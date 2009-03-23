@@ -3,7 +3,7 @@ Section: sound
 Priority: optional
 Maintainer: Laszlo Boszormenyi (GCS) <gcs@debian.hu>
 Build-Depends: debhelper (>= 4.0.0)
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
 
 Package: libsidplay2-dev
 Section: libdevel

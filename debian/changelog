@@ -1,3 +1,10 @@
+sidplay-libs (2.1.1-7) unstable; urgency=low
+
+  * Fix FTBFS issues with g++-4.3 (closes: #467459).
+  * Update to Standars-Version 3.7.3 and fix lintian warnings/errors.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.hu>  Mon, 25 Feb 2008 18:44:08 +0000
+
 sidplay-libs (2.1.1-6) unstable; urgency=low
 
   * Update configure.ac to fix FTBFS on GNU/kFreeBSD (closes: #401857).

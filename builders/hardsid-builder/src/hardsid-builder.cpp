@@ -47,6 +47,7 @@
  ***************************************************************************/
 
 #include <stdio.h>
+#include <cstring>
 #include <string.h>
 
 #ifdef HAVE_CONFIG_H
