@@ -129,7 +129,7 @@ void Filter::writeRES_FILT(reg8 res_filt)
 {
   res = (res_filt >> 4) & 0x0f;
   set_Q();
-  resf = static_cast<float>(res) / 15.f * 0.2f;
+  resf = static_cast<float>(res) / 15.f * 0.22f;
   filt = enabled ? res_filt & 0x0f : 0;
 }
 
