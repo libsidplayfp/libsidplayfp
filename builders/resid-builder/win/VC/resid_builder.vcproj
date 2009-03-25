@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../../include,../../include/sidplay/builders,../../../../libsidplay/include"
+				AdditionalIncludeDirectories=".;../../include;../../include/sidplay/builders;../../../..;../../../../libsidplay/include;../../../../libsidplay/win/VC"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_MSWINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"

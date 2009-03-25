@@ -48,8 +48,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../../include,../../include/sidplay"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS"
+				AdditionalIncludeDirectories=".;../../include;../../include/sidplay;../../include/headers"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;HAVE_CONFIG_H"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../../binaries/Release/libsidplay2.dll"
+				OutputFile="../../../../binaries/Release/libsidplay2.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/libsidplay2.pdb"
@@ -275,7 +275,7 @@
 							Name="VCCLCompilerTool"
 							Optimization="2"
 							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
+							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS"
 						/>
 					</FileConfiguration>
 					<FileConfiguration
@@ -292,6 +292,13 @@
 				<File
 					RelativePath="..\..\src\mos6526\mos6526.h"
 					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
 						>

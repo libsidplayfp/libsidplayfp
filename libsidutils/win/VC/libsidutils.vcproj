@@ -48,7 +48,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../../include,../../include/sidplay/utils,../../../libsidplay/include"
+				AdditionalIncludeDirectories=".;../../include;../../include/sidplay/utils;../../../libsidplay/include;../../../libsidplay/win/VC"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../../binaries/Release/libsidutils.dll"
+				OutputFile="../../../../binaries/Release/libsidutils.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/libsidutils.pdb"
