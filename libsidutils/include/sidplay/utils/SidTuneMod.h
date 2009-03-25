@@ -17,7 +17,7 @@
 #ifndef SIDTUNEMOD_H
 #define SIDTUNEMOD_H
 
-#include <sidplay/SidTune.h>
+#include <headers/SidTune.h>
 
 #define SIDTUNE_MD5_LENGTH 32
 

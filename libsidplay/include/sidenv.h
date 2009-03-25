@@ -35,7 +35,7 @@
 #ifndef _environment_h_
 #define _environment_h_
 
-#include "sidtypes.h"
+#include "headers/sidtypes.h"
 
 /*
 // Enviroment functions - THESE FUNTIONS MUST BE PROVIDED

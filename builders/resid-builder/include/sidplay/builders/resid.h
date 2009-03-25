@@ -23,8 +23,8 @@
  */
 
 #include <vector>
-#include <sidplay/sidbuilder.h>
-#include <sidplay/event.h>
+#include <headers/sidbuilder.h>
+#include <headers/event.h>
 
 /***************************************************************************
  * ReSID Builder Class

@@ -100,7 +100,7 @@ void SidFilter::read (ini_fd_t ini, const char *heading)
                 return;
             }
         }
-        *sidparams[i].address = tmp;
+        *sidparams[i].address = (float) tmp;
     }
 }
 

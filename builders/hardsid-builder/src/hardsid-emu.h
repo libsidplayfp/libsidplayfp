@@ -46,8 +46,8 @@
 #ifndef _hardsid_emu_h_
 #define _hardsid_emu_h_
 
-#include <sidplay/sidbuilder.h>
-#include <sidplay/event.h>
+#include <headers/sidbuilder.h>
+#include <headers/event.h>
 #include "config.h"
 
 #ifdef _WIN32

@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 #include <stdio.h>
-#include <sidplay/sidendian.h>
-#include <sidplay/SidTune.h>
+#include <headers/sidendian.h>
+#include <headers/SidTune.h>
 #include "SidUsage.h"
 #include "smm0.h"
 

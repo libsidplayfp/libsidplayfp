@@ -19,8 +19,8 @@
 #define _SidUsage_h_
 
 #include <stdio.h>
-#include <sidplay/sidusage.h>
-#include <sidplay/utils/SidTuneMod.h>
+#include <headers/sidusage.h>
+#include <SidTuneMod.h>
 
 struct SidTuneInfo;
 

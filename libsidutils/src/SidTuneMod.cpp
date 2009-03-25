@@ -15,7 +15,7 @@
  */
 
 #include <stdio.h>
-#include <sidplay/sidendian.h>
+#include <headers/sidendian.h>
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif

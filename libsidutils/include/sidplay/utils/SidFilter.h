@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <sidplay/sidtypes.h>
+#include <headers/sidtypes.h>
 #include "libini.h"
 
 class SID_EXTERN SidFilter

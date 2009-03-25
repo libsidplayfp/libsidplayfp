@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <sidplay/sidtypes.h>
+#include <headers/sidtypes.h>
 
 // IFF IDs
 #define BUILD_ID(a, b, c, d) ((uint) a << 24 | \

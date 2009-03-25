@@ -335,10 +335,10 @@ double SID::I0(double x)
 bool SID::set_sampling_parameters(double clock_freq, sampling_method method,
 				  double sample_freq, double pass_freq)
 {
-  filter.set_clock_frequency(clock_freq * 0.5);
-  extfilt.set_clock_frequency(clock_freq * 0.5);
+  filter.set_clock_frequency(static_cast<float>(clock_freq * 0.5));
+  extfilt.set_clock_frequency(static_cast<float>(clock_freq * 0.5));
 
-  cycles_per_sample = clock_freq / sample_freq;
+  cycles_per_sample = static_cast<float>(clock_freq / sample_freq);
 
   // FIR initialization is only necessary for resampling.
   if (method != SAMPLE_RESAMPLE_INTERPOLATE)
@@ -437,7 +437,7 @@ bool SID::set_sampling_parameters(double clock_freq, sampling_method method,
       // between 1e-7 and 1e-8 the FP result approximates to 1 due to FP limits
       double sincwt =
 	fabs(wt) >= 1e-8 ? sin(wt)/wt : 1;
-      fir[i * fir_N + j] = f_samples_per_cycle*wc/M_PI*sincwt*Kaiser;
+      fir[i * fir_N + j] = static_cast<float>(f_samples_per_cycle*wc/M_PI*sincwt*Kaiser);
     }
   }
 

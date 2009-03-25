@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <sidplay/sidendian.h>
+#include <headers/sidendian.h>
 #include "sidplay/utils/SidUsage.h"
 #include "smm0.h"
 

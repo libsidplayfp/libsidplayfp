@@ -36,7 +36,7 @@
 #define  _hardsid_h_
 
 #include <vector>
-#include "sidplay/sidbuilder.h"
+#include <headers/sidbuilder.h>
 
 
 class SID_EXTERN HardSIDBuilder: public sidbuilder
