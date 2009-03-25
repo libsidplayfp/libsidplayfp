@@ -160,7 +160,6 @@ private:
 
   // Filter resonance.
   reg8 res;
-  float resf;
 
   // Selects which inputs to route through filter.
   reg8 filt;
@@ -342,7 +341,11 @@ float Filter::clock(float voice1,
          * with Needledrop. The factor here is about 0x380 * 0xff, which
          * probably is significant.
          */
-        const float lpleak = (Vi + Vhp + Vlp - Vbp * _1_div_Q) * resf;
+        float lpleak = Vi + Vhp + Vlp - Vbp * _1_div_Q;
+        //Vlp += (lpleak - Vlp) * distortion_cf_threshold;
+        Vbp += (lpleak - Vbp) * distortion_cf_threshold * _1_div_Q;
+        //Vhp += (lpleak - Vhp) * distortion_cf_threshold;
+        lpleak *= 0.25f;
 
         // outputleveldifference folded into distortion_CT term
 	Vlp -= (Vbp - lpleak) * type3_w0(Vbp - type3_fc_distortion_offset);
