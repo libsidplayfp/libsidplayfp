@@ -334,12 +334,11 @@ float Filter::clock(float voice1,
         /* The resonance control somehow also forms a circuit that causes
          * partial lack of compensation for the lowpass signal in the bp.
          * output. It doesn't occur during res=0, but seems to increase
-         * steadily until res=0xF is reached. So, this is just a guess...
+         * steadily until res=0xF is reached. This might indicate that the
+         * distortion term is proportional to the bandpass contribution, as
+         * for ideal filter Vi + Vhp + Vlp - Vbp = 0 when Q = sqrt(2)/2.
          * The lpleak approximates the level in the vertical strip of n-well
-         * layer above the bp FET block between lp and bp amplifiers. Some
-         * ugly static bias correction factor seems required to avoid trouble
-         * with Needledrop. The factor here is about 0x380 * 0xff, which
-         * probably is significant.
+         * layer above the bp FET block between lp and bp amplifiers.
          */
         float lpleak = Vi + Vhp + Vlp - Vbp * _1_div_Q;
         //Vlp += (lpleak - Vlp) * distortion_cf_threshold;
