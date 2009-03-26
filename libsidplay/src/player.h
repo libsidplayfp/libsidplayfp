@@ -388,6 +388,7 @@ private:
     inline uint8_t envReadMemDataByte (uint_least16_t addr);
     inline void    envSleep           (void);
 
+#ifdef PC64_TESTSUITE
     void   envLoadFile (char *file)
     {
         char name[0x100] = "E:/testsuite/";
@@ -396,6 +397,7 @@ private:
         m_tune->load (name);
         stop ();
     }
+#endif
 
     // Rev 2.0.3 Added - New Mixer Routines
     uint_least32_t (Player::*output) (char *buffer);

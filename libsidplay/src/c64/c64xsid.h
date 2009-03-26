@@ -94,7 +94,7 @@ public:
     void optimisation(uint_least8_t level) {
         m_sid->optimisation(level);
     }
-    void sampling(uint_least32_t systemclock, uint_least32_t freq) {
+    void sampling(float systemclock, float freq) {
         m_sid->sampling(systemclock, freq);
     }
 

@@ -56,7 +56,7 @@ public:
     virtual void bufferpos(int pos) { m_bufferpos = pos; }
     virtual short *buffer() { return m_buffer; }
 
-    virtual void sampling(uint_least32_t systemfreq, uint_least32_t outputfreq) { return; }
+    virtual void sampling(float systemfreq, float outputfreq) { return; }
 };
 
 class sidbuilder

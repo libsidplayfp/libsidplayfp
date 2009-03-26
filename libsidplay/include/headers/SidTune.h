@@ -56,11 +56,6 @@ const int SIDTUNE_COMPATIBILITY_PSID  = 0x01; // File is PSID specific
 const int SIDTUNE_COMPATIBILITY_R64   = 0x02; // File is Real C64 only
 const int SIDTUNE_COMPATIBILITY_BASIC = 0x03; // File requires C64 Basic
 
-
-// Required to export template
-#ifndef _SidTune_cpp_
-extern
-#endif
 template class SID_EXTERN Buffer_sidtt<const uint_least8_t>;
 
 struct SidTuneInfo

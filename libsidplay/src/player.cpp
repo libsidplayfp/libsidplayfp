@@ -371,7 +371,7 @@ Player::Player (void)
  m_ram  (NULL),
  m_rom  (NULL),
  m_errorString       (TXT_NA),
- m_fastForwardFactor (1.0),
+ m_fastForwardFactor (1),
  m_mileage           (0),
  m_playerState       (sid2_stopped),
  m_running           (false),
