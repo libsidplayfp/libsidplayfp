@@ -38,11 +38,6 @@ AC_LANG_CPLUSPLUS
 dnl Check for nothrow allocator.
 MY_CHECK_EXCEPTIONS
 
-dnl Checks for libraries.
-SID2_LIB_CHECKS
-SID2_FIND_LIBRESID
-SID2_FIND_LIBSIDPLAY2(prefix)
-
 AC_MSG_CHECKING([for sidbuilders install directory])
 
 dnl setup builder dir

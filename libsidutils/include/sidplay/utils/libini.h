@@ -30,18 +30,20 @@ extern "C" {
 
 #define INI_LINKAGE
 
-#ifdef __GNUC__
-#define INI_EXTERN __attribute__ ((visibility("default")))
-#endif
-
-#ifdef DLL_EXPORT          /* defined by libtool (if required) */
-#   define INI_EXTERN __declspec(dllexport)
-#endif
-#ifdef LIBINI_DLL_IMPORT   /* define if linking with this dll */
-#   define INI_EXTERN extern __declspec(dllimport)
-#endif
-#ifndef INI_EXTERN         /* static linking or !_WIN32 */
-#    define INI_EXTERN extern
+#ifndef INI_EXTERN
+#   ifdef DLL_EXPORT          /* defined by libtool (if required) */
+#       define INI_EXTERN __declspec(dllexport)
+#   endif
+#   ifdef LIBINI_DLL_IMPORT   /* define if linking with this dll */
+#       define INI_EXTERN extern __declspec(dllimport)
+#   endif
+#   ifndef INI_EXTERN     /* static linking or !_WIN32 */
+#      if defined(__GNUC__) && (__GNUC__ >= 4)
+#          define INI_EXTERN __attribute__ ((visibility("default")))
+#      else
+#          define INI_EXTERN
+#      endif
+#   endif
 #endif
 
 #ifndef INI_ADD_EXTRAS

@@ -34,9 +34,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
-/* Define this to \#include sid.h instead of resid/resid.h */
-#define HAVE_USER_RESID /**/
-
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #define LT_OBJDIR ".libs/"

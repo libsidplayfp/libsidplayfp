@@ -101,21 +101,6 @@ AH_BOTTOM([/* Email addresses */
 #define S_A_WHITE_EMAIL "sidplay2@yahoo.com"
 ])
 
-AC_CONFIG_LINKS([
-include/sidplay/Buffer.h:include/headers/Buffer.h
-include/sidplay/c64env.h:include/headers/c64env.h
-include/sidplay/component.h:include/headers/component.h
-include/sidplay/event.h:include/headers/event.h
-include/sidplay/sid2types.h:include/headers/sid2types.h
-include/sidplay/sidbuilder.h:include/headers/sidbuilder.h
-include/sidplay/sidendian.h:include/headers/sidendian.h
-include/sidplay/sidplay2.h:include/headers/sidplay2.h
-include/sidplay/SidTune.h:include/headers/SidTune.h
-include/sidplay/sidtypes.h:include/headers/sidtypes.h
-include/sidplay/sidusage.h:include/headers/sidusage.h
-include/sidplay/SmartPtr.h:include/headers/SmartPtr.h
-])
-
 AC_CONFIG_FILES([
 Makefile
 include/Makefile

@@ -1,6 +1,7 @@
 AM_CPPFLAGS = \
 -I$(top_srcdir)/include/sidplay/builders \
-$(LIBSIDPLAY2_CXXFLAGS)
+-I$(top_srcdir)/../../libsidplay/include/sidplay \
+-I$(top_srcdir)/../../libsidplay/include
 
 if HAVE_VISIBILITY
   AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden

@@ -41,10 +41,6 @@ AC_LANG_CPLUSPLUS
 dnl Check for nothrow allocator.
 MY_CHECK_EXCEPTIONS
 
-dnl Find libraries
-SID2_LIB_CHECKS
-SID2_FIND_LIBSIDPLAY2
-
 AC_CONFIG_FILES([
 Makefile
 include/Makefile

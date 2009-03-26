@@ -3,9 +3,9 @@ SUBDIRS    = c64 mos6510 mos6526 mos656x xsid sid6526 sidtune
 EXTRA_DIST = psiddrv.bin kernal.bin poweron.bin basic.bin char.bin
 
 AM_CPPFLAGS = \
--I$(top_builddir)/include/sidplay \
--I$(top_srcdir)/include \
--I$(top_srcdir)/include/sidplay
+-I$(top_srcdir)/include/headers \
+-I$(top_srcdir)/include/sidplay \
+-I$(top_srcdir)/include
 
 if HAVE_VISIBILITY
   AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden

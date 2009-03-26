@@ -17,16 +17,7 @@
 
 #include "config.h"
 
-// Allow resid to be in more than one location
-#ifdef HAVE_LOCAL_RESID
-#   include "resid/sid.h"
-#else
-#   ifdef HAVE_USER_RESID
-#       include "sid.h"
-#   else
-#       include <resid/sid.h>
-#   endif
-#endif
+#include <sid.h>
 
 #ifdef RESID_NAMESPACE
 #   define RESID ::RESID_NAMESPACE
