@@ -42,8 +42,8 @@ public:
   void set_voice_nonlinearity(float nl);
 
   void clock();
-  int clock(cycle_count& delta_t, short* buf, int n, int interleave = 1);
-  int clock_fast(cycle_count& delta_t, short* buf, int n, int interleave = 1);
+  int clock(cycle_count& delta_t, float* buf, int n, int interleave = 1);
+  int clock_fast(cycle_count& delta_t, float* buf, int n, int interleave = 1);
   void reset();
   
   // Read/write registers.
@@ -59,9 +59,9 @@ public:
 
 private:
   static double I0(double x);
-  RESID_INLINE int clock_interpolate(cycle_count& delta_t, short* buf, int n,
+  RESID_INLINE int clock_interpolate(cycle_count& delta_t, float* buf, int n,
 				     int interleave);
-  RESID_INLINE int clock_resample_interpolate(cycle_count& delta_t, short* buf,
+  RESID_INLINE int clock_resample_interpolate(cycle_count& delta_t, float* buf,
 					      int n, int interleave);
   RESID_INLINE void age_bus_value(cycle_count);
 

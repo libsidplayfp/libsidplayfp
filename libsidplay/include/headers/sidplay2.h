@@ -46,7 +46,7 @@ public:
     int            fastForward  (uint percent);
     int            load         (SidTune *tune);
     void           pause        (void);
-    uint_least32_t play         (void *buffer, uint_least32_t length);
+    uint_least32_t play         (float *buffer, uint_least32_t count);
     sid2_player_t  state        (void) const;
     void           stop         (void);
     void           debug        (bool enable, FILE *out);

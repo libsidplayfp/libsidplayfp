@@ -64,7 +64,7 @@ ReSID::ReSID (sidbuilder *builder)
         return;
     }
 
-    m_buffer = new short[OUTPUTBUFFERSIZE];
+    m_buffer = new float[OUTPUTBUFFERSIZE];
     m_bufferpos = 0;
     reset (0);
 }
@@ -133,9 +133,9 @@ void ReSID::clock()
     cycle_count cycles = m_context->getTime(m_accessClk, m_phase);
     m_accessClk += cycles;
     if (m_optimisation)
-        m_bufferpos += m_sid.clock_fast(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
+        m_bufferpos += m_sid.clock_fast(cycles, (float *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
     else
-        m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
+        m_bufferpos += m_sid.clock(cycles, (float *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
 }
 
 void ReSID::filter (bool enable)

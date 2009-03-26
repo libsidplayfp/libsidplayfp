@@ -54,7 +54,6 @@
  ***************************************************************************/
 
 #include "player.h"
-#include "sidendian.h"
 
 const int_least32_t VOLUME_MAX = 255;
 /* Scheduling time for next sample event. 20000 is roughly 20 ms and
@@ -70,7 +69,7 @@ void Player::mixerReset (void)
 
 void Player::mixer (void)
 {
-    char *buf = m_sampleBuffer + m_sampleIndex;
+    float *buf = m_sampleBuffer + m_sampleIndex;
     sidemu *chip1 = sid[0];
     sidemu *chip2 = sid[1];
     
@@ -80,8 +79,8 @@ void Player::mixer (void)
 
     /* extract buffer info now that the SID is updated.
      * clock() may update bufferpos. */
-    short *buf1 = chip1->buffer();
-    short *buf2 = chip2->buffer();
+    float *buf1 = chip1->buffer();
+    float *buf2 = chip2->buffer();
     int samples = chip1->bufferpos();
     /* NB: if chip2 exists, its bufferpos is identical to chip1's. */
 
@@ -98,35 +97,33 @@ void Player::mixer (void)
 
         /* This is a crude boxcar low-pass filter to
          * reduce aliasing during fast forward, something I commonly do. */
-        int sample1 = 0;
-        int sample2 = 0;
+        float sample1 = 0;
+        float sample2 = 0;
         int j;
         for (j = 0; j < m_fastForwardFactor; j += 1) {
-            sample1 += (int) buf1[i + j];
+            sample1 += buf1[i + j];
             if (buf2 != NULL)
-                sample2 += (int) buf2[i + j];
+                sample2 += buf2[i + j];
         }
         /* increment i to mark we ate some samples, finish the boxcar thing. */
         i += j;
         sample1 = sample1 * m_leftVolume / VOLUME_MAX;
         sample1 /= j;
-        sample2 = sample2 * m_leftVolume / VOLUME_MAX;
+        sample2 = sample2 * m_rightVolume / VOLUME_MAX;
         sample2 /= j;
 
         /* mono mix. */
         if (buf2 != NULL && m_cfg.playback != sid2_stereo)
-            sample1 = (sample1 + sample2) >> 1;
+            sample1 = (sample1 + sample2) * 0.5f;
         /* stereo clone, for people who keep stereo on permanently. */
         if (buf2 == NULL && m_cfg.playback == sid2_stereo)
             sample2 = sample1;
 
-        endian_16(buf, (uint_least16_t) sample1);
-        buf += sizeof(uint_least16_t);
-        m_sampleIndex += sizeof(uint_least16_t);
+        *buf++ = sample1;
+        m_sampleIndex ++;
         if (m_cfg.playback == sid2_stereo) {
-            endian_16(buf, (uint_least16_t) sample2);
-            buf += sizeof(uint_least16_t);
-            m_sampleIndex += sizeof(uint_least16_t);
+            *buf++ = sample2;
+            m_sampleIndex ++;
         }
     }
 

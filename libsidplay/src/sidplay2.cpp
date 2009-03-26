@@ -119,8 +119,8 @@ void sidplay2::stop (void)
 void sidplay2::pause (void)
 {   sidplayer.pause (); }
 
-uint_least32_t sidplay2::play (void *buffer, uint_least32_t length)
-{   return sidplayer.play (buffer, length); }
+uint_least32_t sidplay2::play (float *buffer, uint_least32_t count)
+{   return sidplayer.play (buffer, count); }
 
 int sidplay2::load (SidTune *tune)
 {   return sidplayer.load (tune); }

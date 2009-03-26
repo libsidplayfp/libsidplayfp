@@ -82,7 +82,7 @@ public:
             m_sid->voice (num, mute);
     }
 
-    short *buffer() {
+    float *buffer() {
         return m_sid->buffer();
     }
     int bufferpos() {

@@ -599,7 +599,7 @@ void Player::pause (void)
     }
 }
 
-uint_least32_t Player::play (void *buffer, uint_least32_t length)
+uint_least32_t Player::play (float *buffer, uint_least32_t count)
 {
     // Make sure a _tune is loaded
     if (!m_tune)
@@ -607,8 +607,8 @@ uint_least32_t Player::play (void *buffer, uint_least32_t length)
 
     // Setup Sample Information
     m_sampleIndex  = 0;
-    m_sampleCount  = length;
-    m_sampleBuffer = (char *) buffer;
+    m_sampleCount  = count;
+    m_sampleBuffer = buffer;
 
     // Start the player loop
     m_playerState = sid2_playing;

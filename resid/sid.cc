@@ -131,13 +131,10 @@ void SID::input(int sample)
 // ----------------------------------------------------------------------------
 float SID::output()
 {
-  const float range = 1 << 15;
-  /* Oscillators go from 0 to 4095, envelope from 0 to 255, volume goes to 1
-   * and there are 3 voices. With strong resonance, it's still possible to
-   * exceed the max (Drum Fool, for instance). So extra 50 % is allocated.
-   *
-   * Output range is -32768 to 32767. */
-  return extfilt.output() / (4095.f * 255.f * 3.f * 1.5f / range);
+  /* Scale to roughly -1 .. 1 range. Voices go from -2048 to 2048 or so,
+   * envelope from 0 to 255, there are 3 voices, and there's factor of 2
+   * for resonance. */
+  return extfilt.output() / (2047.f * 255.f * 3.0f * 2.0f);
 }
 
 // ----------------------------------------------------------------------------
@@ -508,7 +505,7 @@ void SID::clock()
 // }
 // 
 // ----------------------------------------------------------------------------
-int SID::clock(cycle_count& delta_t, short* buf, int n, int interleave)
+int SID::clock(cycle_count& delta_t, float* buf, int n, int interleave)
 {
   /* XXX I assume n is generally large enough for delta_t here... */
   age_bus_value(delta_t);
@@ -538,7 +535,7 @@ int SID::clock(cycle_count& delta_t, short* buf, int n, int interleave)
   return res;
 }
 
-int SID::clock_fast(cycle_count& delta_t, short* buf, int n, int interleave)
+int SID::clock_fast(cycle_count& delta_t, float* buf, int n, int interleave)
 {
   age_bus_value(delta_t);
 #if defined(__SSE__) && defined(__GNUC__)
@@ -566,7 +563,7 @@ int SID::clock_fast(cycle_count& delta_t, short* buf, int n, int interleave)
 // sampling noise.
 // ----------------------------------------------------------------------------
 RESID_INLINE
-int SID::clock_interpolate(cycle_count& delta_t, short* buf, int n,
+int SID::clock_interpolate(cycle_count& delta_t, float* buf, int n,
 			   int interleave)
 {
   int s = 0;
@@ -593,16 +590,7 @@ int SID::clock_interpolate(cycle_count& delta_t, short* buf, int n,
     sample_offset = next_sample_offset - delta_t_sample;
 
     float sample_now = output();
-    int v = static_cast<int>(sample_prev + (sample_offset * (sample_now - sample_prev)));
-    // Saturated arithmetics to guard against 16 bit sample overflow.
-    const int half = 1 << 15;
-    if (v >= half) {
-      v = half - 1;
-    }
-    else if (v < -half) {
-      v = -half;
-    }
-    buf[s++*interleave] = v;
+    buf[s++*interleave] = sample_prev + (sample_offset * (sample_now - sample_prev));
 
     sample_prev = sample_now;
   }
@@ -713,8 +701,8 @@ static float convolve(const float *a, const float *b, int n)
 // implementation dependent in the C++ standard.
 // ----------------------------------------------------------------------------
 RESID_INLINE
-int SID::clock_resample_interpolate(cycle_count& delta_t, short* buf, int n,
-				    int interleave)
+int SID::clock_resample_interpolate(cycle_count& delta_t, float* buf, int n,
+                                    int interleave)
 {
   int s = 0;
 
@@ -759,18 +747,7 @@ int SID::clock_resample_interpolate(cycle_count& delta_t, short* buf, int n,
 
     // Linear interpolation between the sinc tables yields good approximation
     // for the exact value.
-    int v = static_cast<int>(v1 + fir_offset_rmd * (v2 - v1));
-
-    // Saturated arithmetics to guard against 16 bit sample overflow.
-    const int half = 1 << 15;
-    if (v >= half) {
-      v = half - 1;
-    }
-    else if (v < -half) {
-      v = -half;
-    }
-
-    buf[s ++ * interleave] = v;
+    buf[s ++ * interleave] = v1 + fir_offset_rmd * (v2 - v1);
   }
 
   /* clock forward delta_t samples */
