@@ -1,4 +1,5 @@
-EXTRA_DIST = \
+sidplayincludedir = $(includedir)/sidplay/headers
+nodist_sidplayinclude_HEADERS = \
 Buffer.h \
 c64env.h \
 component.h \
