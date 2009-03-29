@@ -1,5 +1,5 @@
 /***************************************************************************
-                          sidint.h  -  AC99 types
+                          stdint.h  -  AC99 types
                              -------------------
     begin                : Mon Jul 3 2000
     copyright            : (C) 2000 by Simon White
@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 /* Setup for Microsoft Visual C++ Version 5 */
-#ifndef _sidint_h_
-#define _sidint_h_
+#ifndef _stdint_h_
+#define _stdint_h_
 
 #include "sidconfig.h"
 
@@ -54,4 +54,4 @@ typedef unsigned long int  uint_least32_t;
  */
 typedef uint_least32_t     uint_fast32_t;
 
-#endif /* _sidint_h_ */
+#endif /* _stdint_h_ */

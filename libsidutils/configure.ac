@@ -51,7 +51,6 @@ src/ini/Makefile
 src/MD5/Makefile
 unix/Makefile
 unix/libsidutils.spec
-unix/libsidutils.qpg
 unix/libsidutils.pc
 ])
 

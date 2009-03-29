@@ -18,7 +18,7 @@
 #ifndef _sidtypes_h_
 #define _sidtypes_h_
 
-#include "sidint.h"
+#include "stdint.h"
 #include "sidconfig.h"
 
 #if SID_SIZEOF_CHAR == 1
