@@ -57,7 +57,4 @@ typedef unsigned int uint;
 typedef float    float32_t;
 typedef double   float64_t;
 
-#define SID_FOREVER for(;;)
-#define SID_SWAP(x,y) ((x)^=(y)^=(x)^=(y))
-
 #endif /* _sidtypes_h_ */
