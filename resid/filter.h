@@ -204,7 +204,7 @@ friend class SID;
 
 const float kinkiness = 0.966f;
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.20f;
+const float outputleveldifference = 1.25f;
 
 RESID_INLINE
 static float fastexp(float val) {
@@ -344,7 +344,7 @@ float Filter::clock(float voice1,
         //Vlp += (lpleak - Vlp) * distortion_cf_threshold;
         Vbp += (lpleak - Vbp) * distortion_cf_threshold * _1_div_Q;
         //Vhp += (lpleak - Vhp) * distortion_cf_threshold;
-        lpleak *= 0.40f;
+        lpleak *= 0.3f;
 
         // outputleveldifference folded into distortion_CT term
 	Vlp -= (Vbp + lpleak) * type3_w0(Vbp - type3_fc_distortion_offset);
