@@ -18,7 +18,7 @@ libsidutils_la_SOURCES = SidDatabase.cpp SidFilter.cpp SidTuneMod.cpp SidUsage.c
 libsidutils_la_LIBADD  = \
 $(top_builddir)/src/MD5/libMD5.la \
 $(top_builddir)/src/ini/libini.la \
-$(LIBSIDPLAY2_LDFLAGS)
+$(top_builddir)/../libsidplay/src/libsidplay2.so
 
 # We substitute the libtool-specific library version in configure.in.
 libsidutils_la_LDFLAGS = -version-info $(LIBVERSION)
