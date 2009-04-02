@@ -204,7 +204,7 @@ friend class SID;
 
 const float kinkiness = 0.966f;
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.3f;
+const float outputleveldifference = 1.33f;
 
 RESID_INLINE
 static float fastexp(float val) {
