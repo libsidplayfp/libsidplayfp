@@ -84,17 +84,8 @@ Labeling:
 // Set the lo byte (8 bit) in a word (16 bit)
 inline void endian_16lo8 (uint_least16_t &word, uint8_t byte)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    ((volatile uint8_t *) &word)[0] = byte;
-#   else
-    ((volatile uint8_t *) &word)[1] = byte;
-#   endif
-    word = *((volatile uint_least16_t *) &word);
-#else
     word &= 0xff00;
     word |= byte;
-#endif
 }
 
 // Get the lo byte (8 bit) in a word (16 bit)
@@ -106,31 +97,14 @@ inline uint8_t endian_16lo8 (uint_least16_t word)
 // Set the hi byte (8 bit) in a word (16 bit)
 inline void endian_16hi8 (uint_least16_t &word, uint8_t byte)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    ((volatile uint8_t *) &word)[1] = byte;
-#   else
-    ((volatile uint8_t *) &word)[0] = byte;
-#   endif
-    word = *((volatile uint_least16_t *) &word);
-#else
     word &= 0x00ff;
     word |= (uint_least16_t) byte << 8;
-#endif
 }
 
 // Set the hi byte (8 bit) in a word (16 bit)
 inline uint8_t endian_16hi8 (uint_least16_t word)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    return ((uint8_t *) &word)[1];
-#   else
-    return ((uint8_t *) &word)[0];
-#   endif
-#else
     return (uint8_t) (word >> 8);
-#endif
 }
 
 // Swap word endian.
@@ -154,9 +128,6 @@ inline uint_least16_t endian_16 (uint8_t hi, uint8_t lo)
 // Convert high-byte and low-byte to 16-bit little endian word.
 inline void endian_16 (uint8_t ptr[2], uint_least16_t word)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-    *((uint_least16_t *) ptr) = word;
-#else
 #   if defined(SID_WORDS_BIGENDIAN)
     ptr[0] = endian_16hi8 (word);
     ptr[1] = endian_16lo8 (word);
@@ -164,7 +135,6 @@ inline void endian_16 (uint8_t ptr[2], uint_least16_t word)
     ptr[0] = endian_16lo8 (word);
     ptr[1] = endian_16hi8 (word);
 #   endif
-#endif
 }
 
 inline void endian_16 (char ptr[2], uint_least16_t word)
@@ -175,47 +145,27 @@ inline void endian_16 (char ptr[2], uint_least16_t word)
 // Convert high-byte and low-byte to 16-bit little endian word.
 inline uint_least16_t endian_little16 (const uint8_t ptr[2])
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_LITTLEENDIAN)
-    return *((uint_least16_t *) ptr);
-#else
     return endian_16 (ptr[1], ptr[0]);
-#endif
 }
 
 // Write a little-endian 16-bit word to two bytes in memory.
 inline void endian_little16 (uint8_t ptr[2], uint_least16_t word)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_LITTLEENDIAN)
-    *((uint_least16_t *) ptr) = word;
-#else
     ptr[0] = endian_16lo8 (word);
     ptr[1] = endian_16hi8 (word);
-#endif
 }
 
 // Convert high-byte and low-byte to 16-bit big endian word.
 inline uint_least16_t endian_big16 (const uint8_t ptr[2])
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_BIGENDIAN)
-    return *((uint_least16_t *) ptr);
-#else
     return endian_16 (ptr[0], ptr[1]);
-#endif
 }
 
 // Write a little-big 16-bit word to two bytes in memory.
 inline void endian_big16 (uint8_t ptr[2], uint_least16_t word)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_BIGENDIAN)
-    *((uint_least16_t *) ptr) = word;
-#else
     ptr[0] = endian_16hi8 (word);
     ptr[1] = endian_16lo8 (word);
-#endif
 }
 
 
@@ -225,17 +175,8 @@ inline void endian_big16 (uint8_t ptr[2], uint_least16_t word)
 // Set the lo word (16bit) in a dword (32 bit)
 inline void endian_32lo16 (uint_least32_t &dword, uint_least16_t word)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    ((volatile uint_least16_t *) &dword)[0] = word;
-#   else
-    ((volatile uint_least16_t *) &dword)[1] = word;
-#   endif
-    dword = *((volatile uint_least32_t *) &dword);
-#else
     dword &= (uint_least32_t) 0xffff0000;
     dword |= word;
-#endif
 }
 
 // Get the lo word (16bit) in a dword (32 bit)
@@ -247,47 +188,21 @@ inline uint_least16_t endian_32lo16 (uint_least32_t dword)
 // Set the hi word (16bit) in a dword (32 bit)
 inline void endian_32hi16 (uint_least32_t &dword, uint_least16_t word)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    ((volatile uint_least16_t *) &dword)[1] = word;
-#   else
-    ((volatile uint_least16_t *) &dword)[0] = word;
-#   endif
-    dword = *((volatile uint_least32_t *) &dword);
-#else
     dword &= (uint_least32_t) 0x0000ffff;
     dword |= (uint_least32_t) word << 16;
-#endif
 }
 
 // Get the hi word (16bit) in a dword (32 bit)
 inline uint_least16_t endian_32hi16 (uint_least32_t dword)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    return ((uint_least16_t *) &dword)[1];
-#   else
-    return ((uint_least16_t *) &dword)[0];
-#   endif
-#else
     return (uint_least16_t) (dword >> 16);
-#endif
 }
 
 // Set the lo byte (8 bit) in a dword (32 bit)
 inline void endian_32lo8 (uint_least32_t &dword, uint8_t byte)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    ((volatile uint8_t *) &dword)[0] = byte;
-#   else
-    ((volatile uint8_t *) &dword)[3] = byte;
-#   endif
-    dword = *((volatile uint_least32_t *) &dword);
-#else
     dword &= (uint_least32_t) 0xffffff00;
     dword |= (uint_least32_t) byte;
-#endif
 }
 
 // Get the lo byte (8 bit) in a dword (32 bit)
@@ -299,31 +214,14 @@ inline uint8_t endian_32lo8 (uint_least32_t dword)
 // Set the hi byte (8 bit) in a dword (32 bit)
 inline void endian_32hi8 (uint_least32_t &dword, uint8_t byte)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    ((volatile uint8_t *) &dword)[1] = byte;
-#   else
-    ((volatile uint8_t *) &dword)[2] = byte;
-#   endif
-    dword = *((volatile uint_least32_t *) &dword);
-#else
     dword &= (uint_least32_t) 0xffff00ff;
     dword |= (uint_least32_t) byte << 8;
-#endif
 }
 
 // Get the hi byte (8 bit) in a dword (32 bit)
 inline uint8_t endian_32hi8 (uint_least32_t dword)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS)
-#   if defined(SID_WORDS_LITTLEENDIAN)
-    return ((uint8_t *) &dword)[1];
-#   else
-    return ((uint8_t *) &dword)[2];
-#   endif
-#else
     return (uint8_t) (dword >> 8);
-#endif
 }
 
 // Swap hi and lo words endian in 32 bit dword.
@@ -363,55 +261,35 @@ inline uint_least32_t endian_32 (uint8_t hihi, uint8_t hilo, uint8_t hi, uint8_t
 // Convert high-byte and low-byte to 32-bit little endian word.
 inline uint_least32_t endian_little32 (const uint8_t ptr[4])
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_LITTLEENDIAN)
-    return *((uint_least32_t *) ptr);
-#else
     return endian_32 (ptr[3], ptr[2], ptr[1], ptr[0]);
-#endif
 }
 
 // Write a little-endian 32-bit word to four bytes in memory.
 inline void endian_little32 (uint8_t ptr[4], uint_least32_t dword)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_LITTLEENDIAN)
-    *((uint_least32_t *) ptr) = dword;
-#else
     uint_least16_t word = 0;
     ptr[0] = endian_32lo8  (dword);
     ptr[1] = endian_32hi8  (dword);
     word   = endian_32hi16 (dword);
     ptr[2] = endian_16lo8  (word);
     ptr[3] = endian_16hi8  (word);
-#endif
 }
 
 // Convert high-byte and low-byte to 32-bit big endian word.
 inline uint_least32_t endian_big32 (const uint8_t ptr[4])
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_BIGENDIAN)
-    return *((uint_least32_t *) ptr);
-#else
     return endian_32 (ptr[0], ptr[1], ptr[2], ptr[3]);
-#endif
 }
 
 // Write a big-endian 32-bit word to four bytes in memory.
 inline void endian_big32 (uint8_t ptr[4], uint_least32_t dword)
 {
-#if defined(SID_OPTIMISE_MEMORY_ACCESS) && \
-    defined(SID_WORDS_BIGENDIAN)
-    *((uint_least32_t *) ptr) = dword;
-#else
     uint_least16_t word = 0;
     word   = endian_32hi16 (dword);
     ptr[1] = endian_16lo8  (word);
     ptr[0] = endian_16hi8  (word);
     ptr[2] = endian_32hi8  (dword);
     ptr[3] = endian_32lo8  (dword);
-#endif
 }
 
 #endif // _sidendian_h_

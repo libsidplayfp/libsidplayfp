@@ -21,14 +21,6 @@
 #include "stdint.h"
 #include "sidconfig.h"
 
-#if SID_SIZEOF_CHAR == 1
-#   if (SID_SIZEOF_SHORT_INT == 2) || (SID_SIZEOF_INT == 2)
-#       if (SID_SIZEOF_INT == 4) || (SID_SIZEOF_LONG_INT == 4)
-//#           define SID_OPTIMISE_MEMORY_ACCESS
-#       endif
-#   endif
-#endif
-
 #if SID_SIZEOF_CHAR != 1
 #   error Code cannot work correctly on this platform as no real 8 bit data type supported!
 #endif
