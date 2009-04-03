@@ -204,7 +204,7 @@ friend class SID;
 
 const float kinkiness = 0.966f;
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.33f;
+const float outputleveldifference = 1.18f;
 
 RESID_INLINE
 static float fastexp(float val) {
@@ -321,14 +321,21 @@ float Filter::clock(float voice1,
     
     if (model == MOS6581) {
         /* output strip mixing to filter state */
+        float lpleak = Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q;
+        if (hp_bp_lp & 2) {
+            Vbp += (Vf - Vbp) * distortion_cf_threshold;
+            Vf -= lpleak;
+        }
         if (hp_bp_lp & 1) {
             Vlp += (Vf - Vlp) * distortion_cf_threshold;
         }
-        if (hp_bp_lp & 2) {
-            Vbp += (Vf - Vbp) * distortion_cf_threshold;
-        }
         if (hp_bp_lp & 4) {
             Vhp += (Vf - Vhp) * distortion_cf_threshold;
+        }
+        
+        /* saturate. This is likely the output inverter saturation. */
+        if (Vf > 3.2e6f) {
+            Vf -= (Vf - 3.2e6f) / 2.f;
         }
 
         /* The resonance control somehow also forms a circuit that causes
@@ -340,25 +347,18 @@ float Filter::clock(float voice1,
          * The lpleak approximates the level in the vertical strip of n-well
          * layer above the bp FET block between lp and bp amplifiers.
          */
-        float lpleak = Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q;
-        //Vlp += (lpleak - Vlp) * distortion_cf_threshold;
+        Vlp += (lpleak - Vlp) * distortion_cf_threshold;
         Vbp += (lpleak - Vbp) * distortion_cf_threshold * _1_div_Q;
-        //Vhp += (lpleak - Vhp) * distortion_cf_threshold;
-        lpleak *= 0.3f;
+        Vhp += (lpleak - Vhp) * distortion_cf_threshold;
 
-        // outputleveldifference folded into distortion_CT term
-	Vlp -= (Vbp + lpleak) * type3_w0(Vbp - type3_fc_distortion_offset);
-	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
-	Vhp = (Vbp - lpleak) * _1_div_Q * (1.f/outputleveldifference)
+	Vlp -= Vbp * type3_w0(Vbp - lpleak * 0.18f - type3_fc_distortion_offset) * outputleveldifference;
+	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset) * outputleveldifference;
+	Vhp = Vbp * _1_div_Q * (1.f/outputleveldifference)
             - Vlp * (1.f/outputleveldifference/outputleveldifference)
         /* the loss of level by about half is likely due to feedback
          * between Vhp amp input and output. */
             - Vi * distortion_rate;
 	
-        /* saturate. This is likely the output inverter saturation. */
-        if (Vf > 3.2e6f) {
-            Vf -= (Vf - 3.2e6f) / 2.f;
-        }
     } else {
         /* On the 8580, BP appears mixed in phase with the rest. */
         Vlp += Vbp * type4_w0_cache;

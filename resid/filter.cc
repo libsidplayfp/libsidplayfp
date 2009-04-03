@@ -64,8 +64,7 @@ void Filter::set_chip_model(chip_model model)
 /* dist_CT eliminates 1/x at hot spot */
 void Filter::set_clock_frequency(float clock) {
     clock_frequency = clock;
-    // outputleveldifference compensated back during Vhp computation.
-    distortion_CT = 1.f / (sidcaps_6581 * clock_frequency) * outputleveldifference;
+    distortion_CT = 1.f / (sidcaps_6581 * clock_frequency);
     set_w0();
 }
 
