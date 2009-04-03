@@ -88,27 +88,12 @@ binary-arch: build install
 	dh_testroot
 	dh_movefiles
 
-	install -d -o root -g root -m 755 debian/libsidplay2/usr/share/doc/libsidplay2
-	install -d -o root -g root -m 755 debian/libsidplay2/usr/share/lintian/overrides
-	cp $(CURDIR)/debian/libsidplay2.lintian  $(CURDIR)/debian/libsidplay2/usr/share/lintian/overrides/libsidplay2
-	install -d -o root -g root -m 755 debian/libsidplay-dev/usr/share/doc
-	install -d -o root -g root -m 755 debian/libsidutils0/usr/share/doc/libsidutils0
-	install -d -o root -g root -m 755 debian/libsidutils-dev/usr/share/doc
-	install -d -o root -g root -m 755 debian/libresid-builder0c2a/usr/share/doc/libresid-builder0c2a
-	install -d -o root -g root -m 755 debian/libresid-builder-dev/usr/share/doc
-	ln -s libsidplay2 debian/libsidplay-dev/usr/share/doc/libsidplay-dev
-	ln -s libsidutils0 debian/libsidutils-dev/usr/share/doc/libsidutils-dev
-	ln -s libresid-builder0c2a debian/libresid-builder-dev/usr/share/doc/libresid-builder-dev
-
-	dh_installdocs
 	dh_installexamples
 	dh_installmenu
 	dh_installcron
 	dh_installman
 	dh_installinfo
 
-	install -o root -g root -m 644 libsidplay/ChangeLog debian/libsidplay2/usr/share/doc/libsidplay2/changelog
-	install -o root -g root -m 644 libsidutils/ChangeLog debian/libsidutils0/usr/share/doc/libsidutils0/changelog
 	dh_installchangelogs
 	dh_link
 	dh_strip
