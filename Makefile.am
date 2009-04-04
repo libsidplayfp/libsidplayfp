@@ -19,7 +19,7 @@ sidplay/c64/c64vic.h \
 sidplay/c64/c64xsid.h \
 sidplay/mos6510/cycle_based \
 sidplay/AUTHORS \
-sidplay/Changelog \
+sidplay/ChangeLog \
 sidplay/COPYING \
 sidplay/README \
 sidplay/TODO \
@@ -28,12 +28,12 @@ utils/ini/keys.i \
 utils/ini/list.i \
 utils/ini/types.i \
 utils/AUTHORS \
-utils/Changelog \
+utils/ChangeLog \
 utils/COPYING \
 utils/README \
 utils/TODO \
 builders/resid-builder/resid/AUTHORS \
-builders/resid-builder/resid/Changelog \
+builders/resid-builder/resid/ChangeLog \
 builders/resid-builder/resid/COPYING \
 builders/resid-builder/resid/INSTALL \
 builders/resid-builder/resid/README \
