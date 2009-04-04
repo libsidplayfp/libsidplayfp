@@ -37,7 +37,7 @@ public:
 
   // Amplitude modulated waveform output.
   // Range [-2048*255, 2047*255].
-  RESID_INLINE float output(WaveformGenerator& source);
+  inline float output(WaveformGenerator& source);
 
 protected:
   WaveformGenerator wave;
@@ -53,7 +53,7 @@ friend class SID;
 // Ideal range [-2048*255, 2047*255].
 // ----------------------------------------------------------------------------
 
-RESID_INLINE
+inline
 float Voice::output(WaveformGenerator& source)
 {
     return wave.output(source) * envelope.output() + voice_DC;

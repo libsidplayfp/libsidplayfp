@@ -40,7 +40,7 @@ public:
 
   enum State { ATTACK, DECAY_SUSTAIN, RELEASE };
 
-  RESID_INLINE void clock();
+  inline void clock();
   void reset();
   void mute(bool enable);
 
@@ -49,7 +49,7 @@ public:
   void writeSUSTAIN_RELEASE(reg8);
   reg8 readENV();
 
-  RESID_INLINE float output();
+  inline float output();
 
 protected:
   void set_nonlinearity(float nl);
@@ -86,7 +86,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 void EnvelopeGenerator::clock()
 {
   if (++ rate_counter != rate_period)
@@ -171,7 +171,7 @@ void EnvelopeGenerator::clock()
 // ----------------------------------------------------------------------------
 // Read the envelope generator output.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 float EnvelopeGenerator::output()
 {
   return envelope_counter_dac;

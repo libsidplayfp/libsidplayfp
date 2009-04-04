@@ -441,7 +441,7 @@ bool SID::set_sampling_parameters(double clock_freq, sampling_method method,
   return true;
 }
 
-RESID_INLINE
+inline
 void SID::age_bus_value(cycle_count n) {
   // Age bus value. This is not supposed to be cycle exact,
   // so it should be safe to approximate.
@@ -562,7 +562,7 @@ int SID::clock_fast(cycle_count& delta_t, float* buf, int n, int interleave)
 // external filter attenuates frequencies above 16kHz, thus reducing
 // sampling noise.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 int SID::clock_interpolate(cycle_count& delta_t, float* buf, int n,
 			   int interleave)
 {
@@ -700,7 +700,7 @@ static float convolve(const float *a, const float *b, int n)
 // NB! the result of right shifting negative numbers is really
 // implementation dependent in the C++ standard.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 int SID::clock_resample_interpolate(cycle_count& delta_t, float* buf, int n,
                                     int interleave)
 {

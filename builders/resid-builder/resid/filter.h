@@ -130,7 +130,7 @@ public:
   void set_type4_properties(float, float);
   void set_clock_frequency(float);
 
-  RESID_INLINE
+  inline
   float clock(float voice1, float voice2, float voice3,
 	      float ext_in);
   void reset();
@@ -206,7 +206,7 @@ const float kinkiness = 0.966f;
 const float sidcaps_6581 = 470e-12f;
 const float outputleveldifference = 1.2f;
 
-RESID_INLINE
+inline
 static float fastexp(float val) {
     typedef union {
         int i;
@@ -234,7 +234,7 @@ static float fastexp(float val) {
     return tmp.f;
 }
 
-RESID_INLINE
+inline
 float Filter::type3_w0(const float dist)
 {
     /* The distortion appears to be the result of MOSFET entering saturation
@@ -279,7 +279,7 @@ float Filter::type3_w0(const float dist)
     return distortion_CT * _1_div_resistance;
 }
 
-RESID_INLINE
+inline
 float Filter::type4_w0()
 {
     const float freq = type4_k * fc + type4_b;
@@ -289,7 +289,7 @@ float Filter::type4_w0()
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 float Filter::clock(float voice1,
 		   float voice2,
 		   float voice3,
@@ -369,7 +369,7 @@ float Filter::clock(float voice1,
     return Vf * volf;
 }
 
-RESID_INLINE
+inline
 void Filter::nuke_denormals()
 {
     /* We only need this for systems that don't do -msse and -mfpmath=sse */

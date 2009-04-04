@@ -44,14 +44,14 @@ public:
 
   void set_clock_frequency(float);
 
-  RESID_INLINE void clock(float Vi);
+  inline void clock(float Vi);
   void reset();
 
   // Audio output (20 bits).
-  RESID_INLINE float output();
+  inline float output();
 
 private:
-  RESID_INLINE void nuke_denormals();
+  inline void nuke_denormals();
 
   // State of filters.
   float Vlp; // lowpass
@@ -67,7 +67,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 void ExternalFilter::clock(float Vi)
 {
   float dVlp = w0lp * (Vi - Vlp);
@@ -79,13 +79,13 @@ void ExternalFilter::clock(float Vi)
 // ----------------------------------------------------------------------------
 // Audio output (19.5 bits).
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 float ExternalFilter::output()
 {
   return Vlp - Vhp;
 }
 
-RESID_INLINE
+inline
 void ExternalFilter::nuke_denormals()
 {
     if (Vhp > -1e-12f && Vhp < 1e-12f)

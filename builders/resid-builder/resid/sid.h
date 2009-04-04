@@ -59,11 +59,11 @@ public:
 
 private:
   static double I0(double x);
-  RESID_INLINE int clock_interpolate(cycle_count& delta_t, float* buf, int n,
+  inline int clock_interpolate(cycle_count& delta_t, float* buf, int n,
 				     int interleave);
-  RESID_INLINE int clock_resample_interpolate(cycle_count& delta_t, float* buf,
+  inline int clock_resample_interpolate(cycle_count& delta_t, float* buf,
 					      int n, int interleave);
-  RESID_INLINE void age_bus_value(cycle_count);
+  inline void age_bus_value(cycle_count);
 
   Voice voice[3];
   Filter filter;

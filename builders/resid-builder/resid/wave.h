@@ -40,8 +40,8 @@ public:
 
   void set_chip_model(chip_model model);
 
-  RESID_INLINE void clock();
-  RESID_INLINE void synchronize(WaveformGenerator& dest, WaveformGenerator& source);
+  inline void clock();
+  inline void synchronize(WaveformGenerator& dest, WaveformGenerator& source);
   void reset();
 
   void writeFREQ_LO(reg8 value);
@@ -51,7 +51,7 @@ public:
   void writeCONTROL_REG(WaveformGenerator& source, reg8 value);
   reg8 readOSC(WaveformGenerator& source);
 
-  RESID_INLINE float output(WaveformGenerator& source);
+  inline float output(WaveformGenerator& source);
 
 protected:
   void clock_noise(const bool clock);
@@ -96,7 +96,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 void WaveformGenerator::clock()
 {
   /* no digital operation if test bit is set. Only emulate analog fade. */
@@ -131,7 +131,7 @@ void WaveformGenerator::clock()
 // Note that the oscillators must be clocked exactly on the cycle when the
 // MSB is set high for hard sync to operate correctly. See SID::clock().
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 void WaveformGenerator::synchronize(WaveformGenerator& sync_dest, WaveformGenerator &sync_source)
 {
   // A special case occurs when a sync source is synced itself on the same
@@ -145,7 +145,7 @@ void WaveformGenerator::synchronize(WaveformGenerator& sync_dest, WaveformGenera
 // ----------------------------------------------------------------------------
 // Select one of 16 possible combinations of waveforms.
 // ----------------------------------------------------------------------------
-RESID_INLINE
+inline
 float WaveformGenerator::output(WaveformGenerator& sync_source)
 {
   if (waveform == 0) {

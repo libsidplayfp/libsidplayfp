@@ -93,19 +93,6 @@ AH_BOTTOM([/* Email addresses */
 #define S_A_WHITE_EMAIL "sidplay2@yahoo.com"
 ])
 
-
-dnl Enable inlining.
-AC_ARG_ENABLE(inline,
-[AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]])])
-
-if test "$enable_inline" != no; then
-  RESID_INLINE=inline
-else
-  RESID_INLINE=
-fi
-
-AC_SUBST([RESID_INLINE])
-
 AC_CONFIG_FILES([
 Makefile
 libsidplay2.spec
