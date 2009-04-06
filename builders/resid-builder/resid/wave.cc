@@ -185,14 +185,13 @@ void WaveformGenerator::calculate_waveform_sample(float o[12])
   for (i = 0; i < 12; i ++) {
     o[i] = (o[i] - config.bias) * sharpness;
 
-    o[i] += 0.707107f;
+    o[i] += 0.5f;
     if (o[i] > 1.f) {
        o[i] = 1.f;
     }
     if (o[i] < 0.f) {
         o[i] = 0.;
     }
-    o[i] = o[i] * o[i];
   }
 }
 
