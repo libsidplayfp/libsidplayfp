@@ -15,7 +15,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
-//  Filter distortion code written by Antti S. Lankila 2007 - 2008.
+//  Filter distortion code written by Antti S. Lankila 2007 - 2009.
 
 #ifndef __FILTER_H__
 #define __FILTER_H__
@@ -352,7 +352,7 @@ float Filter::clock(float voice1,
         Vbp += (lpleak - Vbp) * distortion_cf_threshold * _1_div_Q;
         Vhp += (lpleak - Vhp) * distortion_cf_threshold;
 
-	Vlp -= Vbp * type3_w0(Vbp - lpleak * 0.3f - type3_fc_distortion_offset) * outputleveldifference;
+	Vlp -= Vbp * type3_w0(Vbp - lpleak * 0.25f - type3_fc_distortion_offset) * outputleveldifference;
 	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset) * outputleveldifference;
 	Vhp = Vbp * _1_div_Q * (1.f/outputleveldifference)
             - Vlp * (1.f/outputleveldifference/outputleveldifference)
