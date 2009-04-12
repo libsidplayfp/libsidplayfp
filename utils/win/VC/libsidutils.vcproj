@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="libsidutils"
+	Name="sidutils"
 	ProjectGUID="{63370DF9-1079-4428-9403-E7912DD39505}"
+	RootNamespace="sidutils"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -53,7 +54,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".;../../include;../../include/sidplay/utils;../../../libsidplay/include;../../../libsidplay/win/VC"
+				AdditionalIncludeDirectories="../../../sidplay/win/VC;.;../../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -199,239 +200,95 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\include\config.h"
+			RelativePath="..\..\ini\headings.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\headings.h"
+			RelativePath="..\..\ini\headings.i"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\headings.i"
+			RelativePath="..\..\ini\ini.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\ini.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\src\ini\ini.h"
+			RelativePath="..\..\ini\ini.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\keys.h"
+			RelativePath="..\..\ini\keys.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\keys.i"
+			RelativePath="..\..\ini\keys.i"
 			>
 		</File>
 		<File
-			RelativePath="..\..\include\sidplay\utils\libini.h"
+			RelativePath="..\..\libini.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\list.h"
+			RelativePath="..\..\ini\list.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\list.i"
+			RelativePath="..\..\ini\list.i"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\Md5\MD5.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\src\Md5\MD5.h"
+			RelativePath="..\..\MD5\MD5.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\Md5\MD5_Defs.h"
+			RelativePath="..\..\MD5\MD5.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\SidDatabase.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\include\sidplay\utils\SidDatabase.h"
+			RelativePath="..\..\MD5\MD5_Defs.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\SidFilter.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\include\sidplay\utils\SidFilter.h"
+			RelativePath="..\..\SidDatabase.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\SidTuneMod.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\include\sidplay\utils\SidTuneMod.h"
+			RelativePath="..\..\SidDatabase.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\SidUsage.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\include\sidplay\utils\SidUsage.h"
+			RelativePath="..\..\SidFilter.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\smm.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\src\smm0.h"
+			RelativePath="..\..\SidFilter.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\ini\types.i"
+			RelativePath="..\..\SidTuneMod.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SidTuneMod.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SidUsage.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SidUsage.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\smm.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\smm0.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ini\types.i"
 			>
 		</File>
 	</Files>

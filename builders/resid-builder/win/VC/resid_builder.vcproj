@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="resid_builder"
+	Name="resid-builder"
 	ProjectGUID="{873230EA-1EBC-4B11-80B9-FD446582FA27}"
 	RootNamespace="resid_builder"
 	TargetFrameworkVersion="131072"
@@ -48,7 +48,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".;../../include;../../include/sidplay/builders;../../../../resid;../../../../libsidplay/include;../../../../libsidplay/win/VC"
+				AdditionalIncludeDirectories="../../../../sidplay/win/VC;.;../../../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_MSWINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -173,204 +173,81 @@
 			Name="ReSID"
 			>
 			<File
-				RelativePath="..\..\..\..\resid\envelope.cc"
+				RelativePath="..\..\resid\envelope.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\envelope.h"
+				RelativePath="..\..\resid\envelope.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\extfilt.cc"
+				RelativePath="..\..\resid\extfilt.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\extfilt.h"
+				RelativePath="..\..\resid\extfilt.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\filter.cc"
+				RelativePath="..\..\resid\filter.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\filter.h"
+				RelativePath="..\..\resid\filter.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\pot.cc"
+				RelativePath="..\..\resid\pot.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\pot.h"
+				RelativePath="..\..\resid\pot.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\sid.cc"
+				RelativePath="..\..\resid\sid.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\sid.h"
+				RelativePath="..\..\resid\sid.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\version.cc"
+				RelativePath="..\..\resid\version.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\voice.cc"
+				RelativePath="..\..\resid\voice.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\voice.h"
+				RelativePath="..\..\resid\voice.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\wave.cc"
+				RelativePath="..\..\resid\wave.cc"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\resid\wave.h"
+				RelativePath="..\..\resid\wave.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						FloatingPointModel="2"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\src\resid-builder.cpp"
+			RelativePath="..\..\resid-builder.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\resid.cpp"
+			RelativePath="..\..\resid-emu.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\include\sidplay\builders\resid.h"
+			RelativePath="..\..\resid.cpp"
 			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-				/>
-			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\resid.h"
+			>
 		</File>
 	</Files>
 	<Globals>

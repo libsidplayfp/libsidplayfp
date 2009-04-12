@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="libsidplay"
+	Name="sidplay"
 	ProjectGUID="{3AFB0F7C-8CFF-4440-9C12-9D4DC3A1736A}"
+	RootNamespace="sidplay"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -53,7 +54,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".;../../include;../../include/sidplay;../../include/headers"
+				AdditionalIncludeDirectories="../../win/VC;.;../../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;HAVE_CONFIG_H"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -201,55 +202,19 @@
 				Name="MOS6510"
 				>
 				<File
-					RelativePath="..\..\src\mos6510\conf6510.h"
+					RelativePath="..\..\mos6510\conf6510.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\mos6510\mos6510.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\mos6510\mos6510.h"
+					RelativePath="..\..\mos6510\mos6510.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\mos6510\cycle_based\mos6510c.h"
+					RelativePath="..\..\mos6510\mos6510.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\mos6510\cycle_based\mos6510c.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\mos6510\opcodes.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\mos6510\cycle_based\sid6510c.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\mos6510\cycle_based\sid6510c.i"
+					RelativePath="..\..\mos6510\opcodes.h"
 					>
 				</File>
 			</Filter>
@@ -257,77 +222,23 @@
 				Name="MOS6526"
 				>
 				<File
-					RelativePath="..\..\src\mos6526\mos6526.cpp"
+					RelativePath="..\..\mos6526\mos6526.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\mos6526\mos6526.h"
+					RelativePath="..\..\mos6526\mos6526.h"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
 				Name="MOS656X"
 				>
 				<File
-					RelativePath="..\..\src\mos656x\mos656x.cpp"
+					RelativePath="..\..\mos656x\mos656x.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\mos656x\mos656x.h"
+					RelativePath="..\..\mos656x\mos656x.h"
 					>
 				</File>
 			</Filter>
@@ -335,31 +246,11 @@
 				Name="SID6526"
 				>
 				<File
-					RelativePath="..\..\src\sid6526\sid6526.cpp"
+					RelativePath="..\..\sid6526\sid6526.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\sid6526\sid6526.h"
+					RelativePath="..\..\sid6526\sid6526.h"
 					>
 				</File>
 			</Filter>
@@ -367,227 +258,55 @@
 				Name="SidTune"
 				>
 				<File
-					RelativePath="..\..\include\sidplay\Buffer.h"
+					RelativePath="..\..\sidtune\IconInfo.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\sidtune\IconInfo.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\sidtune\InfoFile.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\sidtune\MUS.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\sidtune\p00.cpp"
+					RelativePath="..\..\sidtune\InfoFile.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\sidtune\PP20.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\sidtune\PP20.h"
+					RelativePath="..\..\sidtune\MUS.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\sidtune\PP20_Defs.h"
+					RelativePath="..\..\sidtune\p00.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\sidtune\PRG.CPP"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\sidtune\PSID.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\sidtune\SidTune.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\include\sidplay\SidTune.h"
+					RelativePath="..\..\sidtune\PP20.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\sidtune\SidTuneCfg.h"
+					RelativePath="..\..\sidtune\PP20.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\sidtune\SidTuneTools.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\src\sidtune\SidTuneTools.h"
+					RelativePath="..\..\sidtune\PP20_Defs.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\sidplay\SmartPtr.h"
+					RelativePath="..\..\sidtune\prg.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\sidtune\PSID.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\sidtune\SidTune.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\sidtune\SidTuneCfg.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\sidtune\SidTuneTools.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\sidtune\SidTuneTools.h"
 					>
 				</File>
 			</Filter>
@@ -595,31 +314,11 @@
 				Name="xSID"
 				>
 				<File
-					RelativePath="..\..\src\xsid\xsid.cpp"
+					RelativePath="..\..\xsid\xsid.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="2"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							Optimization="0"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\xsid\xsid.h"
+					RelativePath="..\..\xsid\xsid.h"
 					>
 				</File>
 			</Filter>
@@ -629,87 +328,15 @@
 			Filter="h"
 			>
 			<File
-				RelativePath="..\..\src\c64\c64cia.h"
+				RelativePath="..\..\c64\c64cia.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\c64\c64vic.h"
+				RelativePath="..\..\c64\c64vic.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\c64\c64xsid.h"
-				>
-			</File>
-			<File
-				RelativePath="config.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\config.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\nullsid.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\player.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\sidplay\sidconfig.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files (Public)"
-			>
-			<File
-				RelativePath="..\..\include\headers\Buffer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\c64env.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\component.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\event.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\sid2types.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\sidbuilder.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\sidendian.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\sidplay2.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\SidTune.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\sidtypes.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\sidusage.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\headers\SmartPtr.h"
+				RelativePath="..\..\c64\c64xsid.h"
 				>
 			</File>
 		</Filter>
@@ -718,192 +345,120 @@
 			Filter="cpp;cc;cxx;c;i"
 			>
 			<File
-				RelativePath="..\..\src\char.bin"
+				RelativePath="..\..\basic.bin"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\config.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\event.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\kernal.bin"
+				RelativePath="..\..\Buffer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\mixer.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\player.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\poweron.bin"
+				RelativePath="..\..\c64env.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\psiddrv.a65"
+				RelativePath="..\..\char.bin"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\psiddrv.bin"
+				RelativePath="..\..\component.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\psiddrv.cpp"
+				RelativePath="..\..\config.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\reloc65.c"
+				RelativePath="..\..\event.cpp"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\sidplay2.cpp"
+				RelativePath="..\..\event.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;$(NoInherit)"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\kernal.bin"
+				>
+			</File>
+			<File
+				RelativePath="..\..\mixer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\nullsid.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\player.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\player.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\poweron.bin"
+				>
+			</File>
+			<File
+				RelativePath="..\..\psiddrv.a65"
+				>
+			</File>
+			<File
+				RelativePath="..\..\psiddrv.bin"
+				>
+			</File>
+			<File
+				RelativePath="..\..\psiddrv.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\reloc65.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sid2types.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidbuilder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidconfig.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidendian.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidenv.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidplay2.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidplay2.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SidTune.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidtypes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\sidusage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\SmartPtr.h"
+				>
 			</File>
 		</Filter>
 	</Files>

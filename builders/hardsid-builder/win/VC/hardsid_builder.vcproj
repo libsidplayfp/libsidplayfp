@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="hardsid_builder"
+	Name="hardsid-builder"
 	ProjectGUID="{FA4051A9-6A7A-4955-8C1D-617DBEBBDD2E}"
 	RootNamespace="hardsid_builder"
 	TargetFrameworkVersion="131072"
@@ -119,8 +119,8 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../../include;../../include/sidplay/builders;../../../../libsidplay/include;../../../../libsidplay/win/VC"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_MSWINDOWS"
+				AdditionalIncludeDirectories=".;../../../../sidplay/win/VC;../../../.."
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_MSWINDOWS;HAVE_CONFIG_H"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -170,67 +170,23 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\include\config.h"
-			>
-		</File>
-		<File
 			RelativePath="config.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\hardsid-builder.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\src\hardsid-emu.h"
+			RelativePath="..\..\hardsid-builder.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\hardsid-win.cpp"
+			RelativePath="..\..\hardsid-emu.h"
 			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="0"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					Optimization="2"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\..\include\sidplay\builders\hardsid.h"
+			RelativePath="..\..\hardsid-win.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\hardsid.h"
 			>
 		</File>
 	</Files>
