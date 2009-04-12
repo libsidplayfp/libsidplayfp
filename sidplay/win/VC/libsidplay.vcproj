@@ -54,7 +54,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../../win/VC;.;../../.."
+				AdditionalIncludeDirectories=".;../../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS;HAVE_CONFIG_H"
 				StringPooling="true"
 				RuntimeLibrary="2"
