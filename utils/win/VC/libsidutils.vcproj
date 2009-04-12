@@ -54,7 +54,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../../../sidplay/win/VC;.;../../.."
+				AdditionalIncludeDirectories=".;../../../sidplay/win/VC;../../.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;DLL_EXPORT;HAVE_MSWINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
