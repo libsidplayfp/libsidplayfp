@@ -28,7 +28,7 @@ typedef struct {
     float stmix;
 } waveformconfig_t;
 
-const float sharpness = 16.f;
+const float sharpness = 32.f;
 const waveformconfig_t wfconfig[3][5] = {
   { /* kevtris chip D (6581r2/r3) */
     {0.9347278f, 0.0f, 0.0f, 1.017948f, 0.5655234f},
