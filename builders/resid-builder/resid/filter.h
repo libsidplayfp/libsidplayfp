@@ -129,6 +129,7 @@ public:
   void set_type3_properties(float, float, float, float);
   void set_type4_properties(float, float);
   void set_clock_frequency(float);
+  void set_nonlinearity(float);
 
   inline
   float clock(float voice1, float voice2, float voice3,
@@ -193,6 +194,8 @@ private:
   float type4_w0_cache, _1_div_Q, type3_fc_kink_exp, distortion_CT,
         type3_fc_distortion_offset;
 
+  float nonlinearity;
+
 friend class SID;
 };
 
@@ -202,7 +205,6 @@ friend class SID;
 // time a sample is calculated.
 // ----------------------------------------------------------------------------
 
-const float kinkiness = 0.966f;
 const float sidcaps_6581 = 470e-12f;
 const float outputleveldifference = 1.25f;
 

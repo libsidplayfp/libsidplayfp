@@ -61,6 +61,12 @@ void Filter::set_chip_model(chip_model model)
     set_w0();
 }
 
+void Filter::set_nonlinearity(float nl)
+{
+    nonlinearity = nl;
+    set_w0();
+}
+
 /* dist_CT eliminates 1/x at hot spot */
 void Filter::set_clock_frequency(float clock) {
     clock_frequency = clock;
@@ -145,8 +151,8 @@ void Filter::writeMODE_VOL(reg8 mode_vol)
 void Filter::set_w0()
 {
   if (model == MOS6581) {
-    /* div once by extra kinkiness because I fitted the type3 eq with that variant. */
-    float type3_fc_kink = SID::kinked_dac(fc, kinkiness, 11) / kinkiness;
+    /* div once by extra nonlinearity because I fitted the type3 eq with that variant. */
+    float type3_fc_kink = SID::kinked_dac(fc, nonlinearity, 11) / nonlinearity;
     type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * 256.f);
     if (distortion_point != 0.f) {
 	type3_fc_distortion_offset = (distortion_point - type3_fc_kink) * 256.f * distortion_rate;
