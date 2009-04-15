@@ -206,7 +206,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.25f;
+const float outputleveldifference = 1.2f;
 
 inline
 static float fastexp(float val) {
@@ -324,7 +324,7 @@ float Filter::clock(float voice1,
     if (model == MOS6581) {
         /* output strip mixing to filter state */
         float lpleak = Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q;
-        lpleak *= 0.5f;
+        lpleak *= 0.75f;
         if (hp_bp_lp & 2) {
             Vbp += (Vf - Vbp) * distortion_cf_threshold;
             Vf -= lpleak;
@@ -354,7 +354,7 @@ float Filter::clock(float voice1,
         Vbp += (lpleak - Vbp) * distortion_cf_threshold * _1_div_Q;
         Vhp += (lpleak - Vhp) * distortion_cf_threshold;
 
-	Vlp -= Vbp * type3_w0(Vbp - lpleak * 0.2f - type3_fc_distortion_offset) * outputleveldifference;
+	Vlp -= Vbp * type3_w0(Vbp - lpleak * 0.17f - type3_fc_distortion_offset) * outputleveldifference;
 	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset) * outputleveldifference;
 	Vhp = Vbp * _1_div_Q * (1.f/outputleveldifference)
             - Vlp * (1.f/outputleveldifference/outputleveldifference)
