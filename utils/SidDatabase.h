@@ -19,7 +19,7 @@
 #define _siddatabase_h_
 
 #include "SidTuneMod.h"
-#include "utils/libini.h"
+#include "libini.h"
 
 class SID_EXTERN SidDatabase
 {

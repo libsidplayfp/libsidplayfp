@@ -6,5 +6,5 @@ includedir=@includedir@
 Name: libsidutils
 Description: Utils for supporting the libsidplay2 library.
 Version: @PKGSIDUTILSVERSION@
-Libs: -L ${libdir}  -lsidutils
+Libs: -L${libdir}  -lsidutils
 Cflags: -I${includedir}
