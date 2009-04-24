@@ -26,7 +26,9 @@ dnl Initialize libtool.
 LT_INIT([win32-dll])
 
 dnl Checks for programs.
+AC_PROG_CC
 AC_PROG_CXX
+AC_PROG_LIBTOOL
 
 dnl Use C++ for tests.
 AC_LANG([C++])
