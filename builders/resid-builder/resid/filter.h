@@ -255,20 +255,8 @@ float Filter::type3_w0(const float dist)
      *
      * Therefore: once the Vds crosses a threshold given by the gate and
      * threshold FET conductance begins to increase faster. The exact shape
-     * for this effect is a parabola.
-     *
-     * The scaling term here tries to match the FC control level with
-     * the signal level in simulation. On the chip, the FC control is
-     * biased by forcing its highest DAC bit in the 1 position, thus
-     * limiting the electrical range to half. Therefore one can guess that
-     * the real FC range is half of the full voice range.
-     *
-     * On the simulation, FC goes to 2047 and the voices to 4095 * 255.
-     * If the FC control was intact, then the scaling factor would be
-     * 1/512. (Simulation voices are 512 times "louder" intrinsically.)
-     * As the real chip's FC has reduced range, the scaling required to
-     * match levels is 1/256. */
-
+     * for this effect is a parabola. The situation, however, is not quite
+     * so simple... */
     float fetresistance = type3_fc_kink_exp;
     if (dist > 0) {
         fetresistance *= fastexp(dist * type3_steepness);
