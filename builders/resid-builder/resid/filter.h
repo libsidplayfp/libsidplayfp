@@ -311,9 +311,11 @@ float Filter::clock(float voice1,
     
     if (model == MOS6581) {
         /* output strip mixing to filter state */
-        float lpleak = Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q;
         if (hp_bp_lp & 2) {
-            Vf -= lpleak;
+            /* Some strange hybrid term in bp -- approximated as sum of all
+             * of filter's inputs and outputs in their respective levels. 
+             * Responsible for all manner of strange sounds in AMJ's music. */
+            Vf -= Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q;
             Vbp += (Vf - Vbp) * distortion_cf_threshold;
         }
         if (hp_bp_lp & 1) {
@@ -327,19 +329,6 @@ float Filter::clock(float voice1,
         if (Vf > 3.2e6f) {
             Vf -= (Vf - 3.2e6f) / 2.f;
         }
-
-        /* The resonance control somehow also forms a circuit that causes
-         * partial lack of compensation for the lowpass signal in the bp.
-         * output. It doesn't occur during res=0, but seems to increase
-         * steadily until res=0xF is reached. This might indicate that the
-         * distortion term is proportional to the bandpass contribution, as
-         * for ideal filter Vi + Vhp + Vlp - Vbp = 0 when Q = sqrt(2)/2.
-         * The lpleak approximates the level in the vertical strip of n-well
-         * layer above the bp FET block between lp and bp amplifiers.
-         */
-        Vlp += (lpleak - Vlp) * distortion_cf_threshold;
-        Vbp += (lpleak - Vbp) * distortion_cf_threshold * _1_div_Q;
-        Vhp += (lpleak - Vhp) * distortion_cf_threshold;
 
 	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
 	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
