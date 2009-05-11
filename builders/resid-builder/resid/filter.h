@@ -206,7 +206,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.25f;
+const float outputleveldifference = 1.5f;
 
 inline
 static float fastexp(float val) {
@@ -342,9 +342,9 @@ float Filter::clock(float voice1,
         Vhp += (lpleak - Vhp) * distortion_cf_threshold;
 
 	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
-	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset) * outputleveldifference;
-	Vhp = Vbp * _1_div_Q * (1.f/outputleveldifference)
-            - Vlp * (1.f/outputleveldifference/outputleveldifference)
+	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
+	Vhp = Vbp * _1_div_Q
+            - Vlp * (1.f/outputleveldifference)
         /* the loss of level by about half is likely due to feedback
          * between Vhp amp input and output. */
             - Vi * distortion_rate;
