@@ -174,7 +174,7 @@ void Filter::set_Q()
 {
   float Q = res / 15.f;
   if (model == MOS6581)
-      _1_div_Q = 1.f / (0.707f + Q);
+      _1_div_Q = 1.f / (0.707f + Q * 1.2f);
   if (model == MOS8580)
       _1_div_Q = 1.f / (0.707f + Q * 1.6f);
 }
