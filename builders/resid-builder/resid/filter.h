@@ -330,9 +330,7 @@ float Filter::clock(float voice1,
             Vf -= (Vf - 3.2e6f) / 2.f;
         }
 
-        // 1.5f follows from the FC control of HP biasing BP as side effect
-        // of its operation.
-	Vlp -= Vbp * type3_w0(Vbp - 1.5f * type3_fc_distortion_offset) * outputleveldifference;
+	Vlp -= Vbp * type3_w0(Vbp - 2.0f * type3_fc_distortion_offset) * outputleveldifference;
 	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
 	Vhp = Vbp * _1_div_Q
             - Vlp * (1.f/outputleveldifference)
