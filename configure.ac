@@ -44,7 +44,7 @@ if test $ac_cv_sizeof_char != 1; then
   AC_MSG_ERROR([code cannot work correctly on this platform as no real 8 bit data type supported!])
 fi
 
-CXXFLAGS="-O3 -ffast-math"
+CXXFLAGS="$CXXFLAGS -O3 -ffast-math"
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS([strncasecmp strcasecmp])
