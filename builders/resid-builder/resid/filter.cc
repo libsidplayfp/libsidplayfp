@@ -158,6 +158,7 @@ void Filter::set_w0()
     float type3_fc_kink = SID::kinked_dac(fc, nonlinearity, 11) / nonlinearity;
     type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * 512.f);
     if (distortion_point != 0.f) {
+        /* XXX Still needs to understand why 256.f here instead of 512.f... */
 	type3_fc_distortion_offset = (distortion_point - type3_fc_kink) * 256.f * distortion_rate;
     }
     else {
