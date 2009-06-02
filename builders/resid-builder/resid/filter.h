@@ -331,7 +331,7 @@ float Filter::clock(float voice1,
         }
 
 	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
-	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
+	Vbp -= Vhp * type3_w0(Vhp - 0.5f * type3_fc_distortion_offset);
 	Vhp = Vbp * _1_div_Q
             - Vlp * (1.f/outputleveldifference)
         /* the loss of level by about half is likely due to feedback
