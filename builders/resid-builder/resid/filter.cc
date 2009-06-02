@@ -97,7 +97,7 @@ void Filter::set_type3_properties(float br, float o, float s, float mfr)
      * The numerical values are 256 * 4096 for env*osc and 0 .. 2048 for fc.
      * On the chip, FC only has half of the range, which means env * osc is
      * two times louder. */
-    type3_steepness = -logf(s) / 256.f; /* s^x to e^(x*ln(s)), 1/e^x == e^-x. */
+    type3_steepness = -logf(s) / 512.f; /* s^x to e^(x*ln(s)), 1/e^x == e^-x. */
     type3_minimumfetresistance = mfr;
     set_w0();
 }
@@ -156,9 +156,9 @@ void Filter::set_w0()
   if (model == MOS6581) {
     /* div once by extra nonlinearity because I fitted the type3 eq with that variant. */
     float type3_fc_kink = SID::kinked_dac(fc, nonlinearity, 11) / nonlinearity;
-    type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * 256.f);
+    type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * 512.f);
     if (distortion_point != 0.f) {
-	type3_fc_distortion_offset = (distortion_point - type3_fc_kink) * 128.f * distortion_rate;
+	type3_fc_distortion_offset = (distortion_point - type3_fc_kink) * 256.f * distortion_rate;
     }
     else {
 	type3_fc_distortion_offset = 9e9f;

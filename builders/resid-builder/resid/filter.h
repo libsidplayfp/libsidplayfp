@@ -315,7 +315,7 @@ float Filter::clock(float voice1,
             /* Some strange hybrid term in bp -- approximated as sum of all
              * of filter's inputs and outputs in their respective levels. 
              * Responsible for all manner of strange sounds in AMJ's music. */
-            Vf -= (Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q) * 0.5f;
+            Vf -= Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q;
             Vbp += (Vf - Vbp) * distortion_cf_threshold;
         }
         if (hp_bp_lp & 1) {
@@ -330,7 +330,7 @@ float Filter::clock(float voice1,
             Vf -= (Vf - 3.2e6f) * 0.4f;
         }
 
-	Vlp -= Vbp * type3_w0(Vbp - 2.0f * type3_fc_distortion_offset) * outputleveldifference;
+	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
 	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
 	Vhp = Vbp * _1_div_Q
             - Vlp * (1.f/outputleveldifference)
