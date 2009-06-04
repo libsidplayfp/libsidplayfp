@@ -112,8 +112,7 @@ sidplay/sidplay2.h \
 sidplay/SidTune.h \
 sidplay/sidtypes.h \
 sidplay/sidusage.h \
-sidplay/SmartPtr.h \
-sidplay/sidconfig.h
+sidplay/SmartPtr.h
 
 #=========================================================
 # libsidutils
