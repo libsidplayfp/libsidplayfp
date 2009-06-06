@@ -206,7 +206,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.6f;
+const float outputleveldifference = 1.4f;
 
 inline
 static float fastexp(float val) {
@@ -315,7 +315,7 @@ float Filter::clock(float voice1,
             /* Some strange hybrid term in bp -- approximated as sum of all
              * of filter's inputs and outputs in their respective levels. 
              * Responsible for all manner of strange sounds in AMJ's music. */
-            Vf -= (Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q) * 0.5f;
+            Vf -= (Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q) * 0.75f;
             Vbp += (Vf - Vbp) * distortion_cf_threshold;
         }
         if (hp_bp_lp & 1) {
