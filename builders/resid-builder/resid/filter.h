@@ -326,8 +326,8 @@ float Filter::clock(float voice1,
         }
         
         /* saturate. This is likely the output inverter saturation. */
-        if (Vf > 3.2e6f) {
-            Vf -= (Vf - 3.2e6f) * 0.4f;
+        if (Vf > 3.3e6f) {
+            Vf -= (Vf - 3.3e6f) * 0.5f;
         }
 
 	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
@@ -344,7 +344,11 @@ float Filter::clock(float voice1,
         Vhp = -Vbp * _1_div_Q - Vlp - Vi;
     }
     
-    return Vf * volf;
+    Vf *= volf;
+    if (Vf > 3.3e6f) {
+        Vf -= (Vf - 3.3e6f) * 0.5f;
+    }
+    return Vf;
 }
 
 inline
