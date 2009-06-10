@@ -206,7 +206,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.2f;
+const float outputleveldifference = 1.33f;
 
 inline
 static float fastexp(float val) {
@@ -312,10 +312,6 @@ float Filter::clock(float voice1,
     if (model == MOS6581) {
         /* output strip mixing to filter state */
         if (hp_bp_lp & 2) {
-            /* Some strange hybrid term in bp -- approximated as sum of all
-             * of filter's inputs and outputs in their respective levels. 
-             * Responsible for all manner of strange sounds in AMJ's music. */
-            Vf -= (Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q) * 0.5f;
             Vbp += (Vf - Vbp) * distortion_cf_threshold;
         }
         if (hp_bp_lp & 1) {
@@ -329,11 +325,16 @@ float Filter::clock(float voice1,
         if (Vf > 3.3e6f) {
             Vf -= (Vf - 3.3e6f) * 0.5f;
         }
+            
+        /* Some strange hybrid term in bp -- approximated as sum of all
+         * of filter's inputs and outputs in their respective levels. 
+         * Responsible for all manner of strange sounds in AMJ's music. */
+        float lpleak = (Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q) * 0.33f;
 
-	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
-	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset) * outputleveldifference;
-	Vhp = Vbp * _1_div_Q * (1.f/outputleveldifference)
-               - Vlp * (1.f/outputleveldifference/outputleveldifference)
+	Vlp -= (Vbp - lpleak) * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
+	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
+	Vhp = (Vbp + lpleak) * _1_div_Q
+               - Vlp * (1.f/outputleveldifference)
         /* the loss of level by about half is likely due to feedback
          * between Vhp amp input and output. */
             - Vi * distortion_rate;
