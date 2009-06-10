@@ -337,17 +337,19 @@ float Filter::clock(float voice1,
         /* the loss of level by about half is likely due to feedback
          * between Vhp amp input and output. */
             - Vi * distortion_rate;
+    
+        Vf *= volf;
+        if (Vf > 3.3e6f) {
+            Vf -= (Vf - 3.3e6f) * 0.5f;
+        }
     } else {
         /* On the 8580, BP appears mixed in phase with the rest. */
         Vlp += Vbp * type4_w0_cache;
         Vbp += Vhp * type4_w0_cache;
         Vhp = -Vbp * _1_div_Q - Vlp - Vi;
+        Vf *= volf;
     }
     
-    Vf *= volf;
-    if (Vf > 3.3e6f) {
-        Vf -= (Vf - 3.3e6f) * 0.5f;
-    }
     return Vf;
 }
 
