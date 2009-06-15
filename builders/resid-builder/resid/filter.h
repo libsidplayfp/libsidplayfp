@@ -325,20 +325,28 @@ float Filter::clock(float voice1,
         if (hp_bp_lp & 4) {
             Vhp += (Vf - Vhp) * distortion_cf_threshold;
         }
-        
-        /* saturate. This is likely the output inverter saturation. */
-        if (Vf > 3.3e6f) {
-            Vf -= (Vf - 3.3e6f) * 0.5f;
-        }
-            
+
 	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
-	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset) * outputleveldifference;
+        if (Vlp > 3.3e6f) {
+            Vlp -= (Vlp - 3.3e6f) * 0.5f;
+        }
+	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset);
+        if (Vbp > 3.3e6f) {
+            Vbp -= (Vbp - 3.3e6f) * 0.5f;
+        }
 	Vhp = Vbp * _1_div_Q * (1.f/outputleveldifference)
                - Vlp * (1.f/outputleveldifference/outputleveldifference)
         /* the loss of level by about half is likely due to feedback
          * between Vhp amp input and output. */
             - Vi * distortion_rate;
-    
+        if (Vhp > 3.3e6f) {
+            Vhp -= (Vhp - 3.3e6f) * 0.5f;
+        }
+        
+        /* saturate. This is likely the output inverter saturation. */
+        if (Vf > 3.3e6f) {
+            Vf -= (Vf - 3.3e6f) * 0.5f;
+        }
         Vf *= volf;
         if (Vf > 3.3e6f) {
             Vf -= (Vf - 3.3e6f) * 0.5f;
