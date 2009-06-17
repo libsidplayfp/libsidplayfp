@@ -5,7 +5,7 @@ AC_DEFUN([CHECK_VISIBILITY],
   AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
       [[
-      #if !defined(__GNUC__) || (__GNUC__ < 4)
+      #if !defined(__GNUC__) || (__GNUC__ < 4) || defined(_WIN32)
       #  error
       #endif
       ]],
