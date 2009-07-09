@@ -249,7 +249,7 @@ void WaveformGenerator::writeCONTROL_REG(WaveformGenerator& source, reg8 control
 {
   /* when selecting the 0 waveform, the previous output is held for
    * a time in the DAC MOSFET gates. We keep on holding forever, though... */
-  if (waveform != 0 && (control & 0x10) == 0) {
+  if (waveform != 0 && (control & 0xf0) == 0) {
     previous = readOSC(source);
     previous_dac = output(source);
   }
