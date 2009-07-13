@@ -322,14 +322,13 @@ void WaveformGenerator::clock_noise(const bool clock)
   }
 
   if (waveform >= 8) {
-    previous = outputN___();
+    previous = outputN___() >> 4;
     previous_dac = wave_zero;
-    for (int i = 4; i < 12; i ++) {
+    for (int i = 0; i < 8; i ++) {
       if (previous & (1 << i)) {
-        previous_dac += dac[i];
+        previous_dac += dac[i+4];
       }
     }
-    previous >>= 4;
   }
 }
 
