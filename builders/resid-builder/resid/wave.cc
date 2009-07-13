@@ -28,7 +28,7 @@ typedef struct {
     float stmix;
 } waveformconfig_t;
 
-const float sharpness = 32.f;
+const float sharpness = 256.f;
 const waveformconfig_t wfconfig[3][5] = {
   { /* kevtris chip D (6581r2/r3) */
     {0.9321273f, 0.0f, 0.0f, 0.8860587f, 0.5655726f},
@@ -249,12 +249,13 @@ void WaveformGenerator::writeCONTROL_REG(WaveformGenerator& source, reg8 control
 {
   /* when selecting the 0 waveform, the previous output is held for
    * a time in the DAC MOSFET gates. We keep on holding forever, though... */
-  if (waveform != 0 && (control & 0xf0) == 0) {
+  reg4 waveform_next = (control >> 4) & 0x0f;
+  if (waveform_next == 0 && waveform >= 1 && waveform <= 7) {
     previous = readOSC(source);
     previous_dac = output(source);
   }
 
-  waveform = (control >> 4) & 0x0f;
+  waveform = waveform_next;
   ring_mod = (control & 0x04) != 0;
   sync = (control & 0x02) != 0;
   bool test_next = (control & 0x08) != 0;
@@ -265,11 +266,13 @@ void WaveformGenerator::writeCONTROL_REG(WaveformGenerator& source, reg8 control
     reg24 bit19 = (shift_register >> 18) & 2;
     shift_register = (shift_register & 0x7ffffd) | (bit19^2);
     noise_overwrite_delay = 200000; /* 200 ms, probably too generous? */
+  } else {
+    if (! test_next) {
+      // Test bit falling? clock noise once,
+      // otherwise just emulate noise's combined waveforms.
+      clock_noise(test);
+    }
   }
-
-  // Test bit falling? clock noise once,
-  // otherwise just emulate noise's combined waveforms.
-  clock_noise(!test_next && test);
  
   test = test_next;
 }
@@ -278,14 +281,8 @@ reg8 WaveformGenerator::readOSC(WaveformGenerator& source)
 {
   float o[12];
 
-  if (waveform == 0) {
+  if (waveform == 0 || waveform > 7) {
     return previous;
-  }
-  if (waveform == 8) {
-    return (reg8) (noise_output_cached >> 4);
-  }
-  if (waveform > 8) {
-    return 0;
   }
 
   /* Include effects of the test bit & ring mod */
@@ -324,12 +321,15 @@ void WaveformGenerator::clock_noise(const bool clock)
     shift_register &= 0x7fffff^(1<<22)^(1<<20)^(1<<16)^(1<<13)^(1<<11)^(1<<7)^(1<<4)^(1<<2);
   }
 
-  noise_output_cached = outputN___();
-  noise_output_cached_dac = wave_zero;
-  for (int i = 4; i < 12; i ++) {
-    if (noise_output_cached & (1 << i)) {
-      noise_output_cached_dac += dac[i];
+  if (waveform >= 8) {
+    previous = outputN___();
+    previous_dac = wave_zero;
+    for (int i = 4; i < 12; i ++) {
+      if (previous & (1 << i)) {
+        previous_dac += dac[i];
+      }
     }
+    previous >>= 4;
   }
 }
 
@@ -354,8 +354,6 @@ void WaveformGenerator::reset()
   accumulator = 0;
   previous = 0;
   previous_dac = 0;
-  noise_output_cached = 0;
-  noise_output_cached_dac = 0;
   shift_register = 0x7ffffc;
   freq = 0;
   pw = 0;
