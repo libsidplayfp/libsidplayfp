@@ -28,27 +28,27 @@ typedef struct {
     float stmix;
 } waveformconfig_t;
 
-const float sharpness = 256.f;
+const float sharpness = 512.f;
 const waveformconfig_t wfconfig[3][5] = {
   { /* kevtris chip D (6581r2/r3) */
-    {0.9321273f, 0.0f, 0.0f, 0.8860587f, 0.5655726f},
-    {0.8931507f, 2.483499f, 0.0f, 0.03339716f, 0.0f},
-    {0.8869214f, 2.440879f, 1.680824f, 0.02267573f, 0.0f},
-    {0.9266459f, 0.7393153f, 0.0f, 0.0598464f, 0.1851717f},
+    { 0.9634957f, 0.f, 0.f, 4.165269f, 0.8020396f }, // 240 bits wrong
+    { 0.8931507f, 2.483499f, 1.0f, 0.03339716f, 0.0f }, // 600 bits wrong
+    { 0.8869214f, 2.440879f, 1.680824f, 0.02267573f, 0.0f }, // 613 bits wrong
+    { 0.9842906f, 2.772751f, 0.f, 0.4342486f, 1.f }, // 32 bits wrong
     { 0.5f, 0.0f, 1.0f, 0.0f, 0.0f },
   },
   { /* kevtris chip G (6581r2/r3) */
-    {0.9393118f, 0.0f, 0.0f, 1.038816f, 0.5292149f},
-    {0.8924618f, 2.01122f, 0.0f, 0.03133072f, 0.0f},
-    {0.8952018f, 2.213601f, 1.705941f, 0.01260567f, 0.0f},
-    {0.9322878f, 0.9076391f, 0.0f, 0.05378763f, 0.5269188f},
+    { 0.9506974f, 0.f, 0.f, 2.104169f, 0.7887034f }, // 188 bits wrong
+    { 0.8924618f, 2.01122f, 1.0f, 0.03133072f, 0.0f }, // 360 bits wrong
+    { 0.8952018f, 2.213601f, 1.705941f, 0.01260567f, 0.0f }, // 668 bits wrong
+    { 0.9527834f, 1.794777f, 0.f, 0.09806272f, 0.7752482f }, // 12 bits wrong
     { 0.5f, 0.0f, 1.0f, 0.0f, 0.0f },
   },
   { /* kevtris chip V (8580) */
-    {0.9738218f, 0.0f, 0.992848f, 2.547508f, 0.9599405f},
-    {0.9236207f, 2.19129f, 0.0f, 0.1108298f, 0.0f},
-    {0.9248214f, 2.232846f, 0.9491023f, 0.1313893f, 0.0f},
-    {0.9845552f, 1.380867f, 0.9621406f, 1.592066f, 0.9472086f},
+    { 0.9781665f, 0.f, 0.9927619f, 3.705556f, 0.9659713f }, // 311 bits wrong
+    { 0.9236207f, 2.19129f, 1.0f, 0.1108298f, 0.0f }, // 628 bits wrong
+    { 0.9248214f, 2.232846f, 0.9491023f, 0.1313893f, 0.0f }, // 593 bits wrong
+    { 0.9845552f, 1.381085f, 0.9621315f, 1.699522f, 1.f }, // 168 bits wrong
     { 0.5f, 0.0f, 1.0f, 0.0f, 0.0f },
   },
 };
@@ -123,7 +123,6 @@ void WaveformGenerator::calculate_waveform_sample(float o[12])
 
   /* S with strong top bit for 6581 */
   populate(accumulator >> 12, o);
-  o[11] *= config.topbit;
 
   /* convert to T */
   if ((waveform & 3) == 1) {
@@ -140,12 +139,13 @@ void WaveformGenerator::calculate_waveform_sample(float o[12])
 
   /* convert to ST */
   if ((waveform & 3) == 3) {
-    for (i = 11; i > 0; i --) {
-      o[i] = o[i - 1] * (1.f - config.stmix) + o[i] * config.stmix;
-    }
     /* bottom bit is grounded via T waveform selector */
     o[0] *= config.stmix;
+    for (i = 1; i < 12; i ++) {
+      o[i] = o[i - 1] * (1.f - config.stmix) + o[i] * config.stmix;
+    }
   }
+  o[11] *= config.topbit;
 
   /* ST, P* waveform? */
   if (waveform == 3 || waveform > 4) {
