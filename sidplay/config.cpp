@@ -176,7 +176,7 @@ int Player::config (const sid2_config_t &cfg)
         goto Player_configure_error;
     }
 
-    if (cfg.precision != 16) {
+    if (cfg.precision != 16 && cfg.precision != 32) {
         // Rev 1.6 (saw) - Added descriptive error
         m_errorString = ERR_UNSUPPORTED_PRECISION;
         goto Player_configure_error;

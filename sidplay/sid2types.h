@@ -27,13 +27,13 @@ struct  SidTuneInfo;
 #ifndef SIDPLAY2_DEFAULTS
 #define SIDPLAY2_DEFAULTS
     // Maximum values
-    const uint_least8_t  SID2_MAX_PRECISION      = 16;
+    const uint_least8_t  SID2_MAX_PRECISION      = 32;
     // Delays <= MAX produce constant results.
     // Delays >  MAX produce random results
     const uint_least16_t SID2_MAX_POWER_ON_DELAY = 0x1FFF;
     // Default settings
     const uint_least32_t SID2_DEFAULT_SAMPLING_FREQ  = 44100;
-    const uint_least8_t  SID2_DEFAULT_PRECISION      = 16;
+    const uint_least8_t  SID2_DEFAULT_PRECISION      = 32;
     const bool           SID2_DEFAULT_SID_SAMPLES    = true; // Samples through sid
     const uint_least16_t SID2_DEFAULT_POWER_ON_DELAY = SID2_MAX_POWER_ON_DELAY + 1;
 #endif // SIDPLAY2_DEFAULTS
