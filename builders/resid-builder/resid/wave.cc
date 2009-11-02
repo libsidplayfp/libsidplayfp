@@ -29,14 +29,23 @@ typedef struct {
 } waveformconfig_t;
 
 const float sharpness = 512.f;
-const waveformconfig_t wfconfig[3][5] = {
-  { /* kevtris chip D (6581r2/r3) */
-    { 0.9634957f, 0.f, 0.f, 4.165269f, 0.8020396f }, // 240 bits wrong
-    { 0.8931507f, 2.483499f, 1.0f, 0.03339716f, 0.0f }, // 600 bits wrong
-    { 0.8869214f, 2.440879f, 1.680824f, 0.02267573f, 0.0f }, // 613 bits wrong
-    { 0.9842906f, 2.772751f, 0.f, 0.4342486f, 1.f }, // 32 bits wrong
+const waveformconfig_t wfconfig[2][5] = { {
+    /* kevtris chip G (6581) */
+    { 0.880815f, 0.f, 0.f, 0.3279614f, 0.5999545f }, // error 1795
+    { 0.8924618f, 2.014781f, 1.003332f, 0.02992322f, 0.0f } // error 11610
+    { 0.8646501f, 1.712586f, 1.137704f, 0.02845423f, 0.f }, // error 21307
+    { 0.9527834f, 1.794777f, 0.f, 0.09806272f, 0.7752482f }, // error 196
+    { 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, },
+}, {
+    /* kevtris chip V (8580) */
+    { 0.9781665f, 0.f, 0.9899469f, 8.087667f, 0.8226412f }, // error 5546
+    { 0.9097769f, 2.039997f, 0.9584096f, 0.1765447f, 0.f }, // error 18763
+    { 0.9231212f, 2.084788f, 0.9493895f, 0.1712518f, 0.f }, // error 17103
+    { 0.9845552f, 1.415612f, 0.9703883f, 3.68829f, 0.8265008f }, // error 3319
     { 0.5f, 0.0f, 1.0f, 0.0f, 0.0f },
-  },
+    }
+};
+
   { /* kevtris chip G (6581r2/r3) */
     { 0.9506974f, 0.f, 0.f, 2.104169f, 0.7887034f }, // 188 bits wrong
     { 0.8924618f, 2.01122f, 1.0f, 0.03133072f, 0.0f }, // 360 bits wrong
@@ -112,7 +121,7 @@ void WaveformGenerator::calculate_waveform_sample(float o[12])
   }
 
   const waveformconfig_t config = wfconfig[
-    model == MOS6581 ? 1 : 2
+    model == MOS6581 ? 0 : 1
   ][
     waveform == 3 ? 0 :
     waveform == 5 ? 1 :
