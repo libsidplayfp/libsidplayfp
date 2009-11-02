@@ -149,6 +149,8 @@ private:
   float type4_w0();
   void calculate_helpers();
   void nuke_denormals();
+  float waveshaper1(float value);
+  float waveshaper2(float value);
 
   // Filter enabled.
   bool enabled;
@@ -179,7 +181,7 @@ private:
   float clock_frequency;
 
   /* Distortion params for Type3 */
-  float distortion_rate, distortion_point, distortion_cf_threshold;
+  float attenuation, distortion_nonlinearity, intermixing_leaks;
 
   /* Type3 params. */
   float type3_baseresistance, type3_offset, type3_steepness, type3_minimumfetresistance;
@@ -191,8 +193,7 @@ private:
   float Vhp, Vbp, Vlp;
 
   /* Resonance/Distortion/Type3/Type4 helpers. */
-  float type4_w0_cache, _1_div_Q, type3_fc_kink_exp, distortion_CT,
-        type3_fc_distortion_offset;
+  float type4_w0_cache, _1_div_Q, type3_fc_kink_exp, distortion_CT;
 
   float nonlinearity;
 
@@ -206,7 +207,6 @@ friend class SID;
 // ----------------------------------------------------------------------------
 
 const float sidcaps_6581 = 470e-12f;
-const float outputleveldifference = 1.2f;
 
 inline
 static float fastexp(float val) {
@@ -276,6 +276,19 @@ float Filter::type4_w0()
     return 2.f * static_cast<float>(M_PI) * freq / clock_frequency;
 }
 
+inline float Filter::waveshaper1(float value)
+{
+    if (value > 3.2e6f) {
+        value -= (value - 3.2e6f) * 0.5f;
+    }
+    return value;
+}
+
+inline float Filter::waveshaper2(float value)
+{
+    return value * fastexp(value * distortion_nonlinearity);
+}
+
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
@@ -310,46 +323,26 @@ float Filter::clock(float voice1,
     }
     
     if (model == MOS6581) {
+        Vlp -= Vbp * type3_w0(Vbp);
+        Vbp -= Vhp * type3_w0(Vhp);
+        float Vhp_construction = waveshaper2(Vbp * _1_div_Q) - Vlp - Vi;
+        Vhp = waveshaper2(Vhp_construction * attenuation);
+
         /* output strip mixing to filter state */
-        if (hp_bp_lp & 2) {
-            /* Some strange hybrid term in bp -- approximated as sum of all
-             * of filter's inputs and outputs in their respective levels. 
-             * Responsible for all manner of strange sounds in AMJ's music. */
-            Vf -= Vi * distortion_rate + Vhp + Vlp - Vbp * _1_div_Q;
-            Vbp += (Vf - Vbp) * distortion_cf_threshold;
-        }
         if (hp_bp_lp & 1) {
-            Vlp += (Vf - Vlp) * distortion_cf_threshold;
+            Vlp += (Vf - Vlp) * intermixing_leaks;
+        }
+        if (hp_bp_lp & 2) {
+            Vbp += (Vf - Vbp) * intermixing_leaks;
         }
         if (hp_bp_lp & 4) {
-            Vhp += (Vf - Vhp) * distortion_cf_threshold;
+            Vhp += (Vf - Vhp) * intermixing_leaks;
         }
 
-	Vlp -= Vbp * type3_w0(Vbp - type3_fc_distortion_offset) * outputleveldifference;
-        if (Vlp > 3.3e6f) {
-            Vlp -= (Vlp - 3.3e6f) * 0.5f;
-        }
-	Vbp -= Vhp * type3_w0(Vhp - type3_fc_distortion_offset) * outputleveldifference;
-        if (Vbp > 3.3e6f) {
-            Vbp -= (Vbp - 3.3e6f) * 0.5f;
-        }
-	Vhp = Vbp * _1_div_Q * (1.f/outputleveldifference)
-               - Vlp * (1.f/outputleveldifference/outputleveldifference)
-        /* the loss of level by about half is likely due to feedback
-         * between Vhp amp input and output. */
-            - Vi * distortion_rate;
-        if (Vhp > 3.3e6f) {
-            Vhp -= (Vhp - 3.3e6f) * 0.5f;
-        }
-        
         /* saturate. This is likely the output inverter saturation. */
-        if (Vf > 3.3e6f) {
-            Vf -= (Vf - 3.3e6f) * 0.5f;
-        }
+        Vf = waveshaper1(Vf);
         Vf *= volf;
-        if (Vf > 3.3e6f) {
-            Vf -= (Vf - 3.3e6f) * 0.5f;
-        }
+        Vf = waveshaper1(Vf);
     } else {
         /* On the 8580, BP appears mixed in phase with the rest. */
         Vlp += Vbp * type4_w0_cache;
