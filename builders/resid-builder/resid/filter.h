@@ -195,7 +195,7 @@ private:
   /* Resonance/Distortion/Type3/Type4 helpers. */
   float type4_w0_cache, _1_div_Q, type3_fc_kink_exp, distortion_CT;
 
-  float nonlinearity;
+  float nonlinearity, distortion_offset;
 
 friend class SID;
 };
@@ -207,6 +207,7 @@ friend class SID;
 // ----------------------------------------------------------------------------
 
 const float sidcaps_6581 = 470e-12f;
+const float FC_TO_OSC = 512.f;
 
 inline
 static float fastexp(float val) {
@@ -323,8 +324,8 @@ float Filter::clock(float voice1,
     }
     
     if (model == MOS6581) {
-        Vlp -= Vbp * type3_w0(Vbp);
-        Vbp -= Vhp * type3_w0(Vhp);
+        Vlp -= Vbp * type3_w0(Vbp - distortion_offset);
+        Vbp -= Vhp * type3_w0(Vhp - distortion_offset);
         float Vhp_construction = waveshaper2(Vbp * _1_div_Q) - Vlp - Vi;
         Vhp = waveshaper2(Vhp_construction * attenuation);
 
@@ -340,7 +341,7 @@ float Filter::clock(float voice1,
         }
 
         /* saturate. This is likely the output inverter saturation. */
-        Vf = waveshaper1(Vf);
+        //Vf = waveshape22(Vf);
         Vf *= volf;
         Vf = waveshaper1(Vf);
     } else {

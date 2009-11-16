@@ -93,7 +93,7 @@ void Filter::set_type3_properties(float br, float o, float s, float mfr)
 {
     type3_baseresistance = br;
     type3_offset = o;
-    type3_steepness = -logf(s) / 512.f; /* s^x to e^(x*ln(s)), 1/e^x == e^-x. */
+    type3_steepness = -logf(s) / FC_TO_OSC; /* s^x to e^(x*ln(s)), 1/e^x == e^-x. */
     type3_minimumfetresistance = mfr;
     set_w0();
 }
@@ -151,7 +151,8 @@ void Filter::set_w0()
   if (model == MOS6581) {
     /* div once by extra nonlinearity because I fitted the type3 eq with that variant. */
     float type3_fc_kink = SID::kinked_dac(fc, nonlinearity, 11) / nonlinearity;
-    type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * 512.f);
+    type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * FC_TO_OSC);
+    distortion_offset = (SID::kinked_dac(0x400, nonlinearity, 11) / nonlinearity - type3_fc_kink) * FC_TO_OSC * 0.5f;
   }
   if (model == MOS8580) {
     type4_w0_cache = type4_w0();
