@@ -135,7 +135,7 @@ float SID::output()
   /* Scale to roughly -1 .. 1 range. Voices go from -2048 to 2048 or so,
    * envelope from 0 to 255, there are 3 voices, and there's factor of 2
    * for resonance. */
-  return extfilt.output() / (2047.f * 255.f * 3.0f * 2.0f);
+  return extfilt.output() * (1.f / (2047.f * 255.f * 3.0f * 2.0f));
 }
 
 // ----------------------------------------------------------------------------
@@ -178,7 +178,7 @@ reg8 SID::read(reg8 offset)
 void SID::write(reg8 offset, reg8 value)
 {
   bus_value = value;
-  bus_value_ttl = 0x4000;
+  bus_value_ttl = 34000;
 
   switch (offset) {
   case 0x00:

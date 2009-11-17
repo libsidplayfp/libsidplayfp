@@ -31,7 +31,7 @@ Filter::Filter()
   /* approximate; sid.cc calls us when set_sampling_parameters() occurs. */
   set_clock_frequency(1e6f);
   /* these parameters are a work-in-progress. */
-  set_distortion_properties(0.5f, -5.0e-7, 3.0e-4f);
+  set_distortion_properties(0.5f, 3.3e6f, 3.0e-4f);
   /* sound similar to alankila6581r4ar3789 */
   set_type3_properties(1299501.5675945764f, 284015710.29875594f, 1.0065089724604026f, 18741.324073610594f);
   /* sound similar to trurl8580r5_3691 */
@@ -152,7 +152,6 @@ void Filter::set_w0()
     /* div once by extra nonlinearity because I fitted the type3 eq with that variant. */
     float type3_fc_kink = SID::kinked_dac(fc, nonlinearity, 11) / nonlinearity;
     type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * FC_TO_OSC);
-    distortion_offset = (SID::kinked_dac(0x400, nonlinearity, 11) / nonlinearity - type3_fc_kink) * FC_TO_OSC * 0.5f;
   }
   if (model == MOS8580) {
     type4_w0_cache = type4_w0();
@@ -162,10 +161,9 @@ void Filter::set_w0()
 // Set filter resonance.
 void Filter::set_Q()
 {
-  float Q = res / 15.f;
   if (model == MOS6581) {
-    _1_div_Q = 1.f / (0.5f + Q);
+    _1_div_Q = 1.f / (0.5f + res / 20.f);
   } else {
-    _1_div_Q = 1.f / (0.707f + Q);
+    _1_div_Q = 1.f / (0.707f + res / 15.f);
   }
 }

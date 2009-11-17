@@ -195,7 +195,7 @@ private:
   /* Resonance/Distortion/Type3/Type4 helpers. */
   float type4_w0_cache, _1_div_Q, type3_fc_kink_exp, distortion_CT;
 
-  float nonlinearity, distortion_offset;
+  float nonlinearity;
 
 friend class SID;
 };
@@ -240,24 +240,6 @@ static float fastexp(float val) {
 inline
 float Filter::type3_w0(const float dist)
 {
-    /* The distortion appears to be the result of MOSFET entering saturation
-     * mode. The conductance of a FET is proportional to:
-     *
-     * ohmic = 2 * (Vgs - Vt) * Vds - Vds^2
-     * saturation = (Vgs - Vt)^2
-     *
-     * The FET switches to saturation mode when Vgs - Vt < Vds.
-     *
-     * In the circuit, the Vgs is mixed with the Vds signal, which gives
-     * (Vgs + Vds) / 2 as the gate voltage. Doing the substitutions we get:
-     *
-     * ohmic = 2 * ((Vgs + Vds) / 2 - Vt) * Vds - Vds^2 = (Vgs - Vt) * Vds
-     * saturation = ((Vgs + Vds) / 2 - Vt)^2
-     *
-     * Therefore: once the Vds crosses a threshold given by the gate and
-     * threshold FET conductance begins to increase faster. The exact shape
-     * for this effect is a parabola. The situation, however, is not quite
-     * so simple... */
     float fetresistance = type3_fc_kink_exp;
     if (dist > 0) {
         fetresistance *= fastexp(dist * type3_steepness);
@@ -279,15 +261,10 @@ float Filter::type4_w0()
 
 inline float Filter::waveshaper1(float value)
 {
-    if (value > 3.2e6f) {
-        value -= (value - 3.2e6f) * 0.5f;
+    if (value > distortion_nonlinearity) {
+        value -= (value - distortion_nonlinearity) * 0.5f;
     }
     return value;
-}
-
-inline float Filter::waveshaper2(float value)
-{
-    return value * fastexp(value * distortion_nonlinearity);
 }
 
 // ----------------------------------------------------------------------------
@@ -324,10 +301,9 @@ float Filter::clock(float voice1,
     }
     
     if (model == MOS6581) {
-        Vlp -= Vbp * type3_w0(Vbp - distortion_offset);
-        Vbp -= Vhp * type3_w0(Vhp - distortion_offset);
-        float Vhp_construction = waveshaper2(Vbp * _1_div_Q) - Vlp - Vi;
-        Vhp = waveshaper2(Vhp_construction * attenuation);
+        Vlp -= Vbp * type3_w0(Vbp);
+        Vbp -= Vhp * type3_w0(Vhp);
+        Vhp = (Vbp * _1_div_Q - Vlp - Vi * 0.75f) * attenuation;
 
         /* output strip mixing to filter state */
         if (hp_bp_lp & 1) {
@@ -341,7 +317,6 @@ float Filter::clock(float voice1,
         }
 
         /* saturate. This is likely the output inverter saturation. */
-        //Vf = waveshape22(Vf);
         Vf *= volf;
         Vf = waveshaper1(Vf);
     } else {
