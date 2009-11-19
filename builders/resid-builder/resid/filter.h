@@ -303,7 +303,7 @@ float Filter::clock(float voice1,
     if (model == MOS6581) {
         Vlp -= Vbp * type3_w0(Vbp);
         Vbp -= Vhp * type3_w0(Vhp);
-        Vhp = (Vbp * _1_div_Q - Vlp - Vi * 0.75f) * attenuation;
+        Vhp = (Vbp * _1_div_Q - Vlp - Vi * 0.85f) * attenuation;
 
         /* output strip mixing to filter state */
         if (hp_bp_lp & 1) {

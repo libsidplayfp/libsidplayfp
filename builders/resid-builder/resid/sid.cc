@@ -52,7 +52,7 @@ float SID::kinked_dac(const int x, const float nonlinearity, const int max)
         weight *= dir;
     }
 
-    return value / (weight / nonlinearity) * (1 << max);
+    return value / (weight / nonlinearity / nonlinearity) * (1 << max);
 }
 
 // ----------------------------------------------------------------------------
