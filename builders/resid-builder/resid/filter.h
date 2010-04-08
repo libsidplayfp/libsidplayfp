@@ -307,13 +307,13 @@ float Filter::clock(float voice1,
 
         /* output strip mixing to filter state */
         if (hp_bp_lp & 1) {
-            Vlp += Vf * intermixing_leaks;
+            Vlp += (Vf - Vlp) * intermixing_leaks;
         }
         if (hp_bp_lp & 2) {
-            Vbp += Vf * intermixing_leaks;
+            Vbp += (Vf - Vbp) * intermixing_leaks;
         }
         if (hp_bp_lp & 4) {
-            Vhp += Vf * intermixing_leaks;
+            Vhp += (Vf - Vhp) * intermixing_leaks;
         }
 
         /* saturate. This is likely the output inverter saturation. */
