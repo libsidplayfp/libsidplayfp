@@ -98,6 +98,7 @@ private:
 protected:
     uint8_t regs[0x10];
     bool    cnt_high;
+    bool    ta_pulse, tb_pulse;
 
     // Ports
     uint8_t &pra, &prb, &ddra, &ddrb;
@@ -130,6 +131,17 @@ protected:
     EventCallback<MOS6526> m_taEvent;
     EventCallback<MOS6526> m_tbEvent;
     EventCallback<MOS6526> m_todEvent;
+    EventCallback<MOS6526> m_tapulse;
+    EventCallback<MOS6526> m_tbpulse;
+    EventCallback<MOS6526> m_trigger;
+    EventCallback<MOS6526> m_taload;
+    EventCallback<MOS6526> m_tastart;
+    EventCallback<MOS6526> m_tacontinue;
+    EventCallback<MOS6526> m_tastop;
+    EventCallback<MOS6526> m_tbload;
+    EventCallback<MOS6526> m_tbstart;
+    EventCallback<MOS6526> m_tbcontinue;
+    EventCallback<MOS6526> m_tbstop;
 
     /*
     class EventStateMachineA: public Event
@@ -149,8 +161,18 @@ protected:
     MOS6526 (EventContext *context);
     void ta_event  (void);
     void tb_event  (void);
+    void ta_pulse_down (void);
+    void tb_pulse_down (void);
+    void ta_load (void);
+    void ta_start (void);
+    void ta_continue(void);
+    void ta_stop(void);
+    void tb_load (void);
+    void tb_start (void);
+    void tb_continue(void);
+    void tb_stop(void);
     void tod_event (void);
-    void trigger   (int irq);
+    void trigger   (void);
 //    void stateMachineA_event (void);
 
     // Environment Interface
@@ -164,6 +186,8 @@ public:
     uint8_t read  (uint_least8_t addr);
     void    write (uint_least8_t addr, uint8_t data);
     const   char *credits (void) {return credit;}
+    void    update_timers(void);
+    void    clear(void);
 
     // @FIXME@ This is not correct!  There should be
     // muliple schedulers running at different rates
