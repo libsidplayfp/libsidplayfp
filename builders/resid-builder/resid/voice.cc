@@ -40,23 +40,12 @@ void Voice::set_chip_model(chip_model model)
      * should be kept disabled for this) as the master level changes. This
      * tunable affects the volume of digis. */
     voice_DC = static_cast<float>(0x800 * 0xff);
-    /* In 8580 the waveforms seem well centered, but on the 6581 there is some
-     * offset change as envelope grows, indicating that the waveforms are not
-     * perfectly centered. The likely cause for this is the follows:
-     *
-     * The waveform DAC generates a voltage between 5 and 12 V corresponding
-     * to oscillator state 0 .. 4095.
-     *
-     * The envelope DAC generates a voltage between waveform gen output and
-     * the 5V level.
-     *
-     * The outputs are amplified against the 12V voltage and sent to the
-     * mixer.
-     *
-     * The SID virtual ground is around 6.5 V. */
   }
   else {
-    voice_DC = 0.f;
+    /* In 8580 the waveforms seem well centered, but there is a slight offset
+     * because sample music is not completely inaudible even though all envelopes
+     * are muted. */
+    voice_DC = static_cast<float>(-0x100 * 0xff);
   }
 }
 
