@@ -25,7 +25,7 @@
 typedef struct
 {
     /* distortion tunables */
-    float           rate, point, voice_nonlinearity, cf_threshold;
+    float           attenuation, distortion_nonlinearity, voice_nonlinearity;
     /* type 3 tunables */
     float           baseresistance, offset, steepness, minimumfetresistance;
     /* type 4 tunables */

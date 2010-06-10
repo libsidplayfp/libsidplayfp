@@ -77,9 +77,8 @@ void SidFilter::read (ini_fd_t ini, const char *heading)
     };
 
     struct parampair sidparams[] = {
-        { "DistortionRate",		&m_filter.rate                  },
-        { "DistortionPoint",		&m_filter.point                 },
-        { "DistortionCFThreshold",	&m_filter.cf_threshold          },
+        { "DistortionAttenuation",	&m_filter.attenuation           },
+        { "DistortionNonlinearity",	&m_filter.distortion_nonlinearity },
         { "VoiceNonlinearity",		&m_filter.voice_nonlinearity    },
         { "Type3BaseResistance",	&m_filter.baseresistance        },
         { "Type3Offset",		&m_filter.offset                },

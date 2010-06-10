@@ -82,7 +82,7 @@ ReSID::~ReSID ()
 bool ReSID::filter (const sid_filter_t *filter)
 {
     /* Set sensible defaults, will override them if new ones provided. */
-    m_sid.get_filter().set_distortion_properties(0.5f, 2048.f, 1.2e-4f);
+    m_sid.get_filter().set_distortion_properties(0.5f, 3.3e6f);
     m_sid.get_filter().set_type3_properties(1.37e6f, 1.70e8f, 1.006f, 1.55e4f);
     m_sid.get_filter().set_type4_properties(5.5f, 20.f);
     m_sid.set_voice_nonlinearity(1.f);
@@ -99,9 +99,9 @@ bool ReSID::filter (const sid_filter_t *filter)
         if (filter->k != 0.f)
             m_sid.get_filter().set_type4_properties(filter->k, filter->b);
 
-	if (filter->point != 0.f)
+	if (filter->attenuation != 0.f)
 	    m_sid.get_filter().set_distortion_properties(
-		filter->rate, filter->point, filter->cf_threshold
+		filter->attenuation, filter->distortion_nonlinearity
 	    );
 
         if (filter->voice_nonlinearity != 0.f)

@@ -31,7 +31,7 @@ Filter::Filter()
   /* approximate; sid.cc calls us when set_sampling_parameters() occurs. */
   set_clock_frequency(1e6f);
   /* these parameters are a work-in-progress. */
-  set_distortion_properties(0.5f, 3.3e6f, 3.0e-4f);
+  set_distortion_properties(0.5f, 3.3e6f);
   /* sound similar to alankila6581r4ar3789 */
   set_type3_properties(1299501.5675945764f, 284015710.29875594f, 1.0065089724604026f, 18741.324073610594f);
   /* sound similar to trurl8580r5_3691 */
@@ -74,11 +74,10 @@ void Filter::set_clock_frequency(float clock) {
     set_w0();
 }
 
-void Filter::set_distortion_properties(float a, float nl, float il)
+void Filter::set_distortion_properties(float a, float nl)
 {
     attenuation = a;
     distortion_nonlinearity = nl;
-    intermixing_leaks = il;
     set_w0();
 }
 
@@ -161,7 +160,7 @@ void Filter::set_w0()
 void Filter::set_Q()
 {
   if (model == MOS6581) {
-    _1_div_Q = 1.f / (0.5f + res / 20.f);
+    _1_div_Q = 1.f / (0.5f + res / 18.f);
   } else {
     _1_div_Q = 1.f / (0.707f + res / 15.f);
   }
