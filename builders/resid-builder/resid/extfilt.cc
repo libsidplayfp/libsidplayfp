@@ -24,7 +24,7 @@ const float pass_frequency = 15915.6f;
 // ----------------------------------------------------------------------------
 // Constructor.
 // ----------------------------------------------------------------------------
-ExternalFilter::ExternalFilter()
+ExternalFilterFP::ExternalFilterFP()
 {
   reset();
   set_clock_frequency(1e6f);
@@ -33,7 +33,7 @@ ExternalFilter::ExternalFilter()
 // ----------------------------------------------------------------------------
 // Setup of the external filter sampling parameters.
 // ----------------------------------------------------------------------------
-void ExternalFilter::set_clock_frequency(float clock_frequency)
+void ExternalFilterFP::set_clock_frequency(float clock_frequency)
 {
   // Low-pass:  R = 10kOhm, C = 1000pF; w0l = 1/RC = 1/(1e4*1e-9) = 100000
   // High-pass: R =  1kOhm, C =   10uF; w0h = 1/RC = 1/(1e3*1e-5) =    100
@@ -44,7 +44,7 @@ void ExternalFilter::set_clock_frequency(float clock_frequency)
 // ----------------------------------------------------------------------------
 // SID reset.
 // ----------------------------------------------------------------------------
-void ExternalFilter::reset()
+void ExternalFilterFP::reset()
 {
   // State of filter.
   Vlp = 0;

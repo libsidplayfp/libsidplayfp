@@ -7,6 +7,9 @@ if HAVE_VISIBILITY
   AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
+AM_CPPFLAGS = -I $(top_builddir)/builders/resid-builder \
+-I $(top_builddir)/builders/resid-builder/resid
+
 #=========================================================
 EXTRA_DIST = \
 sidplay/psiddrv.bin \
@@ -37,9 +40,8 @@ builders/resid-builder/resid/ChangeLog \
 builders/resid-builder/resid/COPYING \
 builders/resid-builder/resid/INSTALL \
 builders/resid-builder/resid/README \
-builders/resid-builder/resid/NEWS \
-builders/resid-builder/resid/THANKS \
-builders/resid-builder/resid/TODO
+builders/resid-builder/resid/README.VICE \
+builders/resid-builder/resid/NEWS
 
 #=========================================================
 # Libraries
@@ -52,8 +54,8 @@ if HARDSID
   lib_LTLIBRARIES += builders/hardsid-builder/libhardsid-builder.la
 endif
 
-noinst_LTLIBRARIES = \
-builders/resid-builder/resid/libresid.la
+noinst_LIBRARIES = \
+builders/resid-builder/resid/libresid.a
 
 #=========================================================
 # libsidplay
@@ -147,7 +149,7 @@ utils_libsidutils_la_LDFLAGS = -version-info $(LIBSIDUTILSVERSION)
 
 #=========================================================
 # resid
-builders_resid_builder_resid_libresid_la_SOURCES = \
+builders_resid_builder_resid_libresid_a_SOURCES = \
 builders/resid-builder/resid/sid.h \
 builders/resid-builder/resid/voice.h \
 builders/resid-builder/resid/wave.h \
@@ -162,7 +164,11 @@ builders/resid-builder/resid/envelope.cc \
 builders/resid-builder/resid/filter.cc \
 builders/resid-builder/resid/extfilt.cc \
 builders/resid-builder/resid/pot.cc \
-builders/resid-builder/resid/version.cc
+builders/resid-builder/resid/version.cc \
+builders/resid-builder/resid/convolve.cc \
+builders/resid-builder/resid/convolve-sse.cc
+
+builders_resid_builder_resid_libresid_a_CXXFLAGS = @RESID_FLAGS@
 
 #=========================================================
 # builders
@@ -176,7 +182,7 @@ builders/resid-builder/resid-builder.cpp \
 builders/resid-builder/resid-emu.h
 
 builders_resid_builder_libresid_builder_la_LIBADD = \
-builders/resid-builder/resid/libresid.la
+builders/resid-builder/resid/libresid.a
 
 builders_resid_builder_libresid_builder_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
 

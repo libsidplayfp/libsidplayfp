@@ -17,11 +17,11 @@
 //  ---------------------------------------------------------------------------
 //  Filter distortion code written by Antti S. Lankila 2007 - 2009.
 
-#ifndef __FILTER_H__
-#define __FILTER_H__
+#ifndef VICE__FILTER_H__
+#define VICE__FILTER_H__
 
 #include <math.h>
-#include "siddefs.h"
+#include "siddefs-fp.h"
 
 // ----------------------------------------------------------------------------
 // The SID filter is modeled with a two-integrator-loop biquadratic filter,
@@ -118,10 +118,10 @@
 //          Vw
 //
 // ----------------------------------------------------------------------------
-class Filter
+class FilterFP
 {
 public:
-  Filter();
+  FilterFP();
 
   void enable_filter(bool enable);
   void set_chip_model(chip_model model);
@@ -131,7 +131,7 @@ public:
   void set_clock_frequency(float);
   void set_nonlinearity(float);
 
-  inline
+  RESID_INLINE
   float clock(float voice1, float voice2, float voice3,
 	      float ext_in);
   void reset();
@@ -150,6 +150,7 @@ private:
   void calculate_helpers();
   void nuke_denormals();
   float waveshaper1(float value);
+  float waveshaper2(float value);
 
   // Filter enabled.
   bool enabled;
@@ -195,8 +196,7 @@ private:
   float type4_w0_cache, _1_div_Q, type3_fc_kink_exp, distortion_CT;
 
   float nonlinearity;
-
-friend class SID;
+friend class SIDFP;
 };
 
 // ----------------------------------------------------------------------------
@@ -206,9 +206,8 @@ friend class SID;
 // ----------------------------------------------------------------------------
 
 const float sidcaps_6581 = 470e-12f;
-const float FC_TO_OSC = 512.f;
 
-inline
+RESID_INLINE
 static float fastexp(float val) {
     typedef union {
         int i;
@@ -236,8 +235,8 @@ static float fastexp(float val) {
     return tmp.f;
 }
 
-inline
-float Filter::type3_w0(const float dist)
+RESID_INLINE
+float FilterFP::type3_w0(const float dist)
 {
     float fetresistance = type3_fc_kink_exp;
     if (dist > 0) {
@@ -251,14 +250,15 @@ float Filter::type3_w0(const float dist)
     return distortion_CT * _1_div_resistance;
 }
 
-inline
-float Filter::type4_w0()
+RESID_INLINE
+float FilterFP::type4_w0()
 {
     const float freq = type4_k * fc + type4_b;
     return 2.f * static_cast<float>(M_PI) * freq / clock_frequency;
 }
 
-inline float Filter::waveshaper1(float value)
+RESID_INLINE
+float FilterFP::waveshaper1(float value)
 {
     if (value > distortion_nonlinearity) {
         value -= (value - distortion_nonlinearity) * 0.5f;
@@ -269,8 +269,8 @@ inline float Filter::waveshaper1(float value)
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
-inline
-float Filter::clock(float voice1,
+RESID_INLINE
+float FilterFP::clock(float voice1,
 		   float voice2,
 		   float voice3,
 		   float ext_in)
@@ -299,12 +299,11 @@ float Filter::clock(float voice1,
 	Vf += Vhp;
     }
     
-    if (model == MOS6581) {
+    if (model == MOS6581FP) {
         Vlp -= Vbp * type3_w0(Vbp);
         Vbp -= Vhp * type3_w0(Vhp);
         Vhp = (Vbp * _1_div_Q - Vlp - Vi) * attenuation;
 
-        /* saturate. This is likely the output inverter saturation. */
         Vf *= volf;
         Vf = waveshaper1(Vf);
     } else {
@@ -318,8 +317,8 @@ float Filter::clock(float voice1,
     return Vf;
 }
 
-inline
-void Filter::nuke_denormals()
+RESID_INLINE
+void FilterFP::nuke_denormals()
 {
     /* We only need this for systems that don't do -msse and -mfpmath=sse */
     if (Vbp > -1e-12f && Vbp < 1e-12f)
@@ -328,4 +327,4 @@ void Filter::nuke_denormals()
         Vlp = 0;
 }
 
-#endif // not __FILTER_H__
+#endif // not VICE__FILTER_H__

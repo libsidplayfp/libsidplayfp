@@ -69,7 +69,7 @@ void Player::mixerReset (void)
 
 void Player::mixer (void)
 {
-    float *buf = m_sampleBuffer + m_sampleIndex;
+    short *buf = m_sampleBuffer + m_sampleIndex;
     sidemu *chip1 = sid[0];
     sidemu *chip2 = sid[1];
     
@@ -79,8 +79,8 @@ void Player::mixer (void)
 
     /* extract buffer info now that the SID is updated.
      * clock() may update bufferpos. */
-    float *buf1 = chip1->buffer();
-    float *buf2 = chip2->buffer();
+    short *buf1 = chip1->buffer();
+    short *buf2 = chip2->buffer();
     int samples = chip1->bufferpos();
     /* NB: if chip2 exists, its bufferpos is identical to chip1's. */
 

@@ -599,7 +599,7 @@ void Player::pause (void)
     }
 }
 
-uint_least32_t Player::play (float *buffer, uint_least32_t count)
+uint_least32_t Player::play (short *buffer, uint_least32_t count)
 {
     // Make sure a _tune is loaded
     if (!m_tune)

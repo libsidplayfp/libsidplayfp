@@ -20,16 +20,16 @@
 #include "envelope.h"
 #include "sid.h"
 
-void EnvelopeGenerator::set_nonlinearity(float nl)
+void EnvelopeGeneratorFP::set_nonlinearity(float nl)
 {
     for (int i = 0; i < 256; i ++)
-        env_dac[i] = SID::kinked_dac(i, nl, 8);
+        env_dac[i] = SIDFP::kinked_dac(i, nl, 8);
 }
 
 // ----------------------------------------------------------------------------
 // Constructor.
 // ----------------------------------------------------------------------------
-EnvelopeGenerator::EnvelopeGenerator()
+EnvelopeGeneratorFP::EnvelopeGeneratorFP()
 {
   reset();
 }
@@ -37,7 +37,7 @@ EnvelopeGenerator::EnvelopeGenerator()
 // ----------------------------------------------------------------------------
 // SID reset.
 // ----------------------------------------------------------------------------
-void EnvelopeGenerator::reset()
+void EnvelopeGeneratorFP::reset()
 {
   muted = false;
 
@@ -60,7 +60,7 @@ void EnvelopeGenerator::reset()
   hold_zero = true;
 }
 
-void EnvelopeGenerator::mute(bool enable)
+void EnvelopeGeneratorFP::mute(bool enable)
 {
   muted = enable;
 }
@@ -109,7 +109,7 @@ void EnvelopeGenerator::mute(bool enable)
 // The described method is thus sufficient for exact calculation of the rate
 // periods.
 //
-reg16 EnvelopeGenerator::rate_counter_period[] = {
+reg16 EnvelopeGeneratorFP::rate_counter_period[] = {
       9,  //   2ms*1.0MHz/256 =     7.81
      32,  //   8ms*1.0MHz/256 =    31.25
      63,  //  16ms*1.0MHz/256 =    62.50
@@ -166,7 +166,7 @@ reg16 EnvelopeGenerator::rate_counter_period[] = {
 // envelope counter are compared to the 4-bit sustain value.
 // This has been verified by sampling ENV3.
 //
-reg8 EnvelopeGenerator::sustain_level[] = {
+reg8 EnvelopeGeneratorFP::sustain_level[] = {
   0x00,
   0x11,
   0x22,
@@ -189,7 +189,7 @@ reg8 EnvelopeGenerator::sustain_level[] = {
 // ----------------------------------------------------------------------------
 // Register functions.
 // ----------------------------------------------------------------------------
-void EnvelopeGenerator::writeCONTROL_REG(reg8 control)
+void EnvelopeGeneratorFP::writeCONTROL_REG(reg8 control)
 {
   reg8 gate_next = control & 0x01;
 
@@ -213,7 +213,7 @@ void EnvelopeGenerator::writeCONTROL_REG(reg8 control)
   gate = gate_next;
 }
 
-void EnvelopeGenerator::writeATTACK_DECAY(reg8 attack_decay)
+void EnvelopeGeneratorFP::writeATTACK_DECAY(reg8 attack_decay)
 {
   attack = (attack_decay >> 4) & 0x0f;
   decay = attack_decay & 0x0f;
@@ -225,7 +225,7 @@ void EnvelopeGenerator::writeATTACK_DECAY(reg8 attack_decay)
   }
 }
 
-void EnvelopeGenerator::writeSUSTAIN_RELEASE(reg8 sustain_release)
+void EnvelopeGeneratorFP::writeSUSTAIN_RELEASE(reg8 sustain_release)
 {
   sustain = (sustain_release >> 4) & 0x0f;
   release = sustain_release & 0x0f;
@@ -234,7 +234,7 @@ void EnvelopeGenerator::writeSUSTAIN_RELEASE(reg8 sustain_release)
   }
 }
 
-void EnvelopeGenerator::update_rate_period(reg16 newperiod)
+void EnvelopeGeneratorFP::update_rate_period(reg16 newperiod)
 {
     rate_period = newperiod;
 
@@ -250,18 +250,18 @@ void EnvelopeGenerator::update_rate_period(reg16 newperiod)
 
     /* if the new period exeecds 0x7fff, we need to wrap */
     if (rate_period - rate_counter > 0x7fff)
-	rate_counter += 0x7fff;
+        rate_counter += 0x7fff;
 
     /* simulate 0x7fff wraparound, if the period-to-be-written
      * is less than the current value. */
     if (rate_period <= rate_counter)
-	rate_counter -= 0x7fff;
+        rate_counter -= 0x7fff;
 
     /* at this point it should be impossible for
      * rate_counter >= rate_period. If it is, there is a bug... */
 }
 
-reg8 EnvelopeGenerator::readENV()
+reg8 EnvelopeGeneratorFP::readENV()
 {
   return envelope_counter;
 }

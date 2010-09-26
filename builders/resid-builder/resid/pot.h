@@ -17,12 +17,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
 
-#ifndef __POT_H__
-#define __POT_H__
+#ifndef VICE__POT_H__
+#define VICE__POT_H__
 
-#include "siddefs.h"
+#include "siddefs-fp.h"
 
-class Potentiometer
+class PotentiometerFP
 {
 public:
   reg8 readPOT();

@@ -17,10 +17,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
 
-#ifndef __ENVELOPE_H__
-#define __ENVELOPE_H__
+#ifndef VICE__ENVELOPE_H__
+#define VICE__ENVELOPE_H__
 
-#include "siddefs.h"
+#include "siddefs-fp.h"
 
 extern float env_dac[256];
 
@@ -33,14 +33,14 @@ extern float env_dac[256];
 // The period of this counter is set to 1, 2, 4, 8, 16, 30 at the envelope
 // counter values 255, 93, 54, 26, 14, 6, respectively.
 // ----------------------------------------------------------------------------
-class EnvelopeGenerator
+class EnvelopeGeneratorFP
 {
 public:
-  EnvelopeGenerator();
+  EnvelopeGeneratorFP();
 
   enum State { ATTACK, DECAY_SUSTAIN, RELEASE };
 
-  inline void clock();
+  RESID_INLINE void clock();
   void reset();
   void mute(bool enable);
 
@@ -49,7 +49,7 @@ public:
   void writeSUSTAIN_RELEASE(reg8);
   reg8 readENV();
 
-  inline float output();
+  RESID_INLINE float output();
 
 protected:
   void set_nonlinearity(float nl);
@@ -80,14 +80,14 @@ protected:
   // The 16 selectable sustain levels.
   static reg8 sustain_level[];
 
-friend class SID;
+friend class SIDFP;
 };
 
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
-inline
-void EnvelopeGenerator::clock()
+RESID_INLINE
+void EnvelopeGeneratorFP::clock()
 {
   if (++ rate_counter != rate_period)
     return;
@@ -115,13 +115,13 @@ void EnvelopeGenerator::clock()
       //
       ++envelope_counter &= 0xff;
       if (envelope_counter == 0xff) {
-	state = DECAY_SUSTAIN;
-	update_rate_period(rate_counter_period[decay]);
+        state = DECAY_SUSTAIN;
+        update_rate_period(rate_counter_period[decay]);
       }
       break;
     case DECAY_SUSTAIN:
       if (envelope_counter != sustain_level[sustain]) {
-	--envelope_counter;
+        --envelope_counter;
       }
       break;
     case RELEASE:
@@ -171,10 +171,10 @@ void EnvelopeGenerator::clock()
 // ----------------------------------------------------------------------------
 // Read the envelope generator output.
 // ----------------------------------------------------------------------------
-inline
-float EnvelopeGenerator::output()
+RESID_INLINE
+float EnvelopeGeneratorFP::output()
 {
   return envelope_counter_dac;
 }
 
-#endif // not __ENVELOPE_H__
+#endif // not VICE__ENVELOPE_H__

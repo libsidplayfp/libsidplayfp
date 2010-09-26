@@ -17,10 +17,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
 
-#include "pot.h"
-
-reg8 PotentiometerFP::readPOT()
+float convolve(const float *a, const float *b, int n)
 {
-  // NB! Not modeled.
-  return 0xff;
+    float out = 0.f;
+    while (n --)
+        out += (*(a ++)) * (*(b ++));
+    return out;
 }
+

@@ -32,7 +32,7 @@ private:
 
 protected:
     int         m_bufferpos;
-    float      *m_buffer;
+    short      *m_buffer;
 
 public:
     sidemu (sidbuilder *builder)
@@ -54,7 +54,7 @@ public:
 
     virtual int bufferpos() { return m_bufferpos; }
     virtual void bufferpos(int pos) { m_bufferpos = pos; }
-    virtual float *buffer() { return m_buffer; }
+    virtual short *buffer() { return m_buffer; }
 
     virtual void sampling(float systemfreq, float outputfreq) { return; }
 };

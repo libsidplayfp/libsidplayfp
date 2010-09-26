@@ -17,59 +17,83 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
 
-#ifndef __SID_H__
-#define __SID_H__
+#ifndef VICE__SID_FP_H__
+#define VICE__SID_FP_H__
 
-#include "siddefs.h"
+#include "siddefs-fp.h"
 #include "voice.h"
 #include "filter.h"
 #include "extfilt.h"
 #include "pot.h"
 
-class SID
+class SIDFP
 {
 public:
-  SID();
-  ~SID();
+  SIDFP();
+  ~SIDFP();
 
   static float kinked_dac(const int x, const float nonlinearity, const int bits);
+  bool sse_enabled() { return can_use_sse; }
 
   void set_chip_model(chip_model model);
-  Filter& get_filter() { return filter; }
+  FilterFP& get_filter() { return filter; }
   void enable_filter(bool enable);
-  bool set_sampling_parameters(double clock_freq, sampling_method method,
-			       double sample_freq, double pass_freq = 20000);
-  void set_voice_nonlinearity(float nl);
+  bool set_sampling_parameters(float clock_freq, sampling_method method,
+                               float sample_freq, float pass_freq = 20000);
+  void set_voice_nonlinearity(float nonlinearity);
 
   void clock();
-  int clock(cycle_count& delta_t, float* buf, int n, int interleave = 1);
-  int clock_fast(cycle_count& delta_t, float* buf, int n, int interleave = 1);
+  int clock(cycle_count& delta_t, short* buf, int n, int interleave = 1);
   void reset();
   
   // Read/write registers.
   reg8 read(reg8 offset);
   void write(reg8 offset, reg8 value);
-  void mute(reg8 channel, bool enable);
+
+  // Read/write state.
+  class State
+  {
+  public:
+    State();
+
+    char sid_register[0x20];
+
+    reg8 bus_value;
+    cycle_count bus_value_ttl;
+
+    reg24 accumulator[3];
+    reg24 shift_register[3];
+    reg16 rate_counter[3];
+    reg16 rate_counter_period[3];
+    reg16 exponential_counter[3];
+    reg16 exponential_counter_period[3];
+    reg8 envelope_counter[3];
+    EnvelopeGeneratorFP::State envelope_state[3];
+    bool hold_zero[3];
+  };
+    
+  State read_state();
+  void write_state(const State& state);
 
   // 16-bit input (EXT IN).
   void input(int sample);
 
-  // 16-bit output (AUDIO OUT).
+  // 16-bit output (AUDIO OUT)
   float output();
 
-private:
+protected:
   static double I0(double x);
-  inline int clock_interpolate(cycle_count& delta_t, float* buf, int n,
-				     int interleave);
-  inline int clock_resample_interpolate(cycle_count& delta_t, float* buf,
-					      int n, int interleave);
-  inline void age_bus_value(cycle_count);
+  RESID_INLINE int clock_interpolate(cycle_count& delta_t, short* buf, int n,
+                                     int interleave);
+  RESID_INLINE int clock_resample_interpolate(cycle_count& delta_t, short* buf,
+                                              int n, int interleave);
+  RESID_INLINE void age_bus_value(cycle_count);
 
-  Voice voice[3];
-  Filter filter;
-  ExternalFilter extfilt;
-  Potentiometer potx;
-  Potentiometer poty;
+  VoiceFP voice[3];
+  FilterFP filter;
+  ExternalFilterFP extfilt;
+  PotentiometerFP potx;
+  PotentiometerFP poty;
 
   reg8 bus_value;
   cycle_count bus_value_ttl;
@@ -78,7 +102,7 @@ private:
   float ext_in;
 
   // Resampling constants.
-  enum { RINGSIZE = 2048 };
+  enum { RINGSIZE = 4096 };
 
   // Sampling variables.
   sampling_method sampling;
@@ -87,6 +111,7 @@ private:
   int sample_index;
   int fir_N;
   int fir_RES;
+  
   /* for linear interpolation mode */
   float sample_prev;
 
@@ -96,9 +121,9 @@ private:
   // FIR_RES filter tables (FIR_N*FIR_RES).
   float* fir;
 
-  /* analog parts are run at half the rate of digital ones. */
-  float lastsample[3];
-  unsigned char filtercyclegate;
+  bool can_use_sse;
+
+  chip_model model;
 };
 
 #endif // not __SID_H__

@@ -22,37 +22,48 @@
 // ----------------------------------------------------------------------------
 // Constructor.
 // ----------------------------------------------------------------------------
-Voice::Voice()
+VoiceFP::VoiceFP()
 {
-  set_chip_model(MOS6581);
+  set_chip_model(MOS6581FP);
 }
 
 // ----------------------------------------------------------------------------
 // Set chip model.
 // ----------------------------------------------------------------------------
-void Voice::set_chip_model(chip_model model)
+void VoiceFP::set_chip_model(chip_model model)
 {
   wave.set_chip_model(model);
 
-  if (model == MOS6581) {
+  if (model == MOS6581FP) {
     /* there is some level from each voice even if the env is down and osc
      * is stopped. You can hear this by routing a voice into filter (filter
      * should be kept disabled for this) as the master level changes. This
      * tunable affects the volume of digis. */
     voice_DC = static_cast<float>(0x800 * 0xff);
+    /* In 8580 the waveforms seem well centered, but on the 6581 there is some
+     * offset change as envelope grows, indicating that the waveforms are not
+     * perfectly centered. The likely cause for this is the follows:
+     *
+     * The waveform DAC generates a voltage between 5 and 12 V corresponding
+     * to oscillator state 0 .. 4095.
+     *
+     * The envelope DAC generates a voltage between waveform gen output and
+     * the 5V level.
+     *
+     * The outputs are amplified against the 12V voltage and sent to the
+     * mixer.
+     *
+     * The SID virtual ground is around 6.5 V. */
   }
   else {
-    /* In 8580 the waveforms seem well centered, but there is a slight offset
-     * because sample music is not completely inaudible even though all envelopes
-     * are muted. */
-    voice_DC = static_cast<float>(-0x100 * 0xff);
+    voice_DC = 0.f;
   }
 }
 
 // ----------------------------------------------------------------------------
 // Register functions.
 // ----------------------------------------------------------------------------
-void Voice::writeCONTROL_REG(WaveformGenerator& source, reg8 control)
+void VoiceFP::writeCONTROL_REG(WaveformGeneratorFP& source, reg8 control)
 {
   wave.writeCONTROL_REG(source, control);
   envelope.writeCONTROL_REG(control);
@@ -61,7 +72,7 @@ void Voice::writeCONTROL_REG(WaveformGenerator& source, reg8 control)
 // ----------------------------------------------------------------------------
 // SID reset.
 // ----------------------------------------------------------------------------
-void Voice::reset()
+void VoiceFP::reset()
 {
   wave.reset();
   envelope.reset();
@@ -71,7 +82,7 @@ void Voice::reset()
 // ----------------------------------------------------------------------------
 // Voice mute.
 // ----------------------------------------------------------------------------
-void Voice::mute(bool enable)
+void VoiceFP::mute(bool enable)
 {
   envelope.mute(enable);
 }

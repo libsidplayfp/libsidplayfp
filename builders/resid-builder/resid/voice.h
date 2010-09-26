@@ -17,35 +17,35 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
 
-#ifndef __VOICE_H__
-#define __VOICE_H__
+#ifndef VICE__VOICE_H__
+#define VICE__VOICE_H__
 
-#include "siddefs.h"
+#include "siddefs-fp.h"
 #include "wave.h"
 #include "envelope.h"
 
-class Voice
+class VoiceFP
 {
 public:
-  Voice();
+  VoiceFP();
 
   void set_chip_model(chip_model model);
   void reset();
   void mute(bool enable);
 
-  void writeCONTROL_REG(WaveformGenerator& source, reg8 value);
+  void writeCONTROL_REG(WaveformGeneratorFP& source, reg8 value);
 
   // Amplitude modulated waveform output.
   // Range [-2048*255, 2047*255].
-  inline float output(WaveformGenerator& source);
+  RESID_INLINE float output(WaveformGeneratorFP& source);
 
 protected:
-  WaveformGenerator wave;
-  EnvelopeGenerator envelope;
+  WaveformGeneratorFP wave;
+  EnvelopeGeneratorFP envelope;
 
   // Multiplying D/A DC offset.
   float voice_DC;
-friend class SID;
+friend class SIDFP;
 };
 
 // ----------------------------------------------------------------------------
@@ -53,10 +53,10 @@ friend class SID;
 // Ideal range [-2048*255, 2047*255].
 // ----------------------------------------------------------------------------
 
-inline
-float Voice::output(WaveformGenerator& source)
+RESID_INLINE
+float VoiceFP::output(WaveformGeneratorFP& source)
 {
     return wave.output(source) * envelope.output() + voice_DC;
 }
 
-#endif // not __VOICE_H__
+#endif // not VICE__VOICE_H__

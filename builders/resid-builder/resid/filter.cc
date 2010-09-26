@@ -18,33 +18,55 @@
 //  ---------------------------------------------------------------------------
 //  Filter distortion code written by Antti S. Lankila 2007 - 2009.
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #include "filter.h"
 #include "sid.h"
-  
+
+#ifndef HAVE_LOGF_PROTOTYPE
+extern float logf(float val);
+#endif
+ 
+#ifndef HAVE_EXPF_PROTOTYPE
+extern float expf(float val);
+#endif
+ 
+#ifndef HAVE_LOGF
+float logf(float val)
+{
+    return (float)log((double)val);
+}
+#endif
+
+#ifndef HAVE_EXPF
+float expf(float val)
+{
+    return (float)exp((double)val);
+}
+#endif
+
 // ----------------------------------------------------------------------------
 // Constructor.
 // ----------------------------------------------------------------------------
-Filter::Filter()
+FilterFP::FilterFP()
+    : enabled(true),
+      model(MOS6581FP),
+      clock_frequency(1000000),
+      attenuation(0.5f), distortion_nonlinearity(3.3e6f),
+    type3_baseresistance(129501), type3_offset(284015710), type3_steepness(1.0065), type3_minimumfetresistance(18741),
+      type4_k(20), type4_b(6.55f),
+      nonlinearity(0.96f)
 {
-  model = (chip_model) 0; // neither 6581/8580; init time only
-  enable_filter(true);
-  /* approximate; sid.cc calls us when set_sampling_parameters() occurs. */
-  set_clock_frequency(1e6f);
-  /* these parameters are a work-in-progress. */
-  set_distortion_properties(0.5f, 3.3e6f);
-  /* sound similar to alankila6581r4ar3789 */
-  set_type3_properties(1299501.5675945764f, 284015710.29875594f, 1.0065089724604026f, 18741.324073610594f);
-  /* sound similar to trurl8580r5_3691 */
-  set_type4_properties(6.55f, 20.f);
   reset();
-  set_chip_model(MOS6581);
 }
 
 
 // ----------------------------------------------------------------------------
 // Enable filter.
 // ----------------------------------------------------------------------------
-void Filter::enable_filter(bool enable)
+void FilterFP::enable_filter(bool enable)
 {
   enabled = enable;
   if (! enabled)
@@ -54,45 +76,45 @@ void Filter::enable_filter(bool enable)
 // ----------------------------------------------------------------------------
 // Set chip model.
 // ----------------------------------------------------------------------------
-void Filter::set_chip_model(chip_model model)
+void FilterFP::set_chip_model(chip_model model)
 {
     this->model = model;
     set_Q();
     set_w0();
 }
 
-void Filter::set_nonlinearity(float nl)
+void FilterFP::set_nonlinearity(float nl)
 {
     nonlinearity = nl;
     set_w0();
 }
 
 /* dist_CT eliminates 1/x at hot spot */
-void Filter::set_clock_frequency(float clock) {
+void FilterFP::set_clock_frequency(float clock) {
     clock_frequency = clock;
     distortion_CT = 1.f / (sidcaps_6581 * clock_frequency);
     set_w0();
 }
 
-void Filter::set_distortion_properties(float a, float nl)
+void FilterFP::set_distortion_properties(float a, float nl)
 {
     attenuation = a;
     distortion_nonlinearity = nl;
     set_w0();
 }
 
-void Filter::set_type4_properties(float k, float b)
+void FilterFP::set_type4_properties(float k, float b)
 {
     type4_k = k;
     type4_b = b;
     set_w0();
 }
 
-void Filter::set_type3_properties(float br, float o, float s, float mfr)
+void FilterFP::set_type3_properties(float br, float o, float s, float mfr)
 {
     type3_baseresistance = br;
     type3_offset = o;
-    type3_steepness = -logf(s) / FC_TO_OSC; /* s^x to e^(x*ln(s)), 1/e^x == e^-x. */
+    type3_steepness = -logf(s) / 512.f; /* s^x to e^(x*ln(s)), 1/e^x == e^-x. */
     type3_minimumfetresistance = mfr;
     set_w0();
 }
@@ -100,7 +122,7 @@ void Filter::set_type3_properties(float br, float o, float s, float mfr)
 // ----------------------------------------------------------------------------
 // SID reset.
 // ----------------------------------------------------------------------------
-void Filter::reset()
+void FilterFP::reset()
 {
   fc = 0;
   res = filt = voice3off = hp_bp_lp = 0; 
@@ -115,26 +137,26 @@ void Filter::reset()
 // ----------------------------------------------------------------------------
 // Register functions.
 // ----------------------------------------------------------------------------
-void Filter::writeFC_LO(reg8 fc_lo)
+void FilterFP::writeFC_LO(reg8 fc_lo)
 {
   fc = (fc & 0x7f8) | (fc_lo & 0x007);
   set_w0();
 }
 
-void Filter::writeFC_HI(reg8 fc_hi)
+void FilterFP::writeFC_HI(reg8 fc_hi)
 {
   fc = ((fc_hi << 3) & 0x7f8) | (fc & 0x007);
   set_w0();
 }
 
-void Filter::writeRES_FILT(reg8 res_filt)
+void FilterFP::writeRES_FILT(reg8 res_filt)
 {
   res = (res_filt >> 4) & 0x0f;
   set_Q();
   filt = enabled ? res_filt & 0x0f : 0;
 }
 
-void Filter::writeMODE_VOL(reg8 mode_vol)
+void FilterFP::writeMODE_VOL(reg8 mode_vol)
 {
   voice3off = mode_vol & 0x80;
 
@@ -145,21 +167,27 @@ void Filter::writeMODE_VOL(reg8 mode_vol)
 }
 
 // Set filter cutoff frequency.
-void Filter::set_w0()
+void FilterFP::set_w0()
 {
-  if (model == MOS6581) {
-    float type3_fc_kink = SID::kinked_dac(fc, nonlinearity, 11);
-    type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * FC_TO_OSC);
+  if (model == MOS6581FP) {
+    float type3_fc_kink = SIDFP::kinked_dac(fc, nonlinearity, 11);
+    type3_fc_kink_exp = type3_offset * expf(type3_fc_kink * type3_steepness * 512.f);
   }
-  if (model == MOS8580) {
+  if (model == MOS8580FP) {
     type4_w0_cache = type4_w0();
   }
 }
 
 // Set filter resonance.
-void Filter::set_Q()
+void FilterFP::set_Q()
 {
-  if (model == MOS6581) {
+    if (model == MOS6581FP) {
+    /* These are handfitted approximations for algorithm that reduces hp by 6 dB.
+     * For res=0, the desired behavior of filter is a 2 dB notch at the center frequency
+     * followed by continuation of 6 dB lower when the energy is on hp output.
+     * 
+     * The filter hump must be about 8 dB when subtracting res=0 behavior from res=f.
+     */
     _1_div_Q = 1.f / (0.5f + res / 18.f);
   } else {
     _1_div_Q = 1.f / (0.707f + res / 15.f);

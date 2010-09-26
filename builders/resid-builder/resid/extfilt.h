@@ -17,12 +17,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //  ---------------------------------------------------------------------------
 
-#ifndef __EXTFILT_H__
-#define __EXTFILT_H__
+#ifndef VICE__EXTFILT_H__
+#define VICE__EXTFILT_H__
 
 #include <math.h>
 
-#include "siddefs.h"
+#include "siddefs-fp.h"
 
 // ----------------------------------------------------------------------------
 // The audio output stage in a Commodore 64 consists of two STC networks,
@@ -37,21 +37,21 @@
 // of kHz. This calls for a sampling frequency of several MHz, which is far
 // too high for practical use.
 // ----------------------------------------------------------------------------
-class ExternalFilter
+class ExternalFilterFP
 {
 public:
-  ExternalFilter();
+  ExternalFilterFP();
 
   void set_clock_frequency(float);
 
-  inline void clock(float Vi);
+  RESID_INLINE void clock(float Vi);
   void reset();
 
   // Audio output (20 bits).
-  inline float output();
+  RESID_INLINE float output();
 
 private:
-  inline void nuke_denormals();
+  RESID_INLINE void nuke_denormals();
 
   // State of filters.
   float Vlp; // lowpass
@@ -61,14 +61,14 @@ private:
   float w0lp;
   float w0hp;
 
-friend class SID;
+friend class SIDFP;
 };
 
 // ----------------------------------------------------------------------------
 // SID clocking - 1 cycle.
 // ----------------------------------------------------------------------------
-inline
-void ExternalFilter::clock(float Vi)
+RESID_INLINE
+void ExternalFilterFP::clock(float Vi)
 {
   float dVlp = w0lp * (Vi - Vlp);
   float dVhp = w0hp * (Vlp - Vhp);
@@ -79,14 +79,14 @@ void ExternalFilter::clock(float Vi)
 // ----------------------------------------------------------------------------
 // Audio output (19.5 bits).
 // ----------------------------------------------------------------------------
-inline
-float ExternalFilter::output()
+RESID_INLINE
+float ExternalFilterFP::output()
 {
   return Vlp - Vhp;
 }
 
-inline
-void ExternalFilter::nuke_denormals()
+RESID_INLINE
+void ExternalFilterFP::nuke_denormals()
 {
     if (Vhp > -1e-12f && Vhp < 1e-12f)
         Vhp = 0;
@@ -94,4 +94,4 @@ void ExternalFilter::nuke_denormals()
         Vlp = 0;
 }
 
-#endif // not __EXTFILT_H__
+#endif // not VICE__EXTFILT_H__

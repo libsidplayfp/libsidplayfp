@@ -318,7 +318,7 @@ private:
     // Mixer settings
     uint_least32_t m_sampleCount;
     uint_least32_t m_sampleIndex;
-    float         *m_sampleBuffer;
+    short         *m_sampleBuffer;
 
     // RTC clock - Based of mixer sample period
     // to make sure time is right when we ask
@@ -425,7 +425,7 @@ public:
     int            load         (SidTune *tune);
     uint_least32_t mileage      (void) const { return m_mileage + time(); }
     void           pause        (void);
-    uint_least32_t play         (float *buffer, uint_least32_t samples);
+    uint_least32_t play         (short *buffer, uint_least32_t samples);
     sid2_player_t  state        (void) const { return m_playerState; }
     void           stop         (void);
     uint_least32_t time         (void) const {return rtc.getTime (); }

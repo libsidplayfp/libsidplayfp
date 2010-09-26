@@ -27,7 +27,7 @@
 #   include <new>
 #endif
 
-#include "siddefs.h"
+#include "resid/siddefs-fp.h"
 #include "resid.h"
 #include "resid-emu.h"
 
@@ -38,9 +38,9 @@ ReSID::ReSID (sidbuilder *builder)
  m_context(NULL),
  m_phase(EVENT_CLOCK_PHI1),
 #ifdef HAVE_EXCEPTIONS
- m_sid(*(new(std::nothrow) RESID::SID)),
+ m_sid(*(new(std::nothrow) RESID::SIDFP)),
 #else
- m_sid(*(new RESID::SID)),
+ m_sid(*(new RESID::SIDFP)),
 #endif
  m_status(true),
  m_locked(false),
@@ -67,7 +67,7 @@ ReSID::ReSID (sidbuilder *builder)
         return;
     }
 
-    m_buffer = new float[OUTPUTBUFFERSIZE];
+    m_buffer = new short[OUTPUTBUFFERSIZE];
     m_bufferpos = 0;
     reset (0);
 }
@@ -135,10 +135,10 @@ void ReSID::clock()
 {
     cycle_count cycles = m_context->getTime(m_accessClk, m_phase);
     m_accessClk += cycles;
-    if (m_optimisation)
+    /*if (m_optimisation)
         m_bufferpos += m_sid.clock_fast(cycles, (float *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
-    else
-        m_bufferpos += m_sid.clock(cycles, (float *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
+    else*/
+        m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
 }
 
 void ReSID::filter (bool enable)
@@ -148,7 +148,7 @@ void ReSID::filter (bool enable)
 
 void ReSID::voice (uint_least8_t num, bool mute)
 {
-    m_sid.mute (num, mute);
+    //m_sid.mute (num, mute);
 }
     
 void ReSID::sampling (float systemclock, float freq)
@@ -183,9 +183,9 @@ bool ReSID::lock (c64env *env)
 void ReSID::model (sid2_model_t model)
 {
     if (model == SID2_MOS8580)
-        m_sid.set_chip_model (RESID::MOS8580);
+        m_sid.set_chip_model (RESID::MOS8580FP);
     else
-        m_sid.set_chip_model (RESID::MOS6581);
+        m_sid.set_chip_model (RESID::MOS6581FP);
 }
 
 // Set optimisation level

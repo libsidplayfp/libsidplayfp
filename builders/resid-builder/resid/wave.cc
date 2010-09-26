@@ -29,7 +29,8 @@ typedef struct {
 } waveformconfig_t;
 
 const float sharpness = 512.f;
-const waveformconfig_t wfconfig[2][5] = { {
+const waveformconfig_t wfconfig[2][5] = {
+{
     /* kevtris chip G (6581) */
     { 0.880815f, 0.f, 0.f, 0.3279614f, 0.5999545f }, // error 1795
     { 0.8924618f, 2.014781f, 1.003332f, 0.02992322f, 0.0f }, // error 11610
@@ -43,7 +44,7 @@ const waveformconfig_t wfconfig[2][5] = { {
     { 0.9231212f, 2.084788f, 0.9493895f, 0.1712518f, 0.f }, // error 17103
     { 0.9845552f, 1.415612f, 0.9703883f, 3.68829f, 0.8265008f }, // error 3319
     { 0.5f, 0.0f, 1.0f, 0.0f, 0.0f },
-    }
+}
 };
 
 /* render output from bitstate */
@@ -56,10 +57,10 @@ static float make_sample(float *o) {
 }
 
 /* generate tables for waveforms 1 .. 7 */
-void WaveformGenerator::rebuild_wftable() {
+void WaveformGeneratorFP::rebuild_wftable() {
     float o[12];
     reg8 oldwf = waveform;
-    reg32 oldacc = accumulator;
+    reg24 oldacc = accumulator;
     reg12 oldpw = pw;
 
     for (waveform = 1; waveform < 8; waveform ++) {
@@ -94,7 +95,7 @@ static void populate(reg12 v, float o[12])
 }
 
 /* waveform values valid are 1 .. 7 */
-void WaveformGenerator::calculate_waveform_sample(float o[12])
+void WaveformGeneratorFP::calculate_waveform_sample(float o[12])
 {
   int i;
 
@@ -105,7 +106,7 @@ void WaveformGenerator::calculate_waveform_sample(float o[12])
   }
 
   const waveformconfig_t config = wfconfig[
-    model == MOS6581 ? 0 : 1
+    model == MOS6581FP ? 0 : 1
   ][
     waveform == 3 ? 0 :
     waveform == 5 ? 1 :
@@ -138,6 +139,7 @@ void WaveformGenerator::calculate_waveform_sample(float o[12])
       o[i] = o[i - 1] * (1.f - config.stmix) + o[i] * config.stmix;
     }
   }
+
   o[11] *= config.topbit;
 
   /* ST, P* waveform? */
@@ -189,88 +191,98 @@ void WaveformGenerator::calculate_waveform_sample(float o[12])
   }
 }
 
-void WaveformGenerator::set_nonlinearity(float nl)
+void WaveformGeneratorFP::set_nonlinearity(float nl)
 {
   for (int i = 0; i < 12; i ++) {
-    dac[i] = SID::kinked_dac((1 << i), nl, 12);
+    dac[i] = SIDFP::kinked_dac((1 << i), nl, 12);
   }
 }
 
 // ----------------------------------------------------------------------------
 // Constructor.
 // ----------------------------------------------------------------------------
-WaveformGenerator::WaveformGenerator()
+WaveformGeneratorFP::WaveformGeneratorFP()
 {
-  set_chip_model(MOS6581);
+  set_chip_model(MOS6581FP);
   reset();
 }
 
 // ----------------------------------------------------------------------------
 // Set chip model.
 // ----------------------------------------------------------------------------
-void WaveformGenerator::set_chip_model(chip_model model)
+void WaveformGeneratorFP::set_chip_model(chip_model model)
 {
   this->model = model;
-  wave_zero = static_cast<float>(model == MOS6581 ? -0x380 : -0x800);
+  wave_zero = static_cast<float>(model == MOS6581FP ? -0x380 : -0x800);
 }
 
 
 // ----------------------------------------------------------------------------
 // Register functions.
 // ----------------------------------------------------------------------------
-void WaveformGenerator::writeFREQ_LO(reg8 freq_lo)
+void WaveformGeneratorFP::writeFREQ_LO(reg8 freq_lo)
 {
   freq = (freq & 0xff00) | (freq_lo & 0xff);
 }
 
-void WaveformGenerator::writeFREQ_HI(reg8 freq_hi)
+void WaveformGeneratorFP::writeFREQ_HI(reg8 freq_hi)
 {
   freq = ((freq_hi << 8) & 0xff00) | (freq & 0xff);
 }
 
-void WaveformGenerator::writePW_LO(reg8 pw_lo)
+void WaveformGeneratorFP::writePW_LO(reg8 pw_lo)
 {
   pw = (pw & 0xf00) | (pw_lo & 0x0ff);
+  update_pw();
 }
 
-void WaveformGenerator::writePW_HI(reg8 pw_hi)
+void WaveformGeneratorFP::writePW_HI(reg8 pw_hi)
 {
   pw = ((pw_hi << 8) & 0xf00) | (pw & 0x0ff);
+  update_pw();
 }
 
-void WaveformGenerator::writeCONTROL_REG(WaveformGenerator& source, reg8 control)
+void WaveformGeneratorFP::writeCONTROL_REG(WaveformGeneratorFP& source, reg8 control)
 {
   /* when selecting the 0 waveform, the previous output is held for
    * a time in the DAC MOSFET gates. We keep on holding forever, though... */
   reg4 waveform_next = (control >> 4) & 0x0f;
   if (waveform_next == 0 && waveform >= 1 && waveform <= 7) {
-    previous = readOSC(source);
+    /* NB: "6581" version is the undelayed variant. We want that. */
+    previous = readOSC6581(source);
     previous_dac = output(source);
   }
 
   waveform = waveform_next;
-  ring_mod = (control & 0x04) != 0;
+  ring = (control & 0x04) != 0 && (waveform & 0x3) == 1 ? 0x800000 : 0;
   sync = (control & 0x02) != 0;
   bool test_next = (control & 0x08) != 0;
 
   // Test bit rising? Invert bit 19 and write it to bit 1.
   if (test_next && !test) {
     accumulator = 0;
-    reg24 bit19 = (shift_register >> 18) & 2;
-    shift_register = (shift_register & 0x7ffffd) | (bit19^2);
     noise_overwrite_delay = 200000; /* 200 ms, probably too generous? */
   } else {
+    // Test bit falling? clock noise once,
+    // otherwise just emulate noise's combined waveforms.
     if (! test_next) {
-      // Test bit falling? clock noise once,
-      // otherwise just emulate noise's combined waveforms.
       clock_noise(test);
     }
   }
  
   test = test_next;
+  update_pw();
 }
 
-reg8 WaveformGenerator::readOSC(WaveformGenerator& source)
+reg8 WaveformGeneratorFP::readOSC6581(WaveformGeneratorFP& source) {
+    return readOSC(source.accumulator, accumulator);
+}
+
+reg8 WaveformGeneratorFP::readOSC8580(WaveformGeneratorFP& source) {
+    return readOSC(source.accumulator_prev, accumulator_prev);
+}
+
+reg8 WaveformGeneratorFP::readOSC(reg24 ring_accumulator, reg24 my_accumulator)
 {
   float o[12];
 
@@ -284,7 +296,7 @@ reg8 WaveformGenerator::readOSC(WaveformGenerator& source)
     pw = 0;
   }
   reg24 oldaccumulator = accumulator;
-  accumulator ^= (waveform & 3) == 1 && ring_mod && (source.accumulator & 0x800000) ? 0x800000 : 0;
+  accumulator = my_accumulator ^ (ring_accumulator & ring);
   calculate_waveform_sample(o);
   pw = oldpw;
   accumulator = oldaccumulator;
@@ -300,10 +312,10 @@ reg8 WaveformGenerator::readOSC(WaveformGenerator& source)
   return out;
 }
 
-void WaveformGenerator::clock_noise(const bool clock)
+void WaveformGeneratorFP::clock_noise(const bool clock)
 {
   if (clock) {
-    reg24 bit0 = ((shift_register >> 22) ^ (shift_register >> 17)) & 0x1;
+    reg24 bit0 = (((shift_register >> 22) | (test ? 1 : 0)) ^ (shift_register >> 17)) & 0x1;
     shift_register <<= 1;
     shift_register |= bit0;
   }
@@ -311,11 +323,11 @@ void WaveformGenerator::clock_noise(const bool clock)
   // clear output bits of shift register if noise and other waveforms
   // are selected simultaneously
   if (waveform > 8) {
-    shift_register &= 0x7fffff^(1<<22)^(1<<20)^(1<<16)^(1<<13)^(1<<11)^(1<<7)^(1<<4)^(1<<2);
+    shift_register &= 0x7fffff^(1<<20)^(1<<18)^(1<<14)^(1<<11)^(1<<9)^(1<<5)^(1<<2)^(1<<0);
   }
 
   if (waveform >= 8) {
-    previous = outputN___() >> 4;
+    previous = outputN___();
     previous_dac = wave_zero;
     for (int i = 0; i < 8; i ++) {
       if (previous & (1 << i)) {
@@ -325,32 +337,31 @@ void WaveformGenerator::clock_noise(const bool clock)
   }
 }
 
-reg12 WaveformGenerator::outputN___()
+reg8 WaveformGeneratorFP::outputN___()
 {
   return
-    ((shift_register & 0x400000) >> 11) |
-    ((shift_register & 0x100000) >> 10) |
-    ((shift_register & 0x010000) >> 7) |
-    ((shift_register & 0x002000) >> 5) |
-    ((shift_register & 0x000800) >> 4) |
-    ((shift_register & 0x000080) >> 1) |
-    ((shift_register & 0x000010) << 1) |
-    ((shift_register & 0x000004) << 2);
+    ((shift_register & (1 << 20)) >> 13) |
+    ((shift_register & (1 << 18)) >> 12) |
+    ((shift_register & (1 << 14)) >> 9) |
+    ((shift_register & (1 << 11)) >> 7) |
+    ((shift_register & (1 <<  9)) >> 6) |
+    ((shift_register & (1 <<  5)) >> 3) |
+    ((shift_register & (1 <<  2)) >> 1) |
+    ((shift_register & (1 <<  0)));
 }
 
 // ----------------------------------------------------------------------------
 // SID reset.
 // ----------------------------------------------------------------------------
-void WaveformGenerator::reset()
+void WaveformGeneratorFP::reset()
 {
-  accumulator = 0;
+  accumulator_prev = accumulator = 0;
   previous = 0;
   previous_dac = 0;
-  shift_register = 0x7ffffc;
+  shift_register = 0x7fffff;
   freq = 0;
   pw = 0;
   test = 0;
   waveform = 0;
   writeCONTROL_REG(*this, 0);
-  msb_rising = false;
 }
