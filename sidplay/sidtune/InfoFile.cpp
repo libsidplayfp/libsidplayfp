@@ -49,7 +49,7 @@ static const char text_invalidError[] = "SIDTUNE ERROR: File contains invalid da
 
 static const char keyword_id[] = "SIDPLAY INFOFILE";
 
-static const char keyword_name[] = "NAME=";            // No white-space characters 
+static const char keyword_name[] = "NAME=";            // No white-space characters
 static const char keyword_author[] = "AUTHOR=";        // in these keywords, because
 static const char keyword_copyright[] = "COPYRIGHT=";  // we want to use a white-space (depreciated)
 static const char keyword_released[] = "RELEASED=";    // we want to use a white-space
@@ -84,7 +84,7 @@ SidTune::LoadStatus SidTune::SID_fileSupport(Buffer_sidtt<const uint_least8_t>& 
     {
         // At least the ID was found, so set a default error message.
         info.formatString = text_truncatedError;
-        
+
         // Defaults.
         fileOffset = 0;                // no header in separate data file
         info.sidChipBase1 = 0xd400;
@@ -101,7 +101,7 @@ SidTune::LoadStatus SidTune::SID_fileSupport(Buffer_sidtt<const uint_least8_t>& 
             hasSongs = false,
             hasSpeed = false,
             hasInitAddr = false;
-    
+
         // Using a temporary instance of an input string chunk.
 #ifdef HAVE_EXCEPTIONS
         char* pParseChunk = new(std::nothrow) char[parseChunkLen+1];
@@ -113,7 +113,7 @@ SidTune::LoadStatus SidTune::SID_fileSupport(Buffer_sidtt<const uint_least8_t>& 
             info.formatString = text_noMemError;
             return LOAD_ERROR;
         }
-        
+
         // Parse as long we have not collected all ``required'' entries.
         //while ( !hasAddress || !hasName || !hasAuthor || !hasCopyright
         //        || !hasSongs || !hasSpeed )
@@ -137,7 +137,7 @@ SidTune::LoadStatus SidTune::SID_fileSupport(Buffer_sidtt<const uint_least8_t>& 
                 }
             }
 #ifdef HAVE_SSTREAM
-            std::string sParse( pParseBuf, restLen );            
+            std::string sParse( pParseBuf, restLen );
             // Create whitespace eating (!) input string stream.
             std::istringstream parseStream( sParse );
             // A second one just for copying.
@@ -279,7 +279,7 @@ SidTune::LoadStatus SidTune::SID_fileSupport(Buffer_sidtt<const uint_least8_t>& 
         } while (parseLen != 0);
 
         delete[] pParseChunk;
-        
+
         if ( !(hasName && hasAuthor && hasReleased && hasSongs) )
         {   // Something is missing (or damaged ?).
             // Error string set above.

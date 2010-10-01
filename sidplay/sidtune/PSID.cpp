@@ -67,7 +67,7 @@ enum
 {
     PSID_MUS       = 1 << 0,
     PSID_SPECIFIC  = 1 << 1, // These two are mutally exclusive
-    PSID_BASIC     = 1 << 1, 
+    PSID_BASIC     = 1 << 1,
     PSID_CLOCK     = 3 << 2,
     PSID_SIDMODEL  = 3 << 4
 };

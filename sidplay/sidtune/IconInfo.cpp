@@ -5,13 +5,13 @@
  *
  * This is a derived work, courtesy of Peter Kunath, who has
  * provided an examplary source code to examine an Amiga icon file.
- * 
+ *
  * It has been ported and heavily modified to suit certain
  * requirements. This replaces the old code, which was simply
  * scanning input data for a first, presumedly constant, Id string.
  * This code does not require the default tool to serve as a
  * constant Id by containing "SID:PlaySID".
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -73,37 +73,37 @@ struct Image
 
 struct Gadget
 {
-    uint8_t pNextGadget[4];       // Gadget *NextGadget; next gadget in the list 
-    uint8_t LeftEdge[2];          // uint_least16_t; "hit box" of gadget 
+    uint8_t pNextGadget[4];       // Gadget *NextGadget; next gadget in the list
+    uint8_t LeftEdge[2];          // uint_least16_t; "hit box" of gadget
     uint8_t TopEdge[2];           // uint_least16_t
-    uint8_t Width[2];             // uint_least16_t; "hit box" of gadget 
+    uint8_t Width[2];             // uint_least16_t; "hit box" of gadget
     uint8_t Height[2];            // uint_least16_t
-    uint8_t Flags[2];             // uint_least16_t; see below for list of defines 
+    uint8_t Flags[2];             // uint_least16_t; see below for list of defines
     uint8_t Activation[2];        // uint_least16_t
-    uint8_t GadgetType[2];        // uint_least16_t; see below for defines 
+    uint8_t GadgetType[2];        // uint_least16_t; see below for defines
     uint8_t pGadgetRender[4];     // Image *GadgetRender;
     uint8_t pSelectRender[4];     // Image *SelectRender;
     uint8_t pGadgetText[4];       // void *GadgetText;
     uint8_t MutualExclude[4];     // udword
     uint8_t pSpecialInfo[4];      // void *SpecialInfo;
     uint8_t GadgetID[2];          // uint_least16_t
-    uint8_t UserData[4];          // udword; ptr to general purpose User data 
+    uint8_t UserData[4];          // udword; ptr to general purpose User data
 };
 
 struct DiskObject
 {
-    uint8_t Magic[2];             // uint_least16_t; a magic num at the start of the file 
-    uint8_t Version[2];           // uint_least16_t; a version number, so we can change it 
-    struct Gadget Gadget;         // a copy of in core gadget 
+    uint8_t Magic[2];             // uint_least16_t; a magic num at the start of the file
+    uint8_t Version[2];           // uint_least16_t; a version number, so we can change it
+    struct Gadget Gadget;         // a copy of in core gadget
     uint8_t Type;
-    uint8_t PAD_BYTE;             // Pad it out to the next word boundry 
+    uint8_t PAD_BYTE;             // Pad it out to the next word boundry
     uint8_t pDefaultTool[4];      // char *DefaultTool;
     uint8_t ppToolTypes[4];       // char **ToolTypes;
     uint8_t CurrentX[4];          // udword
     uint8_t CurrentY[4];          // udword
     uint8_t pDrawerData[4];       // char *DrawerData;
-    uint8_t pToolWindow[4];       // char *ToolWindow; only applies to tools 
-    uint8_t StackSize[4];         // udword; only applies to tools 
+    uint8_t pToolWindow[4];       // char *ToolWindow; only applies to tools
+    uint8_t StackSize[4];         // udword; only applies to tools
 };
 
 
@@ -199,7 +199,7 @@ SidTune::LoadStatus SidTune::INFO_fileSupport(Buffer_sidtt<const uint_least8_t>&
     if ( (endian_16(dobject->Gadget.Flags[0],dobject->Gadget.Flags[1]) & GFLG_GADGIMAGE) == 0)
     {
         // Calculate size of gadget borders (vector image).
-        
+
         if (dobject->Gadget.pGadgetRender[0] |
             dobject->Gadget.pGadgetRender[1] |
             dobject->Gadget.pGadgetRender[2] |
@@ -264,7 +264,7 @@ SidTune::LoadStatus SidTune::INFO_fileSupport(Buffer_sidtt<const uint_least8_t>&
 
             icon += imgsize;
         }
-      
+
         if (dobject->Gadget.pSelectRender[0] |
             dobject->Gadget.pSelectRender[1] |
             dobject->Gadget.pSelectRender[2] |
@@ -449,7 +449,7 @@ SidTune::LoadStatus SidTune::INFO_fileSupport(Buffer_sidtt<const uint_least8_t>&
             info.musPlayer = true;
         }
 
-        
+
         // New extensions from here on!
         else if ( SidTuneTools::myStrNcaseCmp(cmpBuf, _sidtune_keyword_released) == 0 )
         {

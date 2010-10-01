@@ -500,9 +500,9 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
                              Buffer_sidtt<const uint_least8_t>& strBuf)
 {
     Buffer_sidtt<uint8_t> mergeBuf;
-    
+
     uint_least32_t mergeLen = musBuf.len()+strBuf.len();
-    
+
     // Sanity check. I do not trust those MUS/STR files around.
     uint_least32_t freeSpace = endian_16(_sidtune_sidplayer1[1],_sidtune_sidplayer1[0])
                             - SIDTUNE_MUS_DATA_ADDR;
@@ -556,7 +556,7 @@ void SidTune::MUS_installPlayer(uint_least8_t *c64buf)
         // Point player #1 to data #1.
         c64buf[dest+0xc6e] = (SIDTUNE_MUS_DATA_ADDR+2)&0xFF;
         c64buf[dest+0xc70] = (SIDTUNE_MUS_DATA_ADDR+2)>>8;
-        
+
         if (info.sidChipBase2 != 0)
         {
             // Install MUS player #2.
@@ -589,7 +589,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
     {
         info.songs = (info.startSong = 1);
         info.musPlayer = true;
-    
+
         songSpeed[0]  = SIDTUNE_SPEED_CIA_1A;
 #ifdef SIDTUNE_PSID2NG
         clockSpeed[0] = SIDTUNE_CLOCK_ANY;
@@ -624,7 +624,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
 
     // Voice3Index now is offset to text lines (uppercase Pet-strings).
     spPet += voice3Index;
-    
+
     // Already have credits just skip over the ones in the MUS
     if (credits)
     {
@@ -684,7 +684,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
         // Extract credits
         else
         {
-            for (int line = info.numberOfInfoStrings; spPet[0]; line = 
+            for (int line = info.numberOfInfoStrings; spPet[0]; line =
                 ++info.numberOfInfoStrings)
             {
                 if (line < 10)
@@ -701,7 +701,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
         info.formatString = _sidtune_txt_format_str;
     }
     else
-    {    
+    {
         info.sidChipBase2 = 0;
         info.formatString = _sidtune_txt_format_mus;
     }
@@ -709,7 +709,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
 
     if (!credits)
     {   // Remove trailing empty lines.
-        const int lines = info.numberOfInfoStrings; 
+        const int lines = info.numberOfInfoStrings;
         {
             for ( int line = lines-1; line >= 0; line-- )
             {

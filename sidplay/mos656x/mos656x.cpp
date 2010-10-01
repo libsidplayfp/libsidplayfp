@@ -115,13 +115,13 @@ uint8_t MOS656X::read (uint_least8_t addr)
 {
     if (addr > 0x3f) return 0;
     if (addr > 0x2e) return 0xff;
- 
+
     // Sync up timers
     event ();
 
     switch (addr)
     {
-    case 0x11:    // Control register 1 
+    case 0x11:    // Control register 1
         return (ctrl1 & 0x7f) | ((raster_y & 0x100) >> 1);
     case 0x12:    // Raster counter
         return raster_y & 0xFF;
@@ -160,7 +160,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
         // In line $30, the DEN bit controls if Bad Lines can occur
         if ((raster_y == first_dma_line) && (data & 0x10))
             bad_lines_enabled = true;
- 
+
         // Bad Line condition?
         bad_line = (raster_y >= first_dma_line) &&
                    (raster_y <= last_dma_line)  &&
@@ -187,9 +187,9 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
             trigger (0);
         break;
 
-    case 0x1a: // IRQ mask 
-        icr = data & 0x0f; 
-        trigger (icr & idr); 
+    case 0x1a: // IRQ mask
+        icr = data & 0x0f;
+        trigger (icr & idr);
         break;
     }
 }

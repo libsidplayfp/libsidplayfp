@@ -419,7 +419,7 @@ void SidTune::init()
 
     fileOffset = 0;
     musDataLen = 0;
-    
+
     for ( uint_least16_t sNum = 0; sNum < SIDTUNE_MAX_CREDIT_STRINGS; sNum++ )
     {
         for ( uint_least16_t sPos = 0; sPos < SIDTUNE_MAX_CREDIT_STRLEN; sPos++ )
@@ -530,7 +530,7 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
     bool foundFormat = false;
     LoadStatus ret;
     // Here test for the possible single file formats. --------------
-    ret = PSID_fileSupport( buf1 ); 
+    ret = PSID_fileSupport( buf1 );
     if ( ret != LOAD_NOT_MINE )
     {
         if ( ret == LOAD_ERROR )
@@ -903,7 +903,7 @@ void SidTune::getFromFiles(const char* fileName)
         // already set then.
         return;
     }
-} 
+}
 
 void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, int clock)
 {
@@ -1191,7 +1191,7 @@ bool SidTune::checkCompatibility (void)
         {
             info.statusString = txt_badAddr;
             return false;
-        }    
+        }
         break;
     }
     return true;

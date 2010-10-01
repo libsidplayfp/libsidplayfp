@@ -150,7 +150,7 @@ void ReSID::voice (uint_least8_t num, bool mute)
 {
     //m_sid.mute (num, mute);
 }
-    
+
 void ReSID::sampling (float systemclock, float freq)
 {
     if (! m_sid.set_sampling_parameters (systemclock, RESID::SAMPLE_RESAMPLE_INTERPOLATE, freq)) {

@@ -110,7 +110,7 @@ bool PP20::checkEfficiency(const void* source)
             statusString = _pp20_txt_best;
             break;
     }
-    
+
     return true;
 }
 
@@ -123,7 +123,7 @@ inline void PP20::bytesTOdword()
         statusString = _pp20_txt_packeddatacorrupt;
         globalError = true;
     }
-    else 
+    else
     {
         current = readBEdword(readPtr);
     }
@@ -208,12 +208,12 @@ inline void PP20::sequence()
     }
 }
 
-udword_ppt PP20::decompress(const void* source, 
+udword_ppt PP20::decompress(const void* source,
                                   udword_ppt size,
                                   ubyte_ppt** destRef)
 {
     globalError = false;  // assume no error
-    
+
     sourceBeg = (const ubyte_ppt*)source;
     readPtr = sourceBeg;
 
@@ -221,7 +221,7 @@ udword_ppt PP20::decompress(const void* source,
     {
         return 0;
     }
-    
+
     // Uncompressed size is stored at end of source file.
     // Backwards decompression.
     readPtr += (size-4);
@@ -229,7 +229,7 @@ udword_ppt PP20::decompress(const void* source,
     udword_ppt lastDword = readBEdword(readPtr);
     // Uncompressed length in bits 31-8 of last dword.
     udword_ppt outputLen = lastDword>>8;
-    
+
     // Allocate memory for output data.
     ubyte_ppt* dest;
 #ifdef PP20_HAVE_EXCEPTIONS
@@ -241,7 +241,7 @@ udword_ppt PP20::decompress(const void* source,
         statusString = _pp20_txt_notenoughmemory;
         return 0;
     }
-  
+
     // Lowest dest. address for range-checks.
     destBeg = dest;
     // Put destptr to end of uncompressed data.
@@ -250,16 +250,16 @@ udword_ppt PP20::decompress(const void* source,
     // Read number of unused bits in 1st data dword
     // from lowest bits 7-0 of last dword.
     bits = 32 - (lastDword&0xFF);
-    
+
     // Main decompression loop.
     bytesTOdword();
     if ( bits != 32 )
         current >>= (32-bits);
     do
     {
-        if ( readBits(1) == 0 )  
+        if ( readBits(1) == 0 )
             bytes();
-        if ( writePtr > dest )  
+        if ( writePtr > dest )
             sequence();
         if ( globalError )
         {

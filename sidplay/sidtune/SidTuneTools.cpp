@@ -99,7 +99,7 @@ char* SidTuneTools::fileExtOfPath(char* s)
     return( &s[last_dot_pos] );
 }
 
-// Parse input string stream. Read and convert a hexa-decimal number up 
+// Parse input string stream. Read and convert a hexa-decimal number up
 // to a ``,'' or ``:'' or ``\0'' or end of stream.
 uint_least32_t SidTuneTools::readHex( std::istringstream& hexin )
 {
@@ -128,7 +128,7 @@ uint_least32_t SidTuneTools::readHex( std::istringstream& hexin )
     return hexLong;
 }
 
-// Parse input string stream. Read and convert a decimal number up 
+// Parse input string stream. Read and convert a decimal number up
 // to a ``,'' or ``:'' or ``\0'' or end of stream.
 uint_least32_t SidTuneTools::readDec( std::istringstream& decin )
 {
@@ -146,7 +146,7 @@ uint_least32_t SidTuneTools::readDec( std::istringstream& decin )
             hexLong += (uint_least32_t)c;
         }
         else
-        { 
+        {
             if ( c == 0 )
                 decin.putback(c);
             break;

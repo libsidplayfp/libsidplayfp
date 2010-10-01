@@ -311,8 +311,8 @@ ini_t *__ini_open (const char *name, ini_mode_t mode, const char *comment)
     ini->mode = mode;
     file = fopen (ini->filename, "rb");
     if (!file)
-    {   // File doesn't exist so check if allowed 
-        // to create new one 
+    {   // File doesn't exist so check if allowed
+        // to create new one
         if (mode != INI_NEW)
             goto ini_openError;
 
@@ -519,7 +519,7 @@ bool __ini_extractField (ini_t *ini, FILE *file, ini_parser_t &parser, char ch)
             if (parser.first >= 0)
             {
                 if (!ini->selected) // Handle keys which are not in a section
-                {                                   
+                {
                     if (!__ini_faddHeading (ini, file, 0, 0))
                         return false;
                 }
@@ -781,7 +781,7 @@ int __ini_store (ini_t *ini, FILE *file)
         return -1;
     if (!file)
         return -1;
-    
+
     // Backup selected heading and key
     selected_h = ini->selected;
     // Be carefull if nothing was previously selected
@@ -797,7 +797,7 @@ int __ini_store (ini_t *ini, FILE *file)
             if (fprintf (file, "[%s]\n", current_h->heading) < 0)
                 goto __ini_storeError;
         }
-        
+
         // Output the sections keys
         equal_pos = __ini_averageLengthKey (current_h);
         current_k = current_h->first;

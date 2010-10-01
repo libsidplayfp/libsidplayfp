@@ -72,7 +72,7 @@ void Player::mixer (void)
     short *buf = m_sampleBuffer + m_sampleIndex;
     sidemu *chip1 = sid[0];
     sidemu *chip2 = sid[1];
-    
+
     /* this clocks the SID to the present moment, if it isn't already. */
     chip1->clock();
     chip2->clock();

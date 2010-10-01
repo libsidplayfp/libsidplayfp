@@ -1,7 +1,7 @@
 /*
  * This code has been derived by Michael Schwendt <mschwendt@yahoo.com>
  * from original work by L. Peter Deutsch <ghost@aladdin.com>.
- * 
+ *
  * The original C code (md5.c, md5.h) is available here:
  * ftp://ftp.cs.wisc.edu/ghost/packages/md5.tar.gz
  */
@@ -168,7 +168,7 @@ void
 MD5::process(const md5_byte_t data[64])
 {
     md5_word_t a = abcd[0], b = abcd[1], c = abcd[2], d = abcd[3];
-    
+
 #ifdef MD5_WORDS_BIG_ENDIAN
 
     /*
@@ -178,7 +178,7 @@ MD5::process(const md5_byte_t data[64])
     const md5_byte_t *xp = data;
     for (int i = 0; i < 16; ++i, xp += 4)
     {
-        tmpBuf[i] = (xp[0]&0xFF) + ((xp[1]&0xFF)<<8) + 
+        tmpBuf[i] = (xp[0]&0xFF) + ((xp[1]&0xFF)<<8) +
                     ((xp[2]&0xFF)<<16) + ((xp[3]&0xFF)<<24);
     }
     X = tmpBuf;
@@ -193,8 +193,8 @@ MD5::process(const md5_byte_t data[64])
     {
         /* data are properly aligned */
         X = (const md5_word_t *)data;
-    } 
-    else 
+    }
+    else
     {
         /* not aligned */
         memcpy(tmpBuf, data, 64);

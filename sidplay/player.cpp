@@ -381,7 +381,7 @@ Player::Player (void)
 {
     srand ((uint) ::time(NULL));
     m_rand = (uint_least32_t) rand ();
-    
+
     // Set the ICs to use this environment
     cpu.setEnvironment (this);
 
@@ -431,7 +431,7 @@ Player::Player (void)
     m_cfg.sampleFormat    = SID2_LITTLE_SIGNED;
     m_cfg.powerOnDelay    = SID2_DEFAULT_POWER_ON_DELAY;
     m_cfg.sid2crcCount    = 0;
-    
+
     config (m_cfg);
 
     // Get component credits
@@ -723,7 +723,7 @@ uint8_t Player::readMemByte_io (uint_least16_t addr)
             // Sidplay1 Random Extension CIA
             case 0xdc:
                 return sid6526.read (addr&0x0f);
-            // Sidplay1 Random Extension VIC 
+            // Sidplay1 Random Extension VIC
             case 0xd0:
                 switch (addr & 0x3f)
                 {
@@ -766,7 +766,7 @@ uint8_t Player::readMemByte_sidplaytp(uint_least16_t addr)
         }
     }
 }
-        
+
 uint8_t Player::readMemByte_sidplaybs (uint_least16_t addr)
 {
     if (addr < 0xA000)
@@ -921,7 +921,7 @@ void Player::reset (void)
     m_playerState  = sid2_stopped;
     m_running      = false;
     m_sid2crc      = 0xffffffff;
-    m_info.sid2crc = m_sid2crc ^ 0xffffffff;    
+    m_info.sid2crc = m_sid2crc ^ 0xffffffff;
     m_sid2crcCount = m_info.sid2crcCount = 0;
 
     // Select Sidplay1 compatible CPU or real thing
@@ -1039,7 +1039,7 @@ void Player::reset (void)
     }
     else // !sid2_envR
     {
-        memset (m_rom + 0xE000, RTSn, 0x2000);    
+        memset (m_rom + 0xE000, RTSn, 0x2000);
         // fake VBI-interrupts that do $D019, BMI ...
         m_rom[0x0d019] = 0xff;
         if (m_info.environment == sid2_envPS)

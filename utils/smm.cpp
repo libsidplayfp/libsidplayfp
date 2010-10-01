@@ -295,7 +295,7 @@ bool Err_v0::write (FILE *file, const sid2_usage_t &usage, uint_least32_t &lengt
     endian_big16 (tmp, flags);
     if (!_write (file, tmp, sizeof(tmp), length))
         return false;
-    return Chunk::write (file, usage, length);    
+    return Chunk::write (file, usage, length);
 }
 
 bool Err_v0::used (const sid2_usage_t &usage)
@@ -329,7 +329,7 @@ bool Md5::write (FILE *file, const sid2_usage_t &usage, uint_least32_t &length)
 {
     if (!_write (file, (const uint8_t *) usage.md5, SIDTUNE_MD5_LENGTH, length))
         return false;
-    return Chunk::write (file, usage, length);    
+    return Chunk::write (file, usage, length);
 }
 
 bool Md5::used (const sid2_usage_t &usage)
@@ -362,7 +362,7 @@ bool Time::write (FILE *file, const sid2_usage_t &usage, uint_least32_t &length)
     endian_big16 (tmp, usage.length);
     if (!_write (file, tmp, sizeof(tmp), length))
         return false;
-    return Chunk::write (file, usage, length);    
+    return Chunk::write (file, usage, length);
 }
 
 bool Time::used (const sid2_usage_t &usage)
@@ -435,7 +435,7 @@ bool Body::write (FILE *file, const sid2_usage_t &usage, uint_least32_t &length)
         {
             if (!(usage.memory[(i << 8) | j] & ~SID_LOAD_IMAGE))
                 continue;
-           
+
             int addr = i << 8;
             usage_t &data = m_usage[m_pages++];
             data.extended = false;
@@ -473,7 +473,7 @@ bool Body::write (FILE *file, const sid2_usage_t &usage, uint_least32_t &length)
         if (!_write (file, &tmp, sizeof (tmp), length))
             return false;
     }
-    return Chunk::write (file, usage, length);    
+    return Chunk::write (file, usage, length);
 }
 
 

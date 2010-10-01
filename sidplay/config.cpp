@@ -181,7 +181,7 @@ int Player::config (const sid2_config_t &cfg)
         m_errorString = ERR_UNSUPPORTED_PRECISION;
         goto Player_configure_error;
     }
-   
+
     // Only do these if we have a loaded tune
     if (m_tune)
     {
@@ -212,7 +212,7 @@ int Player::config (const sid2_config_t &cfg)
                 sid6526.clock ((uint_least16_t)(cpuFreq / VIC_FREQ_NTSC + 0.5));
             }
 
-            // @FIXME@ see mos6526.h for details. Setup TOD clock 
+            // @FIXME@ see mos6526.h for details. Setup TOD clock
             if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
             {
                 cia.clock  (cpuFreq / VIC_FREQ_PAL);
@@ -246,7 +246,7 @@ int Player::config (const sid2_config_t &cfg)
 	    m_sidmapper[i] = 0;
     }
 
-    m_info.channels = 1; 
+    m_info.channels = 1;
     if (m_tune && m_tuneInfo.sidChipBase2) {
         // Assumed to be in d4xx-d7xx range
         m_sidmapper[(m_tuneInfo.sidChipBase2 >> 5) &
@@ -310,7 +310,7 @@ float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
     {
         if (userClock == SID2_CLOCK_CORRECT)
             userClock  = defaultClock;
-            
+
         switch (userClock)
         {
         case SID2_CLOCK_NTSC:
@@ -517,7 +517,7 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
         {
             if (userModel == SID2_MODEL_CORRECT)
                 userModel  = defaultModel;
-            
+
             switch (userModel)
             {
             case SID2_MOS8580:

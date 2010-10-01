@@ -64,14 +64,14 @@ int_least32_t SidDatabase::parseTimeStamp(const char* arg)
             ++arg;
         }
     }
-    
+
     // Handle -:-- time stamps and old 0:00 entries which
     // need to be rounded up by one second.
     if ( !gotDigits )
         seconds = 0;
     else if ( seconds==0 )
         ++seconds;
-    
+
     return seconds;
 }
 
