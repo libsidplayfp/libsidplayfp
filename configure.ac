@@ -23,7 +23,8 @@ AM_CONDITIONAL([HARDSID], [test "x$hardsid" = "xyes"])
 AM_CONDITIONAL([MINGW32], [test "x$MINGW32" = "xyes"])
 
 dnl Initialize libtool.
-LT_INIT([win32-dll])
+#LT_INIT([win32-dll])
+AC_LIBTOOL_WIN32_DLL
 
 dnl Checks for programs.
 AC_PROG_CXX
@@ -85,30 +86,26 @@ LIBHARDSIDREV=1
 LIBHARDSIDAGE=0
 LIBHARDSIDVERSION=$LIBHARDSIDCUR:$LIBHARDSIDREV:$LIBHARDSIDAGE
 
-AC_ARG_ENABLE(inline,
-[  --enable-inline         enable inlining of functions [default=yes]])
-AC_ARG_ENABLE(sse,
-[  --enable-sse            enable the use of SSE [default=yes]])
+AC_ARG_ENABLE([inline],
+  AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]]))
 
-if test x"$enable_inline" != "xno"; then
-  RESID_INLINE=inline
-else
-  RESID_INLINE=
-fi
+AS_IF([test x"$enable_inline" != "xno"],
+  [RESID_INLINE=inline],
+  [RESID_INLINE=""])
 
-if test x"$enable_sse" != "xno"; then
-  if test x"$GXX" = xyes; then
-    MSSE="-msse -fno-pic"
-    RESID_USE_SSE=1
-  fi
-else
-  RESID_USE_SSE=0
-  MSSE=""
-fi
+
+AC_ARG_ENABLE([sse],
+  AS_HELP_STRING([--enable-sse],[enable the use of SSE [default=yes]]))
+
+AS_IF([test x"$enable_sse" != "xno" -a x"$GXX" = "xyes"],
+  [MSSE="-msse -fno-pic"
+    RESID_USE_SSE=1],
+  [RESID_USE_SSE=0
+    MSSE=""])
 
 AM_CONDITIONAL([USE_SSE], [test $RESID_USE_SSE = 1])
 
-if test x"$GXX" = xyes; then
+if test x"$GXX" = "xyes"; then
   NO_EXCEPTIONS="-fno-exceptions"
 else
   NO_EXCEPTIONS=""
@@ -139,26 +136,22 @@ if test x"$host_os" != "xminix"; then
 fi
 
 AC_MSG_CHECKING([if the logf prototype is present])
-AC_TRY_COMPILE([#include <math.h>
-                #include <stdio.h>],
-               [printf("%d",logf);],
-               [ AC_MSG_RESULT(yes)
-                 HAVE_LOGF_PROTOTYPE=1
-                ],
-               [ AC_MSG_RESULT(no)
-                HAVE_LOGF_PROTOTYPE=0
-                ])
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([[#include <math.h>
+    #include <stdio.h>]], [[printf("%d",logf);]])],
+  [AC_MSG_RESULT(yes)
+  HAVE_LOGF_PROTOTYPE=1],
+  [AC_MSG_RESULT(no)
+  HAVE_LOGF_PROTOTYPE=0])
 
 AC_MSG_CHECKING([if the expf prototype is present])
-AC_TRY_COMPILE([#include <math.h>
-                #include <stdio.h>],
-               [printf("%d",expf);],
-               [ AC_MSG_RESULT(yes)
-                 HAVE_EXPF_PROTOTYPE=1
-                ],
-               [ AC_MSG_RESULT(no)
-                HAVE_EXPF_PROTOTYPE=0
-                ])
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([[#include <math.h>
+    #include <stdio.h>]], [[printf("%d",expf);]])],
+  [AC_MSG_RESULT(yes)
+  HAVE_EXPF_PROTOTYPE=1],
+  [AC_MSG_RESULT(no)
+  HAVE_EXPF_PROTOTYPE=0])
 
 AC_SUBST(HAVE_LOGF_PROTOTYPE)
 AC_SUBST(HAVE_EXPF_PROTOTYPE)
