@@ -149,6 +149,13 @@ utils_libsidutils_la_LDFLAGS = -version-info $(LIBSIDUTILSVERSION)
 
 #=========================================================
 # resid
+
+if USE_SSE
+  convolve_sse_src = builders/resid-builder/resid/convolve-sse.cc
+else
+  convolve_sse_src = 
+endif
+
 builders_resid_builder_resid_libresid_a_SOURCES = \
 builders/resid-builder/resid/sid.h \
 builders/resid-builder/resid/voice.h \
@@ -166,7 +173,7 @@ builders/resid-builder/resid/extfilt.cc \
 builders/resid-builder/resid/pot.cc \
 builders/resid-builder/resid/version.cc \
 builders/resid-builder/resid/convolve.cc \
-builders/resid-builder/resid/convolve-sse.cc
+$(convolve_sse_src)
 
 builders_resid_builder_resid_libresid_a_CXXFLAGS = @RESID_FLAGS@
 
