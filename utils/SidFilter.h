@@ -22,9 +22,9 @@ class SID_EXTERN SidFilter
 {
 protected:
     bool  m_status;
-    char *m_errorString;
+    const char *m_errorString;
     sid_filter_t m_filter;
-    
+
 protected:
     void readType1 (ini_fd_t ini);
     void readType3 (ini_fd_t ini);

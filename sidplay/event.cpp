@@ -86,7 +86,7 @@ void EventScheduler::event ()
 void EventScheduler::reset (void)
 {   // Remove all events
     Event *e = m_next;
-    uint   count = m_events;
+    //uint   count = m_events;
     m_pending = false;
     while (e->m_pending)
     {

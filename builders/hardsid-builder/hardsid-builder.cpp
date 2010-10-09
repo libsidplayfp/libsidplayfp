@@ -384,6 +384,7 @@ int HardSIDBuilder::init ()
             m_count = index;
     }
     closedir (dir);
+    return 0;
 }
 
 #endif // _WIN32

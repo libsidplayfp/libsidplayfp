@@ -73,7 +73,7 @@ protected:
 
 public:
     Chunk(uint_least32_t id, bool compulsory, Chunk *next, Chunk *sub)
-        : m_id(id), m_compulsory(compulsory), m_next(next), m_sub(sub) {;}
+        : m_id(id), m_compulsory(compulsory), m_sub(sub), m_next(next) {;}
     virtual bool read  (FILE *file, sid2_usage_t &usage, uint_least32_t length);
     virtual bool write (FILE *file, const sid2_usage_t &usage, uint_least32_t &length);
 };

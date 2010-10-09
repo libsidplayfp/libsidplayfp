@@ -1510,7 +1510,7 @@ void MOS6510::arr_instr (void)
         setFlagV ((data ^ Register_Accumulator) & 0x40);
 
         if ((data & 0x0f) + (data & 0x01) > 5)
-            Register_Accumulator  = Register_Accumulator & 0xf0 | (Register_Accumulator + 6) & 0x0f;
+            Register_Accumulator  = (Register_Accumulator & 0xf0) | ((Register_Accumulator + 6) & 0x0f);
         setFlagC (((data + (data & 0x10)) & 0x1f0) > 0x50);
         if (getFlagC ())
             Register_Accumulator += 0x60;
@@ -1638,9 +1638,9 @@ void MOS6510::tas_instr (void)
 
 //MOS6510::MOS6510 (model_t _model, const char *id)
 MOS6510::MOS6510 (EventContext *context)
-:eventContext(*context),
- Event("CPU"),
+:Event("CPU"),
  m_fdbg(stdout),
+ eventContext(*context),
  m_phase(EVENT_CLOCK_PHI2),
  m_extPhase(EVENT_CLOCK_PHI1)
 {

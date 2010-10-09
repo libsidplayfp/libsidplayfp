@@ -192,8 +192,8 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
     }
     else
     {   // Check reloc information mode
-        int startrp = tuneInfo.relocStartPage;
-        int endrp   = startrp + (tuneInfo.relocPages - 1);
+        //int startrp = tuneInfo.relocStartPage;
+        //int endrp   = startrp + (tuneInfo.relocPages - 1);
 
         // New relocation implementation (exclude region)
         // to complement existing method rejected as being

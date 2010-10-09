@@ -568,7 +568,7 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
 
 void Player::sidSamples (bool enable)
 {
-    int_least8_t gain = 0;
+    //int_least8_t gain = 0;
     xsid.sidSamples (enable);
 }
 

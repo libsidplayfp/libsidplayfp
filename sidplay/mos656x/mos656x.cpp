@@ -53,10 +53,10 @@ const char *MOS656X::credit =
 
 MOS656X::MOS656X (EventContext *context)
 :Event("VIC Raster"),
- event_context(*context),
- m_phase(EVENT_CLOCK_PHI1),
  sprite_enable(regs[0x15]),
- sprite_y_expansion(regs[0x17])
+ sprite_y_expansion(regs[0x17]),
+ event_context(*context),
+ m_phase(EVENT_CLOCK_PHI1)
 {
     chip (MOS6569);
 }
