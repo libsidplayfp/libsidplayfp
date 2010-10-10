@@ -59,8 +59,7 @@ public:
     // Standard SID functions
     void          clock   ();
     void          filter  (bool enable);
-    void          voice   (uint_least8_t num, bool mute);
-    void          optimisation (uint_least8_t level);
+    void          voice   (uint_least8_t num, bool mute) {;}
 
     operator bool () { return m_status; }
     static   int  devices (char *error);

@@ -99,10 +99,10 @@ bool ReSID::filter (const sid_filter_t *filter)
         if (filter->k != 0.f)
             m_sid.get_filter().set_type4_properties(filter->k, filter->b);
 
-	if (filter->attenuation != 0.f)
-	    m_sid.get_filter().set_distortion_properties(
-		filter->attenuation, filter->distortion_nonlinearity
-	    );
+        if (filter->attenuation != 0.f)
+            m_sid.get_filter().set_distortion_properties(
+                filter->attenuation, filter->distortion_nonlinearity
+            );
 
         if (filter->voice_nonlinearity != 0.f)
             m_sid.set_voice_nonlinearity(filter->voice_nonlinearity);
@@ -135,20 +135,12 @@ void ReSID::clock()
 {
     cycle_count cycles = m_context->getTime(m_accessClk, m_phase);
     m_accessClk += cycles;
-    /*if (m_optimisation)
-        m_bufferpos += m_sid.clock_fast(cycles, (float *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
-    else*/
-        m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
+    m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
 }
 
 void ReSID::filter (bool enable)
 {
     m_sid.enable_filter (enable);
-}
-
-void ReSID::voice (uint_least8_t num, bool mute)
-{
-    //m_sid.mute (num, mute);
 }
 
 void ReSID::sampling (float systemclock, float freq)
@@ -186,10 +178,4 @@ void ReSID::model (sid2_model_t model)
         m_sid.set_chip_model (RESID::MOS8580FP);
     else
         m_sid.set_chip_model (RESID::MOS6581FP);
-}
-
-// Set optimisation level
-void ReSID::optimisation (uint_least8_t level)
-{
-    m_optimisation = level;
 }

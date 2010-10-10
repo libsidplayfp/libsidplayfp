@@ -421,14 +421,12 @@ Player::Player (void)
     m_cfg.forceDualSids   = false;
     m_cfg.frequency       = SID2_DEFAULT_SAMPLING_FREQ;
     m_cfg.playback        = sid2_mono;
-    m_cfg.precision       = SID2_DEFAULT_PRECISION;
     m_cfg.sidDefault      = SID2_MODEL_CORRECT;
     m_cfg.sidEmulation    = NULL;
     m_cfg.sidModel        = SID2_MODEL_CORRECT;
     m_cfg.sidSamples      = true;
     m_cfg.leftVolume      = 255;
     m_cfg.rightVolume     = 255;
-    m_cfg.sampleFormat    = SID2_LITTLE_SIGNED;
     m_cfg.powerOnDelay    = SID2_DEFAULT_POWER_ON_DELAY;
     m_cfg.sid2crcCount    = 0;
 

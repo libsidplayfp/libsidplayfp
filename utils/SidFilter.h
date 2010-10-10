@@ -26,9 +26,6 @@ protected:
     sid_filter_t m_filter;
 
 protected:
-    void readType1 (ini_fd_t ini);
-    void readType3 (ini_fd_t ini);
-    bool get_ini_value (ini_fd_t ini, char *name, double *value);
     void clear ();
 
 public:

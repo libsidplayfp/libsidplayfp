@@ -27,13 +27,11 @@ struct  SidTuneInfo;
 #ifndef SIDPLAY2_DEFAULTS
 #define SIDPLAY2_DEFAULTS
     // Maximum values
-    const uint_least8_t  SID2_MAX_PRECISION      = 32;
     // Delays <= MAX produce constant results.
     // Delays >  MAX produce random results
     const uint_least16_t SID2_MAX_POWER_ON_DELAY = 0x1FFF;
     // Default settings
     const uint_least32_t SID2_DEFAULT_SAMPLING_FREQ  = 44100;
-    const uint_least8_t  SID2_DEFAULT_PRECISION      = 32;
     const bool           SID2_DEFAULT_SID_SAMPLES    = true; // Samples through sid
     const uint_least16_t SID2_DEFAULT_POWER_ON_DELAY = SID2_MAX_POWER_ON_DELAY + 1;
 #endif // SIDPLAY2_DEFAULTS
@@ -44,14 +42,6 @@ typedef enum {sid2_envPS = 0, sid2_envTP, sid2_envBS,  sid2_envR,
               sid2_envTR} sid2_env_t;
 typedef enum {SID2_MODEL_CORRECT, SID2_MOS6581, SID2_MOS8580}      sid2_model_t;
 typedef enum {SID2_CLOCK_CORRECT, SID2_CLOCK_PAL, SID2_CLOCK_NTSC} sid2_clock_t;
-
-typedef enum
-{   // Soundcard sample format
-    SID2_LITTLE_SIGNED,
-    SID2_LITTLE_UNSIGNED,
-    SID2_BIG_SIGNED,
-    SID2_BIG_UNSIGNED
-} sid2_sample_t;
 
 /* Environment Modes
 sid2_envPS = Playsid
@@ -70,14 +60,12 @@ struct sid2_config_t
     bool                emulateStereo;
     uint_least32_t      frequency;
     sid2_playback_t     playback;
-    int                 precision;
     sid2_model_t        sidDefault;    // Intended sid model when unknown
     sidbuilder         *sidEmulation;
     sid2_model_t        sidModel;      // User requested sid model
     bool                sidSamples;
     uint_least32_t      leftVolume;
     uint_least32_t      rightVolume;
-    sid2_sample_t       sampleFormat;
     uint_least16_t      powerOnDelay;
     uint_least32_t      sid2crcCount;  // Max sid writes to form crc
 };
