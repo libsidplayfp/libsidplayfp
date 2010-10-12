@@ -114,8 +114,13 @@ fi
 RESID_FLAGS="$MSSE $NO_EXCEPTIONS"
 
 
+# hack to avoid warnings
+saveCPPFLAGS=$CPPFLAGS
+CPPFLAGS="$CPPFLAGS $CXXFLAGS"
 
-AC_CHECK_HEADERS([xmmintrin.h], [], [], [#define __SSE__])
+AC_CHECK_HEADERS([xmmintrin.h])
+
+CPPFLAGS=$saveCPPFLAGS
 
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 [AC_TRY_COMPILE(,
