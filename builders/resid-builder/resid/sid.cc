@@ -73,13 +73,13 @@ static cpu_x86_regs_t get_cpuid_regs(unsigned int index)
       : "r"  (index)
       : "eax", "ebx", "ecx", "edx");
 #else /* 32 bit x86 needs ebx for pic code */
-  asm("pushl %%ebx; movl %4, %%eax; cpuid; movl %%eax, %0; movl %%ebx, %1; movl %%ecx, %2; movl %%edx, %3; popl %%ebx;"
+  asm("movl %%ebx, %%edi; movl %4, %%eax; cpuid; movl %%eax, %0; movl %%ebx, %1; movl %%ecx, %2; movl %%edx, %3; movl %%edi, %%ebx;"
       : "=m" (retval.eax),
         "=m" (retval.ebx),
         "=m" (retval.ecx),
         "=m" (retval.edx)
       : "r"  (index)
-      : "eax", "ecx", "edx");
+      : "eax", "ecx", "edx", "edi");
 #endif
 
   return retval;
