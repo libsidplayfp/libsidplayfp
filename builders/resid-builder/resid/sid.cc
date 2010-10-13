@@ -64,7 +64,7 @@ static cpu_x86_regs_t get_cpuid_regs(unsigned int index)
     mov [retval.ecx], ecx
     mov [retval.edx], edx
   }
-#else /* GNU assembly */
+#elif defined(__x86_64__) /* GNU assembly */
   asm("movl %4, %%eax; cpuid; movl %%eax, %0; movl %%ebx, %1; movl %%ecx, %2; movl %%edx, %3;"
       : "=m" (retval.eax),
         "=m" (retval.ebx),
@@ -72,6 +72,14 @@ static cpu_x86_regs_t get_cpuid_regs(unsigned int index)
         "=m" (retval.edx)
       : "r"  (index)
       : "eax", "ebx", "ecx", "edx");
+#else /* 32 bit x86 needs ebx for pic code */
+  asm("pushl %%ebx; movl %4, %%eax; cpuid; movl %%eax, %0; movl %%ebx, %1; movl %%ecx, %2; movl %%edx, %3; popl %%ebx;"
+      : "=m" (retval.eax),
+        "=m" (retval.ebx),
+        "=m" (retval.ecx),
+        "=m" (retval.edx)
+      : "r"  (index)
+      : "eax", "ecx", "edx");
 #endif
 
   return retval;

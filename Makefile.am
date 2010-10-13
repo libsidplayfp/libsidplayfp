@@ -54,8 +54,8 @@ if HARDSID
   lib_LTLIBRARIES += builders/hardsid-builder/libhardsid-builder.la
 endif
 
-noinst_LIBRARIES = \
-builders/resid-builder/resid/libresid.a
+noinst_LTLIBRARIES = \
+builders/resid-builder/resid/libresid.la
 
 #=========================================================
 # libsidplay
@@ -156,7 +156,7 @@ else
   convolve_sse_src = 
 endif
 
-builders_resid_builder_resid_libresid_a_SOURCES = \
+builders_resid_builder_resid_libresid_la_SOURCES = \
 builders/resid-builder/resid/sid.h \
 builders/resid-builder/resid/voice.h \
 builders/resid-builder/resid/wave.h \
@@ -175,7 +175,7 @@ builders/resid-builder/resid/version.cc \
 builders/resid-builder/resid/convolve.cc \
 $(convolve_sse_src)
 
-builders_resid_builder_resid_libresid_a_CXXFLAGS = @RESID_FLAGS@
+builders_resid_builder_resid_libresid_la_CXXFLAGS = @RESID_FLAGS@
 
 #=========================================================
 # builders
@@ -189,7 +189,7 @@ builders/resid-builder/resid-builder.cpp \
 builders/resid-builder/resid-emu.h
 
 builders_resid_builder_libresid_builder_la_LIBADD = \
-builders/resid-builder/resid/libresid.a
+builders/resid-builder/resid/libresid.la
 
 builders_resid_builder_libresid_builder_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
 

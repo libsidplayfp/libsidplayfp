@@ -98,7 +98,7 @@ AC_ARG_ENABLE([sse],
   AS_HELP_STRING([--enable-sse],[enable the use of SSE [default=yes]]))
 
 AS_IF([test x"$enable_sse" != "xno" -a x"$GXX" = "xyes"],
-  [MSSE="-msse -fno-pic"
+  [MSSE="-msse"
     RESID_USE_SSE=1],
   [RESID_USE_SSE=0
     MSSE=""])
