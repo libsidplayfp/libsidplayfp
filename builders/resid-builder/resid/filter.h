@@ -150,7 +150,6 @@ private:
   void calculate_helpers();
   void nuke_denormals();
   float waveshaper1(float value);
-  float waveshaper2(float value);
 
   // Filter enabled.
   bool enabled;

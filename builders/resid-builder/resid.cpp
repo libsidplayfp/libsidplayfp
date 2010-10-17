@@ -43,8 +43,7 @@ ReSID::ReSID (sidbuilder *builder)
  m_sid(*(new RESID::SIDFP)),
 #endif
  m_status(true),
- m_locked(false),
- m_optimisation(0)
+ m_locked(false)
 {
     char *p = m_credit;
     m_error = "N/A";

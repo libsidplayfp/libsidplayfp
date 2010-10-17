@@ -45,7 +45,7 @@ public:
     :XSID(&env->context ()),
      m_env(*env), m_sid(sid)
     {;}
-    
+
     // Standard component interface
     const char *error (void) {return "";}
     void reset () { sidemu::reset (); }
@@ -90,9 +90,6 @@ public:
     }
     void bufferpos(int val) {
         m_sid->bufferpos(val);
-    }
-    void optimisation(uint_least8_t level) {
-        m_sid->optimisation(level);
     }
     void sampling(float systemclock, float freq) {
         m_sid->sampling(systemclock, freq);

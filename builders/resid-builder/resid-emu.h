@@ -42,7 +42,6 @@ private:
     const  char  *m_error;
     bool          m_status;
     bool          m_locked;
-    uint_least8_t m_optimisation;
 
 public:
     ReSID  (sidbuilder *builder);

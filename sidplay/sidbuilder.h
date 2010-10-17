@@ -49,7 +49,6 @@ public:
 
     // Standard SID functions
     virtual void          voice   (uint_least8_t num, bool mute) = 0;
-    virtual void          optimisation (uint_least8_t /*level*/) {;}
     sidbuilder           *builder (void) const { return m_builder; }
 
     virtual int bufferpos() { return m_bufferpos; }

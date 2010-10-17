@@ -490,14 +490,6 @@ int Player::fastForward (uint percent)
     if (m_fastForwardFactor < 1)
         m_fastForwardFactor = 1;
 
-    if (m_fastForwardFactor > 1) {
-        sid[0]->optimisation(1);
-        sid[1]->optimisation(1);
-    } else {
-        sid[0]->optimisation(0);
-        sid[1]->optimisation(0);
-    }
-
     return 0;
 }
 
