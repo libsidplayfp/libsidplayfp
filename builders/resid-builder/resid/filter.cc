@@ -18,10 +18,6 @@
 //  ---------------------------------------------------------------------------
 //  Filter distortion code written by Antti S. Lankila 2007 - 2009.
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "filter.h"
 #include "sid.h"
 
