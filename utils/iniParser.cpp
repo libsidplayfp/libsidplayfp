@@ -29,6 +29,18 @@ double iniParser::parseDouble(const char* str) {
 
 	double result = 0.;
 
+	while (*str == ' ') {
+		str++;
+	}
+
+	bool negative = false;
+	if (*str=='+') {
+		str++;
+	} else if (*str=='-') {
+		negative = true;
+		str++;
+	}
+
 	char *end;
 	while (isdigit(*str)) {
 		result = (result * 10.) + (double)((*str++) - '0');
@@ -58,6 +70,9 @@ double iniParser::parseDouble(const char* str) {
 		while (exponent--)
 			exponential *= 10.;
 	}
+
+	if (negative)
+		result = -result;
 
 	return result*exponential;
 }
