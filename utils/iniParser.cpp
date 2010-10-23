@@ -25,20 +25,22 @@ long iniParser::parseLong(const char* str) {
 	return strtol(str, 0, 10);
 }
 
-float iniParser::parseFloat(const char* str) {
+double iniParser::parseDouble(const char* str) {
+
+	double result = 0.;
 
 	char *end;
-	const long integer = strtol(str, &end, 10);
-	str = end;
-
-	float fract = 0.f;
-	int fractDigits = 0;
+	while (isdigit(*str)) {
+		result = (result * 10.) + (double)((*str++) - '0');
+	}
 
 	if (*str=='.') {
-		const long fractional = strtol(++str, &end, 10);
-		fractDigits = end - str;
-		str = end;
-		fract = (float)fractional;
+		str++;
+		double exponential = .1;
+		while (isdigit(*str)) {
+			result += ((double)((*str++) - '0') * exponential);
+			exponential *= .1;
+		}
 	}
 
 	long exponent = 0;
@@ -47,23 +49,14 @@ float iniParser::parseFloat(const char* str) {
 		exponent = strtol(++str, &end, 10);
 	}
 
-	exponent -= fractDigits;
-
-	float result = (float)integer;
-
-	while (fractDigits--)
-		result *= 10.f;
-
-	result += fract;
-
-	float exponential = 1.f;
+	double exponential = 1.;
 
 	if (exponent < 0) {
 		while (exponent++)
-			exponential *= .1f;
+			exponential *= .1;
 	} else {
 		while (exponent--)
-			exponential *= 10.f;
+			exponential *= 10.;
 	}
 
 	return result*exponential;

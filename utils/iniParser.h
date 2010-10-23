@@ -30,7 +30,7 @@ class iniParser {
 public:
 	static long parseLong(const char* str);
 
-	static float parseFloat(const char* str);
+	static double parseDouble(const char* str);
 
 private:
 	typedef std::map<std::string, std::string> keys_t;

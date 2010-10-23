@@ -30,6 +30,12 @@ m_errorString("SID Filter: No filter loaded")
 
 void SidFilter::read (const char *filename)
 {
+    read (filename, "Filter");
+}
+
+
+void SidFilter::read (const char *filename, const char* section)
+{
     iniParser m_parser;
     m_status = false;
 
@@ -39,7 +45,7 @@ void SidFilter::read (const char *filename)
         return;
     }
 
-    if (!m_parser.setSection ("Filter")) {
+    if (!m_parser.setSection (section)) {
         m_errorString = "SID Filter: Unable to locate filter section in input file";
         return;
     }
@@ -64,19 +70,13 @@ void SidFilter::read (const char *filename)
 
     for (int i = 0; sidparams[i].name != NULL; i ++) {
         /* Ensure that all parameters are zeroed, if missing. */
-        float tmp = 0.;
+        double tmp = 0.;
         const char* value = m_parser.getValue (sidparams[i].name);
         if (value) {
-            tmp = iniParser::parseFloat (value);
-            /*if ( < 0) {
-                std::string msg = "Invalid parameter: " + std::string(sidparams[i].name) + ": int expected";
-                m_errorString = (char *) msg.c_str();
-                m_status = false;
-                return;
-            }*/
+            tmp = iniParser::parseDouble (value);
         }
 
-        *sidparams[i].address = tmp;
+        *sidparams[i].address = (float)tmp;
     }
 
     m_status = true;

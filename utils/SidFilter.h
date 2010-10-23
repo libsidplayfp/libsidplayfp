@@ -29,6 +29,7 @@ public:
     ~SidFilter () {};
 
     void                read      (const char *filename);
+    void                read      (const char *filename, const char* section);
     const char*         error     (void) { return m_errorString; }
     const sid_filter_t* provide   () const;
 
