@@ -87,6 +87,9 @@ std::pair<std::string, std::string> iniParser::parseKey(const char* buffer) {
 	std::string key = section.substr(0, pos);
 	std::string value = section.substr(pos+1);
 
+	//Trim right spaces
+	key.erase(key.find_last_not_of(' ')+1);
+
 	return make_pair(key, value);
 }
 
