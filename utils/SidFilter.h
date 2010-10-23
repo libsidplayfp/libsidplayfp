@@ -16,24 +16,19 @@
  ***************************************************************************/
 
 #include "sidplay/sidtypes.h"
-#include "libini.h"
 
 class SID_EXTERN SidFilter
 {
 protected:
-    bool  m_status;
-    const char *m_errorString;
+    bool         m_status;
+    const char  *m_errorString;
     sid_filter_t m_filter;
-
-protected:
-    void clear ();
 
 public:
     SidFilter ();
-    ~SidFilter ();
+    ~SidFilter () {};
 
     void                read      (const char *filename);
-    void                read      (ini_fd_t ini, const char *heading);
     const char*         error     (void) { return m_errorString; }
     const sid_filter_t* provide   () const;
 

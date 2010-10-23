@@ -26,10 +26,6 @@ sidplay/ChangeLog \
 sidplay/COPYING \
 sidplay/README \
 sidplay/TODO \
-utils/ini/headings.i \
-utils/ini/keys.i \
-utils/ini/list.i \
-utils/ini/types.i \
 utils/AUTHORS \
 utils/ChangeLog \
 utils/COPYING \
@@ -121,24 +117,20 @@ sidplay/SmartPtr.h
 utils_libsidutils_ladir = $(includedir)/sidplay/utils
 
 utils_libsidutils_la_HEADERS = \
-utils/libini.h \
 utils/SidDatabase.h \
 utils/SidFilter.h \
 utils/SidTuneMod.h \
 utils/SidUsage.h
 
 utils_libsidutils_la_SOURCES = \
+utils/iniParser.cpp \
+utils/iniParser.h \
 utils/SidDatabase.cpp \
 utils/SidFilter.cpp \
 utils/SidTuneMod.cpp \
 utils/SidUsage.cpp \
 utils/smm.cpp \
 utils/smm0.h \
-utils/ini/headings.h \
-utils/ini/ini.cpp \
-utils/ini/ini.h \
-utils/ini/keys.h \
-utils/ini/list.h \
 utils/MD5/MD5.cpp \
 utils/MD5/MD5.h \
 utils/MD5/MD5_Defs.h

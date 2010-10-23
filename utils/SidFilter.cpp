@@ -19,54 +19,27 @@
 #  include "config.h"
 #endif
 
-#include <new>
-#include <string>
-#include <math.h>
-#include <stdlib.h>
-
 #include "SidFilter.h"
+#include "iniParser.h"
 
 
 SidFilter::SidFilter ()
-:m_status(false)
-{
-    m_errorString = "SID Filter: No filter loaded";
-}
-
-SidFilter::~SidFilter ()
-{
-    clear ();
-}
-
-void SidFilter::clear ()
-{
-    m_status        = false;
-    m_errorString   = "SID Filter: No filter loaded";
-}
+:m_status(false),
+m_errorString("SID Filter: No filter loaded")
+{}
 
 void SidFilter::read (const char *filename)
 {
-    ini_fd_t ini = ini_open (filename, "r", ";");
+    iniParser m_parser;
+    m_status = false;
 
-    // Illegal ini fd
-    if (!ini)
+    if (!m_parser.open (filename))
     {
-        m_status      = false;
         m_errorString = "SID Filter: Unable to open filter file";
         return;
     }
 
-    read (ini, "Filter");
-    ini_close (ini);
-}
-
-void SidFilter::read (ini_fd_t ini, const char *heading)
-{
-    clear ();
-    m_status = true;
-
-    if (ini_locateHeading (ini, heading) < 0) {
-        m_status = false;
+    if (!m_parser.setSection ("Filter")) {
         m_errorString = "SID Filter: Unable to locate filter section in input file";
         return;
     }
@@ -91,17 +64,22 @@ void SidFilter::read (ini_fd_t ini, const char *heading)
 
     for (int i = 0; sidparams[i].name != NULL; i ++) {
         /* Ensure that all parameters are zeroed, if missing. */
-        double tmp = 0.;
-        if (ini_locateKey(ini, sidparams[i].name) >= 0) {
-            if (ini_readDouble(ini, &tmp) < 0) {
-                std::string msg = "Invalid parameter: " + (std::string) sidparams[i].name + ": int expected";
+        float tmp = 0.;
+        const char* value = m_parser.getValue (sidparams[i].name);
+        if (value) {
+            tmp = iniParser::parseFloat (value);
+            /*if ( < 0) {
+                std::string msg = "Invalid parameter: " + std::string(sidparams[i].name) + ": int expected";
                 m_errorString = (char *) msg.c_str();
                 m_status = false;
                 return;
-            }
+            }*/
         }
-        *sidparams[i].address = (float) tmp;
+
+        *sidparams[i].address = tmp;
     }
+
+    m_status = true;
 }
 
 // Get filter

@@ -19,7 +19,10 @@
 #define _siddatabase_h_
 
 #include "SidTuneMod.h"
-#include "libini.h"
+
+#include <exception>
+
+class iniParser;
 
 class SID_EXTERN SidDatabase
 {
@@ -30,14 +33,15 @@ private:
     static const char *ERR_MEM_ALLOC;
     static const char *ERR_UNABLE_TO_LOAD_DATABASE;
 
-    ini_fd_t    database;
+    iniParser  *m_parser;
     const char *errorString;
 
-    int_least32_t parseTimeStamp (const char* arg);
-    uint_least8_t timesFound     (char *str);
+    class parseError : public std::exception {};
+
+    static const char* parseTime(const char* str, long &result);
 
 public:
-    SidDatabase  () : database (0) {;}
+    SidDatabase  ();
     ~SidDatabase ();
 
     int           open   (const char *filename);
