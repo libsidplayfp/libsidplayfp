@@ -220,7 +220,7 @@ int Player::config (const sid2_config_t &cfg)
 
             /* inform ReSID of the desired sampling rate */
             for (int i = 0; i < SID2_MAX_SIDS; i += 1)
-                sid[i]->sampling(cpuFreq, cfg.frequency);
+                sid[i]->sampling(cpuFreq, cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
 
             // Start the real time clock event
             rtc.clock(cpuFreq);
