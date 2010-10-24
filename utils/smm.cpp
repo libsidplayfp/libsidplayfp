@@ -17,7 +17,7 @@
 
 #include <string.h>
 
-#include "sidplay/sidendian.h"
+#include "sidplayfp/sidendian.h"
 #include "SidUsage.h"
 #include "smm0.h"
 

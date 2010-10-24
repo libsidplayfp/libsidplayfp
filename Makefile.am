@@ -12,20 +12,20 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/resid-builder \
 
 #=========================================================
 EXTRA_DIST = \
-sidplay/psiddrv.bin \
-sidplay/kernal.bin \
-sidplay/poweron.bin \
-sidplay/basic.bin \
-sidplay/char.bin \
-sidplay/c64/c64cia.h \
-sidplay/c64/c64vic.h \
-sidplay/c64/c64xsid.h \
-sidplay/mos6510/cycle_based \
-sidplay/AUTHORS \
-sidplay/ChangeLog \
-sidplay/COPYING \
-sidplay/README \
-sidplay/TODO \
+sidplayfp/psiddrv.bin \
+sidplayfp/kernal.bin \
+sidplayfp/poweron.bin \
+sidplayfp/basic.bin \
+sidplayfp/char.bin \
+sidplayfp/c64/c64cia.h \
+sidplayfp/c64/c64vic.h \
+sidplayfp/c64/c64xsid.h \
+sidplayfp/mos6510/cycle_based \
+sidplayfp/AUTHORS \
+sidplayfp/ChangeLog \
+sidplayfp/COPYING \
+sidplayfp/README \
+sidplayfp/TODO \
 utils/AUTHORS \
 utils/ChangeLog \
 utils/COPYING \
@@ -42,87 +42,55 @@ builders/resid-builder/resid/NEWS
 #=========================================================
 # Libraries
 lib_LTLIBRARIES = \
-sidplay/libsidplay2.la \
-utils/libsidutils.la \
-builders/resid-builder/libresid-builder.la
+sidplayfp/libsidplayfp.la \
+builders/resid-builder/libsidplayfp-residfp.la
 
 if HARDSID
-  lib_LTLIBRARIES += builders/hardsid-builder/libhardsid-builder.la
+  lib_LTLIBRARIES += builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
 noinst_LTLIBRARIES = \
-builders/resid-builder/resid/libresid.la
+builders/resid-builder/resid/libresidfp.la
 
 #=========================================================
-# libsidplay
-sidplay_libsidplay2_la_SOURCES = \
-sidplay/config.cpp \
-sidplay/event.cpp \
-sidplay/player.cpp \
-sidplay/player.h \
-sidplay/psiddrv.cpp \
-sidplay/mixer.cpp \
-sidplay/reloc65.c \
-sidplay/sidplay2.cpp \
-sidplay/nullsid.h \
-sidplay/psiddrv.a65 \
-sidplay/sidenv.h \
-sidplay/mos656x/mos656x.cpp \
-sidplay/mos656x/mos656x.h \
-sidplay/mos6510/mos6510.cpp \
-sidplay/mos6510/mos6510.h \
-sidplay/mos6510/conf6510.h \
-sidplay/mos6510/opcodes.h \
-sidplay/mos6526/mos6526.cpp \
-sidplay/mos6526/mos6526.h \
-sidplay/sid6526/sid6526.cpp \
-sidplay/sid6526/sid6526.h \
-sidplay/sidtune/IconInfo.cpp \
-sidplay/sidtune/InfoFile.cpp \
-sidplay/sidtune/MUS.cpp \
-sidplay/sidtune/p00.cpp \
-sidplay/sidtune/PP20.cpp \
-sidplay/sidtune/PP20.h \
-sidplay/sidtune/PP20_Defs.h \
-sidplay/sidtune/prg.cpp \
-sidplay/sidtune/PSID.cpp \
-sidplay/sidtune/SidTune.cpp \
-sidplay/sidtune/SidTuneCfg.h \
-sidplay/sidtune/SidTuneTools.cpp \
-sidplay/sidtune/SidTuneTools.h \
-sidplay/xsid/xsid.cpp \
-sidplay/xsid/xsid.h
-
-sidplay_libsidplay2_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION)
-
-sidplay_libsidplay2_ladir = $(includedir)/sidplay
-
-sidplay_libsidplay2_la_HEADERS = \
-sidplay/sidconfig.h \
-sidplay/Buffer.h \
-sidplay/c64env.h \
-sidplay/component.h \
-sidplay/event.h \
-sidplay/sid2types.h \
-sidplay/sidbuilder.h \
-sidplay/sidendian.h \
-sidplay/sidplay2.h \
-sidplay/SidTune.h \
-sidplay/sidtypes.h \
-sidplay/sidusage.h \
-sidplay/SmartPtr.h
-
-#=========================================================
-# libsidutils
-utils_libsidutils_ladir = $(includedir)/sidplay/utils
-
-utils_libsidutils_la_HEADERS = \
-utils/SidDatabase.h \
-utils/SidFilter.h \
-utils/SidTuneMod.h \
-utils/SidUsage.h
-
-utils_libsidutils_la_SOURCES = \
+# libsidplayfp
+sidplayfp_libsidplayfp_la_SOURCES = \
+sidplayfp/config.cpp \
+sidplayfp/event.cpp \
+sidplayfp/player.cpp \
+sidplayfp/player.h \
+sidplayfp/psiddrv.cpp \
+sidplayfp/mixer.cpp \
+sidplayfp/reloc65.c \
+sidplayfp/sidplay2.cpp \
+sidplayfp/nullsid.h \
+sidplayfp/psiddrv.a65 \
+sidplayfp/sidenv.h \
+sidplayfp/mos656x/mos656x.cpp \
+sidplayfp/mos656x/mos656x.h \
+sidplayfp/mos6510/mos6510.cpp \
+sidplayfp/mos6510/mos6510.h \
+sidplayfp/mos6510/conf6510.h \
+sidplayfp/mos6510/opcodes.h \
+sidplayfp/mos6526/mos6526.cpp \
+sidplayfp/mos6526/mos6526.h \
+sidplayfp/sid6526/sid6526.cpp \
+sidplayfp/sid6526/sid6526.h \
+sidplayfp/sidtune/IconInfo.cpp \
+sidplayfp/sidtune/InfoFile.cpp \
+sidplayfp/sidtune/MUS.cpp \
+sidplayfp/sidtune/p00.cpp \
+sidplayfp/sidtune/PP20.cpp \
+sidplayfp/sidtune/PP20.h \
+sidplayfp/sidtune/PP20_Defs.h \
+sidplayfp/sidtune/prg.cpp \
+sidplayfp/sidtune/PSID.cpp \
+sidplayfp/sidtune/SidTune.cpp \
+sidplayfp/sidtune/SidTuneCfg.h \
+sidplayfp/sidtune/SidTuneTools.cpp \
+sidplayfp/sidtune/SidTuneTools.h \
+sidplayfp/xsid/xsid.cpp \
+sidplayfp/xsid/xsid.h \
 utils/iniParser.cpp \
 utils/iniParser.h \
 utils/SidDatabase.cpp \
@@ -135,12 +103,31 @@ utils/MD5/MD5.cpp \
 utils/MD5/MD5.h \
 utils/MD5/MD5_Defs.h
 
-utils_libsidutils_la_LIBADD = sidplay/libsidplay2.la
+sidplayfp_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION)
 
-utils_libsidutils_la_LDFLAGS = -version-info $(LIBSIDUTILSVERSION)
+sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
+
+sidplayfp_libsidplayfp_la_HEADERS = \
+sidplayfp/sidconfig.h \
+sidplayfp/Buffer.h \
+sidplayfp/c64env.h \
+sidplayfp/component.h \
+sidplayfp/event.h \
+sidplayfp/sid2types.h \
+sidplayfp/sidbuilder.h \
+sidplayfp/sidendian.h \
+sidplayfp/sidplay2.h \
+sidplayfp/SidTune.h \
+sidplayfp/sidtypes.h \
+sidplayfp/sidusage.h \
+sidplayfp/SmartPtr.h \
+utils/SidDatabase.h \
+utils/SidFilter.h \
+utils/SidTuneMod.h \
+utils/SidUsage.h
 
 #=========================================================
-# resid
+# residfp
 
 if USE_SSE
   convolve_sse_src = builders/resid-builder/resid/convolve-sse.cc
@@ -148,7 +135,7 @@ else
   convolve_sse_src = 
 endif
 
-builders_resid_builder_resid_libresid_la_SOURCES = \
+builders_resid_builder_resid_libresidfp_la_SOURCES = \
 builders/resid-builder/resid/sid.h \
 builders/resid-builder/resid/voice.h \
 builders/resid-builder/resid/wave.h \
@@ -167,27 +154,27 @@ builders/resid-builder/resid/version.cc \
 builders/resid-builder/resid/convolve.cc \
 $(convolve_sse_src)
 
-builders_resid_builder_resid_libresid_la_CXXFLAGS = @RESID_FLAGS@
+builders_resid_builder_resid_libresidfp_la_CXXFLAGS = @RESID_FLAGS@
 
 #=========================================================
 # builders
-builders_resid_builder_libresid_builder_ladir = $(includedir)/sidplay/builders
-builders_resid_builder_libresid_builder_la_HEADERS = \
+builders_resid_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
+builders_resid_builder_libsidplayfp_residfp_la_HEADERS = \
 builders/resid-builder/resid.h
 
-builders_resid_builder_libresid_builder_la_SOURCES = \
+builders_resid_builder_libsidplayfp_residfp_la_SOURCES = \
 builders/resid-builder/resid.cpp \
 builders/resid-builder/resid-builder.cpp \
 builders/resid-builder/resid-emu.h
 
-builders_resid_builder_libresid_builder_la_LIBADD = \
-builders/resid-builder/resid/libresid.la
+builders_resid_builder_libsidplayfp_residfp_la_LIBADD = \
+builders/resid-builder/resid/libresidfp.la
 
-builders_resid_builder_libresid_builder_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
+builders_resid_builder_libsidplayfp_residfp_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
 
 
-builders_hardsid_builder_libhardsid_builder_ladir = $(includedir)/sidplay/builders
-builders_hardsid_builder_libhardsid_builder_la_HEADERS = \
+builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
+builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
 builders/hardsid-builder/hardsid.h
 
 if MINGW32
@@ -196,16 +183,16 @@ else
   hardsid_src = builders/hardsid-builder/hardsid-unix.cpp
 endif
 
-builders_hardsid_builder_libhardsid_builder_la_SOURCES = \
+builders_hardsid_builder_libsidplayfp_hardsid_la_SOURCES = \
 $(hardsid_src) \
 builders/hardsid-builder/hardsid-builder.cpp  \
 builders/hardsid-builder/hardsid-emu.h
 
-builders_hardsid_builder_libhardsid_builder_la_LDFLAGS = -version-info $(LIBHARDSIDVERSION)
+builders_hardsid_builder_libsidplayfp_hardsid_la_LDFLAGS = -version-info $(LIBHARDSIDVERSION)
 
 #=========================================================
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libsidplay2.pc libsidutils.pc
+pkgconfig_DATA = libsidplayfp.pc
 
 #=========================================================
 # Remove SVN directories from any subdirs that get

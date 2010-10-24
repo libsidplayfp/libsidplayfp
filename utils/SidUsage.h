@@ -18,7 +18,7 @@
 #ifndef _SidUsage_h_
 #define _SidUsage_h_
 
-#include "sidplay/sidusage.h"
+#include "sidplayfp/sidusage.h"
 #include "SidTuneMod.h"
 
 struct SidTuneInfo;

@@ -1,7 +1,7 @@
 /***************************************************************************
-                          SidFilter.cpp  -  filter type decoding support
+                          c64vic.h  -  C64 VIC
                              -------------------
-    begin                : Sun Mar 11 2001
+    begin                : Fri Apr 4 2001
     copyright            : (C) 2001 by Simon White
     email                : s_a_white@email.com
  ***************************************************************************/
@@ -15,26 +15,35 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sidplayfp/sidtypes.h"
+#ifndef _c64vic_h_
+#define _c64vic_h_
 
-class SID_EXTERN SidFilter
+// The VIC emulation is very generic and here we need to effectively
+// wire it into the computer (like adding a chip to a PCB).
+#include "sidplayfp/c64env.h"
+#include "../mos656x/mos656x.h"
+
+class c64vic: public MOS656X
 {
+private:
+    c64env &m_env;
+
 protected:
-    bool         m_status;
-    const char  *m_errorString;
-    sid_filter_t m_filter;
+    void interrupt (bool state)
+    {
+        m_env.interruptIRQ (state);
+    }
+
+    void addrctrl (bool state)
+    {
+        m_env.signalAEC (state);
+    }
 
 public:
-    SidFilter ();
-    ~SidFilter () {};
-
-    void                read      (const char *filename);
-    void                read      (const char *filename, const char* section);
-    const char*         error     (void) { return m_errorString; }
-    const sid_filter_t* provide   () const;
-
-    operator bool () { return m_status; }
-    const SidFilter&    operator= (const SidFilter    &filter);
-    const sid_filter_t &operator= (const sid_filter_t &filter);
-    const sid_filter_t *operator= (const sid_filter_t *filter);
+    c64vic (c64env *env)
+    :MOS656X(&(env->context ())),
+     m_env(*env) {}
+    const char *error (void) {return "";}
 };
+
+#endif // _c64vic_h_

@@ -1,4 +1,9 @@
 /*
+ * /home/ms/files/source/libsidtune/RCS/PP20_Defs.h,v
+ *
+ * PowerPacker (AMIGA) "PP20" format decompressor.
+ * Copyright (C) Michael Schwendt <mschwendt@yahoo.com>
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -14,26 +19,21 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SIDTUNEMOD_H
-#define SIDTUNEMOD_H
+#ifndef PP_DECOMPRESSOR_DEFS_H
+#define PP_DECOMPRESSOR_DEFS_H
 
-#include "sidplayfp/SidTune.h"
+#include "sidplayfp/sidtypes.h"
 
-#define SIDTUNE_MD5_LENGTH 32
+#ifdef HAVE_EXCEPTIONS
+  #define PP20_HAVE_EXCEPTIONS
+#else
+  #undef PP20_HAVE_EXCEPTIONS
+#endif
 
+// Wanted: 8-bit unsigned.
+typedef uint_least8_t ubyte_ppt;
 
-class SID_EXTERN SidTuneMod : public SidTune
-{
- private:
-    char m_md5[SIDTUNE_MD5_LENGTH+1];
+// Wanted: 32-bit unsigned.
+typedef uint_least32_t udword_ppt;
 
- public:  // --------------------------------------------------------- public
-
-    SidTuneMod(const char* fileName) : SidTune(fileName)
-    { ; }
-
-    // Not providing an md5 buffer will cause the internal one to be used
-    const char *createMD5(char *md5 = 0); // Buffer must be SIDTUNE_MD5_LENGTH + 1
-};
-
-#endif  /* SIDTUNEMOD_H */
+#endif  /* PP_DECOMPRESSOR_DEFS_H */

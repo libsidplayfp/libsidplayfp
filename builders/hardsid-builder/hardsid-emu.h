@@ -50,8 +50,8 @@
 #  include "config.h"
 #endif
 
-#include "sidplay/sidbuilder.h"
-#include "sidplay/event.h"
+#include "sidplayfp/sidbuilder.h"
+#include "sidplayfp/event.h"
 
 #ifdef _WIN32
 

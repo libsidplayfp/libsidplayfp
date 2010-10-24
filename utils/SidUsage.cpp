@@ -18,8 +18,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "sidplay/sidendian.h"
-#include "sidplay/SidTune.h"
+#include "sidplayfp/sidendian.h"
+#include "sidplayfp/SidTune.h"
 #include "SidUsage.h"
 #include "smm0.h"
 

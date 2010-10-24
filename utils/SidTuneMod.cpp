@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 
-#include "sidplay/sidendian.h"
+#include "sidplayfp/sidendian.h"
 #include "SidTuneMod.h"
 #include "MD5/MD5.h"
 

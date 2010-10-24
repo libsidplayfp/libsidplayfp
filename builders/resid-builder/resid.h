@@ -23,7 +23,7 @@
  */
 
 #include <vector>
-#include "sidplay/sidbuilder.h"
+#include "sidplayfp/sidbuilder.h"
 
 /***************************************************************************
  * ReSID Builder Class

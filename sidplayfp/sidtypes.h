@@ -1,8 +1,8 @@
 /***************************************************************************
-                          SidFilter.cpp  -  filter type decoding support
+                          sidtypes.h  -  type definition file
                              -------------------
-    begin                : Sun Mar 11 2001
-    copyright            : (C) 2001 by Simon White
+    begin                : Mon Jul 3 2000
+    copyright            : (C) 2000 by Simon White
     email                : s_a_white@email.com
  ***************************************************************************/
 
@@ -15,26 +15,25 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "sidplayfp/sidtypes.h"
+#ifndef _sidtypes_h_
+#define _sidtypes_h_
 
-class SID_EXTERN SidFilter
+#include <stdint.h>
+
+#include "sidplayfp/sidconfig.h"
+
+typedef struct
 {
-protected:
-    bool         m_status;
-    const char  *m_errorString;
-    sid_filter_t m_filter;
+    /* distortion tunables */
+    float           attenuation, distortion_nonlinearity, voice_nonlinearity;
+    /* type 3 tunables */
+    float           baseresistance, offset, steepness, minimumfetresistance;
+    /* type 4 tunables */
+    float           k, b;
+} sid_filter_t;
 
-public:
-    SidFilter ();
-    ~SidFilter () {};
+typedef unsigned int uint;
+typedef float    float32_t;
+typedef double   float64_t;
 
-    void                read      (const char *filename);
-    void                read      (const char *filename, const char* section);
-    const char*         error     (void) { return m_errorString; }
-    const sid_filter_t* provide   () const;
-
-    operator bool () { return m_status; }
-    const SidFilter&    operator= (const SidFilter    &filter);
-    const sid_filter_t &operator= (const sid_filter_t &filter);
-    const sid_filter_t *operator= (const sid_filter_t *filter);
-};
+#endif /* _sidtypes_h_ */
