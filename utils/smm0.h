@@ -18,9 +18,6 @@
 #ifndef _smm0_h_
 #define _smm0_h_
 
-#include <stdio.h>
-#include <string.h>
-
 #include "sidplay/sidtypes.h"
 #include "SidUsage.h"
 

@@ -18,7 +18,6 @@
 #ifndef _SidUsage_h_
 #define _SidUsage_h_
 
-#include <stdio.h>
 #include "sidplay/sidusage.h"
 #include "SidTuneMod.h"
 

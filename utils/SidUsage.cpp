@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <stdio.h>
+#include <string.h>
 
 #include "sidplay/sidendian.h"
 #include "sidplay/SidTune.h"
