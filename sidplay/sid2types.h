@@ -19,9 +19,9 @@
 #define _sid2types_h_
 
 #include "sidtypes.h"
-#include "event.h"
 
 class   sidbuilder;
+class   EventContext;
 struct  SidTuneInfo;
 
 #ifndef SIDPLAY2_DEFAULTS

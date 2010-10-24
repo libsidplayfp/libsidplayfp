@@ -18,10 +18,12 @@
 #ifndef _sidplay2_h_
 #define _sidplay2_h_
 
-#include "sidtypes.h"
-#include "SidTune.h"
-#include "sidbuilder.h"
+#include <stdio.h>
 
+#include "sidtypes.h"
+#include "sid2types.h"
+
+class SidTune;
 
 // Private Sidplayer
 namespace SIDPLAY2_NAMESPACE

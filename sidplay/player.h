@@ -189,14 +189,10 @@
 #ifndef _player_h_
 #define _player_h_
 
-#include <stdio.h>
-#include <string.h>
-
 #include "sid2types.h"
 #include "SidTune.h"
 #include "sidbuilder.h"
 
-#include "config.h"
 #include "sidenv.h"
 #include "c64env.h"
 #include "c64/c64xsid.h"
@@ -206,6 +202,7 @@
 #include "mos6510/mos6510.h"
 #include "sid6526/sid6526.h"
 #include "nullsid.h"
+
 #define  SID2_MAX_SIDS 2
 #define  SID2_TIME_BASE 10
 #define  SID2_MAPPER_SIZE 32

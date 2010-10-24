@@ -24,7 +24,6 @@
 
 #include <vector>
 #include "sidplay/sidbuilder.h"
-#include "sidplay/event.h"
 
 /***************************************************************************
  * ReSID Builder Class

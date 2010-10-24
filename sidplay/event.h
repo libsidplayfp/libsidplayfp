@@ -19,7 +19,6 @@
 #ifndef _event_h_
 #define _event_h_
 
-#include <stdio.h>
 #include "sidtypes.h"
 
 typedef uint_fast32_t event_clock_t;

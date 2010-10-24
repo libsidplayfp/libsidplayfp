@@ -147,6 +147,8 @@
 // The code here is use to support the PSID Version 2NG
 // (proposal B) file format for player relocation support.
 // --------------------------------------------------------
+#include <string.h>
+
 #include "sidendian.h"
 #include "player.h"
 

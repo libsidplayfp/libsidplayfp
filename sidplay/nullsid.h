@@ -18,6 +18,8 @@
 #ifndef _nullsid_h_
 #define _nullsid_h_
 
+#include <stdio.h>
+
 #include "sidbuilder.h"
 
 class NullSID: public sidemu
