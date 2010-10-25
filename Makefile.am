@@ -21,16 +21,6 @@ sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64xsid.h \
 sidplayfp/mos6510/cycle_based \
-sidplayfp/AUTHORS \
-sidplayfp/ChangeLog \
-sidplayfp/COPYING \
-sidplayfp/README \
-sidplayfp/TODO \
-utils/AUTHORS \
-utils/ChangeLog \
-utils/COPYING \
-utils/README \
-utils/TODO \
 builders/resid-builder/resid/AUTHORS \
 builders/resid-builder/resid/ChangeLog \
 builders/resid-builder/resid/COPYING \
