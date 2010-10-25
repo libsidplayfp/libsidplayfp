@@ -2,10 +2,8 @@
 #ifndef _config_h_
 #define _config_h_
 
-#define PACKAGE "libsidplay"
-#define VERSION "2.1.1"
-
-#define S_A_WHITE_EMAIL "sidplay2@yahoo.com"
+#define PACKAGE "libsidplayfp"
+#define VERSION "0.1.0"
 
 /* Define if your C++ compiler implements exception-handling.  */
 /* Note: exception specification is only available for MSVC > 6 */

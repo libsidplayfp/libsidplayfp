@@ -47,7 +47,7 @@
 const char *MOS656X::credit =
 {   // Optional information
     "*MOS656X (VICII) Emulation:\0"
-    "\tCopyright (C) 2001 Simon White <" S_A_WHITE_EMAIL ">\0"
+    "\tCopyright (C) 2001 Simon White <sidplay2@yahoo.com>\0"
 };
 
 

@@ -163,7 +163,7 @@ enum
 const char *MOS6526::credit =
 {   // Optional information
     "*MOS6526 (CIA) Emulation:\0"
-    "\tCopyright (C) 2001-2004 Simon White <" S_A_WHITE_EMAIL ">\0"
+    "\tCopyright (C) 2001-2004 Simon White <sidplay2@yahoo.com>\0"
 };
 
 

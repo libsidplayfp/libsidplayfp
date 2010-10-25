@@ -112,7 +112,7 @@ const int8_t XSID::sampleConvertTable[16] =
 const char *XSID::credit =
 {
     "xSID (Extended SID) Engine:\0"
-    "\tCopyright (C) 2000 Simon White <" S_A_WHITE_EMAIL ">\0"
+    "\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0"
 };
 
 

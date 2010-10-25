@@ -48,7 +48,7 @@
 #define MOS6510_VERSION "1.08"
 #define MOS6510_DATE    "23th May 2000"
 #define MOS6510_AUTHOR  "Simon White"
-#define MOS6510_EMAIL   S_A_WHITE_EMAIL
+#define MOS6510_EMAIL    "<sidplay2@yahoo.com>"
 #define MOS6510_INTERRUPT_DELAY 2
 
 #include "opcodes.h"

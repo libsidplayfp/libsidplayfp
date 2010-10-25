@@ -82,7 +82,7 @@
 const char * const SID6526::credit =
 {   // Optional information
     "*SID6526 (SIDPlay1 Fake CIA) Emulation:\0"
-    "\tCopyright (C) 2001 Simon White <" S_A_WHITE_EMAIL ">\0"
+    "\tCopyright (C) 2001 Simon White <sidplay2@yahoo.com>\0"
 };
 
 SID6526::SID6526 (c64env *env)

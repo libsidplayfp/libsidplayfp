@@ -435,10 +435,11 @@ Player::Player (void)
     config (m_cfg);
 
     // Get component credits
-    credit[0] = PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\0\tCopyright (C) 2000 Simon White <" S_A_WHITE_EMAIL ">\0"
-                "\thttp://sidplay2.sourceforge.net\0";
+    credit[0] = PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0"
+                "\tCopyright (C) 2007-2010 Antti Lankila\0"
+                "\thttp://sourceforge.net/projects/sidplay-residfp/\0";
     credit[1] = xsid.credits ();
-    credit[2] = "*MOS6510 (CPU) Emulation:\0\tCopyright (C) 2000 Simon White <" S_A_WHITE_EMAIL ">\0";
+    credit[2] = "*MOS6510 (CPU) Emulation:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0";
     credit[3] = cia.credits ();
     credit[4] = vic.credits ();
     credit[5] = NULL;

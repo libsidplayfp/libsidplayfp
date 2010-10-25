@@ -164,11 +164,6 @@ AC_SUBST(LIBRESIDVERSION)
 AC_SUBST(LIBHARDSIDVERSION)
 
 
-dnl Email addresses
-AH_BOTTOM([/* Email addresses */
-#define S_A_WHITE_EMAIL "sidplay2@yahoo.com"
-])
-
 AC_CONFIG_FILES([
 Makefile
 libsidplayfp.spec
