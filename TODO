@@ -1,1 +1,6 @@
-- Sidsample support for 8580 (through ext_in?)
+* add reSID builder
+* rewrite floating point number parser
+* document API
+* port emulation code from jsidplay2
+* fix spec
+* fix Visual Studio build files
