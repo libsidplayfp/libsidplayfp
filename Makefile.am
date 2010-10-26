@@ -7,8 +7,8 @@ if HAVE_VISIBILITY
   AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
-AM_CPPFLAGS = -I $(top_builddir)/builders/resid-builder \
--I $(top_builddir)/builders/resid-builder/resid
+AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
+-I $(top_builddir)/builders/residfp-builder/residfp
 
 #=========================================================
 EXTRA_DIST = \
@@ -21,26 +21,26 @@ sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64xsid.h \
 sidplayfp/mos6510/cycle_based \
-builders/resid-builder/resid/AUTHORS \
-builders/resid-builder/resid/ChangeLog \
-builders/resid-builder/resid/COPYING \
-builders/resid-builder/resid/INSTALL \
-builders/resid-builder/resid/README \
-builders/resid-builder/resid/README.VICE \
-builders/resid-builder/resid/NEWS
+builders/residfp-builder/residfp/AUTHORS \
+builders/residfp-builder/residfp/ChangeLog \
+builders/residfp-builder/residfp/COPYING \
+builders/residfp-builder/residfp/INSTALL \
+builders/residfp-builder/residfp/README \
+builders/residfp-builder/residfp/README.VICE \
+builders/residfp-builder/residfp/NEWS
 
 #=========================================================
 # Libraries
 lib_LTLIBRARIES = \
 sidplayfp/libsidplayfp.la \
-builders/resid-builder/libsidplayfp-residfp.la
+builders/residfp-builder/libsidplayfp-residfp.la
 
 if HARDSID
   lib_LTLIBRARIES += builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
 noinst_LTLIBRARIES = \
-builders/resid-builder/resid/libresidfp.la
+builders/residfp-builder/residfp/libresidfp.la
 
 #=========================================================
 # libsidplayfp
@@ -120,47 +120,47 @@ utils/SidUsage.h
 # residfp
 
 if USE_SSE
-  convolve_sse_src = builders/resid-builder/resid/convolve-sse.cc
+  convolve_sse_src = builders/residfp-builder/residfp/convolve-sse.cc
 else
   convolve_sse_src = 
 endif
 
-builders_resid_builder_resid_libresidfp_la_SOURCES = \
-builders/resid-builder/resid/sid.h \
-builders/resid-builder/resid/voice.h \
-builders/resid-builder/resid/wave.h \
-builders/resid-builder/resid/envelope.h \
-builders/resid-builder/resid/filter.h \
-builders/resid-builder/resid/extfilt.h \
-builders/resid-builder/resid/pot.h \
-builders/resid-builder/resid/sid.cc \
-builders/resid-builder/resid/voice.cc \
-builders/resid-builder/resid/wave.cc \
-builders/resid-builder/resid/envelope.cc \
-builders/resid-builder/resid/filter.cc \
-builders/resid-builder/resid/extfilt.cc \
-builders/resid-builder/resid/pot.cc \
-builders/resid-builder/resid/version.cc \
-builders/resid-builder/resid/convolve.cc \
+builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
+builders/residfp-builder/residfp/sid.h \
+builders/residfp-builder/residfp/voice.h \
+builders/residfp-builder/residfp/wave.h \
+builders/residfp-builder/residfp/envelope.h \
+builders/residfp-builder/residfp/filter.h \
+builders/residfp-builder/residfp/extfilt.h \
+builders/residfp-builder/residfp/pot.h \
+builders/residfp-builder/residfp/sid.cc \
+builders/residfp-builder/residfp/voice.cc \
+builders/residfp-builder/residfp/wave.cc \
+builders/residfp-builder/residfp/envelope.cc \
+builders/residfp-builder/residfp/filter.cc \
+builders/residfp-builder/residfp/extfilt.cc \
+builders/residfp-builder/residfp/pot.cc \
+builders/residfp-builder/residfp/version.cc \
+builders/residfp-builder/residfp/convolve.cc \
 $(convolve_sse_src)
 
-builders_resid_builder_resid_libresidfp_la_CXXFLAGS = @RESID_FLAGS@
+builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = @RESID_FLAGS@
 
 #=========================================================
 # builders
-builders_resid_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
-builders_resid_builder_libsidplayfp_residfp_la_HEADERS = \
-builders/resid-builder/resid.h
+builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
+builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
+builders/residfp-builder/residfp.h
 
-builders_resid_builder_libsidplayfp_residfp_la_SOURCES = \
-builders/resid-builder/resid.cpp \
-builders/resid-builder/resid-builder.cpp \
-builders/resid-builder/resid-emu.h
+builders_residfp_builder_libsidplayfp_residfp_la_SOURCES = \
+builders/residfp-builder/residfp.cpp \
+builders/residfp-builder/residfp-builder.cpp \
+builders/residfp-builder/residfp-emu.h
 
-builders_resid_builder_libsidplayfp_residfp_la_LIBADD = \
-builders/resid-builder/resid/libresidfp.la
+builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
+builders/residfp-builder/residfp/libresidfp.la
 
-builders_resid_builder_libsidplayfp_residfp_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
+builders_residfp_builder_libsidplayfp_residfp_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
 
 
 builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders

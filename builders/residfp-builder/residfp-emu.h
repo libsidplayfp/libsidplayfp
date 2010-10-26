@@ -19,24 +19,24 @@
 #  include "config.h"
 #endif
 
-#include "resid/sid.h"
+#include "residfp/sid.h"
 
 #ifdef RESID_NAMESPACE
-#   define RESID ::RESID_NAMESPACE
+#   define RESIDFP ::RESID_NAMESPACE
 #else
-#   define RESID
+#   define RESIDFP
 #endif
 
 enum {
     OUTPUTBUFFERSIZE = 32768
 };
 
-class ReSID: public sidemu
+class ReSIDfp: public sidemu
 {
 private:
     EventContext *m_context;
     event_phase_t m_phase;
-    class RESID::SIDFP &m_sid;
+    class RESIDFP::SIDFP &m_sid;
     event_clock_t m_accessClk;
     static char   m_credit[180];
     const  char  *m_error;
@@ -44,8 +44,8 @@ private:
     bool          m_locked;
 
 public:
-    ReSID  (sidbuilder *builder);
-    ~ReSID (void);
+    ReSIDfp  (sidbuilder *builder);
+    ~ReSIDfp (void);
 
     // Standard component functions
     const char   *credits (void) {return m_credit;}

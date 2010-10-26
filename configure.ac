@@ -1,7 +1,7 @@
 AC_INIT([libsidplayfp], [0.1.0])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([Makefile.am])
+AC_CONFIG_SRCDIR([sidplayfp/sidplay2.cpp])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
 
@@ -168,7 +168,7 @@ AC_CONFIG_FILES([
 Makefile
 libsidplayfp.spec
 libsidplayfp.pc
-builders/resid-builder/resid/siddefs-fp.h
+builders/residfp-builder/residfp/siddefs-fp.h
 ])
 
 AC_OUTPUT
