@@ -41,7 +41,7 @@ SidUsage::SidUsage ()
     // Probably a better way to do this
     // Detup decode table to convert usage flags to text characters
     for (int i = 0; i < SID_LOAD_IMAGE; i++)
-    {        
+    {
         m_decodeMAP[i][2] = '\0';
         switch (i & (SID_EXECUTE | SID_STACK | SID_SAMPLE))
         {
@@ -246,7 +246,7 @@ bool SidUsage::readMM (FILE *file, sid2_usage_t &usage, const char *ext)
             {
                 m_errorString = txt_reading;
                 return true;
-            }   
+            }
             ret = fgetc (file);
         }
     }
@@ -380,7 +380,7 @@ void SidUsage::writeMAP (FILE *file, const sid2_usage_t &usage)
         bool used = false;
         for (int offset = 0; offset < 0x100; offset++)
             used |= (usage.memory[(page << 8) | offset] != 0);
-               
+
         if (used)
         {
             for (int i = 0; i < 4; i++)
