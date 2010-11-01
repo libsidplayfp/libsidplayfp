@@ -1,4 +1,3 @@
-* add reSID builder
 * rewrite floating point number parser
 * document API
 * port emulation code from jsidplay2

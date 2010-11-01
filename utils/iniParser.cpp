@@ -22,10 +22,16 @@
 
 long iniParser::parseLong(const char* str) {
 
+	if (!str)
+		throw parseError();
+
 	return strtol(str, 0, 10);
 }
 
 double iniParser::parseDouble(const char* str) {
+
+	if (!str)
+		throw parseError();
 
 	double result = 0.;
 

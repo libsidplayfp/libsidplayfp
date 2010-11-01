@@ -79,7 +79,7 @@ ReSIDfp::~ReSIDfp ()
     delete[] m_buffer;
 }
 
-bool ReSIDfp::filter (const sid_filter_t *filter)
+bool ReSIDfp::filter (const sid_filterfp_t *filter)
 {
     /* Set sensible defaults, will override them if new ones provided. */
     m_sid.get_filter().set_distortion_properties(0.5f, 3.3e6f);
@@ -91,6 +91,19 @@ bool ReSIDfp::filter (const sid_filter_t *filter)
      * XXX: we should check that if one param in set is provided,
      * all are provided. */
     if (filter != NULL) {
+
+#if 1
+    printf("attenuation: %f\n", filter->attenuation);
+    printf("distortion_nonlinearity: %f\n", filter->distortion_nonlinearity);
+    printf("voice_nonlinearity: %f\n", filter->voice_nonlinearity);
+    printf("baseresistance: %f\n", filter->baseresistance);
+    printf("offset: %f\n", filter->offset);
+    printf("steepness: %f\n", filter->steepness);
+    printf("minimumfetresistance: %f\n", filter->minimumfetresistance);
+    printf("k: %f\n", filter->k);
+    printf("b: %f\n", filter->b);
+#endif
+
         if (filter->baseresistance != 0.f)
             m_sid.get_filter().set_type3_properties(
                 filter->baseresistance, filter->offset, filter->steepness, filter->minimumfetresistance

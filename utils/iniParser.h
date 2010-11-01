@@ -45,6 +45,9 @@ private:
 	std::map<std::string, keys_t>::const_iterator curSection;
 
 public:
+	class parseError : public std::exception {};
+
+public:
 	iniParser() {};
 	~iniParser() {};
 

@@ -79,7 +79,6 @@ public:
     virtual  const  char *error   (void) const = 0;
     virtual  const  char *credits (void) = 0;
     virtual  void         filter  (bool enable) = 0;
-    virtual  void         filter  (const sid_filter_t *filter) = 0;
     operator bool() const { return m_status; }
 };
 

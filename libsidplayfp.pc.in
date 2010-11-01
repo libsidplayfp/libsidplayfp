@@ -7,5 +7,5 @@ builders=@builders@
 Name: libsidplayfp
 Description: C64 cycle exact stereo sidplayer library.
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -lsidplayfp -lsidplayfp-residfp @HARDSIDLIB@
+Libs: -L${libdir} -lsidplayfp -lsidplayfp-residfp -lsidplayfp-resid @HARDSIDLIB@
 Cflags: -I${includedir}

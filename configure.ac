@@ -83,8 +83,8 @@ AC_ARG_ENABLE([inline],
   AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]]))
 
 AS_IF([test x"$enable_inline" != "xno"],
-  [RESID_INLINE=inline],
-  [RESID_INLINE=""])
+  [RESID_INLINE=inline; RESID_INLINING=1],
+  [RESID_INLINE=""; RESID_INLINING=0])
 
 
 AC_ARG_ENABLE([sse],
@@ -104,14 +104,14 @@ else
   NO_EXCEPTIONS=""
 fi
 
-RESID_FLAGS="$MSSE $NO_EXCEPTIONS"
+RESIDFP_FLAGS="$MSSE $NO_EXCEPTIONS"
 
 
 # hack to avoid warnings
 saveCPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $CXXFLAGS"
 
-AC_CHECK_HEADERS([xmmintrin.h])
+AC_CHECK_HEADERS([xmmintrin.h mmintrin.h])
 
 CPPFLAGS=$saveCPPFLAGS
 
@@ -156,8 +156,9 @@ AC_SUBST(HAVE_EXPF_PROTOTYPE)
 
 AC_SUBST(RESID_HAVE_BOOL)
 AC_SUBST(RESID_USE_SSE)
+AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)
-AC_SUBST(RESID_FLAGS)
+AC_SUBST(RESIDFP_FLAGS)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(PKGSIDPLAYVERSION)
 AC_SUBST(LIBRESIDVERSION)
@@ -169,6 +170,7 @@ Makefile
 libsidplayfp.spec
 libsidplayfp.pc
 builders/residfp-builder/residfp/siddefs-fp.h
+builders/resid-builder/resid/siddefs.h
 ])
 
 AC_OUTPUT
