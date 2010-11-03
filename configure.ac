@@ -79,6 +79,25 @@ LIBHARDSIDREV=0
 LIBHARDSIDAGE=0
 LIBHARDSIDVERSION=$LIBHARDSIDCUR:$LIBHARDSIDREV:$LIBHARDSIDAGE
 
+AC_MSG_CHECKING([for debugging])
+AC_ARG_ENABLE(debug, [AS_HELP_STRING([--enable-debug], [compile for debugging @<:@no/yes/full, default=no@:>@])],
+  , enable_debug=no)
+
+if test "x$enable_debug" = "xno"; then
+  AC_MSG_RESULT([Build without debugging messages])
+else
+  if test "x$enable_debug" = "xyes"; then
+    debug_flags=-DDEBUG=1
+    AC_MSG_RESULT([Build with debugging messages])
+  else
+    debug_flags=-DDEBUG=10
+    AC_MSG_RESULT([Build with all debugging messages])
+  fi
+fi
+
+AC_SUBST([debug_flags])
+
+
 AC_ARG_ENABLE([inline],
   AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]]))
 

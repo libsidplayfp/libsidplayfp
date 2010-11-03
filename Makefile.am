@@ -10,7 +10,8 @@ endif
 AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 -I $(top_builddir)/builders/residfp-builder/residfp \
 -I $(top_builddir)/builders/resid-builder \
--I $(top_builddir)/builders/resid-builder/resid
+-I $(top_builddir)/builders/resid-builder/resid \
+@debug_flags@
 
 #=========================================================
 EXTRA_DIST = \
@@ -134,7 +135,7 @@ utils/SidUsage.h
 if USE_SSE
   convolve_sse_src = builders/residfp-builder/residfp/convolve-sse.cc
 else
-  convolve_sse_src = 
+  convolve_sse_src =
 endif
 
 builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
