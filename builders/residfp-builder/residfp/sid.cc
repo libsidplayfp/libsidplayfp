@@ -38,7 +38,7 @@ enum host_cpu_feature {
 #  endif
 #endif
 
-#if (RESID_USE_SSE==1)
+#if (RESID_USE_SSE==1) && defined (HAVE_XMMINTRIN_H)
 
 /* This code is appropriate for 32-bit and 64-bit x86 CPUs. */
 #ifdef USE_ASM
@@ -182,7 +182,7 @@ void SIDFP::set_voice_nonlinearity(float nl)
 float SIDFP::kinked_dac(const int x, const float nonlinearity, const int max)
 {
     float value = 0.f;
-    
+
     int bit = 1;
     float weight = 1.f;
     const float dir = 2.0f * nonlinearity;
@@ -201,7 +201,7 @@ float SIDFP::kinked_dac(const int x, const float nonlinearity, const int max)
 // ----------------------------------------------------------------------------
 SIDFP::SIDFP()
 {
-#if (RESID_USE_SSE==1)
+#if (RESID_USE_SSE==1) && defined (HAVE_XMMINTRIN_H)
   can_use_sse = (host_cpu_features() & HOST_CPU_SSE) != 0;
 #else
   can_use_sse = false;
@@ -868,7 +868,7 @@ int SIDFP::clock_resample_interpolate(cycle_count& delta_t, short* buf, int n,
     float* sample_start = sample + sample_index - fir_N + RINGSIZE - 1;
 
     float v1 =
-#if (RESID_USE_SSE==1)
+#if (RESID_USE_SSE==1) && defined (HAVE_XMMINTRIN_H)
       can_use_sse ? convolve_sse(sample_start, fir + fir_offset*fir_N, fir_N) :
 #endif
         convolve(sample_start, fir + fir_offset*fir_N, fir_N);
@@ -880,7 +880,7 @@ int SIDFP::clock_resample_interpolate(cycle_count& delta_t, short* buf, int n,
       ++ sample_start;
     }
     float v2 =
-#if (RESID_USE_SSE==1)
+#if (RESID_USE_SSE==1) && defined (HAVE_XMMINTRIN_H)
       can_use_sse ? convolve_sse(sample_start, fir + fir_offset*fir_N, fir_N) :
 #endif
         convolve(sample_start, fir + fir_offset*fir_N, fir_N);
