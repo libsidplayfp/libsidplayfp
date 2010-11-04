@@ -68,7 +68,6 @@ public:
     const char *credits (void);
     void        flush   (void);
     void        filter  (bool enable);
-    void        filter  (const sid_filter_t *filter) { ; }
 
     uint        create  (uint sids);
 };
