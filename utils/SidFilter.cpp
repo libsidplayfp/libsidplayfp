@@ -223,13 +223,13 @@ void SidFilter::readType3 (iniParser *ini)
 
     for (int i = 0; sidparams[i].name != NULL; i ++) {
         /* Ensure that all parameters are zeroed, if missing. */
-        double tmp;
+        double tmp = 0.;
         const char* value = ini->getValue (sidparams[i].name);
         if (value) {
             try
             {
                 tmp = iniParser::parseDouble (value);
-            } catch  (iniParser::parseError e) { tmp = 0.; }
+            } catch  (iniParser::parseError e) {}
         }
 
         *sidparams[i].address = (float)tmp;
