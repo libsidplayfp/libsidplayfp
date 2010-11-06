@@ -113,6 +113,8 @@ std::pair<std::string, std::string> iniParser::parseKey(const char* buffer) {
 bool iniParser::open(const char* fName) {
 
 	std::ifstream iniFile(fName);
+	if (iniFile.fail())
+		return false;
 
 	char buffer[BUFSIZE];
 	std::map<std::string, keys_t>::iterator mIt;
@@ -139,6 +141,8 @@ bool iniParser::open(const char* fName) {
 			break;
 		}
 	}
+
+	return true;
 }
 
 void iniParser::close() {
@@ -149,10 +153,13 @@ void iniParser::close() {
 bool iniParser::setSection(const char* section) {
 
 	curSection = sections.find(std::string(section));
+
+	return (curSection!=sections.end());
 }
 
 const char* iniParser::getValue(const char* key) {
 
 	std::map<std::string, std::string>::const_iterator keyIt = (*curSection).second.find(std::string(key));
+
 	return (keyIt!=(*curSection).second.end())?keyIt->second.c_str():0;
 }
