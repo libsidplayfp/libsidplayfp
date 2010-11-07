@@ -23,12 +23,10 @@ AM_CONDITIONAL([HARDSID], [test "x$hardsid" = "xyes"])
 AM_CONDITIONAL([MINGW32], [test "x$MINGW32" = "xyes"])
 
 dnl Initialize libtool.
-#LT_INIT([win32-dll])
-AC_LIBTOOL_WIN32_DLL
+LT_INIT([win32-dll])
 
 dnl Checks for programs.
 AC_PROG_CXX
-AC_PROG_LIBTOOL
 
 dnl Use C++ for tests.
 AC_LANG([C++])

@@ -3,3 +3,7 @@
 * port emulation code from jsidplay2
 * fix spec
 * fix Visual Studio build files
+
+* merge builders into main lib (?)
+* remove filter parser and add some hardcoded presets (?)
+* add a STIL parser (?)

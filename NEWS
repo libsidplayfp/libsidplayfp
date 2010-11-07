@@ -1,0 +1,16 @@
+0.1.0 2010-11-xx
+
+you can read a summary of changes from the original libsidplay2
+at http://www.bel.fi/~alankila/c64-sw/index-cpp.html
+
+other changes includes:
+* audio output is now signed 16bit
+* added sampling method and fast sampling parameters and removed precision
+  and samplingFormat from the sid_config_t structure
+* removed filter(const sid_filter_t*) from sidbuilder class
+  and made it builder specific
+* removed optimization method from builders
+* rewritten ini parser to be locale agnostic and use it only internally
+* headers are now installed under $(includedir)/sidplayfp
+* libsidplay and libsidutils are merged in a single library
+
