@@ -224,7 +224,7 @@ builders/resid-builder/resid/libresid.la
 
 builders_resid_builder_libsidplayfp_resid_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
 
-
+if HARDSID
 builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
 builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
 builders/hardsid-builder/hardsid.h
@@ -241,6 +241,7 @@ builders/hardsid-builder/hardsid-builder.cpp  \
 builders/hardsid-builder/hardsid-emu.h
 
 builders_hardsid_builder_libsidplayfp_hardsid_la_LDFLAGS = -version-info $(LIBHARDSIDVERSION)
+endif
 
 #=========================================================
 pkgconfigdir = $(libdir)/pkgconfig
