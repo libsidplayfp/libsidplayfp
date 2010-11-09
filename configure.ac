@@ -198,7 +198,6 @@ AC_SUBST(LIBHARDSIDVERSION)
 
 AC_CONFIG_FILES([
 Makefile
-libsidplayfp.spec
 libsidplayfp.pc
 builders/residfp-builder/residfp/siddefs-fp.h
 builders/resid-builder/resid/siddefs.h
