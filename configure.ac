@@ -61,7 +61,21 @@ dnl Check ANSI C++ ios features
 MY_CHECK_IOS_BIN
 MY_CHECK_IOS_OPENMODE
 
+
 dnl libtool-style version-info number
+
+# if you don’t change the interface at all just increase the
+#     “interface revision” value;
+# if you make backward-compatible changes (like adding interfaces),
+#     increase the “current interface” value and the “older interface age”
+#     value, reset “interface revision” to zero;
+# if you make backward-incompatible changes, breaking ABI
+#     (removing interfaces for instance), increase the “current interface”
+#     value and # reset both “older interface age” and ”interface revision”
+#     to zero.
+
+# http://blog.flameeyes.eu/2009/04/22/shared-object-version
+
 LIBSIDPLAYCUR=0
 LIBSIDPLAYREV=0
 LIBSIDPLAYAGE=0
@@ -79,7 +93,7 @@ LIBHARDSIDVERSION=$LIBHARDSIDCUR:$LIBHARDSIDREV:$LIBHARDSIDAGE
 
 AC_MSG_CHECKING([for debugging])
 AC_ARG_ENABLE(debug, [AS_HELP_STRING([--enable-debug], [compile for debugging @<:@no/yes/full, default=no@:>@])],
-  , enable_debug=no)
+ [], [enable_debug=no])
 
 if test "x$enable_debug" = "xno"; then
   AC_MSG_RESULT([Build without debugging messages])

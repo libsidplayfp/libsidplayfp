@@ -1,4 +1,4 @@
-0.1.0 2010-11-xx
+0.1.0 2010-11-10
 
 you can read a summary of changes from the original libsidplay2
 at http://www.bel.fi/~alankila/c64-sw/index-cpp.html
@@ -13,4 +13,4 @@ other changes includes:
 * rewritten ini parser to be locale agnostic and use it only internally
 * headers are now installed under $(includedir)/sidplayfp
 * libsidplay and libsidutils are merged in a single library
-
+* two resid builders (original and distortion patched)
