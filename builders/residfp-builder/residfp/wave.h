@@ -59,7 +59,7 @@ protected:
 
   void clock_noise(const bool clock);
   reg8 outputN___();
-  void set_nonlinearity(float nl);
+  void set_nonlinearity(const chip_model model, const float nl);
   void rebuild_wftable();
   void calculate_waveform_sample(float o[12]);
   void update_pw();

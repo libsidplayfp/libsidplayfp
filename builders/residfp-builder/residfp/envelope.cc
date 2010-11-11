@@ -20,10 +20,10 @@
 #include "envelope.h"
 #include "sid.h"
 
-void EnvelopeGeneratorFP::set_nonlinearity(float nl)
+void EnvelopeGeneratorFP::set_nonlinearity(const chip_model model, const float nl)
 {
     for (int i = 0; i < 256; i ++)
-        env_dac[i] = SIDFP::kinked_dac(i, nl, 8);
+        env_dac[i] = SIDFP::kinked_dac(i, nl, 8, model == MOS8580FP);
 }
 
 // ----------------------------------------------------------------------------

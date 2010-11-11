@@ -52,7 +52,7 @@ public:
   RESID_INLINE float output();
 
 protected:
-  void set_nonlinearity(float nl);
+  void set_nonlinearity(const chip_model model, const float nl);
   void update_rate_period(reg16 period);
 
   int rate_counter;

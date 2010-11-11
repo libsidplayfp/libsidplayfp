@@ -32,7 +32,7 @@ public:
   SIDFP();
   ~SIDFP();
 
-  static float kinked_dac(const int x, const float nonlinearity, const int bits);
+  static float kinked_dac(const int input, const float _2R_div_R, const int bits, const bool term);
   bool sse_enabled() { return can_use_sse; }
 
   void set_chip_model(chip_model model);
@@ -45,7 +45,7 @@ public:
   void clock();
   int clock(cycle_count& delta_t, short* buf, int n, int interleave = 1);
   void reset();
-  
+
   // Read/write registers.
   reg8 read(reg8 offset);
   void write(reg8 offset, reg8 value);
@@ -71,7 +71,7 @@ public:
     EnvelopeGeneratorFP::State envelope_state[3];
     bool hold_zero[3];
   };
-    
+
   State read_state();
   void write_state(const State& state);
 
@@ -111,7 +111,7 @@ protected:
   int sample_index;
   int fir_N;
   int fir_RES;
-  
+
   /* for linear interpolation mode */
   float sample_prev;
 

@@ -173,27 +173,72 @@ float wftable[11][4096];
 /* nonlinear DAC support, set 1 for 8580 / no effect, about 0.96 otherwise */
 void SIDFP::set_voice_nonlinearity(float nl)
 {
-  voice[0].envelope.set_nonlinearity(nl);
-  voice[0].wave.set_nonlinearity(nl);
+  voice[0].envelope.set_nonlinearity(model, nl);
+  voice[0].wave.set_nonlinearity(model, nl);
   voice[0].wave.rebuild_wftable();
   filter.set_nonlinearity(nl);
 }
 
-float SIDFP::kinked_dac(const int x, const float nonlinearity, const int max)
+/*
+ * Estimate DAC nonlinearity. The SID contains R-2R ladder, and some likely errors
+ * in the resistor lengths which result in errors depending on the bits chosen.
+ * 
+ * This model was derived by Dag Lem, and is port of the upcoming reSID version.
+ * In average, it shows a value higher than the target by a value that depends
+ * on the _2R_div_R parameter. It differs from the version written by Antti Lankila
+ * chiefly in the emulation of the lacking termination of the 2R ladder, which
+ * destroys the output with respect to the low bits of the DAC.
+ *
+ * @param input digital value to convert to analog
+ * @param _2R_div_R nonlinearity parameter, 1.0 for perfect linearity.
+ * @param bits highest bit that may be set in input.
+ * @param termi is the dac terminated by a 2R resistor? (6581 DACs are not)
+ *
+ * @return the analog value as modeled from the R-2R network.
+  */
+float SIDFP::kinked_dac(const int input, const float _2R_div_R, const int bits, const bool term)
 {
-    float value = 0.f;
+	const float infinity = 1e6f;
 
-    int bit = 1;
-    float weight = 1.f;
-    const float dir = 2.0f * nonlinearity;
-    for (int i = 0; i < max; i ++) {
-        if (x & bit)
-            value += weight;
-        bit <<= 1;
-        weight *= dir;
-    }
+	// Calculate voltage contribution by each individual bit in the R-2R ladder.
+	float Vo = 0.f;
+	float Vsum = 0.f;
+	for (int set_bit = 0; set_bit < bits; set_bit++) {
+		int bit;
 
-    return value / (weight / nonlinearity / nonlinearity) * (1 << max);
+		float Vn = 1.0f;                // Normalized bit voltage.
+		const float R = 1.0f;           // Normalized R
+		const float _2R = _2R_div_R*R;  // 2R
+		float Rn = term ?               // Rn = 2R for correct termination,
+			_2R : infinity;         // INFINITY for missing termination.
+
+		// Calculate DAC "tail" resistance by repeated parallel substitution.
+		for (bit = 0; bit < set_bit; bit++) {
+			if (Rn == infinity) {
+				Rn = R + _2R;
+			} else {
+				Rn = R + _2R*Rn/(_2R + Rn); // R + 2R || Rn
+			}
+		}
+
+		// Calculate DAC output voltage by repeated source transformation from
+		// the "tail".
+		for (; bit < bits; bit++) {
+			if (Rn == infinity) {
+				Rn = R + _2R;
+			} else {
+				Rn = _2R*Rn/(_2R + Rn);  // 2R || Rn
+				Vn = Vn*Rn/_2R;
+				Rn = R + Rn;             // R + 2R || Rn
+			}
+		}
+
+		if ((input & (1 << set_bit)) != 0) {
+			Vo += Vn;
+		}
+		Vsum += Vn;
+	}
+	return ((1 << bits) - 1) * Vo / Vsum;
 }
 
 // ----------------------------------------------------------------------------
@@ -211,6 +256,7 @@ SIDFP::SIDFP()
   sample = 0;
   fir = 0;
 
+  set_chip_model(MOS8580FP);
   set_sampling_parameters(985248, SAMPLE_INTERPOLATE, 44100);
 
   bus_value = 0;
@@ -581,11 +627,11 @@ bool SIDFP::set_sampling_parameters(float clock_freq, sampling_method method,
     fir = 0;
     return true;
   }
-  
+
   const int bits = 16;
 
   if (pass_freq > 20000)
-    pass_freq = 20000;  
+    pass_freq = 20000;
   if (2*pass_freq/sample_freq > 0.9)
     pass_freq = 0.9f*sample_freq/2;
 
