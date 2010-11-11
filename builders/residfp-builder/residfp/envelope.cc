@@ -109,7 +109,7 @@ void EnvelopeGeneratorFP::mute(bool enable)
 // The described method is thus sufficient for exact calculation of the rate
 // periods.
 //
-reg16 EnvelopeGeneratorFP::rate_counter_period[] = {
+const reg16 EnvelopeGeneratorFP::rate_counter_period[] = {
       9,  //   2ms*1.0MHz/256 =     7.81
      32,  //   8ms*1.0MHz/256 =    31.25
      63,  //  16ms*1.0MHz/256 =    62.50
@@ -166,7 +166,7 @@ reg16 EnvelopeGeneratorFP::rate_counter_period[] = {
 // envelope counter are compared to the 4-bit sustain value.
 // This has been verified by sampling ENV3.
 //
-reg8 EnvelopeGeneratorFP::sustain_level[] = {
+const reg8 EnvelopeGeneratorFP::sustain_level[] = {
   0x00,
   0x11,
   0x22,
