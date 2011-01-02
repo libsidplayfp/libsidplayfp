@@ -1,6 +1,6 @@
 //  ---------------------------------------------------------------------------
 //  This file is part of reSID, a MOS6581 SID emulator engine.
-//  Copyright (C) 2004  Dag Lem <resid@nimrod.no>
+//  Copyright (C) 2010  Dag Lem <resid@nimrod.no>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,8 +19,13 @@
 
 #include "pot.h"
 
+namespace reSID
+{
+
 reg8 Potentiometer::readPOT()
 {
   // NB! Not modeled.
   return 0xff;
 }
+
+} // namespace reSID

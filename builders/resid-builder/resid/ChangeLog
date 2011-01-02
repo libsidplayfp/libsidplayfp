@@ -1,3 +1,159 @@
+2010-??-??  Dag Lem  <resid@nimrod.no>
+
+	* Version 1.0 released.
+
+	* configure.ac: Updated to current autoconf/automake standards.
+	New option --enable-arch for gcc architecture specific
+	optimizations, including vectorization. New option
+	--enable-branch-hints for branch prediction optimizations.
+
+	* Makefile.am, samp2src.pl: Generate header files instead of
+	source files for waveform samples. Added dac.h, dac.cc.
+
+	* siddefs.h.in: Sampling method names now better reflect their
+	operation (SAMPLE_RESAMPLE_INTERPOLATE -> SAMPLE_RESAMPLE,
+	SAMPLE_RESAMPLE_FAST -> SAMPLE_RESAMPLE_FASTMEM).
+	New macros for branch prediction: likely / unlikely.
+
+	* dac.h: New file; accurate emulation of non-monotonic MOS 6581
+	D/A converters.
+
+	* dac.cc: New file; accurate emulation of non-monotonic MOS 6581
+	D/A converters.
+
+	* envelope.h (EnvelopeGenerator::clock): Emulation of one cycle
+	pipeline delay in the exponential frequency divider.
+	(EnvelopeGenerator::output): Emulation of non-ideal DAC output.
+	(EnvelopeGenerator::set_chip_model): New function; for emulation
+	of DAC imperfections.
+	(EnvelopeGenerator::set_exponential_counter): New function;
+	modularization of exponential counter update.
+
+	* envelope.cc (EnvelopeGenerator::EnvelopeGenerator):
+	Initialization of DAC lookup tables.
+	(EnvelopeGenerator::readENV): Return envelope_counter directly, in
+	order to allow EnvelopeGenerator::output to emulate DAC
+	imperfections.
+	(EnvelopeGenerator::reset): Initialization of new
+	variables.
+	(EnvelopeGenerator::set_chip_model): New function; for emulation
+	of DAC imperfections.
+	(EnvelopeGenerator::writeCONTROL_REG): Flush of exponential
+	frequency divider pipeline on attack.
+
+	* extfilt.h (ExternalFilter::clock): Cutoff frequency fixed point
+	accuracy is traded off for for vastly improved filter signal
+	fixed point accuracy.
+	(ExternalFilter::output): Output range reduced from 20 to 16
+	bits.
+
+	* extfilt.cc (ExternalFilter::ExternalFilter): Assumes audio
+	equipment impedance of 10kOhm, yielding a high-pass 3-dB frequency
+	of 1.6Hz (changed from 16Hz). Cutoff frequency fixed point accuracy
+	is traded off for for vastly improved filter signal fixed point
+	accuracy.
+	(ExternalFilter::set_chip_model): Removed. Remaining DC levels can
+	only be canceled by enabling the external filter (or by similar
+	post processing).
+
+	* filter.h: Major rewrite implementing an accurate model of the
+	actual filter and output stage topology, including models for
+	op-amps, input and feedback NMOS FET "resistors", and voltage
+	controlled resistors (VCRs).
+	(Filter::input): New interface to set external input level.
+	(Filter::output): Output range reduced from 20 to 16 bits.
+	(Filter::set_voice_mask): New function. Emulation of physical
+	connection of EXT IN, and voice muting for test purposes.
+	(Filter::solve_gain): New function; iterative solver using
+	Newton-Raphson and bisection to calculate gain for SID op-amp
+	gains and summers using NMOS FETs as input and feedback "resistors".
+	(Filter::solve_integrate): New function; one-step fixpoint solver
+	to calculate output from SID op-amp integrators using VCRs built
+	from four NMOS FETs as inputs.
+
+	* filter.cc: Major rewrite implementing an accurate model of the
+	actual filter and output stage topology, including models for
+	op-amps, input and feedback NMOS FET "resistors", and voltage
+	controlled resistors (VCRs).
+	(Filter::set_voice_mask): New function. Emulation of physical
+	connection of EXT IN, and voice muting for test purposes.
+
+	* sid.h: Resampling constants declared in enum.
+	(SID::State): Added voice_mask, shift_register_reset,
+	shift_pipeline, pulse_output, floating_output_ttl,
+	envelope_pipeline.
+	(SID::output): 16 bit output range only, n-bit interface
+	removed.
+	(SID::clock_resample): Renamed from
+	SID::clock_resample_interpolate.
+	(SID::clock_resample_fastmem): Renamed from
+	SID::clock_resample_fast.
+
+	* sid.cc (SID::clock): Emulation of one cycle pipeline write delay
+	for the MOS8580.
+	(SID::clock_resample): Renamed from SID::clock_resample_interpolate.
+	Corrected bug in FIR table wraparound, courtesy of Antti Lankila.
+	(SID::clock_resample_fastmem): Renamed from
+	SID::clock_resample_fast.
+	(SID::input): Hand off all processing of the external input to the
+	filter.
+	(SID::output): 16 bit output range only, n-bit output interface
+	removed.
+	(SID::read): Aging time for bus value increased from 0x2000 to
+	0x4000 cycles.
+	(SID::read_state, SID::write_state): Added voice_mask,
+	shift_register_reset, shift_pipeline, pulse_output,
+	floating_output_ttl, envelope_pipeline.
+	(SID::set_voice_mask): New function. Emulation of physical
+	connection of EXT IN, and voice muting for test purposes.
+	(SID::write): Emulation of one cycle pipeline write delay for the
+	MOS8580.
+	(SID::write_pipeline): New function. Emulation of one cycle
+	pipeline write delay for the MOS8580.
+
+	* spline.h (PointPlotter::operator()): Rounding to nearest
+	integer.
+
+	* voice.h (Voice::output): Handling of DC for waveform "zero"
+	level moved to Filter::clock.
+
+	* voice.cc (Voice::set_chip_model): Call set_chip_model for
+	envelope generator. Handling of DC for "zero" level moved to
+	Filter::set_chip_model.
+
+	* wave.h (WaveformGenerator::clock): Corrected shift register
+	model. Emulation of reset time for the shift register. Emulation
+	of two cycle pipeline delay for accumulator bit 19 to shift the
+	shift register.
+	(WaveformGenerator::clock_shift_register)
+	(WaveformGenerator::write_shift_register)
+	(WaveformGenerator::reset_shift_register)
+	(WaveformGenerator::set_noise_output): New functions. Emulation
+	of writes to the shift register by combined waveforms.
+	(WaveformGenerator::set_waveform_output): New function. Emulation
+	of floating DAC input with aging. Emulation of one cycle pipeline
+	delay for the pulse width comparator to change the pulse
+	level. Emulation of writes to the shift register by combined
+	waveforms. Highly optimized waveform calculation using nearly
+	branch-free table lookup for all waveforms; replaces 16 previous
+	waveform functions named WaveformGenerator::outputXXXX.
+	(WaveformGenerator::output): Emulation of non-ideal DAC output.
+
+	* wave.cc (WaveformGenerator::WaveformGenerator): Initialization
+	of lookup tables for basic waveforms and DACs.
+	(WaveformGenerator::readOSC): Return waveform_output directly, in
+	order to allow WaveformGenerator::output to emulate DAC
+	imperfections.
+	(WaveformGenerator::set_chip_model): Update pointer to current
+	waveform table.
+	(WaveformGenerator::writePW_LO, WaveformGenerator::writePW_HI):
+	Push next pulse level into pulse level pipeline.
+	(WaveformGenerator::writeCONTROL_REG): Emulation of the effects of
+	the test bit on the shift register (shifting, reset time).
+	Emulation of fading time for floating DAC input (waveform 0).
+	Update pointer to current waveform table.
+	(WaveformGenerator::reset): Initialization of new variables.
+
 2004-06-11  Dag Lem  <resid@nimrod.no>
 
 	* Version 0.16 released.
