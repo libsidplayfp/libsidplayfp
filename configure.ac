@@ -185,6 +185,47 @@ AC_COMPILE_IFELSE(
 AC_SUBST(HAVE_LOGF_PROTOTYPE)
 AC_SUBST(HAVE_EXPF_PROTOTYPE)
 
+
+dnl Enable branch prediction hints.
+AC_ARG_ENABLE([branch-hints],
+  [AS_HELP_STRING([--enable-branch-hints],
+    [enable static branch prediction hints [default=yes]])],
+  [],
+  [enable_branch_hints=yes])
+
+AS_IF([test "$enable_branch_hints" != no],
+  [AC_SUBST([RESID_BRANCH_HINTS], [1])],
+  [AC_SUBST([RESID_BRANCH_HINTS], [0])])
+
+
+AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
+  [AC_COMPILE_IFELSE([int main() { __builtin_expect(0, 0); }],
+    [resid_cv_builtin_expect=yes], [resid_cv_builtin_expect=no])])
+
+AS_IF([test "$resid_cv_builtin_expect" = no],
+  [AC_SUBST([HAVE_BUILTIN_EXPECT], [0])],
+  [AC_SUBST([HAVE_BUILTIN_EXPECT], [1])])
+
+dnl Checks for library functions.
+if test x"$host_os" != "xminix"; then
+  AC_CHECK_FUNCS(sqrtf, [HAVE_SQRTF=1], [HAVE_SQRTF=0])
+fi
+
+AC_MSG_CHECKING([if the sqrtf prototype is present])
+AC_TRY_COMPILE([#include <math.h>
+                #include <stdio.h>],
+               [printf("%d",sqrtf);],
+               [ AC_MSG_RESULT(yes)
+                 HAVE_SQRTF_PROTOTYPE=1
+                ],
+               [ AC_MSG_RESULT(no)
+                HAVE_SQRTF_PROTOTYPE=0
+                ])
+
+AC_SUBST(HAVE_SQRTF)
+AC_SUBST(HAVE_SQRTF_PROTOTYPE)
+
+
 AC_SUBST(RESID_HAVE_BOOL)
 AC_SUBST(RESID_USE_SSE)
 AC_SUBST(RESID_INLINING)

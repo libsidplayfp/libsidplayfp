@@ -36,8 +36,11 @@ builders/resid-builder/resid/ChangeLog \
 builders/resid-builder/resid/COPYING \
 builders/resid-builder/resid/configure.in \
 builders/resid-builder/resid/INSTALL \
+builders/resid-builder/resid/NEWS \
 builders/resid-builder/resid/README \
 builders/resid-builder/resid/README.VICE \
+builders/resid-builder/resid/THANKS \
+builders/resid-builder/resid/TODO \
 $(noinst_DATA)
 
 #=========================================================
@@ -162,9 +165,10 @@ builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = @RESIDFP_FLAGS@
 #=========================================================
 # resid
 
-BUILT_SOURCES = $(noinst_DATA:.dat=.cc)
+BUILT_SOURCES = $(noinst_DATA:.dat=.h)
 
 builders_resid_builder_resid_libresid_la_SOURCES = \
+builders/resid-builder/resid/dac.h \
 builders/resid-builder/resid/sid.h \
 builders/resid-builder/resid/voice.h \
 builders/resid-builder/resid/wave.h \
@@ -173,6 +177,7 @@ builders/resid-builder/resid/filter.h \
 builders/resid-builder/resid/extfilt.h \
 builders/resid-builder/resid/pot.h \
 builders/resid-builder/resid/spline.h \
+builders/resid-builder/resid/dac.cc \
 builders/resid-builder/resid/sid.cc \
 builders/resid-builder/resid/voice.cc \
 builders/resid-builder/resid/wave.cc \
@@ -181,7 +186,7 @@ builders/resid-builder/resid/filter.cc \
 builders/resid-builder/resid/extfilt.cc \
 builders/resid-builder/resid/pot.cc \
 builders/resid-builder/resid/version.cc \
-$(noinst_DATA:.dat=.cc)
+$(noinst_DATA:.dat=.h)
 
 noinst_DATA = \
 builders/resid-builder/resid/wave6581_PST.dat \
@@ -192,6 +197,11 @@ builders/resid-builder/resid/wave8580_PST.dat \
 builders/resid-builder/resid/wave8580_PS_.dat \
 builders/resid-builder/resid/wave8580_P_T.dat \
 builders/resid-builder/resid/wave8580__ST.dat
+
+noinst_SCRIPTS = builders/resid-builder/resid/samp2src.pl
+
+#.dat.h:
+#	$(PERL) $(srcdir)/samp2src.pl $* $< $(srcdir)/$@
 
 #=========================================================
 # builders

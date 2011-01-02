@@ -29,6 +29,7 @@
 #endif
 
 #include "resid/siddefs.h"
+#include "resid/spline.h"
 #include "resid.h"
 #include "resid-emu.h"
 
@@ -39,9 +40,9 @@ ReSID::ReSID (sidbuilder *builder)
  m_context(NULL),
  m_phase(EVENT_CLOCK_PHI1),
 #ifdef HAVE_EXCEPTIONS
- m_sid(*(new(std::nothrow) RESID_NS::RESID)),
+ m_sid(*(new(std::nothrow) RESID_NS::SID)),
 #else
- m_sid(*(new RESID_NS::RESID)),
+ m_sid(*(new RESID_NS::SID)),
 #endif
  m_status(true),
  m_locked(false)
@@ -54,7 +55,7 @@ ReSID::ReSID (sidbuilder *builder)
     p += strlen (p) + 1;
     strcpy  (p, "\t(C) 1999-2002 Simon White <sidplay2@yahoo.com>");
     p += strlen (p) + 1;
-    sprintf (p, "MOS6581 (SID) Emulation (ReSID V%s):", RESID_NS::resid_version_string);
+    sprintf (p, "MOS6581 (SID) Emulation (ReSID V%s):", resid_version_string);
     p += strlen (p) + 1;
     sprintf (p, "\t(C) 1999-2002 Dag Lem <resid@nimrod.no>");
     p += strlen (p) + 1;
@@ -81,13 +82,14 @@ ReSID::~ReSID ()
 
 bool ReSID::filter (const sid_filter_t *filter)
 {
-    RESID_NS::fc_point fc[0x802];
-    const RESID_NS::fc_point *f0 = fc;
+    RESID_NS::short_point fc[0x802];
+    const RESID_NS::short_point *f0 = fc;
     int   points = 0;
 
     if (filter == NULL)
     {   // Select default filter
-        m_sid.fc_default (f0, points);
+        //m_sid.fc_default (f0, points); //FIXME
+        return false;
     }
     else
     {   // Make sure there are enough filter points and they are legal
@@ -107,7 +109,7 @@ bool ReSID::filter (const sid_filter_t *filter)
         {
             const sid_fc_t  fstart = {-1, 0};
             const sid_fc_t *fprev  = &fstart, *fin = filter->cutoff;
-            RESID_NS::fc_point *fout = fc;
+            RESID_NS::short_point *fout = fc;
             // Last check, make sure they are list in numerical order
             // for both axis
             while (points-- > 0)
@@ -115,8 +117,8 @@ bool ReSID::filter (const sid_filter_t *filter)
                 if ((*fprev)[0] >= (*fin)[0])
                     return false;
                 fout++;
-                (*fout)[0] = (RESID_NS::sound_sample) (*fin)[0];
-                (*fout)[1] = (RESID_NS::sound_sample) (*fin)[1];
+                (*fout)[0] = (short) (*fin)[0];
+                (*fout)[1] = (short) (*fin)[1];
                 fprev      = fin++;
             }
             // Updated ReSID interpolate requires we
@@ -131,7 +133,7 @@ bool ReSID::filter (const sid_filter_t *filter)
 
     // function from reSID
     points--;
-    RESID_NS::interpolate (f0, f0 + points, m_sid.fc_plotter (), 1.0);
+    RESID_NS::interpolate (f0, f0 + points, RESID_NS::PointPlotter<short>(*fc), 1.0); //FIXME
     return true;
 }
 
@@ -157,7 +159,7 @@ void ReSID::write (uint_least8_t addr, uint8_t data)
 
 void ReSID::clock()
 {
-    cycle_count cycles = m_context->getTime(m_accessClk, m_phase);
+    RESID_NS::cycle_count cycles = m_context->getTime(m_accessClk, m_phase);
     m_accessClk += cycles;
     m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
 }
@@ -170,14 +172,14 @@ void ReSID::filter (bool enable)
 void ReSID::sampling (float systemclock, float freq,
         const sampling_method_t method, const bool fast)
 {
-    sampling_method sampleMethod;
+    RESID_NS::sampling_method sampleMethod;
     switch (method)
     {
     case SID2_INTERPOLATE:
         sampleMethod = fast ? RESID_NS::SAMPLE_FAST : RESID_NS::SAMPLE_INTERPOLATE;
         break;
     case SID2_RESAMPLE_INTERPOLATE:
-        sampleMethod = fast ? RESID_NS::SAMPLE_RESAMPLE_FAST : RESID_NS::SAMPLE_RESAMPLE_INTERPOLATE;
+        sampleMethod = fast ? RESID_NS::SAMPLE_RESAMPLE_FASTMEM : RESID_NS::SAMPLE_RESAMPLE;
         break;
     default:
         m_status = false;

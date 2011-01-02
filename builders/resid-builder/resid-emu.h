@@ -21,6 +21,9 @@
 
 #include "resid/sid.h"
 
+//FIXME
+#define RESID_NAMESPACE reSID
+
 #ifdef RESID_NAMESPACE
 #   define RESID_NS ::RESID_NAMESPACE
 #else
@@ -36,7 +39,7 @@ class ReSID: public sidemu
 private:
     EventContext *m_context;
     event_phase_t m_phase;
-    class RESID_NS::RESID &m_sid;
+    class RESID_NS::SID &m_sid;
     event_clock_t m_accessClk;
     static char   m_credit[180];
     const  char  *m_error;
