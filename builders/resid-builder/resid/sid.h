@@ -38,6 +38,7 @@ public:
   void set_chip_model(chip_model model);
   void set_voice_mask(reg4 mask);
   void enable_filter(bool enable);
+  void adjust_filter_bias(double dac_bias);
   void enable_external_filter(bool enable);
   bool set_sampling_parameters(double clock_freq, sampling_method method,
 			       double sample_freq, double pass_freq = -1,
@@ -71,7 +72,7 @@ public:
     reg24 shift_register[3];
     cycle_count shift_register_reset[3];
     cycle_count shift_pipeline[3];
-    cycle_count pulse_output[3];
+    reg16 pulse_output[3];
     cycle_count floating_output_ttl[3];
 
     reg16 rate_counter[3];
@@ -93,9 +94,7 @@ public:
   // 16-bit output (AUDIO OUT).
   short output();
 
-  //FIXME:
-  //protected:
-public:
+ protected:
   static double I0(double x);
   RESID_INLINE int clock_fast(cycle_count& delta_t, short* buf, int n,
 			      int interleave);
