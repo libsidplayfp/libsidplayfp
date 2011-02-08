@@ -41,7 +41,8 @@ builders/resid-builder/resid/README \
 builders/resid-builder/resid/README.VICE \
 builders/resid-builder/resid/THANKS \
 builders/resid-builder/resid/TODO \
-$(noinst_DATA)
+$(noinst_DATA) \
+$(noinst_SCRIPTS)
 
 #=========================================================
 # Libraries
