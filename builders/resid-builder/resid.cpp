@@ -82,7 +82,7 @@ ReSID::~ReSID ()
 
 bool ReSID::filter (const sid_filter_t *filter)
 {
-    RESID_NS::short_point fc[0x802];
+    /*RESID_NS::short_point fc[0x802];
     const RESID_NS::short_point *f0 = fc;
     int   points = 0;
 
@@ -133,8 +133,13 @@ bool ReSID::filter (const sid_filter_t *filter)
 
     // function from reSID
     points--;
-    RESID_NS::interpolate (f0, f0 + points, RESID_NS::PointPlotter<short>(*fc), 1.0); //FIXME
+    RESID_NS::interpolate (f0, f0 + points, RESID_NS::PointPlotter<short>(*fc), 1.0); //FIXME*/
     return true;
+}
+
+void ReSID::bias (const double dac_bias)
+{
+    m_sid.adjust_filter_bias(dac_bias);
 }
 
 // Standard component options
