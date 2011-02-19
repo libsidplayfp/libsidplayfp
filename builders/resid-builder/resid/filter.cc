@@ -22,6 +22,7 @@
 #include "filter.h"
 #include "dac.h"
 #include "spline.h"
+#include <math.h>
 
 namespace reSID
 {
@@ -98,11 +99,11 @@ typedef struct {
   double C;
   // Transistor parameters.
   double Vdd;
-  double Vth;      // Threshold voltage
-  double K1_vcr;   // 1/2*u*Cox
-  double WL_vcr;   // W/L for VCR
-  double K1_snake; // 1/2*u*Cox
-  double WL_snake; // W/L for "snake"
+  double Vth;        // Threshold voltage
+  double uCox_vcr;   // u*Cox
+  double WL_vcr;     // W/L for VCR
+  double uCox_snake; // u*Cox
+  double WL_snake;   // W/L for "snake"
   // DAC parameters.
   double dac_zero;
   double dac_scale;
@@ -123,9 +124,9 @@ static model_filter_init_t model_filter_init[2] = {
     // Transistor parameters.
     12.18,
     1.31,
-    10e-6,
+    20e-6,
     9.0/1,
-    10e-6,
+    20e-6,
     1.0/115,
     // DAC parameters.
     6.65,
@@ -154,7 +155,7 @@ static model_filter_init_t model_filter_init[2] = {
 };
 
 unsigned short Filter::vcr_Vg[1 << 16];
-unsigned short Filter::vcr_n_Ids[1 << 16];
+unsigned short Filter::vcr_n_Ids_term[1 << 16];
 
 Filter::model_filter_t Filter::model_filter[2];
 
@@ -167,6 +168,9 @@ Filter::Filter()
   static bool class_init;
 
   if (!class_init) {
+    // Temporary table for op-amp transfer function.
+    int* opamp = new int[1 << 19];
+
     for (int m = 0; m < 2; m++) {
       model_filter_init_t& fi = model_filter_init[m];
       model_filter_t& mf = model_filter[m];
@@ -180,6 +184,7 @@ Filter::Filter()
       // Scaling and translation constants.
       double N16 = norm*((1u << 16) - 1);
       double N19 = norm*((1u << 19) - 1);
+      double N30 = norm*((1u << 30) - 1);
       double N31 = norm*((1u << 31) - 1);
       mf.vo_N16 = (int)(N16);  // FIXME: Remove?
       mf.vo_T19 = (int)(N19*vmin);
@@ -198,8 +203,8 @@ Filter::Filter()
 
       // Normalized VCR and snake current factors, 1 cycle at 1MHz.
       // Fit in 15 bits / 5 bits.
-      mf.n_vcr = (int)(denorm*(1 << 13)*(fi.K1_vcr*fi.WL_vcr*1.0e-6/fi.C) + 0.5);
-      mf.n_snake = (int)(denorm*(1 << 13)*(fi.K1_snake*fi.WL_snake*1.0e-6/fi.C) + 0.5);
+      mf.n_vcr = (int)(denorm*(1 << 13)*(fi.uCox_vcr/2*fi.WL_vcr*1.0e-6/fi.C) + 0.5);
+      mf.n_snake = (int)(denorm*(1 << 13)*(fi.uCox_snake/2*fi.WL_snake*1.0e-6/fi.C) + 0.5);
 
       // Create lookup table mapping op-amp input voltage to op-amp output
       // voltage: vx -> vo
@@ -228,19 +233,19 @@ Filter::Filter()
       }
 
       interpolate(scaled_voltage, scaled_voltage + fi.opamp_voltage_size - 1,
-		  PointPlotter<int>(mf.opamp), 1.0);
+		  PointPlotter<int>(opamp), 1.0);
 
       // Store both fn and dfn in the same table.
-      int f = mf.opamp[0];
+      int f = opamp[0];
       for (int j = 0; j < (1 << 19); j++) {
 	int fp = f;
-	f = mf.opamp[j];  // Scaled by m*2^31
+	f = opamp[j];  // Scaled by m*2^31
 	// m*2^31*dy/1 = (m*2^31*dy)/(m*2^19*dx) = 2^12*dy/dx
 	int df = f - fp;  // Scaled by 2^12
 
 	// High 13 bits (12 bits + sign bit): 2^8*dfn
 	// Low 19 bits (unsigned):            m*2^19*(fn - xmin)
-	mf.opamp[j] = ((df << (19 + 8 - 12)) & ~0x7ffff) | (f >> 12);
+	opamp[j] = ((df << (19 + 8 - 12)) & ~0x7ffff) | (f >> 12);
       }
 
       // Create lookup tables for gains / summers.
@@ -255,7 +260,7 @@ Filter::Filter()
       for (int n8 = 0; n8 < 16; n8++) {
 	int n = n8 << 4;  // Scaled by 2^7
 	for (int vi = 0; vi < (1 << 16); vi++) {
-	  mf.gain[n8][vi] = solve_gain(n, vi << 3, x, mf) >> 3;
+	  mf.gain[n8][vi] = solve_gain(opamp, n, vi << 3, x, mf) >> 3;
 	}
       }
 
@@ -275,7 +280,7 @@ Filter::Filter()
 	size = idiv << 16;
 	for (int vi = 0; vi < size; vi++) {
 	  mf.summer[offset + vi] =
-	    solve_gain(n_idiv, (vi << 3)/idiv, x, mf) >> 3;
+	    solve_gain(opamp, n_idiv, (vi << 3)/idiv, x, mf) >> 3;
 	}
 	offset += size;
       }
@@ -298,7 +303,7 @@ Filter::Filter()
 	}
 	for (int vi = 0; vi < size; vi++) {
 	  mf.mixer[offset + vi] =
-	    solve_gain(n_idiv, (vi << 3)/idiv, x, mf) >> 3;
+	    solve_gain(opamp, n_idiv, (vi << 3)/idiv, x, mf) >> 3;
 	}
 	offset += size;
 	size = (l + 1) << 16;
@@ -311,8 +316,8 @@ Filter::Filter()
 	scaled_voltage[m][1] = N16*fi.opamp_voltage[m][0];
       }
 
-      mf.vc_min = (int)(N31*(fi.opamp_voltage[0][0] - fi.opamp_voltage[0][1]));
-      mf.vc_max = (int)(N31*(fi.opamp_voltage[fi.opamp_voltage_size - 1][0] - fi.opamp_voltage[fi.opamp_voltage_size - 1][1]));
+      mf.vc_min = (int)(N30*(fi.opamp_voltage[0][0] - fi.opamp_voltage[0][1]));
+      mf.vc_max = (int)(N30*(fi.opamp_voltage[fi.opamp_voltage_size - 1][0] - fi.opamp_voltage[fi.opamp_voltage_size - 1][1]));
       interpolate(scaled_voltage, scaled_voltage + fi.opamp_voltage_size - 1,
 		  PointPlotter<unsigned short>(mf.opamp_rev), 1.0);
 
@@ -324,26 +329,54 @@ Filter::Filter()
       }
     }
 
+    // Free temporary table.
+    delete[] opamp;
+
     // VCR - 6581 only.
     int Vddt = model_filter[0].Vddt;
-    int Vth = model_filter[0].Vth;
-    int n_vcr = model_filter[0].n_vcr;
 
     for (int i = 0; i < (1 << 16); i++) {
       // The table index is right-shifted 16 times in order to fit in
       // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-      vcr_Vg[i] = Vddt - (int)(sqrtf((float)i*(1 << 16)) + 0.5f);
+      int Vg = Vddt - (int)(sqrt((float)i*(1 << 16)) + 0.5f);
+      if (Vg >= (1 << 16)) {
+	// Clamp to 16 bits.
+	// FIXME: If the DAC output voltage exceeds the max op-amp output
+	// voltage while the input voltage is at the max op-amp output
+	// voltage, Vg will not fit in 16 bits.
+	// Check whether this can happen, and if so, change the lookup table
+	// to a plain sqrt.
+	Vg = (1 << 16) - 1;
+      }
+      vcr_Vg[i] = Vg;
     }
 
-    for (int Vgs = 0; Vgs < (1 << 16); Vgs++) {
-      int Vov_vcr = Vgs - Vth;
-      if (Vov_vcr < 0) {
-	vcr_n_Ids[Vgs] = 0;
-      }
-      else {
-	// Scaled by (1/m)*2^13*m*2^16*m*2^16*2^-1*2^-1*2^-12*2^-15 = m*2^16
-	vcr_n_Ids[Vgs] = n_vcr*((Vov_vcr >> 1)*(Vov_vcr >> 1) >> 12) >> 15;
-      }
+    /*
+      EKV model:
+
+      Ids = Is*(if - ir)
+      Is = 2*u*Cox*Ut^2/k*W/L
+      if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
+      ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
+    */
+    model_filter_init_t& fi = model_filter_init[0];
+    double Vt = fi.Vth;
+    double uCox = fi.uCox_vcr;
+    double WL = fi.WL_vcr;
+    double Ut = 26.0e-3;  // Thermal voltage.
+    double k = 1.0;
+    double Is = 2*uCox*Ut*Ut/k*WL;
+    // Normalized current factor for 1 cycle at 1MHz.
+    double N16 = model_filter[0].vo_N16;
+    double N15 = N16/2;
+    double n_Is = N15*1.0e-6/fi.C*Is;
+
+    /* 1st term is used for clamping and must therefore be fixed to 0. */
+    vcr_n_Ids_term[0] = 0;
+    for (int Vgx = 1; Vgx < (1 << 16); Vgx++) {
+      double log_term = log(1 + exp((Vgx/N16 - k*Vt)/(2*Ut)));
+      // Scaled by m*2^15
+      vcr_n_Ids_term[Vgx] = n_Is*log_term*log_term;
     }
 
     class_init = true;
