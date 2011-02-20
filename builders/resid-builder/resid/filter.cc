@@ -138,7 +138,7 @@ static model_filter_init_t model_filter_init[2] = {
     opamp_voltage_8580,
     sizeof(opamp_voltage_8580)/sizeof(*opamp_voltage_8580),
     // FIXME: Measure for the 8580.
-    1.5,
+    1.0,
     0.75,  // FIXME: For now we pretend that the working point is 0V.
     470e-12,
     12.18,
@@ -177,7 +177,7 @@ Filter::Filter()
 
       // Convert op-amp voltage transfer to 16 bit values.
       double vmin = fi.opamp_voltage[0][0];
-      double vmax = fi.opamp_voltage[fi.opamp_voltage_size - 1][0];
+      double vmax = fi.Vdd - fi.Vth;
       double denorm = vmax - vmin;
       double norm = 1.0/denorm;
 
@@ -341,11 +341,11 @@ Filter::Filter()
       int Vg = Vddt - (int)(sqrt((float)i*(1 << 16)) + 0.5f);
       if (Vg >= (1 << 16)) {
 	// Clamp to 16 bits.
-	// FIXME: If the DAC output voltage exceeds the max op-amp output
-	// voltage while the input voltage is at the max op-amp output
-	// voltage, Vg will not fit in 16 bits.
-	// Check whether this can happen, and if so, change the lookup table
-	// to a plain sqrt.
+	// FIXME: If the DAC output voltage reaches Vddt while the input
+	// voltage reaches the max op-amp output, it is possible that Vg
+	// will not fit in 16 bits.
+	// Check whether this can happen, and if so, consider changing
+	// the lookup table to a plain sqrt.
 	Vg = (1 << 16) - 1;
       }
       vcr_Vg[i] = Vg;
@@ -363,20 +363,20 @@ Filter::Filter()
     double Vt = fi.Vth;
     double uCox = fi.uCox_vcr;
     double WL = fi.WL_vcr;
-    double Ut = 26.0e-3;  // Thermal voltage.
-    double k = 1.0;
+    double Ut = 26.0e-3; // Thermal voltage: Ut = k*T/q = 8.61734315e-5*T ~ 26mV
+    double k = 1.0;      // Gate coupling coefficient: K = Cox/(Cox+Cdep) ~ 0.7
     double Is = 2*uCox*Ut*Ut/k*WL;
     // Normalized current factor for 1 cycle at 1MHz.
     double N16 = model_filter[0].vo_N16;
     double N15 = N16/2;
     double n_Is = N15*1.0e-6/fi.C*Is;
 
-    /* 1st term is used for clamping and must therefore be fixed to 0. */
-    vcr_n_Ids_term[0] = 0;
-    for (int Vgx = 1; Vgx < (1 << 16); Vgx++) {
-      double log_term = log(1 + exp((Vgx/N16 - k*Vt)/(2*Ut)));
+    // kVg_Vx = k*Vg - Vx
+    // I.e. if k != 1.0, Vg must be scaled accordingly.
+    for (int kVg_Vx = 0; kVg_Vx < (1 << 16); kVg_Vx++) {
+      double log_term = log(1 + exp((kVg_Vx/N16 - k*Vt)/(2*Ut)));
       // Scaled by m*2^15
-      vcr_n_Ids_term[Vgx] = n_Is*log_term*log_term;
+      vcr_n_Ids_term[kVg_Vx] = n_Is*log_term*log_term;
     }
 
     class_init = true;
@@ -498,7 +498,7 @@ void Filter::set_w0()
 {
   model_filter_t& f = model_filter[sid_model];
   Vw = Vw_bias + f.f0_dac[fc];
-  Vw_term = (f.Vddt >> 1)*(f.Vddt >> 1) - (Vw >> 1)*(f.Vddt >> 1) + (Vw >> 1)*(Vw >> 2);
+  Vddt_Vw_2 = unsigned(f.Vddt - Vw)*unsigned(f.Vddt - Vw) >> 1;
 
   // FIXME: w0 is temporarily used for MOS 8580 emulation.
   // MOS 8580 cutoff: 0 - 12.5kHz.
