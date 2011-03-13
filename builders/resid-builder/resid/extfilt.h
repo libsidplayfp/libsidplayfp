@@ -20,7 +20,7 @@
 #ifndef RESID_EXTFILT_H
 #define RESID_EXTFILT_H
 
-#include "siddefs.h"
+#include "resid-config.h"
 
 namespace reSID
 {
@@ -45,12 +45,12 @@ public:
 
   void enable_filter(bool enable);
 
-  RESID_INLINE void clock(short Vi);
-  RESID_INLINE void clock(cycle_count delta_t, short Vi);
+  void clock(short Vi);
+  void clock(cycle_count delta_t, short Vi);
   void reset();
 
   // Audio output (16 bits).
-  RESID_INLINE short output();
+  short output();
 
 protected:
   // Filter enabled.
@@ -148,11 +148,11 @@ short ExternalFilter::output()
   // Saturated arithmetics to guard against 16 bit sample overflow.
   const int half = 1 << 15;
   int Vo = (Vlp - Vhp) >> 11;
-  if (unlikely(Vo >= half)) {
-    return half - 1;
+  if (Vo >= half) {
+    Vo = half - 1;
   }
-  if (unlikely(Vo < -half)) {
-    return -half;
+  else if (Vo < -half) {
+    Vo = -half;
   }
   return Vo;
 }

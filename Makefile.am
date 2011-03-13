@@ -157,6 +157,7 @@ builders/residfp-builder/residfp/envelope.cc \
 builders/residfp-builder/residfp/filter.cc \
 builders/residfp-builder/residfp/extfilt.cc \
 builders/residfp-builder/residfp/pot.cc \
+builders/residfp-builder/residfp/residfp-config.h \
 builders/residfp-builder/residfp/version.cc \
 builders/residfp-builder/residfp/convolve.cc \
 $(convolve_sse_src)
@@ -186,6 +187,7 @@ builders/resid-builder/resid/envelope.cc \
 builders/resid-builder/resid/filter.cc \
 builders/resid-builder/resid/extfilt.cc \
 builders/resid-builder/resid/pot.cc \
+builders/resid-builder/resid/resid-config.h \
 builders/resid-builder/resid/version.cc \
 $(noinst_DATA:.dat=.h)
 

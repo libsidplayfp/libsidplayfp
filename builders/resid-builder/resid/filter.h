@@ -20,7 +20,7 @@
 #ifndef RESID_FILTER_H
 #define RESID_FILTER_H
 
-#include "siddefs.h"
+#include "resid-config.h"
 
 namespace reSID
 {
@@ -353,9 +353,7 @@ public:
   void set_chip_model(chip_model model);
   void set_voice_mask(reg4 mask);
 
-  RESID_INLINE
   void clock(int voice1, int voice2, int voice3);
-  RESID_INLINE
   void clock(cycle_count delta_t, int voice1, int voice2, int voice3);
   void reset();
 
@@ -416,7 +414,7 @@ protected:
   int v1;
 
   // Cutoff frequency DAC voltage, resonance.
-  int Vw, Vddt_Vw_2, Vw_bias;
+  int Vddt_Vw_2, Vw_bias;
   int _8_div_Q;
   // FIXME: Temporarily used for MOS 8580 emulation.
   int w0;
@@ -426,11 +424,7 @@ protected:
 
   typedef struct {
     int vo_N16;  // Fixed point scaling for 16 bit op-amp output.
-    int vo_T19;  // Fixed point scaled translation for 19 bit op-amp output.
-    int vo_T16;  // Fixed point scaled translation for 16 bit op-amp output.
-    int Vth;     // Transistor threshold voltage.
-    int Vddt;    // Vdd - Vth
-    int n_vcr;
+    int kVddt;   // K*(Vdd - Vth)
     int n_snake;
     int voice_scale_s14;
     int voice_DC;
@@ -451,7 +445,7 @@ protected:
   int solve_integrate_6581(int dt, int vi_t, int& x, int& vc, model_filter_t& mf);
 
   // VCR - 6581 only.
-  static unsigned short vcr_Vg[1 << 16];
+  static unsigned short vcr_kVg[1 << 16];
   static unsigned short vcr_n_Ids_term[1 << 16];
   // Common parameters.
   static model_filter_t model_filter[2];
@@ -480,17 +474,11 @@ void Filter::clock(int voice1, int voice2, int voice3)
   v2 = (voice2*f.voice_scale_s14 >> 18) + f.voice_DC;
   v3 = (voice3*f.voice_scale_s14 >> 18) + f.voice_DC;
 
-  // This is handy for testing.
-  if (unlikely(!enabled)) {
-    return;
-  }
-
   // Sum inputs routed into the filter.
   int Vi;
   int offset;
 
-  switch (sum) {
-  default:
+  switch (sum & 0xf) {
   case 0x0:
     Vi = 0;
     offset = summer_offset<0>::value;
@@ -602,8 +590,7 @@ void Filter::clock(cycle_count delta_t, int voice1, int voice2, int voice3)
   int Vi;
   int offset;
 
-  switch (sum) {
-  default:
+  switch (sum & 0xf) {
   case 0x0:
     Vi = 0;
     offset = summer_offset<0>::value;
@@ -766,8 +753,7 @@ for my $mix (0..2**@i-1) {
   int Vi;
   int offset;
 
-  switch (mix) {
-  default:
+  switch (mix & 0x7f) {
   case 0x00:
     Vi = 0;
     offset = mixer_offset<0>::value;
@@ -1327,17 +1313,19 @@ f = a*(b - vx)^2 - c - (b - vo)^2
 df = 2*((b - vo)*dvo - a*(b - vx))
 */
 RESID_INLINE
-int Filter::solve_gain(int* opamp, int n, int vi_n, int& x, model_filter_t& mf)
+int Filter::solve_gain(int* opamp, int n, int vi, int& x, model_filter_t& mf)
 {
-  // Translate normalized vi.
-  int vi = vi_n + mf.vo_T19;
+  // Note that all variables are translated and scaled in order to fit
+  // in 16 bits. It is not necessary to explicitly translate the variables here,
+  // since they are all used in subtractions which cancel out the translation:
+  // (a - t) - (b - t) = a - b
 
   // Start off with an estimate of x and a root bracket [ak, bk].
   // f is decreasing, so that f(ak) > 0 and f(bk) < 0.
-  int ak = mf.vo_T19, bk = mf.vo_T19 + (1 << 19) - 1;
+  int ak = 0, bk = (1 << 19) - 1;
 
   int a = n + (1 << 7);              // Scaled by 2^7
-  int b = mf.Vddt << 3;              // Scaled by m*2^19
+  int b = mf.kVddt << 3;             // Scaled by m*2^19
   unsigned int b_vi = (b - vi) >> 3; // Scaled by m*2^16
   int c = n*int(b_vi*b_vi >> 12);    // Scaled by m^2*2^27
 
@@ -1345,9 +1333,9 @@ int Filter::solve_gain(int* opamp, int n, int vi_n, int& x, model_filter_t& mf)
     int xk = x;
 
     // Calculate f and df.
-    int vo_dvo = opamp[x - mf.vo_T19];
-    int vo = (vo_dvo & 0x7ffff) + mf.vo_T19;  // Scaled by m*2^19
-    int dvo = vo_dvo >> 19;                   // Scaled by 2^8
+    int vo_dvo = opamp[x];
+    int vo = vo_dvo & 0x7ffff;  // Scaled by m*2^19
+    int dvo = vo_dvo >> 19;     // Scaled by 2^8
 
     // f = a*(b - vx)^2 - c - (b - vo)^2
     // df = 2*((b - vo)*dvo - a*(b - vx))
@@ -1366,7 +1354,7 @@ int Filter::solve_gain(int* opamp, int n, int vi_n, int& x, model_filter_t& mf)
     x -= f/df;
     if (unlikely(x == xk)) {
       // No further root improvement possible.
-      return vo - mf.vo_T19;
+      return vo;
     }
 
     // Narrow down root bracket.
@@ -1384,7 +1372,7 @@ int Filter::solve_gain(int* opamp, int n, int vi_n, int& x, model_filter_t& mf)
       x = (ak + bk) >> 1;
       if (unlikely(x == ak)) {
 	// No further bisection possible.
-	return vo - mf.vo_T19;
+	return vo;
       }
     }
   }
@@ -1394,6 +1382,8 @@ int Filter::solve_gain(int* opamp, int n, int vi_n, int& x, model_filter_t& mf)
 /*
 Find output voltage in inverting integrator SID op-amp circuits, using a
 single fixpoint iteration step.
+
+A circuit diagram of a MOS 6581 integrator is shown below.
 
                  ---C---
                 |       |
@@ -1475,18 +1465,49 @@ discussed above:
 - It is symmetrical, i.e. it calculates current in both directions,
   facilitating a branch-free implementation.
 
+Rw in the circuit diagram above is a VCR (voltage controlled resistor),
+as shown in the circuit diagram below.
+
+                   Vw
+                   
+                   |
+           Vdd     |
+              |---|  
+             _|_   |
+           --    --| Vg
+          |      __|__
+          |      -----  Rw
+          |      |   |
+  vi ------------     -------- vo
+
+
+In order to calculalate the current through the VCR, its gate voltage
+must be determined.
+
+Assuming triode mode and applying Kirchoff's current law, we get the
+following equation for Vg:
+
+u*Cox/2*W/L*((Vddt - Vg)^2 - (Vddt - vi)^2 + (Vddt - Vg)^2 - (Vddt - Vw)^2) = 0
+2*(Vddt - Vg)^2 - (Vddt - vi)^2 - (Vddt - Vw)^2 = 0
+(Vddt - Vg) = sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
+
+Vg = Vddt - sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
+
 */
 RESID_INLINE
-int Filter::solve_integrate_6581(int dt, int vi_n, int& x, int& vc,
+int Filter::solve_integrate_6581(int dt, int vi, int& x, int& vc,
 				 model_filter_t& mf)
 {
-  // Translate normalized vi.
-  int vi = vi_n + mf.vo_T16; // Scaled by m*2^16
-  int Vddt = mf.Vddt;        // Scaled by m*2^16
+  // Note that all variables are translated and scaled in order to fit
+  // in 16 bits. It is not necessary to explicitly translate the variables here,
+  // since they are all used in subtractions which cancel out the translation:
+  // (a - t) - (b - t) = a - b
+
+  int kVddt = mf.kVddt;      // Scaled by m*2^16
 
   // "Snake" voltages for triode mode calculation.
-  unsigned int Vgst = Vddt - x;
-  unsigned int Vgdt = Vddt - vi;
+  unsigned int Vgst = kVddt - x;
+  unsigned int Vgdt = kVddt - vi;
   unsigned int Vgdt_2 = Vgdt*Vgdt;
 
   // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
@@ -1494,14 +1515,14 @@ int Filter::solve_integrate_6581(int dt, int vi_n, int& x, int& vc,
 
   // VCR gate voltage.       // Scaled by m*2^16
   // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-  int Vg = vcr_Vg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16];
+  int kVg = vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16];
 
   // VCR voltages for EKV model table lookup.
-  int Vgs = Vg - x;
+  int Vgs = kVg - x;
   if (Vgs < 0) {
     Vgs = 0;
   }
-  int Vgd = Vg - vi;
+  int Vgd = kVg - vi;
   if (Vgd < 0) {
     Vgd = 0;
   }
@@ -1513,7 +1534,7 @@ int Filter::solve_integrate_6581(int dt, int vi_n, int& x, int& vc,
   vc += (n_I_snake + n_I_vcr)*dt;
 
 /*
-  FIXME: Check whether this check is necessary.
+  FIXME: Determine whether this check is necessary.
   if (vc < mf.vc_min) {
     vc = mf.vc_min;
   }
@@ -1526,7 +1547,7 @@ int Filter::solve_integrate_6581(int dt, int vi_n, int& x, int& vc,
   x = mf.opamp_rev[(vc >> 15) + (1 << 15)];
 
   // Return vo.
-  return (x - (vc >> 14)) - mf.vo_T16;
+  return x - (vc >> 14);
 }
 
 #endif // RESID_INLINING || defined(RESID_FILTER_CC)

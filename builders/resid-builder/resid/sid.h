@@ -20,7 +20,7 @@
 #ifndef RESID_SID_H
 #define RESID_SID_H
 
-#include "siddefs.h"
+#include "resid-config.h"
 #include "voice.h"
 #include "filter.h"
 #include "extfilt.h"
@@ -96,15 +96,13 @@ public:
 
  protected:
   static double I0(double x);
-  RESID_INLINE int clock_fast(cycle_count& delta_t, short* buf, int n,
-			      int interleave);
-  RESID_INLINE int clock_interpolate(cycle_count& delta_t, short* buf, int n,
-				     int interleave);
-  RESID_INLINE int clock_resample(cycle_count& delta_t, short* buf,
-				  int n, int interleave);
-  RESID_INLINE int clock_resample_fastmem(cycle_count& delta_t, short* buf,
-					  int n, int interleave);
-  RESID_INLINE void write();
+  int clock_fast(cycle_count& delta_t, short* buf, int n, int interleave);
+  int clock_interpolate(cycle_count& delta_t, short* buf, int n,
+			int interleave);
+  int clock_resample(cycle_count& delta_t, short* buf, int n, int interleave);
+  int clock_resample_fastmem(cycle_count& delta_t, short* buf, int n,
+			     int interleave);
+  void write();
 
   chip_model sid_model;
   Voice voice[3];
@@ -148,7 +146,7 @@ public:
   cycle_count cycles_per_sample;
   cycle_count sample_offset;
   int sample_index;
-  short sample_prev;
+  short sample_prev, sample_now;
   int fir_N;
   int fir_RES;
 
@@ -158,6 +156,72 @@ public:
   // FIR_RES filter tables (FIR_N*FIR_RES).
   short* fir;
 };
+
+
+// ----------------------------------------------------------------------------
+// Inline functions.
+// The following functions are defined inline because they are called every
+// time a sample is calculated.
+// ----------------------------------------------------------------------------
+
+#if RESID_INLINING || defined(RESID_SID_CC)
+
+// ----------------------------------------------------------------------------
+// Read 16-bit sample from audio output.
+// ----------------------------------------------------------------------------
+RESID_INLINE
+short SID::output()
+{
+  return extfilt.output();
+}
+
+
+// ----------------------------------------------------------------------------
+// SID clocking - 1 cycle.
+// ----------------------------------------------------------------------------
+RESID_INLINE
+void SID::clock()
+{
+  int i;
+
+  // Clock amplitude modulators.
+  for (i = 0; i < 3; i++) {
+    voice[i].envelope.clock();
+  }
+
+  // Clock oscillators.
+  for (i = 0; i < 3; i++) {
+    voice[i].wave.clock();
+  }
+
+  // Synchronize oscillators.
+  for (i = 0; i < 3; i++) {
+    voice[i].wave.synchronize();
+  }
+
+  // Calculate waveform output.
+  for (i = 0; i < 3; i++) {
+    voice[i].wave.set_waveform_output();
+  }
+
+  // Clock filter.
+  filter.clock(voice[0].output(), voice[1].output(), voice[2].output());
+
+  // Clock external filter.
+  extfilt.clock(filter.output());
+
+  // Pipelined writes on the MOS8580.
+  if (unlikely(write_pipeline)) {
+    write();
+  }
+
+  // Age bus value.
+  if (unlikely(!--bus_value_ttl)) {
+    bus_value = 0;
+  }
+}
+
+#endif // RESID_INLINING || defined(RESID_SID_CC)
 
 } // namespace reSID
 

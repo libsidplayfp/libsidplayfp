@@ -100,9 +100,10 @@ typedef struct {
   // Transistor parameters.
   double Vdd;
   double Vth;        // Threshold voltage
-  double uCox_vcr;   // u*Cox
+  double Ut;         // Thermal voltage: Ut = k*T/q = 8.61734315e-5*T ~ 26mV
+  double k;          // Gate coupling coefficient: K = Cox/(Cox+Cdep) ~ 0.7
+  double uCox;       // u*Cox
   double WL_vcr;     // W/L for VCR
-  double uCox_snake; // u*Cox
   double WL_snake;   // W/L for "snake"
   // DAC parameters.
   double dac_zero;
@@ -124,9 +125,10 @@ static model_filter_init_t model_filter_init[2] = {
     // Transistor parameters.
     12.18,
     1.31,
+    26.0e-3,
+    1.0,
     20e-6,
     9.0/1,
-    20e-6,
     1.0/115,
     // DAC parameters.
     6.65,
@@ -143,9 +145,10 @@ static model_filter_init_t model_filter_init[2] = {
     470e-12,
     12.18,
     1.31,
+    26.0e-3,
+    1.0,
     15e-6,
     9.0/1,
-    10e-6,
     1.0/115,
     6.65,
     2.63,
@@ -154,7 +157,7 @@ static model_filter_init_t model_filter_init[2] = {
   }
 };
 
-unsigned short Filter::vcr_Vg[1 << 16];
+unsigned short Filter::vcr_kVg[1 << 16];
 unsigned short Filter::vcr_n_Ids_term[1 << 16];
 
 Filter::model_filter_t Filter::model_filter[2];
@@ -187,8 +190,6 @@ Filter::Filter()
       double N30 = norm*((1u << 30) - 1);
       double N31 = norm*((1u << 31) - 1);
       mf.vo_N16 = (int)(N16);  // FIXME: Remove?
-      mf.vo_T19 = (int)(N19*vmin);
-      mf.vo_T16 = (int)(N16*vmin);
 
       // The "zero" output level of the voices.
       // The digital range of one voice is 20 bits; create a scaling term
@@ -197,14 +198,13 @@ Filter::Filter()
       mf.voice_scale_s14 = (int)(N14*fi.voice_voltage_range);
       mf.voice_DC = (int)(N16*(fi.voice_DC_voltage - vmin));
 
-      // Vth, Vdd - Vth
-      mf.Vth = (int)(N16*fi.Vth + 0.5);
-      mf.Vddt = (int)(N16*(fi.Vdd - fi.Vth) + 0.5);
+      // Vdd - Vth, normalized so that translated values can be subtraced:
+      // k*Vddt - x = (k*Vddt - t) - (x - t)
+      mf.kVddt = (int)(N16*(fi.k*(fi.Vdd - fi.Vth) - vmin) + 0.5);
 
-      // Normalized VCR and snake current factors, 1 cycle at 1MHz.
-      // Fit in 15 bits / 5 bits.
-      mf.n_vcr = (int)(denorm*(1 << 13)*(fi.uCox_vcr/2*fi.WL_vcr*1.0e-6/fi.C) + 0.5);
-      mf.n_snake = (int)(denorm*(1 << 13)*(fi.uCox_snake/2*fi.WL_snake*1.0e-6/fi.C) + 0.5);
+      // Normalized snake current factor, 1 cycle at 1MHz.
+      // Fit in 5 bits.
+      mf.n_snake = (int)(denorm*(1 << 13)*(fi.uCox/(2*fi.k)*fi.WL_snake*1.0e-6/fi.C) + 0.5);
 
       // Create lookup table mapping op-amp input voltage to op-amp output
       // voltage: vx -> vo
@@ -256,7 +256,7 @@ Filter::Filter()
       // it follows that gain ~ vol/8 and 1/Q ~ ~res/8 (assuming ideal
       // op-amps and ideal "resistors").
       int x;
-      x = mf.vo_T19;
+      x = 0;
       for (int n8 = 0; n8 < 16; n8++) {
 	int n = n8 << 4;  // Scaled by 2^7
 	for (int vi = 0; vi < (1 << 16); vi++) {
@@ -271,7 +271,7 @@ Filter::Filter()
       // entirely accurate, since the input for each transistor is different,
       // and transistors are not linear components. However modeling all
       // transistors separately would be extremely costly.
-      x = mf.vo_T19;
+      x = 0;
       int offset = 0;
       int size;
       for (int k = 0; k < 5; k++) {
@@ -290,7 +290,7 @@ Filter::Filter()
       //
       // All "on", transistors are modeled as one - see comments above for
       // the filter summer.
-      x = mf.vo_T19;
+      x = 0;
       offset = 0;
       size = 1;  // Only one lookup element for 0 input "resistors".
       for (int l = 0; l < 8; l++) {
@@ -313,7 +313,7 @@ Filter::Filter()
       // vc -> vx
       for (int m = 0; m < fi.opamp_voltage_size; m++) {
 	scaled_voltage[m][0] = (N16*(fi.opamp_voltage[m][0] - fi.opamp_voltage[m][1]) + (1 << 16))/2;
-	scaled_voltage[m][1] = N16*fi.opamp_voltage[m][0];
+	scaled_voltage[m][1] = N16*(fi.opamp_voltage[m][0] - vmin);
       }
 
       mf.vc_min = (int)(N30*(fi.opamp_voltage[0][0] - fi.opamp_voltage[0][1]));
@@ -325,7 +325,7 @@ Filter::Filter()
       int bits = 11;
       build_dac_table(mf.f0_dac, bits, fi.dac_2R_div_R, fi.dac_term);
       for (int n = 0; n < (1 << bits); n++) {
-	mf.f0_dac[n] = (unsigned short)(N16*(fi.dac_zero + mf.f0_dac[n]*fi.dac_scale/(1 << bits)) + 0.5);
+	mf.f0_dac[n] = (unsigned short)(N16*(fi.dac_zero + mf.f0_dac[n]*fi.dac_scale/(1 << bits) - vmin) + 0.5);
       }
     }
 
@@ -333,22 +333,25 @@ Filter::Filter()
     delete[] opamp;
 
     // VCR - 6581 only.
-    int Vddt = model_filter[0].Vddt;
+    model_filter_init_t& fi = model_filter_init[0];
+
+    double N16 = model_filter[0].vo_N16;
+    double vmin = N16*fi.opamp_voltage[0][0];
+    double k = fi.k;
+    double kVddt = N16*(k*(fi.Vdd - fi.Vth));
 
     for (int i = 0; i < (1 << 16); i++) {
       // The table index is right-shifted 16 times in order to fit in
       // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-      int Vg = Vddt - (int)(sqrt((float)i*(1 << 16)) + 0.5f);
-      if (Vg >= (1 << 16)) {
-	// Clamp to 16 bits.
-	// FIXME: If the DAC output voltage reaches Vddt while the input
-	// voltage reaches the max op-amp output, it is possible that Vg
-	// will not fit in 16 bits.
-	// Check whether this can happen, and if so, consider changing
-	// the lookup table to a plain sqrt.
-	Vg = (1 << 16) - 1;
-      }
-      vcr_Vg[i] = Vg;
+      //
+      // The returned value must be corrected for translation. Vg always
+      // takes part in a subtraction as follows:
+      //
+      //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
+      //
+      // I.e. k*Vg - t must be returned.
+      double Vg = kVddt - sqrt((double)i*(1 << 16));
+      vcr_kVg[i] = (unsigned short)(k*Vg - vmin + 0.5);
     }
 
     /*
@@ -359,22 +362,17 @@ Filter::Filter()
       if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
       ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
     */
-    model_filter_init_t& fi = model_filter_init[0];
-    double Vt = fi.Vth;
-    double uCox = fi.uCox_vcr;
-    double WL = fi.WL_vcr;
-    double Ut = 26.0e-3; // Thermal voltage: Ut = k*T/q = 8.61734315e-5*T ~ 26mV
-    double k = 1.0;      // Gate coupling coefficient: K = Cox/(Cox+Cdep) ~ 0.7
-    double Is = 2*uCox*Ut*Ut/k*WL;
+    double kVt = fi.k*fi.Vth;
+    double Ut = fi.Ut;
+    double Is = 2*fi.uCox*Ut*Ut/fi.k*fi.WL_vcr;
     // Normalized current factor for 1 cycle at 1MHz.
-    double N16 = model_filter[0].vo_N16;
     double N15 = N16/2;
     double n_Is = N15*1.0e-6/fi.C*Is;
 
     // kVg_Vx = k*Vg - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
     for (int kVg_Vx = 0; kVg_Vx < (1 << 16); kVg_Vx++) {
-      double log_term = log(1 + exp((kVg_Vx/N16 - k*Vt)/(2*Ut)));
+      double log_term = log(1 + exp((kVg_Vx/N16 - kVt)/(2*Ut)));
       // Scaled by m*2^15
       vcr_n_Ids_term[kVg_Vx] = n_Is*log_term*log_term;
     }
@@ -497,8 +495,8 @@ void Filter::writeMODE_VOL(reg8 mode_vol)
 void Filter::set_w0()
 {
   model_filter_t& f = model_filter[sid_model];
-  Vw = Vw_bias + f.f0_dac[fc];
-  Vddt_Vw_2 = unsigned(f.Vddt - Vw)*unsigned(f.Vddt - Vw) >> 1;
+  int Vw = Vw_bias + f.f0_dac[fc];
+  Vddt_Vw_2 = unsigned(f.kVddt - Vw)*unsigned(f.kVddt - Vw) >> 1;
 
   // FIXME: w0 is temporarily used for MOS 8580 emulation.
   // MOS 8580 cutoff: 0 - 12.5kHz.
@@ -633,7 +631,7 @@ void Filter::set_sum_mix()
 {
   // NB! voice3off (mode bit 7) only affects voice 3 if it is routed directly
   // to the mixer.
-  sum = filt & voice_mask;
+  sum = (enabled ? filt : 0x00) & voice_mask;
   mix =
     (enabled ? (mode & 0x70) | ((~(filt | (mode & 0x80) >> 5)) & 0x0f) : 0x0f)
     & voice_mask;
