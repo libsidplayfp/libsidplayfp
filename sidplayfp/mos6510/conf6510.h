@@ -36,7 +36,7 @@
 #define MOS6510_ACCURATE_CYCLES
 #define MOS6510_SIDPLAY
 //#define MOS6510_STATE_6510
-#define MOS6510_DEBUG 1
+//#define MOS6510_DEBUG 1
 
 // Support global debug option
 #ifdef DEBUG
