@@ -21,8 +21,9 @@
 #include <exception>
 
 #include "sidplayfp/sidconfig.h"
-#include "SidTuneMod.h"
+#include "sidplayfp/sidtypes.h"
 
+class SidTuneMod;
 class iniParser;
 
 class SID_EXTERN SidDatabase
