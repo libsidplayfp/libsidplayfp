@@ -42,7 +42,7 @@ class MD5
  public:
     // Initialize the algorithm. Reset starting values.
     MD5();
-    
+
     // Append a string to the message.
     void append(const void* data, int nbytes);
 
@@ -51,7 +51,7 @@ class MD5
 
     // Return pointer to 16-byte fingerprint.
     const md5_byte_t* getDigest();
-    
+
     // Initialize the algorithm. Reset starting values.
     void reset();
 
@@ -63,19 +63,19 @@ class MD5
     md5_byte_t buf[64];		/* accumulate block */
 
     md5_byte_t digest[16];
-        
+
     md5_word_t tmpBuf[16];
     const md5_word_t* X;
-    
+
     void
     process(const md5_byte_t data[64]);
 
     md5_word_t
     ROTATE_LEFT(const md5_word_t x, const int n);
-    
+
     md5_word_t
     F(const md5_word_t x, const md5_word_t y, const md5_word_t z);
-        
+
     md5_word_t
     G(const md5_word_t x, const md5_word_t y, const md5_word_t z);
 
@@ -86,7 +86,7 @@ class MD5
     I(const md5_word_t x, const md5_word_t y, const md5_word_t z);
 
     typedef md5_word_t (MD5::*md5func)(const md5_word_t x, const md5_word_t y, const md5_word_t z);
-        
+
     void
     SET(md5func func, md5_word_t& a, md5_word_t& b, md5_word_t& c,
         md5_word_t& d, const int k, const int s,

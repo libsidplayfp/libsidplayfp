@@ -266,16 +266,16 @@ bool HardSID::lock(c64env* env)
 {
     if( env == NULL )
     {
-	if (!m_locked)
-	    return false;
+        if (!m_locked)
+            return false;
         cancel ();
         m_locked = false;
         m_eventContext = NULL;
     }
     else
     {
-	if (m_locked)
-	    return false;
+        if (m_locked)
+            return false;
         m_locked = true;
         m_eventContext = &env->context();
         schedule ((EventContext&) *m_eventContext, HARDSID_DELAY_CYCLES, m_phase);

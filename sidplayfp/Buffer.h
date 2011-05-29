@@ -99,7 +99,7 @@ template <class T> class Buffer_sidtt
 	T* buf;
 	uint_least32_t bufLen;
 	T dummy;
-        
+
 	void kill(void)
 	{
 		buf = 0;

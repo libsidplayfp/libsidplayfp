@@ -264,10 +264,10 @@ int HardSIDBuilder::init ()
     if (!dll)
     {
         DWORD err = GetLastError();
-		if (err == ERROR_DLL_INIT_FAILED)
-			sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll init failed!");
-		else
-			sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll not found!");
+        if (err == ERROR_DLL_INIT_FAILED)
+            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll init failed!");
+        else
+            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll not found!");
         goto HardSID_init_error;
     }
 

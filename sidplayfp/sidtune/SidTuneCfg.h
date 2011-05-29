@@ -31,6 +31,6 @@
   #define SID_FS_IS_COLON_AND_SLASH
 #else
   #define SID_FS_IS_SLASH
-#endif	  
+#endif
 
 #endif  /* SIDTUNECFG_H */

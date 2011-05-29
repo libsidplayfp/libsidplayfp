@@ -226,8 +226,8 @@ void ReSID::model (sid2_model_t model)
     else
         m_sid.set_chip_model (RESID_NS::MOS6581);
 /* MOS8580 + digi boost
-	m_sid.set_chip_model (RESID_NS::MOS8580);
-	m_sid.set_voice_mask(0x0f);
-	m_sid.input(-32768);
+        m_sid.set_chip_model (RESID_NS::MOS8580);
+        m_sid.set_voice_mask(0x0f);
+        m_sid.input(-32768);
 */
 }

@@ -386,16 +386,16 @@ Player::Player (void)
     cpu.setEnvironment (this);
 
     {
-	// SID Initialise
-	for (int i = 0; i < SID2_MAX_SIDS; i++)
-	    sid[i] = &nullsid;
+        // SID Initialise
+        for (int i = 0; i < SID2_MAX_SIDS; i++)
+            sid[i] = &nullsid;
     }
     xsid.emulation(sid[0]);
     sid[0] = &xsid;
     {
-	// Setup sid mapping table
-	for (int i = 0; i < SID2_MAPPER_SIZE; i++)
-	    m_sidmapper[i] = 0;
+        // Setup sid mapping table
+        for (int i = 0; i < SID2_MAPPER_SIZE; i++)
+            m_sidmapper[i] = 0;
     }
 
     // Setup exported info

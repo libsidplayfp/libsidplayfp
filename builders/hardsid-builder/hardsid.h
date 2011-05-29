@@ -1,7 +1,7 @@
 /***************************************************************************
                hardsid.h  -  Hardsid support interface.
-	                     Created from Jarno's original
-		             Sidplay2 patch
+                             Created from Jarno's original
+                             Sidplay2 patch
                              -------------------
     begin                : Fri Dec 15 2000
     copyright            : (C) 2000-2002 by Simon White

@@ -236,8 +236,8 @@ int Player::config (const sid2_config_t &cfg)
     // Note this should be based on m_tuneInfo.sidChipBase1
     // but this is only temporary code anyway
     {
-	for (int i = 0; i < SID2_MAPPER_SIZE; i++)
-	    m_sidmapper[i] = 0;
+        for (int i = 0; i < SID2_MAPPER_SIZE; i++)
+            m_sidmapper[i] = 0;
     }
 
     m_info.channels = 1;
