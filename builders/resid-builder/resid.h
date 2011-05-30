@@ -58,6 +58,10 @@ public:
     // Settings that affect all SIDs
     void filter   (bool enable);
     void filter   (const sid_filter_t *filter);
+
+    /* The bias is given in millivolts, and a maximum reasonable control range is
+    approximately -500 to 500. */
+    void bias     (const double dac_bias);
 };
 
 #endif // _resid_h_

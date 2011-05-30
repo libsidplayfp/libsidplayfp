@@ -172,6 +172,17 @@ void ReSIDBuilder::filter (bool enable)
     }
 }
 
+void ReSIDBuilder::bias (const double dac_bias)
+{
+    const int size = sidobjs.size ();
+    m_status = true;
+    for (int i = 0; i < size; i++)
+    {
+        ReSID *sid = (ReSID *) sidobjs[i];
+        sid->bias (dac_bias);
+    }
+}
+
 // Find a free SID of the required specs
 sidemu *ReSIDBuilder::lock (c64env *env, sid2_model_t model)
 {
