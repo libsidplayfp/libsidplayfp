@@ -224,7 +224,7 @@ builders/residfp-builder/residfp-emu.h
 builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 builders/residfp-builder/residfp/libresidfp.la
 
-builders_residfp_builder_libsidplayfp_residfp_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
+builders_residfp_builder_libsidplayfp_residfp_la_LDFLAGS = -version-info $(LIBRESIDFPVERSION)
 
 
 builders_resid_builder_libsidplayfp_resid_ladir = $(includedir)/sidplayfp/builders
