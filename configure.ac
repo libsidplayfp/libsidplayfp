@@ -1,9 +1,21 @@
-AC_INIT([libsidplayfp], [0.1.0])
+m4_define([lib_major], [0])
+m4_define([lib_minor], [1])
+m4_define([lib_level], [0])
+m4_define([lib_version], [lib_major.lib_minor.lib_level])
+
+AC_INIT([libsidplayfp], [lib_version])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([sidplayfp/sidplay2.cpp])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
+
+LIB_MAJOR=lib_major
+LIB_MINOR=lib_minor
+LIB_LEVEL=lib_level
+AC_SUBST([LIB_MAJOR])
+AC_SUBST([LIB_MINOR])
+AC_SUBST([LIB_LEVEL])
 
 AC_CANONICAL_HOST
 case "$host" in
@@ -221,6 +233,7 @@ AC_SUBST(LIBHARDSIDVERSION)
 AC_CONFIG_FILES([
 Makefile
 libsidplayfp.pc
+sidplayfp/sidversion.h
 builders/residfp-builder/residfp/siddefs-fp.h
 builders/resid-builder/resid/siddefs.h
 ])

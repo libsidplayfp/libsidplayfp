@@ -11,6 +11,7 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 -I $(top_builddir)/builders/residfp-builder/residfp \
 -I $(top_builddir)/builders/resid-builder \
 -I $(top_builddir)/builders/resid-builder/resid \
+-I $(top_builddir)/sidplayfp \
 @debug_flags@
 
 #=========================================================
@@ -132,6 +133,9 @@ utils/SidDatabase.h \
 utils/SidFilter.h \
 utils/SidTuneMod.h \
 utils/SidUsage.h
+
+nodist_sidplayfp_libsidplayfp_la_HEADERS = \
+sidplayfp/sidversion.h
 
 #=========================================================
 # residfp
