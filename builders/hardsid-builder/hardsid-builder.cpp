@@ -145,8 +145,7 @@ uint HardSIDBuilder::create (uint sids)
 
 HardSIDBuilder_create_error:
     m_status = false;
-    if (sid)
-        delete sid;
+    delete sid;
     return count;
 }
 

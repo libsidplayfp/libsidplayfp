@@ -106,8 +106,7 @@ uint ReSIDfpBuilder::create (uint sids)
 
 ReSIDfpBuilder_create_error:
     m_status = false;
-    if (sid)
-        delete sid;
+    delete sid;
     return count;
 }
 
