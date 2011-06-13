@@ -23,14 +23,14 @@
 #include "SidUsage.h"
 #include "smm0.h"
 
-static const char *txt_na        = "SID Usage: N/A";
-static const char *txt_file      = "SID Usage: Unable to open file";
-static const char *txt_corrupt   = "SID Usage: File corrupt";
-static const char *txt_invalid   = "SID Usage: Invalid file format";
-static const char *txt_missing   = "SID Usage: Mandatory chunks missing";
-static const char *txt_supported = "SID Usage: File type not supported";
-static const char *txt_reading   = "SID Usage: Error reading file";
-static const char *txt_writing   = "SID Usage: Error writing file";
+static const char txt_na[]        = "SID Usage: N/A";
+static const char txt_file[]      = "SID Usage: Unable to open file";
+static const char txt_corrupt[]   = "SID Usage: File corrupt";
+static const char txt_invalid[]   = "SID Usage: Invalid file format";
+static const char txt_missing[]   = "SID Usage: Mandatory chunks missing";
+static const char txt_supported[] = "SID Usage: File type not supported";
+static const char txt_reading[]   = "SID Usage: Error reading file";
+static const char txt_writing[]   = "SID Usage: Error writing file";
 
 
 SidUsage::SidUsage ()
