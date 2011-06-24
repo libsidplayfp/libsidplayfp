@@ -18,8 +18,6 @@
 #ifndef _siddatabase_h_
 #define _siddatabase_h_
 
-#include <exception>
-
 #include "sidplayfp/sidconfig.h"
 #include "sidplayfp/sidtypes.h"
 
@@ -38,7 +36,7 @@ private:
     iniParser  *m_parser;
     const char *errorString;
 
-    class parseError : public std::exception {};
+    class parseError {};
 
     static const char* parseTime(const char* str, long &result);
 
