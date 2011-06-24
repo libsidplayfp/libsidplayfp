@@ -36,7 +36,7 @@ const char *SidDatabase::ERR_UNABLE_TO_LOAD_DATABASE = "SID DATABASE ERROR: Unab
 SidDatabase::SidDatabase () :
 m_parser(0),
 errorString(ERR_NO_DATABASE_LOADED)
-{};
+{}
 
 SidDatabase::~SidDatabase ()
 {
