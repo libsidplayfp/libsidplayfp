@@ -137,7 +137,7 @@ bool iniParser::open(const char* fName) {
 		default:
 			try {
 				(*mIt).second.insert(parseKey(buffer));
-			} catch (emptyPair e) {};
+			} catch (emptyPair& e) {};
 			break;
 		}
 	}

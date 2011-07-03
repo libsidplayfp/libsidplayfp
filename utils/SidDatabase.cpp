@@ -124,7 +124,7 @@ int_least32_t SidDatabase::length (const char *md5, uint_least16_t song)
         // Validate Time
         try {
             str = parseTime(str, time);
-        } catch (parseError e) {
+        } catch (parseError& e) {
             errorString = ERR_DATABASE_CORRUPT;
             return -1;
         }
