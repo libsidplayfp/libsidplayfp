@@ -57,10 +57,11 @@ struct psidHeader           // all values big-endian
     char name[32];          // ASCII strings, 31 characters long and
     char author[32];        // terminated by a trailing zero
     char released[32];      //
-    uint8_t flags[2];       // only version 0x0002
-    uint8_t relocStartPage; // only version 0x0002B
-    uint8_t relocPages;     // only version 0x0002B
-    uint8_t reserved[2];    // only version 0x0002
+    uint8_t flags[2];       // only version >= 0x0002
+    uint8_t relocStartPage; // only version >= 0x0002B
+    uint8_t relocPages;     // only version >= 0x0002B
+    char sidChipBase2;      // only version >= 0x0003
+    char reserved;          // only version >= 0x0002
 };
 
 enum
@@ -125,6 +126,8 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
            compatibility = SIDTUNE_COMPATIBILITY_PSID;
            // Deliberate run on
        case 2:
+           break;
+       case 3:
            break;
        default:
            info.formatString = _sidtune_unknown_psid;
@@ -214,6 +217,11 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
 
         info.relocStartPage = pHeader->relocStartPage;
         info.relocPages     = pHeader->relocPages;
+
+        if ( endian_big16(pHeader->version) >= 3 )
+        {
+            info.sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
+        }
 #endif // SIDTUNE_PSID2NG
     }
 
@@ -323,7 +331,8 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
     tmpFlags |= (info.clockSpeed << 2);
     tmpFlags |= (info.sidModel << 4);
     endian_big16(myHeader.flags,tmpFlags);
-    endian_big16(myHeader.reserved,0);
+    myHeader.sidChipBase2 = info.sidChipBase2;
+    myHeader.reserved = 0;
 
     fMyOut.write( (char*)&myHeader, sizeof(psidHeader) );
 
