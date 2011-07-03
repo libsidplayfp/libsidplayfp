@@ -36,7 +36,7 @@ protected:
 
 public:
     sidemu (sidbuilder *builder)
-    :m_builder (builder) {;}
+        : m_builder (builder) {;}
     virtual ~sidemu () {;}
 
     // Standard component functions
@@ -56,7 +56,7 @@ public:
     virtual short *buffer() { return m_buffer; }
 
     virtual void sampling(float systemfreq, float outputfreq,
-        const sampling_method_t method, const bool fast) { return; }
+    const sampling_method_t method, const bool fast) { return; }
 };
 
 class sidbuilder
