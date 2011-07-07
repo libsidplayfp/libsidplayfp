@@ -98,7 +98,8 @@ struct SidTuneInfo
     uint_least8_t relocStartPage;  // First available page for relocation
     uint_least8_t relocPages;      // Number of pages available for relocation
     bool musPlayer;                // whether Sidplayer routine has been installed
-    int  sidModel;                 // Sid Model required for this sid
+    int  sidModel1;                 // Sid Model required for first sid
+    int  sidModel2;                 // Sid Model required for second sid
     int  compatibility;            // compatibility requirements
     bool fixLoad;                  // whether load address might be duplicate
     uint_least16_t songLength;     // --- not yet supported ---

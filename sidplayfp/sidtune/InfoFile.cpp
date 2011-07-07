@@ -251,13 +251,13 @@ SidTune::LoadStatus SidTune::SID_fileSupport(Buffer_sidtt<const uint_least8_t>& 
                 char model[8];
                 SidTuneTools::copyStringValueToEOL(pParseBuf,model,sizeof(model));
                 if ( SidTuneTools::myStrNcaseCmp( model, "UNKNOWN" ) == 0 )
-                    info.sidModel = SIDTUNE_SIDMODEL_UNKNOWN;
+                    info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
                 else if ( SidTuneTools::myStrNcaseCmp( model, "6581" ) == 0 )
-                    info.sidModel = SIDTUNE_SIDMODEL_6581;
+                    info.sidModel1 = SIDTUNE_SIDMODEL_6581;
                 else if ( SidTuneTools::myStrNcaseCmp( model, "8580" ) == 0 )
-                    info.sidModel = SIDTUNE_SIDMODEL_8580;
+                    info.sidModel1 = SIDTUNE_SIDMODEL_8580;
                 else if ( SidTuneTools::myStrNcaseCmp( model, "ANY" ) == 0 )
-                    info.sidModel = SIDTUNE_SIDMODEL_ANY;
+                    info.sidModel1 = SIDTUNE_SIDMODEL_ANY;
             }
             // COMPATIBILITY
             else if ( SidTuneTools::myStrNcaseCmp( pParseChunk, keyword_compatibility ) == 0 )
@@ -432,10 +432,10 @@ bool SidTune::SID_fileSupportSave( std::ofstream& toFile )
         }
         toFile << std::endl;
     }
-    if ( info.sidModel != SIDTUNE_SIDMODEL_UNKNOWN )
+    if ( info.sidModel1 != SIDTUNE_SIDMODEL_UNKNOWN )
     {
         toFile << keyword_sidModel;
-        switch (info.sidModel)
+        switch (info.sidModel1)
         {
         case SIDTUNE_SIDMODEL_6581:
             toFile << "6581";

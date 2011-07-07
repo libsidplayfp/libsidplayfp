@@ -490,13 +490,13 @@ SidTune::LoadStatus SidTune::INFO_fileSupport(Buffer_sidtt<const uint_least8_t>&
             char model[8];
             SidTuneTools::copyStringValueToEOL(cmpBuf,model,sizeof(model));
             if ( SidTuneTools::myStrNcaseCmp( model, "UNKNOWN" ) == 0 )
-                info.sidModel = SIDTUNE_SIDMODEL_UNKNOWN;
+                info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
             else if ( SidTuneTools::myStrNcaseCmp( model, "6581" ) == 0 )
-                info.sidModel = SIDTUNE_SIDMODEL_6581;
+                info.sidModel1 = SIDTUNE_SIDMODEL_6581;
             else if ( SidTuneTools::myStrNcaseCmp( model, "8580" ) == 0 )
-                info.sidModel = SIDTUNE_SIDMODEL_8580;
+                info.sidModel1 = SIDTUNE_SIDMODEL_8580;
             else if ( SidTuneTools::myStrNcaseCmp( model, "ANY" ) == 0 )
-                info.sidModel = SIDTUNE_SIDMODEL_ANY;
+                info.sidModel1 = SIDTUNE_SIDMODEL_ANY;
         }
         else if ( SidTuneTools::myStrNcaseCmp(cmpBuf,_sidtune_keyword_compatibility) == 0 )
         {

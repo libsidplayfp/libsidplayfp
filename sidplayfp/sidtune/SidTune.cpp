@@ -400,7 +400,8 @@ void SidTune::init()
     info.songSpeed = SIDTUNE_SPEED_VBI;
 #ifdef SIDTUNE_PSID2NG
     info.clockSpeed = SIDTUNE_CLOCK_UNKNOWN;
-    info.sidModel = SIDTUNE_SIDMODEL_UNKNOWN;
+    info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
+    info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
 #else
     info.clockSpeed = SIDTUNE_CLOCK_PAL;
     info.sidModel = SIDTUNE_SIDMODEL_6581;

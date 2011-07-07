@@ -83,10 +83,18 @@ enum
 
 enum
 {
-    PSID_SIDMODEL_UNKNOWN = 0,
-    PSID_SIDMODEL_6581    = 1 << 4,
-    PSID_SIDMODEL_8580    = 1 << 5,
-    PSID_SIDMODEL_ANY     = PSID_SIDMODEL_6581 | PSID_SIDMODEL_8580
+    PSID_SIDMODEL1_UNKNOWN = 0,
+    PSID_SIDMODEL1_6581    = 1 << 4,
+    PSID_SIDMODEL1_8580    = 1 << 5,
+    PSID_SIDMODEL1_ANY     = PSID_SIDMODEL1_6581 | PSID_SIDMODEL1_8580
+};
+
+enum
+{
+    PSID_SIDMODEL2_UNKNOWN = 0,
+    PSID_SIDMODEL2_6581    = 1 << 6,
+    PSID_SIDMODEL2_8580    = 1 << 7,
+    PSID_SIDMODEL2_ANY     = PSID_SIDMODEL2_6581 | PSID_SIDMODEL2_8580
 };
 
 static const char _sidtune_format_psid[] = "PlaySID one-file format (PSID)";
@@ -176,7 +184,8 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
     }
 
     info.musPlayer      = false;
-    info.sidModel       = SIDTUNE_SIDMODEL_UNKNOWN;
+    info.sidModel1      = SIDTUNE_SIDMODEL_UNKNOWN;
+    info.sidModel2      = SIDTUNE_SIDMODEL_UNKNOWN;
     info.relocPages     = 0;
     info.relocStartPage = 0;
     if ( endian_big16(pHeader->version) >= 2 )
@@ -209,11 +218,17 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             clock |= SIDTUNE_CLOCK_NTSC;
         info.clockSpeed = clock;
 
-        info.sidModel = SIDTUNE_SIDMODEL_UNKNOWN;
-        if (flags & PSID_SIDMODEL_6581)
-            info.sidModel |= SIDTUNE_SIDMODEL_6581;
-        if (flags & PSID_SIDMODEL_8580)
-            info.sidModel |= SIDTUNE_SIDMODEL_8580;
+        info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
+        if (flags & PSID_SIDMODEL1_6581)
+            info.sidModel1 |= SIDTUNE_SIDMODEL_6581;
+        if (flags & PSID_SIDMODEL1_8580)
+            info.sidModel1 |= SIDTUNE_SIDMODEL_8580;
+
+        info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
+        if (flags & PSID_SIDMODEL2_6581)
+            info.sidModel2 |= SIDTUNE_SIDMODEL_6581;
+        if (flags & PSID_SIDMODEL2_8580)
+            info.sidModel2 |= SIDTUNE_SIDMODEL_8580;
 
         info.relocStartPage = pHeader->relocStartPage;
         info.relocPages     = pHeader->relocPages;
@@ -329,7 +344,8 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
     }
 
     tmpFlags |= (info.clockSpeed << 2);
-    tmpFlags |= (info.sidModel << 4);
+    tmpFlags |= (info.sidModel1 << 4);
+    tmpFlags |= (info.sidModel2 << 6);
     endian_big16(myHeader.flags,tmpFlags);
     myHeader.sidChipBase2 = info.sidChipBase2;
     myHeader.reserved = 0;
