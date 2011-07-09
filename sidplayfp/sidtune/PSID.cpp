@@ -104,7 +104,7 @@ static const char _sidtune_unknown_rsid[] = "Unsupported RSID version";
 static const char _sidtune_truncated[] = "ERROR: File is most likely truncated";
 static const char _sidtune_invalid[] = "ERROR: File contains invalid data";
 
-static const int _sidtune_psid_maxStrLen = 31;
+static const int _sidtune_psid_maxStrLen = 32;
 
 
 SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
