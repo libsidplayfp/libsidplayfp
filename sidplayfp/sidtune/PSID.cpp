@@ -57,10 +57,11 @@ struct psidHeader           // all values big-endian
     char name[32];          // ASCII strings, 31 characters long and
     char author[32];        // terminated by a trailing zero
     char released[32];      //
-    uint8_t flags[2];       // only version 0x0002
-    uint8_t relocStartPage; // only version 0x0002B
-    uint8_t relocPages;     // only version 0x0002B
-    uint8_t reserved[2];    // only version 0x0002
+    uint8_t flags[2];       // only version >= 0x0002
+    uint8_t relocStartPage; // only version >= 0x0002B
+    uint8_t relocPages;     // only version >= 0x0002B
+    char sidChipBase2;      // only version >= 0x0003
+    char reserved;          // only version >= 0x0002
 };
 
 enum
@@ -82,10 +83,18 @@ enum
 
 enum
 {
-    PSID_SIDMODEL_UNKNOWN = 0,
-    PSID_SIDMODEL_6581    = 1 << 4,
-    PSID_SIDMODEL_8580    = 1 << 5,
-    PSID_SIDMODEL_ANY     = PSID_SIDMODEL_6581 | PSID_SIDMODEL_8580
+    PSID_SIDMODEL1_UNKNOWN = 0,
+    PSID_SIDMODEL1_6581    = 1 << 4,
+    PSID_SIDMODEL1_8580    = 1 << 5,
+    PSID_SIDMODEL1_ANY     = PSID_SIDMODEL1_6581 | PSID_SIDMODEL1_8580
+};
+
+enum
+{
+    PSID_SIDMODEL2_UNKNOWN = 0,
+    PSID_SIDMODEL2_6581    = 1 << 6,
+    PSID_SIDMODEL2_8580    = 1 << 7,
+    PSID_SIDMODEL2_ANY     = PSID_SIDMODEL2_6581 | PSID_SIDMODEL2_8580
 };
 
 static const char _sidtune_format_psid[] = "PlaySID one-file format (PSID)";
@@ -95,7 +104,7 @@ static const char _sidtune_unknown_rsid[] = "Unsupported RSID version";
 static const char _sidtune_truncated[] = "ERROR: File is most likely truncated";
 static const char _sidtune_invalid[] = "ERROR: File contains invalid data";
 
-static const int _sidtune_psid_maxStrLen = 31;
+static const int _sidtune_psid_maxStrLen = 32;
 
 
 SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
@@ -125,6 +134,8 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
            compatibility = SIDTUNE_COMPATIBILITY_PSID;
            // Deliberate run on
        case 2:
+           break;
+       case 3:
            break;
        default:
            info.formatString = _sidtune_unknown_psid;
@@ -173,7 +184,8 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
     }
 
     info.musPlayer      = false;
-    info.sidModel       = SIDTUNE_SIDMODEL_UNKNOWN;
+    info.sidModel1      = SIDTUNE_SIDMODEL_UNKNOWN;
+    info.sidModel2      = SIDTUNE_SIDMODEL_UNKNOWN;
     info.relocPages     = 0;
     info.relocStartPage = 0;
     if ( endian_big16(pHeader->version) >= 2 )
@@ -206,14 +218,25 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             clock |= SIDTUNE_CLOCK_NTSC;
         info.clockSpeed = clock;
 
-        info.sidModel = SIDTUNE_SIDMODEL_UNKNOWN;
-        if (flags & PSID_SIDMODEL_6581)
-            info.sidModel |= SIDTUNE_SIDMODEL_6581;
-        if (flags & PSID_SIDMODEL_8580)
-            info.sidModel |= SIDTUNE_SIDMODEL_8580;
+        info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
+        if (flags & PSID_SIDMODEL1_6581)
+            info.sidModel1 |= SIDTUNE_SIDMODEL_6581;
+        if (flags & PSID_SIDMODEL1_8580)
+            info.sidModel1 |= SIDTUNE_SIDMODEL_8580;
+
+        info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
+        if (flags & PSID_SIDMODEL2_6581)
+            info.sidModel2 |= SIDTUNE_SIDMODEL_6581;
+        if (flags & PSID_SIDMODEL2_8580)
+            info.sidModel2 |= SIDTUNE_SIDMODEL_8580;
 
         info.relocStartPage = pHeader->relocStartPage;
         info.relocPages     = pHeader->relocPages;
+
+        if ( endian_big16(pHeader->version) >= 3 )
+        {
+            info.sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
+        }
 #endif // SIDTUNE_PSID2NG
     }
 
@@ -321,9 +344,11 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
     }
 
     tmpFlags |= (info.clockSpeed << 2);
-    tmpFlags |= (info.sidModel << 4);
+    tmpFlags |= (info.sidModel1 << 4);
+    tmpFlags |= (info.sidModel2 << 6);
     endian_big16(myHeader.flags,tmpFlags);
-    endian_big16(myHeader.reserved,0);
+    myHeader.sidChipBase2 = info.sidChipBase2;
+    myHeader.reserved = 0;
 
     fMyOut.write( (char*)&myHeader, sizeof(psidHeader) );
 

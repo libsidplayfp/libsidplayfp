@@ -450,6 +450,70 @@ int Player::environment (sid2_env_t env)
     }
 }
 
+sid2_model_t Player::getModel(int sidModel,
+                              sid2_model_t userModel,
+                              sid2_model_t defaultModel)
+{
+    if (sidModel == SIDTUNE_SIDMODEL_UNKNOWN)
+    {
+        switch (defaultModel)
+        {
+        case SID2_MOS6581:
+            sidModel = SIDTUNE_SIDMODEL_6581;
+            break;
+        case SID2_MOS8580:
+            sidModel = SIDTUNE_SIDMODEL_8580;
+            break;
+        case SID2_MODEL_CORRECT:
+            // No default so base it on emulation clock
+            sidModel = SIDTUNE_SIDMODEL_ANY;
+        }
+    }
+
+    // Since song will run correct on any sid model
+    // set it to the current emulation
+    if (sidModel == SIDTUNE_SIDMODEL_ANY)
+    {
+        if (userModel == SID2_MODEL_CORRECT)
+            userModel  = defaultModel;
+
+        switch (userModel)
+        {
+        case SID2_MOS8580:
+            sidModel = SIDTUNE_SIDMODEL_8580;
+            break;
+        case SID2_MOS6581:
+        default:
+            sidModel = SIDTUNE_SIDMODEL_6581;
+            break;
+        }
+    }
+
+    switch (userModel)
+    {
+    case SID2_MODEL_CORRECT:
+        switch (sidModel)
+        {
+        case SIDTUNE_SIDMODEL_8580:
+            userModel = SID2_MOS8580;
+            break;
+        case SIDTUNE_SIDMODEL_6581:
+            userModel = SID2_MOS6581;
+            break;
+        }
+    break;
+    // Fixup tune information if model is forced
+    case SID2_MOS6581:
+        sidModel = SIDTUNE_SIDMODEL_6581;
+        break;
+    case SID2_MOS8580:
+        sidModel = SIDTUNE_SIDMODEL_8580;
+        break;
+    }
+
+    return userModel;
+}
+
 // Integrate SID emulation from the builder class into
 // libsidplay2
 int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
@@ -489,66 +553,15 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
     else
     {   // Detect the Correct SID model
         // Determine model when unknown
-        if (m_tuneInfo.sidModel == SIDTUNE_SIDMODEL_UNKNOWN)
-        {
-            switch (defaultModel)
-            {
-            case SID2_MOS6581:
-                m_tuneInfo.sidModel = SIDTUNE_SIDMODEL_6581;
-                break;
-            case SID2_MOS8580:
-                m_tuneInfo.sidModel = SIDTUNE_SIDMODEL_8580;
-                break;
-            case SID2_MODEL_CORRECT:
-                // No default so base it on emulation clock
-                m_tuneInfo.sidModel = SIDTUNE_SIDMODEL_ANY;
-            }
-        }
-
-        // Since song will run correct on any sid model
-        // set it to the current emulation
-        if (m_tuneInfo.sidModel == SIDTUNE_SIDMODEL_ANY)
-        {
-            if (userModel == SID2_MODEL_CORRECT)
-                userModel  = defaultModel;
-
-            switch (userModel)
-            {
-            case SID2_MOS8580:
-                m_tuneInfo.sidModel = SIDTUNE_SIDMODEL_8580;
-                break;
-            case SID2_MOS6581:
-            default:
-                m_tuneInfo.sidModel = SIDTUNE_SIDMODEL_6581;
-                break;
-            }
-        }
-
-        switch (userModel)
-        {
-        case SID2_MODEL_CORRECT:
-            switch (m_tuneInfo.sidModel)
-            {
-            case SIDTUNE_SIDMODEL_8580:
-                userModel = SID2_MOS8580;
-                break;
-            case SIDTUNE_SIDMODEL_6581:
-                userModel = SID2_MOS6581;
-                break;
-            }
-            break;
-        // Fixup tune information if model is forced
-        case SID2_MOS6581:
-            m_tuneInfo.sidModel = SIDTUNE_SIDMODEL_6581;
-            break;
-        case SID2_MOS8580:
-            m_tuneInfo.sidModel = SIDTUNE_SIDMODEL_8580;
-            break;
-        }
+        sid2_model_t userModels[SID2_MAX_SIDS];
+        userModels[0] = getModel(m_tuneInfo.sidModel1, userModel, defaultModel);
+        // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
+        // model as the first SID.
+        userModels[1] = getModel(m_tuneInfo.sidModel2, userModel, userModels[0]);
 
         for (int i = 0; i < SID2_MAX_SIDS; i++)
         {   // Get first SID emulation
-            sid[i] = builder->lock (this, userModel);
+            sid[i] = builder->lock (this, userModels[i]);
             if (!sid[i])
                 sid[i] = &nullsid;
             if ((i == 0) && !*builder)

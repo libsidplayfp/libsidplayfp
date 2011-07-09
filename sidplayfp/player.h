@@ -357,6 +357,9 @@ private:
     void      sidSamples     (bool enable);
     void      reset          ();
     uint8_t   iomap          (uint_least16_t addr);
+    sid2_model_t getModel(int sidModel,
+                          sid2_model_t userModel,
+                          sid2_model_t defaultModel);
 
     uint8_t readMemByte_plain     (uint_least16_t addr);
     uint8_t readMemByte_io        (uint_least16_t addr);
