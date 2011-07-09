@@ -909,8 +909,6 @@ void Player::writeMemByte_sidplay (uint_least16_t addr, uint8_t data)
 // These must be available for use:
 void Player::reset (void)
 {
-    int i;
-
     m_playerState  = sid2_stopped;
     m_running      = false;
     m_sid2crc      = 0xffffffff;
@@ -921,7 +919,7 @@ void Player::reset (void)
     cpu.environment (m_info.environment);
 
     m_scheduler.reset ();
-    for (i = 0; i < SID2_MAX_SIDS; i++)
+    for (int i = 0; i < SID2_MAX_SIDS; i++)
     {
         sidemu &s = *sid[i];
         s.reset (0x0f);

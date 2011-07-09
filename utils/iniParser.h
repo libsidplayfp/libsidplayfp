@@ -23,7 +23,6 @@
 #include <iostream>
 #include <fstream>
 #include <map>
-#include <exception>
 
 class iniParser {
 
@@ -37,7 +36,7 @@ private:
 
 	std::map<std::string, keys_t> sections;
 
-	class emptyPair : public std::exception {};
+	class emptyPair {};
 
 	std::string parseSection(const char* buffer);
 	std::pair<std::string, std::string> parseKey(const char* buffer);
