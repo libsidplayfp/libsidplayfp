@@ -20,10 +20,10 @@
 #include "envelope.h"
 #include "sid.h"
 
-void EnvelopeGeneratorFP::set_nonlinearity(const chip_model model, const float nl)
+void EnvelopeGeneratorFP::set_nonlinearity(float nl)
 {
     for (int i = 0; i < 256; i ++)
-        env_dac[i] = SIDFP::kinked_dac(i, nl, 8, model == MOS8580FP);
+        env_dac[i] = SIDFP::kinked_dac(i, nl, 8);
 }
 
 // ----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ void EnvelopeGeneratorFP::mute(bool enable)
 // The described method is thus sufficient for exact calculation of the rate
 // periods.
 //
-const reg16 EnvelopeGeneratorFP::rate_counter_period[] = {
+reg16 EnvelopeGeneratorFP::rate_counter_period[] = {
       9,  //   2ms*1.0MHz/256 =     7.81
      32,  //   8ms*1.0MHz/256 =    31.25
      63,  //  16ms*1.0MHz/256 =    62.50
@@ -166,7 +166,7 @@ const reg16 EnvelopeGeneratorFP::rate_counter_period[] = {
 // envelope counter are compared to the 4-bit sustain value.
 // This has been verified by sampling ENV3.
 //
-const reg8 EnvelopeGeneratorFP::sustain_level[] = {
+reg8 EnvelopeGeneratorFP::sustain_level[] = {
   0x00,
   0x11,
   0x22,

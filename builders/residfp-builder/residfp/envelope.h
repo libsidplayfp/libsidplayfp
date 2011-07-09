@@ -52,7 +52,7 @@ public:
   RESID_INLINE float output();
 
 protected:
-  void set_nonlinearity(const chip_model model, const float nl);
+  void set_nonlinearity(float nl);
   void update_rate_period(reg16 period);
 
   int rate_counter;
@@ -75,10 +75,10 @@ protected:
 
   // Lookup table to convert from attack, decay, or release value to rate
   // counter period.
-  static const reg16 rate_counter_period[];
+  static reg16 rate_counter_period[];
 
   // The 16 selectable sustain levels.
-  static const reg8 sustain_level[];
+  static reg8 sustain_level[];
 
 friend class SIDFP;
 };

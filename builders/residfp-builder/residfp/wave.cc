@@ -191,10 +191,10 @@ void WaveformGeneratorFP::calculate_waveform_sample(float o[12])
   }
 }
 
-void WaveformGeneratorFP::set_nonlinearity(const chip_model model, const float nl)
+void WaveformGeneratorFP::set_nonlinearity(float nl)
 {
   for (int i = 0; i < 12; i ++) {
-    dac[i] = SIDFP::kinked_dac((1 << i), nl, 12, model == MOS8580FP);
+    dac[i] = SIDFP::kinked_dac((1 << i), nl, 12);
   }
 }
 
