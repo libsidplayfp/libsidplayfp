@@ -82,7 +82,7 @@ dnl libtool-style version-info number
 #     value and # reset both “older interface age” and ”interface revision”
 #     to zero.
 
-LIBSIDPLAYCUR=0
+LIBSIDPLAYCUR=1
 LIBSIDPLAYREV=0
 LIBSIDPLAYAGE=0
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
