@@ -97,8 +97,8 @@ void Player::mixer (void)
 
         /* This is a crude boxcar low-pass filter to
          * reduce aliasing during fast forward, something I commonly do. */
-        float sample1 = 0;
-        float sample2 = 0;
+        int sample1 = 0;
+        int sample2 = 0;
         int j;
         for (j = 0; j < m_fastForwardFactor; j += 1) {
             sample1 += buf1[i + j];
@@ -114,15 +114,15 @@ void Player::mixer (void)
 
         /* mono mix. */
         if (buf2 != NULL && m_cfg.playback != sid2_stereo)
-            sample1 = (sample1 + sample2) * 0.5f;
+            sample1 = (sample1 + sample2) / 2;
         /* stereo clone, for people who keep stereo on permanently. */
         if (buf2 == NULL && m_cfg.playback == sid2_stereo)
             sample2 = sample1;
 
-        *buf++ = sample1;
+        *buf++ = (short int)sample1;
         m_sampleIndex ++;
         if (m_cfg.playback == sid2_stereo) {
-            *buf++ = sample2;
+            *buf++ = (short int)sample2;
             m_sampleIndex ++;
         }
     }
