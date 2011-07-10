@@ -1,3 +1,8 @@
+0.1.1 2011-07-10
+* add support for PSID v3 tunes (patch by hbekel)
+* minor fixes
+
+
 0.1.0 2010-11-10
 
 you can read a summary of changes from the original libsidplay2

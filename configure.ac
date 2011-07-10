@@ -1,4 +1,4 @@
-AC_INIT([libsidplayfp], [0.1.0])
+AC_INIT([libsidplayfp], [0.1.1])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([sidplayfp/sidplay2.cpp])
@@ -77,7 +77,7 @@ dnl libtool-style version-info number
 # http://blog.flameeyes.eu/2009/04/22/shared-object-version
 
 LIBSIDPLAYCUR=0
-LIBSIDPLAYREV=0
+LIBSIDPLAYREV=1
 LIBSIDPLAYAGE=0
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
