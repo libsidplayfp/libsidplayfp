@@ -57,7 +57,9 @@ public:
 
     // Settings that affect all SIDs
     void filter   (bool enable);
-    void filter   (const sid_filterfp_t *filter);
+    //void filter   (const sid_filterfp_t *filter);
+    void filter6581Curve (const double filterCurve);
+    void filter8580Curve (const double filterCurve);
 };
 
 #endif // _resid_h_

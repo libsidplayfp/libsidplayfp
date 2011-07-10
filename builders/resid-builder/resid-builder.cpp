@@ -51,7 +51,7 @@
 #include "resid-emu.h"
 
 // Error String(s)
-const char *ReSIDBuilder::ERR_FILTER_DEFINITION = "RESID ERROR: Filter definition is not valid (see docs).";
+//const char *ReSIDBuilder::ERR_FILTER_DEFINITION = "RESID ERROR: Filter definition is not valid (see docs).";
 
 ReSIDBuilder::ReSIDBuilder (const char * const name)
 :sidbuilder (name)
@@ -142,7 +142,7 @@ uint ReSIDBuilder::devices (bool created)
     else // Available devices
         return 0;
 }
-
+#if 0
 void ReSIDBuilder::filter (const sid_filter_t *filter)
 {
     int size = sidobjs.size ();
@@ -159,10 +159,10 @@ ReSIDBuilder_sidFilterDef_error:
     m_error  = ERR_FILTER_DEFINITION;
     m_status = false;
 }
-
+#endif
 void ReSIDBuilder::filter (bool enable)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     m_status = true;
     for (int i = 0; i < size; i++)
     {

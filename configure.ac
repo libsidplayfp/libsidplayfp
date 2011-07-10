@@ -1,6 +1,6 @@
 m4_define([lib_major], [0])
 m4_define([lib_minor], [2])
-m4_define([lib_level], [0beta])
+m4_define([lib_level], [0beta2])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version])
@@ -48,12 +48,6 @@ CHECK_VISIBILITY
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 
-AC_CHECK_SIZEOF([char])
-
-if test $ac_cv_sizeof_char != 1; then
-  AC_MSG_ERROR([code cannot work correctly on this platform as no real 8 bit data type supported!])
-fi
-
 AC_CHECK_SIZEOF(int, 4)
 
 if test $ac_cv_sizeof_int -lt 4; then
@@ -75,7 +69,9 @@ MY_CHECK_IOS_OPENMODE
 
 
 dnl libtool-style version-info number
-
+#
+# http://blog.flameeyes.eu/2009/04/22/shared-object-version
+#
 # if you don’t change the interface at all just increase the
 #     “interface revision” value;
 # if you make backward-compatible changes (like adding interfaces),
@@ -85,8 +81,6 @@ dnl libtool-style version-info number
 #     (removing interfaces for instance), increase the “current interface”
 #     value and # reset both “older interface age” and ”interface revision”
 #     to zero.
-
-# http://blog.flameeyes.eu/2009/04/22/shared-object-version
 
 LIBSIDPLAYCUR=0
 LIBSIDPLAYREV=0
@@ -98,8 +92,8 @@ LIBRESIDREV=0
 LIBRESIDAGE=1
 LIBRESIDVERSION=$LIBRESIDCUR:$LIBRESIDREV:$LIBRESIDAGE
 
-LIBRESIDFPCUR=0
-LIBRESIDFPREV=1
+LIBRESIDFPCUR=1
+LIBRESIDFPREV=0
 LIBRESIDFPAGE=0
 LIBRESIDFPVERSION=$LIBRESIDFPCUR:$LIBRESIDFPREV:$LIBRESIDFPAGE
 
@@ -114,6 +108,7 @@ AC_ARG_ENABLE(debug, [AS_HELP_STRING([--enable-debug], [compile for debugging @<
 
 if test "x$enable_debug" = "xno"; then
   AC_MSG_RESULT([Build without debugging messages])
+  debug_flags=-DNDEBUG
 else
   if test "x$enable_debug" = "xyes"; then
     debug_flags=-DDEBUG=1
@@ -135,31 +130,11 @@ AS_IF([test x"$enable_inline" != "xno"],
   [RESID_INLINE=""; RESID_INLINING=0])
 
 
-AC_ARG_ENABLE([sse],
-  AS_HELP_STRING([--enable-sse],[enable the use of SSE [default=yes]]))
-
-AS_IF([test x"$enable_sse" != "xno" -a x"$GXX" = "xyes"],
-  [MSSE="-msse"
-    RESID_USE_SSE=1],
-  [RESID_USE_SSE=0
-    MSSE=""])
-
-AM_CONDITIONAL([USE_SSE], [test $RESID_USE_SSE = 1])
-
-if test x"$GXX" = "xyes"; then
-  NO_EXCEPTIONS="-fno-exceptions"
-else
-  NO_EXCEPTIONS=""
-fi
-
-RESIDFP_FLAGS="$MSSE $NO_EXCEPTIONS"
-
-
 # hack to avoid warnings
 saveCPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $CXXFLAGS"
 
-AC_CHECK_HEADERS([xmmintrin.h mmintrin.h])
+AC_CHECK_HEADERS([mmintrin.h])
 
 CPPFLAGS=$saveCPPFLAGS
 
@@ -175,32 +150,6 @@ if test $ac_cv_cxx_bool = no; then
 else
   RESID_HAVE_BOOL=1
 fi
-
-dnl Checks for library functions.
-if test x"$host_os" != "xminix"; then
-  AC_CHECK_FUNCS([logf expf])
-fi
-
-AC_MSG_CHECKING([if the logf prototype is present])
-AC_COMPILE_IFELSE(
-  [AC_LANG_PROGRAM([[#include <math.h>
-    #include <stdio.h>]], [[printf("%d",logf);]])],
-  [AC_MSG_RESULT(yes)
-  HAVE_LOGF_PROTOTYPE=1],
-  [AC_MSG_RESULT(no)
-  HAVE_LOGF_PROTOTYPE=0])
-
-AC_MSG_CHECKING([if the expf prototype is present])
-AC_COMPILE_IFELSE(
-  [AC_LANG_PROGRAM([[#include <math.h>
-    #include <stdio.h>]], [[printf("%d",expf);]])],
-  [AC_MSG_RESULT(yes)
-  HAVE_EXPF_PROTOTYPE=1],
-  [AC_MSG_RESULT(no)
-  HAVE_EXPF_PROTOTYPE=0])
-
-AC_SUBST(HAVE_LOGF_PROTOTYPE)
-AC_SUBST(HAVE_EXPF_PROTOTYPE)
 
 
 dnl Enable branch prediction hints.
@@ -225,10 +174,8 @@ AS_IF([test "$resid_cv_builtin_expect" = no],
 
 
 AC_SUBST(RESID_HAVE_BOOL)
-AC_SUBST(RESID_USE_SSE)
 AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)
-AC_SUBST(RESIDFP_FLAGS)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(PKGSIDPLAYVERSION)
 AC_SUBST(LIBRESIDVERSION)

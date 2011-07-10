@@ -28,6 +28,10 @@
 #   include <new>
 #endif
 
+#include "residfp/Filter6581.h"
+#include "residfp/Filter8580.h"
+
+
 #include "residfp/siddefs-fp.h"
 #include "residfp.h"
 #include "residfp-emu.h"
@@ -39,9 +43,9 @@ ReSIDfp::ReSIDfp (sidbuilder *builder)
  m_context(NULL),
  m_phase(EVENT_CLOCK_PHI1),
 #ifdef HAVE_EXCEPTIONS
- m_sid(*(new(std::nothrow) RESIDFP::SIDFP)),
+ m_sid(*(new(std::nothrow) RESID_NAMESPACE::SID)),
 #else
- m_sid(*(new RESIDFP::SIDFP)),
+ m_sid(*(new RESID_NAMESPACE::SID)),
 #endif
  m_status(true),
  m_locked(false)
@@ -54,9 +58,11 @@ ReSIDfp::ReSIDfp (sidbuilder *builder)
     p += strlen (p) + 1;
     strcpy  (p, "\t(C) 1999-2002 Simon White <sidplay2@yahoo.com>");
     p += strlen (p) + 1;
-    sprintf (p, "MOS6581 (SID) Emulation (ReSIDfp V%s):", RESIDFP::resid_version_string);
+    sprintf (p, "MOS6581 (SID) Emulation (ReSIDfp V%s):", residfp_version_string);
     p += strlen (p) + 1;
     sprintf (p, "\t(C) 1999-2002 Dag Lem <resid@nimrod.no>");
+    p += strlen (p) + 1;
+    sprintf (p, "\t(C) 2005-2011 Antti S. Lankila <alankila@bel.fi>");
     p += strlen (p) + 1;
     *p = '\0';
 
@@ -78,50 +84,38 @@ ReSIDfp::~ReSIDfp ()
         delete &m_sid;
     delete[] m_buffer;
 }
-
+#if 0
 bool ReSIDfp::filter (const sid_filterfp_t *filter)
 {
-    /* Set sensible defaults, will override them if new ones provided. */
-    m_sid.get_filter().set_distortion_properties(0.5f, 3.3e6f);
-    m_sid.get_filter().set_type3_properties(1.37e6f, 1.70e8f, 1.006f, 1.55e4f);
-    m_sid.get_filter().set_type4_properties(5.5f, 20.f);
-    m_sid.set_voice_nonlinearity(1.f);
-
     /* Set whatever data is provided in the filter def.
      * XXX: we should check that if one param in set is provided,
      * all are provided. */
     if (filter != NULL) {
-
+      //FIXME
 #ifdef DEBUG
-    printf("attenuation: %f\n", filter->attenuation);
-    printf("distortion_nonlinearity: %f\n", filter->distortion_nonlinearity);
-    printf("voice_nonlinearity: %f\n", filter->voice_nonlinearity);
-    printf("baseresistance: %f\n", filter->baseresistance);
-    printf("offset: %f\n", filter->offset);
-    printf("steepness: %f\n", filter->steepness);
-    printf("minimumfetresistance: %f\n", filter->minimumfetresistance);
-    printf("k: %f\n", filter->k);
-    printf("b: %f\n", filter->b);
+    //printf("filterCurve6581: %f\n", filter->filterCurve6581);
+    //printf("filterCurve8580: %f\n", filter->filterCurve8580);
 #endif
 
-        if (filter->baseresistance != 0.f)
-            m_sid.get_filter().set_type3_properties(
-                filter->baseresistance, filter->offset, filter->steepness, filter->minimumfetresistance
-            );
-
-        if (filter->k != 0.f)
-            m_sid.get_filter().set_type4_properties(filter->k, filter->b);
-
-        if (filter->attenuation != 0.f)
-            m_sid.get_filter().set_distortion_properties(
-                filter->attenuation, filter->distortion_nonlinearity
-            );
-
-        if (filter->voice_nonlinearity != 0.f)
-            m_sid.set_voice_nonlinearity(filter->voice_nonlinearity);
+      m_sid.getFilter6581()->setFilterCurve(0.5);
+      m_sid.getFilter8580()->setFilterCurve(12500.);
+    } else {
+      /* Set sensible defaults. */
+      m_sid.getFilter6581()->setFilterCurve(0.5);
+      m_sid.getFilter8580()->setFilterCurve(12500.);
     }
 
     return true;
+}
+#endif
+void ReSIDfp::filter6581Curve (const double filterCurve)
+{
+   m_sid.getFilter6581()->setFilterCurve(filterCurve);
+}
+
+void ReSIDfp::filter8580Curve (const double filterCurve)
+{
+   m_sid.getFilter8580()->setFilterCurve(filterCurve);
 }
 
 // Standard component options
@@ -146,27 +140,28 @@ void ReSIDfp::write (uint_least8_t addr, uint8_t data)
 
 void ReSIDfp::clock()
 {
-    cycle_count cycles = m_context->getTime(m_accessClk, m_phase);
+    const int cycles = m_context->getTime(m_accessClk, m_phase);
     m_accessClk += cycles;
-    m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
+    m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
 }
 
 void ReSIDfp::filter (bool enable)
 {
-    m_sid.enable_filter (enable);
+      m_sid.getFilter6581()->enable(enable);
+      m_sid.getFilter8580()->enable(enable);
 }
 
 void ReSIDfp::sampling (float systemclock, float freq,
         const sampling_method_t method, const bool fast)
 {
-    sampling_method sampleMethod;
+    reSIDfp::SamplingMethod sampleMethod;
     switch (method)
     {
     case SID2_INTERPOLATE:
-        sampleMethod = RESIDFP::SAMPLE_INTERPOLATE;
+        sampleMethod = reSIDfp::DECIMATE;
         break;
     case SID2_RESAMPLE_INTERPOLATE:
-        sampleMethod = RESIDFP::SAMPLE_RESAMPLE_INTERPOLATE;
+        sampleMethod = reSIDfp::RESAMPLE;
         break;
     default:
         m_status = false;
@@ -174,7 +169,13 @@ void ReSIDfp::sampling (float systemclock, float freq,
         return;
     }
 
-    if (! m_sid.set_sampling_parameters (systemclock, sampleMethod, freq)) {
+    try
+    {
+      const int halfFreq = 5000*((int)freq/10000);
+      m_sid.setSamplingParameters (systemclock, sampleMethod, freq, halfFreq>20000?20000:halfFreq);
+    }
+    catch (RESID_NAMESPACE::SIDError& e)
+    {
         m_status = false;
         m_error = "Unable to set desired output frequency.";
     }
@@ -204,7 +205,7 @@ bool ReSIDfp::lock (c64env *env)
 void ReSIDfp::model (sid2_model_t model)
 {
     if (model == SID2_MOS8580)
-        m_sid.set_chip_model (RESIDFP::MOS8580FP);
+        m_sid.setChipModel (reSIDfp::MOS8580);
     else
-        m_sid.set_chip_model (RESIDFP::MOS6581FP);
+        m_sid.setChipModel (reSIDfp::MOS6581);
 }

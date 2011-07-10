@@ -79,7 +79,7 @@ ReSID::~ReSID ()
         delete &m_sid;
     delete[] m_buffer;
 }
-
+#if 0
 bool ReSID::filter (const sid_filter_t *filter)
 {
     /*RESID_NS::short_point fc[0x802];
@@ -136,7 +136,7 @@ bool ReSID::filter (const sid_filter_t *filter)
     RESID_NS::interpolate (f0, f0 + points, RESID_NS::PointPlotter<short>(*fc), 1.0); //FIXME*/
     return true;
 }
-
+#endif
 void ReSID::bias (const double dac_bias)
 {
     m_sid.adjust_filter_bias(dac_bias);

@@ -51,7 +51,7 @@
 #include "residfp-emu.h"
 
 // Error String(s)
-const char *ReSIDfpBuilder::ERR_FILTER_DEFINITION = "RESID ERROR: Filter definition is not valid (see docs).";
+//const char *ReSIDfpBuilder::ERR_FILTER_DEFINITION = "RESID ERROR: Filter definition is not valid (see docs).";
 
 ReSIDfpBuilder::ReSIDfpBuilder (const char * const name)
 :sidbuilder (name)
@@ -142,7 +142,7 @@ uint ReSIDfpBuilder::devices (bool created)
     else // Available devices
         return 0;
 }
-
+#if 0
 void ReSIDfpBuilder::filter (const sid_filterfp_t *filter)
 {
     int size = sidobjs.size ();
@@ -159,7 +159,7 @@ ReSIDfpBuilder_sidFilterDef_error:
     m_error  = ERR_FILTER_DEFINITION;
     m_status = false;
 }
-
+#endif
 void ReSIDfpBuilder::filter (bool enable)
 {
     int size = sidobjs.size ();
@@ -168,6 +168,28 @@ void ReSIDfpBuilder::filter (bool enable)
     {
         ReSIDfp *sid = (ReSIDfp *) sidobjs[i];
         sid->filter (enable);
+    }
+}
+
+void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
+{
+    const int size = sidobjs.size ();
+    m_status = true;
+    for (int i = 0; i < size; i++)
+    {
+        ReSIDfp *sid = (ReSIDfp *) sidobjs[i];
+        sid->filter6581Curve (filterCurve);
+    }
+}
+
+void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
+{
+    const int size = sidobjs.size ();
+    m_status = true;
+    for (int i = 0; i < size; i++)
+    {
+        ReSIDfp *sid = (ReSIDfp *) sidobjs[i];
+        sid->filter8580Curve (filterCurve);
     }
 }
 
@@ -211,7 +233,7 @@ void ReSIDfpBuilder::unlock (sidemu *device)
 // Remove all SID emulations.
 void ReSIDfpBuilder::remove ()
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     for (int i = 0; i < size; i++)
         delete sidobjs[i];
     sidobjs.clear();

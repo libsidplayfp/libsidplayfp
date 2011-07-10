@@ -26,12 +26,8 @@ sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64xsid.h \
 sidplayfp/mos6510/cycle_based \
 builders/residfp-builder/residfp/AUTHORS \
-builders/residfp-builder/residfp/ChangeLog \
 builders/residfp-builder/residfp/COPYING \
-builders/residfp-builder/residfp/INSTALL \
 builders/residfp-builder/residfp/README \
-builders/residfp-builder/residfp/README.VICE \
-builders/residfp-builder/residfp/NEWS \
 builders/resid-builder/resid/AUTHORS \
 builders/resid-builder/resid/ChangeLog \
 builders/resid-builder/resid/COPYING \
@@ -140,33 +136,43 @@ sidplayfp/sidversion.h
 #=========================================================
 # residfp
 
-if USE_SSE
-  convolve_sse_src = builders/residfp-builder/residfp/convolve-sse.cc
-else
-  convolve_sse_src =
-endif
-
 builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
-builders/residfp-builder/residfp/sid.h \
-builders/residfp-builder/residfp/voice.h \
-builders/residfp-builder/residfp/wave.h \
-builders/residfp-builder/residfp/envelope.h \
-builders/residfp-builder/residfp/filter.h \
-builders/residfp-builder/residfp/extfilt.h \
-builders/residfp-builder/residfp/pot.h \
-builders/residfp-builder/residfp/sid.cc \
-builders/residfp-builder/residfp/voice.cc \
-builders/residfp-builder/residfp/wave.cc \
-builders/residfp-builder/residfp/envelope.cc \
-builders/residfp-builder/residfp/filter.cc \
-builders/residfp-builder/residfp/extfilt.cc \
-builders/residfp-builder/residfp/pot.cc \
+builders/residfp-builder/residfp/array.h \
+builders/residfp-builder/residfp/Dac.cpp \
+builders/residfp-builder/residfp/Dac.h \
+builders/residfp-builder/residfp/Integrator.cpp \
+builders/residfp-builder/residfp/Integrator.h \
+builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
+builders/residfp-builder/residfp/EnvelopeGenerator.h \
+builders/residfp-builder/residfp/ExternalFilter.cpp \
+builders/residfp-builder/residfp/ExternalFilter.h \
+builders/residfp-builder/residfp/FilterModelConfig.cpp \
+builders/residfp-builder/residfp/FilterModelConfig.h \
+builders/residfp-builder/residfp/Filter.cpp \
+builders/residfp-builder/residfp/Filter.h \
+builders/residfp-builder/residfp/Filter8580.cpp \
+builders/residfp-builder/residfp/Filter8580.h \
+builders/residfp-builder/residfp/Filter6581.cpp \
+builders/residfp-builder/residfp/Filter6581.h \
+builders/residfp-builder/residfp/OpAmp.cpp \
+builders/residfp-builder/residfp/OpAmp.h \
+builders/residfp-builder/residfp/Potentiometer.h \
+builders/residfp-builder/residfp/SID.cpp \
+builders/residfp-builder/residfp/SID.h \
+builders/residfp-builder/residfp/Spline.cpp \
+builders/residfp-builder/residfp/Spline.h \
+builders/residfp-builder/residfp/Voice.h \
+builders/residfp-builder/residfp/WaveformCalculator.cpp \
+builders/residfp-builder/residfp/WaveformCalculator.h \
+builders/residfp-builder/residfp/WaveformGenerator.cpp \
+builders/residfp-builder/residfp/WaveformGenerator.h \
+builders/residfp-builder/residfp/resample/Resampler.h \
+builders/residfp-builder/residfp/resample/ZeroOrderResampler.h \
+builders/residfp-builder/residfp/resample/SincResampler.cpp \
+builders/residfp-builder/residfp/resample/SincResampler.h \
+builders/residfp-builder/residfp/resample/TwoPassSincResampler.h \
 builders/residfp-builder/residfp/residfp-config.h \
-builders/residfp-builder/residfp/version.cc \
-builders/residfp-builder/residfp/convolve.cc \
-$(convolve_sse_src)
-
-builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = @RESIDFP_FLAGS@
+builders/residfp-builder/residfp/version.cc
 
 #=========================================================
 # resid
