@@ -52,7 +52,6 @@
  *
  ***************************************************************************/
 
-#include <string.h>
 #include "event.h"
 
 #define EVENT_TIMEWARP_COUNT 0x0FFFFF

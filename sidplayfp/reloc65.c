@@ -1,7 +1,7 @@
 /*
     xa65 - 6502 cross assembler and utility suite
     reloc65 - relocates 'o65' files 
-    Copyright (C) 1997 André Fachat (a.fachat@physik.tu-chemnitz.de)
+    Copyright (C) 1997 AndrÃ© Fachat (a.fachat@physik.tu-chemnitz.de)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 */
 
 #include <stdio.h>
-#include <string.h>
 
 #define	BUF	(9*2+8)		/* 16 bit header */
 
