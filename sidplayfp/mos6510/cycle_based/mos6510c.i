@@ -188,6 +188,8 @@
 #   include <new>
 #endif
 
+#include <string.h>
+
 //#define PC64_TESTSUITE
 #ifdef PC64_TESTSUITE
 static const char _sidtune_CHRtab[256] =  // CHR$ conversion table (0x01 = no output)
@@ -2493,11 +2495,16 @@ void MOS6510::reset (void)
 // Module Credits                                                          //
 void MOS6510::credits (char *sbuffer)
 {   // Copy credits to buffer
-    sprintf (sbuffer, "%sModule     : MOS6510 Cycle Exact Emulation\n", sbuffer);
-    sprintf (sbuffer, "%sWritten By : %s\n", sbuffer, MOS6510_AUTHOR);
-    sprintf (sbuffer, "%sVersion    : %s\n", sbuffer, MOS6510_VERSION);
-    sprintf (sbuffer, "%sReleased   : %s\n", sbuffer, MOS6510_DATE);
-    sprintf (sbuffer, "%sEmail      : %s\n", sbuffer, MOS6510_EMAIL);
+    strcat (sbuffer, "Module     : MOS6510 Cycle Exact Emulation\n");
+    strcat (sbuffer, "Written By : ");
+    strcat (sbuffer, MOS6510_AUTHOR);
+    strcat (sbuffer, "\nVersion    : ");
+    strcat (sbuffer, MOS6510_VERSION);
+    strcat (sbuffer, "\nReleased   : ");
+    strcat (sbuffer, MOS6510_DATE);
+    strcat (sbuffer, "\nEmail      : ");
+    strcat (sbuffer, MOS6510_EMAIL);
+    strcat (sbuffer, "\n");
 }
 
 void MOS6510::debug (bool enable, FILE *out)
