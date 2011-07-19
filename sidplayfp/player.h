@@ -203,6 +203,10 @@
 #include "sid6526/sid6526.h"
 #include "nullsid.h"
 
+#ifdef PC64_TESTSUITE
+#  include <string.h>
+#endif
+
 #define  SID2_MAX_SIDS 2
 #define  SID2_TIME_BASE 10
 #define  SID2_MAPPER_SIZE 32
