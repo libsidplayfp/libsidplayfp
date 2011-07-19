@@ -2496,15 +2496,10 @@ void MOS6510::reset (void)
 void MOS6510::credits (char *sbuffer)
 {   // Copy credits to buffer
     strcat (sbuffer, "Module     : MOS6510 Cycle Exact Emulation\n");
-    strcat (sbuffer, "Written By : ");
-    strcat (sbuffer, MOS6510_AUTHOR);
-    strcat (sbuffer, "\nVersion    : ");
-    strcat (sbuffer, MOS6510_VERSION);
-    strcat (sbuffer, "\nReleased   : ");
-    strcat (sbuffer, MOS6510_DATE);
-    strcat (sbuffer, "\nEmail      : ");
-    strcat (sbuffer, MOS6510_EMAIL);
-    strcat (sbuffer, "\n");
+    strcat (sbuffer, "Written By : " MOS6510_AUTHOR "\n");
+    strcat (sbuffer, "Version    : " MOS6510_VERSION "\n");
+    strcat (sbuffer, "Released   : " MOS6510_DATE "\n");
+    strcat (sbuffer, "Email      : " MOS6510_EMAIL "\n");
 }
 
 void MOS6510::debug (bool enable, FILE *out)
