@@ -257,7 +257,6 @@ protected:
     inline void bmi_instr     (void);
     inline void bne_instr     (void);
     inline void branch_instr  (bool condition);
-    inline void branch2_instr (void);
     inline void bpl_instr     (void);
     inline void brk_instr     (void);
     inline void bvc_instr     (void);

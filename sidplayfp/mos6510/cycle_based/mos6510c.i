@@ -1152,33 +1152,30 @@ void MOS6510::branch_instr (bool condition)
     if (condition)
 #ifdef MOS6510_ACCURATE_CYCLES
     {
-        uint8_t page;
-        page = endian_32hi8 (Register_ProgramCounter);
+        uint8_t oldPage = endian_32hi8 (Register_ProgramCounter);
         Register_ProgramCounter += (int8_t) Cycle_Data;
 
-        // Handle page boundary crossing: skip wait and nmi/irq delay
-        // penalty, but spend 1 cycle here.
-        if (endian_32hi8 (Register_ProgramCounter) == page)
-            cycleCount += 2;
+        // Check for page boundary crossing
+        if (endian_32hi8 (Register_ProgramCounter) == oldPage)
+        {
+            // Page boundary not crossed.
+            // This causes pending interrupts to be delayed by a cycle
+            interrupts.irqClk++;
+            interrupts.nmiClk++;
+            // Also skip last instruction cycle
+            cycleCount ++;
+        }
     }
     else
     {
+        // No branch performed, skip last 2 cycles
         cycleCount += 2;
-        clock ();
     }
+
+    clock ();
 #else
     Register_ProgramCounter += (int8_t) Cycle_Data;
 #endif
-}
-
-void MOS6510::branch2_instr ()
-{
-    // This only gets processed when page boundary
-    // is no crossed.  This causes pending interrupts
-    // to be delayed by a cycle
-    interrupts.irqClk++;
-    interrupts.nmiClk++;
-    cycleCount++;
 }
 
 void MOS6510::bcc_instr (void)
@@ -1896,7 +1893,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BCCr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bcc_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
@@ -1904,7 +1901,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BCSr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bcs_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
@@ -1912,7 +1909,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BEQr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::beq_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
@@ -1924,7 +1921,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BMIr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bmi_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
@@ -1932,7 +1929,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BNEr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bne_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
@@ -1940,7 +1937,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BPLr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bpl_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
@@ -1959,7 +1956,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BVCr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bvc_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
@@ -1967,7 +1964,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BVSr:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bvs_instr;
 #ifdef MOS6510_ACCURATE_CYCLES
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::branch2_instr;
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
 #endif
             break;
