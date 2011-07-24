@@ -226,7 +226,7 @@ SID6510::SID6510 (EventContext *context)
     delayCycle.func = reinterpret_cast <void (MOS6510::*)()>
                       (&SID6510::sid_delay);
 }
-    
+
 void SID6510::reset (uint_least16_t pc, uint8_t a, uint8_t x, uint8_t y)
 {   // Reset the processor
     reset ();
@@ -263,7 +263,7 @@ void SID6510::FetchOpcode (void)
         MOS6510::FetchOpcode ();
         return;
     }
-    
+
     // Sid tunes end by wrapping the stack.  For compatibilty it
     // has to be handled.
     m_sleeping |= (endian_16hi8  (Register_StackPointer)   != SP_PAGE);
@@ -353,7 +353,7 @@ void SID6510::sid_rti (void)
         PopSR ();
         return;
     }
-    
+
     // Fake RTS
     sid_rts ();
     FetchOpcode ();

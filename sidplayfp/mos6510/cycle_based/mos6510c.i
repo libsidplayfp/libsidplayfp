@@ -374,7 +374,7 @@ void MOS6510::triggerIRQ (void)
 void MOS6510::clearIRQ (void)
 {
     if (interrupts.irqs > 0)
-    {   
+    {
         if (!(--interrupts.irqs))
         {   // Clear off the interrupts
             interrupts.irqRequest = false;
@@ -426,7 +426,7 @@ MOS6510_interruptPending_check:
         if (cycles >= MOS6510_INTERRUPT_DELAY)
             break;
 
-        // NMI delayed so check for other interrupts
+        // IRQ delayed so check for other interrupts
         pending &= ~iIRQ;
         goto MOS6510_interruptPending_check;
     }
@@ -556,7 +556,7 @@ void MOS6510::FetchDataByte (void)
                         Zerp Page Indexed
                         Absolute Indexed
                         Absolute Indirect
-*/                      
+*/
 void MOS6510::FetchLowAddr (void)
 {
     Cycle_EffectiveAddress = envReadMemByte (endian_32lo16 (Register_ProgramCounter));
@@ -1485,7 +1485,7 @@ void MOS6510::alr_instr (void)
     clock ();
 }
 
-// Undcouemented - ANC ANDs the contents of the A register with an immediate value and then
+// Undocumented - ANC ANDs the contents of the A register with an immediate value and then
 // moves bit 7 of A into the Carry flag.  This opcode works basically
 // identically to AND #immed. except that the Carry flag is set to the same
 // state that the Negative flag is set to.
@@ -1693,7 +1693,7 @@ MOS6510::MOS6510 (EventContext *context)
 
             // Zero Page Addressing Mode Handler - Read & RMW
             case ADCz:  case ANDz: case BITz: case CMPz: case CPXz: case CPYz:
-            case EORz:  case LAXz: case LDAz: case LDXz: case LDYz: case ORAz: 
+            case EORz:  case LAXz: case LDAz: case LDXz: case LDYz: case ORAz:
             case NOPz_: case SBCz:
             case ASLz: case DCPz: case DECz: case INCz: case ISBz: case LSRz:
             case ROLz: case RORz: case SREz: case SLOz: case RLAz: case RRAz:
@@ -1729,12 +1729,12 @@ MOS6510::MOS6510 (EventContext *context)
                     cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchEffAddrDataByte;
                 }
             break;
-            
+
             // Absolute Addressing Mode Handler
             case ADCa: case ANDa: case BITa: case CMPa: case CPXa: case CPYa:
             case EORa: case LAXa: case LDAa: case LDXa: case LDYa: case NOPa:
             case ORAa: case SBCa:
-            case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa: 
+            case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa:
             case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
                 access++;
             case JMPw: case JSRw: case SAXa: case STAa: case STXa: case STYa:
@@ -1776,7 +1776,7 @@ MOS6510::MOS6510 (EventContext *context)
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchEffAddrDataByte;
             break;
-            
+
             // Absolute Y (No page crossing handled)
             case DCPay: case ISBay: case RLAay: case RRAay: case SLOay:
             case SREay:
@@ -1800,7 +1800,7 @@ MOS6510::MOS6510 (EventContext *context)
 
             // Indexed with X Preinc Addressing Mode Handler
             case ADCix: case ANDix: case CMPix: case EORix: case LAXix: case LDAix:
-            case ORAix: case SBCix: 
+            case ORAix: case SBCix:
             case DCPix: case ISBix: case SLOix: case SREix: case RLAix: case RRAix:
                 access++;
             case SAXix: case STAix:
@@ -1822,7 +1822,7 @@ MOS6510::MOS6510 (EventContext *context)
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchEffAddrDataByte;
             break;
-            
+
             // Indexed Y (No page crossing handled)
             case DCPiy: case ISBiy: case RLAiy: case RRAiy: case SLOiy:
             case SREiy:
