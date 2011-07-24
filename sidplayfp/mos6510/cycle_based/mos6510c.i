@@ -1687,7 +1687,7 @@ MOS6510::MOS6510 (EventContext *context)
             case BCCr: case BCSr:  case BEQr:  case BMIr: case BNEr: case BPLr:
             case BRKn: case BVCr:  case BVSr:  case CMPb: case CPXb: case CPYb:
             case EORb: case LDAb:  case LDXb:  case LDYb: case LXAb: case NOPb_:
-            case ORAb: case SBCb_: case SBXb:
+            case ORAb: case SBCb_: case SBXb:  case RTIn: case RTSn:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchDataByte;
             break;
 
@@ -1737,7 +1737,7 @@ MOS6510::MOS6510 (EventContext *context)
             case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa: 
             case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
                 access++;
-            case JMPw: case JSRw: case RTIn: case RTSn: case SAXa: case STAa: case STXa: case STYa:
+            case JMPw: case JSRw: case SAXa: case STAa: case STXa: case STYa:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighAddr;
                 if (access == READ) {
@@ -2157,6 +2157,7 @@ MOS6510::MOS6510 (EventContext *context)
             break;
 
             case RTIn:
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopSR;
                 if (pass) procCycle[cycleCount].nosteal = false;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopLowPC;
@@ -2167,6 +2168,7 @@ MOS6510::MOS6510 (EventContext *context)
             break;
 
             case RTSn:
+                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopLowPC;
                 if (pass) procCycle[cycleCount].nosteal = false;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopHighPC;
