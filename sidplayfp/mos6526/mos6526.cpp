@@ -482,6 +482,7 @@ switch (addr)
 	case CRA:{
 	// Reset the underflow flipflop for the data port
 		bool start = (data & 0x01) && !(cra & 0x01);
+		const bool clearOneShot = (data & 8) == 0 && (cra & 8) != 0;
 		bool load = (data & 0x10);
 		if (start)
 			{
@@ -497,8 +498,8 @@ switch (addr)
 			}
 		if ((cra & 0x21) == 0x01)
 			{   // Active
+			if (clearOneShot && ta==2) return;
 			if (m_taEvent.pending()) m_taEvent.cancel();
-			if (start) ta = ta_latch;
 			m_tacontinue.schedule(event_context, 1, m_phase);
 			}
 		else m_tastop.schedule(event_context, 1, m_phase);
@@ -506,6 +507,7 @@ switch (addr)
 	case CRB:{
 	// Reset the underflow flipflop for the data port
 		bool start = (data & 0x01) && !(crb & 0x01);
+		const bool clearOneShot = (data & 8) == 0 && (crb & 8) != 0;
 		bool load = (data & 0x10);
 		if (start) tb_underflow = true;
 
@@ -518,8 +520,8 @@ switch (addr)
 			}
 		if ((crb & 0x61) == 0x01)
 			{   // Active
+			if (clearOneShot && tb==2) return;
 			if (m_tbEvent.pending()) m_tbEvent.cancel();
-			if (start) tb = tb_latch;
 			m_tbcontinue.schedule(event_context, 1, m_phase);
 			}
 		else m_tbstop.schedule(event_context, 1, m_phase);
