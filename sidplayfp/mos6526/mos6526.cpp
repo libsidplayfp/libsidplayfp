@@ -477,7 +477,7 @@ switch (addr)
 	case ICR:
 		if (data & 0x80) icr |= data & 0x7f;
 		else icr &= ~(data & 0x7f);
-		m_trigger.schedule(event_context, (event_clock_t) 0, m_phase);
+		m_trigger.schedule(event_context, (event_clock_t) 1, m_phase);
 		break;
 	case CRA:{
 	// Reset the underflow flipflop for the data port
