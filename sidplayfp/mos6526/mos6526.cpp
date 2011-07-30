@@ -481,7 +481,7 @@ switch (addr)
 		break;
 	case CRA:{
 	// Reset the underflow flipflop for the data port
-		bool start = (data & 0x01) && (cra & 0x01);
+		bool start = (data & 0x01) && !(cra & 0x01);
 		bool load = (data & 0x10);
 		if (start)
 			{
@@ -505,7 +505,7 @@ switch (addr)
 		break;}
 	case CRB:{
 	// Reset the underflow flipflop for the data port
-		bool start = (data & 0x01) && (crb & 0x01);
+		bool start = (data & 0x01) && !(crb & 0x01);
 		bool load = (data & 0x10);
 		if (start) tb_underflow = true;
 
@@ -552,7 +552,7 @@ if ((cra & 0x21) == 0x21)
 	}
 
 ta = ta_latch;
-ta_underflow = false;
+ta_underflow = !ta_underflow; // Toggle flipflop
 idr |= INTERRUPT_TA;
 
 if (cra & 0x08)
@@ -615,7 +615,7 @@ switch (mode)
 	}
 
 tb = tb_latch;
-tb_underflow = false;
+tb_underflow = !tb_underflow; // Toggle flipflop
 idr |= INTERRUPT_TB;
 
 if (crb & 0x08)
