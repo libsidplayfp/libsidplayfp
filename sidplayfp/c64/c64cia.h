@@ -41,7 +41,7 @@ protected:
 
     void portB ()
     {
-        uint8_t lp = (prb | ~ddrb) & 0x10;
+        const uint8_t lp = (prb | ~ddrb) & 0x10;
         if (lp != this->lp)
         {
             m_env.lightpen();
