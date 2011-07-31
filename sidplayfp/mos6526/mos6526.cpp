@@ -178,6 +178,7 @@ MOS6526::MOS6526 (EventContext *context)
  m_todPeriod(~0), // Dummy
  m_taEvent("CIA Timer A", *this, &MOS6526::ta_event),
  m_tbEvent("CIA Timer B", *this, &MOS6526::tb_event),
+ m_tabEvent("CIA A underflow increments B", *this, &MOS6526::tab_event),
  m_todEvent("CIA Time of Day", *this, &MOS6526::tod_event),
  m_tapulse("CIA A pulse down", *this, &MOS6526::ta_pulse_down),
  m_tbpulse("CIA B pulse down", *this, &MOS6526::tb_pulse_down),
@@ -331,6 +332,7 @@ void MOS6526::reset (void)
     // Remove outstanding events
     m_taEvent.cancel ();
     m_tbEvent.cancel ();
+    m_tabEvent.cancel();
     m_tapulse.cancel();
     m_tbpulse.cancel();
     m_trigger.cancel();
@@ -502,7 +504,6 @@ switch (addr)
 			{   // Active
 			if (!m_taEvent.pending())
 				{
-				if (m_taEvent.pending()) m_taEvent.cancel();
 				m_tacontinue.schedule(event_context, 1, m_phase);
 				}
 			}
@@ -528,7 +529,6 @@ switch (addr)
 			{   // Active
 			if (!m_tbEvent.pending())
 				{
-				if (m_tbEvent.pending()) m_tbEvent.cancel();
 				m_tbcontinue.schedule(event_context, 1, m_phase);
 				}
 			}
@@ -549,21 +549,22 @@ if (icr & idr & 0x7f)
 	}
 }
 
+void MOS6526::tab_event (void)
+{
+	tb--;
+}
+
 void MOS6526::ta_event (void)
 {   // Timer Modes
 update_timers();
 ta_pulse = true;
+idr |= INTERRUPT_TA;
 
 m_tapulse.schedule(event_context, (event_clock_t) 1, m_phase);
 
-if ((cra & 0x21) == 0x21)
-	{
-	if (ta-- != 0) return;
-	}
-
 ta = ta_latch;
 ta_underflow = !ta_underflow; // Toggle flipflop
-idr |= INTERRUPT_TA;
+
 
 if (cra & 0x08)
 	{   // one shot, stop timer A
@@ -591,42 +592,25 @@ if (cra & 0x40)
 
 switch (crb & 0x61)
 	{
-	case 0x41:
-		m_tbEvent.schedule(event_context, (event_clock_t) (tb == 0 ? 1 : 2), m_phase);
-		break;
 	case 0x61:
-		tb_event ();
-		break;
+		if (!cnt_high) break;
+	case 0x41:
+		if (tb == 0) m_tbEvent.schedule(event_context, (event_clock_t)1, m_phase);
+		else m_tabEvent.schedule(event_context, (event_clock_t)2, m_phase);
 	}
 }
 
 void MOS6526::tb_event (void)
 {   // Timer Modes
 update_timers();
-
 tb_pulse = true;
-m_tbpulse.schedule(event_context, 1, m_phase);
+idr |= INTERRUPT_TB;
 
-uint8_t mode = crb & 0x61;
-switch (mode)
-	{
-	case 0x01:
-		break;
-	case 0x21:
-	case 0x41:
-		if (tb-- != 0) return;
-		break;
-	case 0x61:
-		if (cnt_high)
-			{
-			if (tb-- != 0) return;
-			}
-		break;
-	}
+m_tbpulse.schedule(event_context, 1, m_phase);
 
 tb = tb_latch;
 tb_underflow = !tb_underflow; // Toggle flipflop
-idr |= INTERRUPT_TB;
+
 
 if (crb & 0x08)
 	{   // one shot, stop timer A

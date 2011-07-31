@@ -142,6 +142,7 @@ protected:
     EventCallback<MOS6526> m_tbstart;
     EventCallback<MOS6526> m_tbcontinue;
     EventCallback<MOS6526> m_tbstop;
+    EventCallback<MOS6526> m_tabEvent;
 
     /*
     class EventStateMachineA: public Event
@@ -161,6 +162,7 @@ protected:
     MOS6526 (EventContext *context);
     void ta_event  (void);
     void tb_event  (void);
+    void tab_event  (void);
     void ta_pulse_down (void);
     void tb_pulse_down (void);
     void ta_load (void);
