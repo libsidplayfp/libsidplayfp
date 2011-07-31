@@ -104,7 +104,7 @@ protected:
     uint8_t &pra, &prb, &ddra, &ddrb;
 
     // Timer A
-    uint8_t cra, cra_latch, dpa;
+    uint8_t cra;
     uint_least16_t ta, ta_latch;
     bool ta_underflow;
 

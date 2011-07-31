@@ -198,36 +198,43 @@ MOS6526::MOS6526 (EventContext *context)
 void MOS6526::ta_continue(void)
 {
 update_timers();
-if (m_taEvent.pending()) m_taEvent.cancel();
+if (m_taEvent.pending())
+	m_taEvent.cancel();
 m_taEvent.schedule(event_context, (event_clock_t) ta, m_phase);
 }
 
 void MOS6526::ta_stop(void)
 {
 update_timers();
-if (m_taEvent.pending()) m_taEvent.cancel();
+if (m_taEvent.pending())
+	m_taEvent.cancel();
 }
 
 void MOS6526::ta_load(void)
 {
 update_timers();
-if (m_taEvent.pending()) m_taEvent.cancel();
+if (m_taEvent.pending())
+	m_taEvent.cancel();
 ta = ta_latch;
 
-if ((cra & 0x21) == 0x01) m_tastart.schedule(event_context, 1, m_phase);
+// schedule start after load
+if ((cra & 0x21) == 0x01)
+	m_tastart.schedule(event_context, 1, m_phase);
 }
 
 void MOS6526::ta_start(void)
 {
 update_timers();
-if (m_taEvent.pending()) m_taEvent.cancel();
+if (m_taEvent.pending())
+	m_taEvent.cancel();
 m_taEvent.schedule(event_context, (event_clock_t) ta, m_phase);
 }
 
 void MOS6526::tb_continue(void)
 {
 update_timers();
-if (m_tbEvent.pending()) m_tbEvent.cancel();
+if (m_tbEvent.pending())
+	m_tbEvent.cancel();
 m_tbEvent.schedule(event_context, (event_clock_t) tb, m_phase);
 }
 
@@ -240,16 +247,19 @@ if (m_tbEvent.pending()) m_tbEvent.cancel();
 void MOS6526::tb_load(void)
 {
 update_timers();
-if (m_tbEvent.pending()) m_tbEvent.cancel();
+if (m_tbEvent.pending())
+	m_tbEvent.cancel();
 tb = tb_latch;
 
-if ((crb & 0x61) == 0x01) m_tbstart.schedule(event_context, 1, m_phase);
+if ((crb & 0x61) == 0x01)
+	m_tbstart.schedule(event_context, 1, m_phase);
 }
 
 void MOS6526::tb_start(void)
 {
 update_timers();
-if (m_tbEvent.pending()) m_tbEvent.cancel();
+if (m_tbEvent.pending())
+	m_tbEvent.cancel();
 m_tbEvent.schedule(event_context, (event_clock_t) tb, m_phase);
 }
 
@@ -258,11 +268,8 @@ void MOS6526::ta_pulse_down(void)
 update_timers();
 ta_pulse = false;
 trigger();
-uint8_t mode = cra & 0x21;
-if (mode == 0x01)
-	{
+if ((cra & 0x21) == 0x01)
 	m_taEvent.schedule(event_context, (event_clock_t) ta, m_phase);
-	}
 }
 
 void MOS6526::tb_pulse_down(void)
@@ -270,38 +277,33 @@ void MOS6526::tb_pulse_down(void)
 update_timers();
 tb_pulse = false;
 trigger();
-uint8_t mode = crb & 0x61;
-if (mode == 0x01)
-	{
+if ((crb & 0x61) == 0x01)
 	m_tbEvent.schedule(event_context, (event_clock_t) tb, m_phase);
-	}
 }
 
 void MOS6526::update_timers(void)
 {
-event_clock_t cycles = event_context.getTime (m_accessClk, event_context.phase ());
+const event_clock_t cycles = event_context.getTime (m_accessClk, event_context.phase ());
 m_accessClk += cycles;
 
+// Sync up timers
 if (m_taEvent.pending())
-	{
 	ta -= cycles;
-	}
 if (m_tbEvent.pending())
-	{
 	tb -= cycles;
-	}
 }
 
 void MOS6526::clear(void)
 {
-if (idr & INTERRUPT_REQUEST) interrupt(false);
+if (idr & INTERRUPT_REQUEST)
+	interrupt(false);
 idr = 0;
 }
 
 
 void MOS6526::clock (float64_t clock)
 {    // Fixed point 25.7
-    m_todPeriod = (event_clock_t) (clock * (float64_t) (1 << 7));
+m_todPeriod = (event_clock_t) (clock * (float64_t) (1 << 7));
 }
 
 void MOS6526::reset (void)
@@ -317,7 +319,6 @@ void MOS6526::reset (void)
     cnt_high  = true;
     icr = idr = 0;
     m_accessClk = 0;
-    dpa = 0xf0;
     memset (regs, 0, sizeof (regs));
 
     // Reset tod
@@ -393,13 +394,15 @@ switch (addr)
 	case TOD_HR:  // Time Of Day clock hour
 		if (!m_todlatched)
 			memcpy(m_todlatch, m_todclock, sizeof(m_todlatch));
-		if (addr == TOD_TEN) m_todlatched = false;
-		if (addr == TOD_HR) m_todlatched = true;
+		if (addr == TOD_TEN)
+			m_todlatched = false;
+		if (addr == TOD_HR)
+			m_todlatched = true;
 		return m_todlatch[addr - TOD_TEN];
 	case IDR:{
 	// Clear IRQs, and return interrupt
 	// data register
-		uint8_t ret = idr;
+		const uint8_t ret = idr;
 		clear();
 		return ret;}
 	case CRA:
@@ -462,8 +465,10 @@ switch (addr)
 		if (crb & 0x80) m_todalarm[addr - TOD_TEN] = data;
 		else
 			{
-			if (addr == TOD_TEN) m_todstopped = false;
-			if (addr == TOD_HR) m_todstopped = true;
+			if (addr == TOD_TEN)
+				m_todstopped = false;
+			if (addr == TOD_HR)
+				m_todstopped = true;
 			m_todclock[addr - TOD_TEN] = data;
 			}
 	// check alarm
@@ -474,22 +479,23 @@ switch (addr)
 			}
 		break;
 	case SDR:
-		if (cra & 0x40) sdr_buffered = true;
+		if (cra & 0x40)
+			sdr_buffered = true;
 		break;
 	case ICR:
-		if (data & 0x80) icr |= data & 0x7f;
-		else icr &= ~(data & 0x7f);
+		if (data & 0x80)
+			icr |= data & 0x7f;
+		else
+			icr &= ~(data & 0x7f);
 		m_trigger.schedule(event_context, (event_clock_t) 1, m_phase);
 		break;
 	case CRA:{
 	// Reset the underflow flipflop for the data port
-		bool start = (data & 0x01) && !(cra & 0x01);
+		const bool start = (data & 0x01) && !(cra & 0x01);
 		const bool clearOneShot = (data & 8) == 0 && (cra & 8) != 0;
-		bool load = (data & 0x10);
+		const bool load = (data & 0x10);
 		if (start)
-			{
 			ta_underflow = true;
-			}
 		cra = data & 0xef;
 
         // Check for forced load
@@ -498,26 +504,31 @@ switch (addr)
 			m_taload.schedule(event_context, 1, m_phase);
 			break;
 			}
+		/* Clearing ONESHOT at T-1 seems to arrive too late to prevent
+		* counter getting stopped. It is likely that the CIA calculates
+		* if ((ctrl & 0x8) != 0) { ctrl &= 0xfe; } at the underflow clock
+		* and at the clock before the underflow clock. */
 		if (clearOneShot && ta==1)
 			cra = data & 0xee;
+		// schedule timer continue
 		if ((cra & 0x21) == 0x01)
 			{   // Active
 			if (!m_taEvent.pending())
-				{
 				m_tacontinue.schedule(event_context, 1, m_phase);
-				}
 			}
-		else m_tastop.schedule(event_context, 1, m_phase);
+		else
+			m_tastop.schedule(event_context, 1, m_phase);
 		break;}
 	case CRB:{
 	// Reset the underflow flipflop for the data port
-		bool start = (data & 0x01) && !(crb & 0x01);
+		const bool start = (data & 0x01) && !(crb & 0x01);
 		const bool clearOneShot = (data & 8) == 0 && (crb & 8) != 0;
-		bool load = (data & 0x10);
-		if (start) tb_underflow = true;
+		const bool load = (data & 0x10);
+		if (start)
+			tb_underflow = true;
+		crb = data & 0xef;
 
 	// Check for forced load
-		crb = data & 0xef;
 		if (load)
 			{
 			m_tbload.schedule(event_context, 1, m_phase);
@@ -528,11 +539,10 @@ switch (addr)
 		if ((crb & 0x61) == 0x01)
 			{   // Active
 			if (!m_tbEvent.pending())
-				{
 				m_tbcontinue.schedule(event_context, 1, m_phase);
-				}
 			}
-		else m_tbstop.schedule(event_context, 1, m_phase);
+		else
+			m_tbstop.schedule(event_context, 1, m_phase);
 		break;}
 	}
 }
@@ -540,7 +550,7 @@ switch (addr)
 void MOS6526::trigger (void)
 {
 if (icr & idr & 0x7f)
-    {
+	{
 	if (!(idr & INTERRUPT_REQUEST))
 		{
 		idr |= INTERRUPT_REQUEST;
@@ -551,25 +561,38 @@ if (icr & idr & 0x7f)
 
 void MOS6526::tab_event (void)
 {
-	tb--;
+tb--;
 }
 
 void MOS6526::ta_event (void)
-{   // Timer Modes
+{
 update_timers();
+
+// 1) signal interrupt to CPU & send the high pulse event.
+// Pulse and IDR change occurs immediately, but IRQ trigger is delayed
+// by a clock.
 ta_pulse = true;
 idr |= INTERRUPT_TA;
 
 m_tapulse.schedule(event_context, (event_clock_t) 1, m_phase);
 
+// 2) reload timer from latch.
+// When the counter has reached zero, it is reloaded from the latch
+// as soon as there is another clock waiting in the pipeline. In �2
+// mode, this is always the case.
+// This explains why you are reading zeros in cascaded mode only
+// (2-2-2-1-1-1-0-0-2) but not in ø2 mode (2-1-2).
 ta = ta_latch;
-ta_underflow = !ta_underflow; // Toggle flipflop
 
+// By setting bits 2&3 of the control register,
+// PB6/PB7 will be toggled between high and low at each underflow.
+ta_underflow = !ta_underflow;
 
+// If the timer underflows and CRA bit 3 (one shot) is set or has
+// been set in the clock before, then bit 0 of the CRA will be
+// cleared. (Stops CIA.)
 if (cra & 0x08)
-	{   // one shot, stop timer A
 	cra &= (~0x01);
-    }
 
 // Handle serial port
 if (cra & 0x40)
@@ -590,32 +613,34 @@ if (cra & 0x40)
 		}
 	}
 
+// Timer A signals underflows to Timer B
 switch (crb & 0x61)
 	{
 	case 0x61:
 		if (!cnt_high) break;
 	case 0x41:
-		if (tb == 0) m_tbEvent.schedule(event_context, (event_clock_t)1, m_phase);
-		else m_tabEvent.schedule(event_context, (event_clock_t)2, m_phase);
+		if (tb == 0)
+			m_tbEvent.schedule(event_context, (event_clock_t)1, m_phase);
+		else
+			m_tabEvent.schedule(event_context, (event_clock_t)2, m_phase);
 	}
 }
 
 void MOS6526::tb_event (void)
-{   // Timer Modes
+{
 update_timers();
+
 tb_pulse = true;
 idr |= INTERRUPT_TB;
 
 m_tbpulse.schedule(event_context, 1, m_phase);
 
 tb = tb_latch;
-tb_underflow = !tb_underflow; // Toggle flipflop
 
+tb_underflow = !tb_underflow;
 
 if (crb & 0x08)
-	{   // one shot, stop timer A
 	crb &= (~0x01);
-	}
 }
 
 // TOD implementation taken from Vice
