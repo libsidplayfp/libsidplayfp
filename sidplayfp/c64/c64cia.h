@@ -43,8 +43,10 @@ protected:
     {
         uint8_t lp = (prb | ~ddrb) & 0x10;
         if (lp != this->lp)
+        {
             m_env.lightpen();
-        this->lp = lp;
+            this->lp = lp;
+        }
     }
 
 public:
