@@ -496,11 +496,15 @@ switch (addr)
 			m_taload.schedule(event_context, 1, m_phase);
 			break;
 			}
+		if (clearOneShot && ta==1)
+			cra = data & 0xee;
 		if ((cra & 0x21) == 0x01)
 			{   // Active
-			if (clearOneShot && ta==2) return;
-			if (m_taEvent.pending()) m_taEvent.cancel();
-			m_tacontinue.schedule(event_context, 1, m_phase);
+			if (!m_taEvent.pending())
+				{
+				if (m_taEvent.pending()) m_taEvent.cancel();
+				m_tacontinue.schedule(event_context, 1, m_phase);
+				}
 			}
 		else m_tastop.schedule(event_context, 1, m_phase);
 		break;}
@@ -518,11 +522,15 @@ switch (addr)
 			m_tbload.schedule(event_context, 1, m_phase);
 			break;
 			}
+		if (clearOneShot && tb==1)
+			cra = data & 0xee;
 		if ((crb & 0x61) == 0x01)
 			{   // Active
-			if (clearOneShot && tb==2) return;
-			if (m_tbEvent.pending()) m_tbEvent.cancel();
-			m_tbcontinue.schedule(event_context, 1, m_phase);
+			if (!m_tbEvent.pending())
+				{
+				if (m_tbEvent.pending()) m_tbEvent.cancel();
+				m_tbcontinue.schedule(event_context, 1, m_phase);
+				}
 			}
 		else m_tbstop.schedule(event_context, 1, m_phase);
 		break;}
