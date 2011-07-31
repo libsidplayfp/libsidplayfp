@@ -492,7 +492,7 @@ switch (addr)
 	case CRA:{
 	// Reset the underflow flipflop for the data port
 		const bool start = (data & 0x01) && !(cra & 0x01);
-		const bool clearOneShot = (data & 8) == 0 && (cra & 8) != 0;
+		const bool clearOneShot = !(data & 8) && (cra & 8);
 		const bool load = (data & 0x10);
 		if (start)
 			ta_underflow = true;
@@ -508,7 +508,7 @@ switch (addr)
 		* counter getting stopped. It is likely that the CIA calculates
 		* if ((ctrl & 0x8) != 0) { ctrl &= 0xfe; } at the underflow clock
 		* and at the clock before the underflow clock. */
-		if (clearOneShot && ta==1)
+		if (clearOneShot && ta == 1)
 			cra = data & 0xee;
 		// schedule timer continue
 		if ((cra & 0x21) == 0x01)
@@ -522,7 +522,7 @@ switch (addr)
 	case CRB:{
 	// Reset the underflow flipflop for the data port
 		const bool start = (data & 0x01) && !(crb & 0x01);
-		const bool clearOneShot = (data & 8) == 0 && (crb & 8) != 0;
+		const bool clearOneShot = !(data & 8) && (crb & 8);
 		const bool load = (data & 0x10);
 		if (start)
 			tb_underflow = true;
@@ -534,7 +534,7 @@ switch (addr)
 			m_tbload.schedule(event_context, 1, m_phase);
 			break;
 			}
-		if (clearOneShot && tb==1)
+		if (clearOneShot && tb == 1)
 			cra = data & 0xee;
 		if ((crb & 0x61) == 0x01)
 			{   // Active
@@ -549,13 +549,10 @@ switch (addr)
 
 void MOS6526::trigger (void)
 {
-if (icr & idr & 0x7f)
+if ((icr & idr & 0x7f) && !(idr & INTERRUPT_REQUEST))
 	{
-	if (!(idr & INTERRUPT_REQUEST))
-		{
-		idr |= INTERRUPT_REQUEST;
-		interrupt (true);
-		}
+	idr |= INTERRUPT_REQUEST;
+	interrupt (true);
 	}
 }
 
@@ -586,7 +583,8 @@ ta = ta_latch;
 
 // By setting bits 2&3 of the control register,
 // PB6/PB7 will be toggled between high and low at each underflow.
-ta_underflow = !ta_underflow;
+const bool toggle = (cra & 0x06) == 0x06;
+ta_underflow = toggle && !ta_underflow;
 
 // If the timer underflows and CRA bit 3 (one shot) is set or has
 // been set in the clock before, then bit 0 of the CRA will be
@@ -637,7 +635,8 @@ m_tbpulse.schedule(event_context, 1, m_phase);
 
 tb = tb_latch;
 
-tb_underflow = !tb_underflow;
+const bool toggle = (crb & 0x06) == 0x06;
+tb_underflow = toggle && !tb_underflow;
 
 if (crb & 0x08)
 	crb &= (~0x01);
