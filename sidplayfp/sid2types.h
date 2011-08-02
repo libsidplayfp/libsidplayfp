@@ -18,6 +18,14 @@
 #ifndef _sid2types_h_
 #define _sid2types_h_
 
+#if defined(_MSCVER)
+#  define SID_DEPRECATED __declspec(deprecated)
+#elif defined(__GNUC__)
+#  define SID_DEPRECATED __attribute__ ((deprecated))
+#else
+#  define SID_DEPRECATED
+#endif
+
 #include "sidtypes.h"
 
 class   sidbuilder;
