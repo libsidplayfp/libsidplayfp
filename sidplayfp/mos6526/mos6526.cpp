@@ -400,8 +400,8 @@ switch (addr)
 			m_todlatched = true;
 		return m_todlatch[addr - TOD_TEN];
 	case IDR:{
-	// Clear IRQs, and return interrupt
-	// data register
+		// Clear IRQs, and return interrupt
+		// data register
 		const uint8_t ret = idr;
 		clear();
 		return ret;}
@@ -451,14 +451,14 @@ switch (addr)
 
 	// TOD implementation taken from Vice
 	case TOD_HR:  // Time Of Day clock hour
-	// Flip AM/PM on hour 12
-	//   (Andreas Boose <viceteam@t-online.de> 1997/10/11).
-	// Flip AM/PM only when writing time, not when writing alarm
-	// (Alexander Bluhm <mam96ehy@studserv.uni-leipzig.de> 2000/09/17).
+		// Flip AM/PM on hour 12
+		//   (Andreas Boose <viceteam@t-online.de> 1997/10/11).
+		// Flip AM/PM only when writing time, not when writing alarm
+		// (Alexander Bluhm <mam96ehy@studserv.uni-leipzig.de> 2000/09/17).
 		data &= 0x9f;
 		if ((data & 0x1f) == 0x12 && !(crb & 0x80))
 			data ^= 0x80;
-	// deliberate run on
+		// deliberate run on
 	case TOD_TEN: // Time Of Day clock 1/10 s
 	case TOD_SEC: // Time Of Day clock sec
 	case TOD_MIN: // Time Of Day clock min
@@ -471,7 +471,7 @@ switch (addr)
 				m_todstopped = true;
 			m_todclock[addr - TOD_TEN] = data;
 			}
-	// check alarm
+		// check alarm
 		if (!m_todstopped && !memcmp(m_todalarm, m_todclock, sizeof(m_todalarm)))
 			{
 			idr |= INTERRUPT_ALARM;
@@ -490,15 +490,15 @@ switch (addr)
 		m_trigger.schedule(event_context, (event_clock_t) 1, m_phase);
 		break;
 	case CRA:{
-	// Reset the underflow flipflop for the data port
 		const bool start = (data & 0x01) && !(cra & 0x01);
 		const bool clearOneShot = !(data & 8) && (cra & 8);
 		const bool load = (data & 0x10);
+		// Reset the underflow flipflop for the data port
 		if (start)
 			ta_underflow = true;
 		cra = data & 0xef;
 
-        // Check for forced load
+        	// Check for forced load
 		if (load)
 			{
 			m_taload.schedule(event_context, 1, m_phase);
@@ -510,6 +510,7 @@ switch (addr)
 		* and at the clock before the underflow clock. */
 		if (clearOneShot && ta == 1)
 			cra = data & 0xee;
+
 		// schedule timer continue
 		if ((cra & 0x21) == 0x01)
 			{   // Active
@@ -520,7 +521,6 @@ switch (addr)
 			m_tastop.schedule(event_context, 1, m_phase);
 		break;}
 	case CRB:{
-	// Reset the underflow flipflop for the data port
 		const bool start = (data & 0x01) && !(crb & 0x01);
 		const bool clearOneShot = !(data & 8) && (crb & 8);
 		const bool load = (data & 0x10);
@@ -528,14 +528,15 @@ switch (addr)
 			tb_underflow = true;
 		crb = data & 0xef;
 
-	// Check for forced load
 		if (load)
 			{
 			m_tbload.schedule(event_context, 1, m_phase);
 			break;
 			}
+
 		if (clearOneShot && tb == 1)
 			cra = data & 0xee;
+
 		if ((crb & 0x61) == 0x01)
 			{   // Active
 			if (!m_tbEvent.pending())
