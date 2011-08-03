@@ -562,7 +562,7 @@ int Player::load (SidTune *tune)
     }
 
     {   // Must re-configure on fly for stereo support!
-        int ret = config (m_cfg);
+        const int ret = config (m_cfg);
         // Failed configuration with new tune, reject it
         if (ret < 0)
         {
@@ -1017,7 +1017,7 @@ void Player::reset (void)
                 // Extract compressed data
                 if (compressed)
                 {
-                    uint8_t data = poweron[i++];
+                    const uint8_t data = poweron[i++];
                     while (count-- > 0)
                         m_ram[addr++] = data;
                 }
@@ -1099,8 +1099,8 @@ void Player::envReset (bool safe)
     // defaults: Basic-ROM on, Kernal-ROM on, I/O on
     if (m_info.environment != sid2_envR)
     {
-        uint8_t song = m_tuneInfo.currentSong - 1;
-        uint8_t bank = iomap (m_tuneInfo.initAddr);
+        const uint8_t song = m_tuneInfo.currentSong - 1;
+        const uint8_t bank = iomap (m_tuneInfo.initAddr);
         evalBankSelect (bank);
         m_playBank = iomap (m_tuneInfo.playAddr);
         if (m_info.environment != sid2_envPS)

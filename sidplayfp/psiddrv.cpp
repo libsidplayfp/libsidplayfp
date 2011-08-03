@@ -164,8 +164,8 @@ extern "C" int reloc65(unsigned char** buf, int* fsize, int addr);
 int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
 {
     uint_least16_t relocAddr;
-    int startlp = tuneInfo.loadAddr >> 8;
-    int endlp   = (tuneInfo.loadAddr + (tuneInfo.c64dataLen - 1)) >> 8;
+    const int startlp = tuneInfo.loadAddr >> 8;
+    const int endlp   = (tuneInfo.loadAddr + (tuneInfo.c64dataLen - 1)) >> 8;
 
     if (info.environment != sid2_envR)
     {   // Sidplay1 modes require no psid driver

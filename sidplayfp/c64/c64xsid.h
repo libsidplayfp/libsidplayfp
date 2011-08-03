@@ -33,7 +33,7 @@ private:
 private:
     uint8_t readMemByte  (uint_least16_t addr)
     {
-        uint8_t data = m_env.readMemRamByte (addr);
+        const uint8_t data = m_env.readMemRamByte (addr);
         m_env.sid2crc (data);
         return data;
     }

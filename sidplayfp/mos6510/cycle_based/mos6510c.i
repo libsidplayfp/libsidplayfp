@@ -250,14 +250,14 @@ void MOS6510::aecSignal (bool state)
 {
     if (aec != state)
     {
-        event_clock_t clock = eventContext.getTime (m_extPhase);
+        const event_clock_t clock = eventContext.getTime (m_extPhase);
 
         // If the cpu blocked waiting for the bus
         // then schedule a retry.
         aec = state;
         if (state && m_blocked)
         {   // Correct IRQs that appeard before the steal
-            event_clock_t stolen = clock - m_stealingClk;
+            const event_clock_t stolen = clock - m_stealingClk;
             interrupts.nmiClk += stolen;
             interrupts.irqClk += stolen;
             // IRQs that appeared during the steal must have
@@ -298,8 +298,7 @@ void MOS6510::PushSR (void)
 // increment S, Pop P off stack
 void MOS6510::PopSR (void)
 {
-    bool newFlagI, oldFlagI;
-    oldFlagI = getFlagI ();
+    bool oldFlagI = getFlagI ();
 
     // Get status register off stack
     Register_StackPointer++;
@@ -315,7 +314,7 @@ void MOS6510::PopSR (void)
     setFlagC (Register_Status   & (1 << SR_CARRY));
 
     // I flag change is delayed by 1 instruction
-    newFlagI = getFlagI ();
+    bool newFlagI = getFlagI ();
     interrupts.irqLatch = oldFlagI ^ newFlagI;
     // Check to see if interrupts got re-enabled
     if (!newFlagI && interrupts.irqs)
@@ -384,7 +383,6 @@ void MOS6510::clearIRQ (void)
 
 bool MOS6510::interruptPending (void)
 {
-    int_least8_t offset, pending;
     static const int_least8_t offTable[] = {oNONE, oRST, oNMI, oRST,
                                             oIRQ,  oRST, oNMI, oRST};
     // Update IRQ pending
@@ -395,10 +393,10 @@ bool MOS6510::interruptPending (void)
             interrupts.pending |= iIRQ;
     }
 
-    pending = interrupts.pending;
+    int_least8_t pending = interrupts.pending;
 MOS6510_interruptPending_check:
     // Service the highest priority interrupt
-    offset = offTable[pending];
+    int_least8_t offset = offTable[pending];
     switch (offset)
     {
     case oNONE:
@@ -407,7 +405,7 @@ MOS6510_interruptPending_check:
     case oNMI:
     {
         // Try to determine if we should be processing the NMI yet
-        event_clock_t cycles = eventContext.getTime (interrupts.nmiClk, m_phase);
+        const event_clock_t cycles = eventContext.getTime (interrupts.nmiClk, m_phase);
         if (cycles >= MOS6510_INTERRUPT_DELAY)
         {
             interrupts.pending &= ~iNMI;
@@ -422,7 +420,7 @@ MOS6510_interruptPending_check:
     case oIRQ:
     {
         // Try to determine if we should be processing the IRQ yet
-        event_clock_t cycles = eventContext.getTime (interrupts.irqClk, m_phase);
+        const event_clock_t cycles = eventContext.getTime (interrupts.irqClk, m_phase);
         if (cycles >= MOS6510_INTERRUPT_DELAY)
             break;
 
@@ -599,10 +597,9 @@ void MOS6510::FetchHighAddr (void)
 // Addressing Modes:    Absolute Indexed
 void MOS6510::FetchHighAddrX (void)
 {
-    uint8_t page;
     // Rev 1.05 (saw) - Call base Function
     FetchHighAddr ();
-    page = endian_16hi8 (Cycle_EffectiveAddress);
+    const uint8_t page = endian_16hi8 (Cycle_EffectiveAddress);
     Cycle_EffectiveAddress += Register_X;
 
 #ifdef MOS6510_ACCURATE_CYCLES
@@ -624,10 +621,9 @@ void MOS6510::FetchHighAddrX2 (void)
 // Addressing Modes:    Absolute Indexed
 void MOS6510::FetchHighAddrY (void)
 {
-    uint8_t page;
     // Rev 1.05 (saw) - Call base Function
     FetchHighAddr ();
-    page = endian_16hi8 (Cycle_EffectiveAddress);
+    const uint8_t page = endian_16hi8 (Cycle_EffectiveAddress);
     Cycle_EffectiveAddress += Register_Y;
 
 #ifdef MOS6510_ACCURATE_CYCLES
@@ -700,10 +696,9 @@ void MOS6510::FetchHighEffAddr (void)
 // Addressing Modes:    Indirect indexed (post Y)
 void MOS6510::FetchHighEffAddrY (void)
 {
-    uint8_t page;
     // Rev 1.05 (saw) - Call base Function
     FetchHighEffAddr ();
-    page = endian_16hi8 (Cycle_EffectiveAddress);
+    const uint8_t page = endian_16hi8 (Cycle_EffectiveAddress);
     Cycle_EffectiveAddress += Register_Y;
 
 #ifdef MOS6510_ACCURATE_CYCLES
@@ -741,8 +736,7 @@ void MOS6510::PutEffAddrDataByte (void)
 // Push Program Counter Low Byte on stack, decrement S
 void MOS6510::PushLowPC (void)
 {
-    uint_least16_t addr;
-    addr = Register_StackPointer;
+    uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
     envWriteMemByte (addr, endian_32lo8 (Register_ProgramCounter));
     Register_StackPointer--;
@@ -751,8 +745,7 @@ void MOS6510::PushLowPC (void)
 // Push Program Counter High Byte on stack, decrement S
 void MOS6510::PushHighPC (void)
 {
-    uint_least16_t addr;
-    addr = Register_StackPointer;
+    uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
     envWriteMemByte (addr, endian_32hi8 (Register_ProgramCounter));
     Register_StackPointer--;
@@ -761,9 +754,8 @@ void MOS6510::PushHighPC (void)
 // Increment stack and pull program counter low byte from stack,
 void MOS6510::PopLowPC (void)
 {
-    uint_least16_t addr;
     Register_StackPointer++;
-    addr = Register_StackPointer;
+    uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
     endian_16lo8 (Cycle_EffectiveAddress, envReadMemDataByte (addr));
 }
@@ -771,9 +763,8 @@ void MOS6510::PopLowPC (void)
 // Increment stack and pull program counter high byte from stack,
 void MOS6510::PopHighPC (void)
 {
-    uint_least16_t addr;
     Register_StackPointer++;
-    addr = Register_StackPointer;
+    uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
     endian_16hi8 (Cycle_EffectiveAddress, envReadMemDataByte (addr));
 }
@@ -827,7 +818,7 @@ void MOS6510::cld_instr (void)
 
 void MOS6510::cli_instr (void)
 {
-    bool oldFlagI = getFlagI ();
+    const bool oldFlagI = getFlagI ();
     setFlagI (false);
     // I flag change is delayed by 1 instruction
     interrupts.irqLatch = oldFlagI ^ getFlagI ();
@@ -843,10 +834,10 @@ void MOS6510::jmp_instr (void)
 
 #ifdef PC64_TESTSUITE
     // Hack - Output character to screen
-    unsigned short pc = endian_32lo16 (Register_ProgramCounter);
+    const unsigned short pc = endian_32lo16 (Register_ProgramCounter);
     if (pc == 0xffd2)
     {
-        char ch = _sidtune_CHRtab[Register_Accumulator];
+        const char ch = _sidtune_CHRtab[Register_Accumulator];
         switch (ch)
         {
         case 0:
@@ -921,7 +912,7 @@ void MOS6510::sed_instr (void)
 
 void MOS6510::sei_instr (void)
 {
-    bool oldFlagI = getFlagI ();
+    const bool oldFlagI = getFlagI ();
     setFlagI (true);
     // I flag change is delayed by 1 instruction
     interrupts.irqLatch   = oldFlagI ^ getFlagI ();
@@ -1043,10 +1034,10 @@ void MOS6510::xas_instr (void)
 
 void MOS6510::Perform_ADC (void)
 {
-    uint C      = getFlagC ();
-    uint A      = Register_Accumulator;
-    uint s      = Cycle_Data;
-    uint regAC2 = A + s + C;
+    const uint C      = getFlagC ();
+    const uint A      = Register_Accumulator;
+    const uint s      = Cycle_Data;
+    const uint regAC2 = A + s + C;
 
     if (getFlagD ())
     {   // BCD mode
@@ -1073,10 +1064,10 @@ void MOS6510::Perform_ADC (void)
 
 void MOS6510::Perform_SBC (void)
 {
-    uint C      = !getFlagC ();
-    uint A      = Register_Accumulator;
-    uint s      = Cycle_Data;
-    uint regAC2 = A - s - C;
+    const uint C      = !getFlagC ();
+    const uint A      = Register_Accumulator;
+    const uint s      = Cycle_Data;
+    const uint regAC2 = A - s - C;
 
     setFlagC   (regAC2 < 0x100);
     setFlagV   (((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80));
@@ -1152,7 +1143,7 @@ void MOS6510::branch_instr (bool condition)
     if (condition)
 #ifdef MOS6510_ACCURATE_CYCLES
     {
-        uint8_t oldPage = endian_32hi8 (Register_ProgramCounter);
+        const uint8_t oldPage = endian_32hi8 (Register_ProgramCounter);
         Register_ProgramCounter += (int8_t) Cycle_Data;
 
         // Check for page boundary crossing
@@ -1240,7 +1231,7 @@ void MOS6510::clv_instr (void)
 
 void MOS6510::cmp_instr (void)
 {
-    uint_least16_t tmp = (uint_least16_t) Register_Accumulator - Cycle_Data;
+    const uint_least16_t tmp = (uint_least16_t) Register_Accumulator - Cycle_Data;
     setFlagsNZ (tmp);
     setFlagC   (tmp < 0x100);
     clock ();
@@ -1248,7 +1239,7 @@ void MOS6510::cmp_instr (void)
 
 void MOS6510::cpx_instr (void)
 {
-    uint_least16_t tmp = (uint_least16_t) Register_X - Cycle_Data;
+    const uint_least16_t tmp = (uint_least16_t) Register_X - Cycle_Data;
     setFlagsNZ (tmp);
     setFlagC   (tmp < 0x100);
     clock ();
@@ -1256,7 +1247,7 @@ void MOS6510::cpx_instr (void)
 
 void MOS6510::cpy_instr (void)
 {
-    uint_least16_t tmp = (uint_least16_t) Register_Y - Cycle_Data;
+    const uint_least16_t tmp = (uint_least16_t) Register_Y - Cycle_Data;
     setFlagsNZ (tmp);
     setFlagC   (tmp < 0x100);
     clock ();
@@ -1344,16 +1335,15 @@ void MOS6510::ora_instr (void)
 
 void MOS6510::pla_instr (void)
 {
-    uint_least16_t addr;
     Register_StackPointer++;
-    addr = Register_StackPointer;
+    uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
     setFlagsNZ (Register_Accumulator = envReadMemDataByte (addr));
 }
 
 void MOS6510::rol_instr (void)
 {
-    uint8_t tmp = Cycle_Data & 0x80;
+    const uint8_t tmp = Cycle_Data & 0x80;
     PutEffAddrDataByte ();
     Cycle_Data   <<= 1;
     if (getFlagC ()) Cycle_Data |= 0x01;
@@ -1363,7 +1353,7 @@ void MOS6510::rol_instr (void)
 
 void MOS6510::rola_instr (void)
 {
-    uint8_t tmp = Register_Accumulator & 0x80;
+    const uint8_t tmp = Register_Accumulator & 0x80;
     Register_Accumulator <<= 1;
     if (getFlagC ()) Register_Accumulator |= 0x01;
     setFlagsNZ (Register_Accumulator);
@@ -1373,7 +1363,7 @@ void MOS6510::rola_instr (void)
 
 void MOS6510::ror_instr (void)
 {
-    uint8_t tmp  = Cycle_Data & 0x01;
+    const uint8_t tmp  = Cycle_Data & 0x01;
     PutEffAddrDataByte ();
     Cycle_Data >>= 1;
     if (getFlagC ()) Cycle_Data |= 0x80;
@@ -1383,7 +1373,7 @@ void MOS6510::ror_instr (void)
 
 void MOS6510::rora_instr (void)
 {
-    uint8_t tmp = Register_Accumulator & 0x01;
+    const uint8_t tmp = Register_Accumulator & 0x01;
     Register_Accumulator >>= 1;
     if (getFlagC ()) Register_Accumulator |= 0x80;
     setFlagsNZ (Register_Accumulator);
@@ -1393,7 +1383,7 @@ void MOS6510::rora_instr (void)
 
 void MOS6510::sbx_instr (void)
 {
-    uint tmp = (Register_X & Register_Accumulator) - Cycle_Data;
+    const uint tmp = (Register_X & Register_Accumulator) - Cycle_Data;
     setFlagsNZ (Register_X = tmp & 0xff);
     setFlagC   (tmp < 0x100);
     clock ();
@@ -1497,7 +1487,7 @@ void MOS6510::anc_instr (void)
 // then RORs the result (Implementation based on that of Frodo C64 Emulator)
 void MOS6510::arr_instr (void)
 {
-    uint8_t data = Cycle_Data & Register_Accumulator;
+    const uint8_t data = Cycle_Data & Register_Accumulator;
     Register_Accumulator = data >> 1;
     if (getFlagC ()) Register_Accumulator |= 0x80;
 
@@ -1537,10 +1527,9 @@ void MOS6510::aso_instr (void)
 // with the A register.
 void MOS6510::dcm_instr (void)
 {
-    uint_least16_t tmp;
     PutEffAddrDataByte ();
     Cycle_Data--;
-    tmp = (uint_least16_t) Register_Accumulator - Cycle_Data;
+    const uint_least16_t tmp = (uint_least16_t) Register_Accumulator - Cycle_Data;
     setFlagsNZ (tmp);
     setFlagC   (tmp < 0x100);
 }
@@ -1597,7 +1586,7 @@ void MOS6510::oal_instr (void)
 // the accumulator.
 void MOS6510::rla_instr (void)
 {
-    uint8_t tmp = Cycle_Data & 0x80;
+    const uint8_t tmp = Cycle_Data & 0x80;
     PutEffAddrDataByte ();
     Cycle_Data  = Cycle_Data << 1;
     if (getFlagC ()) Cycle_Data |= 0x01;
@@ -1609,7 +1598,7 @@ void MOS6510::rla_instr (void)
 // the accumulator.
 void MOS6510::rra_instr (void)
 {
-    uint8_t tmp  = Cycle_Data & 0x01;
+    const uint8_t tmp  = Cycle_Data & 0x01;
     PutEffAddrDataByte ();
     Cycle_Data >>= 1;
     if (getFlagC ()) Cycle_Data |= 0x80;
@@ -2421,17 +2410,16 @@ exit (-1);
 MOS6510::~MOS6510 ()
 {
     struct ProcessorOperations *instr;
-    uint i;
 
     // Remove Opcodes
-    for (i = 0; i < 0x100; i++)
+    for (uint i = 0; i < 0x100; i++)
     {
         instr = &instrTable[i];
         if (instr->cycle != NULL) delete [] instr->cycle;
     }
 
     // Remove Interrupts
-    for (i = 0; i < 3; i++)
+    for (uint i = 0; i < 3; i++)
     {
         instr = &interruptTable[i];
         if (instr->cycle != NULL) delete [] instr->cycle;
