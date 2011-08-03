@@ -172,6 +172,22 @@ AS_IF([test "$resid_cv_builtin_expect" = no],
   [AC_SUBST([HAVE_BUILTIN_EXPECT], [0])],
   [AC_SUBST([HAVE_BUILTIN_EXPECT], [1])])
 
+AC_ARG_ENABLE([testsuite],
+  [AS_HELP_STRING([--enable-testsuite=PATH_TO_TESTSUITE],
+    [enable Lorenz' testsuite [default=no]]
+  )],
+  [],
+  [enable_testsuite=no]
+)
+
+AS_IF([test "x$enable_testsuite" != xno],
+  AC_DEFINE_UNQUOTED([PC64_TESTSUITE],
+    ["$enable_testsuite"],
+    [Path to Lorenz' testsuite.]
+  )
+)
+
+AM_CONDITIONAL([TESTSUITE], [test "x$enable_testsuite" != xno])
 
 AC_SUBST(RESID_HAVE_BOOL)
 AC_SUBST(RESID_INLINING)

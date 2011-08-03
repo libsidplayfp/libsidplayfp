@@ -190,7 +190,6 @@
 
 #include <string.h>
 
-//#define PC64_TESTSUITE
 #ifdef PC64_TESTSUITE
 static const char _sidtune_CHRtab[256] =  // CHR$ conversion table (0x01 = no output)
 {
@@ -843,16 +842,16 @@ void MOS6510::jmp_instr (void)
         case 0:
             break;
         case 1:
-            printf (" ");
+            //printf (" ");
             fprintf (stderr, " ");
         case 0xd:
-            printf ("\n");
+            //printf ("\n");
             fprintf (stderr, "\n");
             filepos = 0;
             break;
         default:
-            filetmp[filepos++] = ch;
-            printf ("%c", ch);
+            filetmp[filepos++] = ch - 'A' + 'a';
+            //printf ("%c", ch);
             fprintf (stderr, "%c", ch);
         }
     }

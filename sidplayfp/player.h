@@ -203,6 +203,11 @@
 #include "sid6526/sid6526.h"
 #include "nullsid.h"
 
+
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #ifdef PC64_TESTSUITE
 #  include <string.h>
 #endif
@@ -395,9 +400,10 @@ private:
 #ifdef PC64_TESTSUITE
     void   envLoadFile (char *file)
     {
-        char name[0x100] = "E:/testsuite/";
+        char name[0x100] = PC64_TESTSUITE;
         strcat (name, file);
         strcat (name, ".prg");
+
         m_tune->load (name);
         stop ();
     }

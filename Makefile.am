@@ -267,6 +267,17 @@ builders_hardsid_builder_libsidplayfp_hardsid_la_LDFLAGS = -version-info $(LIBHA
 endif
 
 #=========================================================
+
+if TESTSUITE
+noinst_PROGRAMS = test/test
+
+test_test_SOURCES = test/test.cpp
+
+test_test_LDADD = sidplayfp/libsidplayfp.la \
+builders/residfp-builder/libsidplayfp-residfp.la
+endif
+
+#=========================================================
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libsidplayfp.pc
 
