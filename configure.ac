@@ -172,6 +172,17 @@ AS_IF([test "$resid_cv_builtin_expect" = no],
   [AC_SUBST([HAVE_BUILTIN_EXPECT], [0])],
   [AC_SUBST([HAVE_BUILTIN_EXPECT], [1])])
 
+
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+if test -z "$DOXYGEN"; then
+  AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
+fi
+
+AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
+
+AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([Doxyfile])])
+
+
 AC_ARG_ENABLE([testsuite],
   [AS_HELP_STRING([--enable-testsuite=PATH_TO_TESTSUITE],
     [enable Lorenz' testsuite [default=no]]

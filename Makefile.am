@@ -267,7 +267,17 @@ builders_hardsid_builder_libsidplayfp_hardsid_la_LDFLAGS = -version-info $(LIBHA
 endif
 
 #=========================================================
+# docs
+if HAVE_DOXYGEN
+doc:
+	$(DOXYGEN) Doxyfile
 
+clean-local:
+	rm -fr $(builddir)/docs
+endif
+
+#=========================================================
+# test
 if TESTSUITE
 noinst_PROGRAMS = test/test
 
@@ -278,6 +288,7 @@ builders/residfp-builder/libsidplayfp-residfp.la
 endif
 
 #=========================================================
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libsidplayfp.pc
 
