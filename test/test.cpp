@@ -11,11 +11,18 @@
 #include <builders/residfp-builder/residfp.h>
 
 int main(int argc, char *argv[]) {
+
 	sidplay2	m_engine;
 	ReSIDfpBuilder *rs = new ReSIDfpBuilder("Test");
 
 	char name[0x100] = PC64_TESTSUITE;
-        strcat (name, " start.prg");
+	if (argc>1) {
+		strcat (name, argv[1]);
+		strcat (name, ".prg");
+	} else {
+        	strcat (name, " start.prg");
+	}
+
 	SidTune		*tune=new SidTune(name);
 
 	if (!tune->getStatus()) {
