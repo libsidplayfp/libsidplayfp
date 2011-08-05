@@ -23,15 +23,17 @@
 
 struct SidTuneInfo;
 
-// Extended usuage information
+/**
+* Extended usuage information
+*/
 struct sid2_usage_t: public sid_usage_t
 {
-    uint_least16_t start; // Load image start address
-    uint_least16_t end;   // Load image end address
-    char           md5[SIDTUNE_MD5_LENGTH + 1]; // Tunes MD5 key
-    uint_least16_t length;  // usage scan length
+    uint_least16_t start; ///< Load image start address
+    uint_least16_t end;   ///< Load image end address
+    char           md5[SIDTUNE_MD5_LENGTH + 1]; ///< Tunes MD5 key
+    uint_least16_t length;  ///< usage scan length
 
-    // Copy common parts of basic usage to extended usage.
+    /// Copy common parts of basic usage to extended usage.
     sid2_usage_t &operator= (const sid_usage_t &usage)
     {
         *((sid_usage_t *) this) = usage;
@@ -39,6 +41,9 @@ struct sid2_usage_t: public sid_usage_t
     }
 };
 
+/**
+* SidTune
+*/
 class SID_EXTERN SidUsage
 {
 private:

@@ -21,7 +21,9 @@
 
 #define SIDTUNE_MD5_LENGTH 32
 
-
+/**
+* SidTuneMod
+*/
 class SID_EXTERN SidTuneMod : public SidTune
 {
  private:
@@ -32,8 +34,11 @@ class SID_EXTERN SidTuneMod : public SidTune
     SidTuneMod(const char* fileName) : SidTune(fileName)
     { ; }
 
-    // Not providing an md5 buffer will cause the internal one to be used
-    const char *createMD5(char *md5 = 0); // Buffer must be SIDTUNE_MD5_LENGTH + 1
+    /**
+    * Not providing an md5 buffer will cause the internal one to be used.
+    * Buffer must be SIDTUNE_MD5_LENGTH + 1
+    */
+    const char *createMD5(char *md5 = 0);
 };
 
 #endif  /* SIDTUNEMOD_H */

@@ -25,10 +25,9 @@
 #include <vector>
 #include "sidplayfp/sidbuilder.h"
 
-/***************************************************************************
- * ReSID Builder Class
- ***************************************************************************/
-// Create the SID builder object
+/**
+* ReSIDfp Builder Class
+*/
 class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 {
 protected:
@@ -42,11 +41,14 @@ private:
 public:
     ReSIDfpBuilder  (const char * const name);
     ~ReSIDfpBuilder (void);
-    // true will give you the number of used devices.
-    //    return values: 0 none, positive is used sids
-    // false will give you all available sids.
-    //    return values: 0 endless, positive is available sids.
-    // use bool operator to determine error
+
+    /**
+    * true will give you the number of used devices.
+    *    return values: 0 none, positive is used sids
+    * false will give you all available sids.
+    *    return values: 0 endless, positive is available sids.
+    * use bool operator to determine error
+    */
     uint        devices (bool used);
     uint        create  (uint sids);
     sidemu     *lock    (c64env *env, sid2_model_t model);
@@ -55,12 +57,29 @@ public:
     const char *error   (void) const { return m_error; }
     const char *credits (void);
 
-    // Settings that affect all SIDs
+    /// @name global settings
+    /// Settings that affect all SIDs
+    //@{
+    /// enable/disable filter
     void filter   (bool enable);
+
+    /// @deprecated does nothing
     SID_DEPRECATED void filter   (const sid_filterfp_t *filter) {};
 
+    /**
+    * Set 6581 filter curve
+    *
+    * @param filterCurve from 0.0 (light) to 1.0 (dark) (default 0.5)
+    */
     void filter6581Curve (const double filterCurve);
+
+    /**
+    * Set 8580 filter curve
+    *
+    * @param filterCurve curve center frequency (default 12500)
+    */
     void filter8580Curve (const double filterCurve);
+    //@}
 };
 
 #endif // _resid_h_

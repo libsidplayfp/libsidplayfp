@@ -25,10 +25,9 @@
 #include <vector>
 #include "sidplayfp/sidbuilder.h"
 
-/***************************************************************************
- * ReSID Builder Class
- ***************************************************************************/
-// Create the SID builder object
+/**
+* ReSID Builder Class
+*/
 class SID_EXTERN ReSIDBuilder: public sidbuilder
 {
 protected:
@@ -42,11 +41,14 @@ private:
 public:
     ReSIDBuilder  (const char * const name);
     ~ReSIDBuilder (void);
-    // true will give you the number of used devices.
-    //    return values: 0 none, positive is used sids
-    // false will give you all available sids.
-    //    return values: 0 endless, positive is available sids.
-    // use bool operator to determine error
+
+    /**
+    * true will give you the number of used devices.
+    *    return values: 0 none, positive is used sids
+    * false will give you all available sids.
+    *    return values: 0 endless, positive is available sids.
+    * use bool operator to determine error
+    */
     uint        devices (bool used);
     uint        create  (uint sids);
     sidemu     *lock    (c64env *env, sid2_model_t model);
@@ -55,13 +57,21 @@ public:
     const char *error   (void) const { return m_error; }
     const char *credits (void);
 
-    // Settings that affect all SIDs
+    /// @name global settings
+    /// Settings that affect all SIDs
+    //@{
+    /// enable/disable filter
     void filter   (bool enable);
+
+    /// @deprecated does nothing
     SID_DEPRECATED void filter   (const sid_filter_t *filter) {};
 
-    /* The bias is given in millivolts, and a maximum reasonable control range is
-    approximately -500 to 500. */
+    /**
+    * The bias is given in millivolts, and a maximum reasonable
+    * control range is approximately -500 to 500.
+    */
     void bias     (const double dac_bias);
+    //@}
 };
 
 #endif // _resid_h_

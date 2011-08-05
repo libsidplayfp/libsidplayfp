@@ -38,7 +38,9 @@
 #include <vector>
 #include "sidplayfp/sidbuilder.h"
 
-
+/**
+* HardSID Builder Class
+*/
 class SID_EXTERN HardSIDBuilder: public sidbuilder
 {
 private:
@@ -55,11 +57,14 @@ private:
 public:
     HardSIDBuilder  (const char * const name);
     ~HardSIDBuilder (void);
-    // true will give you the number of used devices.
-    //    return values: 0 none, positive is used sids
-    // false will give you all available sids.
-    //    return values: 0 endless, positive is available sids.
-    // use bool operator to determine error
+
+    /**
+    * true will give you the number of used devices.
+    *    return values: 0 none, positive is used sids
+    * false will give you all available sids.
+    *    return values: 0 endless, positive is available sids.
+    * use bool operator to determine error
+    */
     uint        devices (bool used);
     sidemu     *lock    (c64env *env, sid2_model_t model);
     void        unlock  (sidemu *device);

@@ -32,6 +32,9 @@ namespace SIDPLAY2_NAMESPACE
     class Player;
 }
 
+/**
+* sidplay2
+*/
 class SID_EXTERN sidplay2
 {
 private:
@@ -55,10 +58,12 @@ public:
     void           debug        (bool enable, FILE *out);
     void           mute         (int voice, bool enable);
 
-    // Timer functions with respect to resolution returned by timebase
+    //@{
+    /// Timer functions with respect to resolution returned by timebase
     uint_least32_t timebase (void) const;
     uint_least32_t time     (void) const;
     uint_least32_t mileage  (void) const;
+    //@}
 
     operator bool()  const { return (&sidplayer ? true: false); }
     bool operator!() const { return (&sidplayer ? false: true); }

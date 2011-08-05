@@ -25,6 +25,9 @@ typedef uint_fast32_t event_clock_t;
 typedef enum {EVENT_CLOCK_PHI1 = 0, EVENT_CLOCK_PHI2 = 1} event_phase_t;
 #define EVENT_CONTEXT_MAX_PENDING_EVENTS 0x100
 
+/**
+* Event
+*/
 class SID_EXTERN Event
 {
     friend class EventScheduler;
@@ -34,12 +37,15 @@ private:
     class EventContext *m_context;
     event_clock_t m_clk;
 
-    /* This variable is set by the event context
-       when it is scheduled */
+    /**
+    * This variable is set by the event context
+    * when it is scheduled
+    */
     bool m_pending;
 
-    /* Link to the next and previous events in the
-       list.  */
+    /**
+    * Link to the next and previous events in the list.
+    */
     Event *m_next, *m_prev;
 
 public:

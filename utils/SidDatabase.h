@@ -24,6 +24,9 @@
 class SidTuneMod;
 class iniParser;
 
+/**
+* SidDatabase
+*/
 class SID_EXTERN SidDatabase
 {
 private:
