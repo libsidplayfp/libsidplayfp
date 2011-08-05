@@ -6,7 +6,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * This class solves the opamp equation when loaded by different sets of resistors.
  * Equations and first implementation were written by Dag Lem.
  * This class is a rewrite without use of fixed point integer mathematics, and

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of reSID, a MOS6581 SID emulator engine.
  * Copyright (C) 2004  Dag Lem <resid@nimrod.no>
  *
@@ -28,7 +28,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * A 15 bit counter is used to implement the envelope rates, in effect dividing
  * the clock to the envelope counter by the currently selected rate period.
  * <P>

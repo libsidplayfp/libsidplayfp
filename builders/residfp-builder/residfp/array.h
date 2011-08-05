@@ -30,6 +30,8 @@ public:
 	unsigned int decrease() { return --c; }
 };
 
+/** @internal
+*/
 template<typename T>
 class array {
 

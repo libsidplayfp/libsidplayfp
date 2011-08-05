@@ -6,7 +6,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * Return sample with linear interpolation.
  *
  * @author Antti Lankila

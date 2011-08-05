@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of reSID, a MOS6581 SID emulator engine.
  * Copyright (C) 2004  Dag Lem <resid@nimrod.no>
  *
@@ -48,7 +48,7 @@ public:
     const char* getMessage() { return message; }
 };
 
-/**
+/** @internal
  * MOS6581/MOS8580 emulation.
  * Based on reSID 0.16 by Dag Lem,
  * and then hacked on by Antti S. Lankila.

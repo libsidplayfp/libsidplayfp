@@ -9,7 +9,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * Compose a more efficient SINC from chaining two other SINCs.
  *
  * @author Antti Lankila

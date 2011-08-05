@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of reSID, a MOS6581 SID emulator engine.
  * Copyright (C) 2004  Dag Lem <resid@nimrod.no>
  *
@@ -29,7 +29,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * A 24 bit accumulator is the basis for waveform generation. FREQ is added to the lower 16 bits of the accumulator each cycle. The accumulator is set to zero when TEST is set, and starts counting
  * when TEST is cleared. The noise waveform is taken from intermediate bits of a 23 bit shift register. This register is clocked by bit 19 of the accumulator.
  *

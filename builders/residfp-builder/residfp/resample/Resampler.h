@@ -6,7 +6,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * Abstraction of a resampling process. Given enough input, produces output.
  * Cnstructors take additional arguments that configure these objects.
  *

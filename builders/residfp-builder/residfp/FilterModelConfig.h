@@ -9,6 +9,8 @@ namespace reSIDfp
 
 class Integrator;
 
+/** @internal
+*/
 class FilterModelConfig {
 
 private:

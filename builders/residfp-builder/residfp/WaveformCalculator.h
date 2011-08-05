@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of reSID, a MOS6581 SID emulator engine.
  * Copyright (C) 2004  Dag Lem <resid@nimrod.no>
  *
@@ -40,7 +40,7 @@ typedef struct {
     float stmix;
 } CombinedWaveformConfig;
 
-/**
+/** @internal
  * Combined waveform calculator for WaveformGenerator.
  *
  * @author Antti Lankila

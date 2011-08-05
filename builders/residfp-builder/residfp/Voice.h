@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of reSID, a MOS6581 SID emulator engine.
  * Copyright (C) 2004  Dag Lem <resid@nimrod.no>
  *
@@ -30,7 +30,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * Representation of SID voice block.
  *
  * @author Ken Händel

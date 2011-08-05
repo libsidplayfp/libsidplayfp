@@ -6,7 +6,7 @@
 namespace reSIDfp
 {
 
-/**
+/** @internal
  * Java port of the reSID 1.0 filter VCR+opamp+capacitor element (integrator) by Dag Lem.
  *
  * Java port and subthreshold current simulation added by Antti S. Lankila.
