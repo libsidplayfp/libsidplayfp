@@ -44,44 +44,73 @@ struct  SidTuneInfo;
     const uint_least16_t SID2_DEFAULT_POWER_ON_DELAY = SID2_MAX_POWER_ON_DELAY + 1;
 #endif // SIDPLAY2_DEFAULTS
 
-typedef enum {sid2_playing = 0, sid2_paused, sid2_stopped}         sid2_player_t;
+typedef enum {sid2_playing = 0, sid2_paused, sid2_stopped} sid2_player_t;
 typedef enum {sid2_mono = 1,  sid2_stereo} sid2_playback_t;
-typedef enum {sid2_envPS = 0, sid2_envTP, sid2_envBS,  sid2_envR,
-              sid2_envTR} sid2_env_t;
-typedef enum {SID2_MODEL_CORRECT, SID2_MOS6581, SID2_MOS8580}      sid2_model_t;
+typedef enum {sid2_envPS = 0, sid2_envTP, sid2_envBS, sid2_envR, sid2_envTR} sid2_env_t;
+typedef enum {SID2_MODEL_CORRECT, SID2_MOS6581, SID2_MOS8580} sid2_model_t;
 typedef enum {SID2_CLOCK_CORRECT, SID2_CLOCK_PAL, SID2_CLOCK_NTSC} sid2_clock_t;
+typedef enum {SID2_INTERPOLATE, SID2_RESAMPLE_INTERPOLATE} sampling_method_t;
 
-typedef enum { SID2_INTERPOLATE, SID2_RESAMPLE_INTERPOLATE } sampling_method_t;
 
-/* Environment Modes
-sid2_envPS = Playsid
-sid2_envTP = Sidplay  - Transparent Rom
-sid2_envBS = Sidplay  - Bankswitching
-sid2_envR  = Sidplay2 - Real C64 Environment
+/**
+* sid2_config_t
 */
-
 struct sid2_config_t
 {
-    sid2_clock_t        clockDefault;  // Intended tune speed when unknown
+    /// Intended tune speed when unknown
+    sid2_clock_t        clockDefault;
     bool                clockForced;
-    sid2_clock_t        clockSpeed;    // User requested emulation speed
+    /// User requested emulation speed
+    sid2_clock_t        clockSpeed;
+    /**
+    * Environment Modes
+    * - sid2_envPS = Playsid
+    * - sid2_envTP = Sidplay  - Transparent Rom
+    * - sid2_envBS = Sidplay  - Bankswitching
+    * - sid2_envR  = Sidplay2 - Real C64 Environment
+    */
     sid2_env_t          environment;
     bool                forceDualSids;
     bool                emulateStereo;
     uint_least32_t      frequency;
+    /**
+    * Playbak mode
+    * - sid2_mono
+    * - sid2_stereo
+    */
     sid2_playback_t     playback;
-    sid2_model_t        sidDefault;    // Intended sid model when unknown
+    /**
+    * Intended sid model when unknown
+    * - SID2_MODEL_CORRECT
+    * - SID2_MOS6581
+    * - SID2_MOS8580
+    */
+    sid2_model_t        sidDefault;
     sidbuilder         *sidEmulation;
-    sid2_model_t        sidModel;      // User requested sid model
+    /// User requested sid model
+    sid2_model_t        sidModel;
     bool                sidSamples;
     uint_least32_t      leftVolume;
     uint_least32_t      rightVolume;
     uint_least16_t      powerOnDelay;
-    uint_least32_t      sid2crcCount;  // Max sid writes to form crc
+    /// Max sid writes to form crc
+    uint_least32_t      sid2crcCount;
+    /**
+    * Sampling method
+    * - SID2_INTERPOLATE
+    * - SID2_RESAMPLE_INTERPOLATE
+    */
     sampling_method_t   samplingMethod;
-    bool                fastSampling;  // Faster low-quality emulation
+    /**
+    * Faster low-quality emulation
+    * available only for reSID
+    */
+    bool                fastSampling;
 };
 
+/**
+* sid2_info_t
+*/
 struct sid2_info_t
 {
     const char       **credits;
@@ -98,7 +127,8 @@ struct sid2_info_t
     sid2_env_t         environment;
     uint_least16_t     powerOnDelay;
     uint_least32_t     sid2crc;
-    uint_least32_t     sid2crcCount; // Number of sid writes forming crc
+    /// Number of sid writes forming crc
+    uint_least32_t     sid2crcCount;
 };
 
 #endif // _sid2types_h_

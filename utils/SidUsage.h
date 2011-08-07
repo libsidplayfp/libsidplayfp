@@ -24,7 +24,7 @@
 struct SidTuneInfo;
 
 /**
-* Extended usuage information
+* Extended usage information
 */
 struct sid2_usage_t: public sid_usage_t
 {
@@ -42,7 +42,7 @@ struct sid2_usage_t: public sid_usage_t
 };
 
 /**
-* SidTune
+* SidUsage
 */
 class SID_EXTERN SidUsage
 {

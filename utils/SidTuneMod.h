@@ -23,6 +23,8 @@
 
 /**
 * SidTuneMod
+* A wrapper around SidTune class which provides the ability
+* to calculate the tune's md5 hash to match against songlenth DB.
 */
 class SID_EXTERN SidTuneMod : public SidTune
 {
@@ -35,8 +37,10 @@ class SID_EXTERN SidTuneMod : public SidTune
     { ; }
 
     /**
+    * Calculates the MD5 hash of the tune.
     * Not providing an md5 buffer will cause the internal one to be used.
-    * Buffer must be SIDTUNE_MD5_LENGTH + 1
+    * If provided, buffer must be SIDTUNE_MD5_LENGTH + 1
+    * @return a pointer to the buffer containing the md5 string.
     */
     const char *createMD5(char *md5 = 0);
 };

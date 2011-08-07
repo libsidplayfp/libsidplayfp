@@ -68,7 +68,6 @@ protected:
     bool m_status;
 
 public:
-    // Determine current state of object (true = okay, false = error).
     sidbuilder(const char * const name)
         : m_name(name), m_status (true) {;}
     virtual ~sidbuilder() {;}
@@ -79,6 +78,8 @@ public:
     virtual  const  char *error   (void) const = 0;
     virtual  const  char *credits (void) = 0;
     virtual  void         filter  (bool enable) = 0;
+
+    // Determine current state of object (true = okay, false = error).
     operator bool() const { return m_status; }
 };
 
