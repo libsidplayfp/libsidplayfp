@@ -576,7 +576,7 @@ m_tapulse.schedule(event_context, (event_clock_t) 1, m_phase);
 
 // 2) reload timer from latch.
 // When the counter has reached zero, it is reloaded from the latch
-// as soon as there is another clock waiting in the pipeline. In �2
+// as soon as there is another clock waiting in the pipeline. In ø2
 // mode, this is always the case.
 // This explains why you are reading zeros in cascaded mode only
 // (2-2-2-1-1-1-0-0-2) but not in ø2 mode (2-1-2).
