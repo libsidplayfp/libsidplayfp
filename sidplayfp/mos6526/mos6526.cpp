@@ -535,7 +535,7 @@ switch (addr)
 			}
 
 		if (clearOneShot && tb == 1)
-			cra = data & 0xee;
+			crb = data & 0xee;
 
 		if ((crb & 0x61) == 0x01)
 			{   // Active
