@@ -1,0 +1,6 @@
+usr/include/sidplayfp/*.h
+usr/include/sidplayfp/builders/*.h
+usr/lib/libsidplayfp*.a
+usr/lib/libsidplayfp*.la
+usr/lib/libsidplayfp*.so
+usr/lib/pkgconfig/libsidplayfp.pc

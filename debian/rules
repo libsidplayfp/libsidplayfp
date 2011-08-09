@@ -45,29 +45,12 @@ build-stamp:  config.status
 clean:
 	dh_testdir
 	dh_testroot
-	rm -rf $(CURDIR)/debian/libsidplay-dev/
-	rm -f $(CURDIR)/config.log $(CURDIR)/libsidplay/config.log
+	rm -rf $(CURDIR)/debian/libsidplayfp-dev/
+	rm -f $(CURDIR)/config.log $(CURDIR)/libsidplayfp/config.log
 	[ ! -f Makefile ] || $(MAKE) distclean
 	rm -f build-stamp 
 
 	dh_clean
-
-maintainerclean: clean
-	-test -r /usr/share/misc/config.sub && \
-	  cp -f /usr/share/misc/config.sub config.sub
-	-test -r /usr/share/misc/config.guess && \
-	  cp -f /usr/share/misc/config.guess config.guess
-
-	set -e ; \
-	p=`pwd` ; \
-	for d in . libsidplay libsidutils resid builders/resid-builder ; do \
-		echo $$d ; \
-		cd $$p/$$d ; \
-		libtoolize --force --copy ; \
-		aclocal `test -d unix && echo -I unix` ; \
-		automake --add-missing --copy || true ; \
-		autoconf || true ; \
-	done
 
 install: build
 	dh_testdir
