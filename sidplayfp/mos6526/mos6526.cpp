@@ -241,7 +241,8 @@ m_tbEvent.schedule(event_context, (event_clock_t) tb, m_phase);
 void MOS6526::tb_stop(void)
 {
 update_timers();
-if (m_tbEvent.pending()) m_tbEvent.cancel();
+if (m_tbEvent.pending())
+	m_tbEvent.cancel();
 }
 
 void MOS6526::tb_load(void)
@@ -375,7 +376,7 @@ switch (addr)
 			}
 		return data;}
 	case TAL:
-		return endian_16lo8(ta);
+		return endian_16lo8 (ta);
 	case TAH:
 		return endian_16hi8 (ta);
 	case TBL:
