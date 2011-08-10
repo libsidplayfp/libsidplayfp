@@ -1,5 +1,5 @@
 /***************************************************************************
-                          event.cpp  -  Event schdeduler (based on alarm
+                          event->cpp  -  Event schdeduler (based on alarm
                                         from Vice)
                              -------------------
     begin                : Wed May 9 2001
@@ -16,7 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 /***************************************************************************
- *  $Log: event.cpp,v $
+ *  $Log: event->cpp,v $
  *  Revision 1.12  2004/06/26 10:52:29  s_a_white
  *  Support new event template class and add minor code improvements.
  *
@@ -54,90 +54,59 @@
 
 #include "event.h"
 
-#define EVENT_TIMEWARP_COUNT 0x0FFFFF
-
 
 EventScheduler::EventScheduler (const char * const name)
-:Event(name),
- m_timeWarp("Time Warp", *this, &EventScheduler::event),
- m_events(0),
- m_events_future(0)
-{
-    m_next = this;
-    m_prev = this;
-    m_timeWarp.m_clk = 0;
-    reset ();
-}
-
-// Used to prevent overflowing by timewarping
-// the event clocks
-void EventScheduler::event ()
-{
-    m_events = m_events_future;
-    m_events_future = 0;
-    m_timeWarp.m_next = this;
-    m_timeWarp.m_prev = this->m_prev;
-    this->m_prev->m_next = &m_timeWarp;
-    this->m_prev = &m_timeWarp;
-    m_timeWarp.m_pending = true;
-}
+:currentTime(0),
+firstEvent(0) {}
 
 void EventScheduler::reset (void)
-{   // Remove all events
-    Event *e = m_next;
-    //uint   count = m_events;
-    m_pending = false;
-    while (e->m_pending)
-    {
-        e->m_pending = false;
-        e = e->m_next;
+{
+    Event *scan = firstEvent;
+    while (scan) {
+        scan->m_pending = false;
+        scan = scan->next;
     }
-    m_next = this;
-    m_prev = this;
-    m_clk  = 0;
-    m_events = 0;
-    m_events_future = 0;
-    event ();
+    currentTime = 0;
+    firstEvent = 0;
 }
 
-// Add event to ordered pending queue
-void EventScheduler::schedule (Event &event, event_clock_t cycles,
-                               event_phase_t phase)
+void EventScheduler::cancel   (Event &event)
 {
-    for (;;)
-    {
-        if (!event.m_pending)
-        {
-            event_clock_t clk = m_clk + (cycles << 1);
-            clk += ((clk & 1) ^ phase);
-
-            // Now put in the correct place so we don't need to keep
-            // searching the list later.
-            Event *e;
-            uint count;
-            if (clk >= m_clk)
-            {
-                e = m_next;
-                count = m_events++;
-            }
+    event.m_pending = false;
+    Event *scan = firstEvent;
+    Event *prev = 0;
+    while (scan) {
+        if (&event == scan) {
+            if (prev)
+                prev->next = scan->next;
             else
-            {
-                e = m_timeWarp.m_next;
-                count = m_events_future++;
-            }
-
-            while (count-- && (e->m_clk <= clk))
-                e = e->m_next;
-
-            event.m_next      = e;
-            event.m_prev      = e->m_prev;
-            e->m_prev->m_next = &event;
-            e->m_prev         = &event;
-            event.m_pending   = true;
-            event.m_clk       = clk;
-            event.m_context   = this;
+                firstEvent = scan->next;
             break;
         }
-        event.cancel ();
+        prev = scan;
+        scan = scan->next;
     }
+}
+
+void EventScheduler::schedule (Event &event, const event_clock_t cycles,
+                               const event_phase_t phase)
+{
+    if (event.m_pending)
+        cancel(event);
+
+    const event_clock_t tt = event.triggerTime = (cycles << 1) + currentTime + ((currentTime & 1) ^ (phase == EVENT_CLOCK_PHI1 ? 0 : 1));
+
+    event.m_pending = true;
+
+    /* find the right spot where to tuck this new event */
+    Event **scan = &firstEvent;
+    for (;;) {
+        if (*scan == 0 || (*scan)->triggerTime > tt) {
+             event.next = *scan;
+             *scan = &event;
+             break;
+         }
+         scan = &((*scan)->next);
+     }
+
 }

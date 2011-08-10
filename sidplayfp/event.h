@@ -21,21 +21,38 @@
 
 #include "sidtypes.h"
 
-typedef uint_fast32_t event_clock_t;
-typedef enum {EVENT_CLOCK_PHI1 = 0, EVENT_CLOCK_PHI2 = 1} event_phase_t;
-#define EVENT_CONTEXT_MAX_PENDING_EVENTS 0x100
+typedef uint_fast64_t event_clock_t;
 
 /**
-* Event
+* C64 system runs actions at system clock high and low
+* states. The PHI1 corresponds to the auxiliary chip activity
+* and PHI2 to CPU activity. For any clock, PHI1s are before
+* PHI2s.
+*/
+typedef enum {EVENT_CLOCK_PHI1 = 0, EVENT_CLOCK_PHI2 = 1} event_phase_t;
+
+
+/**
+* Event scheduler (based on alarm from Vice). Created in 2001 by Simon A.
+* White.
+*
+* Optimized EventScheduler and corresponding Event class by Antti S. Lankila
+* in 2009.
+*
+* @author Antti Lankila
 */
 class SID_EXTERN Event
 {
     friend class EventScheduler;
 
 private:
+    class EventContext *m_context SID_DEPRECATED;
+
+    /** Describe event for humans. */
     const char * const m_name;
-    class EventContext *m_context;
-    event_clock_t m_clk;
+
+    /** The clock this event fires */
+    event_clock_t triggerTime;
 
     /**
     * This variable is set by the event context
@@ -43,23 +60,47 @@ private:
     */
     bool m_pending;
 
-    /**
-    * Link to the next and previous events in the list.
-    */
-    Event *m_next, *m_prev;
+    /** The next event in sequence */
+    Event *next;
 
 public:
+    /**
+    * Events are used for delayed execution. Name is
+    * not used by code, but is useful for debugging.
+    *
+    * @param name Descriptive string of the event.
+    */
     Event(const char * const name)
         : m_name(name),
           m_pending(false) {}
     ~Event() {}
 
+    /**
+    * Event code to be executed. Events are allowed to safely
+    * reschedule themselves with the EventScheduler during
+    * invocations.
+    */
     virtual void event (void) = 0;
-    bool    pending () { return m_pending; }
-    void    cancel  ();
-    void    schedule(EventContext &context, event_clock_t cycles,
+
+    /** Is Event scheduled? */
+    bool    pending () const { return m_pending; }
+
+    /**
+    * Cancel the specified event.
+    *
+    * @deprecated use EventContext::cancel
+    */
+    SID_DEPRECATED void    cancel  ();
+
+    /**
+    * Add event to pending queue.
+    *
+    * @deprecated use EventContext::schedule
+    */
+    SID_DEPRECATED void    schedule(EventContext &context, event_clock_t cycles,
                      event_phase_t phase);
 };
+
 
 template< class This >
 class EventCallback: public Event
@@ -76,6 +117,7 @@ public:
         m_callback(callback) {}
 };
 
+
 // Public Event Context
 class EventContext
 {
@@ -83,63 +125,108 @@ class EventContext
 
 public:
     virtual void cancel   (Event &event) = 0;
-    virtual void schedule (Event &event, event_clock_t cycles,
-                           event_phase_t phase) = 0;
-    virtual event_clock_t getTime (event_phase_t phase) const = 0;
-    virtual event_clock_t getTime (event_clock_t clock, event_phase_t phase) const = 0;
+    virtual void schedule (Event &event, const event_clock_t cycles,
+                           const event_phase_t phase) = 0;
+    virtual event_clock_t getTime (const event_phase_t phase) const = 0;
+    virtual event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const = 0;
     virtual event_phase_t phase () const = 0;
 };
 
-// Private Event Context Object (The scheduler)
-class EventScheduler: public EventContext, public Event
+/**
+* Fast EventScheduler, which maintains a linked list of Events.
+* This scheduler takes neglible time even when it is used to
+* schedule events for nearly every clock.
+*
+* Events occur on an internal clock which is 2x the visible clock.
+* The visible clock is divided to two phases called phi1 and phi2.
+*
+* The phi1 clocks are used by VIC and CIA chips, phi2 clocks by CPU.
+*
+* Scheduling an event for a phi1 clock when system is in phi2 causes the
+* event to be moved to the next cycle. (This behavior may be a bug of the
+* original EventScheduler specification. Likely reason is to avoid
+* scheduling an event into past.)
+*
+* Getting a phi1 time when system is in phi2 causes the next phi1 clock
+* to be returned.
+*
+* To make scheduling even faster, I am considering making event cancellation
+* before rescheduling mandatory, as caller is generally in position to
+* automatically know if the event needs to be canceled first.
+*
+* @author Antti S. Lankila
+*/
+class EventScheduler: public EventContext
 {
 private:
-    EventCallback<EventScheduler> m_timeWarp;
-    uint  m_events;
-    uint  m_events_future;
+    event_clock_t  currentTime;
+    Event *firstEvent;
 
 private:
     void event (void);
 
 protected:
-    void schedule (Event &event, event_clock_t cycles,
-                   event_phase_t phase);
-    void cancel   (Event &event)
-    {
-        event.m_pending      = false;
-        event.m_prev->m_next = event.m_next;
-        event.m_next->m_prev = event.m_prev;
-        m_events--;
-    }
+    /** Add event to pending queue.
+    *
+    * @param event the event to add
+    * @param cycles the clock to fire
+    * @param phase when to fire the event
+    */
+    void schedule (Event &event, const event_clock_t cycles,
+                   const event_phase_t phase);
+
+    /** Cancel the specified event.
+    *
+    * @param event the event to cancel
+    */
+    void cancel   (Event &event);
 
 public:
     EventScheduler (const char * const name);
+
+    /** Cancel all pending events and reset time. */
     void reset     (void);
 
+    /** Fire next event, advance system time to that event */
     void clock (void)
     {
-//        m_clk++;
-//        while (m_events && (m_clk >= m_next->m_clk))
-//            dispatch (*m_next);
-        Event &e = *m_next;
-        m_clk = e.m_clk;
-        cancel (e);
-        //printf ("Event \"%s\"\n", e.m_name);
-        e.event();
+        Event &event = *firstEvent;
+        firstEvent = firstEvent->next;
+        event.m_pending = false;
+        currentTime = event.triggerTime;
+        event.event();
     }
 
-    // Get time with respect to a specific clock phase
-    event_clock_t getTime (event_phase_t phase) const
-    {   return (m_clk + (phase ^ 1)) >> 1; }
-    event_clock_t getTime (event_clock_t clock, event_phase_t phase) const
-    {   return ((getTime (phase) - clock) << 1) >> 1; } // 31 bit res.
-    event_phase_t phase () const { return (event_phase_t) (m_clk & 1); }
+    /** Get time with respect to a specific clock phase
+    *
+    * @param phase the phase
+    * @return the time according to specified phase.
+    */
+    event_clock_t getTime (const event_phase_t phase) const
+    {   return (currentTime + (phase ^ 1)) >> 1; }
+
+    /** Get clocks since specified clock in given phase.
+    *
+    * @param clock the time to compare to
+    * @param phase the phase to comapre to
+    * @return the time between specified clock and now
+    */
+    event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const
+    {   return getTime (phase) - clock; }
+
+    /** Return current clock phase
+    *
+    * @return The current phase
+    */
+    event_phase_t phase () const { return (event_phase_t) (currentTime & 1); }
 };
+
 
 inline void Event::schedule (EventContext &context, event_clock_t cycles,
                              event_phase_t phase)
 {
-    context.schedule (*this, cycles, phase);
+    m_context = &context;
+    m_context->schedule (*this, cycles, phase);
 }
 
 inline void Event::cancel ()
