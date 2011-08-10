@@ -55,10 +55,6 @@
 #include "event.h"
 
 
-EventScheduler::EventScheduler (const char * const name)
-:currentTime(0),
-firstEvent(0) {}
-
 void EventScheduler::reset (void)
 {
     Event *scan = firstEvent;

@@ -182,7 +182,9 @@ protected:
     void cancel   (Event &event);
 
 public:
-    EventScheduler (const char * const name);
+    EventScheduler ()
+        : currentTime(0),
+          firstEvent(0) {}
 
     /** Cancel all pending events and reset time. */
     void reset     (void);

@@ -360,7 +360,6 @@ const char  *Player::credit[];
 Player::Player (void)
 // Set default settings for system
 :c64env  (&m_scheduler),
- m_scheduler ("SIDPlay 2"),
  cpu     (&m_scheduler),
  xsid    (this, &nullsid),
  cia     (this),
