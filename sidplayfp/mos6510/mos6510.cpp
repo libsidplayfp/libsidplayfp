@@ -107,7 +107,7 @@ void MOS6510::DumpState (void)
     if (getFlagZ()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
     if (getFlagC()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
 
-    opcode  = instrOpcode;
+    opcode  = instrCurrent->opcode;
     operand = Instr_Operand;
     data    = Cycle_Data;
 

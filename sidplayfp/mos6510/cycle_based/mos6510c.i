@@ -525,7 +525,7 @@ void MOS6510::FetchOpcode (void)
 #endif
 
     instrStartPC  = endian_32lo16 (Register_ProgramCounter++);
-    instrOpcode   = envReadMemByte (instrStartPC);
+    const uint_least8_t instrOpcode   = envReadMemByte (instrStartPC);
     // Convert opcode to pointer in instruction table
     instrCurrent  = &instrTable[instrOpcode];
     Instr_Operand = 0;

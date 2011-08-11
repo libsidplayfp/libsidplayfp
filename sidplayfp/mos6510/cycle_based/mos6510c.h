@@ -155,7 +155,6 @@ protected:
     struct ProcessorOperations *instrCurrent;
 
     uint_least16_t instrStartPC;
-    uint_least8_t  instrOpcode;
     int_least8_t   lastAddrCycle;
     int_least8_t   cycleCount;
 
