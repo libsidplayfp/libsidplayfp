@@ -33,7 +33,6 @@
 #include "sidplayfp/sidconfig.h"
 
 #define MOS6510_CYCLE_BASED
-#define MOS6510_ACCURATE_CYCLES
 #define MOS6510_SIDPLAY
 //#define MOS6510_STATE_6510
 //#define MOS6510_DEBUG 1
