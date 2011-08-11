@@ -268,14 +268,14 @@ private:
         EventContext &m_eventContext;
         event_clock_t m_seconds;
         event_clock_t m_period;
-        event_clock_t m_clk;
+        event_clock_t nextEventTime;
 
         void event (void)
         {   // Fixed point 25.7 (approx 2 dp)
             event_clock_t cycles;
-            m_clk += m_period;
-            cycles = m_clk >> 7;
-            m_clk &= 0x7F;
+            nextEventTime += m_period;
+            cycles = nextEventTime >> 7;
+            nextEventTime &= 0x7F;
             m_seconds++;
             schedule (m_eventContext, cycles, EVENT_CLOCK_PHI1);
         }
@@ -292,7 +292,7 @@ private:
         void reset (void)
         {   // Fixed point 25.7
             m_seconds = 0;
-            m_clk     = m_period & 0x7F;
+            nextEventTime = m_period & 0x7F;
             schedule (m_eventContext, m_period >> 7, EVENT_CLOCK_PHI1);
         }
 
@@ -300,7 +300,7 @@ private:
         {   // Fixed point 25.7
             m_period = (event_clock_t) (period / 10.0 * (float64_t) (1 << 7));
             reset ();
-        }   
+        }
     } rtc;
 
     // User Configuration Settings
