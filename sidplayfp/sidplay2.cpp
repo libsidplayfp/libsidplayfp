@@ -148,6 +148,3 @@ void sidplay2::debug (bool enable, FILE *out)
 
 sid2_player_t sidplay2::state (void) const
 {   return sidplayer.state (); }
-
-uint_least32_t sidplay2::timebase (void) const
-{   return SID2_TIME_BASE; }

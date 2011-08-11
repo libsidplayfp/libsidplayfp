@@ -367,7 +367,6 @@ Player::Player (void)
  sid6526 (this),
  vic     (this),
  m_mixerEvent ("Mixer", *this, &Player::mixer),
- rtc        (&m_scheduler),
  m_tune (NULL),
  m_ram  (NULL),
  m_rom  (NULL),
@@ -378,7 +377,8 @@ Player::Player (void)
  m_running           (false),
  m_sid2crc           (0xffffffff),
  m_sid2crcCount      (0),
- m_sampleCount       (0)
+ m_sampleCount       (0),
+ m_cpuFreq(CLOCK_FREQ_PAL)
 {
     srand ((uint) ::time(NULL));
     m_rand = (uint_least32_t) rand ();
@@ -532,7 +532,6 @@ int Player::initialise ()
     }
 
     psidDrvInstall (m_info);
-    rtc.reset ();
     envReset  (false);
     return 0;
 }
@@ -576,7 +575,7 @@ void Player::mute(int voice, bool enable) {
 void Player::mileageCorrect (void)
 {   // Calculate 1 bit below the timebase so we can round the
     // mileage count
-    if (((m_sampleCount * 2 * SID2_TIME_BASE) / m_cfg.frequency) & 1)
+    if (((m_sampleCount * 2) / m_cfg.frequency) & 1)
         m_mileage++;
     m_sampleCount = 0;
 }

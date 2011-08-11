@@ -60,7 +60,7 @@ public:
 
     //@{
     /// Timer functions with respect to resolution returned by timebase
-    uint_least32_t timebase (void) const;
+    SID_DEPRECATED uint_least32_t timebase (void) const { return 1; }
     uint_least32_t time     (void) const;
     uint_least32_t mileage  (void) const;
     //@}

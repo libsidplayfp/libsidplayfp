@@ -189,6 +189,8 @@ int Player::config (const sid2_config_t &cfg)
             // Determine clock speed
             cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
                                   cfg.clockForced);
+            m_cpuFreq = cpuFreq;
+
             // Setup fake cia
             sid6526.clock ((uint_least16_t)(cpuFreq / VIC_FREQ_PAL + 0.5));
             if (m_tuneInfo.songSpeed  == SIDTUNE_SPEED_CIA_1A ||
@@ -213,9 +215,6 @@ int Player::config (const sid2_config_t &cfg)
              if (environment(cfg.environment) < 0) {
                 goto Player_configure_error;
              }
-
-            // Start the real time clock event
-            rtc.clock(cpuFreq);
 
             // SID emulation setup
             if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0) {

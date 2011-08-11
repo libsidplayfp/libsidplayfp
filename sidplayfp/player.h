@@ -213,7 +213,6 @@
 #endif
 
 #define  SID2_MAX_SIDS 2
-#define  SID2_TIME_BASE 10
 #define  SID2_MAPPER_SIZE 32
 
 SIDPLAY2_NAMESPACE_START
@@ -262,47 +261,6 @@ private:
 
     EventCallback<Player> m_mixerEvent;
 
-    class EventRTC: public Event
-    {
-    private:
-        EventContext &m_eventContext;
-        event_clock_t m_seconds;
-        event_clock_t m_period;
-        event_clock_t nextEventTime;
-
-        void event (void)
-        {   // Fixed point 25.7 (approx 2 dp)
-            event_clock_t cycles;
-            nextEventTime += m_period;
-            cycles = nextEventTime >> 7;
-            nextEventTime &= 0x7F;
-            m_seconds++;
-            schedule (m_eventContext, cycles, EVENT_CLOCK_PHI1);
-        }
-
-    public:
-        EventRTC (EventContext *context)
-        :Event("RTC"),
-         m_eventContext(*context),
-         m_seconds(0)
-        {;}
-
-        event_clock_t getTime () const {return m_seconds;}
-
-        void reset (void)
-        {   // Fixed point 25.7
-            m_seconds = 0;
-            nextEventTime = m_period & 0x7F;
-            schedule (m_eventContext, m_period >> 7, EVENT_CLOCK_PHI1);
-        }
-
-        void clock (float64_t period)
-        {   // Fixed point 25.7
-            m_period = (event_clock_t) (period / 10.0 * (float64_t) (1 << 7));
-            reset ();
-        }
-    } rtc;
-
     // User Configuration Settings
     SidTuneInfo   m_tuneInfo;
     SidTune      *m_tune;
@@ -320,6 +278,8 @@ private:
     int             m_rand;
     uint_least32_t  m_sid2crc;
     uint_least32_t  m_sid2crcCount;
+
+    float64_t m_cpuFreq;
 
     // Mixer settings
     uint_least32_t m_sampleCount;
@@ -434,11 +394,12 @@ public:
     int            fastForward  (uint percent);
     int            load         (SidTune *tune);
     uint_least32_t mileage      (void) const { return m_mileage + time(); }
+    float64_t      cpuFreq      (void) const { return m_cpuFreq; }
     void           pause        (void);
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     sid2_player_t  state        (void) const { return m_playerState; }
     void           stop         (void);
-    uint_least32_t time         (void) const {return rtc.getTime (); }
+    uint_least32_t time         (void) const {return (uint_least32_t)(context().getTime(EVENT_CLOCK_PHI1) / m_cpuFreq); }
     void           debug        (bool enable, FILE *out)
                                 { cpu.debug (enable, out); }
     void           mute         (int voice, bool enable);
