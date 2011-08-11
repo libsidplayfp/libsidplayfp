@@ -1636,8 +1636,8 @@ MOS6510::MOS6510 (EventContext *context)
 
         for (pass = 0; pass < 2; pass++)
         {
-            enum {WRITE = 0, READ = 1};
-            int access = WRITE;
+            typedef enum {WRITE = 0, READ = 1} AccessMode;
+            AccessMode access = WRITE;
             cycleCount = -1;
             legalMode  = true;
             legalInstr = true;
@@ -1668,7 +1668,7 @@ MOS6510::MOS6510 (EventContext *context)
             case NOPz_: case SBCz:
             case ASLz: case DCPz: case DECz: case INCz: case ISBz: case LSRz:
             case ROLz: case RORz: case SREz: case SLOz: case RLAz: case RRAz:
-                access++;
+                access = READ;
             case SAXz: case STAz: case STXz: case STYz:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
                 if (access == READ) {
@@ -1681,7 +1681,7 @@ MOS6510::MOS6510 (EventContext *context)
             case NOPzx_: case ORAzx: case SBCzx:
             case ASLzx: case DCPzx: case DECzx: case INCzx: case ISBzx: case LSRzx:
             case RLAzx:    case ROLzx: case RORzx: case RRAzx: case SLOzx: case SREzx:
-                access++;
+                access = READ;
             case STAzx: case STYzx:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddrX;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
@@ -1707,7 +1707,7 @@ MOS6510::MOS6510 (EventContext *context)
             case ORAa: case SBCa:
             case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa:
             case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
-                access++;
+                access = READ;
             case JMPw: case JSRw: case SAXa: case STAa: case STXa: case STYa:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighAddr;
@@ -1773,7 +1773,7 @@ MOS6510::MOS6510 (EventContext *context)
             case ADCix: case ANDix: case CMPix: case EORix: case LAXix: case LDAix:
             case ORAix: case SBCix:
             case DCPix: case ISBix: case SLOix: case SREix: case RLAix: case RRAix:
-                access++;
+                access = READ;
             case SAXix: case STAix:
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowPointer;
                 cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowPointerX;
