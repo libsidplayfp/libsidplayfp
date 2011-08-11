@@ -448,13 +448,10 @@ Player::Player (void)
 
 Player::~Player ()
 {
-   if (m_ram == m_rom)
-      delete [] m_ram;
-   else
-   {
-      delete [] m_rom;
-      delete [] m_ram;
-   }
+    if (m_rom != m_ram)
+        delete [] m_rom;
+
+    delete [] m_ram;
 }
 
 // Makes the next sequence of notes available.  For sidplay compatibility

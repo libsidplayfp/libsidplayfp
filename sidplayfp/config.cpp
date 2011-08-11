@@ -381,13 +381,10 @@ int Player::environment (sid2_env_t env)
         m_info.environment = env;
         if (m_ram)
         {
-            if (m_ram == m_rom)
-               delete [] m_ram;
-            else
-            {
-               delete [] m_rom;
-               delete [] m_ram;
-            }
+            if (m_rom != m_ram)
+                delete [] m_rom;
+
+            delete [] m_ram;
         }
 
 #ifdef HAVE_EXCEPTIONS
