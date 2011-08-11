@@ -182,15 +182,6 @@ int Player::config (const sid2_config_t &cfg)
         if (m_playerState != sid2_paused)
             m_tune->getInfo(m_tuneInfo);
 
-        // SID emulation setup (must be performed before the
-        // environment setup call)
-        if (sidCreate (cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0)
-        {
-            m_errorString      = cfg.sidEmulation->error ();
-            m_cfg.sidEmulation = NULL;
-            goto Player_configure_restore;
-        }
-
         if (m_playerState != sid2_paused)
         {
             float64_t cpuFreq;
@@ -218,16 +209,24 @@ int Player::config (const sid2_config_t &cfg)
                 cia2.clock (cpuFreq / VIC_FREQ_NTSC);
             }
 
-            /* inform ReSID of the desired sampling rate */
-            for (int i = 0; i < SID2_MAX_SIDS; i += 1)
-                sid[i]->sampling(cpuFreq, cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
+            // Configure, setup and install C64 environment/events
+             if (environment(cfg.environment) < 0) {
+                goto Player_configure_error;
+             }
 
             // Start the real time clock event
             rtc.clock(cpuFreq);
 
-            // Configure, setup and install C64 environment/events
-            if (environment (cfg.environment) < 0)
+            // SID emulation setup
+            if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0) {
+                m_errorString = cfg.sidEmulation->error();
+                m_cfg.sidEmulation = NULL;
                 goto Player_configure_restore;
+            }
+            /* inform ReSID of the desired sampling rate */
+            for (int i = 0; i < SID2_MAX_SIDS; i += 1) {
+                sid[i]->sampling((long)cpuFreq, cfg.frequency, cfg.samplingMethod, false);
+            }
         }
     }
     sidSamples (cfg.sidSamples);
@@ -441,10 +440,9 @@ int Player::environment (sid2_env_t env)
 
     {   // Have to reload the song into memory as
         // everything has changed
-        int ret;
-        sid2_env_t old = m_info.environment;
+        const sid2_env_t old = m_info.environment;
         m_info.environment = env;
-        ret = initialise ();
+        const int ret = initialise ();
         m_info.environment = old;
         return ret;
     }
@@ -519,21 +517,10 @@ sid2_model_t Player::getModel(int sidModel,
 int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
                        sid2_model_t defaultModel)
 {
-    sid[0] = xsid.emulation ();
-   /* @FIXME@ Removed as prevents SID
-    * Model being updated
-    ****************************************
-    // If we are already using the emulation
-    // then don't change
-    if (builder == sid[0]->builder ())
-    {
-        sid[0] = &xsid;
-        return 0;
+    if (xsid.emulation() != &nullsid) {
+        sid[0] = xsid.emulation();
+        xsid.emulation (&nullsid);
     }
-    ****************************************/
-
-    // Make xsid forget it's emulation
-    xsid.emulation (&nullsid);
 
     {   // Release old sids
         for (int i = 0; i < SID2_MAX_SIDS; i++)
@@ -568,8 +555,12 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
                 return -1;
         }
     }
-    xsid.emulation (sid[0]);
-    sid[0] = &xsid;
+
+    /* put XSID as sid #0 in case we aren't in a real c64 environment */
+    if (m_info.environment != sid2_envR) {
+        xsid.emulation (sid[0]);
+        sid[0] = &xsid;
+    }
     return 0;
 }
 
