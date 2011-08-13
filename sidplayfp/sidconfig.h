@@ -19,6 +19,16 @@
 #   endif
 #endif
 
+/* Deprecated attributes */
+#if defined(_MSCVER)
+#  define SID_DEPRECATED __declspec(deprecated)
+#elif defined(__GNUC__)
+#  define SID_DEPRECATED __attribute__ ((deprecated))
+#else
+#  define SID_DEPRECATED
+#endif
+
+
 /* Namespace support */
 #define SIDPLAY2_NAMESPACE __sidplay2__
 #ifdef  SIDPLAY2_NAMESPACE
