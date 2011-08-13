@@ -245,7 +245,7 @@ static int  filepos = 0;
 
 
 // Handle bus access signals
-void MOS6510::aecSignal (bool state)
+void MOS6510::aecSignal (const bool state)
 {
     if (aec != state)
     {
@@ -2432,7 +2432,7 @@ void MOS6510::credits (char *sbuffer)
     strcat (sbuffer, "Email      : " MOS6510_EMAIL "\n");
 }
 
-void MOS6510::debug (bool enable, FILE *out)
+void MOS6510::debug (const bool enable, FILE *out)
 {
     dodump = enable;
     if (!(out && enable))
