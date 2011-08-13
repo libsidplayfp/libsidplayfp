@@ -184,12 +184,6 @@ protected:
         bool           irqLatch;
     } interrupts;
 
-    uint8_t        Debug_Data;
-    uint_least16_t Debug_EffectiveAddress;
-    uint_least8_t  Debug_Opcode;
-    uint_least16_t Debug_Operand;
-    uint_least16_t Debug_ProgramCounter;
-
 protected:
     void        clock            (void);
     void        event            (void);
