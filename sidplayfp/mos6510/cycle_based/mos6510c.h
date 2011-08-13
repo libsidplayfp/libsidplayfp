@@ -227,7 +227,7 @@ protected:
     inline void PutEffAddrDataByte   (void);
     inline void PushLowPC            (void);
     inline void PushHighPC           (void);
-    inline void PushSR               (bool b_flag);
+    inline void PushSR               (const bool b_flag);
     inline void PushSR               (void);
     inline void PopLowPC             (void);
     inline void PopHighPC            (void);
@@ -253,7 +253,7 @@ protected:
     inline void bit_instr     (void);
     inline void bmi_instr     (void);
     inline void bne_instr     (void);
-    inline void branch_instr  (bool condition);
+    inline void branch_instr  (const bool condition);
     inline void bpl_instr     (void);
     inline void brk_instr     (void);
     inline void bvc_instr     (void);
@@ -326,8 +326,8 @@ public:
     virtual void reset     (void);
     virtual void credits   (char *str);
     virtual void DumpState (void);
-    void         debug     (bool enable, FILE *out);
-    void         aecSignal (bool state);
+    void         debug     (const bool enable, FILE *out);
+    void         aecSignal (const bool state);
 
     // Non-standard functions
     virtual void triggerRST (void);

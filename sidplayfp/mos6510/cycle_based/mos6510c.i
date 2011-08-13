@@ -274,7 +274,7 @@ void MOS6510::aecSignal (bool state)
 
 
 // Push P on stack, decrement S
-void MOS6510::PushSR (bool b_flag)
+void MOS6510::PushSR (const bool b_flag)
 {
     uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
@@ -1127,7 +1127,7 @@ void MOS6510::asla_instr (void)
     clock ();
 }
 
-void MOS6510::branch_instr (bool condition)
+void MOS6510::branch_instr (const bool condition)
 {
     if (condition)
     {
