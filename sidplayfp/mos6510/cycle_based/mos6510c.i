@@ -514,8 +514,11 @@ void MOS6510::NextInstr (void)
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 
-// Fetch opcode, increment PC
-// Addressing Modes: All
+/**
+* Fetch opcode, increment PC<BR>
+*
+* Addressing Modes: All
+*/
 void MOS6510::FetchOpcode (void)
 {   // On new instruction all interrupt delays are reset
     interrupts.irqLatch = false;
@@ -542,13 +545,18 @@ void MOS6510::FetchDataByte (void)
     Register_ProgramCounter++;
 }
 
-// Fetch low address byte, increment PC
-/* Addressing Modes:    Stack Manipulation
-                        Absolute
-                        Zero Page
-                        Zerp Page Indexed
-                        Absolute Indexed
-                        Absolute Indirect
+/**
+* Fetch low address byte, increment PC<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Stack Manipulation
+* <LI>Absolute
+* <LI>Zero Page
+* <LI>Zero Page Indexed
+* <LI>Absolute Indexed
+* <LI>Absolute Indirect
+* </UL>
 */
 void MOS6510::FetchLowAddr (void)
 {
@@ -556,25 +564,44 @@ void MOS6510::FetchLowAddr (void)
     Register_ProgramCounter++;
 }
 
-// Read from address, add index register X to it
-// Addressing Modes:    Zero Page Indexed
+/**
+* Read from address, add index register X to it<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Zero Page Indexed
+* </UL>
+*/
 void MOS6510::FetchLowAddrX (void)
 {
     FetchLowAddr ();
     Cycle_EffectiveAddress = (Cycle_EffectiveAddress + Register_X) & 0xFF;
 }
 
-// Read from address, add index register Y to it
-// Addressing Modes:    Zero Page Indexed
+/**
+* Read from address, add index register Y to it<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Zero Page Indexed
+* </UL>
+*/
 void MOS6510::FetchLowAddrY (void)
 {
     FetchLowAddr ();
     Cycle_EffectiveAddress = (Cycle_EffectiveAddress + Register_Y) & 0xFF;
 }
 
-// Fetch high address byte, increment PC (Absoulte Addressing)
-// Low byte must have been obtained first!
-// Addressing Modes:    Absolute
+/**
+* Fetch high address byte, increment PC (Absolute Addressing)<BR>
+*
+* Low byte must have been obtained first!<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Absolute
+* </UL>
+*/
 void MOS6510::FetchHighAddr (void)
 {   // Get the high byte of an address from memory
     endian_16hi8 (Cycle_EffectiveAddress, envReadMemByte (endian_32lo16 (Register_ProgramCounter)));
@@ -584,9 +611,16 @@ void MOS6510::FetchHighAddr (void)
     endian_16hi8 (Instr_Operand, endian_16hi8 (Cycle_EffectiveAddress));
 }
 
-// Fetch high byte of address, add index register X to low address byte,
-// increment PC
-// Addressing Modes:    Absolute Indexed
+/**
+* Fetch high byte of address, add index register X to low address byte,<BR>
+*
+* increment PC<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Absolute Indexed
+* </UL>
+*/
 void MOS6510::FetchHighAddrX (void)
 {
     // Rev 1.05 (saw) - Call base Function
@@ -606,9 +640,16 @@ void MOS6510::FetchHighAddrX2 (void)
     Cycle_EffectiveAddress += Register_X;
 }
 
-// Fetch high byte of address, add index register Y to low address byte,
-// increment PC
-// Addressing Modes:    Absolute Indexed
+/**
+* Fetch high byte of address, add index register Y to low address byte,<BR>
+*
+* increment PC<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Absolute Indexed
+* </UL>
+*/
 void MOS6510::FetchHighAddrY (void)
 {
     // Rev 1.05 (saw) - Call base Function
@@ -628,9 +669,14 @@ void MOS6510::FetchHighAddrY2 (void)
     Cycle_EffectiveAddress += Register_Y;
 }
 
-// Fetch pointer address low, increment PC
-/* Addressing Modes:    Absolute Indirect
-                        Indirect indexed (post Y)
+/**
+* Fetch pointer address low, increment PC<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Absolute Indirect
+* <LI>Indirect indexed (post Y)
+* </UL>
 */
 void MOS6510::FetchLowPointer (void)
 {
@@ -649,8 +695,14 @@ void MOS6510::FetchLowPointerX (void)
     Cycle_Pointer = (Cycle_Pointer + Register_X) & 0xFF;
 }
 
-// Fetch pointer address high, increment PC
-// Addressing Modes:    Absolute Indirect
+/**
+* Fetch pointer address high, increment PC<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Absolute Indirect
+* </UL>
+*/
 void MOS6510::FetchHighPointer (void)
 {
     endian_16hi8 (Cycle_Pointer, envReadMemByte (endian_32lo16 (Register_ProgramCounter)));
@@ -660,19 +712,29 @@ void MOS6510::FetchHighPointer (void)
     endian_16hi8 (Instr_Operand, endian_16hi8 (Cycle_Pointer));
 }
 
-// Fetch effective address low
-/* Addressing Modes:    Indirect
-                        Indexed Indirect (pre X)
-                        Indirect indexed (post Y)
+/**
+* Fetch effective address low<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Indirect
+* <LI>Indexed Indirect (pre X)
+* <LI>Indirect indexed (post Y)
+* </UL>
 */
 void MOS6510::FetchLowEffAddr (void)
 {
     Cycle_EffectiveAddress = envReadMemDataByte (Cycle_Pointer);
 }
 
-// Fetch effective address high
-/* Addressing Modes:    Indirect
-                        Indexed Indirect (pre X)
+/**
+* Fetch effective address high<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Indirect
+* <LI>Indexed Indirect (pre X)
+* </UL>
 */
 void MOS6510::FetchHighEffAddr (void)
 {   // Rev 1.03 (Mike) - Extra +1 removed
@@ -680,8 +742,14 @@ void MOS6510::FetchHighEffAddr (void)
     endian_16hi8 (Cycle_EffectiveAddress, envReadMemDataByte (Cycle_Pointer));
 }
 
-// Fetch effective address high, add Y to low byte of effective address
-// Addressing Modes:    Indirect indexed (post Y)
+/**
+* Fetch effective address high, add Y to low byte of effective address<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Indirect indexed (post Y)
+* <UL>
+*/
 void MOS6510::FetchHighEffAddrY (void)
 {
     // Rev 1.05 (saw) - Call base Function
@@ -719,7 +787,9 @@ void MOS6510::PutEffAddrDataByte (void)
     envWriteMemByte (Cycle_EffectiveAddress, Cycle_Data);
 }
 
-// Push Program Counter Low Byte on stack, decrement S
+/**
+* Push Program Counter Low Byte on stack, decrement S
+*/
 void MOS6510::PushLowPC (void)
 {
     uint_least16_t addr = Register_StackPointer;
@@ -728,7 +798,9 @@ void MOS6510::PushLowPC (void)
     Register_StackPointer--;
 }
 
-// Push Program Counter High Byte on stack, decrement S
+/**
+* Push Program Counter High Byte on stack, decrement S
+*/
 void MOS6510::PushHighPC (void)
 {
     uint_least16_t addr = Register_StackPointer;
@@ -737,7 +809,9 @@ void MOS6510::PushHighPC (void)
     Register_StackPointer--;
 }
 
-// Increment stack and pull program counter low byte from stack,
+/**
+* Increment stack and pull program counter low byte from stack.
+*/
 void MOS6510::PopLowPC (void)
 {
     Register_StackPointer++;
@@ -746,7 +820,9 @@ void MOS6510::PopLowPC (void)
     endian_16lo8 (Cycle_EffectiveAddress, envReadMemDataByte (addr));
 }
 
-// Increment stack and pull program counter high byte from stack,
+/**
+* Increment stack and pull program counter high byte from stack.
+*/
 void MOS6510::PopHighPC (void)
 {
     Register_StackPointer++;
@@ -1599,11 +1675,14 @@ void MOS6510::tas_instr (void)
 
 #endif // X86
 
-
 //-------------------------------------------------------------------------//
-// Initialise and create CPU Chip                                          //
 
-//MOS6510::MOS6510 (model_t _model, const char *id)
+/**
+* Create new CPU emu
+*
+* @param context
+*            The Event Context
+*/
 MOS6510::MOS6510 (EventContext *context)
 :Event("CPU"),
  m_fdbg(stdout),

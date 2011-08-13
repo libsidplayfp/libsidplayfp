@@ -114,7 +114,9 @@
 #include "sidplayfp/sidtypes.h"
 #include "sidplayfp/sidendian.h"
 
-
+/** @internal
+* MOS6510
+*/
 class MOS6510: public C64Environment, public Event
 {
 protected:
@@ -126,6 +128,7 @@ protected:
     FILE *m_fdbg;
 
     bool dodump;
+    /** Our event context copy. */
     EventContext &eventContext;
 
     struct ProcessorCycle
@@ -148,6 +151,8 @@ protected:
 
     struct ProcessorCycle       fetchCycle;
     struct ProcessorCycle      *procCycle;
+
+    /** Table of CPU opcode implementations */
     struct ProcessorOperations  instrTable[0x100];
     struct ProcessorOperations  interruptTable[3];
     struct ProcessorOperations *instrCurrent;
@@ -156,7 +161,7 @@ protected:
     int_least8_t   lastAddrCycle;
     int_least8_t   cycleCount;
 
-    // Pointers to the current instruction cycle
+    /** Data regarding current instruction */
     uint_least16_t Cycle_EffectiveAddress;
     uint8_t        Cycle_Data;
     uint_least16_t Cycle_Pointer;
@@ -171,9 +176,11 @@ protected:
     uint_least8_t  Register_v_Flag;
     uint_least8_t  Register_z_Flag;
     uint_least16_t Register_StackPointer;
+
+    /** Debug info */
     uint_least16_t Instr_Operand;
 
-    // Interrupts
+    /** Interrupts */
     struct
     {
         uint_least8_t  pending;
@@ -188,6 +195,7 @@ protected:
     void        clock            (void);
     void        event            (void);
     void        Initialise       (void);
+
     // Declare Interrupt Routines
     inline void RSTRequest       (void);
     inline void RST1Request      (void);
@@ -330,9 +338,12 @@ public:
     void         clearIRQ   (void);
 };
 
-
 //-------------------------------------------------------------------------//
-// Emulate One Complete Cycle                                              //
+
+/**
+* Emulate One Complete Cycle. Either execute CPU instruction or,
+* if AEC goes low and we are doing a read operation, stall the CPU.
+*/
 inline void MOS6510::clock (void)
 {
     int_least8_t i = cycleCount++;
