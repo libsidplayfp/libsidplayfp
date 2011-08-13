@@ -1,16 +1,26 @@
-0.2.0 2011-06-02
-* Update reSID to the 1.0rc1 version (see the NEWS file in the resid dir)
-* Ported Dag Lem's R-2R ladder network emulation from Jsidplay2 into reSIDfp
+0.2.0 2011-08-13
+* ported reSIDfp engine from jsidplay2 featuring two pass resampler
+  and triangular dithering and new filter model based on reSID's one
+* improved CIA emulation, fixes a bunch of tunes with digi samples
+* few fixes to the 6510 core based on Lorenz testuite
+* added support for PSIDv3 tunes
+* Updated reSID to the 1.0rc1 version (see the NEWS file in the resid dir)
 * Added version defines
 
 API changes:
+
+deprecated method filter(const sid_filter_t *filter) from reSID builder
+deprecated method filter(const sid_filterfp_t *filter) from reSIDfp builder
 
 added method bias(const double dac_bias) to the reSID builder
 The bias is given in millivolts, and a maximum reasonable control range is
 approximately -500 to 500 (Actually from testing the value seems to be
 in volts so dac_bias value should be in the range -0.5 - 0.5)
 
-the reSID builder's filter(const sid_filter_t *filter) method does nothing
+added methods filter6581Curve(const double filterCurve) which sets the filter
+curve for 6581 chip filter in a range from 0.0 (light) to 1.0 (dark)
+(default 0.5) and filter8580Curve(const double filterCurve) which sets the
+filter frequency for 8580 chip (default 12500)
 
 SidDatabase.h does not include SidTuneMod.h anymore
 
