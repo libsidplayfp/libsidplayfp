@@ -249,7 +249,7 @@ void SID6510::reset ()
 // interrupt will wake up the processor
 void SID6510::sleep ()
 {   // Simulate a delay for JMPw
-    m_delayClk = m_stealingClk = eventContext.getTime (m_phase);
+    m_delayClk = m_stealingClk = eventContext.getTime (EVENT_CLOCK_PHI2);
     procCycle  = &delayCycle;
     cycleCount = 0;
     m_sleeping = !(interrupts.irqRequest || interrupts.pending);
@@ -383,8 +383,8 @@ void SID6510::sid_illegal (void)
 
 void SID6510::sid_delay (void)
 {
-    event_clock_t stolen  = eventContext.getTime (m_stealingClk, m_phase);
-    event_clock_t delayed = eventContext.getTime (m_delayClk, m_phase);
+    event_clock_t stolen  = eventContext.getTime (m_stealingClk, EVENT_CLOCK_PHI2);
+    event_clock_t delayed = eventContext.getTime (m_delayClk, EVENT_CLOCK_PHI2);
 
     // Check for stealing.  The relative clock cycle
     // differences are compared here rather than the
@@ -409,7 +409,7 @@ void SID6510::sid_delay (void)
             if (interruptPending ())
                 return;
         }
-        schedule (eventContext, 3 - cycle, m_phase);
+        schedule (eventContext, 3 - cycle, EVENT_CLOCK_PHI2);
     }
 }
 
@@ -423,7 +423,7 @@ void SID6510::triggerRST (void)
     if (m_sleeping)
     {
         m_sleeping = false;
-        schedule (eventContext, eventContext.phase() == m_phase, m_phase);
+        schedule (eventContext, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
     }
 }
 
@@ -435,7 +435,7 @@ void SID6510::triggerNMI (void)
         if (m_sleeping)
         {
             m_sleeping = false;
-            schedule (eventContext, eventContext.phase() == m_phase, m_phase);
+            schedule (eventContext, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
         }
     }
 }
@@ -460,7 +460,7 @@ void SID6510::triggerIRQ (void)
         {   // Simulate busy loop
             m_sleeping = !(interrupts.irqRequest || interrupts.pending);
             if (!m_sleeping)
-                schedule (eventContext, eventContext.phase() == m_phase, m_phase);
+                schedule (eventContext, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
         }
     }
 }

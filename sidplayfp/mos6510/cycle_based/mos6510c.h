@@ -127,8 +127,6 @@ protected:
 
     bool dodump;
     EventContext &eventContext;
-    event_phase_t m_phase;    // Clock phase in use by the processor
-    event_phase_t m_extPhase; // Clock phase when external events appear
 
     struct ProcessorCycle
     {
@@ -352,7 +350,7 @@ inline void MOS6510::clock (void)
     else if (!m_blocked)
     {
         m_blocked     = true;
-        m_stealingClk = eventContext.getTime (m_phase);
+        m_stealingClk = eventContext.getTime (EVENT_CLOCK_PHI2);
     }
     cycleCount--;
     cancel ();
@@ -360,7 +358,7 @@ inline void MOS6510::clock (void)
 
 inline void MOS6510::event (void)
 {
-    schedule (eventContext, 1, m_phase);
+    schedule (eventContext, 1, EVENT_CLOCK_PHI2);
     clock ();
 }
 
