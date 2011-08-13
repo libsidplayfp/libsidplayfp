@@ -176,6 +176,14 @@ int Player::config (const sid2_config_t &cfg)
         goto Player_configure_error;
     }
 
+    // SID emulation setup (must be performed before the
+    // environment setup call)
+    if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0) {
+        m_errorString = cfg.sidEmulation->error();
+        m_cfg.sidEmulation = NULL;
+        goto Player_configure_restore;
+    }
+
     // Only do these if we have a loaded tune
     if (m_tune)
     {
@@ -216,12 +224,6 @@ int Player::config (const sid2_config_t &cfg)
                 goto Player_configure_error;
              }
 
-            // SID emulation setup
-            if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0) {
-                m_errorString = cfg.sidEmulation->error();
-                m_cfg.sidEmulation = NULL;
-                goto Player_configure_restore;
-            }
             /* inform ReSID of the desired sampling rate */
             for (int i = 0; i < SID2_MAX_SIDS; i += 1) {
                 sid[i]->sampling((long)cpuFreq, cfg.frequency, cfg.samplingMethod, false);
@@ -262,7 +264,7 @@ int Player::config (const sid2_config_t &cfg)
     // Update Configuration
     m_cfg = cfg;
 
-return 0;
+    return 0;
 
 Player_configure_restore:
     // Try restoring old configuration
