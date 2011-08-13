@@ -335,22 +335,22 @@ const double Player::VIC_FREQ_PAL    = 50.0;
 const double Player::VIC_FREQ_NTSC   = 60.0;
 
 // These texts are used to override the sidtune settings.
-const char  *Player::TXT_PAL_VBI        = "50 Hz VBI (PAL)";
-const char  *Player::TXT_PAL_VBI_FIXED  = "60 Hz VBI (PAL FIXED)";
-const char  *Player::TXT_PAL_CIA        = "CIA (PAL)";
-const char  *Player::TXT_PAL_UNKNOWN    = "UNKNOWN (PAL)";
-const char  *Player::TXT_NTSC_VBI       = "60 Hz VBI (NTSC)";
-const char  *Player::TXT_NTSC_VBI_FIXED = "50 Hz VBI (NTSC FIXED)";
-const char  *Player::TXT_NTSC_CIA       = "CIA (NTSC)";
-const char  *Player::TXT_NTSC_UNKNOWN   = "UNKNOWN (NTSC)";
-const char  *Player::TXT_NA             = "NA";
+const char  Player::TXT_PAL_VBI[]        = "50 Hz VBI (PAL)";
+const char  Player::TXT_PAL_VBI_FIXED[]  = "60 Hz VBI (PAL FIXED)";
+const char  Player::TXT_PAL_CIA[]        = "CIA (PAL)";
+const char  Player::TXT_PAL_UNKNOWN[]    = "UNKNOWN (PAL)";
+const char  Player::TXT_NTSC_VBI[]       = "60 Hz VBI (NTSC)";
+const char  Player::TXT_NTSC_VBI_FIXED[] = "50 Hz VBI (NTSC FIXED)";
+const char  Player::TXT_NTSC_CIA[]       = "CIA (NTSC)";
+const char  Player::TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
+const char  Player::TXT_NA[]             = "NA";
 
 // Error Strings
-const char  *Player::ERR_CONF_WHILST_ACTIVE    = "SIDPLAYER ERROR: Trying to configure player whilst active.";
-const char  *Player::ERR_UNSUPPORTED_FREQ      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
-const char  *Player::ERR_UNSUPPORTED_PRECISION = "SIDPLAYER ERROR: Unsupported sample precision.";
-const char  *Player::ERR_MEM_ALLOC             = "SIDPLAYER ERROR: Memory Allocation Failure.";
-const char  *Player::ERR_UNSUPPORTED_MODE      = "SIDPLAYER ERROR: Unsupported Environment Mode (Coming Soon).";
+const char  Player::ERR_CONF_WHILST_ACTIVE[]    = "SIDPLAYER ERROR: Trying to configure player whilst active.";
+const char  Player::ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
+const char  Player::ERR_UNSUPPORTED_PRECISION[] = "SIDPLAYER ERROR: Unsupported sample precision.";
+const char  Player::ERR_MEM_ALLOC[]             = "SIDPLAYER ERROR: Memory Allocation Failure.";
+const char  Player::ERR_UNSUPPORTED_MODE[]      = "SIDPLAYER ERROR: Unsupported Environment Mode (Coming Soon).";
 
 const char  *Player::credit[];
 

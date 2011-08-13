@@ -225,25 +225,25 @@ private:
     static const double VIC_FREQ_PAL;
     static const double VIC_FREQ_NTSC;
 
-    static const char  *TXT_PAL_VBI;
-    static const char  *TXT_PAL_VBI_FIXED;
-    static const char  *TXT_PAL_CIA;
-    static const char  *TXT_PAL_UNKNOWN;
-    static const char  *TXT_NTSC_VBI;
-    static const char  *TXT_NTSC_VBI_FIXED;
-    static const char  *TXT_NTSC_CIA;
-    static const char  *TXT_NTSC_UNKNOWN;
-    static const char  *TXT_NA;
+    static const char  TXT_PAL_VBI[];
+    static const char  TXT_PAL_VBI_FIXED[];
+    static const char  TXT_PAL_CIA[];
+    static const char  TXT_PAL_UNKNOWN[];
+    static const char  TXT_NTSC_VBI[];
+    static const char  TXT_NTSC_VBI_FIXED[];
+    static const char  TXT_NTSC_CIA[];
+    static const char  TXT_NTSC_UNKNOWN[];
+    static const char  TXT_NA[];
 
-    static const char  *ERR_CONF_WHILST_ACTIVE;
-    static const char  *ERR_UNSUPPORTED_FREQ;
-    static const char  *ERR_UNSUPPORTED_PRECISION;
-    static const char  *ERR_MEM_ALLOC;
-    static const char  *ERR_UNSUPPORTED_MODE;
+    static const char  ERR_CONF_WHILST_ACTIVE[];
+    static const char  ERR_UNSUPPORTED_FREQ[];
+    static const char  ERR_UNSUPPORTED_PRECISION[];
+    static const char  ERR_MEM_ALLOC[];
+    static const char  ERR_UNSUPPORTED_MODE[];
     static const char  *credit[10]; // 10 credits max
 
-    static const char  *ERR_PSIDDRV_NO_SPACE; 
-    static const char  *ERR_PSIDDRV_RELOC;
+    static const char  ERR_PSIDDRV_NO_SPACE[];
+    static const char  ERR_PSIDDRV_RELOC[];
 
     EventScheduler m_scheduler;
 
