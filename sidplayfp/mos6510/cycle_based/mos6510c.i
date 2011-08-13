@@ -528,7 +528,6 @@ void MOS6510::FetchOpcode (void)
     const uint_least8_t instrOpcode   = envReadMemByte (instrStartPC);
     // Convert opcode to pointer in instruction table
     instrCurrent  = &instrTable[instrOpcode];
-    Instr_Operand = 0;
     procCycle     = instrCurrent->cycle;
     cycleCount    = 0;
 }
@@ -541,9 +540,6 @@ void MOS6510::FetchDataByte (void)
 {   // Get data byte from memory
     Cycle_Data = envReadMemByte (endian_32lo16 (Register_ProgramCounter));
     Register_ProgramCounter++;
-
-    // Nextline used for Debug
-    Instr_Operand = (uint_least16_t) Cycle_Data;
 }
 
 // Fetch low address byte, increment PC
@@ -558,9 +554,6 @@ void MOS6510::FetchLowAddr (void)
 {
     Cycle_EffectiveAddress = envReadMemByte (endian_32lo16 (Register_ProgramCounter));
     Register_ProgramCounter++;
-
-    // Nextline used for Debug
-    Instr_Operand = Cycle_EffectiveAddress;
 }
 
 // Read from address, add index register X to it
@@ -1132,10 +1125,10 @@ void MOS6510::branch_instr (const bool condition)
     if (condition)
     {
         const uint8_t oldPage = endian_32hi8 (Register_ProgramCounter);
-        Register_ProgramCounter += (int8_t) Cycle_Data;
+        Cycle_EffectiveAddress = Register_ProgramCounter + (int8_t) Cycle_Data;
 
         // Check for page boundary crossing
-        if (endian_32hi8 (Register_ProgramCounter) == oldPage)
+        if (endian_16hi8 (Cycle_EffectiveAddress) == oldPage)
         {
             // Page boundary not crossed.
             // This causes pending interrupts to be delayed by a cycle
@@ -1144,6 +1137,7 @@ void MOS6510::branch_instr (const bool condition)
             // Also skip last instruction cycle
             cycleCount ++;
         }
+        Register_ProgramCounter = Cycle_EffectiveAddress;
     }
     else
     {
