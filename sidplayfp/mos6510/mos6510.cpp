@@ -43,7 +43,7 @@
  *  Speed optimisation update.
  *
  *  Revision 1.5  2001/02/13 23:01:10  s_a_white
- *  envReadMemDataByte now used for debugging.
+ *  env->envReadMemDataByte now used for debugging.
  *
  *  Revision 1.4  2000/12/11 19:03:16  s_a_white
  *  AC99 Update.
@@ -92,8 +92,8 @@ void MOS6510::DumpState (void)
     fprintf(m_fdbg, "%02x ",   Register_X);
     fprintf(m_fdbg, "%02x ",   Register_Y);
     fprintf(m_fdbg, "01%02x ", endian_16lo8 (Register_StackPointer));
-    fprintf(m_fdbg, "%02x ",   envReadMemDataByte (0));
-    fprintf(m_fdbg, "%02x ",   envReadMemDataByte (1));
+    fprintf(m_fdbg, "%02x ",   env->envReadMemDataByte (0));
+    fprintf(m_fdbg, "%02x ",   env->envReadMemDataByte (1));
 
     if (getFlagN()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
     if (getFlagV()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
@@ -104,7 +104,7 @@ void MOS6510::DumpState (void)
     if (getFlagZ()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
     if (getFlagC()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
 
-    int opcode  = envReadMemDataByte(instrStartPC);
+    const int opcode  = env->envReadMemDataByte(instrStartPC);
 
     fprintf(m_fdbg, "  %02x ", opcode);
 

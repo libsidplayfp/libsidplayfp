@@ -351,14 +351,15 @@ private:
     // Environment Function entry Points
     void           envReset           (bool safe);
     void           envReset           (void) { envReset (true); }
-    inline uint8_t envReadMemByte     (uint_least16_t addr);
-    inline void    envWriteMemByte    (uint_least16_t addr, uint8_t data);
-    bool           envCheckBankJump   (uint_least16_t addr);
-    inline uint8_t envReadMemDataByte (uint_least16_t addr);
+    inline uint8_t envReadRomByte     (const uint_least16_t addr);
+    inline uint8_t envReadMemByte     (const uint_least16_t addr);
+    inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
+    bool           envCheckBankJump   (const uint_least16_t addr);
+    inline uint8_t envReadMemDataByte (const uint_least16_t addr);
     inline void    envSleep           (void);
 
 #ifdef PC64_TESTSUITE
-    void   envLoadFile (char *file)
+    void   envLoadFile (const char *file)
     {
         char name[0x100] = PC64_TESTSUITE;
         strcat (name, file);
@@ -372,7 +373,7 @@ private:
     // Rev 2.0.3 Added - New Mixer Routines
     uint_least32_t (Player::*output) (char *buffer);
 
-    inline void interruptIRQ (bool state);
+    inline void interruptIRQ (const bool state);
     inline void interruptNMI (void);
     inline void interruptRST (void);
     void signalAEC (bool state) { cpu.aecSignal (state); }
@@ -407,17 +408,22 @@ public:
 };
 
 
-uint8_t Player::envReadMemByte (uint_least16_t addr)
+uint8_t Player::envReadRomByte (const uint_least16_t addr)
+{
+    return m_rom[addr];
+}
+
+uint8_t Player::envReadMemByte (const uint_least16_t addr)
 {   // Read from plain only to prevent execution of rom code
     return (this->*(m_readMemByte)) (addr);
 }
 
-void Player::envWriteMemByte (uint_least16_t addr, uint8_t data)
+void Player::envWriteMemByte (const uint_least16_t addr, uint8_t data)
 {   // Writes must be passed to env version.
     (this->*(m_writeMemByte)) (addr, data);
 }
 
-uint8_t Player::envReadMemDataByte (uint_least16_t addr)
+uint8_t Player::envReadMemDataByte (const uint_least16_t addr)
 {   // Read from plain only to prevent execution of rom code
     return (this->*(m_readMemDataByte)) (addr);
 }
@@ -431,7 +437,7 @@ void Player::envSleep (void)
     }
 }
 
-void Player::interruptIRQ (bool state)
+void Player::interruptIRQ (const bool state)
 {
     if (state)
     {

@@ -117,9 +117,11 @@
 /** @internal
 * MOS6510
 */
-class MOS6510: public C64Environment, public Event
+class MOS6510: public Event
 {
 protected:
+    C64Environment *env;
+
     // External signals
     bool aec; /* Address Controller, blocks reads */
     bool m_blocked;
@@ -330,6 +332,7 @@ public:
     virtual void DumpState (void);
     void         debug     (const bool enable, FILE *out);
     void         aecSignal (const bool state);
+    void         setEnvironment(C64Environment *env) { this->env = env; }
 
     // Non-standard functions
     virtual void triggerRST (void);

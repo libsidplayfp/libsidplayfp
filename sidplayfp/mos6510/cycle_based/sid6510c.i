@@ -253,7 +253,7 @@ void SID6510::sleep ()
     procCycle  = &delayCycle;
     cycleCount = 0;
     m_sleeping = !(interrupts.irqRequest || interrupts.pending);
-    envSleep ();
+    env->envSleep ();
 }
 
 void SID6510::FetchOpcode (void)
@@ -284,7 +284,7 @@ void SID6510::FetchOpcode (void)
         if (!timeout)
         {
             fprintf   (m_fdbg, "\n\nINFINITE LOOP DETECTED *********************************\n");
-            envReset ();
+            env->envReset ();
         }
         sleep ();
         m_framelock = false;
@@ -325,7 +325,7 @@ void SID6510::sid_jmp (void)
         return;
     }
 
-    if (envCheckBankJump (Cycle_EffectiveAddress))
+    if (env->envCheckBankJump (Cycle_EffectiveAddress))
         jmp_instr ();
     else
         sid_rts   ();
