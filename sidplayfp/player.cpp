@@ -632,7 +632,7 @@ void Player::stop (void)
 
 //  Input: A 16-bit effective address
 // Output: A default bank-select value for $01.
-uint8_t Player::iomap (uint_least16_t addr)
+uint8_t Player::iomap (const uint_least16_t addr)
 {
     if (m_info.environment != sid2_envPS)
     {   // Force Real C64 Compatibility
@@ -655,19 +655,18 @@ uint8_t Player::iomap (uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-void Player::evalBankSelect (uint8_t data)
+void Player::evalBankSelect (const uint8_t data)
 {   // Determine new memory configuration.
     m_port.pr_out = data;
     m_port.pr_in  = (data & m_port.ddr) | (~m_port.ddr & (m_port.pr_in | 0x17) & 0xdf);
-    data     |= ~m_port.ddr;
-    data     &= 7;
-    isBasic   = ((data & 3) == 3);
-    isIO      = (data >  4);
-    isKernal  = ((data & 2) != 0);
-    isChar    = ((data ^ 4) > 4);
+    const uint8_t _data = (data | ~m_port.ddr) & 7;
+    isBasic   = ((_data & 3) == 3);
+    isIO      = (_data >  4);
+    isKernal  = ((_data & 2) != 0);
+    isChar    = ((_data ^ 4) > 4);
 }
 
-uint8_t Player::readMemByte_plain (uint_least16_t addr)
+uint8_t Player::readMemByte_plain (const uint_least16_t addr)
 {   // Bank Select Register Value DOES NOT get to ram
     if (addr > 1)
         return m_ram[addr];
@@ -676,7 +675,7 @@ uint8_t Player::readMemByte_plain (uint_least16_t addr)
     return m_port.ddr;
 }
 
-uint8_t Player::readMemByte_io (uint_least16_t addr)
+uint8_t Player::readMemByte_io (const uint_least16_t addr)
 {
     uint_least16_t tempAddr = (addr & 0xfc1f);
 
@@ -729,12 +728,12 @@ uint8_t Player::readMemByte_io (uint_least16_t addr)
     }
 
     {   // Read real sid for these
-        int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
+        const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
         return sid[i]->read (tempAddr & 0xff);
     }
 }
 
-uint8_t Player::readMemByte_sidplaytp(uint_least16_t addr)
+uint8_t Player::readMemByte_sidplaytp(const uint_least16_t addr)
 {
     if (addr < 0xD000)
         return readMemByte_plain (addr);
@@ -757,7 +756,7 @@ uint8_t Player::readMemByte_sidplaytp(uint_least16_t addr)
     }
 }
 
-uint8_t Player::readMemByte_sidplaybs (uint_least16_t addr)
+uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
 {
     if (addr < 0xA000)
         return readMemByte_plain (addr);
@@ -795,7 +794,7 @@ uint8_t Player::readMemByte_sidplaybs (uint_least16_t addr)
     }
 }
 
-void Player::writeMemByte_plain (uint_least16_t addr, uint8_t data)
+void Player::writeMemByte_plain (const uint_least16_t addr, const uint8_t data)
 {
     if (addr > 1)
         m_ram[addr] = data;
@@ -810,7 +809,7 @@ void Player::writeMemByte_plain (uint_least16_t addr, uint8_t data)
     }
 }
 
-void Player::writeMemByte_playsid (uint_least16_t addr, uint8_t data)
+void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data)
 {
     uint_least16_t tempAddr = (addr & 0xfc1f);
 
@@ -868,13 +867,13 @@ void Player::writeMemByte_playsid (uint_least16_t addr, uint8_t data)
         xsid.write16 (addr & 0x01ff, data);
     else // Mirrored SID.
     {
-        int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
+        const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
         // Convert address to that acceptable by resid
         sid[i]->write(tempAddr & 0xff, data);
     }
 }
 
-void Player::writeMemByte_sidplay (uint_least16_t addr, uint8_t data)
+void Player::writeMemByte_sidplay (const uint_least16_t addr, const uint8_t data)
 {
     if (addr < 0xA000)
         writeMemByte_plain (addr, data);
@@ -1059,7 +1058,7 @@ void Player::reset (void)
 
 // This resets the cpu once the program is loaded to begin
 // running. Also called when the emulation crashes
-void Player::envReset (bool safe)
+void Player::envReset (const bool safe)
 {
     if (safe)
     {   // Emulation crashed so run in safe mode
@@ -1113,7 +1112,7 @@ void Player::envReset (bool safe)
     xsid.suppress (true);
 }
 
-bool Player::envCheckBankJump (uint_least16_t addr)
+bool Player::envCheckBankJump (const uint_least16_t addr)
 {
     switch (m_info.environment)
     {
@@ -1228,7 +1227,7 @@ static const uint_least32_t crc32Table[0x100] =
     0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
 };
 
-void Player::sid2crc (uint8_t data)
+void Player::sid2crc (const uint8_t data)
 {
     if (m_sid2crcCount < m_cfg.sid2crcCount)
     {

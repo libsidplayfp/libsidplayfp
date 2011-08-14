@@ -35,12 +35,12 @@ public:
     c64env (EventContext *context)
         :m_context (*context) {}
     EventContext &context (void) const { return m_context; }
-    virtual void interruptIRQ (bool state) = 0;
+    virtual void interruptIRQ (const bool state) = 0;
     virtual void interruptNMI (void) = 0;
     virtual void interruptRST (void) = 0;
-    virtual void signalAEC    (bool state) = 0;
-    virtual uint8_t readMemRamByte (uint_least16_t addr) = 0;
-    virtual void sid2crc      (uint8_t data) = 0;
+    virtual void signalAEC    (const bool state) = 0;
+    virtual uint8_t readMemRamByte (const uint_least16_t addr) = 0;
+    virtual void sid2crc      (const uint8_t data) = 0;
     virtual void lightpen     () = 0;
 };
 

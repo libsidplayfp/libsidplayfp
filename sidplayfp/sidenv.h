@@ -43,7 +43,6 @@
 
 class C64Environment
 {
-
 public:
     // Eniviroment functions
     virtual void    envReset        (void) =0;

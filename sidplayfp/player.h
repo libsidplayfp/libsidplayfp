@@ -217,7 +217,7 @@
 
 SIDPLAY2_NAMESPACE_START
 
-class Player: private C64Environment, c64env
+class Player: public C64Environment, private c64env
 {
 private:
     static const double CLOCK_FREQ_NTSC;
@@ -307,13 +307,13 @@ private:
     bool   isBasic;
     bool   isIO;
     bool   isChar;
-    void   evalBankSelect (uint8_t data);
+    void   evalBankSelect (const uint8_t data);
     void   c64_initialise (void);
     // ------------------------
 
 private:
     float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
-                              bool forced);
+                              const bool forced);
     int       environment    (sid2_env_t env);
     void      fakeIRQ        (void);
     int       initialise     (void);
@@ -323,33 +323,33 @@ private:
     void      mileageCorrect (void);
     int       sidCreate      (sidbuilder *builder, sid2_model_t model,
                               sid2_model_t defaultModel);
-    void      sidSamples     (bool enable);
+    void      sidSamples     (const bool enable);
     void      reset          ();
-    uint8_t   iomap          (uint_least16_t addr);
-    sid2_model_t getModel(int sidModel,
+    uint8_t   iomap          (const uint_least16_t addr);
+    sid2_model_t getModel(const int sidModel,
                           sid2_model_t userModel,
                           sid2_model_t defaultModel);
 
-    uint8_t readMemByte_plain     (uint_least16_t addr);
-    uint8_t readMemByte_io        (uint_least16_t addr);
-    uint8_t readMemByte_sidplaytp (uint_least16_t addr);
-    uint8_t readMemByte_sidplaybs (uint_least16_t addr);
-    void    writeMemByte_plain    (uint_least16_t addr, uint8_t data);
-    void    writeMemByte_playsid  (uint_least16_t addr, uint8_t data);
-    void    writeMemByte_sidplay  (uint_least16_t addr, uint8_t data);
+    uint8_t readMemByte_plain     (const uint_least16_t addr);
+    uint8_t readMemByte_io        (const uint_least16_t addr);
+    uint8_t readMemByte_sidplaytp (const uint_least16_t addr);
+    uint8_t readMemByte_sidplaybs (const uint_least16_t addr);
+    void    writeMemByte_plain    (const uint_least16_t addr, const uint8_t data);
+    void    writeMemByte_playsid  (const uint_least16_t addr, const uint8_t data);
+    void    writeMemByte_sidplay  (const uint_least16_t addr, const uint8_t data);
 
     // Use pointers to please requirements of all the provided
     // environments.
-    uint8_t (Player::*m_readMemByte)    (uint_least16_t);
-    void    (Player::*m_writeMemByte)   (uint_least16_t, uint8_t);
-    uint8_t (Player::*m_readMemDataByte)(uint_least16_t);
+    uint8_t (Player::*m_readMemByte)    (const uint_least16_t);
+    void    (Player::*m_writeMemByte)   (const uint_least16_t, const uint8_t);
+    uint8_t (Player::*m_readMemDataByte)(const uint_least16_t);
 
-    uint8_t  readMemRamByte (uint_least16_t addr)
+    uint8_t  readMemRamByte (const uint_least16_t addr)
     {   return m_ram[addr]; }
-    void sid2crc (uint8_t data);
+    void sid2crc (const uint8_t data);
 
     // Environment Function entry Points
-    void           envReset           (bool safe);
+    void           envReset           (const bool safe);
     void           envReset           (void) { envReset (true); }
     inline uint8_t envReadRomByte     (const uint_least16_t addr);
     inline uint8_t envReadMemByte     (const uint_least16_t addr);
@@ -376,7 +376,7 @@ private:
     inline void interruptIRQ (const bool state);
     inline void interruptNMI (void);
     inline void interruptRST (void);
-    void signalAEC (bool state) { cpu.aecSignal (state); }
+    void signalAEC (const bool state) { cpu.aecSignal (state); }
     void lightpen  () { vic.lightpen (); }
 
     // PSID driver
