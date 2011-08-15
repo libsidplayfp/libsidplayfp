@@ -1079,11 +1079,6 @@ void MOS6510::xas_instr (void)
 }
 
 
-#ifdef X86
-#include "MOS6510\CYCLE_~1\X86.CPP"
-//#include "MOS6510\CYCLE_BASED\X86.CPP"
-#else
-
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 // Generic Binary Coded Decimal Correction                                 //
@@ -1672,8 +1667,6 @@ void MOS6510::tas_instr (void)
     uint_least16_t tmp = Register_StackPointer & (Cycle_EffectiveAddress + 1);
     Cycle_Data         = (signed) endian_16lo8 (tmp);
 }
-
-#endif // X86
 
 //-------------------------------------------------------------------------//
 
