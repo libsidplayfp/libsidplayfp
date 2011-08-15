@@ -1688,634 +1688,606 @@ MOS6510::MOS6510 (EventContext *context)
  m_fdbg(stdout),
  eventContext(*context)
 {
-    struct ProcessorOperations *instr;
-    uint8_t legalMode  = true;
-    uint8_t legalInstr = true;
-    uint    i, pass;
-
     //----------------------------------------------------------------------
     // Build up the processor instruction table
-    for (i = 0; i < 0x100; i++)
+    for (int i = 0; i < 0x100; i++)
     {
 #if MOS6510_DEBUG > 1
         printf ("Building Command %d[%02x]..", i, i);
 #endif
 
-        // Pass 1 allocates the memory, Pass 2 builds the instruction
-        instr     = &instrTable[i];
-        procCycle = 0;
+        struct ProcessorOperations *instr = &instrTable[i];
+        instr->opcode = i;
+        procCycle = instr->cycle;
 
-        for (pass = 0; pass < 2; pass++)
+        for (int j=0; j<8; j++) {
+            procCycle[j].nosteal = true;
+        }
+
+        typedef enum {WRITE = 0, READ = 1} AccessMode;
+        AccessMode access = WRITE;
+        cycleCount = 0;
+        bool legalMode  = true;
+        bool legalInstr = true;
+
+        switch (i)
         {
-            typedef enum {WRITE = 0, READ = 1} AccessMode;
-            AccessMode access = WRITE;
-            cycleCount = -1;
-            legalMode  = true;
-            legalInstr = true;
+        // Accumulator or Implied addressing
+        case ASLn: case CLCn: case CLDn: case CLIn: case CLVn:  case DEXn:
+        case DEYn: case INXn: case INYn: case LSRn: case NOPn_: case PHAn:
+        case PHPn: case PLAn: case PLPn: case ROLn: case RORn:
+        case SECn: case SEDn: case SEIn: case TAXn:  case TAYn:
+        case TSXn: case TXAn: case TXSn: case TYAn:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            switch (i)
-            {
-            // Accumulator or Implied addressing
-            case ASLn: case CLCn: case CLDn: case CLIn: case CLVn:  case DEXn:
-            case DEYn: case INXn: case INYn: case LSRn: case NOPn_: case PHAn:
-            case PHPn: case PLAn: case PLPn: case ROLn: case RORn:
-            case SECn: case SEDn: case SEIn: case TAXn:  case TAYn:
-            case TSXn: case TXAn: case TXSn: case TYAn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Immediate and Relative Addressing Mode Handler
+        case ADCb: case ANDb:  case ANCb_: case ANEb: case ASRb: case ARRb:
+        case BCCr: case BCSr:  case BEQr:  case BMIr: case BNEr: case BPLr:
+        case BRKn: case BVCr:  case BVSr:  case CMPb: case CPXb: case CPYb:
+        case EORb: case LDAb:  case LDXb:  case LDYb: case LXAb: case NOPb_:
+        case ORAb: case SBCb_: case SBXb:  case RTIn: case RTSn:
+            procCycle[cycleCount++].func = &MOS6510::FetchDataByte;
+        break;
 
-            // Immediate and Relative Addressing Mode Handler
-            case ADCb: case ANDb:  case ANCb_: case ANEb: case ASRb: case ARRb:
-            case BCCr: case BCSr:  case BEQr:  case BMIr: case BNEr: case BPLr:
-            case BRKn: case BVCr:  case BVSr:  case CMPb: case CPXb: case CPYb:
-            case EORb: case LDAb:  case LDXb:  case LDYb: case LXAb: case NOPb_:
-            case ORAb: case SBCb_: case SBXb:  case RTIn: case RTSn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchDataByte;
-            break;
+        // Zero Page Addressing Mode Handler - Read & RMW
+        case ADCz:  case ANDz: case BITz: case CMPz: case CPXz: case CPYz:
+        case EORz:  case LAXz: case LDAz: case LDXz: case LDYz: case ORAz:
+        case NOPz_: case SBCz:
+        case ASLz: case DCPz: case DECz: case INCz: case ISBz: case LSRz:
+        case ROLz: case RORz: case SREz: case SLOz: case RLAz: case RRAz:
+            access = READ;
+        case SAXz: case STAz: case STXz: case STYz:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
+        break;
 
-            // Zero Page Addressing Mode Handler - Read & RMW
-            case ADCz:  case ANDz: case BITz: case CMPz: case CPXz: case CPYz:
-            case EORz:  case LAXz: case LDAz: case LDXz: case LDYz: case ORAz:
-            case NOPz_: case SBCz:
-            case ASLz: case DCPz: case DECz: case INCz: case ISBz: case LSRz:
-            case ROLz: case RORz: case SREz: case SLOz: case RLAz: case RRAz:
-                access = READ;
-            case SAXz: case STAz: case STXz: case STYz:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
-            break;
+        // Zero Page with X Offset Addressing Mode Handler
+        case ADCzx: case ANDzx:  case CMPzx: case EORzx: case LDAzx: case LDYzx:
+        case NOPzx_: case ORAzx: case SBCzx:
+        case ASLzx: case DCPzx: case DECzx: case INCzx: case ISBzx: case LSRzx:
+        case RLAzx:    case ROLzx: case RORzx: case RRAzx: case SLOzx: case SREzx:
+            access = READ;
+        case STAzx: case STYzx:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddrX;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            // Zero Page with X Offset Addressing Mode Handler
-            case ADCzx: case ANDzx:  case CMPzx: case EORzx: case LDAzx: case LDYzx:
-            case NOPzx_: case ORAzx: case SBCzx:
-            case ASLzx: case DCPzx: case DECzx: case INCzx: case ISBzx: case LSRzx:
-            case RLAzx:    case ROLzx: case RORzx: case RRAzx: case SLOzx: case SREzx:
-                access = READ;
-            case STAzx: case STYzx:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddrX;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Zero Page with Y Offset Addressing Mode Handler
+        case LDXzy: case LAXzy:
+            access = READ;
+        case STXzy: case SAXzy:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddrY;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            // Zero Page with Y Offset Addressing Mode Handler
-            case LDXzy: case LAXzy:
-                access = READ;
-            case STXzy: case SAXzy:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddrY;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Absolute Addressing Mode Handler
+        case ADCa: case ANDa: case BITa: case CMPa: case CPXa: case CPYa:
+        case EORa: case LAXa: case LDAa: case LDXa: case LDYa: case NOPa:
+        case ORAa: case SBCa:
+        case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa:
+        case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
+            access = READ;
+        case JMPw: case JSRw: case SAXa: case STAa: case STXa: case STYa:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddr;
+        break;
 
-            // Absolute Addressing Mode Handler
-            case ADCa: case ANDa: case BITa: case CMPa: case CPXa: case CPYa:
-            case EORa: case LAXa: case LDAa: case LDXa: case LDYa: case NOPa:
-            case ORAa: case SBCa:
-            case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa:
-            case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
-                access = READ;
-            case JMPw: case JSRw: case SAXa: case STAa: case STXa: case STYa:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighAddr;
-            break;
+        // Absolute With X Offset Addressing Mode Handler (Read)
+        case ADCax: case ANDax:  case CMPax: case EORax: case LDAax:
+        case LDYax: case NOPax_: case ORAax: case SBCax:
+            access = READ;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrX;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            // Absolute With X Offset Addressing Mode Handler (Read)
-            case ADCax: case ANDax:  case CMPax: case EORax: case LDAax:
-            case LDYax: case NOPax_: case ORAax: case SBCax:
-                access = READ;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighAddrX;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Absolute X (No page crossing handled)
+        case ASLax: case DCPax: case DECax: case INCax: case ISBax:
+        case LSRax: case RLAax: case ROLax: case RORax: case RRAax:
+        case SLOax: case SREax:
+            access = READ;
+        case SHYax: case STAax:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrX2;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            // Absolute X (No page crossing handled)
-            case ASLax: case DCPax: case DECax: case INCax: case ISBax:
-            case LSRax: case RLAax: case ROLax: case RORax: case RRAax:
-            case SLOax: case SREax:
-                access = READ;
-            case SHYax: case STAax:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighAddrX2;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Absolute With Y Offset Addresing Mode Handler (Read)
+        case ADCay: case ANDay: case CMPay: case EORay: case LASay:
+        case LAXay: case LDAay: case LDXay: case ORAay: case SBCay:
+            access = READ;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrY;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            // Absolute With Y Offset Addresing Mode Handler (Read)
-            case ADCay: case ANDay: case CMPay: case EORay: case LASay:
-            case LAXay: case LDAay: case LDXay: case ORAay: case SBCay:
-                access = READ;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighAddrY;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Absolute Y (No page crossing handled)
+        case DCPay: case ISBay: case RLAay: case RRAay: case SLOay:
+        case SREay:
+            access = READ;
+        case SHAay: case SHSay: case SHXay: case STAay:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrY2;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            // Absolute Y (No page crossing handled)
-            case DCPay: case ISBay: case RLAay: case RRAay: case SLOay:
-            case SREay:
-                access = READ;
-            case SHAay: case SHSay: case SHXay: case STAay:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighAddrY2;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Absolute Indirect Addressing Mode Handler
+        case JMPi:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowPointer;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighPointer;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowEffAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddr;
+        break;
 
-            // Absolute Indirect Addressing Mode Handler
-            case JMPi:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowPointer;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighPointer;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowEffAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighEffAddr;
-            break;
+        // Indexed with X Preinc Addressing Mode Handler
+        case ADCix: case ANDix: case CMPix: case EORix: case LAXix: case LDAix:
+        case ORAix: case SBCix:
+        case DCPix: case ISBix: case SLOix: case SREix: case RLAix: case RRAix:
+            access = READ;
+        case SAXix: case STAix:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowPointer;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowPointerX;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowEffAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddr;
 
-            // Indexed with X Preinc Addressing Mode Handler
-            case ADCix: case ANDix: case CMPix: case EORix: case LAXix: case LDAix:
-            case ORAix: case SBCix:
-            case DCPix: case ISBix: case SLOix: case SREix: case RLAix: case RRAix:
-                access = READ;
-            case SAXix: case STAix:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowPointer;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowPointerX;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowEffAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighEffAddr;
+        break;
 
-            break;
+        // Indexed with Y Postinc Addressing Mode Handler (Read)
+        case ADCiy: case ANDiy: case CMPiy: case EORiy: case LAXiy:
+        case LDAiy: case ORAiy: case SBCiy:
+            access = READ;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowPointer;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowEffAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddrY;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            // Indexed with Y Postinc Addressing Mode Handler (Read)
-            case ADCiy: case ANDiy: case CMPiy: case EORiy: case LAXiy:
-            case LDAiy: case ORAiy: case SBCiy:
-                access = READ;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowPointer;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowEffAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighEffAddrY;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        // Indexed Y (No page crossing handled)
+        case DCPiy: case ISBiy: case RLAiy: case RRAiy: case SLOiy:
+        case SREiy:
+            access = READ;
+        case SHAiy: case STAiy:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowPointer;
+            procCycle[cycleCount++].func = &MOS6510::FetchLowEffAddr;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddrY2;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
 
-            // Indexed Y (No page crossing handled)
-            case DCPiy: case ISBiy: case RLAiy: case RRAiy: case SLOiy:
-            case SREiy:
-                access = READ;
-            case SHAiy: case STAiy:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowPointer;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchLowEffAddr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchHighEffAddrY2;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
+        break;
 
-            break;
+        default:
+            legalMode = false;
+        break;
+        }
 
-            default:
-                legalMode = false;
-            break;
-            }
+        if (access == READ) {
+            procCycle[cycleCount++].func = &MOS6510::FetchEffAddrDataByte;
+        }
 
-            if (access == READ) {
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchEffAddrDataByte;
-            }
-
-            if (pass)
-            {   // Everything upto now is reads and can therefore
-                // be blocked through cycle stealing
-                for (int c = -1; c < cycleCount;)
-                    procCycle[++c].nosteal = false;
-            }
+        {   // Everything upto now is reads and can therefore
+            // be blocked through cycle stealing
+            for (int c = -1; c < cycleCount;)
+                procCycle[++c].nosteal = false;
+        }
 
 #ifdef MOS6510_DEBUG
-            cycleCount++;
-            if (pass) procCycle[cycleCount].func = &MOS6510::DebugCycle;
+        procCycle[cycleCount++].func = &MOS6510::DebugCycle;
 #endif // MOS6510_DEBUG
 
-            //---------------------------------------------------------------------------------------
-            // Addressing Modes Finished, other cycles are instruction dependent
-            switch(i)
-            {
-            case ADCz:  case ADCzx: case ADCa: case ADCax: case ADCay: case ADCix:
-            case ADCiy: case ADCb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::adc_instr;
-            break;
+        //---------------------------------------------------------------------------------------
+        // Addressing Modes Finished, other cycles are instruction dependent
+        switch(i)
+        {
+        case ADCz:  case ADCzx: case ADCa: case ADCax: case ADCay: case ADCix:
+        case ADCiy: case ADCb:
+            procCycle[cycleCount++].func = &MOS6510::adc_instr;
+        break;
 
-            case ANCb_:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::anc_instr;
-            break;
+        case ANCb_:
+            procCycle[cycleCount++].func = &MOS6510::anc_instr;
+        break;
 
-            case ANDz:  case ANDzx: case ANDa: case ANDax: case ANDay: case ANDix:
-            case ANDiy: case ANDb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::and_instr;
-            break;
+        case ANDz:  case ANDzx: case ANDa: case ANDax: case ANDay: case ANDix:
+        case ANDiy: case ANDb:
+            procCycle[cycleCount++].func = &MOS6510::and_instr;
+        break;
 
-            case ANEb: // Also known as XAA
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::ane_instr;
-            break;
+        case ANEb: // Also known as XAA
+            procCycle[cycleCount++].func = &MOS6510::ane_instr;
+        break;
 
-            case ARRb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::arr_instr;
-            break;
+        case ARRb:
+            procCycle[cycleCount++].func = &MOS6510::arr_instr;
+        break;
 
-            case ASLn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::asla_instr;
-            break;
+        case ASLn:
+            procCycle[cycleCount++].func = &MOS6510::asla_instr;
+        break;
 
-            case ASLz: case ASLzx: case ASLa: case ASLax:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::asl_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case ASLz: case ASLzx: case ASLa: case ASLax:
+            procCycle[cycleCount++].func = &MOS6510::asl_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case ASRb: // Also known as ALR
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::alr_instr;
-            break;
+        case ASRb: // Also known as ALR
+            procCycle[cycleCount++].func = &MOS6510::alr_instr;
+        break;
 
-            case BCCr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bcc_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BCCr:
+            procCycle[cycleCount++].func = &MOS6510::bcc_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case BCSr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bcs_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BCSr:
+            procCycle[cycleCount++].func = &MOS6510::bcs_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case BEQr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::beq_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BEQr:
+            procCycle[cycleCount++].func = &MOS6510::beq_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case BITz: case BITa:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bit_instr;
-            break;
+        case BITz: case BITa:
+            procCycle[cycleCount++].func = &MOS6510::bit_instr;
+        break;
 
-            case BMIr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bmi_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BMIr:
+            procCycle[cycleCount++].func = &MOS6510::bmi_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case BNEr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bne_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BNEr:
+            procCycle[cycleCount++].func = &MOS6510::bne_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case BPLr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bpl_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BPLr:
+            procCycle[cycleCount++].func = &MOS6510::bpl_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case BRKn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushHighPC;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushLowPC;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::brk_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::IRQ1Request;
-                if (pass) procCycle[cycleCount].nosteal = false;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::IRQ2Request;
-                if (pass) procCycle[cycleCount].nosteal = false;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchOpcode;
-            break;
+        case BRKn:
+            procCycle[cycleCount++].func = &MOS6510::PushHighPC;
+            procCycle[cycleCount++].func = &MOS6510::PushLowPC;
+            procCycle[cycleCount++].func = &MOS6510::brk_instr;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::IRQ1Request;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::IRQ2Request;
+            procCycle[cycleCount++].func = &MOS6510::FetchOpcode;
+        break;
 
-            case BVCr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bvc_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BVCr:
+            procCycle[cycleCount++].func = &MOS6510::bvc_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case BVSr:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::bvs_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            break;
+        case BVSr:
+            procCycle[cycleCount++].func = &MOS6510::bvs_instr;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        break;
 
-            case CLCn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::clc_instr;
-            break;
+        case CLCn:
+            procCycle[cycleCount++].func = &MOS6510::clc_instr;
+        break;
 
-            case CLDn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::cld_instr;
-            break;
+        case CLDn:
+            procCycle[cycleCount++].func = &MOS6510::cld_instr;
+        break;
 
-            case CLIn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::cli_instr;
-            break;
+        case CLIn:
+            procCycle[cycleCount++].func = &MOS6510::cli_instr;
+        break;
 
-            case CLVn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::clv_instr;
-            break;
+        case CLVn:
+            procCycle[cycleCount++].func = &MOS6510::clv_instr;
+        break;
 
-            case CMPz:  case CMPzx: case CMPa: case CMPax: case CMPay: case CMPix:
-            case CMPiy: case CMPb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::cmp_instr;
-            break;
+        case CMPz:  case CMPzx: case CMPa: case CMPax: case CMPay: case CMPix:
+        case CMPiy: case CMPb:
+            procCycle[cycleCount++].func = &MOS6510::cmp_instr;
+        break;
 
-            case CPXz: case CPXa: case CPXb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::cpx_instr;
-            break;
+        case CPXz: case CPXa: case CPXb:
+            procCycle[cycleCount++].func = &MOS6510::cpx_instr;
+        break;
 
-            case CPYz: case CPYa: case CPYb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::cpy_instr;
-            break;
+        case CPYz: case CPYa: case CPYb:
+            procCycle[cycleCount++].func = &MOS6510::cpy_instr;
+        break;
 
-            case DCPz: case DCPzx: case DCPa: case DCPax: case DCPay: case DCPix:
-            case DCPiy: // Also known as DCM
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::dcm_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case DCPz: case DCPzx: case DCPa: case DCPax: case DCPay: case DCPix:
+        case DCPiy: // Also known as DCM
+            procCycle[cycleCount++].func = &MOS6510::dcm_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case DECz: case DECzx: case DECa: case DECax:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::dec_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case DECz: case DECzx: case DECa: case DECax:
+            procCycle[cycleCount++].func = &MOS6510::dec_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case DEXn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::dex_instr;
-            break;
+        case DEXn:
+            procCycle[cycleCount++].func = &MOS6510::dex_instr;
+        break;
 
-            case DEYn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::dey_instr;
-            break;
+        case DEYn:
+            procCycle[cycleCount++].func = &MOS6510::dey_instr;
+        break;
 
-            case EORz:  case EORzx: case EORa: case EORax: case EORay: case EORix:
-            case EORiy: case EORb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::eor_instr;
-            break;
+        case EORz:  case EORzx: case EORa: case EORax: case EORay: case EORix:
+        case EORiy: case EORb:
+            procCycle[cycleCount++].func = &MOS6510::eor_instr;
+        break;
 
 /* HLT // Also known as JAM
-            case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52:
-            case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
-            case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52:
-            case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
-                cycleCount++; if (pass) procCycle[cycleCount].func = hlt_instr;
-            break;
+        case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52:
+        case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
+        case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52:
+        case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
+            procCycle[cycleCount++].func = hlt_instr;
+        break;
 */
 
-            case INCz: case INCzx: case INCa: case INCax:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::inc_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case INCz: case INCzx: case INCa: case INCax:
+            procCycle[cycleCount++].func = &MOS6510::inc_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case INXn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::inx_instr;
-            break;
+        case INXn:
+            procCycle[cycleCount++].func = &MOS6510::inx_instr;
+        break;
 
-            case INYn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::iny_instr;
-            break;
+        case INYn:
+            procCycle[cycleCount++].func = &MOS6510::iny_instr;
+        break;
 
-            case ISBz: case ISBzx: case ISBa: case ISBax: case ISBay: case ISBix:
-            case ISBiy: // Also known as INS
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::ins_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case ISBz: case ISBzx: case ISBa: case ISBax: case ISBay: case ISBix:
+        case ISBiy: // Also known as INS
+            procCycle[cycleCount++].func = &MOS6510::ins_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case JSRw:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::jsr_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushLowPC;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-            case JMPw: case JMPi:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::jmp_instr;
-            break;
+        case JSRw:
+            procCycle[cycleCount++].func = &MOS6510::jsr_instr;
+            procCycle[cycleCount++].func = &MOS6510::PushLowPC;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+        case JMPw: case JMPi:
+            procCycle[cycleCount++].func = &MOS6510::jmp_instr;
+        break;
 
-            case LASay:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::las_instr;
-            break;
+        case LASay:
+            procCycle[cycleCount++].func = &MOS6510::las_instr;
+        break;
 
-            case LAXz: case LAXzy: case LAXa: case LAXay: case LAXix: case LAXiy:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::lax_instr;
-            break;
+        case LAXz: case LAXzy: case LAXa: case LAXay: case LAXix: case LAXiy:
+            procCycle[cycleCount++].func = &MOS6510::lax_instr;
+        break;
 
-            case LDAz:  case LDAzx: case LDAa: case LDAax: case LDAay: case LDAix:
-            case LDAiy: case LDAb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::lda_instr;
-            break;
+        case LDAz:  case LDAzx: case LDAa: case LDAax: case LDAay: case LDAix:
+        case LDAiy: case LDAb:
+            procCycle[cycleCount++].func = &MOS6510::lda_instr;
+        break;
 
-            case LDXz: case LDXzy: case LDXa: case LDXay: case LDXb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::ldx_instr;
-            break;
+        case LDXz: case LDXzy: case LDXa: case LDXay: case LDXb:
+            procCycle[cycleCount++].func = &MOS6510::ldx_instr;
+        break;
 
-            case LDYz: case LDYzx: case LDYa: case LDYax: case LDYb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::ldy_instr;
-            break;
+        case LDYz: case LDYzx: case LDYa: case LDYax: case LDYb:
+            procCycle[cycleCount++].func = &MOS6510::ldy_instr;
+        break;
 
-            case LSRn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::lsra_instr;
-            break;
+        case LSRn:
+            procCycle[cycleCount++].func = &MOS6510::lsra_instr;
+        break;
 
-            case LSRz: case LSRzx: case LSRa: case LSRax:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::lsr_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case LSRz: case LSRzx: case LSRa: case LSRax:
+            procCycle[cycleCount++].func = &MOS6510::lsr_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case NOPn_: case NOPb_:
-            case NOPz_: case NOPzx_: case NOPa: case NOPax_:
-            // NOPb NOPz NOPzx - Also known as SKBn
-            // NOPa NOPax      - Also known as SKWn
-            break;
+        case NOPn_: case NOPb_:
+        case NOPz_: case NOPzx_: case NOPa: case NOPax_:
+        // NOPb NOPz NOPzx - Also known as SKBn
+        // NOPa NOPax      - Also known as SKWn
+        break;
 
-            case LXAb: // Also known as OAL
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::oal_instr;
-            break;
+        case LXAb: // Also known as OAL
+            procCycle[cycleCount++].func = &MOS6510::oal_instr;
+        break;
 
-            case ORAz:  case ORAzx: case ORAa: case ORAax: case ORAay: case ORAix:
-            case ORAiy: case ORAb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::ora_instr;
-            break;
+        case ORAz:  case ORAzx: case ORAa: case ORAax: case ORAay: case ORAix:
+        case ORAiy: case ORAb:
+            procCycle[cycleCount++].func = &MOS6510::ora_instr;
+        break;
 
-            case PHAn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::pha_instr;
-            break;
+        case PHAn:
+            procCycle[cycleCount++].func = &MOS6510::pha_instr;
+        break;
 
-            case PHPn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushSR;
-            break;
+        case PHPn:
+            procCycle[cycleCount++].func = &MOS6510::PushSR;
+        break;
 
-            case PLAn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::pla_instr;
-                if (pass) procCycle[cycleCount].nosteal = false;
-            break;
+        case PLAn:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::pla_instr;
+        break;
 
-            case PLPn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopSR;
-                if (pass) procCycle[cycleCount].nosteal = false;
-            break;
+        case PLPn:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::PopSR;
+        break;
 
-            case RLAz: case RLAzx: case RLAix: case RLAa: case RLAax: case RLAay:
-            case RLAiy:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::rla_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case RLAz: case RLAzx: case RLAix: case RLAa: case RLAax: case RLAay:
+        case RLAiy:
+            procCycle[cycleCount++].func = &MOS6510::rla_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case ROLn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::rola_instr;
-            break;
+        case ROLn:
+            procCycle[cycleCount++].func = &MOS6510::rola_instr;
+        break;
 
-            case ROLz: case ROLzx: case ROLa: case ROLax:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::rol_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case ROLz: case ROLzx: case ROLa: case ROLax:
+            procCycle[cycleCount++].func = &MOS6510::rol_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case RORn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::rora_instr;
-            break;
+        case RORn:
+            procCycle[cycleCount++].func = &MOS6510::rora_instr;
+        break;
 
-            case RORz: case RORzx: case RORa: case RORax:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::ror_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case RORz: case RORzx: case RORa: case RORax:
+            procCycle[cycleCount++].func = &MOS6510::ror_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case RRAa: case RRAax: case RRAay: case RRAz: case RRAzx: case RRAix:
-            case RRAiy:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::rra_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case RRAa: case RRAax: case RRAay: case RRAz: case RRAzx: case RRAix:
+        case RRAiy:
+            procCycle[cycleCount++].func = &MOS6510::rra_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case RTIn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopSR;
-                if (pass) procCycle[cycleCount].nosteal = false;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopLowPC;
-                if (pass) procCycle[cycleCount].nosteal = false;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopHighPC;
-                if (pass) procCycle[cycleCount].nosteal = false;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::rti_instr;
-            break;
+        case RTIn:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::PopSR;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::PopLowPC;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::PopHighPC;
+            procCycle[cycleCount++].func = &MOS6510::rti_instr;
+        break;
 
-            case RTSn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopLowPC;
-                if (pass) procCycle[cycleCount].nosteal = false;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PopHighPC;
-                if (pass) procCycle[cycleCount].nosteal = false;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::rts_instr;
-            break;
+        case RTSn:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::PopLowPC;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::PopHighPC;
+            procCycle[cycleCount++].func = &MOS6510::rts_instr;
+        break;
 
-            case SAXz: case SAXzy: case SAXa: case SAXix: // Also known as AXS
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::axs_instr;
-            break;
+        case SAXz: case SAXzy: case SAXa: case SAXix: // Also known as AXS
+            procCycle[cycleCount++].func = &MOS6510::axs_instr;
+        break;
 
-            case SBCz:  case SBCzx: case SBCa: case SBCax: case SBCay: case SBCix:
-            case SBCiy: case SBCb_:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::sbc_instr;
-            break;
+        case SBCz:  case SBCzx: case SBCa: case SBCax: case SBCay: case SBCix:
+        case SBCiy: case SBCb_:
+            procCycle[cycleCount++].func = &MOS6510::sbc_instr;
+        break;
 
-            case SBXb:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::sbx_instr;
-            break;
+        case SBXb:
+            procCycle[cycleCount++].func = &MOS6510::sbx_instr;
+        break;
 
-            case SECn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::sec_instr;
-            break;
+        case SECn:
+            procCycle[cycleCount++].func = &MOS6510::sec_instr;
+        break;
 
-            case SEDn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::sed_instr;
-            break;
+        case SEDn:
+            procCycle[cycleCount++].func = &MOS6510::sed_instr;
+        break;
 
-            case SEIn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::sei_instr;
-            break;
+        case SEIn:
+            procCycle[cycleCount++].func = &MOS6510::sei_instr;
+        break;
 
-            case SHAay: case SHAiy: // Also known as AXA
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::axa_instr;
-            break;
+        case SHAay: case SHAiy: // Also known as AXA
+            procCycle[cycleCount++].func = &MOS6510::axa_instr;
+        break;
 
-            case SHSay: // Also known as TAS
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::shs_instr;
-            break;
+        case SHSay: // Also known as TAS
+            procCycle[cycleCount++].func = &MOS6510::shs_instr;
+        break;
 
-            case SHXay: // Also known as XAS
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::xas_instr;
-            break;
+        case SHXay: // Also known as XAS
+            procCycle[cycleCount++].func = &MOS6510::xas_instr;
+        break;
 
-            case SHYax: // Also known as SAY
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::say_instr;
-            break;
+        case SHYax: // Also known as SAY
+            procCycle[cycleCount++].func = &MOS6510::say_instr;
+        break;
 
-            case SLOz: case SLOzx: case SLOa: case SLOax: case SLOay: case SLOix:
-            case SLOiy: // Also known as ASO
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::aso_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case SLOz: case SLOzx: case SLOa: case SLOax: case SLOay: case SLOix:
+        case SLOiy: // Also known as ASO
+            procCycle[cycleCount++].func = &MOS6510::aso_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case SREz: case SREzx: case SREa: case SREax: case SREay: case SREix:
-            case SREiy: // Also known as LSE
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::lse_instr;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PutEffAddrDataByte;
-            break;
+        case SREz: case SREzx: case SREa: case SREax: case SREay: case SREix:
+        case SREiy: // Also known as LSE
+            procCycle[cycleCount++].func = &MOS6510::lse_instr;
+            procCycle[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+        break;
 
-            case STAz: case STAzx: case STAa: case STAax: case STAay: case STAix:
-            case STAiy:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::sta_instr;
-            break;
+        case STAz: case STAzx: case STAa: case STAax: case STAay: case STAix:
+        case STAiy:
+            procCycle[cycleCount++].func = &MOS6510::sta_instr;
+        break;
 
-            case STXz: case STXzy: case STXa:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::stx_instr;
-            break;
+        case STXz: case STXzy: case STXa:
+            procCycle[cycleCount++].func = &MOS6510::stx_instr;
+        break;
 
-            case STYz: case STYzx: case STYa:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::sty_instr;
-            break;
+        case STYz: case STYzx: case STYa:
+            procCycle[cycleCount++].func = &MOS6510::sty_instr;
+        break;
 
-            case TAXn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::tax_instr;
-            break;
+        case TAXn:
+            procCycle[cycleCount++].func = &MOS6510::tax_instr;
+        break;
 
-            case TAYn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::tay_instr;
-            break;
+        case TAYn:
+            procCycle[cycleCount++].func = &MOS6510::tay_instr;
+        break;
 
-            case TSXn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::tsx_instr;
-            break;
+        case TSXn:
+            procCycle[cycleCount++].func = &MOS6510::tsx_instr;
+        break;
 
-            case TXAn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::txa_instr;
-            break;
+        case TXAn:
+            procCycle[cycleCount++].func = &MOS6510::txa_instr;
+        break;
 
-            case TXSn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::txs_instr;
-            break;
+        case TXSn:
+            procCycle[cycleCount++].func = &MOS6510::txs_instr;
+        break;
 
-            case TYAn:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::tya_instr;
-            break;
+        case TYAn:
+            procCycle[cycleCount++].func = &MOS6510::tya_instr;
+        break;
 
-            default:
-                legalInstr = false;
-            break;
-            }
+        default:
+            legalInstr = false;
+        break;
+        }
 
-            if (!(legalMode || legalInstr))
-            {
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::illegal_instr;
-            }
-            else if (!(legalMode && legalInstr))
-            {
-                printf ("\nInstruction 0x%x: Not built correctly.\n\n", i);
-                exit(1);
-            }
-            cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::NextInstr;
-            cycleCount++;
-
-            if (!pass)
-            {   // Pass 1 - Allocate Memory
-                if (cycleCount)
-                {
-#ifdef HAVE_EXCEPTIONS
-                    instr->cycle = new(std::nothrow) ProcessorCycle[cycleCount];
-#else
-                    instr->cycle = new ProcessorCycle[cycleCount];
-#endif
-                    if (!instr->cycle)
-                        goto MOS6510_MemAllocFailed;
-                    procCycle = instr->cycle;
-
-                    int c = cycleCount;
-                    while (c > 0)
-                        procCycle[--c].nosteal = true;
-                }
-            }
-            else
-                instr->opcode = i;
+        if (!(legalMode || legalInstr))
+        {
+            procCycle[cycleCount++].func = &MOS6510::illegal_instr;
+        }
+        else if (!(legalMode && legalInstr))
+        {
+            printf ("\nInstruction 0x%x: Not built correctly.\n\n", i);
+            exit(1);
+        }
+        procCycle[cycleCount++].func = &MOS6510::NextInstr;
 
 #if MOS6510_DEBUG > 1
-            printf (".");
+        printf (".");
 #endif
-        }
 
         instr->cycles = cycleCount;
 #if MOS6510_DEBUG > 1
@@ -2325,85 +2297,64 @@ MOS6510::MOS6510 (EventContext *context)
 
     //----------------------------------------------------------------------
     // Build interrupts
-    for (i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
     {
 #if MOS6510_DEBUG > 1
         printf ("Building Interrupt %d[%02x]..", i, i);
 #endif
 
-        // Pass 1 allocates the memory, Pass 2 builds the interrupt
-        instr         = &interruptTable[i];
-        instr->cycle  = NULL;
+        struct ProcessorOperations *instr = &interruptTable[i];
         instr->opcode = 0;
+        cycleCount = 0;
+        procCycle = instr->cycle;
 
-        for (int pass = 0; pass < 2; pass++)
+        for (int j = 0; j < 9; j++)
+            procCycle[j].nosteal = false;
+
+        switch (i)
         {
-            cycleCount = -1;
-            if (pass) procCycle = instr->cycle;
+        case oRST:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::RSTRequest;
+            procCycle[cycleCount++].func = &MOS6510::FetchOpcode;
+        break;
 
-            switch (i)
-            {
-            case oRST:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::RSTRequest;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchOpcode;
-            break;
+        case oNMI:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount].nosteal = true;
+            procCycle[cycleCount++].func = &MOS6510::PushHighPC;
+            procCycle[cycleCount].nosteal = true;
+            procCycle[cycleCount++].func = &MOS6510::PushLowPC;
+            procCycle[cycleCount].nosteal = true;
+            procCycle[cycleCount++].func = &MOS6510::IRQRequest;
+            procCycle[cycleCount++].func = &MOS6510::NMIRequest;
+            procCycle[cycleCount++].func = &MOS6510::NMI1Request;
+            procCycle[cycleCount++].func = &MOS6510::FetchOpcode;
+        break;
 
-            case oNMI:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushHighPC;
-                if (pass) procCycle[cycleCount].nosteal = true;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushLowPC;
-                if (pass) procCycle[cycleCount].nosteal = true;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::IRQRequest;
-                if (pass) procCycle[cycleCount].nosteal = true;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::NMIRequest;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::NMI1Request;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchOpcode;
-            break;
-
-            case oIRQ:
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::WasteCycle;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushHighPC;
-                if (pass) procCycle[cycleCount].nosteal = true;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::PushLowPC;
-                if (pass) procCycle[cycleCount].nosteal = true;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::IRQRequest;
-                if (pass) procCycle[cycleCount].nosteal = true;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::IRQ1Request;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::IRQ2Request;
-                cycleCount++; if (pass) procCycle[cycleCount].func = &MOS6510::FetchOpcode;
-            break;
-            }
-
-            cycleCount++;
-            if (!pass)
-            {   // Pass 1 - Allocate Memory
-                if (cycleCount)
-                {
-#ifdef HAVE_EXCEPTIONS
-                    instr->cycle = new(std::nothrow) ProcessorCycle[cycleCount];
-#else
-                    instr->cycle = new ProcessorCycle[cycleCount];
-#endif
-                    if (!instr->cycle)
-                        goto MOS6510_MemAllocFailed;
-                    procCycle = instr->cycle;
-                    for (int c = 0; c < cycleCount; c++)
-                        procCycle[c].nosteal = false;
-                }
-            }
+        case oIRQ:
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount].nosteal = true;
+            procCycle[cycleCount++].func = &MOS6510::PushHighPC;
+            procCycle[cycleCount].nosteal = true;
+            procCycle[cycleCount++].func = &MOS6510::PushLowPC;
+            procCycle[cycleCount].nosteal = true;
+            procCycle[cycleCount++].func = &MOS6510::IRQRequest;
+            procCycle[cycleCount++].func = &MOS6510::IRQ1Request;
+            procCycle[cycleCount++].func = &MOS6510::IRQ2Request;
+            procCycle[cycleCount++].func = &MOS6510::FetchOpcode;
+        break;
+        }
 
 #if MOS6510_DEBUG > 1
-            printf (".");
+        printf (".");
 #endif
-        }
 
         instr->cycles = cycleCount;
 #if MOS6510_DEBUG > 1
@@ -2428,26 +2379,6 @@ MOS6510_MemAllocFailed:
     printf ("Unable to allocate enough memory.\n\n");
 exit (-1);
 }
-
-MOS6510::~MOS6510 ()
-{
-    struct ProcessorOperations *instr;
-
-    // Remove Opcodes
-    for (uint i = 0; i < 0x100; i++)
-    {
-        instr = &instrTable[i];
-        if (instr->cycle != NULL) delete [] instr->cycle;
-    }
-
-    // Remove Interrupts
-    for (uint i = 0; i < 3; i++)
-    {
-        instr = &interruptTable[i];
-        if (instr->cycle != NULL) delete [] instr->cycle;
-    }
-}
-
 
 //-------------------------------------------------------------------------//
 // Initialise CPU Emulation (Registers)                                    //

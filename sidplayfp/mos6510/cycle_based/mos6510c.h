@@ -144,11 +144,11 @@ protected:
     // Declare processor operations
     struct ProcessorOperations
     {
-        struct ProcessorCycle *cycle;
+        struct ProcessorCycle cycle[9];
         uint          cycles;
         uint_least8_t opcode;
         ProcessorOperations ()
-            :cycle(NULL), cycles (0) { ; }
+            : cycles (0) { ; }
     };
 
     struct ProcessorCycle       fetchCycle;
@@ -326,7 +326,7 @@ protected:
 
 public:
     MOS6510 (EventContext *context);
-    virtual ~MOS6510 ();
+    virtual ~MOS6510 () {}
     virtual void reset     (void);
     virtual void credits   (char *str);
     virtual void DumpState (void);
