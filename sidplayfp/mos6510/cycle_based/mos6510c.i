@@ -533,12 +533,33 @@ void MOS6510::FetchOpcode (void)
     cycleCount    = 0;
 }
 
-// Fetch value, increment PC
-/* Addressing Modes:    Immediate
-                        Relative
+/**
+* Read the next opcode byte from memory (and throw it away)
+*/
+void MOS6510::throwAwayFetch (void)
+{
+    env->envReadMemByte (endian_32lo16 (Register_ProgramCounter));
+}
+
+/**
+* Issue throw-away read. Some people use these to ACK CIA IRQs.
+*/
+void MOS6510::throwAwayRead (void)
+{
+    env->envReadMemByte (Cycle_HighByteWrongEffectiveAddress);
+}
+
+/**
+* Fetch value, increment PC<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Immediate
+* <LI>Relative
+* </UL>
 */
 void MOS6510::FetchDataByte (void)
-{   // Get data byte from memory
+{
     Cycle_Data = env->envReadMemByte (endian_32lo16 (Register_ProgramCounter));
     Register_ProgramCounter++;
 }
@@ -621,21 +642,17 @@ void MOS6510::FetchHighAddr (void)
 */
 void MOS6510::FetchHighAddrX (void)
 {
-    // Rev 1.05 (saw) - Call base Function
     FetchHighAddr ();
-    const uint8_t page = endian_16hi8 (Cycle_EffectiveAddress);
+    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress  & 0xff00) | ((Cycle_EffectiveAddress + Register_X) & 0xff);
     Cycle_EffectiveAddress += Register_X;
-
-    // Handle page boundary crossing
-    if (endian_16hi8 (Cycle_EffectiveAddress) == page)
-        cycleCount++;
 }
 
-// Same as above except dosen't worry about page crossing
+ // Handle page boundary crossing
 void MOS6510::FetchHighAddrX2 (void)
 {
-    FetchHighAddr ();
-    Cycle_EffectiveAddress += Register_X;
+    FetchHighAddrX();
+    if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
+        cycleCount++;
 }
 
 /**
@@ -650,21 +667,17 @@ void MOS6510::FetchHighAddrX2 (void)
 */
 void MOS6510::FetchHighAddrY (void)
 {
-    // Rev 1.05 (saw) - Call base Function
     FetchHighAddr ();
-    const uint8_t page = endian_16hi8 (Cycle_EffectiveAddress);
+    Cycle_HighByteWrongEffectiveAddress = Cycle_EffectiveAddress & 0xff00 | Cycle_EffectiveAddress + Register_Y & 0xff;
     Cycle_EffectiveAddress += Register_Y;
-
-    // Handle page boundary crossing
-    if (endian_16hi8 (Cycle_EffectiveAddress) == page)
-        cycleCount++;
 }
 
 // Same as above except dosen't worry about page crossing
 void MOS6510::FetchHighAddrY2 (void)
 {
-    FetchHighAddr ();
-    Cycle_EffectiveAddress += Register_Y;
+    FetchHighAddrY ();
+    if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
+        cycleCount++;
 }
 
 /**
@@ -684,12 +697,16 @@ void MOS6510::FetchLowPointer (void)
     Instr_Operand = Cycle_Pointer;
 }
 
-// Read pointer from the address and add X to it
-// Addressing Modes:    Indexed Indirect (pre X)
+/**
+* Add X to it<BR>
+*
+* Addressing Modes:
+* <UL>
+* <LI>Indexed Indirect (pre X)
+* </UL>
+*/
 void MOS6510::FetchLowPointerX (void)
 {
-    endian_16hi8 (Cycle_Pointer, env->envReadMemDataByte (Cycle_Pointer));
-    // Page boundary crossing is not handled
     Cycle_Pointer = (Cycle_Pointer + Register_X) & 0xFF;
 }
 
@@ -750,21 +767,17 @@ void MOS6510::FetchHighEffAddr (void)
 */
 void MOS6510::FetchHighEffAddrY (void)
 {
-    // Rev 1.05 (saw) - Call base Function
     FetchHighEffAddr ();
-    const uint8_t page = endian_16hi8 (Cycle_EffectiveAddress);
+    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress  & 0xff00) | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
     Cycle_EffectiveAddress += Register_Y;
-
-    // Handle page boundary crossing
-    if (endian_16hi8 (Cycle_EffectiveAddress) == page)
-        cycleCount++;
 }
 
-// Same as above except dosen't worry about page crossing
+// Handle page boundary crossing
 void MOS6510::FetchHighEffAddrY2 (void)
 {
-    FetchHighEffAddr ();
-    Cycle_EffectiveAddress += Register_Y;
+    FetchHighEffAddrY();
+    if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
+        cycleCount++;
 }
 
 //-------------------------------------------------------------------------//
@@ -920,14 +933,6 @@ void MOS6510::jmp_instr (void)
 #endif // PC64_TESTSUITE
 
     clock ();
-}
-
-void MOS6510::jsr_instr (void)
-{   // JSR uses absolute addressing in this emulation,
-    // hence the -1.  The real SID does not use this addressing
-    // mode.
-    Register_ProgramCounter--;
-    PushHighPC ();
 }
 
 void MOS6510::pha_instr (void)
@@ -1686,13 +1691,23 @@ MOS6510::MOS6510 (EventContext *context)
         printf ("Building Command %d[%02x]..", i, i);
 #endif
 
+        /*
+        * So: what cycles are marked as stealable? Rules are:
+        *
+        * - CPU performs either read or write at every cycle. Reads are
+        *   always stealable. Writes are rare.
+        *
+        * - Every instruction begins with a sequence of reads. Writes,
+        *   if any, are at the end for most instructions.
+        */
+
         procCycle = instrTable[i];
 
         for (int j=0; j<8; j++) {
             procCycle[j].nosteal = true;
         }
 
-        typedef enum {WRITE = 0, READ = 1} AccessMode;
+        typedef enum { WRITE, READ } AccessMode;
         AccessMode access = WRITE;
         cycleCount = 0;
         bool legalMode  = true;
@@ -1706,7 +1721,7 @@ MOS6510::MOS6510 (EventContext *context)
         case PHPn: case PLAn: case PLPn: case ROLn: case RORn:
         case SECn: case SEDn: case SEIn: case TAXn:  case TAYn:
         case TSXn: case TXAn: case TXSn: case TYAn:
-            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::throwAwayFetch;
         break;
 
         // Immediate and Relative Addressing Mode Handler
@@ -1730,6 +1745,9 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         // Zero Page with X Offset Addressing Mode Handler
+        // these issue extra reads on the 0 page, but we don't care about it
+        // because there are no detectable effects from them. These reads
+        // occur during the "wasted" cycle.
         case ADCzx: case ANDzx:  case CMPzx: case EORzx: case LDAzx: case LDYzx:
         case NOPzx_: case ORAzx: case SBCzx:
         case ASLzx: case DCPzx: case DECzx: case INCzx: case ISBzx: case LSRzx:
@@ -1755,9 +1773,13 @@ MOS6510::MOS6510 (EventContext *context)
         case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa:
         case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
             access = READ;
-        case JMPw: case JSRw: case SAXa: case STAa: case STXa: case STYa:
+        case JMPw: case SAXa: case STAa: case STXa: case STYa:
             procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
             procCycle[cycleCount++].func = &MOS6510::FetchHighAddr;
+        break;
+
+        case JSRw:
+            procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
         break;
 
         // Absolute With X Offset Addressing Mode Handler (Read)
@@ -1765,19 +1787,21 @@ MOS6510::MOS6510 (EventContext *context)
         case LDYax: case NOPax_: case ORAax: case SBCax:
             access = READ;
             procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
-            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrX;
-            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrX2;
+            // this cycle is skipped if the address is already correct.
+            // otherwise, it will be read and ignored.
+            procCycle[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
-        // Absolute X (No page crossing handled)
+        // Absolute X (RMW; no page crossing handled, always reads before writing)
         case ASLax: case DCPax: case DECax: case INCax: case ISBax:
         case LSRax: case RLAax: case ROLax: case RORax: case RRAax:
         case SLOax: case SREax:
             access = READ;
         case SHYax: case STAax:
             procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
-            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrX2;
-            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrX;
+            procCycle[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         // Absolute With Y Offset Addresing Mode Handler (Read)
@@ -1785,8 +1809,8 @@ MOS6510::MOS6510 (EventContext *context)
         case LAXay: case LDAay: case LDXay: case ORAay: case SBCay:
             access = READ;
             procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
-            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrY;
-            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrY2;
+            procCycle[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         // Absolute Y (No page crossing handled)
@@ -1795,8 +1819,8 @@ MOS6510::MOS6510 (EventContext *context)
             access = READ;
         case SHAay: case SHSay: case SHXay: case STAay:
             procCycle[cycleCount++].func = &MOS6510::FetchLowAddr;
-            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrY2;
-            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddrY;
+            procCycle[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         // Absolute Indirect Addressing Mode Handler
@@ -1826,8 +1850,8 @@ MOS6510::MOS6510 (EventContext *context)
             access = READ;
             procCycle[cycleCount++].func = &MOS6510::FetchLowPointer;
             procCycle[cycleCount++].func = &MOS6510::FetchLowEffAddr;
-            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddrY;
-            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddrY2;
+            procCycle[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         // Indexed Y (No page crossing handled)
@@ -1837,8 +1861,8 @@ MOS6510::MOS6510 (EventContext *context)
         case SHAiy: case STAiy:
             procCycle[cycleCount++].func = &MOS6510::FetchLowPointer;
             procCycle[cycleCount++].func = &MOS6510::FetchLowEffAddr;
-            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddrY2;
-            procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighEffAddrY;
+            procCycle[cycleCount++].func = &MOS6510::throwAwayRead;
 
         break;
 
@@ -2045,9 +2069,12 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case JSRw:
-            procCycle[cycleCount++].func = &MOS6510::jsr_instr;
-            procCycle[cycleCount++].func = &MOS6510::PushLowPC;
+            procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::WasteCycle;
+            procCycle[cycleCount++].func = &MOS6510::PushHighPC;
+            procCycle[cycleCount++].func = &MOS6510::PushLowPC;
+            procCycle[cycleCount].nosteal = false;
+            procCycle[cycleCount++].func = &MOS6510::FetchHighAddr;
         case JMPw: case JMPi:
             procCycle[cycleCount++].func = &MOS6510::jmp_instr;
         break;
@@ -2106,12 +2133,14 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case PLAn:
+            procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::WasteCycle;
             procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::pla_instr;
         break;
 
         case PLPn:
+            procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::WasteCycle;
             procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::PopSR;
@@ -2148,6 +2177,7 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case RTIn:
+            procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::WasteCycle;
             procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::PopSR;
@@ -2159,6 +2189,7 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case RTSn:
+            procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::WasteCycle;
             procCycle[cycleCount].nosteal = false;
             procCycle[cycleCount++].func = &MOS6510::PopLowPC;
@@ -2262,6 +2293,9 @@ MOS6510::MOS6510 (EventContext *context)
         break;
         }
 
+        /* Missing an addressing mode or implementation makes opcode invalid.
+        * These are normally called HLT instructions. In the hardware, the
+        * CPU state machine locks up and will never recover. */
         if (!(legalMode || legalInstr))
         {
             procCycle[cycleCount++].func = &MOS6510::illegal_instr;
@@ -2271,6 +2305,9 @@ MOS6510::MOS6510 (EventContext *context)
             printf ("\nInstruction 0x%x: Not built correctly.\n\n", i);
             exit(1);
         }
+
+        /* check for IRQ triggers or fetch next opcode... */
+        procCycle[cycleCount].nosteal = false;
         procCycle[cycleCount++].func = &MOS6510::NextInstr;
 
 #if MOS6510_DEBUG > 1

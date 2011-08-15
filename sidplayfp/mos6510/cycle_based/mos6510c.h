@@ -154,6 +154,7 @@ protected:
 
     /** Data regarding current instruction */
     uint_least16_t Cycle_EffectiveAddress;
+    uint_least16_t Cycle_HighByteWrongEffectiveAddress;
     uint8_t        Cycle_Data;
     uint_least16_t Cycle_Pointer;
 
@@ -200,6 +201,8 @@ protected:
     // Declare Instruction Routines
     virtual void FetchOpcode         (void);
     void        NextInstr            (void);
+    inline void throwAwayFetch       (void);
+    inline void throwAwayRead        (void);
     inline void FetchDataByte        (void);
     inline void FetchLowAddr         (void);
     inline void FetchLowAddrX        (void);
@@ -268,7 +271,6 @@ protected:
     inline void inx_instr     (void);
     inline void iny_instr     (void);
     inline void jmp_instr     (void);
-    inline void jsr_instr     (void);
     inline void las_instr     (void);
     inline void lax_instr     (void);
     inline void lda_instr     (void);
