@@ -142,7 +142,7 @@ protected:
     };
 
     struct ProcessorCycle       fetchCycle;
-    struct ProcessorCycle      *procCycle;
+    struct ProcessorCycle      *instrCurrent;
 
     /** Table of CPU opcode implementations */
     struct ProcessorCycle  instrTable[0x100][9];
@@ -150,7 +150,7 @@ protected:
 
     uint_least16_t instrStartPC;
     int_least8_t   lastAddrCycle;
-    int_least8_t   cycleCount;
+    int   cycleCount;
 
     /** Data regarding current instruction */
     uint_least16_t Cycle_EffectiveAddress;
@@ -197,12 +197,11 @@ protected:
 
     // Declare Interrupt Routines
     inline void RSTRequest       (void);
-    inline void RST1Request      (void);
-    inline void NMIRequest       (void);
-    inline void NMI1Request      (void);
+    inline void NMILoRequest     (void);
+    inline void NMIHiRequest     (void);
     inline void IRQRequest       (void);
-    inline void IRQ1Request      (void);
-    inline void IRQ2Request      (void);
+    inline void IRQLoRequest     (void);
+    inline void IRQHiRequest     (void);
     bool        interruptPending (void);
 
     // Declare Instruction Routines
@@ -348,9 +347,9 @@ public:
 inline void MOS6510::clock (void)
 {
     int_least8_t i = cycleCount++;
-    if (procCycle[i].nosteal || aec)
+    if (instrCurrent[i].nosteal || aec)
     {
-        (this->*(procCycle[i].func)) ();
+        (this->*(instrCurrent[i].func)) ();
         return;
     }
     else if (!m_blocked)

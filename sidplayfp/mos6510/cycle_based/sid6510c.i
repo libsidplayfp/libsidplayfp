@@ -160,24 +160,24 @@ SID6510::SID6510 (EventContext *context)
     // itself.
     for (uint i = 0; i < OPCODE_MAX; i++)
     {
-        procCycle = instrTable[i];
+        instrCurrent = instrTable[i];
 
         for (uint n = 0; n < 9; n++)
         {
-            if (procCycle[n].func == 0) break;
-            if (procCycle[n].func == &SID6510::illegal_instr)
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::illegal_instr)
             {   // Rev 1.2 (saw) - Changed nasty union to reinterpret_cast
-                procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
                     (&SID6510::sid_illegal);
             }
-            else if (procCycle[n].func == &SID6510::jmp_instr)
+            else if (instrCurrent[n].func == &SID6510::jmp_instr)
             {   // Stop jumps into rom code
-                procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
                     (&SID6510::sid_jmp);
             }
-            else if (procCycle[n].func == &SID6510::cli_instr)
+            else if (instrCurrent[n].func == &SID6510::cli_instr)
             {   // No overlapping IRQs allowed
-                procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
                     (&SID6510::sid_cli);
             }
         }
@@ -186,25 +186,25 @@ SID6510::SID6510 (EventContext *context)
     {   // Since no real IRQs, all RTIs mapped to RTS
         // Required for fix bad tunes in old modes
         uint n;
-        procCycle = instrTable[RTIn];
+        instrCurrent = instrTable[RTIn];
         for (n = 0; n < 9; n++)
         {
-            if (procCycle[n].func == 0) break;
-            if (procCycle[n].func == &SID6510::PopSR)
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::PopSR)
             {
-                procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
                     (&SID6510::sid_rti);
                 break;
             }
         }
 
-        procCycle = interruptTable[oIRQ];
+        instrCurrent = interruptTable[oIRQ];
         for (n = 0; n < 9; n++)
         {
-            if (procCycle[n].func == 0) break;
-            if (procCycle[n].func == &SID6510::IRQRequest)
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::IRQRequest)
             {
-                procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
                     (&SID6510::sid_irq);
                 break;
             }
@@ -212,13 +212,13 @@ SID6510::SID6510 (EventContext *context)
     }
 
     {   // Support of sidplays BRK functionality
-        procCycle = instrTable[BRKn];
+        instrCurrent = instrTable[BRKn];
         for (uint n = 0; n < 9; n++)
         {
-            if (procCycle[n].func == 0) break;
-            if (procCycle[n].func == &SID6510::PushHighPC)
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::PushHighPC)
             {
-                procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
                     (&SID6510::sid_brk);
                 break;
             }
@@ -253,7 +253,7 @@ void SID6510::reset ()
 void SID6510::sleep ()
 {   // Simulate a delay for JMPw
     m_delayClk = m_stealingClk = eventContext.getTime (EVENT_CLOCK_PHI2);
-    procCycle  = &delayCycle;
+    instrCurrent  = &delayCycle;
     cycleCount = 0;
     m_sleeping = !(interrupts.irqRequest || interrupts.pending);
     env->envSleep ();
