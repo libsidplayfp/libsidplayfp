@@ -95,14 +95,14 @@ void MOS6510::DumpState (void)
     fprintf(m_fdbg, "%02x ",   env->envReadMemDataByte (0));
     fprintf(m_fdbg, "%02x ",   env->envReadMemDataByte (1));
 
-    if (getFlagN()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
-    if (getFlagV()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
-    if (Register_Status & (1 << SR_NOTUSED)) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
-    if (Register_Status & (1 << SR_BREAK))   fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
-    if (getFlagD()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
-    if (getFlagI()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
-    if (getFlagZ()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
-    if (getFlagC()) fprintf(m_fdbg, "1"); else fprintf(m_fdbg, "0");
+    fprintf(m_fdbg, flagN ? "1" : "0");
+    fprintf(m_fdbg, flagV ? "1" : "0");
+    fprintf(m_fdbg, "1");
+    fprintf(m_fdbg, flagB ? "1" : "0");
+    fprintf(m_fdbg, flagD ? "1" : "0");
+    fprintf(m_fdbg, flagI ? "1" : "0");
+    fprintf(m_fdbg, flagZ ? "1" : "0");
+    fprintf(m_fdbg, flagC ? "1" : "0");
 
     const int opcode  = env->envReadMemDataByte(instrStartPC);
 

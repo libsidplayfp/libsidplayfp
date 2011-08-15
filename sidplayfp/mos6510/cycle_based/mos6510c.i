@@ -217,32 +217,49 @@ static int  filepos = 0;
 #endif // PC64_TESTSUITE
 
 
-//-------------------------------------------------------------------------//
-//-------------------------------------------------------------------------//
-// Status Register Routines                                                //
-//-------------------------------------------------------------------------//
-//-------------------------------------------------------------------------//
-// Use macros to access flags.  Allows compatiblity with other versions
-// of this emulation
-// Set N and Z flags according to byte
-#define setFlagsNZ(x) (Register_z_Flag = (Register_n_Flag = (uint_least8_t) (x)))
-#define setFlagN(x)   (Register_n_Flag = (uint_least8_t) (x))
-#define setFlagV(x)   (Register_v_Flag = (uint_least8_t) (x))
-#define setFlagD(x)   (Register_Status = (Register_Status & ~(1 << SR_DECIMAL)) \
-                                       | (((x) != 0) << SR_DECIMAL))
-#define setFlagI(x)   (Register_Status = (Register_Status & ~(1 << SR_INTERRUPT)) \
-                                       | (((x) != 0) << SR_INTERRUPT))
-#define setFlagZ(x)   (Register_z_Flag = (uint_least8_t) (x))
-#define setFlagC(x)   (Register_c_Flag = (uint_least8_t) (x))
+void MOS6510::setFlagsNZ(const uint8_t value)
+{
+    flagZ = value == 0;
+    flagN = value & 0x80;
+}
 
+uint8_t MOS6510::getStatusRegister(void)
+{
+    uint8_t sr = 0x20;
+    if (flagN) {
+        sr |= 0x80;
+    }
+    if (flagV) {
+        sr |= 0x40;
+    }
+    if (flagB) {
+        sr |= 0x10;
+    }
+    if (flagD) {
+        sr |= 0x08;
+    }
+    if (flagI) {
+        sr |= 0x04;
+    }
+    if (flagZ) {
+        sr |= 0x02;
+    }
+    if (flagC) {
+        sr |= 0x01;
+    }
+    return sr;
+}
 
-#define getFlagN()    ((Register_n_Flag &  (1 << SR_NEGATIVE))  != 0)
-#define getFlagV()    (Register_v_Flag != 0)
-#define getFlagD()    ((Register_Status  & (1 << SR_DECIMAL))   != 0)
-#define getFlagI()    ((Register_Status  & (1 << SR_INTERRUPT)) != 0)
-#define getFlagZ()    (Register_z_Flag == 0)
-#define getFlagC()    (Register_c_Flag != 0)
-
+void MOS6510::setStatusRegister(const uint8_t sr)
+{
+    flagC = sr & 0x01;
+    flagZ = sr & 0x02;
+    flagI = sr & 0x04;
+    flagD = sr & 0x08;
+    flagB = sr & 0x10;
+    flagV = sr & 0x40;
+    flagN = sr & 0x80;
+}
 
 // Handle bus access signals
 void MOS6510::aecSignal (const bool state)
@@ -276,16 +293,10 @@ void MOS6510::aecSignal (const bool state)
 // Push P on stack, decrement S
 void MOS6510::PushSR (const bool b_flag)
 {
+    flagB = b_flag;
     uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
-    /* Rev 1.04 - Corrected flag mask */
-    Register_Status &= ((1 << SR_NOTUSED) | (1 << SR_INTERRUPT) |
-                        (1 << SR_DECIMAL) | (1 << SR_BREAK));
-    Register_Status |= (getFlagN () << SR_NEGATIVE);
-    Register_Status |= (getFlagV () << SR_OVERFLOW);
-    Register_Status |= (getFlagZ () << SR_ZERO);
-    Register_Status |= (getFlagC () << SR_CARRY);
-    env->envWriteMemByte (addr, Register_Status & ~((!b_flag) << SR_BREAK));
+    env->envWriteMemByte (addr, getStatusRegister());
     Register_StackPointer--;
 }
 
@@ -297,26 +308,20 @@ void MOS6510::PushSR (void)
 // increment S, Pop P off stack
 void MOS6510::PopSR (void)
 {
-    bool oldFlagI = getFlagI ();
+    const bool oldFlagI = flagI;
 
     // Get status register off stack
     Register_StackPointer++;
     {
         uint_least16_t addr = Register_StackPointer;
         endian_16hi8 (addr, SP_PAGE);
-        Register_Status = env->envReadMemDataByte (addr);
+        setStatusRegister(env->envReadMemDataByte (addr) | (1 << SR_BREAK));
     }
-    Register_Status |= ((1 << SR_NOTUSED) | (1 << SR_BREAK));
-    setFlagN (Register_Status);
-    setFlagV (Register_Status   & (1 << SR_OVERFLOW));
-    setFlagZ (!(Register_Status & (1 << SR_ZERO)));
-    setFlagC (Register_Status   & (1 << SR_CARRY));
 
     // I flag change is delayed by 1 instruction
-    bool newFlagI = getFlagI ();
-    interrupts.irqLatch = oldFlagI ^ newFlagI;
+    interrupts.irqLatch = oldFlagI ^ flagI;
     // Check to see if interrupts got re-enabled
-    if (!newFlagI && interrupts.irqs)
+    if (!flagI && interrupts.irqs)
         interrupts.irqRequest = true;
 }
 
@@ -357,7 +362,7 @@ void MOS6510::triggerNMI (void)
 // Level triggered interrupt
 void MOS6510::triggerIRQ (void)
 {   // IRQ Suppressed
-    if (!getFlagI ())
+    if (!flagI)
         interrupts.irqRequest = true;
     if (!interrupts.irqs++)
         interrupts.irqClk = eventContext.getTime (EVENT_CLOCK_PHI1);
@@ -479,7 +484,7 @@ void MOS6510::NMI1Request (void)
 void MOS6510::IRQRequest (void)
 {
     PushSR   (false);
-    setFlagI (true);
+    flagI = true;
     interrupts.irqRequest = false;
 }
 
@@ -863,7 +868,7 @@ void MOS6510::DebugCycle (void)
 void MOS6510::brk_instr (void)
 {
     PushSR   ();
-    setFlagI (true);
+    flagI = true;
     interrupts.irqRequest = false;
 
     // Check for an NMI, and switch over if pending
@@ -880,16 +885,16 @@ void MOS6510::brk_instr (void)
 
 void MOS6510::cld_instr (void)
 {
-    setFlagD (false);
+    flagD = false;
     clock ();
 }
 
 void MOS6510::cli_instr (void)
 {
-    const bool oldFlagI = getFlagI ();
-    setFlagI (false);
+    const bool oldFlagI = flagI;
+    flagI = false;
     // I flag change is delayed by 1 instruction
-    interrupts.irqLatch = oldFlagI ^ getFlagI ();
+    interrupts.irqLatch = oldFlagI ^ flagI;
     // Check to see if interrupts got re-enabled
     if (interrupts.irqs)
         interrupts.irqRequest = true;
@@ -966,16 +971,16 @@ void MOS6510::rts_instr (void)
 
 void MOS6510::sed_instr (void)
 {
-    setFlagD (true);
+    flagD = true;
     clock ();
 }
 
 void MOS6510::sei_instr (void)
 {
-    const bool oldFlagI = getFlagI ();
-    setFlagI (true);
+    const bool oldFlagI = flagI;
+    flagI = true;
     // I flag change is delayed by 1 instruction
-    interrupts.irqLatch   = oldFlagI ^ getFlagI ();
+    interrupts.irqLatch   = oldFlagI ^ flagI;
     interrupts.irqRequest = false;
     clock ();
 }
@@ -1095,46 +1100,46 @@ void MOS6510::xas_instr (void)
 
 void MOS6510::Perform_ADC (void)
 {
-    const uint C      = getFlagC ();
+    const uint C      = flagC ? 1 : 0;
     const uint A      = Register_Accumulator;
     const uint s      = Cycle_Data;
     const uint regAC2 = A + s + C;
 
-    if (getFlagD ())
+    if (flagD)
     {   // BCD mode
         uint lo = (A & 0x0f) + (s & 0x0f) + C;
         uint hi = (A & 0xf0) + (s & 0xf0);
         if (lo > 0x09) lo += 0x06;
         if (lo > 0x0f) hi += 0x10;
 
-        setFlagZ (regAC2);
-        setFlagN (hi);
-        setFlagV (((hi ^ A) & 0x80) && !((A ^ s) & 0x80));
+        flagZ = regAC2 == 0;
+        flagN = hi;
+        flagV = ((hi ^ A) & 0x80) && !((A ^ s) & 0x80) == 0;
         if (hi > 0x90) hi += 0x60;
 
-        setFlagC (hi > 0xff);
+        flagC = hi > 0xff;
         Register_Accumulator = (hi | (lo & 0x0f));
     }
     else
     {   // Binary mode
-        setFlagC   (regAC2 > 0xff);
-        setFlagV   (((regAC2 ^ A) & 0x80) && !((A ^ s) & 0x80));
+        flagC = regAC2 > 0xff;
+        flagV = ((regAC2 ^ A) & 0x80) && !((A ^ s) & 0x80) == 0;
         setFlagsNZ (Register_Accumulator = regAC2 & 0xff);
     }
 }
 
 void MOS6510::Perform_SBC (void)
 {
-    const uint C      = !getFlagC ();
+    const uint C      = flagC? 0 : 1;
     const uint A      = Register_Accumulator;
     const uint s      = Cycle_Data;
     const uint regAC2 = A - s - C;
 
-    setFlagC   (regAC2 < 0x100);
-    setFlagV   (((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80));
+    flagC = regAC2 < 0x100;
+    flagV =((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80) == 0;
     setFlagsNZ (regAC2);
 
-    if (getFlagD ())
+    if (flagD)
     {   // BCD mode
         uint lo = (A & 0x0f) - (s & 0x0f) - C;
         uint hi = (A & 0xf0) - (s & 0xf0);
@@ -1188,13 +1193,13 @@ void MOS6510::ane_instr (void)
 void MOS6510::asl_instr (void)
 {
     PutEffAddrDataByte ();
-    setFlagC   (Cycle_Data & 0x80);
+    flagC = Cycle_Data & 0x80;
     setFlagsNZ (Cycle_Data <<= 1);
 }
 
 void MOS6510::asla_instr (void)
 {
-    setFlagC   (Register_Accumulator & 0x80);
+    flagC = Register_Accumulator & 0x80;
     setFlagsNZ (Register_Accumulator <<= 1);
     clock ();
 }
@@ -1242,61 +1247,61 @@ void MOS6510::branch_instr (const bool condition)
 
 void MOS6510::bcc_instr (void)
 {
-    branch_instr (!getFlagC ());
+    branch_instr (!flagC);
 }
 
 void MOS6510::bcs_instr (void)
 {
-    branch_instr (getFlagC ());
+    branch_instr (flagC);
 }
 
 void MOS6510::beq_instr (void)
 {
-    branch_instr (getFlagZ ());
+    branch_instr (flagZ);
 }
 
 void MOS6510::bit_instr (void)
 {
-    setFlagZ (Register_Accumulator & Cycle_Data);
-    setFlagN (Cycle_Data);
-    setFlagV (Cycle_Data & 0x40);
+    flagZ = (Register_Accumulator & Cycle_Data) == 0;
+    flagN = Cycle_Data;
+    flagV = Cycle_Data & 0x40;
     clock ();
 }
 
 void MOS6510::bmi_instr (void)
 {
-    branch_instr (getFlagN ());
+    branch_instr (flagN);
 }
 
 void MOS6510::bne_instr (void)
 {
-    branch_instr (!getFlagZ ());
+    branch_instr (!flagZ);
 }
 
 void MOS6510::bpl_instr(void)
 {
-    branch_instr (!getFlagN ());
+    branch_instr (!flagN);
 }
 
 void MOS6510::bvc_instr (void)
 {
-    branch_instr (!getFlagV ());
+    branch_instr (!flagV);
 }
 
 void MOS6510::bvs_instr (void)
 {
-    branch_instr (getFlagV ());
+    branch_instr (flagV);
 }
 
 void MOS6510::clc_instr (void)
 {
-    setFlagC (false);
+    flagC = false;
     clock ();
 }
 
 void MOS6510::clv_instr (void)
 {
-    setFlagV (false);
+    flagV = false;
     clock ();
 }
 
@@ -1304,7 +1309,7 @@ void MOS6510::cmp_instr (void)
 {
     const uint_least16_t tmp = (uint_least16_t) Register_Accumulator - Cycle_Data;
     setFlagsNZ (tmp);
-    setFlagC   (tmp < 0x100);
+    flagC = tmp < 0x100;
     clock ();
 }
 
@@ -1312,7 +1317,7 @@ void MOS6510::cpx_instr (void)
 {
     const uint_least16_t tmp = (uint_least16_t) Register_X - Cycle_Data;
     setFlagsNZ (tmp);
-    setFlagC   (tmp < 0x100);
+    flagC = tmp < 0x100;
     clock ();
 }
 
@@ -1320,7 +1325,7 @@ void MOS6510::cpy_instr (void)
 {
     const uint_least16_t tmp = (uint_least16_t) Register_Y - Cycle_Data;
     setFlagsNZ (tmp);
-    setFlagC   (tmp < 0x100);
+    flagC = tmp < 0x100;
     clock ();
 }
 
@@ -1387,13 +1392,13 @@ void MOS6510::ldy_instr (void)
 void MOS6510::lsr_instr (void)
 {
     PutEffAddrDataByte ();
-    setFlagC   (Cycle_Data & 0x01);
+    flagC = Cycle_Data & 0x01;
     setFlagsNZ (Cycle_Data >>= 1);
 }
 
 void MOS6510::lsra_instr (void)
 {
-    setFlagC   (Register_Accumulator & 0x01);
+    flagC = Register_Accumulator & 0x01;
     setFlagsNZ (Register_Accumulator >>= 1);
     clock ();
 }
@@ -1417,18 +1422,20 @@ void MOS6510::rol_instr (void)
     const uint8_t tmp = Cycle_Data & 0x80;
     PutEffAddrDataByte ();
     Cycle_Data   <<= 1;
-    if (getFlagC ()) Cycle_Data |= 0x01;
+    if (flagC)
+        Cycle_Data |= 0x01;
     setFlagsNZ (Cycle_Data);
-    setFlagC   (tmp);
+    flagC = tmp;
 }
 
 void MOS6510::rola_instr (void)
 {
     const uint8_t tmp = Register_Accumulator & 0x80;
     Register_Accumulator <<= 1;
-    if (getFlagC ()) Register_Accumulator |= 0x01;
+    if (flagC)
+        Register_Accumulator |= 0x01;
     setFlagsNZ (Register_Accumulator);
-    setFlagC   (tmp);
+    flagC = tmp;
     clock ();
 }
 
@@ -1437,18 +1444,20 @@ void MOS6510::ror_instr (void)
     const uint8_t tmp  = Cycle_Data & 0x01;
     PutEffAddrDataByte ();
     Cycle_Data >>= 1;
-    if (getFlagC ()) Cycle_Data |= 0x80;
+    if (flagC)
+        Cycle_Data |= 0x80;
     setFlagsNZ (Cycle_Data);
-    setFlagC   (tmp);
+    flagC = tmp;
 }
 
 void MOS6510::rora_instr (void)
 {
     const uint8_t tmp = Register_Accumulator & 0x01;
     Register_Accumulator >>= 1;
-    if (getFlagC ()) Register_Accumulator |= 0x80;
+    if (flagC)
+        Register_Accumulator |= 0x80;
     setFlagsNZ (Register_Accumulator);
-    setFlagC   (tmp);
+    flagC = tmp;
     clock ();
 }
 
@@ -1456,7 +1465,7 @@ void MOS6510::sbx_instr (void)
 {
     const uint tmp = (Register_X & Register_Accumulator) - Cycle_Data;
     setFlagsNZ (Register_X = tmp & 0xff);
-    setFlagC   (tmp < 0x100);
+    flagC = tmp < 0x100;
     clock ();
 }
 
@@ -1468,7 +1477,7 @@ void MOS6510::sbc_instr (void)
 
 void MOS6510::sec_instr (void)
 {
-    setFlagC (true);
+    flagC = true;
     clock ();
 }
 
@@ -1540,7 +1549,7 @@ void MOS6510::illegal_instr (void)
 void MOS6510::alr_instr (void)
 {
     Register_Accumulator &= Cycle_Data;
-    setFlagC   (Register_Accumulator & 0x01);
+    flagC = Register_Accumulator & 0x01;
     setFlagsNZ (Register_Accumulator >>= 1);
     clock ();
 }
@@ -1552,7 +1561,7 @@ void MOS6510::alr_instr (void)
 void MOS6510::anc_instr (void)
 {
     setFlagsNZ (Register_Accumulator &= Cycle_Data);
-    setFlagC   (getFlagN ());
+    flagC   = flagN;
     clock ();
 }
 
@@ -1562,26 +1571,26 @@ void MOS6510::arr_instr (void)
 {
     const uint8_t data = Cycle_Data & Register_Accumulator;
     Register_Accumulator = data >> 1;
-    if (getFlagC ()) Register_Accumulator |= 0x80;
+    if (flagC)
+        Register_Accumulator |= 0x80;
 
-    if (getFlagD ())
+    if (flagD)
     {
-        setFlagN (0);
-        if (getFlagC ()) setFlagN (1 << SR_NEGATIVE);
-        setFlagZ (Register_Accumulator);
-        setFlagV ((data ^ Register_Accumulator) & 0x40);
+        flagN = flagC;
+        flagZ = Register_Accumulator == 0;
+        flagV = (data ^ Register_Accumulator) & 0x40;
 
         if ((data & 0x0f) + (data & 0x01) > 5)
             Register_Accumulator  = (Register_Accumulator & 0xf0) | ((Register_Accumulator + 6) & 0x0f);
-        setFlagC (((data + (data & 0x10)) & 0x1f0) > 0x50);
-        if (getFlagC ())
+        flagC = ((data + (data & 0x10)) & 0x1f0) > 0x50;
+        if (flagC)
             Register_Accumulator += 0x60;
     }
     else
     {
         setFlagsNZ (Register_Accumulator);
-        setFlagC   (Register_Accumulator & 0x40);
-        setFlagV  ((Register_Accumulator & 0x40) ^ ((Register_Accumulator & 0x20) << 1));
+        flagC = Register_Accumulator & 0x40;
+        flagV = (Register_Accumulator & 0x40) ^ ((Register_Accumulator & 0x20) << 1);
     }
     clock ();
 }
@@ -1591,7 +1600,7 @@ void MOS6510::arr_instr (void)
 void MOS6510::aso_instr (void)
 {
     PutEffAddrDataByte ();
-    setFlagC   (Cycle_Data & 0x80);
+    flagC = Cycle_Data & 0x80;
     Cycle_Data <<= 1;
     setFlagsNZ (Register_Accumulator |= Cycle_Data);
 }
@@ -1604,7 +1613,7 @@ void MOS6510::dcm_instr (void)
     Cycle_Data--;
     const uint_least16_t tmp = (uint_least16_t) Register_Accumulator - Cycle_Data;
     setFlagsNZ (tmp);
-    setFlagC   (tmp < 0x100);
+    flagC = tmp < 0x100;
 }
 
 // Undocumented - This opcode INCs the contents of a memory location and then SBCs the result
@@ -1641,7 +1650,7 @@ void MOS6510::lax_instr (void)
 void MOS6510::lse_instr (void)
 {
     PutEffAddrDataByte ();
-    setFlagC   (Cycle_Data & 0x01);
+    flagC = Cycle_Data & 0x01;
     Cycle_Data >>= 1;
     setFlagsNZ (Register_Accumulator ^= Cycle_Data);
 }
@@ -1662,8 +1671,8 @@ void MOS6510::rla_instr (void)
     const uint8_t tmp = Cycle_Data & 0x80;
     PutEffAddrDataByte ();
     Cycle_Data  = Cycle_Data << 1;
-    if (getFlagC ()) Cycle_Data |= 0x01;
-    setFlagC   (tmp);
+    if (flagC) Cycle_Data |= 0x01;
+    flagC = tmp;
     setFlagsNZ (Register_Accumulator &= Cycle_Data);
 }
 
@@ -1674,8 +1683,8 @@ void MOS6510::rra_instr (void)
     const uint8_t tmp  = Cycle_Data & 0x01;
     PutEffAddrDataByte ();
     Cycle_Data >>= 1;
-    if (getFlagC ()) Cycle_Data |= 0x80;
-    setFlagC (tmp);
+    if (flagC) Cycle_Data |= 0x80;
+    flagC = tmp;
     Perform_ADC ();
 }
 
@@ -2434,13 +2443,8 @@ void MOS6510::Initialise (void)
     procCycle  = &fetchCycle;
 
     // Reset Status Register
-    Register_Status = (1 << SR_NOTUSED) | (1 << SR_BREAK);
-    // FLAGS are set from data directly and do not require
-    // being calculated first before setting.  E.g. if you used
-    // SetFlags (0), N flag would = 0, and Z flag would = 1.
-    setFlagsNZ (1);
-    setFlagC   (false);
-    setFlagV   (false);
+    flagB = true;
+    flagN = flagC = flagD = flagV = flagZ = flagI = false;
 
     // Set PC to some value
     Register_ProgramCounter = 0;

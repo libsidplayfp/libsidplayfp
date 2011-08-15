@@ -162,11 +162,13 @@ protected:
     uint8_t        Register_X;
     uint8_t        Register_Y;
     uint_least32_t Register_ProgramCounter;
-    uint8_t        Register_Status;
-    uint_least8_t  Register_c_Flag;
-    uint_least8_t  Register_n_Flag;
-    uint_least8_t  Register_v_Flag;
-    uint_least8_t  Register_z_Flag;
+    bool           flagN;
+    bool           flagC;
+    bool           flagD;
+    bool           flagZ;
+    bool           flagV;
+    bool           flagI;
+    bool           flagB;
     uint_least16_t Register_StackPointer;
 
     /** Debug info */
@@ -187,6 +189,11 @@ protected:
     void        clock            (void);
     void        event            (void);
     void        Initialise       (void);
+
+    // Flag utility functions
+    inline void setFlagsNZ(const uint8_t value);
+    inline uint8_t getStatusRegister(void);
+    inline void setStatusRegister(const uint8_t sr);
 
     // Declare Interrupt Routines
     inline void RSTRequest       (void);
