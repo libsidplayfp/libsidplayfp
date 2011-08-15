@@ -138,26 +138,15 @@ protected:
         void (MOS6510::*func)(void);
         bool nosteal;
         ProcessorCycle ()
-            :func(NULL), nosteal(false) { ; }
-    };
-
-    // Declare processor operations
-    struct ProcessorOperations
-    {
-        struct ProcessorCycle cycle[9];
-        uint          cycles;
-        uint_least8_t opcode;
-        ProcessorOperations ()
-            : cycles (0) { ; }
+            :func(0), nosteal(false) { ; }
     };
 
     struct ProcessorCycle       fetchCycle;
     struct ProcessorCycle      *procCycle;
 
     /** Table of CPU opcode implementations */
-    struct ProcessorOperations  instrTable[0x100];
-    struct ProcessorOperations  interruptTable[3];
-    struct ProcessorOperations *instrCurrent;
+    struct ProcessorCycle  instrTable[0x100][9];
+    struct ProcessorCycle  interruptTable[3][9];
 
     uint_least16_t instrStartPC;
     int_least8_t   lastAddrCycle;

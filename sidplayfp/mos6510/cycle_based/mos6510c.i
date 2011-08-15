@@ -454,8 +454,7 @@ MOS6510_interruptPending_check:
 #endif
 
     // Start the interrupt
-    instrCurrent = &interruptTable[offset];
-    procCycle    = instrCurrent->cycle;
+    procCycle = interruptTable[offset];
     cycleCount   = 0;
     clock ();
     return true;
@@ -530,8 +529,7 @@ void MOS6510::FetchOpcode (void)
     instrStartPC  = endian_32lo16 (Register_ProgramCounter++);
     const uint_least8_t instrOpcode   = env->envReadMemByte (instrStartPC);
     // Convert opcode to pointer in instruction table
-    instrCurrent  = &instrTable[instrOpcode];
-    procCycle     = instrCurrent->cycle;
+    procCycle  = instrTable[instrOpcode];
     cycleCount    = 0;
 }
 
@@ -862,8 +860,7 @@ void MOS6510::brk_instr (void)
         if (cycles >= MOS6510_INTERRUPT_DELAY)
         {
             interrupts.pending &= ~iNMI;
-            instrCurrent = &interruptTable[oNMI];
-            procCycle    = instrCurrent->cycle;
+            procCycle = interruptTable[oNMI];
         }
     }
 }
@@ -1689,9 +1686,7 @@ MOS6510::MOS6510 (EventContext *context)
         printf ("Building Command %d[%02x]..", i, i);
 #endif
 
-        struct ProcessorOperations *instr = &instrTable[i];
-        instr->opcode = i;
-        procCycle = instr->cycle;
+        procCycle = instrTable[i];
 
         for (int j=0; j<8; j++) {
             procCycle[j].nosteal = true;
@@ -2282,7 +2277,6 @@ MOS6510::MOS6510 (EventContext *context)
         printf (".");
 #endif
 
-        instr->cycles = cycleCount;
 #if MOS6510_DEBUG > 1
         printf ("Done [%d Cycles]\n", cycleCount);
 #endif
@@ -2296,10 +2290,8 @@ MOS6510::MOS6510 (EventContext *context)
         printf ("Building Interrupt %d[%02x]..", i, i);
 #endif
 
-        struct ProcessorOperations *instr = &interruptTable[i];
-        instr->opcode = 0;
+        procCycle = interruptTable[i];
         cycleCount = 0;
-        procCycle = instr->cycle;
 
         for (int j = 0; j < 9; j++)
             procCycle[j].nosteal = false;
@@ -2349,7 +2341,6 @@ MOS6510::MOS6510 (EventContext *context)
         printf (".");
 #endif
 
-        instr->cycles = cycleCount;
 #if MOS6510_DEBUG > 1
         printf ("Done [%d Cycles]\n", cycleCount);
 #endif

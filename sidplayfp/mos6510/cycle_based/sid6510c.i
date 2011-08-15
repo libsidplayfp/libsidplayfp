@@ -160,11 +160,11 @@ SID6510::SID6510 (EventContext *context)
     // itself.
     for (uint i = 0; i < OPCODE_MAX; i++)
     {
-        procCycle = instrTable[i].cycle;
-        if (procCycle == NULL) continue;
+        procCycle = instrTable[i];
 
-        for (uint n = 0; n < instrTable[i].cycles; n++)
+        for (uint n = 0; n < 9; n++)
         {
+            if (procCycle[n].func == 0) break;
             if (procCycle[n].func == &SID6510::illegal_instr)
             {   // Rev 1.2 (saw) - Changed nasty union to reinterpret_cast
                 procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
@@ -186,9 +186,10 @@ SID6510::SID6510 (EventContext *context)
     {   // Since no real IRQs, all RTIs mapped to RTS
         // Required for fix bad tunes in old modes
         uint n;
-        procCycle = instrTable[RTIn].cycle;
-        for (n = 0; n < instrTable[RTIn].cycles; n++)
+        procCycle = instrTable[RTIn];
+        for (n = 0; n < 9; n++)
         {
+            if (procCycle[n].func == 0) break;
             if (procCycle[n].func == &SID6510::PopSR)
             {
                 procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
@@ -197,9 +198,10 @@ SID6510::SID6510 (EventContext *context)
             }
         }
 
-        procCycle = interruptTable[oIRQ].cycle;
-        for (n = 0; n < interruptTable[oIRQ].cycles; n++)
+        procCycle = interruptTable[oIRQ];
+        for (n = 0; n < 9; n++)
         {
+            if (procCycle[n].func == 0) break;
             if (procCycle[n].func == &SID6510::IRQRequest)
             {
                 procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
@@ -210,9 +212,10 @@ SID6510::SID6510 (EventContext *context)
     }
 
     {   // Support of sidplays BRK functionality
-        procCycle = instrTable[BRKn].cycle;
-        for (uint n = 0; n < instrTable[BRKn].cycles; n++)
+        procCycle = instrTable[BRKn];
+        for (uint n = 0; n < 9; n++)
         {
+            if (procCycle[n].func == 0) break;
             if (procCycle[n].func == &SID6510::PushHighPC)
             {
                 procCycle[n].func = reinterpret_cast <void (MOS6510::*)()>
