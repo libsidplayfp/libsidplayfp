@@ -1201,13 +1201,26 @@ void MOS6510::asla_instr (void)
 
 void MOS6510::branch_instr (const bool condition)
 {
+    /*
+    * 2 cycles spent before arriving here. spend 0 - 2 cycles here;
+    * - condition false: Continue immediately to FetchNextInstr (return true).
+    *
+    * Otherwise read the byte following the opcode (which is already scheduled to occur on this cycle).
+    * This effort is wasted. Then calculate address of the branch target. If branch is on same page,
+    * then continue at that insn on next cycle (this delays IRQs by 1 clock for some reason, allegedly).
+    *
+    * If the branch is on different memory page, issue a spurious read with wrong high byte before
+    * continuing at the correct address.
+    */
     if (condition)
     {
-        const uint8_t oldPage = endian_32hi8 (Register_ProgramCounter);
+        /* issue the spurious read for next insn here. */
+        env->envReadMemByte(Register_ProgramCounter);
+        Cycle_HighByteWrongEffectiveAddress = Register_ProgramCounter & 0xff00 | Register_ProgramCounter + Cycle_Data & 0xff;
         Cycle_EffectiveAddress = Register_ProgramCounter + (int8_t) Cycle_Data;
 
         // Check for page boundary crossing
-        if (endian_16hi8 (Cycle_EffectiveAddress) == oldPage)
+        if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
         {
             // Page boundary not crossed.
             // This causes pending interrupts to be delayed by a cycle
