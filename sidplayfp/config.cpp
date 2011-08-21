@@ -176,57 +176,58 @@ int Player::config (const sid2_config_t &cfg)
         goto Player_configure_error;
     }
 
-    // SID emulation setup (must be performed before the
-    // environment setup call)
-    if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0) {
-        m_errorString = cfg.sidEmulation->error();
-        m_cfg.sidEmulation = NULL;
-        goto Player_configure_restore;
-    }
-
     // Only do these if we have a loaded tune
     if (m_tune)
     {
         if (m_playerState != sid2_paused)
             m_tune->getInfo(m_tuneInfo);
 
+        // SID emulation setup (must be performed before the
+        // environment setup call)
+        if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0) {
+            m_errorString = cfg.sidEmulation->error();
+            m_cfg.sidEmulation = NULL;
+            goto Player_configure_restore;
+        }
+
         if (m_playerState != sid2_paused)
         {
-            float64_t cpuFreq;
             // Must be this order:
             // Determine clock speed
-            cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
+            m_cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
                                   cfg.clockForced);
-            m_cpuFreq = cpuFreq;
+
+            const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
+            const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
 
             // Setup fake cia
-            sid6526.clock ((uint_least16_t)(cpuFreq / VIC_FREQ_PAL + 0.5));
+            sid6526.clock ((uint_least16_t)(clockPAL + 0.5));
             if (m_tuneInfo.songSpeed  == SIDTUNE_SPEED_CIA_1A ||
                 m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_NTSC)
             {
-                sid6526.clock ((uint_least16_t)(cpuFreq / VIC_FREQ_NTSC + 0.5));
+                sid6526.clock ((uint_least16_t)(clockNTSC + 0.5));
             }
 
             // @FIXME@ see mos6526.h for details. Setup TOD clock
             if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
             {
-                cia.clock  (cpuFreq / VIC_FREQ_PAL);
-                cia2.clock (cpuFreq / VIC_FREQ_PAL);
+                cia.clock  (clockPAL);
+                cia2.clock (clockPAL);
             }
             else
             {
-                cia.clock  (cpuFreq / VIC_FREQ_NTSC);
-                cia2.clock (cpuFreq / VIC_FREQ_NTSC);
+                cia.clock  (clockNTSC);
+                cia2.clock (clockNTSC);
             }
 
             // Configure, setup and install C64 environment/events
-             if (environment(cfg.environment) < 0) {
+            if (environment(cfg.environment) < 0) {
                 goto Player_configure_error;
-             }
+            }
 
             /* inform ReSID of the desired sampling rate */
             for (int i = 0; i < SID2_MAX_SIDS; i += 1) {
-                sid[i]->sampling((long)cpuFreq, cfg.frequency, cfg.samplingMethod, false);
+                sid[i]->sampling((long)m_cpuFreq, cfg.frequency, cfg.samplingMethod, false);
             }
         }
     }
@@ -235,12 +236,9 @@ int Player::config (const sid2_config_t &cfg)
     // Setup sid mapping table
     // Note this should be based on m_tuneInfo.sidChipBase1
     // but this is only temporary code anyway
-    {
-        for (int i = 0; i < SID2_MAPPER_SIZE; i++)
-            m_sidmapper[i] = 0;
-    }
+    for (int i = 0; i < SID2_MAPPER_SIZE; i++)
+        m_sidmapper[i] = 0;
 
-    m_info.channels = 1;
     if (m_tune && m_tuneInfo.sidChipBase2) {
         // Assumed to be in d4xx-d7xx range
         m_sidmapper[(m_tuneInfo.sidChipBase2 >> 5) &
@@ -252,7 +250,8 @@ int Player::config (const sid2_config_t &cfg)
         for (int i = 0xd420; i < 0xd7ff; i += 0x20)
             m_sidmapper[(i >> 5) & (SID2_MAPPER_SIZE - 1)] = 1;
         m_info.channels = 2;
-    }
+    } else
+        m_info.channels = 1;
 
     m_leftVolume  = cfg.leftVolume;
     m_rightVolume = cfg.rightVolume;
@@ -376,8 +375,8 @@ int Player::environment (sid2_env_t env)
             env  = sid2_envBS;
     }
 
-    // Environment already set?
-    if (!(m_ram && (m_info.environment == env)))
+    // Environment not set?
+    if ((m_ram == 0) || (m_info.environment != env))
     {   // Setup new player environment
         m_info.environment = env;
         if (m_ram)
@@ -436,14 +435,7 @@ int Player::environment (sid2_env_t env)
         }
     }
 
-    {   // Have to reload the song into memory as
-        // everything has changed
-        const sid2_env_t old = m_info.environment;
-        m_info.environment = env;
-        const int ret = initialise ();
-        m_info.environment = old;
-        return ret;
-    }
+    return initialise ();
 }
 
 sid2_model_t Player::getModel(int sidModel,
@@ -515,19 +507,12 @@ sid2_model_t Player::getModel(int sidModel,
 int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
                        sid2_model_t defaultModel)
 {
-    if (xsid.emulation() != &nullsid) {
-        sid[0] = xsid.emulation();
-        xsid.emulation (&nullsid);
-    }
-
-    {   // Release old sids
-        for (int i = 0; i < SID2_MAX_SIDS; i++)
-        {
-            sidbuilder *b;
-            b = sid[i]->builder ();
-            if (b)
-                b->unlock (sid[i]);
-        }
+    // Release old sids
+    for (int i = 0; i < SID2_MAX_SIDS; i++)
+    {
+        sidbuilder *b = sid[i]->builder ();
+        if (b)
+            b->unlock (sid[i]);
     }
 
     if (!builder)
@@ -539,6 +524,7 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
     {   // Detect the Correct SID model
         // Determine model when unknown
         sid2_model_t userModels[SID2_MAX_SIDS];
+
         userModels[0] = getModel(m_tuneInfo.sidModel1, userModel, defaultModel);
         // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
         // model as the first SID.
@@ -555,10 +541,11 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
     }
 
     /* put XSID as sid #0 in case we aren't in a real c64 environment */
-    if (m_info.environment != sid2_envR) {
+    if (m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_PSID) {
         xsid.emulation (sid[0]);
         sid[0] = &xsid;
     }
+
     return 0;
 }
 
