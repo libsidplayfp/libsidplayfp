@@ -85,7 +85,7 @@ short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig confi
 		for (int i = 11; i > 0; i--) {
 			o[i] = top ? 1.0f - o[i - 1] :  o[i - 1];
 		}
-		o[0] = 0.;
+		o[0] = 0.f;
 	}
 
 	/* convert to ST */
@@ -108,8 +108,8 @@ short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig confi
 
 		float tmp[12];
 		for (int i = 0; i < 12; i++) {
-			float avg = 0.;
-			float n = 0.;
+			float avg = 0.f;
+			float n = 0.f;
 			for (int j = 0; j < 12; j++) {
 				const float weight = distancetable[i - j + 12];
 				avg += o[j] * weight;
@@ -132,7 +132,7 @@ short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig confi
 
 	short value = 0;
 	for (int i = 0; i < 12; i++) {
-		if (o[i] - config.bias > 0.) {
+		if (o[i] - config.bias > 0.f) {
 			value |= 1 << i;
 		}
 	}
