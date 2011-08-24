@@ -90,6 +90,40 @@
 #include "sidplayfp/component.h"
 #include "sidplayfp/event.h"
 
+class Timer {
+
+private:
+    uint8_t        m_cr;
+    uint_least16_t m_timer;
+    uint_least16_t m_latch;
+    bool           m_underflow;
+    bool           m_pulse;
+
+public:
+    Timer() :
+    m_cr(0),
+    m_timer(0),
+    m_latch(0),
+    m_underflow(false),
+    m_pulse(false) {}
+
+    inline void reset();
+    inline bool cr(const uint8_t data);
+    inline void pulseDown() { m_pulse = false; }
+    inline void latchLo(const uint8_t data);
+    inline void latchHi(const uint8_t data);
+    inline void underflow();
+
+    inline void decTimer(const event_clock_t cycles) { m_timer -= cycles; }
+    inline void load() { m_timer = m_latch; }
+
+    inline uint8_t cr() const { return m_cr; }
+    inline uint_least16_t timer() const { return m_timer; }
+    inline bool pb() const { return m_cr & 0x04 ? m_underflow : m_pulse; }
+    inline uint8_t timerLo() const;
+    inline uint8_t timerHi() const;
+};
+
 class MOS6526: public component
 {
 private:
@@ -98,20 +132,13 @@ private:
 protected:
     uint8_t regs[0x10];
     bool    cnt_high;
-    bool    ta_pulse, tb_pulse;
 
     // Ports
     uint8_t &pra, &prb, &ddra, &ddrb;
 
-    // Timer A
-    uint8_t cra;
-    uint_least16_t ta, ta_latch;
-    bool ta_underflow;
-
-    // Timer B
-    uint8_t crb;
-    uint_least16_t tb, tb_latch;
-    bool tb_underflow;
+    // Timers
+    Timer timerA;
+    Timer timerB;
 
     // Serial Data Registers
     uint8_t sdr_out;
@@ -121,7 +148,6 @@ protected:
     uint8_t icr, idr; // Interrupt Control Register
     event_clock_t m_accessClk;
     EventContext &event_context;
-    event_phase_t m_phase;
 
     bool    m_todlatched;
     bool    m_todstopped;
@@ -144,20 +170,6 @@ protected:
     EventCallback<MOS6526> m_tbstop;
     EventCallback<MOS6526> m_tabEvent;
 
-    /*
-    class EventStateMachineA: public Event
-    {
-    private:
-        MOS6526 &m_cia;
-        void event (void) {m_cia.cra_event ();}
-
-    public:
-        EventStateMachineA (MOS6526 *cia)
-            :Event("CIA Timer A (State Machine)"),
-             m_cia(*cia) {}
-    } event_stateMachineA;
-*/
-
 protected:
     MOS6526 (EventContext *context);
     void ta_event  (void);
@@ -175,7 +187,6 @@ protected:
     void tb_stop(void);
     void tod_event (void);
     void trigger   (void);
-//    void stateMachineA_event (void);
 
     // Environment Interface
     virtual void interrupt (bool state) = 0;
