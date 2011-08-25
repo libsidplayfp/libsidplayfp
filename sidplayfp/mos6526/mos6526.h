@@ -93,6 +93,12 @@
 class Timer {
 
 private:
+    static const int CIAT_CR_START   = 0x01;
+    static const int CIAT_STEP       = 0x04;
+    static const int CIAT_CR_ONESHOT = 0x08;
+    static const int CIAT_CR_FLOAD   = 0x10;
+
+private:
     uint8_t        m_cr;
     uint_least16_t m_timer;
     uint_least16_t m_latch;
@@ -119,7 +125,7 @@ public:
 
     inline uint8_t cr() const { return m_cr; }
     inline uint_least16_t timer() const { return m_timer; }
-    inline bool pb() const { return m_cr & 0x04 ? m_underflow : m_pulse; }
+    inline bool pb() const { return m_cr & CIAT_STEP ? m_underflow : m_pulse; }
     inline uint8_t timerLo() const;
     inline uint8_t timerHi() const;
 };

@@ -166,15 +166,15 @@ void Timer::reset()
 
 bool Timer::cr(const uint8_t data)
 {
-	const bool start = (data & 0x01) && !(m_cr & 0x01);
-	const bool clearOneShot = !(data & 8) && (m_cr & 8);
+	const bool start = (data & CIAT_CR_START) && !(m_cr & CIAT_CR_START);
+	const bool clearOneShot = !(data & CIAT_CR_ONESHOT) && (m_cr & CIAT_CR_ONESHOT);
 	// Reset the underflow flipflop for the data port
 	if (start)
 		m_underflow = true;
 	m_cr = data & 0xef;
 
 	// Check for forced load
-	if (data & 0x10)
+	if (data & CIAT_CR_FLOAD)
 		return true;
 
 	/* Clearing ONESHOT at T-1 seems to arrive too late to prevent
@@ -195,7 +195,7 @@ void Timer::latchLo(const uint8_t data)
 void Timer::latchHi(const uint8_t data)
 {
 	endian_16hi8 (m_latch, data);
-	if (!(m_cr & 0x01)) // Reload timer if stopped
+	if (!(m_cr & CIAT_CR_START)) // Reload timer if stopped
 		load();
 }
 
@@ -220,8 +220,8 @@ m_underflow = toggle && !m_underflow;
 // If the timer underflows and CR bit 3 (one shot) is set or has
 // been set in the clock before, then bit 0 of the CRA will be
 // cleared. (Stops CIA.)
-if (m_cr & 0x08)
-	m_cr &= (~0x01);
+if (m_cr & CIAT_CR_ONESHOT)
+	m_cr &= (~CIAT_CR_START);
 }
 
 uint8_t Timer::timerLo() const { return endian_16lo8 (m_timer); }
