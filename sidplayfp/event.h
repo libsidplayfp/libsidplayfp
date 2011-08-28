@@ -21,7 +21,7 @@
 
 #include "sidtypes.h"
 
-typedef uint_fast64_t event_clock_t;
+typedef int_fast64_t event_clock_t;
 
 /**
 * C64 system runs actions at system clock high and low
