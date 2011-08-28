@@ -127,6 +127,7 @@ public:
     virtual void cancel   (Event &event) = 0;
     virtual void schedule (Event &event, const event_clock_t cycles,
                            const event_phase_t phase) = 0;
+    virtual void schedule (Event &event, const event_clock_t cycles) = 0;
     virtual event_clock_t getTime (const event_phase_t phase) const = 0;
     virtual event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const = 0;
     virtual event_phase_t phase () const = 0;
@@ -165,6 +166,30 @@ private:
 private:
     void event (void);
 
+    /**
+    * Scan the event queue and schedule event for execution.
+    *
+    * @param event The event to add
+    */
+    void schedule(Event &event) {
+
+        if (event.m_pending)
+            cancel(event);
+
+        event.m_pending = true;
+
+        /* find the right spot where to tuck this new event */
+        Event **scan = &firstEvent;
+        for (;;) {
+            if (*scan == 0 || (*scan)->triggerTime > event.triggerTime) {
+                 event.next = *scan;
+                 *scan = &event;
+                 break;
+             }
+             scan = &((*scan)->next);
+         }
+    }
+
 protected:
     /** Add event to pending queue.
     *
@@ -173,7 +198,20 @@ protected:
     * @param phase when to fire the event
     */
     void schedule (Event &event, const event_clock_t cycles,
-                   const event_phase_t phase);
+                   const event_phase_t phase) {
+        event.triggerTime = (cycles << 1) + currentTime + (currentTime & 1 ^ (phase == EVENT_CLOCK_PHI1 ? 0 : 1));
+        schedule(event);
+    }
+
+    /** Add event to pending queue in the same phase as current event.
+    *
+    * @param event the event to add
+    * @param cycles how many cycles from now to fire
+    */
+    void schedule(Event &event, const event_clock_t cycles) {
+        event.triggerTime = (cycles << 1) + currentTime;
+        schedule(event);
+    }
 
     /** Cancel the specified event.
     *

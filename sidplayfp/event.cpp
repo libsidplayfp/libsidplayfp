@@ -83,26 +83,3 @@ void EventScheduler::cancel   (Event &event)
         scan = scan->next;
     }
 }
-
-void EventScheduler::schedule (Event &event, const event_clock_t cycles,
-                               const event_phase_t phase)
-{
-    if (event.m_pending)
-        cancel(event);
-
-    const event_clock_t tt = event.triggerTime = (cycles << 1) + currentTime + ((currentTime & 1) ^ (phase == EVENT_CLOCK_PHI1 ? 0 : 1));
-
-    event.m_pending = true;
-
-    /* find the right spot where to tuck this new event */
-    Event **scan = &firstEvent;
-    for (;;) {
-        if (*scan == 0 || (*scan)->triggerTime > tt) {
-             event.next = *scan;
-             *scan = &event;
-             break;
-         }
-         scan = &((*scan)->next);
-     }
-
-}
