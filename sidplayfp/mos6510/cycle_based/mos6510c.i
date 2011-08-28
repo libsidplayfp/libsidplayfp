@@ -2363,21 +2363,19 @@ MOS6510::MOS6510 (EventContext *context)
         for (int j = 0; j < 9; j++)
             instrCurrent[j].nosteal = false;
 
+        instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+        instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+
         switch (i)
         {
         case oRST:
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
             instrCurrent[cycleCount++].func = &MOS6510::RSTRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchOpcode;
         break;
 
         case oNMI:
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
             instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
             instrCurrent[cycleCount].nosteal = true;
@@ -2386,12 +2384,9 @@ MOS6510::MOS6510 (EventContext *context)
             instrCurrent[cycleCount++].func = &MOS6510::IRQRequest;
             instrCurrent[cycleCount++].func = &MOS6510::NMILoRequest;
             instrCurrent[cycleCount++].func = &MOS6510::NMIHiRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchOpcode;
         break;
 
         case oIRQ:
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
             instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
             instrCurrent[cycleCount].nosteal = true;
@@ -2400,9 +2395,11 @@ MOS6510::MOS6510 (EventContext *context)
             instrCurrent[cycleCount++].func = &MOS6510::IRQRequest;
             instrCurrent[cycleCount++].func = &MOS6510::IRQLoRequest;
             instrCurrent[cycleCount++].func = &MOS6510::IRQHiRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchOpcode;
+
         break;
         }
+
+        instrCurrent[cycleCount++].func = &MOS6510::FetchOpcode;
 
 #if MOS6510_DEBUG > 1
         printf (".");
