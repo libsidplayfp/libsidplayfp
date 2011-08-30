@@ -96,6 +96,10 @@ private:
     event_clock_t m_delayClk;
     bool          m_framelock;
 
+private:
+    void hackTable();
+    void unhackTable();
+
 public:
     SID6510 (EventContext *context);
 
@@ -103,9 +107,8 @@ public:
     void reset (void);
     void reset (uint_least16_t pc, uint8_t a, uint8_t x, uint8_t y);
 
-    void environment (sid2_env_t mode) { m_mode = mode; }
+    void environment (const sid2_env_t mode);
     void triggerRST (void);
-    void triggerNMI (void);
     void triggerIRQ (void);
     void sleep      (void);
 

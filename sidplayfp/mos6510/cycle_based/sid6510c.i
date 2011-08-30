@@ -148,11 +148,27 @@
 
 #include "sid6510c.h"
 
-
 SID6510::SID6510 (EventContext *context)
 :MOS6510(context),
+ m_sleeping(false),
  m_mode(sid2_envR),
  m_framelock(false)
+{
+    // Used to insert busy delays into the CPU emulation
+    delayCycle.func = reinterpret_cast <void (MOS6510::*)()>
+                      (&SID6510::sid_delay);
+}
+
+void SID6510::environment (const sid2_env_t mode)
+{
+    if (mode != sid2_envR && m_mode == sid2_envR)
+        hackTable();
+    else if (mode == sid2_envR && m_mode != sid2_envR)
+        unhackTable();
+    m_mode = mode;
+}
+
+void SID6510::hackTable()
 {   // Ok start all the hacks for sidplay.  This prevents
     // execution of code in roms.  For real c64 emulation
     // create object from base class!  Also stops code
@@ -185,9 +201,8 @@ SID6510::SID6510 (EventContext *context)
 
     {   // Since no real IRQs, all RTIs mapped to RTS
         // Required for fix bad tunes in old modes
-        uint n;
         instrCurrent = instrTable[RTIn];
-        for (n = 0; n < 9; n++)
+        for (uint n = 0; n < 9; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == &SID6510::PopSR)
@@ -199,7 +214,7 @@ SID6510::SID6510 (EventContext *context)
         }
 
         instrCurrent = interruptTable[oIRQ];
-        for (n = 0; n < 9; n++)
+        for (uint n = 0; n < 9; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == &SID6510::IRQRequest)
@@ -224,12 +239,78 @@ SID6510::SID6510 (EventContext *context)
             }
         }
     }
-
-    // Used to insert busy delays into the CPU emulation
-    delayCycle.func = reinterpret_cast <void (MOS6510::*)()>
-                      (&SID6510::sid_delay);
 }
 
+void SID6510::unhackTable()
+{   //Restore the original table.
+    for (uint i = 0; i < OPCODE_MAX; i++)
+    {
+        instrCurrent = instrTable[i];
+
+        for (uint n = 0; n < 9; n++)
+        {
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::sid_illegal)
+            {   // Rev 1.2 (saw) - Changed nasty union to reinterpret_cast
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
+                    (&SID6510::illegal_instr);
+            }
+            else if (instrCurrent[n].func == &SID6510::sid_jmp)
+            {   // Stop jumps into rom code
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
+                    (&SID6510::jmp_instr);
+            }
+            else if (instrCurrent[n].func == &SID6510::sid_cli)
+            {   // No overlapping IRQs allowed
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
+                    (&SID6510::cli_instr);
+            }
+        }
+    }
+
+    {   // Since no real IRQs, all RTIs mapped to RTS
+        // Required for fix bad tunes in old modes
+        instrCurrent = instrTable[RTIn];
+        for (uint n = 0; n < 9; n++)
+        {
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::sid_rti)
+            {
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
+                    (&SID6510::PopSR);
+                break;
+            }
+        }
+
+        instrCurrent = interruptTable[oIRQ];
+        for (uint n = 0; n < 9; n++)
+        {
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::sid_irq)
+            {
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
+                    (&SID6510::IRQRequest);
+                break;
+            }
+        }
+    }
+
+    {   // Support of sidplays BRK functionality
+        instrCurrent = instrTable[BRKn];
+        for (uint n = 0; n < 9; n++)
+        {
+            if (instrCurrent[n].func == 0) break;
+            if (instrCurrent[n].func == &SID6510::sid_brk)
+            {
+                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
+                    (&SID6510::PushHighPC);
+                break;
+            }
+        }
+    }
+
+    m_sleeping = false;
+}
 void SID6510::reset (uint_least16_t pc, uint8_t a, uint8_t x, uint8_t y)
 {   // Reset the processor
     reset ();
@@ -300,12 +381,6 @@ void SID6510::FetchOpcode (void)
 //**************************************************************************************
 void SID6510::sid_brk (void)
 {
-    if (m_mode == sid2_envR)
-    {
-        MOS6510::PushHighPC ();
-        return;
-    }
-
     sei_instr ();
 #if !defined(NO_RTS_UPON_BRK)
     sid_rts ();
@@ -315,19 +390,6 @@ void SID6510::sid_brk (void)
 
 void SID6510::sid_jmp (void)
 {   // For sidplay compatibility, inherited from environment
-    if (m_mode == sid2_envR)
-    {   // If a busy loop then just sleep
-        if (Cycle_EffectiveAddress == instrStartPC)
-        {
-            endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
-            if (!interruptPending ())
-                this->sleep ();
-        }
-        else
-            jmp_instr ();
-        return;
-    }
-
     if (env->envCheckBankJump (Cycle_EffectiveAddress))
         jmp_instr ();
     else
@@ -343,20 +405,10 @@ void SID6510::sid_rts (void)
     rts_instr();
 }
 
-void SID6510::sid_cli (void)
-{
-    if (m_mode == sid2_envR)
-        cli_instr ();
-}
+void SID6510::sid_cli (void) {}
 
 void SID6510::sid_rti (void)
 {
-    if (m_mode == sid2_envR)
-    {
-        PopSR ();
-        return;
-    }
-
     // Fake RTS
     sid_rts ();
     FetchOpcode ();
@@ -365,20 +417,12 @@ void SID6510::sid_rti (void)
 void SID6510::sid_irq (void)
 {
     MOS6510::IRQRequest ();
-    if (m_mode != sid2_envR)
-    {   // RTI behaves like RTI in sidplay1 modes
-        Register_StackPointer++;
-    }
+    Register_StackPointer++;
 }
 
 // Sidplay Suppresses Illegal Instructions
 void SID6510::sid_illegal (void)
 {
-    if (m_mode == sid2_envR)
-    {
-        MOS6510::illegal_instr ();
-        return;
-    }
 #ifdef MOS6510_DEBUG
     DumpState ();
 #endif
@@ -403,7 +447,7 @@ void SID6510::sid_delay (void)
     cycleCount--;
     // Woken from sleep just to handle the stealing release
     if (m_sleeping)
-        cancel ();
+        eventContext.cancel (*this);
     else
     {
         event_clock_t cycle = delayed % 3;
@@ -412,13 +456,13 @@ void SID6510::sid_delay (void)
             if (interruptPending ())
                 return;
         }
-        schedule (eventContext, 3 - cycle, EVENT_CLOCK_PHI2);
+        eventContext.schedule (*this, 3 - cycle, EVENT_CLOCK_PHI2);
     }
 }
 
 
 //**************************************************************************************
-// Sidplay compatibility interrupts.  Basically wakes CPU if it is m_sleeping
+// Sidplay compatibility   Basically wakes CPU if it is m_sleeping
 //**************************************************************************************
 void SID6510::triggerRST (void)
 {   // All modes
@@ -426,44 +470,23 @@ void SID6510::triggerRST (void)
     if (m_sleeping)
     {
         m_sleeping = false;
-        schedule (eventContext, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
-    }
-}
-
-void SID6510::triggerNMI (void)
-{   // Only in Real C64 mode
-    if (m_mode == sid2_envR)
-    {
-        MOS6510::triggerNMI ();
-        if (m_sleeping)
-        {
-            m_sleeping = false;
-            schedule (eventContext, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
-        }
+        eventContext.schedule (*this, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
     }
 }
 
 void SID6510::triggerIRQ (void)
 {
-    switch (m_mode)
+    if (m_mode == sid2_envR)
     {
-    default:
-#ifdef MOS6510_DEBUG
-        if (dodump)
-        {
-            fprintf (m_fdbg, "****************************************************\n");
-            fprintf (m_fdbg, " Fake IRQ Routine\n");
-            fprintf (m_fdbg, "****************************************************\n");
-        }
-#endif
-        return;
-    case sid2_envR:
         MOS6510::triggerIRQ ();
-        if (m_sleeping)
-        {   // Simulate busy loop
-            m_sleeping = !(interrupts.irqRequest || interrupts.pending);
-            if (!m_sleeping)
-                schedule (eventContext, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
-        }
+        return;
     }
+#ifdef MOS6510_DEBUG
+    if (dodump)
+    {
+        fprintf (m_fdbg, "****************************************************\n");
+        fprintf (m_fdbg, " Fake IRQ Routine\n");
+        fprintf (m_fdbg, "****************************************************\n");
+    }
+#endif
 }
