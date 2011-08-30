@@ -336,7 +336,8 @@ void SID6510::sleep ()
     m_delayClk = m_stealingClk = eventContext.getTime (EVENT_CLOCK_PHI2);
     instrCurrent  = &delayCycle;
     cycleCount = 0;
-    m_sleeping = !(interrupts.irqRequest || interrupts.pending);
+    //m_sleeping = !(irqRequest || pending);
+    m_sleeping = !(nmiFlag || irqFlag);
     env->envSleep ();
 }
 
@@ -362,7 +363,7 @@ void SID6510::FetchOpcode (void)
         // Simulate sidplay1 frame based execution
         while (!m_sleeping && timeout)
         {
-            MOS6510::clock ();
+            MOS6510::eventWithoutSteals ();
             timeout--;
         }
         if (!timeout)
@@ -447,16 +448,20 @@ void SID6510::sid_delay (void)
     cycleCount--;
     // Woken from sleep just to handle the stealing release
     if (m_sleeping)
-        eventContext.cancel (*this);
+        eventContext.cancel (m_steal);
     else
     {
         event_clock_t cycle = delayed % 3;
         if (cycle == 0)
         {
-            if (interruptPending ())
+            //if (interruptPending ())
+            if (!(
+                (nmiFlag && cycleCount > nmiClk + 2)
+                || (!flagI && irqFlag && cycleCount > irqClk + 2)
+            ))
                 return;
         }
-        eventContext.schedule (*this, 3 - cycle, EVENT_CLOCK_PHI2);
+        eventContext.schedule (m_steal, 3 - cycle, EVENT_CLOCK_PHI2);
     }
 }
 
@@ -470,7 +475,7 @@ void SID6510::triggerRST (void)
     if (m_sleeping)
     {
         m_sleeping = false;
-        eventContext.schedule (*this, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
+        eventContext.schedule (m_steal, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
     }
 }
 

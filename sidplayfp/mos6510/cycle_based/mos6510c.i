@@ -216,6 +216,51 @@ static char filetmp[0x100];
 static int  filepos = 0;
 #endif // PC64_TESTSUITE
 
+//-------------------------------------------------------------------------//
+
+/** When AEC signal is high, no stealing is possible */
+void MOS6510::eventWithoutSteals  (void)
+{
+    (this->*(instrCurrent[cycleCount++].func)) ();
+    eventContext.schedule(m_nosteal, 1, EVENT_CLOCK_PHI2);
+}
+
+/** When AEC signal is low, steals permitted */
+void MOS6510::eventWithSteals  (void)
+{
+    if (instrCurrent[cycleCount].nosteal) {
+        (this->*(instrCurrent[cycleCount++].func)) ();
+        eventContext.schedule(m_steal, 1, EVENT_CLOCK_PHI2);
+    } else {
+        /* Even while stalled, the CPU can still process first clock of
+        * interrupt delay, but only the first one. However, IRQ may be
+        * modified by CLI and SEI, and are specially handled below. */
+        if (nmiClk == cycleCount) {
+            nmiClk --;
+        }
+        if (cycleCount == 0) {
+            /* If stalled on first cycle of CLIn, consume IRQ delay
+            * normally and thus allow IRQ to trigger on the next
+            * instruction. */
+            if (instrCurrent == instrTable[CLIn]) {
+                instrCurrent = instrTable[NOPn];
+                flagI = false;
+                irqClk = -1;
+                return;
+            }
+            /* If stalled on first cycle of SEIn, don't consume IRQ delay.
+            * This has the effect of causing the interrupt to be skipped
+            * if it arrives during the CPU being stalled on this cycle. */
+            if (instrCurrent == instrTable[SEIn])
+                return;
+        }
+        /* no special conditions matched */
+        if (irqClk == cycleCount)
+            irqClk --;
+    }
+}
+
+//-------------------------------------------------------------------------//
 
 void MOS6510::setFlagsNZ(const uint8_t value)
 {
@@ -261,36 +306,32 @@ void MOS6510::setStatusRegister(const uint8_t sr)
     flagN = sr & 0x80;
 }
 
-// Handle bus access signals
-void MOS6510::aecSignal (const bool state)
+
+/**
+* Handle bus access signals
+*
+* @param state
+*            new state for AEC signals
+*/
+void MOS6510::aecSignal (const bool newAec)
 {
-    if (aec != state)
-    {
-        const event_clock_t clock = eventContext.getTime (EVENT_CLOCK_PHI1);
-
-        // If the cpu blocked waiting for the bus
-        // then schedule a retry.
-        aec = state;
-        if (state && m_blocked)
-        {   // Correct IRQs that appeard before the steal
-            const event_clock_t stolen = clock - m_stealingClk;
-            interrupts.nmiClk += stolen;
-            interrupts.irqClk += stolen;
-            // IRQs that appeared during the steal must have
-            // there clocks corrected
-            if (interrupts.nmiClk > clock)
-                interrupts.nmiClk = clock - 1;
-            if (interrupts.irqClk > clock)
-                interrupts.irqClk = clock - 1;
-            m_blocked = false;
-        }
-
-        schedule (eventContext, eventContext.phase() == EVENT_CLOCK_PHI2, EVENT_CLOCK_PHI2);
+    aec = newAec;
+    if (aec) {
+        eventContext.cancel(m_steal);
+        eventContext.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
+    } else {
+        eventContext.cancel(m_nosteal);
+        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
 }
 
 
-// Push P on stack, decrement S
+/**
+* Push P on stack, decrement S
+*
+* @param newFlagB
+*            new value for B flag to set on CPU and write to RAM
+*/
 void MOS6510::PushSR (const bool b_flag)
 {
     flagB = b_flag;
@@ -305,24 +346,16 @@ void MOS6510::PushSR (void)
     PushSR (true);
 }
 
-// increment S, Pop P off stack
+/**
+* increment S, Pop P off stack
+*/
 void MOS6510::PopSR (void)
 {
-    const bool oldFlagI = flagI;
-
     // Get status register off stack
     Register_StackPointer++;
-    {
-        uint_least16_t addr = Register_StackPointer;
-        endian_16hi8 (addr, SP_PAGE);
-        setStatusRegister(env->envReadMemDataByte (addr) | (1 << SR_BREAK));
-    }
-
-    // I flag change is delayed by 1 instruction
-    interrupts.irqLatch = oldFlagI ^ flagI;
-    // Check to see if interrupts got re-enabled
-    if (!flagI && interrupts.irqs)
-        interrupts.irqRequest = true;
+    uint_least16_t addr = Register_StackPointer;
+    endian_16hi8 (addr, SP_PAGE);
+    setStatusRegister(env->envReadMemDataByte (addr) | (1 << SR_BREAK));
 }
 
 
@@ -340,135 +373,121 @@ enum
     oIRQ
 };
 
-enum
-{
-    iNONE = 0,
-    iRST  = 1 << oRST,
-    iNMI  = 1 << oNMI,
-    iIRQ  = 1 << oIRQ
-};
 
+/**
+* This forces the CPU to abort whatever it is doing and immediately
+* enter the RST interrupt handling sequence. The implementation is
+* not compatible: instructions actually get aborted mid-execution.
+* However, there is no possible way to trigger this signal from
+* programs, so it's OK.
+*/
 void MOS6510::triggerRST (void)
 {
-    interrupts.pending |= iRST;
+    Initialise();
+    cycleCount = 0;
+    instrCurrent = interruptTable[oRST];
 }
 
 void MOS6510::triggerNMI (void)
 {
-    interrupts.pending |= iNMI;
-    interrupts.nmiClk   = eventContext.getTime (EVENT_CLOCK_PHI1);
+    nmiFlag = true;
+    nmiClk = cycleCount;
+    /* maybe process 1 clock of interrupt delay. */
+    if (! aec) {
+        eventContext.cancel(m_steal);
+        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+    }
 }
 
 // Level triggered interrupt
 void MOS6510::triggerIRQ (void)
-{   // IRQ Suppressed
-    if (!flagI)
-        interrupts.irqRequest = true;
-    if (!interrupts.irqs++)
-        interrupts.irqClk = eventContext.getTime (EVENT_CLOCK_PHI1);
+{
+    /* mark interrupt arrival time */
+    if (irqs == 0) {
+        irqFlag = true;
+        irqClk = cycleCount;
+        /* maybe process 1 clock of interrupt delay. */
+        if (! aec) {
+            eventContext.cancel(m_steal);
+            eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+        }
+    }
 
-    if (interrupts.irqs > iIRQSMAX)
+    if (++irqs > iIRQSMAX)
     {
-        fprintf (m_fdbg, "\nMOS6510 ERROR: An external component is not clearing down it's IRQs.\n\n");
+        fprintf (m_fdbg, "\nMOS6510 ERROR: Bizarre attempt to signal more than %d \n\n", iIRQSMAX);
         exit (-1);
     }
 }
 
 void MOS6510::clearIRQ (void)
 {
-    if (interrupts.irqs > 0)
-    {
-        if (!(--interrupts.irqs))
-        {   // Clear off the interrupts
-            interrupts.irqRequest = false;
-        }
+    if (--irqs < 0) {
+        fprintf (m_fdbg, "\nMOS6510 ERROR: Bizarre attempt to clear untriggered IRQ.\n\n");
+        exit (-1);
     }
 }
 
-bool MOS6510::interruptPending (void)
+void MOS6510::interruptsAndNextOpcode (void)
 {
-    static const int_least8_t offTable[] = {oNONE, oRST, oNMI, oRST,
-                                            oIRQ,  oRST, oNMI, oRST};
-    // Update IRQ pending
-    if (!interrupts.irqLatch)
-    {
-        interrupts.pending &= ~iIRQ;
-        if (interrupts.irqRequest)
-            interrupts.pending |= iIRQ;
-    }
-
-    int_least8_t pending = interrupts.pending;
-MOS6510_interruptPending_check:
-    // Service the highest priority interrupt
-    int_least8_t offset = offTable[pending];
-    switch (offset)
-    {
-    case oNONE:
-        return false;
-
-    case oNMI:
-    {
-        // Try to determine if we should be processing the NMI yet
-        const event_clock_t cycles = eventContext.getTime (interrupts.nmiClk, EVENT_CLOCK_PHI2);
-        if (cycles >= MOS6510_INTERRUPT_DELAY)
-        {
-            interrupts.pending &= ~iNMI;
-            break;
-        }
-
-        // NMI delayed so check for other interrupts
-        pending &= ~iNMI;
-        goto MOS6510_interruptPending_check;
-    }
-
-    case oIRQ:
-    {
-        // Try to determine if we should be processing the IRQ yet
-        const event_clock_t cycles = eventContext.getTime (interrupts.irqClk, EVENT_CLOCK_PHI2);
-        if (cycles >= MOS6510_INTERRUPT_DELAY)
-            break;
-
-        // IRQ delayed so check for other interrupts
-        pending &= ~iIRQ;
-        goto MOS6510_interruptPending_check;
-    }
-
-    case oRST:
-        break;
+    int offset;
+    if (nmiFlag && cycleCount > nmiClk + 2) {
+        nmiFlag = false;
+        offset = oNMI;
+    } else if (!flagI && irqFlag && cycleCount > irqClk + 2) {
+        offset = oIRQ;
+    } else {
+#ifdef MOS6510_DEBUG
+        if (dodump)
+            DumpState();
+#endif
+        FetchOpcode();
+        return;
     }
 
 #ifdef MOS6510_DEBUG
-    event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
     if (dodump)
     {
-    fprintf (m_fdbg, "****************************************************\n");
-    switch (offset)
-    {
-    case oIRQ:
-        fprintf (m_fdbg, " IRQ Routine (%u)\n", cycles);
-    break;
-    case oNMI:
-        fprintf (m_fdbg, " NMI Routine (%u)\n", cycles);
-    break;
-    case oRST:
-        fprintf (m_fdbg, " RST Routine (%u)\n", cycles);
-    break;
-    }
-    fprintf (m_fdbg, "****************************************************\n");
+        event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
+        fprintf (m_fdbg, "****************************************************\n");
+        switch (offset)
+        {
+        case oIRQ:
+            fprintf (m_fdbg, " IRQ Routine (%u)\n", cycles);
+            break;
+        case oNMI:
+            fprintf (m_fdbg, " NMI Routine (%u)\n", cycles);
+            break;
+        case oRST:
+            fprintf (m_fdbg, " RST Routine (%u)\n", cycles);
+            break;
+        }
+        fprintf (m_fdbg, "****************************************************\n");
     }
 #endif
-
     // Start the interrupt
     instrCurrent = interruptTable[offset];
     cycleCount   = 0;
-    clock ();
-    return true;
+    (this->*(instrCurrent[cycleCount++].func)) ();
 }
 
-void MOS6510::RSTRequest (void)
+void MOS6510::RSTLoRequest (void)
+{
+    /* reset the values in MMU */
+    env->envWriteMemByte(0, 0x2f);
+    env->envWriteMemByte(1, 0x37);
+    Register_ProgramCounter = env->envReadMemDataByte(0xFFFC);
+}
+
+void MOS6510::RSTHiRequest (void)
+{
+    Register_ProgramCounter = env->envReadMemDataByte(0xFFFD);
+}
+
+/*void MOS6510::RSTRequest (void)
 {
     env->envReset ();
-}
+}*/
 
 void MOS6510::NMILoRequest (void)
 {
@@ -483,9 +502,8 @@ void MOS6510::NMIHiRequest (void)
 
 void MOS6510::IRQRequest (void)
 {
-    PushSR   (false);
+    PushSR (false);
     flagI = true;
-    interrupts.irqRequest = false;
 }
 
 void MOS6510::IRQLoRequest (void)
@@ -497,16 +515,6 @@ void MOS6510::IRQHiRequest (void)
 {
     endian_16hi8  (Cycle_EffectiveAddress, env->envReadMemDataByte (0xFFFF));
     endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
-}
-
-void MOS6510::NextInstr (void)
-{
-    if (!interruptPending ())
-    {
-        cycleCount = 0;
-        instrCurrent  = &fetchCycle;
-        clock ();
-    }
 }
 
 
@@ -524,17 +532,21 @@ void MOS6510::NextInstr (void)
 * Addressing Modes: All
 */
 void MOS6510::FetchOpcode (void)
-{   // On new instruction all interrupt delays are reset
-    interrupts.irqLatch = false;
-
+{
 #ifdef MOS6510_DEBUG
     m_dbgClk = eventContext.getTime (EVENT_CLOCK_PHI2);
 #endif
 
+    // Next line used for Debug
     instrStartPC  = endian_32lo16 (Register_ProgramCounter++);
+
     const uint_least8_t instrOpcode   = env->envReadMemByte (instrStartPC);
-    // Convert opcode to pointer in instruction table
     instrCurrent  = instrTable[instrOpcode];
+
+    irqFlag = irqs != 0;
+    irqClk = -1;
+    nmiClk = -1;
+
     cycleCount    = 0;
 }
 
@@ -648,7 +660,7 @@ void MOS6510::FetchHighAddr (void)
 void MOS6510::FetchHighAddrX (void)
 {
     FetchHighAddr ();
-    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress  & 0xff00) | ((Cycle_EffectiveAddress + Register_X) & 0xff);
+    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress & 0xff00) | ((Cycle_EffectiveAddress + Register_X) & 0xff);
     Cycle_EffectiveAddress += Register_X;
 }
 
@@ -673,7 +685,7 @@ void MOS6510::FetchHighAddrX2 (void)
 void MOS6510::FetchHighAddrY (void)
 {
     FetchHighAddr ();
-    Cycle_HighByteWrongEffectiveAddress = Cycle_EffectiveAddress & 0xff00 | Cycle_EffectiveAddress + Register_Y & 0xff;
+    Cycle_HighByteWrongEffectiveAddress = Cycle_EffectiveAddress & 0xff00 | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
     Cycle_EffectiveAddress += Register_Y;
 }
 
@@ -698,6 +710,7 @@ void MOS6510::FetchLowPointer (void)
 {
     Cycle_Pointer = env->envReadMemByte (endian_32lo16 (Register_ProgramCounter));
     Register_ProgramCounter++;
+
     // Nextline used for Debug
     Instr_Operand = Cycle_Pointer;
 }
@@ -773,7 +786,7 @@ void MOS6510::FetchHighEffAddr (void)
 void MOS6510::FetchHighEffAddrY (void)
 {
     FetchHighEffAddr ();
-    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress  & 0xff00) | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
+    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress & 0xff00) | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
     Cycle_EffectiveAddress += Register_Y;
 }
 
@@ -854,7 +867,7 @@ void MOS6510::DebugCycle (void)
 {
     if (dodump)
         DumpState ();
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 
@@ -869,36 +882,31 @@ void MOS6510::brk_instr (void)
 {
     PushSR   ();
     flagI = true;
-    interrupts.irqRequest = false;
 
-    // Check for an NMI, and switch over if pending
-    if (interrupts.pending & iNMI)
-    {
-        event_clock_t cycles = eventContext.getTime (interrupts.nmiClk, EVENT_CLOCK_PHI2);
-        if (cycles >= MOS6510_INTERRUPT_DELAY)
-        {
-            interrupts.pending &= ~iNMI;
-            instrCurrent = interruptTable[oNMI];
-        }
+    /* check if we need to transform BRK into NMI.
+    * c64doc says "If the interrupt arrives before the
+    * flag-setting cycle" */
+    if (nmiFlag && nmiClk < 3) {
+        instrCurrent = interruptTable[oNMI];
+        nmiFlag = false;
+        cycleCount = 5;
     }
 }
 
 void MOS6510::cld_instr (void)
 {
     flagD = false;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::cli_instr (void)
 {
-    const bool oldFlagI = flagI;
+    if (flagI) {
+        irqClk = cycleCount;
+    }
+
     flagI = false;
-    // I flag change is delayed by 1 instruction
-    interrupts.irqLatch = oldFlagI ^ flagI;
-    // Check to see if interrupts got re-enabled
-    if (interrupts.irqs)
-        interrupts.irqRequest = true;
-    clock ();
+    interruptsAndNextOpcode();
 }
 
 void MOS6510::jmp_instr (void)
@@ -908,6 +916,7 @@ void MOS6510::jmp_instr (void)
 #ifdef PC64_TESTSUITE
     // Hack - Output character to screen
     const unsigned short pc = endian_32lo16 (Register_ProgramCounter);
+
     if (pc == 0xffd2)
     {
         const char ch = _sidtune_CHRtab[Register_Accumulator];
@@ -916,16 +925,13 @@ void MOS6510::jmp_instr (void)
         case 0:
             break;
         case 1:
-            //printf (" ");
             fprintf (stderr, " ");
         case 0xd:
-            //printf ("\n");
             fprintf (stderr, "\n");
             filepos = 0;
             break;
         default:
             filetmp[filepos++] = ch - 'A' + 'a';
-            //printf ("%c", ch);
             fprintf (stderr, "%c", ch);
         }
     }
@@ -937,13 +943,12 @@ void MOS6510::jmp_instr (void)
     }
 #endif // PC64_TESTSUITE
 
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::pha_instr (void)
 {
-    uint_least16_t addr;
-    addr = Register_StackPointer;
+    uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
     env->envWriteMemByte (addr, Register_Accumulator);
     Register_StackPointer--;
@@ -959,8 +964,7 @@ void MOS6510::rti_instr (void)
         fprintf (m_fdbg, "****************************************************\n\n");
 #endif
     endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
-    interrupts.irqLatch = false;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::rts_instr (void)
@@ -972,17 +976,13 @@ void MOS6510::rts_instr (void)
 void MOS6510::sed_instr (void)
 {
     flagD = true;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::sei_instr (void)
 {
-    const bool oldFlagI = flagI;
+    interruptsAndNextOpcode();
     flagI = true;
-    // I flag change is delayed by 1 instruction
-    interrupts.irqLatch   = oldFlagI ^ flagI;
-    interrupts.irqRequest = false;
-    clock ();
 }
 
 void MOS6510::sta_instr (void)
@@ -1109,13 +1109,16 @@ void MOS6510::Perform_ADC (void)
     {   // BCD mode
         uint lo = (A & 0x0f) + (s & 0x0f) + C;
         uint hi = (A & 0xf0) + (s & 0xf0);
-        if (lo > 0x09) lo += 0x06;
-        if (lo > 0x0f) hi += 0x10;
+        if (lo > 0x09)
+            lo += 0x06;
+        if (lo > 0x0f)
+            hi += 0x10;
 
-        flagZ = regAC2 == 0;
-        flagN = hi;
-        flagV = ((hi ^ A) & 0x80) && !((A ^ s) & 0x80) == 0;
-        if (hi > 0x90) hi += 0x60;
+        flagZ = !(regAC2 & 0xff);
+        flagN = hi & 0x80;
+        flagV = ((hi ^ A) & 0x80) && !((A ^ s) & 0x80);
+        if (hi > 0x90)
+            hi += 0x60;
 
         flagC = hi > 0xff;
         Register_Accumulator = (hi | (lo & 0x0f));
@@ -1123,7 +1126,7 @@ void MOS6510::Perform_ADC (void)
     else
     {   // Binary mode
         flagC = regAC2 > 0xff;
-        flagV = ((regAC2 ^ A) & 0x80) && !((A ^ s) & 0x80) == 0;
+        flagV = ((regAC2 ^ A) & 0x80) && !((A ^ s) & 0x80);
         setFlagsNZ (Register_Accumulator = regAC2 & 0xff);
     }
 }
@@ -1136,7 +1139,7 @@ void MOS6510::Perform_SBC (void)
     const uint regAC2 = A - s - C;
 
     flagC = regAC2 < 0x100;
-    flagV =((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80) == 0;
+    flagV =((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80);
     setFlagsNZ (regAC2);
 
     if (flagD)
@@ -1148,7 +1151,8 @@ void MOS6510::Perform_SBC (void)
              lo -= 0x06;
              hi -= 0x10;
         }
-        if (hi & 0x100) hi -= 0x60;
+        if (hi & 0x100)
+            hi -= 0x60;
         Register_Accumulator = (hi | (lo & 0x0f));
     }
     else
@@ -1175,19 +1179,19 @@ void MOS6510::Perform_SBC (void)
 void MOS6510::adc_instr (void)
 {
     Perform_ADC ();
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::and_instr (void)
 {
     setFlagsNZ (Register_Accumulator &= Cycle_Data);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::ane_instr (void)
 {
     setFlagsNZ (Register_Accumulator = (Register_Accumulator | 0xee) & Register_X & Cycle_Data);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::asl_instr (void)
@@ -1201,7 +1205,7 @@ void MOS6510::asla_instr (void)
 {
     flagC = Register_Accumulator & 0x80;
     setFlagsNZ (Register_Accumulator <<= 1);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::branch_instr (const bool condition)
@@ -1221,28 +1225,22 @@ void MOS6510::branch_instr (const bool condition)
     {
         /* issue the spurious read for next insn here. */
         env->envReadMemByte(Register_ProgramCounter);
-        Cycle_HighByteWrongEffectiveAddress = Register_ProgramCounter & 0xff00 | Register_ProgramCounter + Cycle_Data & 0xff;
+        Cycle_HighByteWrongEffectiveAddress = Register_ProgramCounter & 0xff00 | Register_ProgramCounter + (int8_t) Cycle_Data & 0xff;
         Cycle_EffectiveAddress = Register_ProgramCounter + (int8_t) Cycle_Data;
 
         // Check for page boundary crossing
         if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
         {
-            // Page boundary not crossed.
-            // This causes pending interrupts to be delayed by a cycle
-            interrupts.irqClk++;
-            interrupts.nmiClk++;
-            // Also skip last instruction cycle
             cycleCount ++;
+            irqClk += 2;
+            nmiClk +=2;
         }
         Register_ProgramCounter = Cycle_EffectiveAddress;
     }
     else
     {
-        // No branch performed, skip last 2 cycles
-        cycleCount += 2;
+        interruptsAndNextOpcode ();
     }
-
-    clock ();
 }
 
 void MOS6510::bcc_instr (void)
@@ -1265,7 +1263,7 @@ void MOS6510::bit_instr (void)
     flagZ = (Register_Accumulator & Cycle_Data) == 0;
     flagN = Cycle_Data & 0x80;
     flagV = Cycle_Data & 0x40;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::bmi_instr (void)
@@ -1296,13 +1294,13 @@ void MOS6510::bvs_instr (void)
 void MOS6510::clc_instr (void)
 {
     flagC = false;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::clv_instr (void)
 {
     flagV = false;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::cmp_instr (void)
@@ -1310,7 +1308,7 @@ void MOS6510::cmp_instr (void)
     const uint_least16_t tmp = (uint_least16_t) Register_Accumulator - Cycle_Data;
     setFlagsNZ (tmp);
     flagC = tmp < 0x100;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::cpx_instr (void)
@@ -1318,7 +1316,7 @@ void MOS6510::cpx_instr (void)
     const uint_least16_t tmp = (uint_least16_t) Register_X - Cycle_Data;
     setFlagsNZ (tmp);
     flagC = tmp < 0x100;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::cpy_instr (void)
@@ -1326,7 +1324,7 @@ void MOS6510::cpy_instr (void)
     const uint_least16_t tmp = (uint_least16_t) Register_Y - Cycle_Data;
     setFlagsNZ (tmp);
     flagC = tmp < 0x100;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::dec_instr (void)
@@ -1338,19 +1336,19 @@ void MOS6510::dec_instr (void)
 void MOS6510::dex_instr (void)
 {
     setFlagsNZ (--Register_X);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::dey_instr (void)
 {
     setFlagsNZ (--Register_Y);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::eor_instr (void)
 {
-    setFlagsNZ (Register_Accumulator^= Cycle_Data);
-    clock ();
+    setFlagsNZ (Register_Accumulator ^= Cycle_Data);
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::inc_instr (void)
@@ -1362,31 +1360,31 @@ void MOS6510::inc_instr (void)
 void MOS6510::inx_instr (void)
 {
     setFlagsNZ (++Register_X);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::iny_instr (void)
 {
     setFlagsNZ (++Register_Y);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::lda_instr (void)
 {
     setFlagsNZ (Register_Accumulator = Cycle_Data);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::ldx_instr (void)
 {
     setFlagsNZ (Register_X = Cycle_Data);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::ldy_instr (void)
 {
     setFlagsNZ (Register_Y = Cycle_Data);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::lsr_instr (void)
@@ -1400,13 +1398,13 @@ void MOS6510::lsra_instr (void)
 {
     flagC = Register_Accumulator & 0x01;
     setFlagsNZ (Register_Accumulator >>= 1);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::ora_instr (void)
 {
     setFlagsNZ (Register_Accumulator |= Cycle_Data);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::pla_instr (void)
@@ -1415,6 +1413,11 @@ void MOS6510::pla_instr (void)
     uint_least16_t addr = Register_StackPointer;
     endian_16hi8 (addr, SP_PAGE);
     setFlagsNZ (Register_Accumulator = env->envReadMemDataByte (addr));
+}
+
+void MOS6510::plp_instr (void)
+{
+    interruptsAndNextOpcode();
 }
 
 void MOS6510::rol_instr (void)
@@ -1436,7 +1439,7 @@ void MOS6510::rola_instr (void)
         Register_Accumulator |= 0x01;
     setFlagsNZ (Register_Accumulator);
     flagC = tmp;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::ror_instr (void)
@@ -1458,7 +1461,7 @@ void MOS6510::rora_instr (void)
         Register_Accumulator |= 0x80;
     setFlagsNZ (Register_Accumulator);
     flagC = tmp;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::sbx_instr (void)
@@ -1466,19 +1469,19 @@ void MOS6510::sbx_instr (void)
     const uint tmp = (Register_X & Register_Accumulator) - Cycle_Data;
     setFlagsNZ (Register_X = tmp & 0xff);
     flagC = tmp < 0x100;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::sbc_instr (void)
 {
     Perform_SBC ();
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::sec_instr (void)
 {
     flagC = true;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::shs_instr (void)
@@ -1493,47 +1496,42 @@ void MOS6510::shs_instr (void)
 void MOS6510::tax_instr (void)
 {
     setFlagsNZ (Register_X = Register_Accumulator);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::tay_instr (void)
 {
     setFlagsNZ (Register_Y = Register_Accumulator);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::tsx_instr (void)
 {   // Rev 1.03 (saw) - Got these tsx and txs reversed
     setFlagsNZ (Register_X = endian_16lo8 (Register_StackPointer));
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::txa_instr (void)
 {
     setFlagsNZ (Register_Accumulator = Register_X);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::txs_instr (void)
 {   // Rev 1.03 (saw) - Got these tsx and txs reversed
     endian_16lo8 (Register_StackPointer, Register_X);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::tya_instr (void)
 {
     setFlagsNZ (Register_Accumulator = Register_Y);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 void MOS6510::illegal_instr (void)
 {
-    Register_ProgramCounter --;
-    clock();
-    /*
-    fprintf (m_fdbg, "CPU halted.\n");
-    // Perform Environment Reset
-    env->envReset ();*/
+    cycleCount --;
 }
 
 
@@ -1551,7 +1549,7 @@ void MOS6510::alr_instr (void)
     Register_Accumulator &= Cycle_Data;
     flagC = Register_Accumulator & 0x01;
     setFlagsNZ (Register_Accumulator >>= 1);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 // Undocumented - ANC ANDs the contents of the A register with an immediate value and then
@@ -1562,7 +1560,7 @@ void MOS6510::anc_instr (void)
 {
     setFlagsNZ (Register_Accumulator &= Cycle_Data);
     flagC   = flagN;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 // Undocumented - This opcode ANDs the contents of the A register with an immediate value and
@@ -1592,7 +1590,7 @@ void MOS6510::arr_instr (void)
         flagC = Register_Accumulator & 0x40;
         flagV = (Register_Accumulator & 0x40) ^ ((Register_Accumulator & 0x20) << 1);
     }
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 // Undocumented - This opcode ASLs the contents of a memory location and then ORs the result
@@ -1634,7 +1632,7 @@ void MOS6510::las_instr (void)
     Register_Accumulator  = Cycle_Data;
     Register_X            = Cycle_Data;
     Register_StackPointer = Cycle_Data;
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 // Undocumented - This opcode loads both the accumulator and the X register with the contents
@@ -1642,7 +1640,7 @@ void MOS6510::las_instr (void)
 void MOS6510::lax_instr (void)
 {
     setFlagsNZ (Register_Accumulator = Register_X = Cycle_Data);
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 // Undocumented - LSE LSRs the contents of a memory location and then EORs the result with
@@ -1661,7 +1659,7 @@ void MOS6510::lse_instr (void)
 void MOS6510::oal_instr (void)
 {
     setFlagsNZ (Register_X = (Register_Accumulator = (Cycle_Data & (Register_Accumulator | 0xee))));
-    clock ();
+    interruptsAndNextOpcode ();
 }
 
 // Undocumented - RLA ROLs the contents of a memory location and then ANDs the result with
@@ -1709,9 +1707,10 @@ void MOS6510::tas_instr (void)
 *            The Event Context
 */
 MOS6510::MOS6510 (EventContext *context)
-:Event("CPU"),
- m_fdbg(stdout),
- eventContext(*context)
+:m_fdbg(stdout),
+ eventContext(*context),
+ m_nosteal("CPU-nosteal", *this, &MOS6510::eventWithoutSteals),
+ m_steal("CPU-steal", *this, &MOS6510::eventWithSteals)
 {
     //----------------------------------------------------------------------
     // Build up the processor instruction table
@@ -1731,11 +1730,8 @@ MOS6510::MOS6510 (EventContext *context)
         *   if any, are at the end for most instructions.
         */
 
-        instrCurrent = instrTable[i];
-
-        for (int j=0; j<8; j++) {
-            instrCurrent[j].nosteal = true;
-        }
+        struct ProcessorCycle *instrCurrent = instrTable[i];
+        int cycleCount = 0;
 
         typedef enum { WRITE, READ } AccessMode;
         AccessMode access = WRITE;
@@ -1905,12 +1901,6 @@ MOS6510::MOS6510 (EventContext *context)
             instrCurrent[cycleCount++].func = &MOS6510::FetchEffAddrDataByte;
         }
 
-        {   // Everything upto now is reads and can therefore
-            // be blocked through cycle stealing
-            for (int c = -1; c < cycleCount;)
-                instrCurrent[++c].nosteal = false;
-        }
-
 #ifdef MOS6510_DEBUG
         instrCurrent[cycleCount++].func = &MOS6510::DebugCycle;
 #endif // MOS6510_DEBUG
@@ -1946,7 +1936,9 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case ASLz: case ASLzx: case ASLa: case ASLax:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::asl_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
@@ -1956,20 +1948,17 @@ MOS6510::MOS6510 (EventContext *context)
 
         case BCCr:
             instrCurrent[cycleCount++].func = &MOS6510::bcc_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case BCSr:
             instrCurrent[cycleCount++].func = &MOS6510::bcs_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case BEQr:
             instrCurrent[cycleCount++].func = &MOS6510::beq_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case BITz: case BITa:
@@ -1978,43 +1967,39 @@ MOS6510::MOS6510 (EventContext *context)
 
         case BMIr:
             instrCurrent[cycleCount++].func = &MOS6510::bmi_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case BNEr:
             instrCurrent[cycleCount++].func = &MOS6510::bne_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case BPLr:
             instrCurrent[cycleCount++].func = &MOS6510::bpl_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case BRKn:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::brk_instr;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::IRQLoRequest;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::IRQHiRequest;
             instrCurrent[cycleCount++].func = &MOS6510::FetchOpcode;
         break;
 
         case BVCr:
             instrCurrent[cycleCount++].func = &MOS6510::bvc_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case BVSr:
             instrCurrent[cycleCount++].func = &MOS6510::bvs_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
         break;
 
         case CLCn:
@@ -2048,12 +2033,16 @@ MOS6510::MOS6510 (EventContext *context)
 
         case DCPz: case DCPzx: case DCPa: case DCPax: case DCPay: case DCPix:
         case DCPiy: // Also known as DCM
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::dcm_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case DECz: case DECzx: case DECa: case DECax:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::dec_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
@@ -2080,7 +2069,9 @@ MOS6510::MOS6510 (EventContext *context)
 */
 
         case INCz: case INCzx: case INCa: case INCax:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::inc_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
@@ -2094,16 +2085,18 @@ MOS6510::MOS6510 (EventContext *context)
 
         case ISBz: case ISBzx: case ISBa: case ISBax: case ISBay: case ISBix:
         case ISBiy: // Also known as INS
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::ins_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case JSRw:
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::FetchHighAddr;
         case JMPw: case JMPi:
             instrCurrent[cycleCount++].func = &MOS6510::jmp_instr;
@@ -2135,7 +2128,9 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case LSRz: case LSRzx: case LSRa: case LSRax:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::lsr_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
@@ -2155,30 +2150,35 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case PHAn:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::pha_instr;
         break;
 
         case PHPn:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PushSR;
         break;
 
         case PLAn:
-            instrCurrent[cycleCount].nosteal = false;
+            // should read the value at current stack register.
+            // Truly side-effect free.
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::pla_instr;
         break;
 
         case PLPn:
-            instrCurrent[cycleCount].nosteal = false;
+            // should read the value at current stack register.
+            // Truly side-effect free.
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::PopSR;
+            instrCurrent[cycleCount++].func = &MOS6510::plp_instr;
         break;
 
         case RLAz: case RLAzx: case RLAix: case RLAa: case RLAax: case RLAay:
         case RLAiy:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::rla_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
@@ -2187,7 +2187,9 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case ROLz: case ROLzx: case ROLa: case ROLax:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::rol_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
@@ -2196,39 +2198,37 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case RORz: case RORzx: case RORa: case RORax:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::ror_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case RRAa: case RRAax: case RRAay: case RRAz: case RRAzx: case RRAix:
         case RRAiy:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::rra_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case RTIn:
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::PopSR;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::PopLowPC;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::PopHighPC;
             instrCurrent[cycleCount++].func = &MOS6510::rti_instr;
         break;
 
         case RTSn:
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::PopLowPC;
-            instrCurrent[cycleCount].nosteal = false;
             instrCurrent[cycleCount++].func = &MOS6510::PopHighPC;
             instrCurrent[cycleCount++].func = &MOS6510::rts_instr;
         break;
 
         case SAXz: case SAXzy: case SAXa: case SAXix: // Also known as AXS
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::axs_instr;
         break;
 
@@ -2254,43 +2254,54 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case SHAay: case SHAiy: // Also known as AXA
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::axa_instr;
         break;
 
         case SHSay: // Also known as TAS
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::shs_instr;
         break;
 
         case SHXay: // Also known as XAS
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::xas_instr;
         break;
 
         case SHYax: // Also known as SAY
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::say_instr;
         break;
 
         case SLOz: case SLOzx: case SLOa: case SLOax: case SLOay: case SLOix:
         case SLOiy: // Also known as ASO
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::aso_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case SREz: case SREzx: case SREa: case SREax: case SREay: case SREix:
         case SREiy: // Also known as LSE
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::lse_instr;
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case STAz: case STAzx: case STAa: case STAax: case STAay: case STAix:
         case STAiy:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::sta_instr;
         break;
 
         case STXz: case STXzy: case STXa:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::stx_instr;
         break;
 
         case STYz: case STYzx: case STYa:
+            instrCurrent[cycleCount].nosteal = true;
             instrCurrent[cycleCount++].func = &MOS6510::sty_instr;
         break;
 
@@ -2326,19 +2337,14 @@ MOS6510::MOS6510 (EventContext *context)
         /* Missing an addressing mode or implementation makes opcode invalid.
         * These are normally called HLT instructions. In the hardware, the
         * CPU state machine locks up and will never recover. */
-        if (!(legalMode || legalInstr))
+        if (!(legalMode && legalInstr))
         {
             instrCurrent[cycleCount++].func = &MOS6510::illegal_instr;
         }
-        else if (!(legalMode && legalInstr))
-        {
-            printf ("\nInstruction 0x%x: Not built correctly.\n\n", i);
-            exit(1);
-        }
 
         /* check for IRQ triggers or fetch next opcode... */
-        instrCurrent[cycleCount].nosteal = false;
-        instrCurrent[cycleCount++].func = &MOS6510::NextInstr;
+        //instrCurrent[cycleCount].nosteal = false;
+        instrCurrent[cycleCount++].func = &MOS6510::interruptsAndNextOpcode;
 
 #if MOS6510_DEBUG > 1
         printf (".");
@@ -2357,45 +2363,38 @@ MOS6510::MOS6510 (EventContext *context)
         printf ("Building Interrupt %d[%02x]..", i, i);
 #endif
 
-        instrCurrent = interruptTable[i];
-        cycleCount = 0;
+        struct ProcessorCycle *instrCurrent = interruptTable[i];
+        int cycleCount = 0;
 
-        for (int j = 0; j < 9; j++)
-            instrCurrent[j].nosteal = false;
+        ProcessorCycle *procCycle = interruptTable[i];
+        /* common interrupt handling lead-in:
+        * 2x read from PC, store pc hi, pc lo, sr to stack.
+        */
 
-        instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-        instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+        instrCurrent[cycleCount++].func = &MOS6510::throwAwayFetch;
+        instrCurrent[cycleCount++].func = &MOS6510::throwAwayFetch;
+        instrCurrent[cycleCount].nosteal = true;
+        instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
+        instrCurrent[cycleCount].nosteal = true;
+        instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
+        instrCurrent[cycleCount].nosteal = true;
+        instrCurrent[cycleCount++].func = &MOS6510::IRQRequest;
 
         switch (i)
         {
         case oRST:
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::RSTRequest;
+            instrCurrent[cycleCount++].func = &MOS6510::RSTLoRequest;
+            instrCurrent[cycleCount++].func = &MOS6510::RSTHiRequest;
         break;
 
         case oNMI:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::IRQRequest;
             instrCurrent[cycleCount++].func = &MOS6510::NMILoRequest;
             instrCurrent[cycleCount++].func = &MOS6510::NMIHiRequest;
         break;
 
         case oIRQ:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::IRQRequest;
             instrCurrent[cycleCount++].func = &MOS6510::IRQLoRequest;
             instrCurrent[cycleCount++].func = &MOS6510::IRQHiRequest;
-
         break;
         }
 
@@ -2422,10 +2421,6 @@ MOS6510::MOS6510 (EventContext *context)
     dodump = false;
     Initialise ();
 return;
-
-MOS6510_MemAllocFailed:
-    printf ("Unable to allocate enough memory.\n\n");
-exit (-1);
 }
 
 //-------------------------------------------------------------------------//
@@ -2445,19 +2440,19 @@ void MOS6510::Initialise (void)
 
     // Set PC to some value
     Register_ProgramCounter = 0;
+
     // IRQs pending check
-    interrupts.pending    = false;
-    interrupts.irqs       = 0;
-    interrupts.irqLatch   = false;
-    interrupts.irqRequest = false;
-    interrupts.nmiClk     = 0;
-    interrupts.irqClk     = 0;
+    irqs       = 0;
+    irqFlag    = false;
+    nmis       = 0;
+    nmiFlag    = false;
+    nmiClk     = -1;
+    irqClk     = -1;
 
     // Signals
     aec = true;
 
-    m_blocked = false;
-    schedule (eventContext, 0, EVENT_CLOCK_PHI2);
+    eventContext.schedule (m_nosteal, 0, EVENT_CLOCK_PHI2);
 }
 
 //-------------------------------------------------------------------------//

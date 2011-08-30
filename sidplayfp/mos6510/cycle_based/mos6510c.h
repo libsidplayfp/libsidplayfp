@@ -117,14 +117,13 @@
 /** @internal
 * MOS6510
 */
-class MOS6510: public Event
+class MOS6510
 {
 protected:
     C64Environment *env;
 
     // External signals
     bool aec; /* Address Controller, blocks reads */
-    bool m_blocked;
     event_clock_t m_stealingClk;
     event_clock_t m_dbgClk;
     FILE *m_fdbg;
@@ -138,7 +137,7 @@ protected:
         void (MOS6510::*func)(void);
         bool nosteal;
         ProcessorCycle ()
-            :func(0), nosteal(false) { ; }
+            :func(0), nosteal(false) {}
     };
 
     struct ProcessorCycle       fetchCycle;
@@ -152,7 +151,7 @@ protected:
     int_least8_t   lastAddrCycle;
     int   cycleCount;
 
-    /** Data regarding current instruction */
+    /** Pointers to the current instruction cycle */
     uint_least16_t Cycle_EffectiveAddress;
     uint_least16_t Cycle_HighByteWrongEffectiveAddress;
     uint8_t        Cycle_Data;
@@ -174,20 +173,33 @@ protected:
     /** Debug info */
     uint_least16_t Instr_Operand;
 
-    /** Interrupts */
-    struct
-    {
-        uint_least8_t  pending;
-        uint_least8_t  irqs;
-        event_clock_t  nmiClk;
-        event_clock_t  irqClk;
-        bool           irqRequest;
-        bool           irqLatch;
-    } interrupts;
+    /* Interrupts */
+
+    /** How many chips are asserting IRQ line */
+    int  irqs;
+
+    /** IRQ requested */
+    bool irqFlag;
+
+     /** When IRQ can trigger earliest */
+    event_clock_t  irqClk;
+
+    /** Number of sources pulling NMI line. */
+    int nmis;
+
+    /** NMI positive edge sent by CIA2? */
+    bool           nmiFlag;
+
+    /** When NMI can trigger earliest */
+    event_clock_t  nmiClk;
 
 protected:
-    void        clock            (void);
-    void        event            (void);
+    EventCallback<MOS6510> m_nosteal;
+    EventCallback<MOS6510> m_steal;
+
+    void eventWithoutSteals  (void);
+    void eventWithSteals     (void);
+
     void        Initialise       (void);
 
     // Flag utility functions
@@ -196,17 +208,17 @@ protected:
     inline void setStatusRegister(const uint8_t sr);
 
     // Declare Interrupt Routines
-    inline void RSTRequest       (void);
+    inline void RSTLoRequest     (void);
+    inline void RSTHiRequest     (void);
     inline void NMILoRequest     (void);
     inline void NMIHiRequest     (void);
     inline void IRQRequest       (void);
     inline void IRQLoRequest     (void);
     inline void IRQHiRequest     (void);
-    bool        interruptPending (void);
+    void interruptsAndNextOpcode (void);
 
     // Declare Instruction Routines
     virtual void FetchOpcode         (void);
-    void        NextInstr            (void);
     inline void throwAwayFetch       (void);
     inline void throwAwayRead        (void);
     inline void FetchDataByte        (void);
@@ -289,6 +301,7 @@ protected:
     inline void ora_instr     (void);
     inline void pha_instr     (void);
     inline void pla_instr     (void);
+    inline void plp_instr     (void);
     inline void rla_instr     (void);
     inline void rol_instr     (void);
     inline void rola_instr    (void);
@@ -337,34 +350,5 @@ public:
     virtual void triggerIRQ (void);
     void         clearIRQ   (void);
 };
-
-//-------------------------------------------------------------------------//
-
-/**
-* Emulate One Complete Cycle. Either execute CPU instruction or,
-* if AEC goes low and we are doing a read operation, stall the CPU.
-*/
-inline void MOS6510::clock (void)
-{
-    int_least8_t i = cycleCount++;
-    if (instrCurrent[i].nosteal || aec)
-    {
-        (this->*(instrCurrent[i].func)) ();
-        return;
-    }
-    else if (!m_blocked)
-    {
-        m_blocked     = true;
-        m_stealingClk = eventContext.getTime (EVENT_CLOCK_PHI2);
-    }
-    cycleCount--;
-    cancel ();
-}
-
-inline void MOS6510::event (void)
-{
-    schedule (eventContext, 1, EVENT_CLOCK_PHI2);
-    clock ();
-}
 
 #endif // _mos6510c_h_
