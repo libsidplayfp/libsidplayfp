@@ -1263,7 +1263,7 @@ void MOS6510::beq_instr (void)
 void MOS6510::bit_instr (void)
 {
     flagZ = (Register_Accumulator & Cycle_Data) == 0;
-    flagN = Cycle_Data;
+    flagN = Cycle_Data & 0x80;
     flagV = Cycle_Data & 0x40;
     clock ();
 }
