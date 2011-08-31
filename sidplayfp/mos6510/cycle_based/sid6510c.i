@@ -250,20 +250,17 @@ void SID6510::unhackTable()
         for (uint n = 0; n < 9; n++)
         {
             if (instrCurrent[n].func == 0) break;
-            if (instrCurrent[n].func == &SID6510::sid_illegal)
+            if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_illegal))
             {   // Rev 1.2 (saw) - Changed nasty union to reinterpret_cast
-                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
-                    (&SID6510::illegal_instr);
+                instrCurrent[n].func = &SID6510::illegal_instr;
             }
-            else if (instrCurrent[n].func == &SID6510::sid_jmp)
+            else if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_jmp))
             {   // Stop jumps into rom code
-                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
-                    (&SID6510::jmp_instr);
+                instrCurrent[n].func =&SID6510::jmp_instr;
             }
-            else if (instrCurrent[n].func == &SID6510::sid_cli)
+            else if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_cli))
             {   // No overlapping IRQs allowed
-                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
-                    (&SID6510::cli_instr);
+                instrCurrent[n].func =&SID6510::cli_instr;
             }
         }
     }
@@ -274,10 +271,9 @@ void SID6510::unhackTable()
         for (uint n = 0; n < 9; n++)
         {
             if (instrCurrent[n].func == 0) break;
-            if (instrCurrent[n].func == &SID6510::sid_rti)
+            if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_rti))
             {
-                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
-                    (&SID6510::PopSR);
+                instrCurrent[n].func = &SID6510::PopSR;
                 break;
             }
         }
@@ -286,10 +282,9 @@ void SID6510::unhackTable()
         for (uint n = 0; n < 9; n++)
         {
             if (instrCurrent[n].func == 0) break;
-            if (instrCurrent[n].func == &SID6510::sid_irq)
+            if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_irq))
             {
-                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
-                    (&SID6510::IRQRequest);
+                instrCurrent[n].func = &SID6510::IRQRequest;
                 break;
             }
         }
@@ -300,10 +295,9 @@ void SID6510::unhackTable()
         for (uint n = 0; n < 9; n++)
         {
             if (instrCurrent[n].func == 0) break;
-            if (instrCurrent[n].func == &SID6510::sid_brk)
+            if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_brk))
             {
-                instrCurrent[n].func = reinterpret_cast <void (MOS6510::*)()>
-                    (&SID6510::PushHighPC);
+                instrCurrent[n].func =&SID6510::PushHighPC;
                 break;
             }
         }
