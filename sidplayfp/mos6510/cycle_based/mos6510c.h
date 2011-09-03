@@ -145,8 +145,7 @@ protected:
     struct ProcessorCycle      *instrCurrent;
 
     /** Table of CPU opcode implementations */
-    struct ProcessorCycle  instrTable[0x100][8];
-    struct ProcessorCycle  interruptTable[3][8];
+    struct ProcessorCycle  instrTable[0x103][8];
 
     uint_least16_t instrStartPC;
     int_least8_t   lastAddrCycle;

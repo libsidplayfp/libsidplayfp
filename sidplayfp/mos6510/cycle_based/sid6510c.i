@@ -213,7 +213,7 @@ void SID6510::hackTable()
             }
         }
 
-        instrCurrent = interruptTable[oIRQ];
+        instrCurrent = instrTable[oIRQ];
         for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
@@ -278,7 +278,7 @@ void SID6510::unhackTable()
             }
         }
 
-        instrCurrent = interruptTable[oIRQ];
+        instrCurrent = instrTable[oIRQ];
         for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;

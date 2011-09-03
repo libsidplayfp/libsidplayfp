@@ -365,14 +365,6 @@ void MOS6510::PopSR (void)
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 #define iIRQSMAX 3
-enum
-{
-    oNONE = -1,
-    oRST,
-    oNMI,
-    oIRQ
-};
-
 
 /**
 * This forces the CPU to abort whatever it is doing and immediately
@@ -385,7 +377,7 @@ void MOS6510::triggerRST (void)
 {
     Initialise();
     cycleCount = 0;
-    instrCurrent = interruptTable[oRST];
+    instrCurrent = instrTable[oRST];
 }
 
 void MOS6510::triggerNMI (void)
@@ -466,7 +458,7 @@ void MOS6510::interruptsAndNextOpcode (void)
     }
 #endif
     // Start the interrupt
-    instrCurrent = interruptTable[offset];
+    instrCurrent = instrTable[offset];
     cycleCount   = 0;
     (this->*(instrCurrent[cycleCount++].func)) ();
 }
@@ -887,7 +879,7 @@ void MOS6510::brk_instr (void)
     * c64doc says "If the interrupt arrives before the
     * flag-setting cycle" */
     if (nmiFlag && nmiClk < 3) {
-        instrCurrent = interruptTable[oNMI];
+        instrCurrent = instrTable[oNMI];
         nmiFlag = false;
         cycleCount = 5;
     }
@@ -2368,14 +2360,13 @@ MOS6510::MOS6510 (EventContext *context)
         printf ("Building Interrupt %d[%02x]..", i, i);
 #endif
 
-        struct ProcessorCycle *instrCurrent = interruptTable[i];
+        const int offset = i + 0x100;
+        struct ProcessorCycle *instrCurrent = instrTable[offset];
         int cycleCount = 0;
 
-        ProcessorCycle *procCycle = interruptTable[i];
         /* common interrupt handling lead-in:
         * 2x read from PC, store pc hi, pc lo, sr to stack.
         */
-
         instrCurrent[cycleCount++].func = &MOS6510::throwAwayFetch;
         instrCurrent[cycleCount++].func = &MOS6510::throwAwayFetch;
         instrCurrent[cycleCount].nosteal = true;
@@ -2385,7 +2376,7 @@ MOS6510::MOS6510 (EventContext *context)
         instrCurrent[cycleCount].nosteal = true;
         instrCurrent[cycleCount++].func = &MOS6510::IRQRequest;
 
-        switch (i)
+        switch (offset)
         {
         case oRST:
             instrCurrent[cycleCount++].func = &MOS6510::RSTLoRequest;

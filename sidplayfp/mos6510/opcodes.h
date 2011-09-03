@@ -328,4 +328,9 @@
 #define SKBn  NOPb
 #define SKWn  NOPa
 
+// Interrupts
+#define oRST  0x100
+#define oNMI  0x101
+#define oIRQ  0x102
+
 #endif // _opcodes_h_
