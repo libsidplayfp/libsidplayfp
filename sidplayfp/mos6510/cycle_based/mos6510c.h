@@ -129,6 +129,7 @@ protected:
     FILE *m_fdbg;
 
     bool dodump;
+
     /** Our event context copy. */
     EventContext &eventContext;
 
@@ -144,8 +145,8 @@ protected:
     struct ProcessorCycle      *instrCurrent;
 
     /** Table of CPU opcode implementations */
-    struct ProcessorCycle  instrTable[0x100][9];
-    struct ProcessorCycle  interruptTable[3][9];
+    struct ProcessorCycle  instrTable[0x100][8];
+    struct ProcessorCycle  interruptTable[3][8];
 
     uint_least16_t instrStartPC;
     int_least8_t   lastAddrCycle;

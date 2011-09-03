@@ -178,7 +178,7 @@ void SID6510::hackTable()
     {
         instrCurrent = instrTable[i];
 
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == &SID6510::illegal_instr)
@@ -202,7 +202,7 @@ void SID6510::hackTable()
     {   // Since no real IRQs, all RTIs mapped to RTS
         // Required for fix bad tunes in old modes
         instrCurrent = instrTable[RTIn];
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == &SID6510::PopSR)
@@ -214,7 +214,7 @@ void SID6510::hackTable()
         }
 
         instrCurrent = interruptTable[oIRQ];
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == &SID6510::IRQRequest)
@@ -228,7 +228,7 @@ void SID6510::hackTable()
 
     {   // Support of sidplays BRK functionality
         instrCurrent = instrTable[BRKn];
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == &SID6510::PushHighPC)
@@ -247,7 +247,7 @@ void SID6510::unhackTable()
     {
         instrCurrent = instrTable[i];
 
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_illegal))
@@ -268,7 +268,7 @@ void SID6510::unhackTable()
     {   // Since no real IRQs, all RTIs mapped to RTS
         // Required for fix bad tunes in old modes
         instrCurrent = instrTable[RTIn];
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_rti))
@@ -279,7 +279,7 @@ void SID6510::unhackTable()
         }
 
         instrCurrent = interruptTable[oIRQ];
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_irq))
@@ -292,7 +292,7 @@ void SID6510::unhackTable()
 
     {   // Support of sidplays BRK functionality
         instrCurrent = instrTable[BRKn];
-        for (uint n = 0; n < 9; n++)
+        for (uint n = 0; n < 8; n++)
         {
             if (instrCurrent[n].func == 0) break;
             if (instrCurrent[n].func == reinterpret_cast <void (MOS6510::*)()>(&SID6510::sid_brk))

@@ -2349,7 +2349,7 @@ MOS6510::MOS6510 (EventContext *context)
 
         /* check for IRQ triggers or fetch next opcode... */
         //instrCurrent[cycleCount].nosteal = false;
-        instrCurrent[cycleCount++].func = &MOS6510::interruptsAndNextOpcode;
+        instrCurrent[cycleCount].func = &MOS6510::interruptsAndNextOpcode;
 
 #if MOS6510_DEBUG > 1
         printf (".");
@@ -2403,7 +2403,7 @@ MOS6510::MOS6510 (EventContext *context)
         break;
         }
 
-        instrCurrent[cycleCount++].func = &MOS6510::FetchOpcode;
+        instrCurrent[cycleCount].func = &MOS6510::FetchOpcode;
 
 #if MOS6510_DEBUG > 1
         printf (".");
