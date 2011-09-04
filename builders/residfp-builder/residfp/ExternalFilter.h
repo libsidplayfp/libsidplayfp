@@ -67,7 +67,7 @@ public:
 	 * 
 	 * @param Vi
 	 */
-	const int clock(const int Vi);
+	int clock(const int Vi);
 
 	/**
 	 * Constructor.
@@ -95,7 +95,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-const int ExternalFilter::clock(const int Vi) {
+int ExternalFilter::clock(const int Vi) {
 	const int dVlp = (w0lp_1_s7*((Vi << 11) - Vlp) >> 7);
 	const int dVhp = (w0hp_1_s20*(Vlp - Vhp) >> 20);
 	Vlp += dVlp;

@@ -130,7 +130,7 @@ public:
 	 * @param vE external audio in
 	 * @return filtered output
 	 */
-	virtual const int clock(const int v1, const int v2, const int v3)=0;
+	virtual int clock(const int v1, const int v2, const int v3)=0;
 
 	/**
 	 * Enable filter.

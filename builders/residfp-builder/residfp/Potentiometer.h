@@ -42,7 +42,7 @@ public:
 	 *
 	 * @return paddle value (always 0xff)
 	 */
-	unsigned char readPOT() { return (unsigned char) 0xff; }
+	unsigned char readPOT() const { return (unsigned char) 0xff; }
 };
 
 } // namespace reSIDfp

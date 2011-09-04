@@ -88,7 +88,7 @@ public:
 
 	~Filter6581();
 
-	const int clock(const int voice1, const int voice2, const int voice3);
+	int clock(const int voice1, const int voice2, const int voice3);
 
 	void input(const int sample);
 
@@ -126,7 +126,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-const int Filter6581::clock(const int voice1, const int voice2, const int voice3) {
+int Filter6581::clock(const int voice1, const int voice2, const int voice3) {
 	const int v1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
 	const int v2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
 	const int v3 = (voice3 * voiceScaleS14 >> 18) + voiceDC;

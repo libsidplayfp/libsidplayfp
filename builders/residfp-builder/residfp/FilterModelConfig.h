@@ -55,13 +55,13 @@ private:
 public:
 	static FilterModelConfig* getInstance();
 
-	const double getDacZero(const double adjustment);
+	double getDacZero(const double adjustment) const;
 
-	const int getVO_T16();
+	int getVO_T16() const;
 
-	const int getVoiceScaleS14();
+	int getVoiceScaleS14() const;
 
-	const int getVoiceDC();
+	int getVoiceDC() const;
 
 	unsigned short** getGain() { return gain; }
 
@@ -73,7 +73,7 @@ public:
 	 * Make DAC
 	 * must be deleted
 	 */
-	const unsigned int* getDAC(const double dac_zero);
+	unsigned int* getDAC(const double dac_zero) const;
 
 	Integrator* buildIntegrator();
 
@@ -89,7 +89,7 @@ public:
 	 * @param fc
 	 * @return frequency in Hz
 	 */
-	const double estimateFrequency(const double dac_zero, const int fc);
+	double estimateFrequency(const double dac_zero, const int fc);
 };
 
 } // namespace reSIDfp

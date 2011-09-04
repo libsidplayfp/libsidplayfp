@@ -125,7 +125,7 @@ private:
 	 *
 	 * @return the output sample
 	 */
-	int output();
+	int output() const;
 
 	/**
 	 * Return the numebr of cycles according to current parameters
@@ -222,7 +222,7 @@ public:
 	 * @param buf audio output buffer
 	 * @return
 	 */
-	const int clock(int cycles, short* buf);
+	int clock(int cycles, short* buf);
 
 	/**
 	 * Clock SID forward with no audio production.
@@ -271,7 +271,7 @@ void SID::mute(const int channel, const bool enable) {
 }
 
 RESID_INLINE
-int SID::output() {
+int SID::output() const {
 	return externalFilter->clock(
 		filter->clock(
 			voice[0]->output(voice[2]->wave),
@@ -283,7 +283,7 @@ int SID::output() {
 
 
 RESID_INLINE
-const int SID::clock(int cycles, short* buf) {
+int SID::clock(int cycles, short* buf) {
 	ageBusValue(cycles);
 	int s = 0;
 	while (cycles != 0) {

@@ -122,7 +122,7 @@ public:
 	 * @param syncDest The oscillator I am syncing
 	 * @param syncSource The oscillator syncing me.
 	 */
-	const void synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource);
+	void synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const;
 
 	/**
 	 * Constructor.
@@ -211,22 +211,22 @@ public:
 	/**
 	* Read accumulator value.
 	*/
-	const int readAccumulator() const { return accumulator; }
+	int readAccumulator() const { return accumulator; }
 
 	/**
 	* Read freq value.
 	*/
-	const int readFreq() const { return freq; }
+	int readFreq() const { return freq; }
 
 	/**
 	* Read test value.
 	*/
-	const bool readTest() const { return test; }
+	bool readTest() const { return test; }
 
 	/**
 	* Read sync value.
 	*/
-	const bool readSync() const { return sync; }
+	bool readSync() const { return sync; }
 };
 
 } // namespace reSIDfp

@@ -65,7 +65,7 @@ private:
 	 * @param accumulator the accumulator value
 	 * @param pw pulse width value.
 	 */
-	short calculateCombinedWaveform(CombinedWaveformConfig config, const int waveform, const int accumulator);
+	short calculateCombinedWaveform(CombinedWaveformConfig config, const int waveform, const int accumulator) const;
 
 	WaveformCalculator() {}
 

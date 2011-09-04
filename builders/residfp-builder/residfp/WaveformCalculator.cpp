@@ -71,7 +71,7 @@ array<short>* WaveformCalculator::buildTable(const ChipModel model) {
 	return &(CACHE.insert(lb, std::map<const CombinedWaveformConfig*, array<short> >::value_type(cfgArray, wftable))->second);
 }
 
-short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig config, const int waveform, const int accumulator) {
+short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig config, const int waveform, const int accumulator) const {
 	float o[12];
 
 	/* S with strong top bit for 6581 */

@@ -36,11 +36,11 @@ public:
 		delete s2;
 	}
 
-	const bool input(const int sample) {
+	bool input(const int sample) {
 		return s1->input(sample) && s2->input(s1->output());
 	}
 
-	const int output() {
+	int output() const {
 		return s2->output();
 	}
 

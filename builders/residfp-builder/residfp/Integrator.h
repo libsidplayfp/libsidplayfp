@@ -39,7 +39,7 @@ public:
 
 	void setVw(const int Vw);
 
-	const int solve(const int vi);
+	int solve(const int vi);
 };
 
 } // namespace reSIDfp
@@ -50,7 +50,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-const int Integrator::solve(const int vi) {
+int Integrator::solve(const int vi) {
 	// "Snake" voltages for triode mode calculation.
 	const int Vgst = Vddt - x;
 	const int Vgdt = Vddt - vi;

@@ -55,7 +55,7 @@ public:
 	 * @param vi input
 	 * @return vo
 	 */
-	const double solve(const double n, const double vi);
+	double solve(const double n, const double vi);
 };
 
 } // namespace reSIDfp

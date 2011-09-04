@@ -27,7 +27,7 @@ public:
 		sampleOffset(0),
 		outputValue(0) {}
 
-	const bool input(const int sample) {
+	bool input(const int sample) {
 		bool ready = false;
 
 		if (sampleOffset < 1024) {
@@ -42,7 +42,7 @@ public:
 		return ready;
 	}
 
-	const int output() { return outputValue; }
+	int output() const { return outputValue; }
 
 	void reset() {
 		sampleOffset = 0;

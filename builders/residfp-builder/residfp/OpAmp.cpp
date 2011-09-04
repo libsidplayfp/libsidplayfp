@@ -7,7 +7,7 @@ namespace reSIDfp
 
 const double OpAmp::EPSILON = 1e-8;
 
-const double OpAmp::solve(const double n, const double vi) {
+double OpAmp::solve(const double n, const double vi) {
 	// Start off with an estimate of x and a root bracket [ak, bk].
 	// f is decreasing, so that f(ak) > 0 and f(bk) < 0.
 	double ak = vmin;

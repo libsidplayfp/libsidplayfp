@@ -105,7 +105,7 @@ void WaveformGenerator::setChipModel(const ChipModel chipModel) {
 	}
 }
 
-const void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) {
+void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const {
 	// A special case occurs when a sync source is synced itself on the same
 	// cycle as when its MSB is set high. In this case the destination will
 	// not be synced. This has been verified by sampling OSC3.

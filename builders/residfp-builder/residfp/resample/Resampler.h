@@ -18,13 +18,13 @@ private:
 	int oldRandomValue;
 
 protected:
-	const int triangularDithering() {
+	int triangularDithering() {
 		const int prevValue = oldRandomValue;
 		oldRandomValue = rand() & 0x3ff;
 		return oldRandomValue - prevValue;
 	}
 
-	virtual const int output()=0;
+	virtual int output() const =0;
 
 	Resampler() :
 		oldRandomValue(0) {}
@@ -38,14 +38,14 @@ public:
 	 * @param sample
 	 * @return true when a sample is ready
 	 */
-	virtual const bool input(const int sample)=0;
+	virtual bool input(const int sample)=0;
 
 	/**
 	 * Output a sample from resampler
 	 *
 	 * @return resampled sample
 	 */
-	const short getOutput() {
+	short getOutput() {
 		const int dither = triangularDithering();
 		int value = (output() * 1024 + dither) >> 10;
 		if (value > 32767) {

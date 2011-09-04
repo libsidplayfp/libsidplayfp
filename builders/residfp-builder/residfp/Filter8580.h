@@ -38,7 +38,7 @@ public:
 		_1_div_Q(0.f),
 		highFreq(12500.) {}
 
-	const int clock(const int voice1, const int voice2, const int voice3);
+	int clock(const int voice1, const int voice2, const int voice3);
 
 	void updatedCenterFrequency();
 
@@ -62,7 +62,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-const int Filter8580::clock(const int v1, const int v2, const int v3) {
+int Filter8580::clock(const int v1, const int v2, const int v3) {
 	const int voice1 = v1 >> 7;
 	const int voice2 = v2 >> 7;
 	const int voice3 = v3 >> 7;

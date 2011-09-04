@@ -216,23 +216,23 @@ double FilterModelConfig::evaluateTransistor(const double Vw, const double vi, c
 	return n_I_snake + n_I_vcr;
 }
 
-const double FilterModelConfig::getDacZero(const double adjustment) {
+double FilterModelConfig::getDacZero(const double adjustment) const {
 	return dac_zero - (adjustment - 0.5) * 2.;
 }
 
-const int FilterModelConfig::getVO_T16() {
+int FilterModelConfig::getVO_T16() const {
 	return (int) (norm * ((1L << 16) - 1) * vmin);
 }
 
-const int FilterModelConfig::getVoiceScaleS14() {
+int FilterModelConfig::getVoiceScaleS14() const {
 	return (int) ((norm * ((1L << 14) - 1)) * voice_voltage_range);
 }
 
-const int FilterModelConfig::getVoiceDC() {
+int FilterModelConfig::getVoiceDC() const {
 	return (int) ((norm * ((1L << 16) - 1)) * (voice_DC_voltage - vmin));
 }
 
-const unsigned int* FilterModelConfig::getDAC(const double dac_zero) {
+unsigned int* FilterModelConfig::getDAC(const double dac_zero) const {
 	const double N16 = norm * ((1L << 16) - 1);
 	const int bits = DAC_SIZE;
 	unsigned int* f0_dac = new unsigned int[1 << bits];
@@ -255,7 +255,7 @@ Integrator* FilterModelConfig::buildIntegrator() {
 	return new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, Vddt, n_snake);
 }
 
-const double FilterModelConfig::estimateFrequency(const double dac_zero, const int fc) {
+double FilterModelConfig::estimateFrequency(const double dac_zero, const int fc) {
 	/* Calculate input from DAC */
 	const int bits = DAC_SIZE;
 	double Vw = 0.;

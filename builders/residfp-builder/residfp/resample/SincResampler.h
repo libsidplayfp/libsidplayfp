@@ -127,9 +127,9 @@ public:
 	 */
 	SincResampler(const double clockFrequency, const double samplingFrequency, const double highestAccurateFrequency);
 
-	const bool input(const int input);
+	bool input(const int input);
 
-	const int output() { return outputValue; }
+	int output() const { return outputValue; }
 
 	void reset();
 #if 0

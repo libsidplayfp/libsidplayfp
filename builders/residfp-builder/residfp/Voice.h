@@ -61,7 +61,7 @@ public:
 	 * @return waveformgenerator output
 	 */
 	RESID_INLINE
-	int output(const WaveformGenerator* ringModulator) {
+	int output(const WaveformGenerator* ringModulator) const {
 		return wave->output(ringModulator) * envelope->output();
 	}
 

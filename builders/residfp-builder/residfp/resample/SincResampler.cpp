@@ -194,7 +194,7 @@ SincResampler::SincResampler(const double clockFrequency, const double samplingF
 	}
 }
 
-const bool SincResampler::input(const int input) {
+bool SincResampler::input(const int input) {
 	bool ready = false;
 
 	sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = input;
