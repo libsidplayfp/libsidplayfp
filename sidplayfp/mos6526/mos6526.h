@@ -142,13 +142,13 @@ protected:
 	Timer(const char* name, EventContext *context, MOS6526* parent) :
 		Event(name),
 		event_context(*context),
-		parent(parent),
-		state(0),
 		lastControlValue(0),
 		timer(0),
 		latch(0),
 		pbToggle(false),
-		m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent) {}
+		m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
+		parent(parent),
+		state(0) {}
 
 public:
 	/**

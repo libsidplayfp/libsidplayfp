@@ -377,8 +377,8 @@ Player::Player (void)
  m_running           (false),
  m_sid2crc           (0xffffffff),
  m_sid2crcCount      (0),
- m_sampleCount       (0),
- m_cpuFreq(CLOCK_FREQ_PAL)
+ m_cpuFreq(CLOCK_FREQ_PAL),
+ m_sampleCount       (0)
 {
     srand ((uint) ::time(NULL));
     m_rand = (uint_least32_t) rand ();
