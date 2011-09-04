@@ -68,7 +68,7 @@ const int Filter8580::clock(const int v1, const int v2, const int v3) {
 	const int voice3 = v3 >> 7;
 
 	int Vi = 0;
-	float Vo = 0.;
+	float Vo = 0.f;
 	if (filt1) {
 		Vi += voice1;
 	} else {
