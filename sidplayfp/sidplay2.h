@@ -47,14 +47,68 @@ public:
     const sid2_config_t &config (void) const;
     const sid2_info_t   &info   (void) const;
 
+    /**
+    * Configure the engine.
+    *
+    * @param cfg
+    * @return 0 on sucess, -1 otherwise.
+    */
     int            config       (const sid2_config_t &cfg);
+
+    /**
+    * Error message
+    *
+    * @return string error message.
+    */
     const char    *error        (void) const;
+
+    /**
+    * 
+    *
+    * @param percent
+    */
     int            fastForward  (uint percent);
+
+    /**
+    * Load a tune
+    *
+    * @param tune the SidTune to load, 0 unloads current tune
+    * @return 0 on sucess, -1 otherwise
+    */
     int            load         (SidTune *tune);
+
+    /**
+    * Pause the engine
+    */
     void           pause        (void);
+
+    /**
+    * Produce samples to play
+    *
+    * @param buffer pointer to the buffer to fill with samples.
+    * @param count the size of the buffer.
+    * @return the number of produced samples.
+    */
     uint_least32_t play         (short *buffer, uint_least32_t count);
+
+    /**
+    * Check the state of the engine.
+    *
+    * @return 
+    */
     sid2_player_t  state        (void) const;
+
+    /**
+    * Stop engine
+    */
     void           stop         (void);
+
+    /**
+    * Control debugging
+    *
+    * @param enable enable/disable debugging.
+    * @param out the file where to redirect the debug info.
+    */
     void           debug        (bool enable, FILE *out);
     void           mute         (int voice, bool enable);
 
