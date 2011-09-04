@@ -25,8 +25,6 @@
 
 #include "residfp-config.h"
 
-#include <exception>
-
 namespace reSIDfp
 {
 
@@ -38,7 +36,7 @@ class Potentiometer;
 class Voice;
 class Resampler;
 
-class SIDError : public std::exception {
+class SIDError {
 
 private:
     const char* message;
