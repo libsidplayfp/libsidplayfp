@@ -64,7 +64,7 @@ SIDPLAY2_NAMESPACE_START
 
 void Player::mixerReset (void)
 {
-    m_mixerEvent.schedule(context(), MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
+    context().schedule(m_mixerEvent, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
 }
 
 void Player::mixer (void)
@@ -139,7 +139,7 @@ void Player::mixer (void)
         chip2->bufferpos(j);
 
     /* Post a callback to ourselves. */
-    m_mixerEvent.schedule(context(), MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
+    context().schedule(m_mixerEvent, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
 }
 
 SIDPLAY2_NAMESPACE_STOP

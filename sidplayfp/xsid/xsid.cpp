@@ -134,9 +134,9 @@ void channel::reset ()
     mode       = FM_NONE;
     free ();
     // Remove outstanding events
-    m_xsid.cancel ();
-    m_sampleEvent.cancel ();
-    m_galwayEvent.cancel ();
+    m_context.cancel (m_xsid);
+    m_context.cancel (m_sampleEvent);
+    m_context.cancel (m_galwayEvent);
 }
 
 void channel::free ()
@@ -249,8 +249,8 @@ void channel::sampleInit ()
 
     // Schedule a sample update
     if (!m_xsid.pending ())
-        m_xsid.schedule (m_context, 0, m_phase);
-    m_sampleEvent.schedule (m_context, cycleCount, m_phase);
+        m_context.schedule (m_xsid, 0, m_phase);
+    m_context.schedule (m_sampleEvent, cycleCount, m_phase);
 }
 
 void channel::sampleClock ()
@@ -291,8 +291,8 @@ void channel::sampleClock ()
     cycles += cycleCount;
     // Schedule a sample update
     if (!m_xsid.pending ())
-        m_xsid.schedule (m_context, 0, m_phase);
-    m_sampleEvent.schedule (m_context, cycleCount, m_phase);
+        m_context.schedule (m_xsid, 0, m_phase);
+    m_context.schedule (m_sampleEvent, cycleCount, m_phase);
 }
 
 int8_t channel::sampleCalculate ()
@@ -368,8 +368,8 @@ void channel::galwayInit()
 
     // Schedule a sample update
     if (!m_xsid.pending ())
-        m_xsid.schedule (m_context, 0, m_phase);
-    m_galwayEvent.schedule (m_context, cycleCount, m_phase);
+        m_context.schedule (m_xsid, 0, m_phase);
+    m_context.schedule (m_galwayEvent, cycleCount, m_phase);
 }
 
 void channel::galwayClock ()
@@ -401,8 +401,8 @@ void channel::galwayClock ()
     sample     = (int8_t) galVolume - 8;
     cycles    += cycleCount;
     if (!m_xsid.pending ())
-        m_xsid.schedule (m_context, 0, m_phase);
-    m_galwayEvent.schedule (m_context, cycleCount, m_phase);
+        m_context.schedule (m_xsid, 0, m_phase);
+    m_context.schedule (m_galwayEvent, cycleCount, m_phase);
 }
 
 void channel::galwayTonePeriod ()
@@ -425,9 +425,9 @@ void channel::galwayTonePeriod ()
 void channel::silence ()
 {
     sample = 0;
-    m_sampleEvent.cancel ();
-    m_galwayEvent.cancel ();
-    m_xsid.schedule (m_context, 0, m_phase);
+    m_context.cancel (m_sampleEvent);
+    m_context.cancel (m_galwayEvent);
+    m_context.schedule (m_xsid, 0, m_phase);
 }
 
 

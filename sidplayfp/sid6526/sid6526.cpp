@@ -108,7 +108,7 @@ void SID6526::reset (bool seed)
         rnd += time(NULL) & 0xff;
     m_accessClk = 0;
     // Remove outstanding events
-    cancel ();
+    m_eventContext.cancel (*this);
 }
 
 uint8_t SID6526::read (uint_least8_t addr)
@@ -164,7 +164,7 @@ void SID6526::write (uint_least8_t addr, uint8_t data)
             cra &= (~0x10);
             ta   = ta_latch;
         }
-        schedule (m_eventContext, (event_clock_t) ta + 3, m_phase);
+        m_eventContext.schedule (*this, (event_clock_t) ta + 3, m_phase);
     break;
     default:
     break;
@@ -175,6 +175,6 @@ void SID6526::event (void)
 {   // Timer Modes
     m_accessClk = m_eventContext.getTime (m_phase);
     ta = ta_latch;
-    schedule (m_eventContext, (event_clock_t) ta + 1, m_phase);
+    m_eventContext.schedule (*this, (event_clock_t) ta + 1, m_phase);
     m_env.interruptIRQ (true);
 }

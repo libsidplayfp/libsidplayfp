@@ -161,7 +161,7 @@ void HardSID::reset (uint8_t volume)
     ioctl(m_handle, HSID_IOCTL_RESET, volume);
     m_accessClk = 0;
     if (m_eventContext != NULL)
-        schedule ((EventContext&) *m_eventContext, HARDSID_DELAY_CYCLES, m_phase);
+        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, m_phase);
 }
 
 void HardSID::clock()
@@ -241,14 +241,14 @@ void HardSID::event (void)
     event_clock_t cycles = m_eventContext->getTime (m_accessClk, m_phase);
     if (cycles < HARDSID_DELAY_CYCLES)
     {
-        schedule ((EventContext&) *m_eventContext, HARDSID_DELAY_CYCLES - cycles,
+        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES - cycles,
                   m_phase);
     }
     else
     {
         m_accessClk += cycles;
         ioctl(m_handle, HSID_IOCTL_DELAY, (uint) cycles);
-        schedule ((EventContext&) *m_eventContext, HARDSID_DELAY_CYCLES, m_phase);
+        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, m_phase);
     }
 }
 
@@ -278,7 +278,7 @@ bool HardSID::lock(c64env* env)
             return false;
         m_locked = true;
         m_eventContext = &env->context();
-        schedule ((EventContext&) *m_eventContext, HARDSID_DELAY_CYCLES, m_phase);
+        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, m_phase);
     }
     return true;
 }
