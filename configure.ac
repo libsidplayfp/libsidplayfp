@@ -1,6 +1,6 @@
 m4_define([lib_major], [0])
 m4_define([lib_minor], [3])
-m4_define([lib_level], [0alpha])
+m4_define([lib_level], [0beta])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version])
@@ -82,7 +82,7 @@ dnl libtool-style version-info number
 #     value and # reset both “older interface age” and ”interface revision”
 #     to zero.
 
-LIBSIDPLAYCUR=1
+LIBSIDPLAYCUR=2
 LIBSIDPLAYREV=0
 LIBSIDPLAYAGE=0
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
@@ -93,12 +93,12 @@ LIBRESIDAGE=1
 LIBRESIDVERSION=$LIBRESIDCUR:$LIBRESIDREV:$LIBRESIDAGE
 
 LIBRESIDFPCUR=1
-LIBRESIDFPREV=0
+LIBRESIDFPREV=1
 LIBRESIDFPAGE=0
 LIBRESIDFPVERSION=$LIBRESIDFPCUR:$LIBRESIDFPREV:$LIBRESIDFPAGE
 
 LIBHARDSIDCUR=0
-LIBHARDSIDREV=0
+LIBHARDSIDREV=1
 LIBHARDSIDAGE=0
 LIBHARDSIDVERSION=$LIBHARDSIDCUR:$LIBHARDSIDREV:$LIBHARDSIDAGE
 

@@ -1,3 +1,20 @@
+0.3.0beta 2011-09-11
+
+* integrated Lorenz testsuite
+* added doxygen documentation
+* simplified the Event Scheduler
+* ported the MOS6526 emulation from jsiplay2, passes the whole CIA suite
+* reworked the 6510 emulation, passes the whole Lorenz suite
+
+API changes:
+
+deprecated methods Event::cancel and Event::schedule in favor of
+EventContext::cancel and EventContext::schedule
+
+deprecated sidplay2::timebase, it always returns 1
+
+
+
 0.2.0 2011-08-13
 
 * ported reSIDfp engine from jsidplay2 featuring two pass resampler
