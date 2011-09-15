@@ -51,13 +51,6 @@ private:
 	};
 
 	/**
-	 * Whether hold is enabled. Only switching to ATTACK can release envelope.
-	 */
-	bool hold_zero;
-
-	bool envelope_pipeline;
-
-	/**
 	 * XOR shift register emulated via normal integer which implements delay
 	 * until the next envelope operation occurs. The XOR shift register has
 	 * 0x7fff different values to scan.
@@ -96,11 +89,18 @@ private:
 	/** Release register */
 	int release;
 
-	/** Gate bit */
-	bool gate;
-
 	/** Current envelope state */
 	State state;
+
+	/**
+	 * Whether hold is enabled. Only switching to ATTACK can release envelope.
+	 */
+	bool hold_zero;
+
+	bool envelope_pipeline;
+
+	/** Gate bit */
+	bool gate;
 
 	/**
 	 * Lookup table to convert from attack, decay, or release value to rate

@@ -43,10 +43,6 @@ class WaveformGenerator {
 
 private:
 	array<short>* model_wave;
-	short dac[4096];
-
-	// Tell whether the accumulator MSB was set high on this cycle.
-	bool msb_rising;
 
 	// PWout = (PWn/40.95)%
 	int pw;
@@ -80,7 +76,6 @@ private:
 	int accumulator;
 
 	// Fout  = (Fn*Fclk/16777216)Hz
-	// reg16 freq;
 	int freq;
 
 	/**
@@ -88,6 +83,11 @@ private:
 	 */
 	bool test;
 	bool sync;
+
+	// Tell whether the accumulator MSB was set high on this cycle.
+	bool msb_rising;
+
+	short dac[4096];
 
 private:
 	void clock_shift_register();

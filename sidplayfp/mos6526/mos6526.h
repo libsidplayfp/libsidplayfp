@@ -66,11 +66,6 @@ private:
 	event_clock_t ciaEventPauseTime;
 
 	/**
-	* Copy of regs[CRA/B]
-	*/
-	uint8_t lastControlValue;
-
-	/**
 	* Current timer value.
 	*/
 	uint_least16_t timer;
@@ -84,6 +79,11 @@ private:
 	* PB6/PB7 Flipflop to signal underflows.
 	*/
 	bool pbToggle;
+
+	/**
+	* Copy of regs[CRA/B]
+	*/
+	uint8_t lastControlValue;
 
 	EventCallback<Timer> m_cycleSkippingEvent;
 

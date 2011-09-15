@@ -91,10 +91,11 @@ class SID6510: public MOS6510
 {
 private:
     // Sidplay Specials
-    bool          m_sleeping;
-    sid2_env_t    m_mode;
+    event_clock_t m_stealingClk;
     event_clock_t m_delayClk;
+    sid2_env_t    m_mode;
     bool          m_framelock;
+    bool          m_sleeping;
 
 private:
     void hackTable();

@@ -139,24 +139,24 @@ private:
     EventCallback<channel> m_sampleEvent;
     EventCallback<channel> m_galwayEvent;
 
-    uint8_t  reg[0x10];
-    enum    {FM_NONE = 0, FM_HUELS, FM_GALWAY} mode;
-    bool     active;
     uint_least16_t address;
     uint_least16_t cycleCount; // Counts to zero and triggers!
+    enum    {FM_NONE = 0, FM_HUELS, FM_GALWAY} mode;
+    bool     active;
     uint_least8_t  volShift;
     uint_least8_t  sampleLimit;
     int8_t         sample;
+    uint8_t  reg[0x10];
 
     // Sample Section
+    uint_least16_t samEndAddr;
+    uint_least16_t samRepeatAddr;
+    uint_least16_t samPeriod;
     uint_least8_t  samRepeat;
     uint_least8_t  samScale;
     enum {SO_LOWHIGH = 0, SO_HIGHLOW = 1};
     uint_least8_t  samOrder;
     uint_least8_t  samNibble;
-    uint_least16_t samEndAddr;
-    uint_least16_t samRepeatAddr;
-    uint_least16_t samPeriod;
 
     // Galway Section
     uint_least8_t  galTones;

@@ -86,16 +86,8 @@ private:
 	/** Paddle Y register support */
 	Potentiometer* potY;
 
-	/** Last written value */
-	unsigned char busValue;
-
 	/** Time to live for the last written value */
 	int busValueTtl;
-
-	/**
-	 * Currently active chip model.
-	 */
-	ChipModel model;
 
 	/**
 	 * Time until synchronize() must be run.
@@ -110,8 +102,16 @@ private:
 	/** Delayed MOS8580 write register */
 	int delayedOffset;
 
+	/**
+	 * Currently active chip model.
+	 */
+	ChipModel model;
+
 	/** Delayed MOS8580 write value */
 	unsigned char delayedValue;
+
+	/** Last written value */
+	unsigned char busValue;
 
 	bool muted[3];
 

@@ -24,9 +24,9 @@ namespace reSIDfp
 class Filter8580 : public Filter {
 
 private:
+	double highFreq;
 	float Vlp, Vbp, Vhp;
 	float ve, w0, _1_div_Q;
-	double highFreq;
 
 public:
 	Filter8580() :

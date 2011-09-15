@@ -120,19 +120,6 @@
 class MOS6510
 {
 protected:
-    C64Environment *env;
-
-    // External signals
-    bool aec; /* Address Controller, blocks reads */
-    event_clock_t m_stealingClk;
-    event_clock_t m_dbgClk;
-    FILE *m_fdbg;
-
-    bool dodump;
-
-    /** Our event context copy. */
-    EventContext &eventContext;
-
     struct ProcessorCycle
     {
         void (MOS6510::*func)(void);
@@ -141,15 +128,18 @@ protected:
             :func(0), nosteal(false) {}
     };
 
-    struct ProcessorCycle       fetchCycle;
-    struct ProcessorCycle      *instrCurrent;
+protected:
+    C64Environment *env;
 
-    /** Table of CPU opcode implementations */
-    struct ProcessorCycle  instrTable[0x103][8];
+    /** Our event context copy. */
+    EventContext &eventContext;
+
+    struct ProcessorCycle *instrCurrent;
+
+    int cycleCount;
 
     uint_least16_t instrStartPC;
     int_least8_t   lastAddrCycle;
-    int   cycleCount;
 
     /** Pointers to the current instruction cycle */
     uint_least16_t Cycle_EffectiveAddress;
@@ -169,9 +159,6 @@ protected:
     bool           flagI;
     bool           flagB;
     uint_least16_t Register_StackPointer;
-
-    /** Debug info */
-    uint_least16_t Instr_Operand;
 
     /* Interrupts */
 
@@ -193,6 +180,23 @@ protected:
     /** When NMI can trigger earliest */
     event_clock_t  nmiClk;
 
+    /** Address Controller, blocks reads */
+    bool aec;
+
+    struct ProcessorCycle       fetchCycle;
+
+    /** Debug info */
+    uint_least16_t Instr_Operand;
+
+    FILE *m_fdbg;
+
+    event_clock_t m_dbgClk;
+
+    bool dodump;
+
+    /** Table of CPU opcode implementations */
+    struct ProcessorCycle  instrTable[0x103][8];
+
 protected:
     EventCallback<MOS6510> m_nosteal;
     EventCallback<MOS6510> m_steal;
@@ -200,7 +204,7 @@ protected:
     void eventWithoutSteals  (void);
     void eventWithSteals     (void);
 
-    void        Initialise       (void);
+    void Initialise          (void);
 
     // Flag utility functions
     inline void setFlagsNZ(const uint8_t value);

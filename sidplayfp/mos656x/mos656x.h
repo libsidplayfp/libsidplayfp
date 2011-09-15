@@ -35,22 +35,23 @@ private:
     static const char *credit;
 
 protected:
-    uint8_t        regs[0x40];
-    uint8_t        icr, idr, ctrl1;
+    event_clock_t m_rasterClk;
+    EventContext &event_context;
+    event_phase_t m_phase;
+
     uint_least16_t yrasters, xrasters, raster_irq;
     uint_least16_t raster_x, raster_y;
     uint_least16_t first_dma_line, last_dma_line, y_scroll;
     bool           bad_lines_enabled, bad_line;
     bool           vblanking;
     bool           lp_triggered;
+    uint8_t        icr, idr, ctrl1;
     uint8_t        lpx, lpy;
     uint8_t       &sprite_enable, &sprite_y_expansion;
     uint8_t        sprite_dma, sprite_expand_y;
     uint8_t        sprite_mc_base[8];
 
-    event_clock_t m_rasterClk;
-    EventContext &event_context;
-    event_phase_t m_phase;
+    uint8_t        regs[0x40];
 
 protected:
     MOS656X (EventContext *context);

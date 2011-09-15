@@ -51,6 +51,12 @@ private:
 	char filt;
 
 protected:
+
+	/**
+	 * Current clock frequency.
+	 */
+	double clockFrequency;
+
 	/**
 	 * Filter cutoff frequency.
 	 */
@@ -60,6 +66,11 @@ protected:
 	 * Filter resonance.
 	 */
 	int res;
+
+	/**
+	 * Current volume.
+	 */
+	int vol;
 
 	/**
 	 * Routing to filter or outside filter
@@ -75,16 +86,6 @@ protected:
 	 * Highpass, bandpass, and lowpass filter modes.
 	 */
 	bool hp, bp, lp;
-
-	/**
-	 * Current volume.
-	 */
-	int vol;
-
-	/**
-	 * Current clock frequency.
-	 */
-	double clockFrequency;
 
 protected:
 	/**

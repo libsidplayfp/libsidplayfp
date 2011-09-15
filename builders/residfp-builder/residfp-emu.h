@@ -34,10 +34,10 @@ private:
     event_phase_t m_phase;
     class RESID_NAMESPACE::SID &m_sid;
     event_clock_t m_accessClk;
-    static char   m_credit[250];
     const  char  *m_error;
     bool          m_status;
     bool          m_locked;
+    static char   m_credit[250];
 
 public:
     ReSIDfp  (sidbuilder *builder);

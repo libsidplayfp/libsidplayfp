@@ -11,9 +11,9 @@ typedef double (*Params)[6];
 class Spline {
 
 private:
+	double* c;
 	const int paramsLength;
 	Params params;
-	double* c;
 
 public:
 	Spline(const double input[][2], const int inputLength);

@@ -35,8 +35,8 @@ protected:
 
 private:
     static const char  *ERR_FILTER_DEFINITION;
-    char        m_errorBuffer[100];
     const char *m_error;
+    char        m_errorBuffer[100];
 
 public:
     ReSIDfpBuilder  (const char * const name);

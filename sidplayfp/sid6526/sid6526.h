@@ -47,7 +47,6 @@
 class SID6526: public component, private Event
 {
 private:
-
     static const char * const credit;
 
     c64env       &m_env;
@@ -55,13 +54,13 @@ private:
     event_clock_t m_accessClk;
     event_phase_t m_phase;
 
-    uint8_t regs[0x10];
-    uint8_t cra;             // Timer A Control Register
     uint_least16_t ta_latch;
     uint_least16_t ta;       // Current count (reduces to zero)
     uint_least32_t rnd;
     uint_least16_t m_count;
     bool locked; // Prevent code changing CIA.
+    uint8_t cra;             // Timer A Control Register
+    uint8_t regs[0x10];
 
 public:
     SID6526 (c64env *env);

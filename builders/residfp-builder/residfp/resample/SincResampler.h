@@ -64,8 +64,6 @@ private:
 
 	static const int BITS = 16;
 
-	short sample[RINGSIZE * 2];
-
 	array<short>* firTable;
 
 	int sampleIndex;
@@ -77,6 +75,8 @@ private:
 	int sampleOffset;
 
 	int outputValue;
+
+	short sample[RINGSIZE * 2];
 
 	/**
 	* Cache for the expensive FIR table computation results.
