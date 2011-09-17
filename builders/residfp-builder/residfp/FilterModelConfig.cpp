@@ -56,10 +56,7 @@ FilterModelConfig::FilterModelConfig() :
 	dac_2R_div_R(2.2),
 	dac_term(false),
 	vmin(opamp_voltage[0][0]),
-	norm(1.0/((Vdd - Vth) - vmin)),
-	vcr_Vg(new unsigned short[1 << 16]),
-	vcr_n_Ids_term(new unsigned short[1 << 16]),
-	opamp_rev(new int[1 << 16]) {
+	norm(1.0/((Vdd - Vth) - vmin)) {
 	// Convert op-amp voltage transfer to 16 bit values.
 
 	double wp = 0.;
@@ -175,9 +172,6 @@ FilterModelConfig::FilterModelConfig() :
 }
 
 FilterModelConfig::~FilterModelConfig() {
-	delete [] vcr_Vg;
-	delete [] vcr_n_Ids_term;
-	delete [] opamp_rev;
 
 	for (int i = 0; i < 7; i++) {
 		delete [] summer[i];

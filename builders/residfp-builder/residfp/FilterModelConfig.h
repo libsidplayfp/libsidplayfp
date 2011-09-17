@@ -39,13 +39,14 @@ private:
 	/* Derived stuff */
 	const double vmin, norm;
 	double opamp_working_point;
-	double dac[DAC_SIZE];
-	unsigned short* vcr_Vg;
-	unsigned short* vcr_n_Ids_term;
-	int* opamp_rev;
 	unsigned short* mixer[8];
 	unsigned short* summer[7];
 	unsigned short* gain[16];
+	double dac[DAC_SIZE];
+	unsigned short vcr_Vg[1 << 16];
+	unsigned short vcr_n_Ids_term[1 << 16];
+	int opamp_rev[1 << 16];
+
 
 	double evaluateTransistor(const double Vw, const double vi, const double vx);
 
