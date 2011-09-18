@@ -308,7 +308,6 @@ private:
     bool   isIO;
     bool   isChar;
     void   evalBankSelect (const uint8_t data);
-    void   c64_initialise (void);
     // ------------------------
 
 private:
