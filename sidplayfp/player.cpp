@@ -459,8 +459,7 @@ void Player::fakeIRQ (void)
     // We have to reload the new play address
     if (playAddr)
     {
-        m_port.pr_out = m_playBank;
-        m_port.evalBankSelect ();
+        m_port.setData(m_playBank);
     }
     else
     {
@@ -653,10 +652,9 @@ uint8_t Player::iomap (const uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-void Player::MMU::evalBankSelect ()
-{   // Determine new memory configuration.
-    pr_in  = (pr_out & ddr) | (~ddr & (pr_in | 0x17) & 0xdf);
-    const uint8_t _data = (pr_out | ~ddr) & 7;
+void Player::MMU::mem_pla_config_changed ()
+{
+    const uint8_t mem_config = (data | ~dir) & 0x7;
     /*  B I K C
     * 0 . . . .
     * 1 . . . *
@@ -667,19 +665,44 @@ void Player::MMU::evalBankSelect ()
     * 6 . * * .
     * 7 * * * .
     */
-    isBasic   = ((_data & 3) == 3);
-    isIO      = (_data >  4);
-    isKernal  = ((_data & 2) != 0);
-    isChar    = ((_data ^ 4) > 4);
+    isBasic   = ((mem_config & 3) == 3);
+    isIO      = (mem_config >  4);
+    isKernal  = ((mem_config & 2) != 0);
+    isChar    = ((mem_config ^ 4) > 4);
+
+    c64pla_config_changed(false, true, 0x17);
+}
+
+void Player::MMU::c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup)
+{
+    data_out = (data_out & ~dir) | (data & dir);
+    data_read = (data | ~dir) & (data_out | pullup);
+    if ((pullup & 0x40) != 0 && !caps_sense)
+    {
+        data_read &= 0xbf;
+    }
+    if ((dir & 0x20) == 0)
+    {
+        data_read &= 0xdf;
+    }
+    if (tape_sense && (dir & 0x10) == 0)
+    {
+        data_read &= 0xef;
+    }
+    dir_read = dir;
 }
 
 uint8_t Player::readMemByte_plain (const uint_least16_t addr)
 {   // Bank Select Register Value DOES NOT get to ram
-    if (addr > 1)
+    switch (addr)
+    {
+    case 0:
+        return m_port.getDirRead();
+    case 1:
+        return m_port.getDataRead();
+    default:
         return m_ram[addr];
-    else if (addr)
-        return m_port.pr_in;
-    return m_port.ddr;
+    }
 }
 
 uint8_t Player::readMemByte_io (const uint_least16_t addr)
@@ -803,17 +826,16 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
 
 void Player::writeMemByte_plain (const uint_least16_t addr, const uint8_t data)
 {
-    if (addr > 1)
-        m_ram[addr] = data;
-    else if (addr)
-    {   // Determine new memory configuration.
-        m_port.pr_out = data;
-        m_port.evalBankSelect ();
-    }
-    else
+    switch (addr)
     {
-        m_port.ddr = data;
-        m_port.evalBankSelect ();
+    case 0:
+        m_port.setDir(data);
+        break;
+    case 1:
+        m_port.setData(data);
+        break;
+    default:
+        m_ram[addr] = data;
     }
 }
 
@@ -952,7 +974,7 @@ void Player::reset (void)
     }
 
     // Initalise Memory
-    m_port.pr_in = 0;
+    m_port.setData(0);
     memset (m_ram, 0, 0x10000);
     switch (m_info.environment)
     {
@@ -1096,15 +1118,14 @@ void Player::envReset (const bool safe)
             sid[i]->reset (0);
     }
 
-    m_port.ddr = 0x2F;
+    m_port.setDir(0x2F);
 
     // defaults: Basic-ROM on, Kernal-ROM on, I/O on
     if (m_info.environment != sid2_envR)
     {
         const uint8_t song = m_tuneInfo.currentSong - 1;
         const uint8_t bank = iomap (m_tuneInfo.initAddr);
-        m_port.pr_out = bank;
-        m_port.evalBankSelect ();
+        m_port.setData(bank);
         m_playBank = iomap (m_tuneInfo.playAddr);
         if (m_info.environment != sid2_envPS)
             cpu.reset (m_tuneInfo.initAddr, song, 0, 0);
@@ -1113,8 +1134,7 @@ void Player::envReset (const bool safe)
     }
     else
     {
-        m_port.pr_out = 0x37;
-        m_port.evalBankSelect ();
+        m_port.setData(0x37);
         cpu.reset ();
     }
 
