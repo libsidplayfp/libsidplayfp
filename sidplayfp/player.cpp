@@ -458,10 +458,10 @@ void Player::fakeIRQ (void)
 
     // We have to reload the new play address
     if (playAddr)
-        evalBankSelect (m_playBank);
+        m_port.evalBankSelect (m_playBank);
     else
     {
-        if (isKernal)
+        if (m_port.isKernal)
         {   // Setup the entry point from hardware IRQ
             playAddr = endian_little16 (&m_ram[0x0314]);
         }
@@ -650,11 +650,11 @@ uint8_t Player::iomap (const uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-void Player::evalBankSelect (const uint8_t data)
+void Player::MMU::evalBankSelect (const uint8_t data)
 {   // Determine new memory configuration.
-    m_port.pr_out = data;
-    m_port.pr_in  = (data & m_port.ddr) | (~m_port.ddr & (m_port.pr_in | 0x17) & 0xdf);
-    const uint8_t _data = (data | ~m_port.ddr) & 7;
+    pr_out = data;
+    pr_in  = (data & ddr) | (~ddr & (pr_in | 0x17) & 0xdf);
+    const uint8_t _data = (data | ~ddr) & 7;
     isBasic   = ((_data & 3) == 3);
     isIO      = (_data >  4);
     isKernal  = ((_data & 2) != 0);
@@ -738,7 +738,7 @@ uint8_t Player::readMemByte_sidplaytp(const uint_least16_t addr)
         switch (addr >> 12)
         {
         case 0xd:
-            if (isIO)
+            if (m_port.isIO)
                 return readMemByte_io (addr);
             else
                 return m_ram[addr];
@@ -762,7 +762,7 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
         {
         case 0xa:
         case 0xb:
-            if (isBasic)
+            if (m_port.isBasic)
                 return m_rom[addr];
             else
                 return m_ram[addr];
@@ -771,9 +771,9 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
             return m_ram[addr];
         break;
         case 0xd:
-            if (isIO)
+            if (m_port.isIO)
                 return readMemByte_io (addr);
-            else if (isChar)
+            else if (m_port.isChar)
                 return m_rom[addr & 0x4fff];
             else
                 return m_ram[addr];
@@ -781,7 +781,7 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
         case 0xe:
         case 0xf:
         default:  // <-- just to please the compiler
-            if (isKernal)
+            if (m_port.isKernal)
                 return m_rom[addr];
             else
                 return m_ram[addr];
@@ -795,12 +795,12 @@ void Player::writeMemByte_plain (const uint_least16_t addr, const uint8_t data)
         m_ram[addr] = data;
     else if (addr)
     {   // Determine new memory configuration.
-        evalBankSelect (data);
+        m_port.evalBankSelect (data);
     }
     else
     {
         m_port.ddr = data;
-        evalBankSelect (m_port.pr_out);
+        m_port.evalBankSelect (m_port.pr_out);
     }
 }
 
@@ -883,7 +883,7 @@ void Player::writeMemByte_sidplay (const uint_least16_t addr, const uint8_t data
             m_ram[addr] = data;
         break;
         case 0xd:
-            if (isIO)
+            if (m_port.isIO)
                 writeMemByte_playsid (addr, data);
             else
                 m_ram[addr] = data;
@@ -1090,7 +1090,7 @@ void Player::envReset (const bool safe)
     {
         const uint8_t song = m_tuneInfo.currentSong - 1;
         const uint8_t bank = iomap (m_tuneInfo.initAddr);
-        evalBankSelect (bank);
+        m_port.evalBankSelect (bank);
         m_playBank = iomap (m_tuneInfo.playAddr);
         if (m_info.environment != sid2_envPS)
             cpu.reset (m_tuneInfo.initAddr, song, 0, 0);
@@ -1099,7 +1099,7 @@ void Player::envReset (const bool safe)
     }
     else
     {
-        evalBankSelect (0x37);
+        m_port.evalBankSelect (0x37);
         cpu.reset ();
     }
 
@@ -1119,7 +1119,7 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
             {
             case 0xa:
             case 0xb:
-                if (isBasic)
+                if (m_port.isBasic)
                     return false;
             break;
 
@@ -1127,14 +1127,14 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
             break;
 
             case 0xd:
-                if (isIO)
+                if (m_port.isIO)
                     return false;
             break;
 
             case 0xe:
             case 0xf:
             default:  // <-- just to please the compiler
-               if (isKernal)
+               if (m_port.isKernal)
                     return false;
             break;
             }
@@ -1142,7 +1142,7 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
     break;
 
     case sid2_envTP:
-        if ((addr >= 0xd000) && isKernal)
+        if ((addr >= 0xd000) && m_port.isKernal)
             return false;
     break;
 

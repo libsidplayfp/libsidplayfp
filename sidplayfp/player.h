@@ -220,6 +220,23 @@ SIDPLAY2_NAMESPACE_START
 class Player: public C64Environment, private c64env
 {
 private:
+
+    class MMU
+    {
+    public:
+        bool isKernal;
+        bool isBasic;
+        bool isIO;
+        bool isChar;
+
+        uint8_t pr_out;
+        uint8_t ddr;
+        uint8_t pr_in;
+
+        void evalBankSelect(const uint8_t data);
+    };
+
+private:
     static const double CLOCK_FREQ_NTSC;
     static const double CLOCK_FREQ_PAL;
     static const double VIC_FREQ_PAL;
@@ -293,22 +310,9 @@ private:
     event_clock_t  m_rtcPeriod;
 
     // C64 environment settings
-    struct
-    {
-        uint8_t pr_out;
-        uint8_t ddr;
-        uint8_t pr_in;
-    } m_port;
+    MMU m_port;
 
     uint8_t m_playBank;
-
-    // temp stuff -------------
-    bool   isKernal;
-    bool   isBasic;
-    bool   isIO;
-    bool   isChar;
-    void   evalBankSelect (const uint8_t data);
-    // ------------------------
 
 private:
     float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
