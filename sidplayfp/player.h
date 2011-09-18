@@ -233,7 +233,7 @@ private:
         uint8_t ddr;
         uint8_t pr_in;
 
-        void evalBankSelect(const uint8_t data);
+        void evalBankSelect();
     };
 
 private:
