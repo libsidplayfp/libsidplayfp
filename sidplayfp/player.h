@@ -217,60 +217,71 @@
 
 SIDPLAY2_NAMESPACE_START
 
-class Player: public C64Environment, private c64env
+class MMU
 {
 private:
+    bool kernal;
+    bool basic;
+    bool ioArea;
+    bool character;
 
-    class MMU
+    /* Value written to processor port.  */
+    uint8_t dir;
+    uint8_t data;
+
+    /* Value read from processor port.  */
+    uint8_t dir_read;
+    uint8_t data_read;
+
+    /* State of processor port pins.  */
+    uint8_t data_out;
+
+    // TODO some wired stuff with data_set_bit6 and data_set_bit7
+
+private:
+    void mem_pla_config_changed();
+    void c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup);
+
+public:
+    void reset()
     {
-    public:
-        bool isKernal;
-        bool isBasic;
-        bool isIO;
-        bool isChar;
+        data = 0x3f;
+        data_out = 0x3f;
+        data_read = 0x3f;
+        dir = 0;
+        dir_read = 0;
+    }
 
-    private:
-        /* Value written to processor port.  */
-        uint8_t dir;
-        uint8_t data;
+    void setData(const uint8_t value)
+    {
+        if (data != value)
+        {
+            data = value;
+            mem_pla_config_changed();
+        }
+    }
 
-        /* Value read from processor port.  */
-        uint8_t dir_read;
-        uint8_t data_read;
+    void setDir(const uint8_t value)
+    {
+        if (dir != value)
+        {
+            dir = value;
+            mem_pla_config_changed();
+        }
+    }
 
-        /* State of processor port pins.  */
-        uint8_t data_out;
+    bool isKernal() const { return kernal; }
+    bool isBasic() const { return basic; }
+    bool isIoArea() const { return ioArea; }
+    bool isCharacter() const { return character; }
 
-       // TODO some wired stuff with data_set_bit6 and data_set_bit7
+    uint8_t getDirRead() const { return dir_read; }
+    uint8_t getDataRead() const { return data_read; }
+};
 
-    private:
-        void mem_pla_config_changed();
-        void c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup);
 
-    public:
-
-       void setData(const uint8_t value)
-       {
-           if (data != value)
-           {
-               data = value;
-               mem_pla_config_changed();
-           }
-       }
-
-       void setDir(const uint8_t value)
-       {
-           if (dir != value)
-           {
-               dir = value;
-               mem_pla_config_changed();
-           }
-       }
-
-        uint8_t getDataRead() const { return data_read; }
-        uint8_t getDirRead() const { return dir_read; }
-    };
-
+class Player: public C64Environment, private c64env
+{
 private:
     static const double CLOCK_FREQ_NTSC;
     static const double CLOCK_FREQ_PAL;

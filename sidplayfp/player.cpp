@@ -329,6 +329,48 @@ static const uint8_t poweron[] = {
 #include "poweron.bin"
 };
 
+
+void MMU::mem_pla_config_changed ()
+{
+    const uint8_t mem_config = (data | ~dir) & 0x7;
+    /*  B I K C
+    * 0 . . . .
+    * 1 . . . *
+    * 2 . . * *
+    * 3 * . * *
+    * 4 . . . .
+    * 5 . * . .
+    * 6 . * * .
+    * 7 * * * .
+    */
+    basic      = ((mem_config & 3) == 3);
+    ioArea     = (mem_config >  4);
+    kernal     = ((mem_config & 2) != 0);
+    character  = ((mem_config ^ 4) > 4);
+
+    c64pla_config_changed(false, true, 0x17);
+}
+
+void MMU::c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup)
+{
+    data_out = (data_out & ~dir) | (data & dir);
+    data_read = (data | ~dir) & (data_out | pullup);
+    if ((pullup & 0x40) != 0 && !caps_sense)
+    {
+        data_read &= 0xbf;
+    }
+    if ((dir & 0x20) == 0)
+    {
+        data_read &= 0xdf;
+    }
+    if (tape_sense && (dir & 0x10) == 0)
+    {
+        data_read &= 0xef;
+    }
+    dir_read = dir;
+}
+
+
 const double Player::CLOCK_FREQ_NTSC = 1022727.14;
 const double Player::CLOCK_FREQ_PAL  = 985248.4;
 const double Player::VIC_FREQ_PAL    = 50.0;
@@ -463,7 +505,7 @@ void Player::fakeIRQ (void)
     }
     else
     {
-        if (m_port.isKernal)
+        if (m_port.isKernal())
         {   // Setup the entry point from hardware IRQ
             playAddr = endian_little16 (&m_ram[0x0314]);
         }
@@ -652,46 +694,6 @@ uint8_t Player::iomap (const uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-void Player::MMU::mem_pla_config_changed ()
-{
-    const uint8_t mem_config = (data | ~dir) & 0x7;
-    /*  B I K C
-    * 0 . . . .
-    * 1 . . . *
-    * 2 . . * *
-    * 3 * . * *
-    * 4 . . . .
-    * 5 . * . .
-    * 6 . * * .
-    * 7 * * * .
-    */
-    isBasic   = ((mem_config & 3) == 3);
-    isIO      = (mem_config >  4);
-    isKernal  = ((mem_config & 2) != 0);
-    isChar    = ((mem_config ^ 4) > 4);
-
-    c64pla_config_changed(false, true, 0x17);
-}
-
-void Player::MMU::c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup)
-{
-    data_out = (data_out & ~dir) | (data & dir);
-    data_read = (data | ~dir) & (data_out | pullup);
-    if ((pullup & 0x40) != 0 && !caps_sense)
-    {
-        data_read &= 0xbf;
-    }
-    if ((dir & 0x20) == 0)
-    {
-        data_read &= 0xdf;
-    }
-    if (tape_sense && (dir & 0x10) == 0)
-    {
-        data_read &= 0xef;
-    }
-    dir_read = dir;
-}
-
 uint8_t Player::readMemByte_plain (const uint_least16_t addr)
 {   // Bank Select Register Value DOES NOT get to ram
     switch (addr)
@@ -773,7 +775,7 @@ uint8_t Player::readMemByte_sidplaytp(const uint_least16_t addr)
         switch (addr >> 12)
         {
         case 0xd:
-            if (m_port.isIO)
+            if (m_port.isIoArea())
                 return readMemByte_io (addr);
             else
                 return m_ram[addr];
@@ -797,7 +799,7 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
         {
         case 0xa:
         case 0xb:
-            if (m_port.isBasic)
+            if (m_port.isBasic())
                 return m_rom[addr];
             else
                 return m_ram[addr];
@@ -806,9 +808,9 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
             return m_ram[addr];
         break;
         case 0xd:
-            if (m_port.isIO)
+            if (m_port.isIoArea())
                 return readMemByte_io (addr);
-            else if (m_port.isChar)
+            else if (m_port.isCharacter())
                 return m_rom[addr & 0x4fff];
             else
                 return m_ram[addr];
@@ -816,7 +818,7 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
         case 0xe:
         case 0xf:
         default:  // <-- just to please the compiler
-            if (m_port.isKernal)
+            if (m_port.isKernal())
                 return m_rom[addr];
             else
                 return m_ram[addr];
@@ -918,7 +920,7 @@ void Player::writeMemByte_sidplay (const uint_least16_t addr, const uint8_t data
             m_ram[addr] = data;
         break;
         case 0xd:
-            if (m_port.isIO)
+            if (m_port.isIoArea())
                 writeMemByte_playsid (addr, data);
             else
                 m_ram[addr] = data;
@@ -974,7 +976,7 @@ void Player::reset (void)
     }
 
     // Initalise Memory
-    m_port.setData(0);
+    m_port.reset();
     memset (m_ram, 0, 0x10000);
     switch (m_info.environment)
     {
@@ -1154,7 +1156,7 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
             {
             case 0xa:
             case 0xb:
-                if (m_port.isBasic)
+                if (m_port.isBasic())
                     return false;
             break;
 
@@ -1162,14 +1164,14 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
             break;
 
             case 0xd:
-                if (m_port.isIO)
+                if (m_port.isIoArea())
                     return false;
             break;
 
             case 0xe:
             case 0xf:
             default:  // <-- just to please the compiler
-               if (m_port.isKernal)
+               if (m_port.isKernal())
                     return false;
             break;
             }
@@ -1177,7 +1179,7 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
     break;
 
     case sid2_envTP:
-        if ((addr >= 0xd000) && m_port.isKernal)
+        if ((addr >= 0xd000) && m_port.isKernal())
             return false;
     break;
 
