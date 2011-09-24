@@ -268,7 +268,7 @@ bool HardSID::lock(c64env* env)
     {
         if (!m_locked)
             return false;
-        cancel ();
+        m_eventContext->cancel (*this);
         m_locked = false;
         m_eventContext = NULL;
     }
