@@ -131,7 +131,7 @@ int Filter6581::clock(const int voice1, const int voice2, const int voice3) {
 	const int v2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
 	const int v3 = (voice3 * voiceScaleS14 >> 18) + voiceDC;
 
-	int Vi = 0 ;
+	int Vi = 0;
 	int Vo = 0;
 
 	if (filt1) {
