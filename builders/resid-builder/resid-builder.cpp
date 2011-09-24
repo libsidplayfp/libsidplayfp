@@ -67,12 +67,11 @@ ReSIDBuilder::~ReSIDBuilder (void)
 // Create a new sid emulation.  Called by libsidplay2 only
 uint ReSIDBuilder::create (uint sids)
 {
-    uint   count;
     ReSID *sid = NULL;
     m_status   = true;
 
     // Check available devices
-    count = devices (false);
+    uint count = devices (false);
     if (!m_status)
         goto ReSIDBuilder_create_error;
     if (count && (count < sids))
@@ -185,7 +184,7 @@ void ReSIDBuilder::bias (const double dac_bias)
 // Find a free SID of the required specs
 sidemu *ReSIDBuilder::lock (c64env *env, sid2_model_t model)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     m_status = true;
 
     for (int i = 0; i < size; i++)
@@ -206,7 +205,7 @@ sidemu *ReSIDBuilder::lock (c64env *env, sid2_model_t model)
 // Allow something to use this SID
 void ReSIDBuilder::unlock (sidemu *device)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     // Maek sure this is our SID
     for (int i = 0; i < size; i++)
     {
@@ -222,7 +221,7 @@ void ReSIDBuilder::unlock (sidemu *device)
 // Remove all SID emulations.
 void ReSIDBuilder::remove ()
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     for (int i = 0; i < size; i++)
         delete sidobjs[i];
     sidobjs.clear();

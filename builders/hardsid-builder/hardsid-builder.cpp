@@ -107,12 +107,11 @@ HardSIDBuilder::~HardSIDBuilder (void)
 // Create a new sid emulation.  Called by libsidplay2 only
 uint HardSIDBuilder::create (uint sids)
 {
-    uint   count;
     HardSID *sid = NULL;
     m_status     = true;
 
     // Check available devices
-    count = devices (false);
+    uint count = devices (false);
     if (!m_status)
         goto HardSIDBuilder_create_error;
     if (count && (count < sids))
@@ -182,14 +181,14 @@ const char *HardSIDBuilder::credits ()
 
 void HardSIDBuilder::flush(void)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     for (int i = 0; i < size; i++)
         ((HardSID*)sidobjs[i])->flush();
 }
 
 void HardSIDBuilder::filter (bool enable)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     m_status = true;
     for (int i = 0; i < size; i++)
     {
@@ -201,7 +200,7 @@ void HardSIDBuilder::filter (bool enable)
 // Find a free SID of the required specs
 sidemu *HardSIDBuilder::lock (c64env *env, sid2_model_t model)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     m_status = true;
 
     for (int i = 0; i < size; i++)
@@ -222,7 +221,7 @@ sidemu *HardSIDBuilder::lock (c64env *env, sid2_model_t model)
 // Allow something to use this SID
 void HardSIDBuilder::unlock (sidemu *device)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     // Make sure this is our SID
     for (int i = 0; i < size; i++)
     {
@@ -238,7 +237,7 @@ void HardSIDBuilder::unlock (sidemu *device)
 // Remove all SID emulations.
 void HardSIDBuilder::remove ()
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     for (int i = 0; i < size; i++)
         delete sidobjs[i];
     sidobjs.clear();
@@ -354,13 +353,12 @@ HardSID_init_error:
 // available nodes.
 int HardSIDBuilder::init ()
 {
-    DIR    *dir;
-    dirent *entry;
-
-    m_count = 0;
-    dir = opendir("/dev");
+    DIR    *dir = opendir("/dev");
     if (!dir)
         return -1;
+
+    m_count = 0;
+    dirent *entry;
 
     while ( (entry=readdir(dir)) )
     {

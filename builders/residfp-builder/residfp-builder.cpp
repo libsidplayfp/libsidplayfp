@@ -67,12 +67,11 @@ ReSIDfpBuilder::~ReSIDfpBuilder (void)
 // Create a new sid emulation.  Called by libsidplay2 only
 uint ReSIDfpBuilder::create (uint sids)
 {
-    uint   count;
     ReSIDfp *sid = NULL;
     m_status   = true;
 
     // Check available devices
-    count = devices (false);
+    uint count = devices (false);
     if (!m_status)
         goto ReSIDfpBuilder_create_error;
     if (count && (count < sids))
@@ -196,7 +195,7 @@ void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 // Find a free SID of the required specs
 sidemu *ReSIDfpBuilder::lock (c64env *env, sid2_model_t model)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     m_status = true;
 
     for (int i = 0; i < size; i++)
@@ -217,7 +216,7 @@ sidemu *ReSIDfpBuilder::lock (c64env *env, sid2_model_t model)
 // Allow something to use this SID
 void ReSIDfpBuilder::unlock (sidemu *device)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     // Maek sure this is our SID
     for (int i = 0; i < size; i++)
     {
