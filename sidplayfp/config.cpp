@@ -201,11 +201,14 @@ int Player::config (const sid2_config_t &cfg)
             const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
 
             // Setup fake cia
-            sid6526.clock ((uint_least16_t)(clockPAL + 0.5));
             if (m_tuneInfo.songSpeed  == SIDTUNE_SPEED_CIA_1A ||
                 m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_NTSC)
             {
                 sid6526.clock ((uint_least16_t)(clockNTSC + 0.5));
+            }
+            else
+            {
+                sid6526.clock ((uint_least16_t)(clockPAL + 0.5));
             }
 
             // @FIXME@ see mos6526.h for details. Setup TOD clock
@@ -213,11 +216,13 @@ int Player::config (const sid2_config_t &cfg)
             {
                 cia.clock  (clockPAL);
                 cia2.clock (clockPAL);
+                vic.chip   (MOS6569);
             }
             else
             {
                 cia.clock  (clockNTSC);
                 cia2.clock (clockNTSC);
+                vic.chip   (MOS6567R8);
             }
 
             // Configure, setup and install C64 environment/events
@@ -304,16 +309,8 @@ float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
         if (userClock == SID2_CLOCK_CORRECT)
             userClock  = defaultClock;
 
-        switch (userClock)
-        {
-        case SID2_CLOCK_NTSC:
-            m_tuneInfo.clockSpeed = SIDTUNE_CLOCK_NTSC;
-            break;
-        case SID2_CLOCK_PAL:
-        default:
-            m_tuneInfo.clockSpeed = SIDTUNE_CLOCK_PAL;
-            break;
-        }
+        m_tuneInfo.clockSpeed = (userClock == SID2_CLOCK_NTSC) ?
+            SIDTUNE_CLOCK_NTSC : SIDTUNE_CLOCK_PAL;
     }
 
     if (userClock == SID2_CLOCK_CORRECT)
@@ -331,15 +328,9 @@ float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
 
     if (forced)
     {
-        m_tuneInfo.clockSpeed = SIDTUNE_CLOCK_PAL;
-        if (userClock == SID2_CLOCK_NTSC)
-            m_tuneInfo.clockSpeed = SIDTUNE_CLOCK_NTSC;
+        m_tuneInfo.clockSpeed = (userClock == SID2_CLOCK_NTSC) ?
+            SIDTUNE_CLOCK_NTSC : SIDTUNE_CLOCK_PAL;
     }
-
-    if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
-        vic.chip (MOS6569);
-    else // if (tuneInfo.clockSpeed == SIDTUNE_CLOCK_NTSC)
-        vic.chip (MOS6567R8);
 
     if (userClock == SID2_CLOCK_PAL)
     {

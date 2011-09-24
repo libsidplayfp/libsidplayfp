@@ -407,11 +407,6 @@ public:
 };
 
 
-uint8_t Player::envReadRomByte (const uint_least16_t addr)
-{
-    return m_rom[addr];
-}
-
 uint8_t Player::envReadMemByte (const uint_least16_t addr)
 {   // Read from plain only to prevent execution of rom code
     return (this->*(m_readMemByte)) (addr);

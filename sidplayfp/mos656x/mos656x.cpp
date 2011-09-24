@@ -218,28 +218,27 @@ void MOS656X::trigger (int irq)
 
 void MOS656X::event (void)
 {
-    event_clock_t  cycles = event_context.getTime (m_rasterClk, event_context.phase());
+    const event_clock_t  cycles = event_context.getTime (m_rasterClk, event_context.phase());
 
     // Cycle already executed check
     if (!cycles)
         return;
 
-    event_clock_t  delay  = 1;
-    uint_least16_t cycle;
+    event_clock_t  delay = 1;
 
     // Update x raster
     m_rasterClk += cycles;
     raster_x    += cycles;
-    cycle        = (raster_x + 9) % xrasters;
+    uint_least16_t cycle = (raster_x + 9) % xrasters;
     raster_x    %= xrasters;
 
     switch (cycle)
     {
     case 0:
     {   // Calculate sprite DMA
-        uint8_t y    = raster_y & 0xff;
-        uint8_t mask = 1;
+        const uint8_t y = raster_y & 0xff;
         sprite_expand_y ^= sprite_y_expansion; // 3.8.1-2
+        uint8_t mask = 1;
         for (unsigned int i=1; i<0x10; i+=2, mask<<=1)
         {   // 3.8.1-3
             if ((sprite_enable & mask) && (y == regs[i]))
