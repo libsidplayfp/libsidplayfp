@@ -197,8 +197,6 @@ public:
 	 * Constructor.
 	 */
 	EnvelopeGenerator() :
-		hold_zero(true),
-		envelope_pipeline(false),
 		rate_counter(0),
 		rate_period(0),
 		exponential_counter(0),
@@ -208,8 +206,10 @@ public:
 		decay(0),
 		sustain(0),
 		release(0),
-		gate(false),
-		state(RELEASE) {}
+		state(RELEASE),
+		hold_zero(true),
+		envelope_pipeline(false),
+		gate(false) {}
 
 	/**
 	 * SID reset.

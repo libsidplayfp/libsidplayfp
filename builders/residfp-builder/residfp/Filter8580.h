@@ -30,13 +30,13 @@ private:
 
 public:
 	Filter8580() :
+		highFreq(12500.),
 		Vlp(0.f),
 		Vbp(0.f),
 		Vhp(0.f),
 		ve(0.f),
 		w0(0.f),
-		_1_div_Q(0.f),
-		highFreq(12500.) {}
+		_1_div_Q(0.f) {}
 
 	int clock(const int voice1, const int voice2, const int voice3);
 

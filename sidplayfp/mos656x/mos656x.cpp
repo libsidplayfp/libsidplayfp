@@ -53,10 +53,9 @@ const char *MOS656X::credit =
 
 MOS656X::MOS656X (EventContext *context)
 :Event("VIC Raster"),
- sprite_enable(regs[0x15]),
- sprite_y_expansion(regs[0x17]),
  event_context(*context),
- m_phase(EVENT_CLOCK_PHI1)
+ sprite_enable(regs[0x15]),
+ sprite_y_expansion(regs[0x17])
 {
     chip (MOS6569);
 }
@@ -76,7 +75,7 @@ void MOS656X::reset ()
     sprite_expand_y = 0xff;
     memset (regs, 0, sizeof (regs));
     memset (sprite_mc_base, 0, sizeof (sprite_mc_base));
-    event_context.schedule (*this, 0, m_phase);
+    event_context.schedule (*this, 0, EVENT_CLOCK_PHI1);
 }
 
 void MOS656X::chip (mos656x_model_t model)
@@ -435,7 +434,7 @@ void MOS656X::event (void)
             delay = xrasters - cycle;
     }
 
-    event_context.schedule (*this, delay - event_context.phase(), m_phase);
+    event_context.schedule (*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
 }
 
 // Handle light pen trigger

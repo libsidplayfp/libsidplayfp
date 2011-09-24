@@ -37,7 +37,6 @@ private:
 protected:
     event_clock_t m_rasterClk;
     EventContext &event_context;
-    event_phase_t m_phase;
 
     uint_least16_t yrasters, xrasters, raster_irq;
     uint_least16_t raster_x, raster_y;

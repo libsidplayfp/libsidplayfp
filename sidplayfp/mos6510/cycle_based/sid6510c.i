@@ -150,9 +150,9 @@
 
 SID6510::SID6510 (EventContext *context)
 :MOS6510(context),
- m_sleeping(false),
  m_mode(sid2_envR),
- m_framelock(false)
+ m_framelock(false),
+ m_sleeping(false)
 {
     // Used to insert busy delays into the CPU emulation
     delayCycle.func = reinterpret_cast <void (MOS6510::*)()>

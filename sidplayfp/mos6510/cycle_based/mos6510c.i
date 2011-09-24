@@ -1704,8 +1704,8 @@ void MOS6510::tas_instr (void)
 *            The Event Context
 */
 MOS6510::MOS6510 (EventContext *context)
-:m_fdbg(stdout),
- eventContext(*context),
+:eventContext(*context),
+ m_fdbg(stdout),
  m_nosteal("CPU-nosteal", *this, &MOS6510::eventWithoutSteals),
  m_steal("CPU-steal", *this, &MOS6510::eventWithSteals)
 {
