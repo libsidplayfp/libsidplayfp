@@ -261,18 +261,4 @@ public:
     event_phase_t phase () const { return (event_phase_t) (currentTime & 1); }
 };
 
-
-inline void Event::schedule (EventContext &context, event_clock_t cycles,
-                             event_phase_t phase)
-{
-    m_context = &context;
-    m_context->schedule (*this, cycles, phase);
-}
-
-inline void Event::cancel ()
-{
-    if (m_pending)
-        m_context->cancel (*this);
-}
-
 #endif // _event_h_
