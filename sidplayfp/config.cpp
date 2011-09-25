@@ -367,40 +367,20 @@ int Player::environment (sid2_env_t env)
     }
 
     // Environment not set?
-    if ((m_ram == 0) || (m_info.environment != env))
+    if (mmu.getRom() == 0 || m_info.environment != env)
     {   // Setup new player environment
         m_info.environment = env;
-        if (m_ram)
-        {
-            if (m_rom != m_ram)
-                delete [] m_rom;
-
-            delete [] m_ram;
-        }
-
-#ifdef HAVE_EXCEPTIONS
-        m_ram = new(std::nothrow) uint8_t[0x10000];
-#else
-        m_ram = new uint8_t[0x10000];
-#endif
-
+        mmu.setEnv(env);
         // Setup the access functions to the environment
         // and the properties the memory has.
         if (m_info.environment == sid2_envPS)
         {   // Playsid has no roms and SID exists in ram space
-            m_rom = m_ram;
             m_readMemByte     = &Player::readMemByte_plain;
             m_writeMemByte    = &Player::writeMemByte_playsid;
             m_readMemDataByte = &Player::readMemByte_plain;
         }
         else
         {
-#ifdef HAVE_EXCEPTIONS
-            m_rom = new(std::nothrow) uint8_t[0x10000];
-#else
-            m_rom = new uint8_t[0x10000];
-#endif
-
             switch (m_info.environment)
             {
             case sid2_envTP:

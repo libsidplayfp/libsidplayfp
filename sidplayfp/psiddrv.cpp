@@ -239,7 +239,7 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
         info.driverLength += 0xff;
         info.driverLength &= 0xff00;
 
-        memcpy (&m_rom[0xfffc], &reloc_driver[0], 2); /* RESET */
+        mmu.fillRom(0xfffc, &reloc_driver[0], 2); /* RESET */
         // If not a basic tune then the psiddrv must install
         // interrupt hooks and trap programs trying to restart basic
         if (tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC)
@@ -247,32 +247,32 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
             uint8_t prg[] = {LDAb, (uint8_t) (tuneInfo.currentSong-1),
                              STAa, 0x0c, 0x03, JSRw, 0x2c, 0xa8,
                              JMPw, 0xb1, 0xa7};
-            memcpy (&m_rom[0xbf53], prg, sizeof (prg));
-            m_rom[0xa7ae] = JMPw;
-            endian_little16 (&m_rom[0xa7af], 0xbf53);
+            mmu.fillRom (0xbf53, prg, sizeof (prg));
+            mmu.writeRomByte(0xa7ae, JMPw);
+            mmu.writeRomWord(0xa7af, 0xbf53);
         }
         else
         {   // Only install irq handle for RSID tunes
             if (tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_R64)
-                memcpy (&m_ram[0x0314], &reloc_driver[2], 2);
+                mmu.fillRam(0x0314, &reloc_driver[2], 2);
             else
-                memcpy (&m_ram[0x0314], &reloc_driver[2], 6);
+                mmu.fillRam(0x0314, &reloc_driver[2], 6);
 
             // Experimental restart basic trap
             uint_least16_t addr;
             addr = endian_little16(&reloc_driver[8]);
-            m_rom[0xa7ae] = JMPw;
-            endian_little16 (&m_rom[0xa7af], 0xffe1);
-            endian_little16 (&m_ram[0x0328], addr);
+            mmu.writeRomByte(0xa7ae, JMPw);
+            mmu.writeRomWord(0xa7af, 0xffe1);
+            mmu.writeMemWord(0x0328, addr);
         }
         // Install driver to rom so it can be copied later into
         // ram once the tune is installed.
         //memcpy (&m_ram[relocAddr], &reloc_driver[10], reloc_size);
-        memcpy (&m_rom[0], &reloc_driver[10], reloc_size);
+        mmu.fillRom(0, &reloc_driver[10], reloc_size);
     }
 
     {   // Setup the Initial entry point
-        uint8_t *addr = &m_rom[0]; // &m_ram[relocAddr];
+        uint8_t *addr = mmu.getRom(); // &m_ram[relocAddr];
 
         // Tell C64 about song
         *addr++ = (uint8_t) (tuneInfo.currentSong-1);
@@ -300,7 +300,7 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
         m_rand  = m_rand * 13 + 1;
         *addr++ = iomap (m_tuneInfo.initAddr);
         *addr++ = iomap (m_tuneInfo.playAddr);
-        addr[1] = (addr[0] = m_ram[0x02a6]); // PAL/NTSC flag
+        addr[1] = (addr[0] = mmu.readMemByte(0x02a6)); // PAL/NTSC flag
         addr++;
 
         // Add the required tune speed
@@ -370,7 +370,7 @@ void Player::psidRelocAddr (SidTuneInfo &tuneInfo, int startp, int endp)
 // to allow the driver to be installed inside the load image
 void Player::psidDrvInstall (sid2_info_t &info)
 {
-    memcpy (&m_ram[info.driverAddr], &m_rom[0], info.driverLength);
+    mmu.fillRam (info.driverAddr, mmu.getRom(), info.driverLength);
 }
 
 SIDPLAY2_NAMESPACE_STOP

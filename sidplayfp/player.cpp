@@ -298,10 +298,6 @@
 #include "sidendian.h"
 #include "player.h"
 
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
-
 #ifndef PACKAGE_NAME
 #   define PACKAGE_NAME PACKAGE
 #endif
@@ -312,63 +308,6 @@
 
 
 SIDPLAY2_NAMESPACE_START
-
-static const uint8_t kernal[] = {
-#include "kernal.bin"
-};
-
-static const uint8_t character[] = {
-#include "char.bin"
-};
-
-static const uint8_t basic[] = {
-#include "basic.bin"
-};
-
-static const uint8_t poweron[] = {
-#include "poweron.bin"
-};
-
-
-void MMU::mem_pla_config_changed ()
-{
-    const uint8_t mem_config = (data | ~dir) & 0x7;
-    /*  B I K C
-    * 0 . . . .
-    * 1 . . . *
-    * 2 . . * *
-    * 3 * . * *
-    * 4 . . . .
-    * 5 . * . .
-    * 6 . * * .
-    * 7 * * * .
-    */
-    basic      = ((mem_config & 3) == 3);
-    ioArea     = (mem_config >  4);
-    kernal     = ((mem_config & 2) != 0);
-    character  = ((mem_config ^ 4) > 4);
-
-    c64pla_config_changed(false, true, 0x17);
-}
-
-void MMU::c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup)
-{
-    data_out = (data_out & ~dir) | (data & dir);
-    data_read = (data | ~dir) & (data_out | pullup);
-    if ((pullup & 0x40) != 0 && !caps_sense)
-    {
-        data_read &= 0xbf;
-    }
-    if ((dir & 0x20) == 0)
-    {
-        data_read &= 0xdf;
-    }
-    if (tape_sense && (dir & 0x10) == 0)
-    {
-        data_read &= 0xef;
-    }
-    dir_read = dir;
-}
 
 
 const double Player::CLOCK_FREQ_NTSC = 1022727.14;
@@ -410,8 +349,6 @@ Player::Player (void)
  vic     (this),
  m_mixerEvent ("Mixer", *this, &Player::mixer),
  m_tune (NULL),
- m_ram  (NULL),
- m_rom  (NULL),
  m_errorString       (TXT_NA),
  m_fastForwardFactor (1),
  m_mileage           (0),
@@ -483,14 +420,6 @@ Player::Player (void)
     credit[5] = NULL;
 }
 
-Player::~Player ()
-{
-    if (m_rom != m_ram)
-        delete [] m_rom;
-
-    delete [] m_ram;
-}
-
 // Makes the next sequence of notes available.  For sidplay compatibility
 // this function should be called from interrupt event
 void Player::fakeIRQ (void)
@@ -501,17 +430,17 @@ void Player::fakeIRQ (void)
     // We have to reload the new play address
     if (playAddr)
     {
-        m_port.setData(m_playBank);
+        mmu.setData(m_playBank);
     }
     else
     {
-        if (m_port.isKernal())
+        if (mmu.isKernal())
         {   // Setup the entry point from hardware IRQ
-            playAddr = endian_little16 (&m_ram[0x0314]);
+            playAddr = mmu.readMemWord(0x0314);
         }
         else
         {   // Setup the entry point from software IRQ
-            playAddr = endian_little16 (&m_ram[0xFFFE]);
+            playAddr = mmu.readMemWord(0xFFFE);
         }
     }
 
@@ -557,14 +486,14 @@ int Player::initialise ()
     {   // Program end address
         uint_least16_t start = m_tuneInfo.loadAddr;
         uint_least16_t end   = start + m_tuneInfo.c64dataLen;
-        endian_little16 (&m_ram[0x2d], end); // Variables start
-        endian_little16 (&m_ram[0x2f], end); // Arrays start
-        endian_little16 (&m_ram[0x31], end); // Strings start
-        endian_little16 (&m_ram[0xac], start);
-        endian_little16 (&m_ram[0xae], end);
+        mmu.writeMemWord(0x2d, end); // Variables start
+        mmu.writeMemWord(0x2f, end); // Arrays start
+        mmu.writeMemWord(0x31, end); // Strings start
+        mmu.writeMemWord(0xac, start);
+        mmu.writeMemWord(0xae, end);
     }
 
-    if (!m_tune->placeSidTuneInC64mem (m_ram))
+    if (!m_tune->placeSidTuneInC64mem (mmu.getMem()))
     {   // Rev 1.6 (saw) - Allow loop through errors
         m_errorString = (m_tune->getInfo()).statusString;
         return -1;
@@ -699,11 +628,11 @@ uint8_t Player::readMemByte_plain (const uint_least16_t addr)
     switch (addr)
     {
     case 0:
-        return m_port.getDirRead();
+        return mmu.getDirRead();
     case 1:
-        return m_port.getDataRead();
+        return mmu.getDataRead();
     default:
-        return m_ram[addr];
+        return mmu.readMemByte(addr);
     }
 }
 
@@ -731,7 +660,7 @@ uint8_t Player::readMemByte_io (const uint_least16_t addr)
             case 0xd3:
                 return vic.read (addr&0x3f);
             default:
-                return m_rom[addr];
+                return mmu.readRomByte(addr);
             }
         }
         else
@@ -754,7 +683,7 @@ uint8_t Player::readMemByte_io (const uint_least16_t addr)
                 }
                 // Deliberate run on
             default:
-                return m_rom[addr];
+                return mmu.readRomByte(addr);
             }
         }
     }
@@ -775,15 +704,15 @@ uint8_t Player::readMemByte_sidplaytp(const uint_least16_t addr)
         switch (addr >> 12)
         {
         case 0xd:
-            if (m_port.isIoArea())
+            if (mmu.isIoArea())
                 return readMemByte_io (addr);
             else
-                return m_ram[addr];
+                return mmu.readMemByte(addr);
         break;
         case 0xe:
         case 0xf:
         default:  // <-- just to please the compiler
-              return m_ram[addr];
+              return mmu.readMemByte(addr);
         }
     }
 }
@@ -799,29 +728,29 @@ uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
         {
         case 0xa:
         case 0xb:
-            if (m_port.isBasic())
-                return m_rom[addr];
+            if (mmu.isBasic())
+                return mmu.readRomByte(addr);
             else
-                return m_ram[addr];
+                return mmu.readMemByte(addr);
         break;
         case 0xc:
-            return m_ram[addr];
+            return mmu.readMemByte(addr);
         break;
         case 0xd:
-            if (m_port.isIoArea())
+            if (mmu.isIoArea())
                 return readMemByte_io (addr);
-            else if (m_port.isCharacter())
-                return m_rom[addr & 0x4fff];
+            else if (mmu.isCharacter())
+                return mmu.readRomByte(addr & 0x4fff);
             else
-                return m_ram[addr];
+                return mmu.readMemByte(addr);
         break;
         case 0xe:
         case 0xf:
         default:  // <-- just to please the compiler
-            if (m_port.isKernal())
-                return m_rom[addr];
+            if (mmu.isKernal())
+                return mmu.readRomByte(addr);
             else
-                return m_ram[addr];
+                return mmu.readMemByte(addr);
         }
     }
 }
@@ -831,13 +760,13 @@ void Player::writeMemByte_plain (const uint_least16_t addr, const uint8_t data)
     switch (addr)
     {
     case 0:
-        m_port.setDir(data);
+        mmu.setDir(data);
         break;
     case 1:
-        m_port.setData(data);
+        mmu.setData(data);
         break;
     default:
-        m_ram[addr] = data;
+        mmu.writeMemByte(addr, data);
     }
 }
 
@@ -855,22 +784,22 @@ void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data
             case 0:
             case 1:
                 writeMemByte_plain (addr, data);
-            return;
+                break;
             case 0xdc:
                 cia.write (addr&0x0f, data);
-            return;
+                break;
             case 0xdd:
                 cia2.write (addr&0x0f, data);
-            return;
+                break;
             case 0xd0:
             case 0xd1:
             case 0xd2:
             case 0xd3:
                 vic.write (addr&0x3f, data);
-            return;
+                break;
             default:
-                m_rom[addr] = data;
-            return;
+                mmu.writeRomByte(addr, data);
+                break;
             }
         }
         else
@@ -880,28 +809,30 @@ void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data
             case 0:
             case 1:
                 writeMemByte_plain (addr, data);
-            return;
+                break;
             case 0xdc: // Sidplay1 CIA
                 sid6526.write (addr&0x0f, data);
-            return;
+                break;
             default:
-                m_rom[addr] = data;
-            return;
+                mmu.writeRomByte(addr, data);
+                break;
             }
         }
     }
-
-    // $D41D/1E/1F, $D43D/3E/3F, ...
-    // Map to real address to support PlaySID
-    // Extended SID Chip Registers.
-    sid2crc (data);
-    if (( tempAddr & 0x00ff ) >= 0x001d )
-        xsid.write16 (addr & 0x01ff, data);
-    else // Mirrored SID.
+    else
     {
-        const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
-        // Convert address to that acceptable by resid
-        sid[i]->write(tempAddr & 0xff, data);
+        // $D41D/1E/1F, $D43D/3E/3F, ...
+        // Map to real address to support PlaySID
+        // Extended SID Chip Registers.
+        sid2crc (data);
+        if (( tempAddr & 0x00ff ) >= 0x001d )
+            xsid.write16 (addr & 0x01ff, data);
+        else // Mirrored SID.
+        {
+            const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
+            // Convert address to that acceptable by resid
+            sid[i]->write(tempAddr & 0xff, data);
+        }
     }
 }
 
@@ -917,18 +848,18 @@ void Player::writeMemByte_sidplay (const uint_least16_t addr, const uint8_t data
         case 0xa:
         case 0xb:
         case 0xc:
-            m_ram[addr] = data;
+            mmu.writeMemByte(addr, data);
         break;
         case 0xd:
-            if (m_port.isIoArea())
+            if (mmu.isIoArea())
                 writeMemByte_playsid (addr, data);
             else
-                m_ram[addr] = data;
+                mmu.writeMemByte(addr, data);
         break;
         case 0xe:
         case 0xf:
         default:  // <-- just to please the compiler
-            m_ram[addr] = data;
+            mmu.writeMemByte(addr, data);
         }
     }
 }
@@ -976,116 +907,13 @@ void Player::reset (void)
     }
 
     // Initalise Memory
-    m_port.reset();
-    memset (m_ram, 0, 0x10000);
-    switch (m_info.environment)
-    {
-    case sid2_envPS:
-        break;
-    case sid2_envR:
-    {   // Initialize RAM with powerup pattern
-        for (int i=0x07c0; i<0x10000; i+=128)
-            memset (m_ram+i, 0xff, 64);
-        memset (m_rom, 0, 0x10000);
-        break;
-    }
-    default:
-        memset (m_rom, 0, 0x10000);
-        memset (m_rom + 0xA000, RTSn, 0x2000);
-    }
-
-    if (m_info.environment == sid2_envR)
-    {
-        memcpy (&m_rom[0xe000], kernal, sizeof (kernal));
-        // ROM should be at 0xd000 but have internally relocated
-        // it here to unused ROM space (does not affect C64 progs)
-        memcpy (&m_rom[0x4000], character, sizeof (character));
-        m_rom[0xfd69] = 0x9f; // Bypass memory check
-        m_rom[0xe55f] = 0x00; // Bypass screen clear
-        m_rom[0xfdc4] = 0xea; // Ingore sid volume reset to avoid DC
-        m_rom[0xfdc5] = 0xea; // click (potentially incompatibility)!!
-        m_rom[0xfdc6] = 0xea;
-        if (m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC)
-            memcpy (&m_rom[0xa000], basic, sizeof (basic));
-
-        // Copy in power on settings.  These were created by running
-        // the kernel reset routine and storing the usefull values
-        // from $0000-$03ff.  Format is:
-        // -offset byte (bit 7 indicates presence rle byte)
-        // -rle count byte (bit 7 indicates compression used)
-        // data (single byte) or quantity represented by uncompressed count
-        // -all counts and offsets are 1 less than they should be
-        //if (m_tuneInfo.compatibility >= SIDTUNE_COMPATIBILITY_R64)
-        {
-            uint_least16_t addr = 0;
-            for (int i = 0; i < sizeof (poweron);)
-            {
-                uint8_t off   = poweron[i++];
-                uint8_t count = 0;
-                bool compressed = false;
-
-                // Determine data count/compression
-                if (off & 0x80)
-                {   // fixup offset
-                    off  &= 0x7f;
-                    count = poweron[i++];
-                    if (count & 0x80)
-                    {   // fixup count
-                        count &= 0x7f;
-                        compressed = true;
-                    }
-                }
-
-                // Fix count off by ones (see format details)
-                count++;
-                addr += off;
-
-                // Extract compressed data
-                if (compressed)
-                {
-                    const uint8_t data = poweron[i++];
-                    while (count-- > 0)
-                        m_ram[addr++] = data;
-                }
-                // Extract uncompressed data
-                else
-                {
-                    while (count-- > 0)
-                        m_ram[addr++] = poweron[i++];
-                }
-            }
-        }
-    }
-    else // !sid2_envR
-    {
-        memset (m_rom + 0xE000, RTSn, 0x2000);
-        // fake VBI-interrupts that do $D019, BMI ...
-        m_rom[0x0d019] = 0xff;
-        if (m_info.environment == sid2_envPS)
-        {
-            m_ram[0xff48] = JMPi;
-            endian_little16 (&m_ram[0xff49], 0x0314);
-        }
-
-        // Software vectors
-        endian_little16 (&m_ram[0x0314], 0xEA31); // IRQ
-        endian_little16 (&m_ram[0x0316], 0xFE66); // BRK
-        endian_little16 (&m_ram[0x0318], 0xFE47); // NMI
-        // Hardware vectors
-        if (m_info.environment == sid2_envPS)
-            endian_little16 (&m_rom[0xfffa], 0xFFFA); // NMI
-        else
-            endian_little16 (&m_rom[0xfffa], 0xFE43); // NMI
-        endian_little16 (&m_rom[0xfffc], 0xFCE2); // RESET
-        endian_little16 (&m_rom[0xfffe], 0xFF48); // IRQ
-        memcpy (&m_ram[0xfffa], &m_rom[0xfffa], 6);
-    }
+    mmu.reset(m_info.environment, m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC);
 
     // Will get done later if can't now
     if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
-        m_ram[0x02a6] = 1;
+        mmu.writeMemByte(0x02a6, 1);
     else // SIDTUNE_CLOCK_NTSC
-        m_ram[0x02a6] = 0;
+        mmu.writeMemByte(0x02a6, 0);
 }
 
 // This resets the cpu once the program is loaded to begin
@@ -1107,7 +935,7 @@ void Player::envReset (const bool safe)
             info.environment        = m_info.environment;
             psidDrvReloc (tuneInfo, info);
             // Install prg & driver
-            memcpy (&m_ram[0x0800], prg, sizeof (prg));
+            mmu.fillRam(0x0800, prg, sizeof (prg));
             psidDrvInstall (info);
         }
         else
@@ -1120,14 +948,15 @@ void Player::envReset (const bool safe)
             sid[i]->reset (0);
     }
 
-    m_port.setDir(0x2F);
+    mmu.setDir(0x2F);
 
     // defaults: Basic-ROM on, Kernal-ROM on, I/O on
     if (m_info.environment != sid2_envR)
     {
+
         const uint8_t song = m_tuneInfo.currentSong - 1;
         const uint8_t bank = iomap (m_tuneInfo.initAddr);
-        m_port.setData(bank);
+        mmu.setData(bank);
         m_playBank = iomap (m_tuneInfo.playAddr);
         if (m_info.environment != sid2_envPS)
             cpu.reset (m_tuneInfo.initAddr, song, 0, 0);
@@ -1136,7 +965,7 @@ void Player::envReset (const bool safe)
     }
     else
     {
-        m_port.setData(0x37);
+        mmu.setData(0x37);
         cpu.reset ();
     }
 
@@ -1156,7 +985,7 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
             {
             case 0xa:
             case 0xb:
-                if (m_port.isBasic())
+                if (mmu.isBasic())
                     return false;
             break;
 
@@ -1164,14 +993,14 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
             break;
 
             case 0xd:
-                if (m_port.isIoArea())
+                if (mmu.isIoArea())
                     return false;
             break;
 
             case 0xe:
             case 0xf:
             default:  // <-- just to please the compiler
-               if (m_port.isKernal())
+               if (mmu.isKernal())
                     return false;
             break;
             }
@@ -1179,7 +1008,7 @@ bool Player::envCheckBankJump (const uint_least16_t addr)
     break;
 
     case sid2_envTP:
-        if ((addr >= 0xd000) && m_port.isKernal())
+        if ((addr >= 0xd000) && mmu.isKernal())
             return false;
     break;
 

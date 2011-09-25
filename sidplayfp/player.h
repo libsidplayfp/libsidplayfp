@@ -198,6 +198,7 @@
 #include "c64/c64xsid.h"
 #include "c64/c64cia.h"
 #include "c64/c64vic.h"
+#include "c64/mmu.h"
 
 #include "mos6510/mos6510.h"
 #include "sid6526/sid6526.h"
@@ -216,69 +217,6 @@
 #define  SID2_MAPPER_SIZE 32
 
 SIDPLAY2_NAMESPACE_START
-
-class MMU
-{
-private:
-    bool kernal;
-    bool basic;
-    bool ioArea;
-    bool character;
-
-    /* Value written to processor port.  */
-    uint8_t dir;
-    uint8_t data;
-
-    /* Value read from processor port.  */
-    uint8_t dir_read;
-    uint8_t data_read;
-
-    /* State of processor port pins.  */
-    uint8_t data_out;
-
-    // TODO some wired stuff with data_set_bit6 and data_set_bit7
-
-private:
-    void mem_pla_config_changed();
-    void c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup);
-
-public:
-    void reset()
-    {
-        data = 0x3f;
-        data_out = 0x3f;
-        data_read = 0x3f;
-        dir = 0;
-        dir_read = 0;
-    }
-
-    void setData(const uint8_t value)
-    {
-        if (data != value)
-        {
-            data = value;
-            mem_pla_config_changed();
-        }
-    }
-
-    void setDir(const uint8_t value)
-    {
-        if (dir != value)
-        {
-            dir = value;
-            mem_pla_config_changed();
-        }
-    }
-
-    bool isKernal() const { return kernal; }
-    bool isBasic() const { return basic; }
-    bool isIoArea() const { return ioArea; }
-    bool isCharacter() const { return character; }
-
-    uint8_t getDirRead() const { return dir_read; }
-    uint8_t getDataRead() const { return data_read; }
-};
-
 
 class Player: public C64Environment, private c64env
 {
@@ -327,7 +265,6 @@ private:
     // User Configuration Settings
     SidTuneInfo   m_tuneInfo;
     SidTune      *m_tune;
-    uint8_t      *m_ram, *m_rom;
     sid2_info_t   m_info;
     sid2_config_t m_cfg;
 
@@ -356,7 +293,7 @@ private:
     event_clock_t  m_rtcPeriod;
 
     // C64 environment settings
-    MMU m_port;
+    MMU mmu;
 
     uint8_t m_playBank;
 
@@ -394,7 +331,7 @@ private:
     uint8_t (Player::*m_readMemDataByte)(const uint_least16_t);
 
     uint8_t  readMemRamByte (const uint_least16_t addr)
-    {   return m_ram[addr]; }
+    { return mmu.readMemByte(addr); }
     void sid2crc (const uint8_t data);
 
     // Environment Function entry Points
@@ -435,7 +372,7 @@ private:
 
 public:
     Player ();
-    ~Player ();
+    ~Player () {}
 
     const sid2_config_t &config (void) const { return m_cfg; }
     const sid2_info_t   &info   (void) const { return m_info; }

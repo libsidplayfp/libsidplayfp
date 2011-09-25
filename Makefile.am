@@ -17,10 +17,10 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 #=========================================================
 EXTRA_DIST = \
 sidplayfp/psiddrv.bin \
-sidplayfp/kernal.bin \
-sidplayfp/poweron.bin \
-sidplayfp/basic.bin \
-sidplayfp/char.bin \
+sidplayfp/c64/kernal.bin \
+sidplayfp/c64/poweron.bin \
+sidplayfp/c64/basic.bin \
+sidplayfp/c64/char.bin \
 sidplayfp/mos6510/cycle_based \
 builders/residfp-builder/residfp/AUTHORS \
 builders/residfp-builder/residfp/COPYING \
@@ -70,6 +70,8 @@ sidplayfp/sidenv.h \
 sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64xsid.h \
+sidplayfp/c64/mmu.cpp \
+sidplayfp/c64/mmu.h \
 sidplayfp/mos656x/mos656x.cpp \
 sidplayfp/mos656x/mos656x.h \
 sidplayfp/mos6510/mos6510.cpp \
