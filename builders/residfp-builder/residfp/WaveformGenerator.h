@@ -129,7 +129,6 @@ public:
 	 */
 	WaveformGenerator() :
 		model_wave(0),
-		msb_rising(false),
 		pw(0),
 		shift_register(0),
 		shift_register_reset(0),
@@ -147,7 +146,8 @@ public:
 		accumulator(0),
 		freq(0),
 		test(false),
-		sync(false) {}
+		sync(false),
+		msb_rising(false) {}
 
 	/**
 	 * Register functions.

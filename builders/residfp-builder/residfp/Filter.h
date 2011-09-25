@@ -107,8 +107,10 @@ public:
 	Filter() :
 		enabled(true),
 		filt(0),
+		clockFrequency(0.),
 		fc(0),
 		res(0),
+		vol(0),
 		filt1(false),
 		filt2(false),
 		filt3(false),
@@ -116,9 +118,7 @@ public:
 		voice3off(0),
 		hp(false),
 		bp(false),
-		lp(false),
-		vol(0),
-		clockFrequency(0.) {}
+		lp(false) {}
 
 	virtual ~Filter() {}
 

@@ -221,7 +221,8 @@ static int  filepos = 0;
 /** When AEC signal is high, no stealing is possible */
 void MOS6510::eventWithoutSteals  (void)
 {
-    (this->*(instrCurrent[cycleCount++].func)) ();
+    cycleCount++;
+    (this->*(instrCurrent[cycleCount - 1].func)) ();
     eventContext.schedule(m_nosteal, 1, EVENT_CLOCK_PHI2);
 }
 
@@ -229,7 +230,8 @@ void MOS6510::eventWithoutSteals  (void)
 void MOS6510::eventWithSteals  (void)
 {
     if (instrCurrent[cycleCount].nosteal) {
-        (this->*(instrCurrent[cycleCount++].func)) ();
+        cycleCount++;
+        (this->*(instrCurrent[cycleCount - 1].func)) ();
         eventContext.schedule(m_steal, 1, EVENT_CLOCK_PHI2);
     } else {
         /* Even while stalled, the CPU can still process first clock of
@@ -459,8 +461,8 @@ void MOS6510::interruptsAndNextOpcode (void)
 #endif
     // Start the interrupt
     instrCurrent = instrTable[offset];
-    cycleCount   = 0;
-    (this->*(instrCurrent[cycleCount++].func)) ();
+    cycleCount   = 1;
+    (this->*(instrCurrent[cycleCount - 1].func)) ();
 }
 
 void MOS6510::RSTLoRequest (void)
@@ -1704,8 +1706,8 @@ void MOS6510::tas_instr (void)
 *            The Event Context
 */
 MOS6510::MOS6510 (EventContext *context)
-:m_fdbg(stdout),
- eventContext(*context),
+:eventContext(*context),
+ m_fdbg(stdout),
  m_nosteal("CPU-nosteal", *this, &MOS6510::eventWithoutSteals),
  m_steal("CPU-steal", *this, &MOS6510::eventWithSteals)
 {
