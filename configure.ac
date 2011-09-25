@@ -43,7 +43,9 @@ AC_PROG_CXX
 dnl Use C++ for tests.
 AC_LANG([C++])
 
-CHECK_VISIBILITY
+dnl check for hidden visibility support
+AX_CHECK_COMPILE_FLAG([-fvisibility=hidden -fvisibility-inlines-hidden], [has_visibility=yes], [has_visibility=no])
+AM_CONDITIONAL([HAVE_VISIBILITY], [test "x$has_visibility" = xyes])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -165,7 +167,8 @@ AS_IF([test "$enable_branch_hints" != no],
 
 
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
-  [AC_COMPILE_IFELSE([int main() { __builtin_expect(0, 0); }],
+  [AC_COMPILE_IFELSE(
+    [AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
     [resid_cv_builtin_expect=yes], [resid_cv_builtin_expect=no])])
 
 AS_IF([test "$resid_cv_builtin_expect" = no],
