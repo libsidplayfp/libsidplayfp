@@ -463,7 +463,6 @@ void MOS6510::interruptsAndNextOpcode (void)
     instrCurrent = instrTable[offset];
     cycleCount   = 1;
     (this->*(instrCurrent[cycleCount - 1].func)) ();
-    cycleCount++;
 }
 
 void MOS6510::RSTLoRequest (void)
