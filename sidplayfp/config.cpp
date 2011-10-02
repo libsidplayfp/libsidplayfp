@@ -255,15 +255,14 @@ int Player::config (const sid2_config_t &cfg)
         for (int i = 0xd420; i < 0xd7ff; i += 0x20)
             m_sidmapper[(i >> 5) & (SID2_MAPPER_SIZE - 1)] = 1;
         m_info.channels = 2;
-    } else
+    } else {
         m_info.channels = 1;
+        /* without stereo SID mode, we don't emulate the second chip! */
+        sid[1] = &nullsid;
+    }
 
     m_leftVolume  = cfg.leftVolume;
     m_rightVolume = cfg.rightVolume;
-
-    /* without stereo SID mode, we don't emulate the second chip! */
-    if (m_info.channels == 1)
-        sid[1] = &nullsid;
 
     // Update Configuration
     m_cfg = cfg;
