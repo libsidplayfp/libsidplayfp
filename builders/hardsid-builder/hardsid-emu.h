@@ -152,7 +152,8 @@ public:
     void          write   (uint_least8_t addr, uint8_t data);
     void          clock   ();
     const char   *error   (void) {return m_errorBuffer;}
-    operator bool () const { return m_status; }
+    SID_DEPRECATED operator bool () const { return m_status; }
+    bool          getStatus() const { return m_status; }
 
     // Standard SID functions
     void          filter  (bool enable);

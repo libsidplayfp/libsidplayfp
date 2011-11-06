@@ -80,7 +80,8 @@ public:
     virtual  void         filter  (bool enable) = 0;
 
     // Determine current state of object (true = okay, false = error).
-    operator bool() const { return m_status; }
+    SID_DEPRECATED operator bool() const { return m_status; }
+    bool           getStatus() const { return m_status; }
 };
 
 #endif // _sidbuilder_h_

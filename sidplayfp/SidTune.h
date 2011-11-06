@@ -256,7 +256,7 @@ class SID_EXTERN SidTune
     * Upon error condition use ``getInfo'' to get a descriptive
     * text string in ``SidTuneInfo.statusString''.
     */
-    operator bool()  { return status; }
+    SID_DEPRECATED operator bool()  { return status; }
     bool getStatus()  { return status; }
 
     /**

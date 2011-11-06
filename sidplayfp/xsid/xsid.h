@@ -200,7 +200,8 @@ private:
     inline void   galwayTonePeriod (void);
 
     // Used to indicate if channel is running
-    operator bool()  const { return (active); }
+    SID_DEPRECATED operator bool()  const { return (active); }
+    bool           isActive() const { return active; }
 };
 
 

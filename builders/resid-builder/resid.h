@@ -47,7 +47,6 @@ public:
     *    return values: 0 none, positive is used sids
     * false will give you all available sids.
     *    return values: 0 endless, positive is available sids.
-    * use bool operator to determine error
     */
     uint        devices (bool used);
     uint        create  (uint sids);

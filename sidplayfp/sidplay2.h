@@ -119,8 +119,8 @@ public:
     uint_least32_t mileage  (void) const;
     //@}
 
-    operator bool()  const { return (&sidplayer ? true: false); }
-    bool operator!() const { return (&sidplayer ? false: true); }
+    SID_DEPRECATED operator bool()  const { return (&sidplayer ? true: false); }
+    SID_DEPRECATED bool operator!() const { return (&sidplayer ? false: true); }
 };
 
 #endif // _sidplay2_h_

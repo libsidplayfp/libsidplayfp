@@ -63,7 +63,6 @@ public:
     *    return values: 0 none, positive is used sids
     * false will give you all available sids.
     *    return values: 0 endless, positive is available sids.
-    * use bool operator to determine error
     */
     uint        devices (bool used);
     sidemu     *lock    (c64env *env, sid2_model_t model);
