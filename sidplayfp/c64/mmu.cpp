@@ -27,6 +27,8 @@
 
 SIDPLAY2_NAMESPACE_START
 
+#if EMBEDDED_ROMS
+
 static const uint8_t KERNAL[] = {
 #include "kernal.bin"
 };
@@ -38,6 +40,12 @@ static const uint8_t CHARACTER[] = {
 static const uint8_t BASIC[] = {
 #include "basic.bin"
 };
+
+#else
+#  define KERNAL 0
+#  define CHARACTER 0
+#  define BASIC 0
+#endif
 
 static const uint8_t POWERON[] = {
 #include "poweron.bin"
