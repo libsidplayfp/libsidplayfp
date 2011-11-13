@@ -31,6 +31,10 @@ SIDPLAY2_NAMESPACE_START
 class MMU
 {
 private:
+	const uint8_t* kernalRom;
+	const uint8_t* basicRom;
+	const uint8_t* characterRom;
+
 	bool kernal;
 	bool basic;
 	bool ioArea;
@@ -57,8 +61,7 @@ private:
 	void c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup);
 
 public:
-	MMU() :
-		m_rom(0) {}
+	MMU();
 
 	~MMU () {
 		if (m_rom != m_ram)
@@ -66,6 +69,12 @@ public:
 	}
 
 	void reset(const sid2_env_t env, const bool compatibility);
+
+	void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character) {
+		kernalRom=kernal;
+		basicRom=basic;
+		characterRom=character;
+	}
 
 	void setEnv(const sid2_env_t env);
 

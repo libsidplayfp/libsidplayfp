@@ -43,6 +43,12 @@ static const uint8_t POWERON[] = {
 #include "poweron.bin"
 };
 
+MMU::MMU() :
+	kernalRom(KERNAL),
+	basicRom(BASIC),
+	characterRom(CHARACTER),
+	m_rom(0) {}
+
 void MMU::mem_pla_config_changed () {
 
 	const uint8_t mem_config = (data | ~dir) & 0x7;
@@ -97,17 +103,19 @@ void MMU::reset(const sid2_env_t env, const bool compatibility) {
 
 		memset(m_rom, 0, 0x10000);
 
-		memcpy(&m_rom[0xe000], KERNAL, sizeof (KERNAL));
+		if (kernalRom)
+			memcpy(&m_rom[0xe000], kernalRom, 8192);
 		// ROM should be at 0xd000 but have internally relocated
 		// it here to unused ROM space (does not affect C64 progs)
-		memcpy(&m_rom[0x4000], CHARACTER, sizeof (CHARACTER));
+		if (characterRom)
+			memcpy(&m_rom[0x4000], characterRom, 4096);
 		m_rom[0xfd69] = 0x9f; // Bypass memory check
 		m_rom[0xe55f] = 0x00; // Bypass screen clear
 		m_rom[0xfdc4] = 0xea; // Ingore sid volume reset to avoid DC
 		m_rom[0xfdc5] = 0xea; // click (potentially incompatibility)!!
 		m_rom[0xfdc6] = 0xea;
-		if (compatibility)
-			memcpy(&m_rom[0xa000], BASIC, sizeof (BASIC));
+		if (compatibility && basicRom)
+			memcpy(&m_rom[0xa000], basicRom, 8192);
 
 		// Copy in power on settings.  These were created by running
 		// the kernel reset routine and storing the usefull values

@@ -391,6 +391,9 @@ public:
                                 { cpu.debug (enable, out); }
     void           mute         (int voice, bool enable);
     const char    *error        (void) const { return m_errorString; }
+
+    void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
+    { mmu.setRoms(kernal, basic, character); }
 };
 
 
