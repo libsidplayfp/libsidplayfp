@@ -281,6 +281,8 @@ private:
 
     float64_t m_cpuFreq;
 
+    bool           m_status;
+
     // Mixer settings
     uint_least32_t m_sampleCount;
     uint_least32_t m_sampleIndex;
@@ -392,8 +394,9 @@ public:
     void           mute         (int voice, bool enable);
     const char    *error        (void) const { return m_errorString; }
 
-    void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
-    { mmu.setRoms(kernal, basic, character); }
+    bool           getStatus() const { return m_status; }
+
+    void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
 };
 
 

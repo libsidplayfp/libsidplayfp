@@ -92,9 +92,9 @@ public:
     uint_least32_t play         (short *buffer, uint_least32_t count);
 
     /**
-    * Check the state of the engine.
+    * Check if the engine is playing, paused or stopped.
     *
-    * @return 
+    * @return
     */
     sid2_player_t  state        (void) const;
 
@@ -130,6 +130,13 @@ public:
 
     SID_DEPRECATED operator bool()  const { return (&sidplayer ? true: false); }
     SID_DEPRECATED bool operator!() const { return (&sidplayer ? false: true); }
+
+    /**
+    * Check the status of the engine.
+    *
+    * @return true if the engine is correctly initialized.
+    */
+    bool           getStatus() const;
 };
 
 #endif // _sidplay2_h_

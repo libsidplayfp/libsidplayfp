@@ -357,6 +357,11 @@ Player::Player (void)
  m_sid2crc           (0xffffffff),
  m_sid2crcCount      (0),
  m_cpuFreq(CLOCK_FREQ_PAL),
+#if EMBEDDED_ROMS
+ m_status            (true),
+#else
+ m_status            (false),
+#endif
  m_sampleCount       (0)
 {
     srand ((uint) ::time(NULL));
@@ -418,6 +423,13 @@ Player::Player (void)
     credit[3] = cia.credits ();
     credit[4] = vic.credits ();
     credit[5] = NULL;
+}
+
+void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
+{
+  // TODO verify checksums
+  mmu.setRoms(kernal, basic, character);
+  m_status = true;
 }
 
 // Makes the next sequence of notes available.  For sidplay compatibility
