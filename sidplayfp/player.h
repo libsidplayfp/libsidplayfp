@@ -241,6 +241,7 @@ private:
     static const char  ERR_UNSUPPORTED_PRECISION[];
     static const char  ERR_MEM_ALLOC[];
     static const char  ERR_UNSUPPORTED_MODE[];
+    static const char  ERR_UNKNOWN_ROM[];
     static const char  *credit[10]; // 10 credits max
 
     static const char  ERR_PSIDDRV_NO_SPACE[];
@@ -335,6 +336,8 @@ private:
     uint8_t  readMemRamByte (const uint_least16_t addr)
     { return mmu.readMemByte(addr); }
     void sid2crc (const uint8_t data);
+
+    uint16_t getChecksum(const uint8_t* rom, const int size);
 
     // Environment Function entry Points
     void           envReset           (const bool safe);

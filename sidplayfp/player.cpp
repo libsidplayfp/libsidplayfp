@@ -332,6 +332,7 @@ const char  Player::ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported 
 const char  Player::ERR_UNSUPPORTED_PRECISION[] = "SIDPLAYER ERROR: Unsupported sample precision.";
 const char  Player::ERR_MEM_ALLOC[]             = "SIDPLAYER ERROR: Memory Allocation Failure.";
 const char  Player::ERR_UNSUPPORTED_MODE[]      = "SIDPLAYER ERROR: Unsupported Environment Mode (Coming Soon).";
+const char  Player::ERR_UNKNOWN_ROM[]           = "SIDPLAYER ERROR: Unknown Rom.";
 
 const char  *Player::credit[];
 
@@ -425,11 +426,64 @@ Player::Player (void)
     credit[5] = NULL;
 }
 
+uint16_t Player::getChecksum(const uint8_t* rom, const int size)
+{
+    uint16_t checksum = 0;
+    for (int i=0; i<size; i++)
+        checksum += rom[i];
+
+    return checksum;
+}
+
 void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {
-  // TODO verify checksums
-  mmu.setRoms(kernal, basic, character);
-  m_status = true;
+    // kernal is mandatory
+    if (!kernal)
+        return;
+
+    // Verify rom checksums and accept only known ones
+
+    // Kernal revision is located at 0xff80
+    const uint8_t rev = kernal[0xff80 - 0xe000];
+
+    const uint16_t kChecksum = getChecksum(kernal, 0x2000);
+    // second revision + Japanese version
+    if ((rev == 0x00 && (kChecksum != 0xc70b && kChecksum != 0xd183))
+        // third revision
+        || (rev == 0x03 && kChecksum != 0xc70a)
+        // first revision
+        || (rev == 0xaa && kChecksum != 0xd4fd)
+        // Commodore SX-64
+        || (rev == 0x43 && kChecksum != 0xc70b))
+    {
+        m_errorString = ERR_UNKNOWN_ROM;
+        return;
+    }
+
+    if (basic)
+    {
+        const uint16_t checksum = getChecksum(basic, 0x2000);
+        // Commodore 64 BASIC V2
+        if (checksum != 0x3d56)
+        {
+            m_errorString = ERR_UNKNOWN_ROM;
+            return;
+        }
+    }
+
+    if (character)
+    {
+        const uint16_t checksum = getChecksum(character, 0x1000);
+        if (checksum != 0xf7f8
+            && checksum != 0xf800)
+        {
+            m_errorString = ERR_UNKNOWN_ROM;
+            return;
+        }
+    }
+
+    mmu.setRoms(kernal, basic, character);
+    m_status = true;
 }
 
 // Makes the next sequence of notes available.  For sidplay compatibility
@@ -475,7 +529,11 @@ int Player::fastForward (uint percent)
 }
 
 int Player::initialise ()
-{   // Fix the mileage counter if just finished another song.
+{
+    if (!m_status)
+        return -1;
+
+    // Fix the mileage counter if just finished another song.
     mileageCorrect ();
     m_mileage += time ();
 
