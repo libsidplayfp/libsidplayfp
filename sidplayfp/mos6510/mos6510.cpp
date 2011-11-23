@@ -70,17 +70,8 @@
 
 #include "mos6510.h"
 
-// Check to see what type of emulation is required
-#ifdef MOS6510_CYCLE_BASED
-#   include "cycle_based/mos6510c.i"
+#include "cycle_based/mos6510c.i"
 
-#   ifdef MOS6510_SIDPLAY
-        // Compile in sidplay code
-#       include "cycle_based/sid6510c.i"
-#   endif // MOS6510_SIDPLAY
-#else
-    // Line based emulation code has not been provided
-#endif // MOS6510_CYCLE_BASED
 
 void MOS6510::DumpState (void)
 {

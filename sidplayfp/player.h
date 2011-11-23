@@ -79,8 +79,7 @@ private:
 
     EventScheduler m_scheduler;
 
-    //SID6510  cpu(6510, "Main CPU");
-    SID6510 cpu;
+    MOS6510 cpu;
     // Sid objects to use.
     NullSID nullsid;
     c64xsid xsid;
@@ -132,7 +131,6 @@ private:
     float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
                               const bool forced);
     int       environment    (sid2_env_t env);
-    void      fakeIRQ        (void);
     int       initialise     (void);
     void      nextSequence   (void);
     void      mixer          (void);
@@ -257,13 +255,12 @@ void Player::interruptIRQ (const bool state)
 {
     if (state)
     {
-        if (m_info.environment == sid2_envR)
-            cpu.triggerIRQ ();
-        else
-            fakeIRQ ();
+        cpu.triggerIRQ ();
     }
     else
+    {
         cpu.clearIRQ ();
+    }
 }
 
 void Player::interruptNMI ()

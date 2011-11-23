@@ -221,16 +221,7 @@ float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
 
 int Player::environment (sid2_env_t env)
 {
-    switch (m_tuneInfo.compatibility)
-    {
-    case SIDTUNE_COMPATIBILITY_R64:
-    case SIDTUNE_COMPATIBILITY_BASIC:
-        env = sid2_envR;
-        break;
-    case SIDTUNE_COMPATIBILITY_PSID:
-        if (env == sid2_envR)
-            env  = sid2_envBS;
-    }
+    env = sid2_envR;
 
     // Environment not set?
     if (mmu.getRom() == 0 || m_info.environment != env)

@@ -209,35 +209,6 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
     m_status = true;
 }
 
-// Makes the next sequence of notes available.  For sidplay compatibility
-// this function should be called from interrupt event
-void Player::fakeIRQ (void)
-{   // Check to see if the play address has been provided or whether
-    // we should pick it up from an IRQ vector
-    uint_least16_t playAddr = m_tuneInfo.playAddr;
-
-    // We have to reload the new play address
-    if (playAddr)
-    {
-        mmu.setData(m_playBank);
-    }
-    else
-    {
-        if (mmu.isKernal())
-        {   // Setup the entry point from hardware IRQ
-            playAddr = mmu.readMemWord(0x0314);
-        }
-        else
-        {   // Setup the entry point from software IRQ
-            playAddr = mmu.readMemWord(0xFFFE);
-        }
-    }
-
-    // Setup the entry point and restart the cpu
-    cpu.triggerIRQ ();
-    cpu.reset (playAddr, 0, 0, 0);
-}
-
 int Player::fastForward (uint percent)
 {
     if (percent > 3200) {
@@ -663,9 +634,6 @@ void Player::reset (void)
     m_playerState  = sid2_stopped;
     m_running      = false;
 
-    // Select Sidplay1 compatible CPU or real thing
-    cpu.environment (m_info.environment);
-
     m_scheduler.reset ();
     for (int i = 0; i < SID2_MAX_SIDS; i++)
     {
@@ -711,27 +679,10 @@ void Player::envReset ()
 {
     mmu.setDir(0x2F);
 
-    // defaults: Basic-ROM on, Kernal-ROM on, I/O on
-    if (m_info.environment != sid2_envR)
-    {
-
-        const uint8_t song = m_tuneInfo.currentSong - 1;
-        const uint8_t bank = iomap (m_tuneInfo.initAddr);
-        mmu.setData(bank);
-        m_playBank = iomap (m_tuneInfo.playAddr);
-        if (m_info.environment != sid2_envPS)
-            cpu.reset (m_tuneInfo.initAddr, song, 0, 0);
-        else
-            cpu.reset (m_tuneInfo.initAddr, song, song, song);
-    }
-    else
-    {
-        mmu.setData(0x37);
-        cpu.reset ();
-    }
+    mmu.setData(0x37);
+    cpu.reset ();
 
     mixerReset ();
-    xsid.suppress (true);
 }
 
 bool Player::envCheckBankJump (const uint_least16_t addr)

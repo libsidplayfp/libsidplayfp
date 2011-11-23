@@ -66,16 +66,7 @@
 
 #define SP_PAGE      0x01
 
-// Check to see what type of emulation is required
-#ifdef MOS6510_CYCLE_BASED
-#   ifdef MOS6510_SIDPLAY
-#       include "cycle_based/sid6510c.h"
-#   else
-#       include "cycle_based/mos6510c.h"
-#   endif // MOS6510_SIDPLAY
-#else
-    // Line based emulation code has not been provided
-#endif // MOS6510_CYCLE_BASED
+#include "cycle_based/mos6510c.h"
 
 #endif // _mos6510_h_
 
