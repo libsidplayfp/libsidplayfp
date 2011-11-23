@@ -147,7 +147,6 @@ private:
 
     uint8_t readMemByte_plain     (const uint_least16_t addr);
     uint8_t readMemByte_io        (const uint_least16_t addr);
-    uint8_t readMemByte_sidplaytp (const uint_least16_t addr);
     uint8_t readMemByte_sidplaybs (const uint_least16_t addr);
     void    writeMemByte_plain    (const uint_least16_t addr, const uint8_t data);
     void    writeMemByte_playsid  (const uint_least16_t addr, const uint8_t data);
@@ -169,7 +168,6 @@ private:
     inline uint8_t envReadRomByte     (const uint_least16_t addr);
     inline uint8_t envReadMemByte     (const uint_least16_t addr);
     inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
-    bool           envCheckBankJump   (const uint_least16_t addr);
     inline uint8_t envReadMemDataByte (const uint_least16_t addr);
     inline void    envSleep           (void);
 

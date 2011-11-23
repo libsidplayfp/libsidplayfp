@@ -238,28 +238,9 @@ int Player::environment (sid2_env_t env)
         }
         else
         {
-            switch (m_info.environment)
-            {
-            case sid2_envTP:
-                m_readMemByte     = &Player::readMemByte_plain;
-                m_writeMemByte    = &Player::writeMemByte_sidplay;
-                m_readMemDataByte = &Player::readMemByte_sidplaytp;
-            break;
-
-            //case sid2_envTR:
-            case sid2_envBS:
-                m_readMemByte     = &Player::readMemByte_plain;
-                m_writeMemByte    = &Player::writeMemByte_sidplay;
-                m_readMemDataByte = &Player::readMemByte_sidplaybs;
-            break;
-
-            case sid2_envR:
-            default: // <-- Just to please compiler
-                m_readMemByte     = &Player::readMemByte_sidplaybs;
-                m_writeMemByte    = &Player::writeMemByte_sidplay;
-                m_readMemDataByte = &Player::readMemByte_sidplaybs;
-            break;
-            }
+            m_readMemByte     = &Player::readMemByte_sidplaybs;
+            m_writeMemByte    = &Player::writeMemByte_sidplay;
+            m_readMemDataByte = &Player::readMemByte_sidplaybs;
         }
     }
 

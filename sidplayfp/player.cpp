@@ -407,77 +407,28 @@ uint8_t Player::readMemByte_io (const uint_least16_t addr)
     // Not SID ?
     if ((( tempAddr & 0xff00 ) != 0xd400 ) && (addr < 0xde00) || (addr > 0xdfff))
     {
-        if (m_info.environment == sid2_envR)
+        switch (endian_16hi8 (addr))
         {
-            switch (endian_16hi8 (addr))
-            {
-            case 0:
-            case 1:
-                return readMemByte_plain (addr);
-            case 0xdc:
-                return cia.read (addr&0x0f);
-            case 0xdd:
-                return cia2.read (addr&0x0f);
-            case 0xd0:
-            case 0xd1:
-            case 0xd2:
-            case 0xd3:
-                return vic.read (addr&0x3f);
-            default:
-                return mmu.readRomByte(addr);
-            }
-        }
-        else
-        {
-            switch (endian_16hi8 (addr))
-            {
-            case 0:
-            case 1:
-                return readMemByte_plain (addr);
-            // Sidplay1 Random Extension CIA
-            case 0xdc:
-                return sid6526.read (addr&0x0f);
-            // Sidplay1 Random Extension VIC
-            case 0xd0:
-                switch (addr & 0x3f)
-                {
-                case 0x11:
-                case 0x12:
-                    return sid6526.read ((addr-13)&0x0f);
-                }
-                // Deliberate run on
-            default:
-                return mmu.readRomByte(addr);
-            }
+        case 0:
+        case 1:
+            return readMemByte_plain (addr);
+        case 0xdc:
+            return cia.read (addr&0x0f);
+        case 0xdd:
+            return cia2.read (addr&0x0f);
+        case 0xd0:
+        case 0xd1:
+        case 0xd2:
+        case 0xd3:
+            return vic.read (addr&0x3f);
+        default:
+            return mmu.readRomByte(addr);
         }
     }
 
     {   // Read real sid for these
         const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
         return sid[i]->read (tempAddr & 0xff);
-    }
-}
-
-uint8_t Player::readMemByte_sidplaytp(const uint_least16_t addr)
-{
-    if (addr < 0xD000)
-        return readMemByte_plain (addr);
-    else
-    {
-        // Get high-nibble of address.
-        switch (addr >> 12)
-        {
-        case 0xd:
-            if (mmu.isIoArea())
-                return readMemByte_io (addr);
-            else
-                return mmu.readMemByte(addr);
-        break;
-        case 0xe:
-        case 0xf:
-        default:  // <-- just to please the compiler
-              return mmu.readMemByte(addr);
-        }
     }
 }
 
@@ -683,52 +634,6 @@ void Player::envReset ()
     cpu.reset ();
 
     mixerReset ();
-}
-
-bool Player::envCheckBankJump (const uint_least16_t addr)
-{
-    switch (m_info.environment)
-    {
-    case sid2_envBS:
-        if (addr >= 0xA000)
-        {
-            // Get high-nibble of address.
-            switch (addr >> 12)
-            {
-            case 0xa:
-            case 0xb:
-                if (mmu.isBasic())
-                    return false;
-            break;
-
-            case 0xc:
-            break;
-
-            case 0xd:
-                if (mmu.isIoArea())
-                    return false;
-            break;
-
-            case 0xe:
-            case 0xf:
-            default:  // <-- just to please the compiler
-               if (mmu.isKernal())
-                    return false;
-            break;
-            }
-        }
-    break;
-
-    case sid2_envTP:
-        if ((addr >= 0xd000) && mmu.isKernal())
-            return false;
-    break;
-
-    default:
-    break;
-    }
-
-    return true;
 }
 
 SIDPLAY2_NAMESPACE_STOP

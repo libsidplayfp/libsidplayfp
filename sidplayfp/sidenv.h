@@ -36,7 +36,6 @@ public:
     virtual void    envWriteMemByte (const uint_least16_t addr, const uint8_t data) =0;
 
     // Sidplay compatibily funtions
-    virtual bool    envCheckBankJump   (const uint_least16_t addr) =0;
     virtual uint8_t envReadMemDataByte (const uint_least16_t addr) =0;
     virtual void    envSleep           (void) =0;
 #ifdef PC64_TESTSUITE
