@@ -565,7 +565,7 @@ int Player::initialise ()
     }
 
     psidDrvInstall (m_info);
-    envReset  (false);
+    envReset ();
     return 0;
 }
 
@@ -979,36 +979,8 @@ void Player::reset (void)
 
 // This resets the cpu once the program is loaded to begin
 // running. Also called when the emulation crashes
-void Player::envReset (const bool safe)
+void Player::envReset ()
 {
-    if (safe)
-    {   // Emulation crashed so run in safe mode
-        if (m_info.environment == sid2_envR)
-        {
-            uint8_t prg[] = {LDAb, 0x7f, STAa, 0x0d, 0xdc, RTSn};
-            sid2_info_t info;
-            SidTuneInfo tuneInfo;
-            // Install driver
-            tuneInfo.relocStartPage = 0x09;
-            tuneInfo.relocPages     = 0x20;
-            tuneInfo.initAddr       = 0x0800;
-            tuneInfo.songSpeed      = SIDTUNE_SPEED_CIA_1A;
-            info.environment        = m_info.environment;
-            psidDrvReloc (tuneInfo, info);
-            // Install prg & driver
-            mmu.fillRam(0x0800, prg, sizeof (prg));
-            psidDrvInstall (info);
-        }
-        else
-        {   // If theres no irqs, song wont continue
-            sid6526.reset ();
-        }
-
-        // Make sids silent
-        for (int i = 0; i < SID2_MAX_SIDS; i++)
-            sid[i]->reset (0);
-    }
-
     mmu.setDir(0x2F);
 
     // defaults: Basic-ROM on, Kernal-ROM on, I/O on

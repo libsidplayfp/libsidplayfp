@@ -337,8 +337,7 @@ private:
     uint16_t getChecksum(const uint8_t* rom, const int size);
 
     // Environment Function entry Points
-    void           envReset           (const bool safe);
-    void           envReset           (void) { envReset (true); }
+    void           envReset           (void);
     inline uint8_t envReadRomByte     (const uint_least16_t addr);
     inline uint8_t envReadMemByte     (const uint_least16_t addr);
     inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
