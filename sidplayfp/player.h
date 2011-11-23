@@ -123,8 +123,6 @@ private:
     // C64 environment settings
     MMU mmu;
 
-    uint8_t m_playBank;
-
 private:
     float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
                               const bool forced);
