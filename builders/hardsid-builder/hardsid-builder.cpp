@@ -133,7 +133,7 @@ uint HardSIDBuilder::create (uint sids)
         }
 
         // SID init failed?
-        if (!*sid)
+        if (!sid->getStatus())
         {
             strcpy (m_errorBuffer, sid->error ());
             goto HardSIDBuilder_create_error;

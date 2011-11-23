@@ -506,7 +506,7 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
             sid[i] = builder->lock (this, userModels[i]);
             if (!sid[i])
                 sid[i] = &nullsid;
-            if ((i == 0) && !*builder)
+            if ((i == 0) && !builder->getStatus())
                 return -1;
         }
     }

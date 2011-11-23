@@ -453,7 +453,7 @@ void XSID::reset (uint8_t)
 
 void XSID::event (void)
 {
-    if (ch4 || ch5)
+    if (ch4.isActive() || ch5.isActive())
     {
         setSidData0x18 ();
         wasRunning = true;
@@ -612,7 +612,7 @@ void XSID::sampleOffsetCalc (void)
 bool XSID::storeSidData0x18 (uint8_t data)
 {
     sidData0x18 = data;
-    if (ch4 || ch5)
+    if (ch4.isActive() || ch5.isActive())
     {   // Force volume to be changed at next clock
         sampleOffsetCalc ();
         if (_sidSamples)

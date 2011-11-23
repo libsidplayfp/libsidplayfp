@@ -94,7 +94,7 @@ uint ReSIDfpBuilder::create (uint sids)
         }
 
         // SID init failed?
-        if (!*sid)
+        if (!sid->getStatus())
         {
             m_error = sid->error ();
             goto ReSIDfpBuilder_create_error;
@@ -122,7 +122,7 @@ const char *ReSIDfpBuilder::credits ()
 
     {   // Create an emulation to obtain credits
         ReSIDfp sid(this);
-        if (!sid)
+        if (!sid.getStatus())
         {
             m_status = false;
             strcpy (m_errorBuffer, sid.error ());
