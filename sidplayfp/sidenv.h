@@ -16,21 +16,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/***************************************************************************
- *  $Log: sidenv.h,v $
- *  Revision 1.5  2002/01/29 21:53:25  s_a_white
- *  Fixed envSleep
- *
- *  Revision 1.4  2002/01/29 08:02:22  s_a_white
- *  PSID sample improvements.
- *
- *  Revision 1.3  2001/07/14 13:09:35  s_a_white
- *  Removed cache parameters.
- *
- *  Revision 1.2  2000/12/11 19:10:59  s_a_white
- *  AC99 Update.
- *
- ***************************************************************************/
+
 
 #ifndef _environment_h_
 #define _environment_h_

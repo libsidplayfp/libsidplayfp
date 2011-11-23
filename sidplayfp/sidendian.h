@@ -14,40 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/***************************************************************************
- *  $Log: sidendian.h,v $
- *  Revision 1.6  2005/11/20 11:02:06  s_a_white
- *  Work around for bug in gcc 4 (optimiser breaks if variable never has a
- *  direct assignment).
- *
- *  Revision 1.5  2001/07/03 22:44:13  s_a_white
- *  Added endian_16 to convert a 16 bit value to an array of 8s.
- *
- *  Revision 1.4  2001/05/07 16:27:24  s_a_white
- *  Fix optimisation issues with gcc 2.96.
- *
- *  Revision 1.3  2001/03/25 19:46:12  s_a_white
- *  _endian_h_ changed to _sidendian_h_.
- *
- *  Revision 1.2  2001/03/10 19:49:32  s_a_white
- *  Removed bad include.
- *
- *  Revision 1.1  2001/03/02 19:04:38  s_a_white
- *  Include structure modified for better compatibility
- *
- *  Revision 1.5  2001/01/07 16:01:33  s_a_white
- *  sidendian.h is now installed, therefore endian defines updated.
- *
- *  Revision 1.4  2000/12/13 17:53:01  s_a_white
- *  Fixes some of the endian calls.
- *
- *  Revision 1.3  2000/12/12 19:39:15  s_a_white
- *  Removed bad const.
- *
- *  Revision 1.2  2000/12/11 19:10:59  s_a_white
- *  AC99 Update.
- *
- ***************************************************************************/
+
 
 #ifndef _sidendian_h_
 #define _sidendian_h_

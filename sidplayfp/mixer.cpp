@@ -14,44 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/***************************************************************************
- *  $Log: mixer.cpp,v $
- *  Revision 1.12  2004/06/26 10:55:34  s_a_white
- *  Changes to support new calling convention for event scheduler.
- *
- *  Revision 1.11  2003/01/17 08:35:46  s_a_white
- *  Event scheduler phase support.
- *
- *  Revision 1.10  2002/01/29 21:50:33  s_a_white
- *  Auto switching to a better emulation mode.  m_tuneInfo reloaded after a
- *  config.  Initial code added to support more than two sids.
- *
- *  Revision 1.9  2001/12/13 08:28:08  s_a_white
- *  Added namespace support to fix problems with xsidplay.
- *
- *  Revision 1.8  2001/11/16 19:25:33  s_a_white
- *  Removed m_context as where getting mixed with parent class.
- *
- *  Revision 1.7  2001/10/02 18:29:32  s_a_white
- *  Corrected fixed point maths overflow caused by fastforwarding.
- *
- *  Revision 1.6  2001/09/17 19:02:38  s_a_white
- *  Now uses fixed point maths for sample output and rtc.
- *
- *  Revision 1.5  2001/07/25 17:02:37  s_a_white
- *  Support for new configuration interface.
- *
- *  Revision 1.4  2001/07/14 12:47:39  s_a_white
- *  Mixer routines simplified.  Added new and more efficient method of
- *  determining when an output samples is required.
- *
- *  Revision 1.3  2001/03/01 23:46:37  s_a_white
- *  Support for sample mode to be selected at runtime.
- *
- *  Revision 1.2  2000/12/12 22:50:15  s_a_white
- *  Bug Fix #122033.
- *
- ***************************************************************************/
+
 
 #include "player.h"
 
