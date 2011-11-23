@@ -277,8 +277,6 @@ private:
     volatile sid2_player_t m_playerState;
     volatile bool   m_running;
     int             m_rand;
-    uint_least32_t  m_sid2crc;
-    uint_least32_t  m_sid2crcCount;
 
     float64_t m_cpuFreq;
 
@@ -335,7 +333,6 @@ private:
 
     uint8_t  readMemRamByte (const uint_least16_t addr)
     { return mmu.readMemByte(addr); }
-    void sid2crc (const uint8_t data);
 
     uint16_t getChecksum(const uint8_t* rom, const int size);
 

@@ -85,8 +85,7 @@ struct sid2_config_t
     uint_least32_t      leftVolume;
     uint_least32_t      rightVolume;
     uint_least16_t      powerOnDelay;
-    /// Max sid writes to form crc
-    uint_least32_t      sid2crcCount;
+
     /**
     * Sampling method
     * - SID2_INTERPOLATE
