@@ -31,7 +31,6 @@
 #include "c64/mmu.h"
 
 #include "mos6510/mos6510.h"
-#include "sid6526/sid6526.h"
 #include "nullsid.h"
 
 
@@ -85,7 +84,6 @@ private:
     c64xsid xsid;
     c64cia1 cia;
     c64cia2 cia2;
-    SID6526 sid6526;
     c64vic  vic;
     sidemu *sid[SID2_MAX_SIDS];
     int     m_sidmapper[32]; // Mapping table in d4xx-d7xx
@@ -130,7 +128,6 @@ private:
 private:
     float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
                               const bool forced);
-    int       environment    (sid2_env_t env);
     int       initialise     (void);
     void      nextSequence   (void);
     void      mixer          (void);
@@ -147,16 +144,12 @@ private:
 
     uint8_t readMemByte_plain     (const uint_least16_t addr);
     uint8_t readMemByte_io        (const uint_least16_t addr);
-    uint8_t readMemByte_sidplaybs (const uint_least16_t addr);
     void    writeMemByte_plain    (const uint_least16_t addr, const uint8_t data);
     void    writeMemByte_playsid  (const uint_least16_t addr, const uint8_t data);
-    void    writeMemByte_sidplay  (const uint_least16_t addr, const uint8_t data);
 
-    // Use pointers to please requirements of all the provided
-    // environments.
-    uint8_t (Player::*m_readMemByte)    (const uint_least16_t);
-    void    (Player::*m_writeMemByte)   (const uint_least16_t, const uint8_t);
-    uint8_t (Player::*m_readMemDataByte)(const uint_least16_t);
+
+    uint8_t m_readMemByte    (const uint_least16_t);
+    void    m_writeMemByte   (const uint_least16_t, const uint8_t);
 
     uint8_t  readMemRamByte (const uint_least16_t addr)
     { return mmu.readMemByte(addr); }
@@ -169,7 +162,6 @@ private:
     inline uint8_t envReadMemByte     (const uint_least16_t addr);
     inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
     inline uint8_t envReadMemDataByte (const uint_least16_t addr);
-    inline void    envSleep           (void);
 
 #ifdef PC64_TESTSUITE
     void   envLoadFile (const char *file)
@@ -227,26 +219,17 @@ public:
 
 uint8_t Player::envReadMemByte (const uint_least16_t addr)
 {   // Read from plain only to prevent execution of rom code
-    return (this->*(m_readMemByte)) (addr);
+    return m_readMemByte (addr);
 }
 
 void Player::envWriteMemByte (const uint_least16_t addr, uint8_t data)
 {   // Writes must be passed to env version.
-    (this->*(m_writeMemByte)) (addr, data);
+    m_writeMemByte (addr, data);
 }
 
 uint8_t Player::envReadMemDataByte (const uint_least16_t addr)
 {   // Read from plain only to prevent execution of rom code
-    return (this->*(m_readMemDataByte)) (addr);
-}
-
-void Player::envSleep (void)
-{
-    if (m_info.environment != sid2_envR)
-    {   // Start the sample sequence
-        xsid.suppress (false);
-        xsid.suppress (true);
-    }
+    return m_readMemByte (addr);
 }
 
 void Player::interruptIRQ (const bool state)

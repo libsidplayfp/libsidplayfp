@@ -35,7 +35,6 @@ int main(int argc, char *argv[]) {
 	cfg=m_engine.config();
 	cfg.clockForced=false;
 	cfg.clockSpeed=SID2_CLOCK_CORRECT;
-	cfg.environment=sid2_envR;
 	cfg.frequency=48000;
 	cfg.samplingMethod=SID2_INTERPOLATE;
 	cfg.fastSampling=false;

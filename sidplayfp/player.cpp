@@ -74,7 +74,6 @@ Player::Player (void)
  xsid    (this, &nullsid),
  cia     (this),
  cia2    (this),
- sid6526 (this),
  vic     (this),
  m_mixerEvent ("Mixer", *this, &Player::mixer),
  m_tune (NULL),
@@ -116,13 +115,11 @@ Player::Player (void)
     m_info.eventContext    = &context();
     // Number of SIDs support by this library
     m_info.maxsids         = SID2_MAX_SIDS;
-    m_info.environment     = sid2_envR;
 
     // Configure default settings
     m_cfg.clockDefault    = SID2_CLOCK_CORRECT;
     m_cfg.clockForced     = false;
     m_cfg.clockSpeed      = SID2_CLOCK_CORRECT;
-    m_cfg.environment     = m_info.environment;
     m_cfg.forceDualSids   = false;
     m_cfg.frequency       = SID2_DEFAULT_SAMPLING_FREQ;
     m_cfg.playback        = sid2_mono;
@@ -366,24 +363,24 @@ void Player::stop (void)
 // Output: A default bank-select value for $01.
 uint8_t Player::iomap (const uint_least16_t addr)
 {
-    if (m_info.environment != sid2_envPS)
-    {   // Force Real C64 Compatibility
-        switch (m_tuneInfo.compatibility)
-        {
-        case SIDTUNE_COMPATIBILITY_R64:
-        case SIDTUNE_COMPATIBILITY_BASIC:
-            return 0;     // Special case, converted to 0x37 later
-        }
 
-        if (addr == 0)
-            return 0;     // Special case, converted to 0x37 later
-        if (addr < 0xa000)
-            return 0x37;  // Basic-ROM, Kernal-ROM, I/O
-        if (addr  < 0xd000)
-            return 0x36;  // Kernal-ROM, I/O
-        if (addr >= 0xe000)
-            return 0x35;  // I/O only
+    // Force Real C64 Compatibility
+    switch (m_tuneInfo.compatibility)
+    {
+    case SIDTUNE_COMPATIBILITY_R64:
+    case SIDTUNE_COMPATIBILITY_BASIC:
+        return 0;     // Special case, converted to 0x37 later
     }
+
+    if (addr == 0)
+        return 0;     // Special case, converted to 0x37 later
+    if (addr < 0xa000)
+        return 0x37;  // Basic-ROM, Kernal-ROM, I/O
+    if (addr  < 0xd000)
+        return 0x36;  // Kernal-ROM, I/O
+    if (addr >= 0xe000)
+        return 0x35;  // I/O only
+
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
@@ -432,7 +429,7 @@ uint8_t Player::readMemByte_io (const uint_least16_t addr)
     }
 }
 
-uint8_t Player::readMemByte_sidplaybs (const uint_least16_t addr)
+uint8_t Player::m_readMemByte (const uint_least16_t addr)
 {
     if (addr < 0xA000)
         return readMemByte_plain (addr);
@@ -492,46 +489,27 @@ void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data
     // Not SID ?
     if ((( tempAddr & 0xff00 ) != 0xd400 ) && (addr < 0xde00) || (addr > 0xdfff))
     {
-        if (m_info.environment == sid2_envR)
+        switch (endian_16hi8 (addr))
         {
-            switch (endian_16hi8 (addr))
-            {
-            case 0:
-            case 1:
-                writeMemByte_plain (addr, data);
-                break;
-            case 0xdc:
-                cia.write (addr&0x0f, data);
-                break;
-            case 0xdd:
-                cia2.write (addr&0x0f, data);
-                break;
-            case 0xd0:
-            case 0xd1:
-            case 0xd2:
-            case 0xd3:
-                vic.write (addr&0x3f, data);
-                break;
-            default:
-                mmu.writeRomByte(addr, data);
-                break;
-            }
-        }
-        else
-        {
-            switch (endian_16hi8 (addr))
-            {
-            case 0:
-            case 1:
-                writeMemByte_plain (addr, data);
-                break;
-            case 0xdc: // Sidplay1 CIA
-                sid6526.write (addr&0x0f, data);
-                break;
-            default:
-                mmu.writeRomByte(addr, data);
-                break;
-            }
+        case 0:
+        case 1:
+            writeMemByte_plain (addr, data);
+            break;
+        case 0xdc:
+            cia.write (addr&0x0f, data);
+            break;
+        case 0xdd:
+            cia2.write (addr&0x0f, data);
+            break;
+        case 0xd0:
+        case 0xd1:
+        case 0xd2:
+        case 0xd3:
+            vic.write (addr&0x3f, data);
+            break;
+        default:
+            mmu.writeRomByte(addr, data);
+            break;
         }
     }
     else
@@ -550,7 +528,7 @@ void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data
     }
 }
 
-void Player::writeMemByte_sidplay (const uint_least16_t addr, const uint8_t data)
+void Player::m_writeMemByte (const uint_least16_t addr, const uint8_t data)
 {
     if (addr < 0xA000)
         writeMemByte_plain (addr, data);
@@ -600,22 +578,12 @@ void Player::reset (void)
         s.write (0x12, 0x00);
     }
 
-    if (m_info.environment == sid2_envR)
-    {
-        cia.reset  ();
-        cia2.reset ();
-        vic.reset  ();
-    }
-    else
-    {
-        sid6526.reset (m_cfg.powerOnDelay <= SID2_MAX_POWER_ON_DELAY);
-        sid6526.write (0x0e, 1); // Start timer
-        if (m_tuneInfo.songSpeed == SIDTUNE_SPEED_VBI)
-            sid6526.lock ();
-    }
+    cia.reset  ();
+    cia2.reset ();
+    vic.reset  ();
 
     // Initalise Memory
-    mmu.reset(m_info.environment, m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC);
+    mmu.reset(m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC);
 
     // Will get done later if can't now
     if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)

@@ -37,7 +37,6 @@ public:
 
     // Sidplay compatibily funtions
     virtual uint8_t envReadMemDataByte (const uint_least16_t addr) =0;
-    virtual void    envSleep           (void) =0;
 #ifdef PC64_TESTSUITE
     virtual void    envLoadFile        (const char *file) =0;
 #endif

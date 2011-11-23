@@ -53,7 +53,7 @@ private:
 
 	// TODO some wired stuff with data_set_bit6 and data_set_bit7
 
-	uint8_t *m_rom;
+	uint8_t m_rom[65536];
 	uint8_t m_ram[65536];
 
 private:
@@ -62,21 +62,15 @@ private:
 
 public:
 	MMU();
+	~MMU () {}
 
-	~MMU () {
-		if (m_rom != m_ram)
-			delete [] m_rom;
-	}
-
-	void reset(const sid2_env_t env, const bool compatibility);
+	void reset(const bool compatibility);
 
 	void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character) {
 		kernalRom=kernal;
 		basicRom=basic;
 		characterRom=character;
 	}
-
-	void setEnv(const sid2_env_t env);
 
 	void setData(const uint8_t value) {
 		if (data != value) {

@@ -66,17 +66,6 @@ int Player::config (const sid2_config_t &cfg)
             const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
             const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
 
-            // Setup fake cia
-            if (m_tuneInfo.songSpeed  == SIDTUNE_SPEED_CIA_1A ||
-                m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_NTSC)
-            {
-                sid6526.clock ((uint_least16_t)(clockNTSC + 0.5));
-            }
-            else
-            {
-                sid6526.clock ((uint_least16_t)(clockPAL + 0.5));
-            }
-
             // @FIXME@ see mos6526.h for details. Setup TOD clock
             if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
             {
@@ -92,7 +81,7 @@ int Player::config (const sid2_config_t &cfg)
             }
 
             // Configure, setup and install C64 environment/events
-            if (environment(cfg.environment) < 0) {
+            if (initialise() < 0) {
                 goto Player_configure_error;
             }
 
@@ -217,34 +206,6 @@ float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
             m_tuneInfo.speedString = TXT_NTSC_VBI_FIXED;
     }
     return cpuFreq;
-}
-
-int Player::environment (sid2_env_t env)
-{
-    env = sid2_envR;
-
-    // Environment not set?
-    if (mmu.getRom() == 0 || m_info.environment != env)
-    {   // Setup new player environment
-        m_info.environment = env;
-        mmu.setEnv(env);
-        // Setup the access functions to the environment
-        // and the properties the memory has.
-        if (m_info.environment == sid2_envPS)
-        {   // Playsid has no roms and SID exists in ram space
-            m_readMemByte     = &Player::readMemByte_plain;
-            m_writeMemByte    = &Player::writeMemByte_playsid;
-            m_readMemDataByte = &Player::readMemByte_plain;
-        }
-        else
-        {
-            m_readMemByte     = &Player::readMemByte_sidplaybs;
-            m_writeMemByte    = &Player::writeMemByte_sidplay;
-            m_readMemDataByte = &Player::readMemByte_sidplaybs;
-        }
-    }
-
-    return initialise ();
 }
 
 sid2_model_t Player::getModel(int sidModel,

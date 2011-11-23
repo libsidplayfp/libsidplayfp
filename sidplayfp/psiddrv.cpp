@@ -39,14 +39,6 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
     const int startlp = tuneInfo.loadAddr >> 8;
     const int endlp   = (tuneInfo.loadAddr + (tuneInfo.c64dataLen - 1)) >> 8;
 
-    if (info.environment != sid2_envR)
-    {   // Sidplay1 modes require no psid driver
-        info.driverAddr   = 0;
-        info.driverLength = 0;
-        info.powerOnDelay = 0;
-        return 0;
-    }
-
     if (tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC)
     {   // The psiddrv is only used for initialisation and to
         // autorun basic tunes as running the kernel falls
