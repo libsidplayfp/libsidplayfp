@@ -25,13 +25,11 @@
 
 #include "sidenv.h"
 #include "c64env.h"
-#include "c64/c64xsid.h"
 #include "c64/c64cia.h"
 #include "c64/c64vic.h"
 #include "c64/mmu.h"
 
 #include "mos6510/mos6510.h"
-#include "nullsid.h"
 
 
 #ifdef HAVE_CONFIG_H
@@ -80,8 +78,6 @@ private:
 
     MOS6510 cpu;
     // Sid objects to use.
-    NullSID nullsid;
-    c64xsid xsid;
     c64cia1 cia;
     c64cia2 cia2;
     c64vic  vic;
@@ -133,7 +129,6 @@ private:
     void      mileageCorrect (void);
     int       sidCreate      (sidbuilder *builder, sid2_model_t model,
                               sid2_model_t defaultModel);
-    void      sidSamples     (const bool enable);
     void      reset          ();
     uint8_t   iomap          (const uint_least16_t addr);
     sid2_model_t getModel(const int sidModel,

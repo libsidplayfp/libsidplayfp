@@ -71,7 +71,6 @@ Player::Player (void)
 // Set default settings for system
 :c64env  (&m_scheduler),
  cpu     (&m_scheduler),
- xsid    (this, &nullsid),
  cia     (this),
  cia2    (this),
  vic     (this),
@@ -98,7 +97,7 @@ Player::Player (void)
 
     // SID Initialise
     for (int i = 0; i < SID2_MAX_SIDS; i++)
-        sid[i] = &nullsid;
+        sid[i] = 0;
 
     // Setup sid mapping table
     for (int i = 0; i < SID2_MAPPER_SIZE; i++)
@@ -126,7 +125,6 @@ Player::Player (void)
     m_cfg.sidDefault      = SID2_MODEL_CORRECT;
     m_cfg.sidEmulation    = NULL;
     m_cfg.sidModel        = SID2_MODEL_CORRECT;
-    m_cfg.sidSamples      = true;
     m_cfg.leftVolume      = 255;
     m_cfg.rightVolume     = 255;
     m_cfg.powerOnDelay    = SID2_DEFAULT_POWER_ON_DELAY;
@@ -139,11 +137,10 @@ Player::Player (void)
     credit[0] = PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0"
                 "\tCopyright (C) 2007-2010 Antti Lankila\0"
                 "\thttp://sourceforge.net/projects/sidplay-residfp/\0";
-    credit[1] = xsid.credits ();
-    credit[2] = "*MOS6510 (CPU) Emulation:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0";
-    credit[3] = cia.credits ();
-    credit[4] = vic.credits ();
-    credit[5] = NULL;
+    credit[1] = "*MOS6510 (CPU) Emulation:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0";
+    credit[2] = cia.credits ();
+    credit[3] = vic.credits ();
+    credit[4] = NULL;
 }
 
 uint16_t Player::getChecksum(const uint8_t* rom, const int size)
@@ -275,14 +272,14 @@ int Player::load (SidTune *tune)
     }
     m_info.tuneInfo = &m_tuneInfo;
 
-    // Un-mute all voices
-    xsid.mute (false);
-
     for (int i = 0; i < SID2_MAX_SIDS; i++)
     {
-        uint_least8_t v = 3;
-        while (v--)
-            sid[i]->voice (v, false);
+        if (sid[i])
+        {
+            sid[i]->voice (2, false);
+            sid[i]->voice (1, false);
+            sid[i]->voice (0, false);
+        }
     }
 
     {   // Must re-configure on fly for stereo support!
@@ -298,7 +295,8 @@ int Player::load (SidTune *tune)
 }
 
 void Player::mute(int voice, bool enable) {
-    sid[0]->voice(voice, enable);
+    if (sid[0])
+        sid[0]->voice(voice, enable);
 }
 
 void Player::mileageCorrect (void)
@@ -514,17 +512,9 @@ void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data
     }
     else
     {
-        // $D41D/1E/1F, $D43D/3E/3F, ...
-        // Map to real address to support PlaySID
-        // Extended SID Chip Registers.
-        if (( tempAddr & 0x00ff ) >= 0x001d )
-            xsid.write16 (addr & 0x01ff, data);
-        else // Mirrored SID.
-        {
-            const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
-            // Convert address to that acceptable by resid
-            sid[i]->write(tempAddr & 0xff, data);
-        }
+        const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
+        // Convert address to that acceptable by resid
+        sid[i]->write(tempAddr & 0x1f, data);
     }
 }
 
@@ -549,18 +539,22 @@ void Player::reset (void)
     m_running      = false;
 
     m_scheduler.reset ();
+
     for (int i = 0; i < SID2_MAX_SIDS; i++)
     {
-        sidemu &s = *sid[i];
-        s.reset (0x0f);
-        // Synchronise the waveform generators
-        // (must occur after reset)
-        s.write (0x04, 0x08);
-        s.write (0x0b, 0x08);
-        s.write (0x12, 0x08);
-        s.write (0x04, 0x00);
-        s.write (0x0b, 0x00);
-        s.write (0x12, 0x00);
+        if (sid[i])
+        {
+            sidemu &s = *sid[i];
+            s.reset (0x0f);
+            // Synchronise the waveform generators
+            // (must occur after reset)
+            s.write (0x04, 0x08);
+            s.write (0x0b, 0x08);
+            s.write (0x12, 0x08);
+            s.write (0x04, 0x00);
+            s.write (0x0b, 0x00);
+            s.write (0x12, 0x00);
+        }
     }
 
     cia.reset  ();

@@ -79,7 +79,6 @@ struct sid2_config_t
     sidbuilder         *sidEmulation;
     /// User requested sid model
     sid2_model_t        sidModel;
-    bool                sidSamples;
     uint_least32_t      leftVolume;
     uint_least32_t      rightVolume;
     uint_least16_t      powerOnDelay;

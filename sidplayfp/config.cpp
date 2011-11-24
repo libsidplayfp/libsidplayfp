@@ -86,12 +86,12 @@ int Player::config (const sid2_config_t &cfg)
             }
 
             /* inform ReSID of the desired sampling rate */
-            for (int i = 0; i < SID2_MAX_SIDS; i += 1) {
-                sid[i]->sampling((long)m_cpuFreq, cfg.frequency, cfg.samplingMethod, false);
+            for (int i = 0; i < SID2_MAX_SIDS; i++) {
+                if (sid[i])
+                    sid[i]->sampling((long)m_cpuFreq, cfg.frequency, cfg.samplingMethod, false);
             }
         }
     }
-    sidSamples (cfg.sidSamples);
 
     // Setup sid mapping table
     // Note this should be based on m_tuneInfo.sidChipBase1
@@ -118,7 +118,7 @@ int Player::config (const sid2_config_t &cfg)
 
     /* without stereo SID mode, we don't emulate the second chip! */
     if (m_info.channels == 1)
-        sid[1] = &nullsid;
+        sid[1] = 0;
 
     // Update Configuration
     m_cfg = cfg;
@@ -280,15 +280,18 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
     // Release old sids
     for (int i = 0; i < SID2_MAX_SIDS; i++)
     {
-        sidbuilder *b = sid[i]->builder ();
-        if (b)
-            b->unlock (sid[i]);
+        if (sid[i])
+        {
+            sidbuilder *b = sid[i]->builder ();
+            if (b)
+                b->unlock (sid[i]);
+        }
     }
 
     if (!builder)
     {   // No sid
         for (int i = 0; i < SID2_MAX_SIDS; i++)
-            sid[i] = &nullsid;
+            sid[i] = 0;
     }
     else
     {   // Detect the Correct SID model
@@ -303,26 +306,12 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
         for (int i = 0; i < SID2_MAX_SIDS; i++)
         {   // Get first SID emulation
             sid[i] = builder->lock (this, userModels[i]);
-            if (!sid[i])
-                sid[i] = &nullsid;
             if ((i == 0) && !builder->getStatus())
                 return -1;
         }
     }
 
-    /* put XSID as sid #0 in case we aren't in a real c64 environment */
-    if (m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_PSID) {
-        xsid.emulation (sid[0]);
-        sid[0] = &xsid;
-    }
-
     return 0;
-}
-
-void Player::sidSamples (bool enable)
-{
-    //int_least8_t gain = 0;
-    xsid.sidSamples (enable);
 }
 
 SIDPLAY2_NAMESPACE_STOP

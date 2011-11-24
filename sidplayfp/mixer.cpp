@@ -38,12 +38,13 @@ void Player::mixer (void)
 
     /* this clocks the SID to the present moment, if it isn't already. */
     chip1->clock();
-    chip2->clock();
+    if (chip2)
+        chip2->clock();
 
     /* extract buffer info now that the SID is updated.
      * clock() may update bufferpos. */
     short *buf1 = chip1->buffer();
-    short *buf2 = chip2->buffer();
+    short *buf2 = chip2?chip2->buffer():0;
     int samples = chip1->bufferpos();
     /* NB: if chip2 exists, its bufferpos is identical to chip1's. */
 
@@ -98,7 +99,7 @@ void Player::mixer (void)
             buf2[j] = buf2[i + j];
     }
     chip1->bufferpos(j);
-    if (buf2 != NULL)
+    if (chip2)
         chip2->bufferpos(j);
 
     /* Post a callback to ourselves. */

@@ -64,12 +64,10 @@ sidplayfp/psiddrv.cpp \
 sidplayfp/mixer.cpp \
 sidplayfp/reloc65.c \
 sidplayfp/sidplay2.cpp \
-sidplayfp/nullsid.h \
 sidplayfp/psiddrv.a65 \
 sidplayfp/sidenv.h \
 sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64vic.h \
-sidplayfp/c64/c64xsid.h \
 sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
 sidplayfp/mos656x/mos656x.cpp \
@@ -93,8 +91,6 @@ sidplayfp/sidtune/SidTune.cpp \
 sidplayfp/sidtune/SidTuneCfg.h \
 sidplayfp/sidtune/SidTuneTools.cpp \
 sidplayfp/sidtune/SidTuneTools.h \
-sidplayfp/xsid/xsid.cpp \
-sidplayfp/xsid/xsid.h \
 utils/iniParser.cpp \
 utils/iniParser.h \
 utils/SidDatabase.cpp \
