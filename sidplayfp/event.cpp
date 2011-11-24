@@ -19,19 +19,6 @@
 #include "event.h"
 
 
-void Event::schedule (EventContext &context, event_clock_t cycles,
-                             event_phase_t phase)
-{
-    m_context = &context;
-    m_context->schedule (*this, cycles, phase);
-}
-
-void Event::cancel ()
-{
-    if (m_pending)
-        m_context->cancel (*this);
-}
-
 void EventScheduler::reset (void)
 {
     Event *scan = firstEvent;

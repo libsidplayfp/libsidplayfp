@@ -63,7 +63,6 @@ public:
     void          filter  (bool enable);
     void          voice   (uint_least8_t num, bool mute) {;}
 
-    SID_DEPRECATED operator bool () { return m_status; }
     bool          getStatus() const { return m_status; }
     static   int  devices (char *error);
 

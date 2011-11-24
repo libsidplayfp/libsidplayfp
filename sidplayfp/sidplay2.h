@@ -114,7 +114,6 @@ public:
 
     //@{
     /// Timer functions with respect to resolution returned by timebase
-    SID_DEPRECATED uint_least32_t timebase (void) const { return 1; }
     uint_least32_t time     (void) const;
     uint_least32_t mileage  (void) const;
     //@}
@@ -127,9 +126,6 @@ public:
     * @param character pointer to character generator ROM, optional.
     */
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
-
-    SID_DEPRECATED operator bool()  const { return (&sidplayer ? true: false); }
-    SID_DEPRECATED bool operator!() const { return (&sidplayer ? false: true); }
 
     /**
     * Check the status of the engine.

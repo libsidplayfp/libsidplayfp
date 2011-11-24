@@ -62,9 +62,6 @@ public:
     /// enable/disable filter
     void filter   (bool enable);
 
-    /// @deprecated does nothing
-    SID_DEPRECATED void filter   (const sid_filter_t *filter) {};
-
     /**
     * The bias is given in millivolts, and a maximum reasonable
     * control range is approximately -500 to 500.

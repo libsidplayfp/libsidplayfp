@@ -72,7 +72,6 @@ public:
     void           write      (const char *filename, const sid2_usage_t &usage);
     const char *   error      (void) { return m_errorString; }
 
-    SID_DEPRECATED operator bool () { return m_status; }
     bool           getStatus() const { return m_status; }
 };
 

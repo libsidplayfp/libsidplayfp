@@ -46,8 +46,6 @@ class SID_EXTERN Event
     friend class EventScheduler;
 
 private:
-    class EventContext *m_context SID_DEPRECATED;
-
     /** Describe event for humans. */
     const char * const m_name;
 
@@ -84,21 +82,6 @@ public:
 
     /** Is Event scheduled? */
     bool    pending () const { return m_pending; }
-
-    /**
-    * Cancel the specified event.
-    *
-    * @deprecated use EventContext::cancel
-    */
-    SID_DEPRECATED void    cancel  ();
-
-    /**
-    * Add event to pending queue.
-    *
-    * @deprecated use EventContext::schedule
-    */
-    SID_DEPRECATED void    schedule(EventContext &context, event_clock_t cycles,
-                     event_phase_t phase);
 };
 
 

@@ -62,9 +62,6 @@ public:
     /// enable/disable filter
     void filter   (bool enable);
 
-    /// @deprecated does nothing
-    SID_DEPRECATED void filter   (const sid_filterfp_t *filter) {};
-
     /**
     * Set 6581 filter curve
     *
