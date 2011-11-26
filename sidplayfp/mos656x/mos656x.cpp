@@ -228,7 +228,7 @@ void MOS656X::event (void)
     // Update x raster
     m_rasterClk += cycles;
     raster_x    += cycles;
-    uint_least16_t cycle = (raster_x + 9) % xrasters;
+    const uint_least16_t cycle = (raster_x + 9) % xrasters;
     raster_x    %= xrasters;
 
     switch (cycle)
