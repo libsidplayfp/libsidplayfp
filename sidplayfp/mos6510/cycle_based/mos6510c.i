@@ -223,7 +223,7 @@ void MOS6510::eventWithoutSteals  (void)
 {
     cycleCount++;
     (this->*(instrCurrent[cycleCount - 1].func)) ();
-    eventContext.schedule(m_nosteal, 1, EVENT_CLOCK_PHI2);
+    eventContext.schedule(m_nosteal, 1);
 }
 
 /** When AEC signal is low, steals permitted */
@@ -232,7 +232,7 @@ void MOS6510::eventWithSteals  (void)
     if (instrCurrent[cycleCount].nosteal) {
         cycleCount++;
         (this->*(instrCurrent[cycleCount - 1].func)) ();
-        eventContext.schedule(m_steal, 1, EVENT_CLOCK_PHI2);
+        eventContext.schedule(m_steal, 1);
     } else {
         /* Even while stalled, the CPU can still process first clock of
         * interrupt delay, but only the first one. However, IRQ may be
