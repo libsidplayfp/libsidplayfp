@@ -317,6 +317,9 @@ void MOS6510::setStatusRegister(const uint8_t sr)
 */
 void MOS6510::aecSignal (const bool newAec)
 {
+    if (aec == newAec)
+        return;
+
     aec = newAec;
     if (aec) {
         eventContext.cancel(m_steal);
