@@ -60,6 +60,9 @@ private:
 	void mem_pla_config_changed();
 	void c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup);
 
+	uint8_t getDirRead() const { return dir_read; }
+	uint8_t getDataRead() const { return data_read; }
+
 public:
 	MMU();
 	~MMU () {}
@@ -91,9 +94,6 @@ public:
 	bool isIoArea() const { return ioArea; }
 	bool isCharacter() const { return character; }
 
-	uint8_t getDirRead() const { return dir_read; }
-	uint8_t getDataRead() const { return data_read; }
-
 	// RAM access methods
 	uint8_t* getMem() { return m_ram; }
 
@@ -121,6 +121,10 @@ public:
 	void fillRom(const uint_least16_t start, const uint8_t* source, const int size) {
 		memcpy(m_rom+start, source, size);
 	}
+
+	//
+	uint8_t cpuRead(const uint_least16_t addr);
+	void cpuWrite(const uint_least16_t addr, const uint8_t data);
 };
 
 SIDPLAY2_NAMESPACE_STOP

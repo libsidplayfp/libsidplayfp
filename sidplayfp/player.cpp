@@ -382,19 +382,6 @@ uint8_t Player::iomap (const uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-uint8_t Player::readMemByte_plain (const uint_least16_t addr)
-{   // Bank Select Register Value DOES NOT get to ram
-    switch (addr)
-    {
-    case 0:
-        return mmu.getDirRead();
-    case 1:
-        return mmu.getDataRead();
-    default:
-        return mmu.readMemByte(addr);
-    }
-}
-
 uint8_t Player::readMemByte_io (const uint_least16_t addr)
 {
     uint_least16_t tempAddr = (addr & 0xfc1f);
@@ -406,7 +393,7 @@ uint8_t Player::readMemByte_io (const uint_least16_t addr)
         {
         case 0:
         case 1:
-            return readMemByte_plain (addr);
+            return mmu.readMemByte (addr);
         case 0xdc:
             return cia.read (addr&0x0f);
         case 0xdd:
@@ -430,7 +417,7 @@ uint8_t Player::readMemByte_io (const uint_least16_t addr)
 uint8_t Player::m_readMemByte (const uint_least16_t addr)
 {
     if (addr < 0xA000)
-        return readMemByte_plain (addr);
+        return mmu.cpuRead (addr);
     else
     {
         // Get high-nibble of address.
@@ -465,22 +452,7 @@ uint8_t Player::m_readMemByte (const uint_least16_t addr)
     }
 }
 
-void Player::writeMemByte_plain (const uint_least16_t addr, const uint8_t data)
-{
-    switch (addr)
-    {
-    case 0:
-        mmu.setDir(data);
-        break;
-    case 1:
-        mmu.setData(data);
-        break;
-    default:
-        mmu.writeMemByte(addr, data);
-    }
-}
-
-void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data)
+void Player::writeMemByte_io (const uint_least16_t addr, const uint8_t data)
 {
     uint_least16_t tempAddr = (addr & 0xfc1f);
 
@@ -491,7 +463,7 @@ void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data
         {
         case 0:
         case 1:
-            writeMemByte_plain (addr, data);
+            mmu.cpuWrite (addr, data);
             break;
         case 0xdc:
             cia.write (addr&0x0f, data);
@@ -521,11 +493,11 @@ void Player::writeMemByte_playsid (const uint_least16_t addr, const uint8_t data
 void Player::m_writeMemByte (const uint_least16_t addr, const uint8_t data)
 {
     if (addr < 0xA000)
-        writeMemByte_plain (addr, data);
+        mmu.cpuWrite (addr, data);
     else
     {
         if (((addr >> 12) == 0xd) && mmu.isIoArea())
-            writeMemByte_playsid (addr, data);
+            writeMemByte_io (addr, data);
         else
             mmu.writeMemByte(addr, data);
     }

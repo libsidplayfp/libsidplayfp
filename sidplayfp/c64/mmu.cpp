@@ -173,4 +173,31 @@ void MMU::reset(const bool compatibility) {
 	}
 }
 
+uint8_t MMU::cpuRead(const uint_least16_t addr) {
+
+	// Bank Select Register Value DOES NOT get to ram
+	switch (addr) {
+	case 0:
+		return getDirRead();
+	case 1:
+		return getDataRead();
+	default:
+		return readMemByte(addr);
+	}
+}
+
+void MMU::cpuWrite(const uint_least16_t addr, const uint8_t data) {
+
+	switch (addr) {
+	case 0:
+		setDir(data);
+		break;
+	case 1:
+		setData(data);
+		break;
+	default:
+		writeMemByte(addr, data);
+	}
+}
+
 SIDPLAY2_NAMESPACE_STOP

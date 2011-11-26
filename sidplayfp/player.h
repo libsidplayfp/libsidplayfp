@@ -135,23 +135,17 @@ private:
                           sid2_model_t userModel,
                           sid2_model_t defaultModel);
 
-    uint8_t readMemByte_plain     (const uint_least16_t addr);
-    uint8_t readMemByte_io        (const uint_least16_t addr);
-    void    writeMemByte_plain    (const uint_least16_t addr, const uint8_t data);
-    void    writeMemByte_playsid  (const uint_least16_t addr, const uint8_t data);
+    uint8_t readMemByte_io   (const uint_least16_t addr);
+    void    writeMemByte_io  (const uint_least16_t addr, const uint8_t data);
 
 
     uint8_t m_readMemByte    (const uint_least16_t);
     void    m_writeMemByte   (const uint_least16_t, const uint8_t);
 
-    uint8_t  readMemRamByte (const uint_least16_t addr)
-    { return mmu.readMemByte(addr); }
-
     uint16_t getChecksum(const uint8_t* rom, const int size);
 
     // Environment Function entry Points
     void           envReset           (void);
-    inline uint8_t envReadRomByte     (const uint_least16_t addr);
     inline uint8_t envReadMemByte     (const uint_least16_t addr);
     inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
     inline uint8_t envReadMemDataByte (const uint_least16_t addr);
