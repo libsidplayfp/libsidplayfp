@@ -445,7 +445,7 @@ void MOS6510::interruptsAndNextOpcode (void)
 #ifdef MOS6510_DEBUG
     if (dodump)
     {
-        event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
+        const event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
         fprintf (m_fdbg, "****************************************************\n");
         switch (offset)
         {
