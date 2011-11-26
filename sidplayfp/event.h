@@ -127,37 +127,27 @@ public:
 * The phi1 clocks are used by VIC and CIA chips, phi2 clocks by CPU.
 *
 * Scheduling an event for a phi1 clock when system is in phi2 causes the
-* event to be moved to the next cycle. (This behavior may be a bug of the
-* original EventScheduler specification. Likely reason is to avoid
-* scheduling an event into past.)
-*
-* Getting a phi1 time when system is in phi2 causes the next phi1 clock
-* to be returned.
-*
-* To make scheduling even faster, I am considering making event cancellation
-* before rescheduling mandatory, as caller is generally in position to
-* automatically know if the event needs to be canceled first.
+* event to be moved to the next phi1 cycle. Correspondingly, requesting 
+* a phi1 time when system is in phi2 returns the value of the next phi1.
 *
 * @author Antti S. Lankila
 */
 class EventScheduler: public EventContext
 {
 private:
+    /** EventScheduler's current clock */
     event_clock_t  currentTime;
+
+    /** The first event of the chain */
     Event *firstEvent;
 
 private:
-    void event (void);
-
     /**
     * Scan the event queue and schedule event for execution.
     *
     * @param event The event to add
     */
     void schedule(Event &event) {
-
-        if (event.m_pending)
-            cancel(event);
 
         event.m_pending = true;
 
@@ -176,13 +166,16 @@ private:
 protected:
     /** Add event to pending queue.
     *
+    * At PHI2, specify cycles=0 and Phase=PHI1 to fire on the very next PHI1.
+    *
     * @param event the event to add
-    * @param cycles the clock to fire
-    * @param phase when to fire the event
+    * @param cycles how many cycles from now to fire
+    * @param phase the phase when to fire the event
     */
     void schedule (Event &event, const event_clock_t cycles,
                    const event_phase_t phase) {
-        event.triggerTime = (cycles << 1) + currentTime + (currentTime & 1 ^ (phase == EVENT_CLOCK_PHI1 ? 0 : 1));
+        // this strange formulation always selects the next available slot regardless of specified phase.
+        event.triggerTime = (cycles << 1) + currentTime + (currentTime & 1 ^ phase);
         schedule(event);
     }
 
@@ -200,7 +193,7 @@ protected:
     *
     * @param event the event to cancel
     */
-    void cancel   (Event &event);
+    void cancel (Event &event);
 
 public:
     EventScheduler ()

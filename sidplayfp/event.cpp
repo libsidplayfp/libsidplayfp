@@ -30,7 +30,7 @@ void EventScheduler::reset (void)
     firstEvent = 0;
 }
 
-void EventScheduler::cancel   (Event &event)
+void EventScheduler::cancel (Event &event)
 {
     event.m_pending = false;
     Event *scan = firstEvent;
