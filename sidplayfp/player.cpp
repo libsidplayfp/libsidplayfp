@@ -353,35 +353,6 @@ void Player::stop (void)
     }
 }
 
-
-//-------------------------------------------------------------------------
-// Temporary hack till real bank switching code added
-
-//  Input: A 16-bit effective address
-// Output: A default bank-select value for $01.
-uint8_t Player::iomap (const uint_least16_t addr)
-{
-
-    // Force Real C64 Compatibility
-    switch (m_tuneInfo.compatibility)
-    {
-    case SIDTUNE_COMPATIBILITY_R64:
-    case SIDTUNE_COMPATIBILITY_BASIC:
-        return 0;     // Special case, converted to 0x37 later
-    }
-
-    if (addr == 0)
-        return 0;     // Special case, converted to 0x37 later
-    if (addr < 0xa000)
-        return 0x37;  // Basic-ROM, Kernal-ROM, I/O
-    if (addr  < 0xd000)
-        return 0x36;  // Kernal-ROM, I/O
-    if (addr >= 0xe000)
-        return 0x35;  // I/O only
-
-    return 0x34;  // RAM only (special I/O in PlaySID mode)
-}
-
 uint8_t Player::readMemByte_io (const uint_least16_t addr)
 {
     uint_least16_t tempAddr = (addr & 0xfc1f);
