@@ -74,6 +74,8 @@ private:
     static const char  ERR_PSIDDRV_NO_SPACE[];
     static const char  ERR_PSIDDRV_RELOC[];
 
+    static const int MIXER_EVENT_RATE;
+
     EventScheduler m_scheduler;
 
     MOS6510 cpu;
@@ -125,7 +127,6 @@ private:
     int       initialise     (void);
     void      nextSequence   (void);
     void      mixer          (void);
-    void      mixerReset     (void);
     void      mileageCorrect (void);
     int       sidCreate      (sidbuilder *builder, sid2_model_t model,
                               sid2_model_t defaultModel);
@@ -145,7 +146,6 @@ private:
     uint16_t getChecksum(const uint8_t* rom, const int size);
 
     // Environment Function entry Points
-    void           envReset           (void);
     inline uint8_t envReadMemByte     (const uint_least16_t addr);
     inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
     inline uint8_t envReadMemDataByte (const uint_least16_t addr);
@@ -173,7 +173,6 @@ private:
 
     // PSID driver
     int  psidDrvReloc   (SidTuneInfo &tuneInfo, sid2_info_t &info);
-    void psidDrvInstall (sid2_info_t &info);
     void psidRelocAddr  (SidTuneInfo &tuneInfo, int startp, int endp);
 
 public:

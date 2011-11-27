@@ -255,34 +255,28 @@ void SidTune::fixLoadAddress(bool force, uint_least16_t init, uint_least16_t pla
 
 bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
 {
-    if ( status && c64buf!=0 )
+    if ( status && c64buf )
     {
-        uint_least32_t endPos = info.loadAddr + info.c64dataLen;
-        if (endPos <= SIDTUNE_MAX_MEMORY)
-        {
-            // Copy data from cache to the correct destination.
-            memcpy(c64buf+info.loadAddr,cache.get()+fileOffset,info.c64dataLen);
-            info.statusString = SidTune::txt_noErrors;
-        }
-        else
-        {
-            // Security - cut data which would exceed the end of the C64
-            // memory. Memcpy could not detect this.
-            //
-            // NOTE: In libsidplay1 the rest gets wrapped to the beginning
-            // of the C64 memory. It is an undocumented hack most likely not
-            // used by any sidtune. Here we no longer do it like that, set
-            // an error message, and hope the modified behaviour will find
-            // a few badly ripped sids.
-            memcpy(c64buf+info.loadAddr,cache.get()+fileOffset,info.c64dataLen-(endPos-SIDTUNE_MAX_MEMORY));
-            info.statusString = SidTune::txt_dataTooLong;
-        }
+        // The Basic ROM sets these values on loading a file.
+        // Program end address
+        const uint_least16_t start = info.loadAddr;
+        const uint_least16_t end   = start + info.c64dataLen;
+        endian_little16(c64buf + 0x2d, end); // Variables start
+        endian_little16(c64buf + 0x2f, end); // Arrays start
+        endian_little16(c64buf + 0x31, end); // Strings start
+        endian_little16(c64buf + 0xac, start);
+        endian_little16(c64buf + 0xae, end);
+
+        // Copy data from cache to the correct destination.
+        memcpy(c64buf+info.loadAddr, cache.get()+fileOffset, info.c64dataLen);
+        info.statusString = SidTune::txt_noErrors;
+
         if (info.musPlayer)
         {
             MUS_installPlayer(c64buf);
         }
     }
-    return ( status && c64buf!=0 );
+    return ( status && c64buf );
 }
 
 bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)

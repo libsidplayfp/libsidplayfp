@@ -31,7 +31,6 @@ class C64Environment
 {
 public:
     // Eniviroment functions
-    virtual void    envReset        (void) =0;
     virtual uint8_t envReadMemByte  (const uint_least16_t addr) =0;
     virtual void    envWriteMemByte (const uint_least16_t addr, const uint8_t data) =0;
 

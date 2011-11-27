@@ -19,16 +19,12 @@
 #include "player.h"
 
 const int_least32_t VOLUME_MAX = 255;
-/* Scheduling time for next sample event. 20000 is roughly 20 ms and
- * gives us about 1k samples per mixing event on typical settings. */
-const int MIXER_EVENT_RATE = 20000;
 
 SIDPLAY2_NAMESPACE_START
 
-void Player::mixerReset (void)
-{
-    context().schedule(m_mixerEvent, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
-}
+/* Scheduling time for next sample event. 20000 is roughly 20 ms and
+ * gives us about 1k samples per mixing event on typical settings. */
+const int Player::MIXER_EVENT_RATE = 20000;
 
 void Player::mixer (void)
 {

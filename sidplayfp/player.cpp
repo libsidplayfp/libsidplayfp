@@ -228,7 +228,7 @@ int Player::initialise ()
     reset ();
 
     {
-        uint_least32_t page = ((uint_least32_t) m_tuneInfo.loadAddr
+        const uint_least32_t page = ((uint_least32_t) m_tuneInfo.loadAddr
                             + m_tuneInfo.c64dataLen - 1) >> 8;
         if (page > 0xff)
         {
@@ -240,25 +240,18 @@ int Player::initialise ()
     if (psidDrvReloc (m_tuneInfo, m_info) < 0)
         return -1;
 
-    // The Basic ROM sets these values on loading a file.
-    {   // Program end address
-        uint_least16_t start = m_tuneInfo.loadAddr;
-        uint_least16_t end   = start + m_tuneInfo.c64dataLen;
-        mmu.writeMemWord(0x2d, end); // Variables start
-        mmu.writeMemWord(0x2f, end); // Arrays start
-        mmu.writeMemWord(0x31, end); // Strings start
-        mmu.writeMemWord(0xac, start);
-        mmu.writeMemWord(0xae, end);
-    }
-
     if (!m_tune->placeSidTuneInC64mem (mmu.getMem()))
     {   // Rev 1.6 (saw) - Allow loop through errors
         m_errorString = (m_tune->getInfo()).statusString;
         return -1;
     }
 
-    psidDrvInstall (m_info);
-    envReset ();
+    mmu.setDir(0x2F);
+    mmu.setData(0x37);
+
+    cpu.reset ();
+
+    context().schedule(m_mixerEvent, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
     return 0;
 }
 
@@ -486,18 +479,7 @@ void Player::reset (void)
     for (int i = 0; i < SID2_MAX_SIDS; i++)
     {
         if (sid[i])
-        {
-            sidemu &s = *sid[i];
-            s.reset (0x0f);
-            // Synchronise the waveform generators
-            // (must occur after reset)
-            s.write (0x04, 0x08);
-            s.write (0x0b, 0x08);
-            s.write (0x12, 0x08);
-            s.write (0x04, 0x00);
-            s.write (0x0b, 0x00);
-            s.write (0x12, 0x00);
-        }
+            sid[i]->reset (0x0f);
     }
 
     cia.reset  ();
@@ -508,22 +490,8 @@ void Player::reset (void)
     mmu.reset(m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC);
 
     // Will get done later if can't now
-    if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
-        mmu.writeMemByte(0x02a6, 1);
-    else // SIDTUNE_CLOCK_NTSC
-        mmu.writeMemByte(0x02a6, 0);
-}
+    mmu.writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);
 
-// This resets the cpu once the program is loaded to begin
-// running. Also called when the emulation crashes
-void Player::envReset ()
-{
-    mmu.setDir(0x2F);
-
-    mmu.setData(0x37);
-    cpu.reset ();
-
-    mixerReset ();
 }
 
 SIDPLAY2_NAMESPACE_STOP
