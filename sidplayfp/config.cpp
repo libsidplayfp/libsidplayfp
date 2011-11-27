@@ -63,18 +63,16 @@ int Player::config (const sid2_config_t &cfg)
             m_cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
                                   cfg.clockForced);
 
-            const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
-            const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
-
-            // @FIXME@ see mos6526.h for details. Setup TOD clock
             if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
             {
+                const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
                 cia.clock  (clockPAL);
                 cia2.clock (clockPAL);
                 vic.chip   (MOS6569);
             }
             else
             {
+                const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
                 cia.clock  (clockNTSC);
                 cia2.clock (clockNTSC);
                 vic.chip   (MOS6567R8);
