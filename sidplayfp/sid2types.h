@@ -53,13 +53,6 @@ struct sid2_config_t
     bool                clockForced;
     /// User requested emulation speed
     sid2_clock_t        clockSpeed;
-    /**
-    * Environment Modes
-    * - sid2_envPS = Playsid
-    * - sid2_envTP = Sidplay  - Transparent Rom
-    * - sid2_envBS = Sidplay  - Bankswitching
-    * - sid2_envR  = Sidplay2 - Real C64 Environment
-    */
     bool                forceDualSids;
     bool                emulateStereo;
     uint_least32_t      frequency;
