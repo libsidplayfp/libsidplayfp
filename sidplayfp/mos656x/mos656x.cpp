@@ -118,7 +118,7 @@ uint8_t MOS656X::read (uint_least8_t addr)
     if (addr > 0x2e) return 0xff;
 
     // Sync up timers
-    event ();
+    clock ();
 
     switch (addr)
     {
@@ -145,7 +145,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
     regs[addr] = data;
 
     // Sync up timers
-    event ();
+    clock ();
 
     switch (addr)
     {
@@ -219,13 +219,19 @@ void MOS656X::trigger (int irq)
 
 void MOS656X::event (void)
 {
-    const event_clock_t  cycles = event_context.getTime (m_rasterClk, event_context.phase());
+    const event_clock_t delay = clock();
+    event_context.schedule (*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
+}
+
+event_clock_t MOS656X::clock (void)
+{
+    event_clock_t delay = 1;
+
+    const event_clock_t cycles = event_context.getTime (m_rasterClk, event_context.phase());
 
     // Cycle already executed check
     if (!cycles)
-        return;
-
-    event_clock_t  delay = 1;
+        return delay;
 
     // Update x raster
     m_rasterClk += cycles;
@@ -436,15 +442,13 @@ void MOS656X::event (void)
             delay = xrasters - cycle;
     }
 
-    if (pending())
-        event_context.cancel(*this);
-    event_context.schedule (*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
+    return delay;
 }
 
 // Handle light pen trigger
 void MOS656X::lightpen ()
 {   // Synchronise simulation
-    event ();
+    clock ();
 
     if (!lp_triggered)
     {   // Latch current coordinates
