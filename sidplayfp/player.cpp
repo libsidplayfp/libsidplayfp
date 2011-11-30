@@ -228,9 +228,8 @@ int Player::initialise ()
     reset ();
 
     {
-        const uint_least32_t page = ((uint_least32_t) m_tuneInfo.loadAddr
-                            + m_tuneInfo.c64dataLen - 1) >> 8;
-        if (page > 0xff)
+        const uint_least32_t page = (uint_least32_t) m_tuneInfo.loadAddr + m_tuneInfo.c64dataLen - 1;
+        if (page > 0xffff)
         {
             m_errorString = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
             return -1;
