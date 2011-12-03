@@ -211,7 +211,7 @@ uint_least16_t SidTune::selectSong(const uint_least16_t selectedSong)
         info.statusString = SidTune::txt_songNumberExceed;
     }
     info.currentSong = song;
-    info.songLength = songLength[song-1];
+    info.songLength = 0;
     // Retrieve song speed definition.
     if (info.compatibility == SIDTUNE_COMPATIBILITY_R64)
         info.songSpeed = SIDTUNE_SPEED_CIA_1A;
@@ -406,7 +406,6 @@ void SidTune::init()
     {
         songSpeed[si] = info.songSpeed;
         clockSpeed[si] = info.clockSpeed;
-        songLength[si] = 0;
     }
 
     fileOffset = 0;

@@ -330,7 +330,6 @@ class SID_EXTERN SidTune
 
     uint_least8_t songSpeed[SIDTUNE_MAX_SONGS];
     uint_least8_t clockSpeed[SIDTUNE_MAX_SONGS];
-    uint_least16_t songLength[SIDTUNE_MAX_SONGS];
 
     /// holds text info from the format headers etc.
     char infoString[SIDTUNE_MAX_CREDIT_STRINGS][SIDTUNE_MAX_CREDIT_STRLEN];
