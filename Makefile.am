@@ -92,7 +92,6 @@ utils/iniParser.cpp \
 utils/iniParser.h \
 utils/SidDatabase.cpp \
 utils/SidFilter.cpp \
-utils/SidTuneMod.cpp \
 utils/SidUsage.cpp \
 utils/smm.cpp \
 utils/smm0.h \
@@ -120,7 +119,6 @@ sidplayfp/sidusage.h \
 sidplayfp/SmartPtr.h \
 utils/SidDatabase.h \
 utils/SidFilter.h \
-utils/SidTuneMod.h \
 utils/SidUsage.h
 
 nodist_sidplayfp_libsidplayfp_la_HEADERS = \

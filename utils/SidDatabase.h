@@ -21,7 +21,7 @@
 #include "sidplayfp/sidconfig.h"
 #include "sidplayfp/sidtypes.h"
 
-class SidTuneMod;
+class SidTune;
 class iniParser;
 
 /**
@@ -64,7 +64,7 @@ public:
     * @param tune
     * @return tune length in seconds, -1 in case of errors.
     */
-    int_least32_t length (SidTuneMod &tune);
+    int_least32_t length (SidTune &tune);
     /**
     * Get the length of the selected subtune.
     * @param md5 the md5 hash of the tune.

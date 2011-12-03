@@ -169,6 +169,8 @@ struct SidTuneInfo
     char* infoFileName;
 };
 
+#define SIDTUNE_MD5_LENGTH 32
+
 /**
 * SidTune
 */
@@ -181,6 +183,9 @@ class SID_EXTERN SidTune
         LOAD_OK,
         LOAD_ERROR
     } LoadStatus;
+
+ private:
+    char m_md5[SIDTUNE_MD5_LENGTH+1];
 
  public:  // ----------------------------------------------------------------
 
@@ -310,6 +315,14 @@ class SID_EXTERN SidTune
     bool loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef);
 
     bool saveToOpenFile( std::ofstream& toFile, const uint_least8_t* buffer, uint_least32_t bufLen );
+
+    /**
+    * Calculates the MD5 hash of the tune.
+    * Not providing an md5 buffer will cause the internal one to be used.
+    * If provided, buffer must be SIDTUNE_MD5_LENGTH + 1
+    * @return a pointer to the buffer containing the md5 string.
+    */
+    const char *createMD5(char *md5 = 0);
 
  protected:  // -------------------------------------------------------------
 

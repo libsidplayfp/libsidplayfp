@@ -23,7 +23,7 @@
 #endif
 
 #include "SidDatabase.h"
-#include "SidTuneMod.h"
+#include "SidTune.h"
 #include "iniParser.h"
 #include "MD5/MD5.h"
 
@@ -80,7 +80,7 @@ void SidDatabase::close ()
     m_parser = 0;
 }
 
-int_least32_t SidDatabase::length (SidTuneMod &tune)
+int_least32_t SidDatabase::length (SidTune &tune)
 {
     char md5[SIDTUNE_MD5_LENGTH+1];
     uint_least16_t song = tune.getInfo().currentSong;
