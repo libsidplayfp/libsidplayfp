@@ -23,7 +23,7 @@
 #endif
 
 #include "SidDatabase.h"
-#include "SidTune.h"
+#include "sidplayfp/SidTune.h"
 #include "iniParser.h"
 #include "MD5/MD5.h"
 
