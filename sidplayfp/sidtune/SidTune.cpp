@@ -65,26 +65,11 @@ const char* defaultFileNameExt[] =
 {
     // Preferred default file extension for single-file sidtunes
     // or sidtune description files in SIDPLAY INFOFILE format.
-    ".sid",
-    // Common file extension for single-file sidtunes due to SIDPLAY/DOS
-    // displaying files *.DAT in its file selector by default.
-    // Originally this was intended to be the extension of the raw data file
-    // of two-file sidtunes in SIDPLAY INFOFILE format.
-    ".dat",
-    // Extension of Amiga Workbench tooltype icon info files, which
-    // have been cut to MS-DOS file name length (8.3).
-    ".inf",
-    // No extension for the raw data file of two-file sidtunes in
-    // PlaySID Amiga Workbench tooltype icon info format.
-    "",
-    // Common upper-case file extensions from MS-DOS (unconverted).
-    ".DAT", ".SID", ".INF",
+    ".sid", ".SID",
     // File extensions used (and created) by various C64 emulators and
     // related utilities. These extensions are recommended to be used as
     // a replacement for ".dat" in conjunction with two-file sidtunes.
     ".c64", ".prg", ".p00", ".C64", ".PRG", ".P00",
-    // Uncut extensions from Amiga.
-    ".info", ".INFO", ".data", ".DATA",
     // Stereo Sidplayer (.mus/.MUS ought not be included because
     // these must be loaded first; it sometimes contains the first
     // credit lines of a MUS/STR pair).
@@ -700,10 +685,8 @@ void SidTune::getFromFiles(const char* fileName)
     // continue searching when an error is found.
     if ( loadFile(fileName,fileBuf1) )
     {
-        LoadStatus ret;
-
         // File loaded. Now check if it is in a valid single-file-format.
-        ret = PSID_fileSupport(fileBuf1);
+        LoadStatus ret = PSID_fileSupport(fileBuf1);
         if (ret != LOAD_NOT_MINE)
         {
             if (ret == LOAD_OK)
@@ -712,174 +695,79 @@ void SidTune::getFromFiles(const char* fileName)
         }
 
 // -------------------------------------- Support for multiple-files formats.
-        else
+        // Try some native C64 file formats
+        ret = MUS_fileSupport(fileBuf1,fileBuf2);
+        if (ret != LOAD_NOT_MINE)
         {
-// We cannot simply try to load additional files, if a description file was
-// specified. It would work, but is error-prone. Imagine a filename mismatch
-// or more than one description file (in another) format. Any other file
-// with an appropriate file name can be the C64 data file.
-
-// First we see if ``fileName'' could be a raw data file. In that case we
-// have to find the corresponding description file.
-
-            // Right now we do not have a second file (fileBuf2 empty). This
-            // will not hurt the file support procedures.
-
-            // Make sure that ``fileBuf1'' does not contain a description file.
-            ret = (LoadStatus)( SID_fileSupport (fileBuf2, fileBuf1) );
-            if ( ret == LOAD_NOT_MINE )
-            {
-                // Assuming ``fileName'' to hold the name of the raw data file,
-                // we now create the name of a description file (=fileName2) by
-                // appending various filename extensions.
-
-// ------------------------------------------ Looking for a description file.
-
-                int n = 0;
-                while (fileNameExtensions[n] != 0)
-                {
-                    if ( !createNewFileName(fileName2,fileName,fileNameExtensions[n]) )
-                        return;
-                    // 1st data file was loaded into ``fileBuf1'',
-                    // so we load the 2nd one into ``fileBuf2''.
-                    // Do not load the first file again if names are equal.
-                    if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
-                         loadFile(fileName2.get(),fileBuf2) )
-                    {
-                        if ( SID_fileSupport (fileBuf1, fileBuf2) == LOAD_OK )
-                        {
-                            status = acceptSidTune(fileName,fileName2.get(),
-                                                   fileBuf1);
-                            return;
-                        }
-                    }
-                    n++;
-                };
-
-// --------------------------------------- Could not find a description file.
-
-                // Try some native C64 file formats
-                ret = MUS_fileSupport(fileBuf1,fileBuf2);
-                if (ret != LOAD_NOT_MINE)
-                {
-                    if (ret == LOAD_ERROR)
-                        return;
-
-                    // Try to find second file.
-                    int n = 0;
-                    while (fileNameExtensions[n] != 0)
-                    {
-                        if ( !createNewFileName(fileName2,fileName,fileNameExtensions[n]) )
-                            return;
-                        // 1st data file was loaded into ``fileBuf1'',
-                        // so we load the 2nd one into ``fileBuf2''.
-                        // Do not load the first file again if names are equal.
-                        if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
-                            loadFile(fileName2.get(),fileBuf2) )
-                        {
-                            // Check if tunes in wrong order and therefore swap them here
-                            if ( MYSTRICMP (fileNameExtensions[n], ".mus")==0 )
-                            {
-                                if ( MUS_fileSupport(fileBuf2,fileBuf1) == LOAD_OK )
-                                {
-                                    if ( MUS_mergeParts(fileBuf2,fileBuf1) )
-                                        status = acceptSidTune(fileName2.get(),fileName,
-                                                            fileBuf2);
-                                    return;
-                                }
-                            }
-                            else
-                            {
-                                if ( MUS_fileSupport(fileBuf1,fileBuf2) == LOAD_OK )
-                                {
-                                    if ( MUS_mergeParts(fileBuf1,fileBuf2) )
-                                        status = acceptSidTune(fileName,fileName2.get(),
-                                                            fileBuf1);
-                                    return;
-                                }
-                            }
-                            // The first tune loaded ok, so ignore errors on the
-                            // second tune, may find an ok one later
-                        }
-                        n++;
-                    };
-                    // No (suitable) second file, so reload first without second
-                    fileBuf2.erase();
-                    MUS_fileSupport(fileBuf1,fileBuf2);
-                    status = acceptSidTune(fileName,0,fileBuf1);
-                    return;
-                }
-
-                // Now directly support x00 (p00, etc)
-                ret = X00_fileSupport(fileName,fileBuf1);
-                if (ret != LOAD_NOT_MINE)
-                {
-                    if (ret == LOAD_OK)
-                        status = acceptSidTune(fileName,0,fileBuf1);
-                    return;
-                }
-
-                // Now directly support prgs and equivalents
-                ret = PRG_fileSupport(fileName,fileBuf1);
-                if (ret != LOAD_NOT_MINE)
-                {
-                    if (ret == LOAD_OK)
-                        status = acceptSidTune(fileName,0,fileBuf1);
-                    return;
-                }
-
-                info.statusString = SidTune::txt_unrecognizedFormat;
+            if (ret == LOAD_ERROR)
                 return;
-            }
 
-// -------------------------------------------------------------------------
-// Still unsuccessful ? Probably one put a description file name into
-// ``fileName''. Assuming ``fileName'' to hold the name of a description
-// file, we now create the name of the data file and swap both used memory
-// buffers - fileBuf1 and fileBuf2 - when calling the format support.
-// If it works, the second file is the data file ! If it is not, but does
-// exist, we are out of luck, since we cannot detect data files.
-
-            // Make sure ``fileBuf1'' contains a description file.
-            else if ( ret == LOAD_OK )
+            // Try to find second file.
+            int n = 0;
+            while (fileNameExtensions[n] != 0)
             {
-
-// --------------------- Description file found. --- Looking for a data file.
-
-                int n = 0;
-                while (fileNameExtensions[n] != 0)
+                if ( !createNewFileName(fileName2,fileName,fileNameExtensions[n]) )
+                    return;
+                // 1st data file was loaded into ``fileBuf1'',
+                // so we load the 2nd one into ``fileBuf2''.
+                // Do not load the first file again if names are equal.
+                if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
+                    loadFile(fileName2.get(),fileBuf2) )
                 {
-                    if ( !createNewFileName(fileName2,fileName,fileNameExtensions[n]) )
-                        return;
-                    // 1st info file was loaded into ``fileBuf'',
-                    // so we load the 2nd one into ``fileBuf2''.
-                    // Do not load the first file again if names are equal.
-                    if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
-
-                        loadFile(fileName2.get(),fileBuf2) )
+                    // Check if tunes in wrong order and therefore swap them here
+                    if ( MYSTRICMP (fileNameExtensions[n], ".mus")==0 )
                     {
-// -------------- Some data file found, now identifying the description file.
-
-                        if ( SID_fileSupport (fileBuf2,fileBuf1) == LOAD_OK )
+                        if ( MUS_fileSupport(fileBuf2,fileBuf1) == LOAD_OK )
                         {
-                            status = acceptSidTune(fileName2.get(),fileName,
+                            if ( MUS_mergeParts(fileBuf2,fileBuf1) )
+                                status = acceptSidTune(fileName2.get(),fileName,
                                                     fileBuf2);
                             return;
                         }
                     }
-                    n++;
-                };
+                    else
+                    {
+                        if ( MUS_fileSupport(fileBuf1,fileBuf2) == LOAD_OK )
+                        {
+                            if ( MUS_mergeParts(fileBuf1,fileBuf2) )
+                                status = acceptSidTune(fileName,fileName2.get(),
+                                                    fileBuf1);
+                            return;
+                        }
+                    }
+                    // The first tune loaded ok, so ignore errors on the
+                    // second tune, may find an ok one later
+                }
+                n++;
+            };
+            // No (suitable) second file, so reload first without second
+            fileBuf2.erase();
+            MUS_fileSupport(fileBuf1,fileBuf2);
+            status = acceptSidTune(fileName,0,fileBuf1);
+            return;
+        }
 
-// ---------------------------------------- No corresponding data file found.
+        // Now directly support x00 (p00, etc)
+        ret = X00_fileSupport(fileName,fileBuf1);
+        if (ret != LOAD_NOT_MINE)
+        {
+            if (ret == LOAD_OK)
+                status = acceptSidTune(fileName,0,fileBuf1);
+            return;
+        }
 
-                info.statusString = SidTune::txt_noDataFile;
-                return;
-            } // end else if ( = is description file )
-        } // end else ( = is no singlefile )
+        // Now directly support prgs and equivalents
+        ret = PRG_fileSupport(fileName,fileBuf1);
+        if (ret != LOAD_NOT_MINE)
+        {
+            if (ret == LOAD_OK)
+                status = acceptSidTune(fileName,0,fileBuf1);
+            return;
+        }
 
-// ---------------------------------------------------------- File I/O error.
-
-    } // if loaddatafile
+        info.statusString = SidTune::txt_unrecognizedFormat;
+        return;
+    }
     else
     {
         // returned fileLen was 0 = error. The info.statusString is

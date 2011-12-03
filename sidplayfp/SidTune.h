@@ -377,9 +377,6 @@ class SID_EXTERN SidTune
     virtual LoadStatus PSID_fileSupport    (Buffer_sidtt<const uint_least8_t>& dataBuf);
     virtual bool       PSID_fileSupportSave(std::ofstream& toFile, const uint_least8_t* dataBuffer);
 
-    virtual LoadStatus SID_fileSupport     (Buffer_sidtt<const uint_least8_t>& dataBuf,
-                                            Buffer_sidtt<const uint_least8_t>& sidBuf) { return LOAD_NOT_MINE; }
-
     virtual LoadStatus MUS_fileSupport     (Buffer_sidtt<const uint_least8_t>& musBuf,
                                             Buffer_sidtt<const uint_least8_t>& strBuf);
     LoadStatus         MUS_load            (Buffer_sidtt<const uint_least8_t>& musBuf,
