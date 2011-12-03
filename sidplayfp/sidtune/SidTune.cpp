@@ -414,8 +414,6 @@ void SidTune::init()
 #endif
     if (info.commentString != 0)
         info.commentString[0] = SidTuneTools::myStrDup("--- SAVED WITH SIDPLAY ---");
-    else
-        info.commentString[0] = 0;
 }
 
 void SidTune::cleanup()
@@ -498,12 +496,10 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
     memcpy(tmpBuf,buffer,bufferLen);
 
     Buffer_sidtt<const uint_least8_t> buf1(tmpBuf,bufferLen);
-    Buffer_sidtt<const uint_least8_t> buf2;  // empty
 
     bool foundFormat = false;
-    LoadStatus ret;
     // Here test for the possible single file formats. --------------
-    ret = PSID_fileSupport( buf1 );
+    LoadStatus ret = PSID_fileSupport( buf1 );
     if ( ret != LOAD_NOT_MINE )
     {
         if ( ret == LOAD_ERROR )
@@ -512,6 +508,7 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
     }
     else
     {
+        Buffer_sidtt<const uint_least8_t> buf2;  // empty
         ret = MUS_fileSupport(buf1,buf2);
         if ( ret != LOAD_NOT_MINE )
         {
@@ -676,104 +673,96 @@ void SidTune::getFromFiles(const char* fileName)
     // Assume a failure, so we can simply return.
     status = false;
 
-    Buffer_sidtt<const uint_least8_t> fileBuf1, fileBuf2;
-    Buffer_sidtt<char> fileName2;
+    Buffer_sidtt<const uint_least8_t> fileBuf1;
 
-    // Try to load the single specified file.  The original method didn't
-    // quite work that well, so instead we now let the support files take
-    // ownership of a known file and don't assume we should just
-    // continue searching when an error is found.
-    if ( loadFile(fileName,fileBuf1) )
+    if ( !loadFile(fileName,fileBuf1) )
+        return;
+
+    // File loaded. Now check if it is in a valid single-file-format.
+    LoadStatus ret = PSID_fileSupport(fileBuf1);
+    if (ret != LOAD_NOT_MINE)
     {
-        // File loaded. Now check if it is in a valid single-file-format.
-        LoadStatus ret = PSID_fileSupport(fileBuf1);
-        if (ret != LOAD_NOT_MINE)
-        {
-            if (ret == LOAD_OK)
-                status = acceptSidTune(fileName,0,fileBuf1);
-            return;
-        }
-
-// -------------------------------------- Support for multiple-files formats.
-        // Try some native C64 file formats
-        ret = MUS_fileSupport(fileBuf1,fileBuf2);
-        if (ret != LOAD_NOT_MINE)
-        {
-            if (ret == LOAD_ERROR)
-                return;
-
-            // Try to find second file.
-            int n = 0;
-            while (fileNameExtensions[n] != 0)
-            {
-                if ( !createNewFileName(fileName2,fileName,fileNameExtensions[n]) )
-                    return;
-                // 1st data file was loaded into ``fileBuf1'',
-                // so we load the 2nd one into ``fileBuf2''.
-                // Do not load the first file again if names are equal.
-                if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
-                    loadFile(fileName2.get(),fileBuf2) )
-                {
-                    // Check if tunes in wrong order and therefore swap them here
-                    if ( MYSTRICMP (fileNameExtensions[n], ".mus")==0 )
-                    {
-                        if ( MUS_fileSupport(fileBuf2,fileBuf1) == LOAD_OK )
-                        {
-                            if ( MUS_mergeParts(fileBuf2,fileBuf1) )
-                                status = acceptSidTune(fileName2.get(),fileName,
-                                                    fileBuf2);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if ( MUS_fileSupport(fileBuf1,fileBuf2) == LOAD_OK )
-                        {
-                            if ( MUS_mergeParts(fileBuf1,fileBuf2) )
-                                status = acceptSidTune(fileName,fileName2.get(),
-                                                    fileBuf1);
-                            return;
-                        }
-                    }
-                    // The first tune loaded ok, so ignore errors on the
-                    // second tune, may find an ok one later
-                }
-                n++;
-            };
-            // No (suitable) second file, so reload first without second
-            fileBuf2.erase();
-            MUS_fileSupport(fileBuf1,fileBuf2);
+        if (ret == LOAD_OK)
             status = acceptSidTune(fileName,0,fileBuf1);
-            return;
-        }
-
-        // Now directly support x00 (p00, etc)
-        ret = X00_fileSupport(fileName,fileBuf1);
-        if (ret != LOAD_NOT_MINE)
-        {
-            if (ret == LOAD_OK)
-                status = acceptSidTune(fileName,0,fileBuf1);
-            return;
-        }
-
-        // Now directly support prgs and equivalents
-        ret = PRG_fileSupport(fileName,fileBuf1);
-        if (ret != LOAD_NOT_MINE)
-        {
-            if (ret == LOAD_OK)
-                status = acceptSidTune(fileName,0,fileBuf1);
-            return;
-        }
-
-        info.statusString = SidTune::txt_unrecognizedFormat;
         return;
     }
-    else
+
+// ---------------------------------- Support for multiple-files formats.
+    Buffer_sidtt<const uint_least8_t> fileBuf2;
+
+    // Try some native C64 file formats
+    ret = MUS_fileSupport(fileBuf1,fileBuf2);
+    if (ret != LOAD_NOT_MINE)
     {
-        // returned fileLen was 0 = error. The info.statusString is
-        // already set then.
+        if (ret == LOAD_ERROR)
+            return;
+
+        // Try to find second file.
+        Buffer_sidtt<char> fileName2;
+        int n = 0;
+        while (fileNameExtensions[n] != 0)
+        {
+            if ( !createNewFileName(fileName2,fileName,fileNameExtensions[n]) )
+                return;
+            // 1st data file was loaded into ``fileBuf1'',
+            // so we load the 2nd one into ``fileBuf2''.
+            // Do not load the first file again if names are equal.
+            if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
+                loadFile(fileName2.get(),fileBuf2) )
+            {
+                // Check if tunes in wrong order and therefore swap them here
+                if ( MYSTRICMP (fileNameExtensions[n], ".mus")==0 )
+                {
+                    if ( MUS_fileSupport(fileBuf2,fileBuf1) == LOAD_OK )
+                    {
+                        if ( MUS_mergeParts(fileBuf2,fileBuf1) )
+                            status = acceptSidTune(fileName2.get(),fileName,
+                                                fileBuf2);
+                        return;
+                    }
+                }
+                else
+                {
+                    if ( MUS_fileSupport(fileBuf1,fileBuf2) == LOAD_OK )
+                    {
+                        if ( MUS_mergeParts(fileBuf1,fileBuf2) )
+                            status = acceptSidTune(fileName,fileName2.get(),
+                                                fileBuf1);
+                        return;
+                    }
+                }
+                // The first tune loaded ok, so ignore errors on the
+                // second tune, may find an ok one later
+            }
+            n++;
+        };
+        // No (suitable) second file, so reload first without second
+        fileBuf2.erase();
+        MUS_fileSupport(fileBuf1,fileBuf2);
+        status = acceptSidTune(fileName,0,fileBuf1);
         return;
     }
+
+    // Now directly support x00 (p00, etc)
+    ret = X00_fileSupport(fileName,fileBuf1);
+    if (ret != LOAD_NOT_MINE)
+    {
+        if (ret == LOAD_OK)
+            status = acceptSidTune(fileName,0,fileBuf1);
+        return;
+    }
+
+    // Now directly support prgs and equivalents
+    ret = PRG_fileSupport(fileName,fileBuf1);
+    if (ret != LOAD_NOT_MINE)
+    {
+        if (ret == LOAD_OK)
+            status = acceptSidTune(fileName,0,fileBuf1);
+        return;
+    }
+
+    info.statusString = SidTune::txt_unrecognizedFormat;
+    return;
 }
 
 void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, int clock)
@@ -782,7 +771,7 @@ void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, int clock)
     //
     // This routine implements the PSIDv2NG compliant speed conversion.  All tunes
     // above 32 use the same song speed as tune 32
-    int toDo = ((info.songs <= SIDTUNE_MAX_SONGS) ? info.songs : SIDTUNE_MAX_SONGS);
+    const int toDo = ((info.songs <= SIDTUNE_MAX_SONGS) ? info.songs : SIDTUNE_MAX_SONGS);
     for (int s = 0; s < toDo; s++)
     {
         clockSpeed[s] = clock;
@@ -1085,7 +1074,7 @@ const char *SidTune::createMD5(char *md5)
         endian_little16 (tmp,info.songs);
         myMD5.append    (tmp,sizeof(tmp));
         {   // Include song speed for each song.
-            uint_least16_t currentSong = info.currentSong;
+            const uint_least16_t currentSong = info.currentSong;
             for (uint_least16_t s = 1; s <= info.songs; s++)
             {
                 selectSong (s);
