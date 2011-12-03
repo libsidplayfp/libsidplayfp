@@ -40,24 +40,24 @@
 #endif
 
 
-const char* SidTune::txt_songNumberExceed = "SIDTUNE WARNING: Selected song number was too high";
-const char* SidTune::txt_empty = "SIDTUNE ERROR: No data to load";
-const char* SidTune::txt_unrecognizedFormat = "SIDTUNE ERROR: Could not determine file format";
-const char* SidTune::txt_noDataFile = "SIDTUNE ERROR: Did not find the corresponding data file";
-const char* SidTune::txt_notEnoughMemory = "SIDTUNE ERROR: Not enough free memory";
-const char* SidTune::txt_cantLoadFile = "SIDTUNE ERROR: Could not load input file";
-const char* SidTune::txt_cantOpenFile = "SIDTUNE ERROR: Could not open file for binary input";
-const char* SidTune::txt_fileTooLong = "SIDTUNE ERROR: Input data too long";
-const char* SidTune::txt_dataTooLong = "SIDTUNE ERROR: Size of music data exceeds C64 memory";
-const char* SidTune::txt_cantCreateFile = "SIDTUNE ERROR: Could not create output file";
-const char* SidTune::txt_fileIoError = "SIDTUNE ERROR: File I/O error";
-const char* SidTune::txt_VBI = "VBI";
-const char* SidTune::txt_CIA = "CIA 1 Timer A";
-const char* SidTune::txt_noErrors = "No errors";
-const char* SidTune::txt_na = "N/A";
-const char* SidTune::txt_badAddr = "SIDTUNE ERROR: Bad address data";
-const char* SidTune::txt_badReloc = "SIDTUNE ERROR: Bad reloc data";
-const char* SidTune::txt_corrupt = "SIDTUNE ERROR: File is incomplete or corrupt";
+const char SidTune::txt_songNumberExceed[] = "SIDTUNE WARNING: Selected song number was too high";
+const char SidTune::txt_empty[] = "SIDTUNE ERROR: No data to load";
+const char SidTune::txt_unrecognizedFormat[] = "SIDTUNE ERROR: Could not determine file format";
+const char SidTune::txt_noDataFile[] = "SIDTUNE ERROR: Did not find the corresponding data file";
+const char SidTune::txt_notEnoughMemory[] = "SIDTUNE ERROR: Not enough free memory";
+const char SidTune::txt_cantLoadFile[] = "SIDTUNE ERROR: Could not load input file";
+const char SidTune::txt_cantOpenFile[] = "SIDTUNE ERROR: Could not open file for binary input";
+const char SidTune::txt_fileTooLong[] = "SIDTUNE ERROR: Input data too long";
+const char SidTune::txt_dataTooLong[] = "SIDTUNE ERROR: Size of music data exceeds C64 memory";
+const char SidTune::txt_cantCreateFile[] = "SIDTUNE ERROR: Could not create output file";
+const char SidTune::txt_fileIoError[] = "SIDTUNE ERROR: File I/O error";
+const char SidTune::txt_VBI[] = "VBI";
+const char SidTune::txt_CIA[] = "CIA 1 Timer A";
+const char SidTune::txt_noErrors[] = "No errors";
+const char SidTune::txt_na[] = "N/A";
+const char SidTune::txt_badAddr[] = "SIDTUNE ERROR: Bad address data";
+const char SidTune::txt_badReloc[] = "SIDTUNE ERROR: Bad reloc data";
+const char SidTune::txt_corrupt[] = "SIDTUNE ERROR: File is incomplete or corrupt";
 
 // Default sidtune file name extensions. This selection can be overriden
 // by specifying a custom list in the constructor.
