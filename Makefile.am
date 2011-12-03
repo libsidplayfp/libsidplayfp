@@ -78,8 +78,6 @@ sidplayfp/mos6510/conf6510.h \
 sidplayfp/mos6510/opcodes.h \
 sidplayfp/mos6526/mos6526.cpp \
 sidplayfp/mos6526/mos6526.h \
-sidplayfp/sidtune/IconInfo.cpp \
-sidplayfp/sidtune/InfoFile.cpp \
 sidplayfp/sidtune/MUS.cpp \
 sidplayfp/sidtune/p00.cpp \
 sidplayfp/sidtune/prg.cpp \

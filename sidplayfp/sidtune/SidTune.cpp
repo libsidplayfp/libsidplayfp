@@ -727,8 +727,7 @@ void SidTune::getFromFiles(const char* fileName)
             // will not hurt the file support procedures.
 
             // Make sure that ``fileBuf1'' does not contain a description file.
-            ret = (LoadStatus)( SID_fileSupport (fileBuf2, fileBuf1) |
-                                INFO_fileSupport(fileBuf2, fileBuf1) );
+            ret = (LoadStatus)( SID_fileSupport (fileBuf2, fileBuf1) );
             if ( ret == LOAD_NOT_MINE )
             {
                 // Assuming ``fileName'' to hold the name of the raw data file,
@@ -748,9 +747,7 @@ void SidTune::getFromFiles(const char* fileName)
                     if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
                          loadFile(fileName2.get(),fileBuf2) )
                     {
-                        if ( (SID_fileSupport (fileBuf1, fileBuf2) == LOAD_OK)
-                          || (INFO_fileSupport(fileBuf1, fileBuf2) == LOAD_OK)
-                            )
+                        if ( SID_fileSupport (fileBuf1, fileBuf2) == LOAD_OK )
                         {
                             status = acceptSidTune(fileName,fileName2.get(),
                                                    fileBuf1);
@@ -864,9 +861,7 @@ void SidTune::getFromFiles(const char* fileName)
                     {
 // -------------- Some data file found, now identifying the description file.
 
-                        if ( (SID_fileSupport (fileBuf2,fileBuf1) == LOAD_OK)
-                          || (INFO_fileSupport(fileBuf2,fileBuf1) == LOAD_OK)
-                            )
+                        if ( SID_fileSupport (fileBuf2,fileBuf1) == LOAD_OK )
                         {
                             status = acceptSidTune(fileName2.get(),fileName,
                                                     fileBuf2);
@@ -976,40 +971,6 @@ bool SidTune::saveC64dataFile( const char* fileName, bool overWriteFlag )
             // Data starts at: bufferaddr + fileOffset
             // Data length: info.dataFileLen - fileOffset
             if ( !saveToOpenFile( fMyOut,cache.get()+fileOffset, info.dataFileLen - fileOffset ) )
-            {
-                info.statusString = SidTune::txt_fileIoError;
-            }
-            else
-            {
-                info.statusString = SidTune::txt_noErrors;
-                success = true;
-            }
-            fMyOut.close();
-        }
-    }
-    return success;
-}
-
-bool SidTune::saveSIDfile( const char* fileName, bool overWriteFlag )
-{
-    bool success = false;  // assume error
-    // This prevents saving from a bad object.
-    if ( status )
-    {
-        // Open ASCII output file stream.
-        openmode createAttr = std::ios::out;
-        if ( overWriteFlag )
-            createAttr |= std::ios::trunc;
-        else
-            createAttr |= std::ios::app;
-        std::ofstream fMyOut( fileName, createAttr );
-        if ( !fMyOut || fMyOut.tellp()>0 )
-        {
-            info.statusString = SidTune::txt_cantCreateFile;
-        }
-        else
-        {
-            if ( !SID_fileSupportSave( fMyOut ) )
             {
                 info.statusString = SidTune::txt_fileIoError;
             }

@@ -288,7 +288,6 @@ class SID_EXTERN SidTune
     * returns: true = Successful, false = Error condition.
     */
     bool saveC64dataFile( const char* destFileName, const bool overWriteFlag = false );
-    bool saveSIDfile( const char* destFileName, const bool overWriteFlag = false );
     bool savePSIDfile( const char* destFileName, const bool overWriteFlag = false );
 
     /**
@@ -380,8 +379,7 @@ class SID_EXTERN SidTune
     virtual bool       PSID_fileSupportSave(std::ofstream& toFile, const uint_least8_t* dataBuffer);
 
     virtual LoadStatus SID_fileSupport     (Buffer_sidtt<const uint_least8_t>& dataBuf,
-                                            Buffer_sidtt<const uint_least8_t>& sidBuf);
-    virtual bool       SID_fileSupportSave (std::ofstream& toFile);
+                                            Buffer_sidtt<const uint_least8_t>& sidBuf) { return LOAD_NOT_MINE; }
 
     virtual LoadStatus MUS_fileSupport     (Buffer_sidtt<const uint_least8_t>& musBuf,
                                             Buffer_sidtt<const uint_least8_t>& strBuf);
@@ -397,8 +395,6 @@ class SID_EXTERN SidTune
     virtual void       MUS_setPlayerAddress();
     virtual void       MUS_installPlayer   (uint_least8_t *c64buf);
 
-    virtual LoadStatus INFO_fileSupport    (Buffer_sidtt<const uint_least8_t>& dataBuf,
-                                            Buffer_sidtt<const uint_least8_t>& infoBuf);
     virtual LoadStatus PRG_fileSupport     (const char* fileName,
                                             Buffer_sidtt<const uint_least8_t>& dataBuf);
     virtual LoadStatus X00_fileSupport     (const char* fileName,
