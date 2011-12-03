@@ -437,8 +437,6 @@ class SID_EXTERN SidTune
     bool createNewFileName(Buffer_sidtt<char>& destString,
                            const char* sourceName, const char* sourceExt);
 
-    int  decompressPP20(Buffer_sidtt<const uint_least8_t>& buf);
-
  private:    // prevent copying
     SidTune(const SidTune&);
     SidTune& operator=(SidTune&);

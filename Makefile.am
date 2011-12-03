@@ -82,9 +82,6 @@ sidplayfp/sidtune/IconInfo.cpp \
 sidplayfp/sidtune/InfoFile.cpp \
 sidplayfp/sidtune/MUS.cpp \
 sidplayfp/sidtune/p00.cpp \
-sidplayfp/sidtune/PP20.cpp \
-sidplayfp/sidtune/PP20.h \
-sidplayfp/sidtune/PP20_Defs.h \
 sidplayfp/sidtune/prg.cpp \
 sidplayfp/sidtune/PSID.cpp \
 sidplayfp/sidtune/SidTune.cpp \
