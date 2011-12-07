@@ -27,11 +27,11 @@
 #include "iniParser.h"
 #include "MD5/MD5.h"
 
-const char *SidDatabase::ERR_DATABASE_CORRUPT        = "SID DATABASE ERROR: Database seems to be corrupt.";
-const char *SidDatabase::ERR_NO_DATABASE_LOADED      = "SID DATABASE ERROR: Songlength database not loaded.";
-const char *SidDatabase::ERR_NO_SELECTED_SONG        = "SID DATABASE ERROR: No song selected for retrieving song length.";
-const char *SidDatabase::ERR_MEM_ALLOC               = "SID DATABASE ERROR: Memory Allocation Failure.";
-const char *SidDatabase::ERR_UNABLE_TO_LOAD_DATABASE = "SID DATABASE ERROR: Unable to load the songlegnth database.";
+const char SidDatabase::ERR_DATABASE_CORRUPT[]        = "SID DATABASE ERROR: Database seems to be corrupt.";
+const char SidDatabase::ERR_NO_DATABASE_LOADED[]      = "SID DATABASE ERROR: Songlength database not loaded.";
+const char SidDatabase::ERR_NO_SELECTED_SONG[]        = "SID DATABASE ERROR: No song selected for retrieving song length.";
+const char SidDatabase::ERR_MEM_ALLOC[]               = "SID DATABASE ERROR: Memory Allocation Failure.";
+const char SidDatabase::ERR_UNABLE_TO_LOAD_DATABASE[] = "SID DATABASE ERROR: Unable to load the songlegnth database.";
 
 SidDatabase::SidDatabase () :
 m_parser(0),
