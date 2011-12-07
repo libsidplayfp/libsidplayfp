@@ -33,8 +33,6 @@ double iniParser::parseDouble(const char* str) {
 	if (!str)
 		throw parseError();
 
-	double result = 0.;
-
 	while (*str == ' ') {
 		str++;
 	}
@@ -47,7 +45,8 @@ double iniParser::parseDouble(const char* str) {
 		str++;
 	}
 
-	char *end;
+	double result = 0.;
+
 	while (isdigit(*str)) {
 		result = (result * 10.) + (double)((*str++) - '0');
 	}
@@ -64,6 +63,7 @@ double iniParser::parseDouble(const char* str) {
 	long exponent = 0;
 
 	if (*str=='e') {
+		char *end;
 		exponent = strtol(++str, &end, 10);
 	}
 
@@ -116,10 +116,11 @@ bool iniParser::open(const char* fName) {
 	if (iniFile.fail())
 		return false;
 
-	char buffer[BUFSIZE];
 	std::map<std::string, keys_t>::iterator mIt;
 
 	while (iniFile.good()) {
+		char buffer[BUFSIZE];
+
 		iniFile.getline(buffer, BUFSIZE);
 		switch (buffer[0]) {
 		case ';':
