@@ -22,7 +22,7 @@
 #define BUFFER_H
 
 #include <assert.h>
-#include "sidtypes.h"
+#include <stdint.h>
 
 template <class T> class Buffer_sidtt
 {

@@ -18,7 +18,9 @@
 #ifndef _smm0_h_
 #define _smm0_h_
 
-#include "sidplayfp/sidtypes.h"
+#include <stdint.h>
+
+#include "sidplayfp/sid2types.h"
 #include "SidUsage.h"
 
 // IFF IDs

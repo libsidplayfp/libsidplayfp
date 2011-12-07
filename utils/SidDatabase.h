@@ -18,8 +18,9 @@
 #ifndef _siddatabase_h_
 #define _siddatabase_h_
 
+#include <stdint.h>
+
 #include "sidplayfp/sidconfig.h"
-#include "sidplayfp/sidtypes.h"
 
 class SidTune;
 class iniParser;

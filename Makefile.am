@@ -111,7 +111,6 @@ sidplayfp/sidbuilder.h \
 sidplayfp/sidendian.h \
 sidplayfp/sidplay2.h \
 sidplayfp/SidTune.h \
-sidplayfp/sidtypes.h \
 sidplayfp/sidusage.h \
 sidplayfp/SmartPtr.h \
 utils/SidDatabase.h \

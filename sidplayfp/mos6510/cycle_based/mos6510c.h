@@ -110,8 +110,8 @@
 #define _mos6510c_h_
 
 #include <stdio.h>
+#include <stdint.h>
 
-#include "sidplayfp/sidtypes.h"
 #include "sidplayfp/sidendian.h"
 
 /** @internal

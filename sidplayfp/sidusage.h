@@ -18,7 +18,7 @@
 #ifndef _sidusage_h_
 #define _sidusage_h_
 
-#include "sidtypes.h"
+#include <stdint.h>
 
 enum
 {

@@ -21,8 +21,9 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#include <stdint.h>
+
 #include "SidTuneCfg.h"
-#include "sidplayfp/sidtypes.h"
 
 #include <string.h>
 #if defined(HAVE_SSTREAM)

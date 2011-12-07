@@ -53,7 +53,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "sidplayfp/sidtypes.h"
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidenv.h"
 #include "conf6510.h"

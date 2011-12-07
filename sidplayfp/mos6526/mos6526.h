@@ -18,6 +18,9 @@
 #ifndef MOS6526_H
 #define MOS6526_H
 
+#include <stdint.h>
+
+#include "sidplayfp/sid2types.h"
 #include "sidplayfp/component.h"
 #include "sidplayfp/event.h"
 

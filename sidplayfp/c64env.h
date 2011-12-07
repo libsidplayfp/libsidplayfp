@@ -18,7 +18,6 @@
 #ifndef _c64env_h_
 #define _c64env_h_
 
-#include "sidtypes.h"
 #include "event.h"
  
 /* An implementation of of this class can be created to perform the C64

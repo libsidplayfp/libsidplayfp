@@ -19,11 +19,11 @@
 #ifndef SIDTUNE_H
 #define SIDTUNE_H
 
-
-#include "sidtypes.h"
+#include "sidconfig.h"
 #include "Buffer.h"
 #include "SmartPtr.h"
 
+#include <stdint.h>
 #include <fstream>
 
 /// Also PSID file format limit.

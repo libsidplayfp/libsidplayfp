@@ -19,7 +19,9 @@
 #ifndef _event_h_
 #define _event_h_
 
-#include "sidtypes.h"
+#include <stdint.h>
+
+#include "sidconfig.h"
 
 typedef int_fast64_t event_clock_t;
 

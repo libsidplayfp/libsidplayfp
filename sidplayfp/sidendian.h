@@ -27,7 +27,7 @@
 // not being reflected in the CPU regs.  The use of the volatile keyword
 // fixes this.
 
-#include "sidtypes.h"
+#include <stdint.h>
 
 /*
 Labeling:

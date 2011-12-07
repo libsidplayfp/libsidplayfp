@@ -25,7 +25,7 @@
 #  include "config.h"
 #endif
 
-#include "sidtypes.h"
+#include <stdint.h>
 
 class C64Environment
 {

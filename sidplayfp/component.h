@@ -18,7 +18,7 @@
 #ifndef _component_h_
 #define _component_h_
 
-#include "sidtypes.h"
+#include <stdint.h>
 
 class component
 {

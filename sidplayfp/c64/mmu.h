@@ -23,6 +23,7 @@
 
 #include "sidplayfp/sid2types.h"
 #include "sidplayfp/sidendian.h"
+#include "sidplayfp/sidconfig.h"
 
 #include <string.h>
 

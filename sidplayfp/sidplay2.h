@@ -20,8 +20,8 @@
 
 #include <stdio.h>
 
-#include "sidtypes.h"
 #include "sid2types.h"
+#include "sidconfig.h"
 #include "sidversion.h"
 
 class SidTune;
