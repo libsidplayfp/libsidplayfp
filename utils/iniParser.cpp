@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010 Leandro Nini
+ *  Copyright (C) 2010-2011 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,72 +16,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include"iniParser.h"
+#include "iniParser.h"
 
 #include <stdlib.h>
-
-long iniParser::parseLong(const char* str) {
-
-	if (!str)
-		throw parseError();
-
-	return strtol(str, 0, 10);
-}
-
-double iniParser::parseDouble(const char* str) {
-
-	if (!str)
-		throw parseError();
-
-	while (*str == ' ') {
-		str++;
-	}
-
-	bool negative = false;
-	if (*str=='+') {
-		str++;
-	} else if (*str=='-') {
-		negative = true;
-		str++;
-	}
-
-	double result = 0.;
-
-	while (isdigit(*str)) {
-		result = (result * 10.) + (double)((*str++) - '0');
-	}
-
-	if (*str=='.') {
-		str++;
-		double exponential = .1;
-		while (isdigit(*str)) {
-			result += ((double)((*str++) - '0') * exponential);
-			exponential *= .1;
-		}
-	}
-
-	long exponent = 0;
-
-	if (*str=='e') {
-		char *end;
-		exponent = strtol(++str, &end, 10);
-	}
-
-	double exponential = 1.;
-
-	if (exponent < 0) {
-		while (exponent++)
-			exponential *= .1;
-	} else {
-		while (exponent--)
-			exponential *= 10.;
-	}
-
-	if (negative)
-		result = -result;
-
-	return result*exponential;
-}
 
 std::string iniParser::parseSection(const char* buffer) {
 
@@ -108,7 +45,6 @@ std::pair<std::string, std::string> iniParser::parseKey(const char* buffer) {
 }
 
 #define BUFSIZE 2048
-
 
 bool iniParser::open(const char* fName) {
 
