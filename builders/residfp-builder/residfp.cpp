@@ -84,30 +84,7 @@ ReSIDfp::~ReSIDfp ()
         delete &m_sid;
     delete[] m_buffer;
 }
-#if 0
-bool ReSIDfp::filter (const sid_filterfp_t *filter)
-{
-    /* Set whatever data is provided in the filter def.
-     * XXX: we should check that if one param in set is provided,
-     * all are provided. */
-    if (filter != NULL) {
-      //FIXME
-#ifdef DEBUG
-    //printf("filterCurve6581: %f\n", filter->filterCurve6581);
-    //printf("filterCurve8580: %f\n", filter->filterCurve8580);
-#endif
 
-      m_sid.getFilter6581()->setFilterCurve(0.5);
-      m_sid.getFilter8580()->setFilterCurve(12500.);
-    } else {
-      /* Set sensible defaults. */
-      m_sid.getFilter6581()->setFilterCurve(0.5);
-      m_sid.getFilter8580()->setFilterCurve(12500.);
-    }
-
-    return true;
-}
-#endif
 void ReSIDfp::filter6581Curve (const double filterCurve)
 {
    m_sid.getFilter6581()->setFilterCurve(filterCurve);

@@ -62,7 +62,7 @@ public:
     // Specific to resid
     void sampling (float systemclock, float freq,
     const sampling_method_t method, const bool fast);
-    //bool filter   (const sid_filterfp_t *filter);
+
     void filter6581Curve (const double filterCurve);
     void filter8580Curve (const double filterCurve);
     void model    (sid2_model_t model);

@@ -141,24 +141,7 @@ uint ReSIDBuilder::devices (bool created)
     else // Available devices
         return 0;
 }
-#if 0
-void ReSIDBuilder::filter (const sid_filter_t *filter)
-{
-    int size = sidobjs.size ();
-    m_status = true;
-    for (int i = 0; i < size; i++)
-    {
-        ReSID *sid = (ReSID *) sidobjs[i];
-        if (!sid->filter (filter))
-            goto ReSIDBuilder_sidFilterDef_error;
-    }
-return;
 
-ReSIDBuilder_sidFilterDef_error:
-    m_error  = ERR_FILTER_DEFINITION;
-    m_status = false;
-}
-#endif
 void ReSIDBuilder::filter (bool enable)
 {
     const int size = sidobjs.size ();

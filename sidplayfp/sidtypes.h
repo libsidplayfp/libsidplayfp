@@ -22,23 +22,6 @@
 
 #include "sidplayfp/sidconfig.h"
 
-typedef int sid_fc_t[2];
-typedef struct
-{
-    sid_fc_t       cutoff[0x800];
-    uint_least16_t points;
-} sid_filter_t;
-
-typedef struct
-{
-    /* distortion tunables */
-    float           attenuation, distortion_nonlinearity, voice_nonlinearity;
-    /* type 3 tunables */
-    float           baseresistance, offset, steepness, minimumfetresistance;
-    /* type 4 tunables */
-    float           k, b;
-} sid_filterfp_t;
-
 typedef unsigned int uint;
 typedef float    float32_t;
 typedef double   float64_t;

@@ -79,64 +79,7 @@ ReSID::~ReSID ()
         delete &m_sid;
     delete[] m_buffer;
 }
-#if 0
-bool ReSID::filter (const sid_filter_t *filter)
-{
-    /*RESID_NS::short_point fc[0x802];
-    const RESID_NS::short_point *f0 = fc;
-    int   points = 0;
 
-    if (filter == NULL)
-    {   // Select default filter
-        //m_sid.fc_default (f0, points); //FIXME
-        return false;
-    }
-    else
-    {   // Make sure there are enough filter points and they are legal
-        points = filter->points;
-        if ((points < 2) || (points > 0x800))
-            return false;
-
-#ifdef DEBUG
-    printf("points: %d\n", filter->points);
-    for (int i=0; i<filter->points; ++i)
-    {
-        printf("point[%d,0]: %d\n", i, filter->cutoff[i][0]);
-        printf("point[%d,1]: %d\n", i, filter->cutoff[i][1]);
-    }
-#endif
-
-        {
-            const sid_fc_t  fstart = {-1, 0};
-            const sid_fc_t *fprev  = &fstart, *fin = filter->cutoff;
-            RESID_NS::short_point *fout = fc;
-            // Last check, make sure they are list in numerical order
-            // for both axis
-            while (points-- > 0)
-            {
-                if ((*fprev)[0] >= (*fin)[0])
-                    return false;
-                fout++;
-                (*fout)[0] = (short) (*fin)[0];
-                (*fout)[1] = (short) (*fin)[1];
-                fprev      = fin++;
-            }
-            // Updated ReSID interpolate requires we
-            // repeat the end points
-            (*(fout+1))[0] = (*fout)[0];
-            (*(fout+1))[1] = (*fout)[1];
-            fc[0][0] = fc[1][0];
-            fc[0][1] = fc[1][1];
-            points   = filter->points + 2;
-        }
-    }
-
-    // function from reSID
-    points--;
-    RESID_NS::interpolate (f0, f0 + points, RESID_NS::PointPlotter<short>(*fc), 1.0); //FIXME*/
-    return true;
-}
-#endif
 void ReSID::bias (const double dac_bias)
 {
     m_sid.adjust_filter_bias(dac_bias);
