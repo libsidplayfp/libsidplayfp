@@ -363,7 +363,7 @@ class SID_EXTERN SidTune
     void convertOldStyleSpeedToTables(uint_least32_t speed,
          int clock = SIDTUNE_CLOCK_PAL);
 
-    virtual int convertPetsciiToAscii (SmartPtr_sidtt<const uint_least8_t>&, char*);
+    static int convertPetsciiToAscii (SmartPtr_sidtt<const uint_least8_t>&, char*);
 
     /// Check compatibility details are sensible
     bool checkCompatibility(void);
