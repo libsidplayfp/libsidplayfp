@@ -501,10 +501,10 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
 {
     Buffer_sidtt<uint8_t> mergeBuf;
 
-    uint_least32_t mergeLen = musBuf.len()+strBuf.len();
+    const uint_least32_t mergeLen = musBuf.len()+strBuf.len();
 
     // Sanity check. I do not trust those MUS/STR files around.
-    uint_least32_t freeSpace = endian_16(_sidtune_sidplayer1[1],_sidtune_sidplayer1[0])
+    const uint_least32_t freeSpace = endian_16(_sidtune_sidplayer1[1],_sidtune_sidplayer1[0])
                             - SIDTUNE_MUS_DATA_ADDR;
     if ( (musBuf.len()+strBuf.len()-4) > freeSpace)
     {
@@ -513,9 +513,9 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     }
 
 #ifdef HAVE_EXCEPTIONS
-    if ( !mergeBuf.assign(new(std::nothrow) uint8_t[mergeLen],mergeLen) )
+    if ( !mergeBuf.assign(new(std::nothrow) uint8_t[mergeLen], mergeLen) )
 #else
-    if ( !mergeBuf.assign(new uint8_t[mergeLen],mergeLen) )
+    if ( !mergeBuf.assign(new uint8_t[mergeLen], mergeLen) )
 #endif
     {
         info.statusString = _sidtune_txt_notEnoughMemory;
@@ -618,7 +618,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
     info.sidChipBase1 = SIDTUNE_SID1_BASE_ADDR;
 
     // No credits so extract them from the MUS files
-    bool credits = (infoString[0][0] | infoString[1][0] | infoString[2][0]) != 0;
+    const bool credits = (infoString[0][0] | infoString[1][0] | infoString[2][0]) != 0;
 
     // Voice3Index now is offset to text lines (uppercase Pet-strings).
     spPet += voice3Index;

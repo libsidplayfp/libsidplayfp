@@ -69,7 +69,7 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
     const char      *ext     = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));
     const char      *format  = 0;
     const X00Header *pHeader = reinterpret_cast<const X00Header*>(dataBuf.get());
-    uint_least32_t   bufLen  = dataBuf.len ();
+    const uint_least32_t bufLen  = dataBuf.len ();
 
     // Combined extension & magic field identification
     if (strlen (ext) != 4)
