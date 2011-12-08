@@ -244,8 +244,9 @@ bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
         {
             MUS_installPlayer(c64buf);
         }
+        return true;
     }
-    return ( status && c64buf );
+    return false;
 }
 
 bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
@@ -340,14 +341,9 @@ void SidTune::init()
     info.musPlayer = false;
     info.fixLoad = false;
     info.songSpeed = SIDTUNE_SPEED_VBI;
-#ifdef SIDTUNE_PSID2NG
     info.clockSpeed = SIDTUNE_CLOCK_UNKNOWN;
     info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
     info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
-#else
-    info.clockSpeed = SIDTUNE_CLOCK_PAL;
-    info.sidModel = SIDTUNE_SIDMODEL_6581;
-#endif
     info.compatibility = SIDTUNE_COMPATIBILITY_C64;
     info.songLength = 0;
     info.relocStartPage = 0;

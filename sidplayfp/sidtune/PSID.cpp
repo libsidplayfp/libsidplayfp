@@ -109,15 +109,11 @@ static const int _sidtune_psid_maxStrLen = 32;
 
 SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
-    int clock, compatibility;
     uint_least32_t speed;
     uint_least32_t bufLen = dataBuf.len();
-#ifdef SIDTUNE_PSID2NG
-    clock = SIDTUNE_CLOCK_UNKNOWN;
-#else
-    clock = info.clockSpeed;
-#endif
-    compatibility = SIDTUNE_COMPATIBILITY_C64;
+
+    int clock = SIDTUNE_CLOCK_UNKNOWN;
+    int compatibility = SIDTUNE_COMPATIBILITY_C64;
 
     // Require minimum size to allow access to the first few bytes.
     // Require a valid ID and version number.
@@ -197,7 +193,6 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             info.musPlayer = true;
         }
 
-#ifdef SIDTUNE_PSID2NG
         // This flags is only available for the appropriate
         // file formats
         switch (compatibility)
@@ -237,7 +232,6 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
         {
             info.sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
         }
-#endif // SIDTUNE_PSID2NG
     }
 
     // Check reserved fields to force real c64 compliance

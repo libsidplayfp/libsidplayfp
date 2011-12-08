@@ -591,9 +591,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
         info.musPlayer = true;
 
         songSpeed[0]  = SIDTUNE_SPEED_CIA_1A;
-#ifdef SIDTUNE_PSID2NG
         clockSpeed[0] = SIDTUNE_CLOCK_ANY;
-#endif
     }
 
     // Check setting compatibility for MUS playback

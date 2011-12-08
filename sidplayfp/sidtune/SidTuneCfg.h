@@ -5,9 +5,6 @@
 
 #include "config.h"
 
-/* Define to add PSID2NG support */
-#define SIDTUNE_PSID2NG
-
 /* Minimum load address for real c64 only tunes */
 #define SIDTUNE_R64_MIN_LOAD_ADDR 0x07e8
 
