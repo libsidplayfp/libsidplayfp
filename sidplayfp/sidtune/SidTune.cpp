@@ -220,22 +220,6 @@ uint_least16_t SidTune::selectSong(const uint_least16_t selectedSong)
     return info.currentSong;
 }
 
-void SidTune::fixLoadAddress(bool force, uint_least16_t init, uint_least16_t play)
-{
-    if (info.fixLoad || force)
-    {
-        info.fixLoad = false;
-        info.loadAddr += 2;
-        fileOffset += 2;
-
-        if (force)
-        {
-            info.initAddr = init;
-            info.playAddr = play;
-        }
-    }
-}
-
 // ------------------------------------------------- private member functions
 
 bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)

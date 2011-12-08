@@ -261,12 +261,12 @@ class SID_EXTERN SidTune
     * Upon error condition use ``getInfo'' to get a descriptive
     * text string in ``SidTuneInfo.statusString''.
     */
-    bool getStatus()  { return status; }
+    bool getStatus() const { return status; }
 
     /**
     * Whether sidtune uses two SID chips.
     */
-    bool isStereo()
+    bool isStereo() const
     {
         return (info.sidChipBase1!=0 && info.sidChipBase2!=0);
     }
@@ -289,23 +289,6 @@ class SID_EXTERN SidTune
     */
     bool saveC64dataFile( const char* destFileName, const bool overWriteFlag = false );
     bool savePSIDfile( const char* destFileName, const bool overWriteFlag = false );
-
-    /**
-    * This function can be used to remove a duplicate C64 load address in
-    * the C64 data (example: FE 0F 00 10 4C ...). A duplicate load address
-    * of offset 0x02 is indicated by the ``fixLoad'' flag in the SidTuneInfo
-    * structure.
-    *
-    * The ``force'' flag here can be used to remove the first load address
-    * and set new INIT/PLAY addresses regardless of whether a duplicate
-    * load address has been detected and indicated by ``fixLoad''.
-    * For instance, some position independent sidtunes contain a load address
-    * of 0xE000, but are loaded to 0x0FFE and call the player code at 0x1000.
-    *
-    * Do not forget to save the sidtune file.
-    */
-    void fixLoadAddress(const bool force = false, uint_least16_t initAddr = 0,
-                        uint_least16_t playAddr = 0);
 
     /**
     * Does not affect status of object, and therefore can be used
