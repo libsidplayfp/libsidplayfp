@@ -250,9 +250,6 @@ bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
 
 bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
 {
-    Buffer_sidtt<const uint_least8_t> fileBuf;
-    uint_least32_t fileLen = 0;
-
     // This sucks big time
     openmode createAtrr = std::ios::in;
 #ifdef HAVE_IOS_NOCREATE
@@ -265,65 +262,50 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
     createAtrr |= std::ios::binary;
 #endif
 
-    std::fstream myIn(fileName,createAtrr);
-    // As a replacement for !is_open(), bad() and the NOT-operator don't seem
-    // to work on all systems.
-#if defined(DONT_HAVE_IS_OPEN)
-    if ( !myIn )
-#else
+    std::fstream myIn(fileName, createAtrr);
+
     if ( !myIn.is_open() )
-#endif
     {
         info.statusString = SidTune::txt_cantOpenFile;
         return false;
     }
-    else
-    {
-#if defined(HAVE_SEEKG_OFFSET)
-        fileLen = (myIn.seekg(0,std::ios::end)).offset();
-#else
-        myIn.seekg(0,std::ios::end);
-        fileLen = (uint_least32_t)myIn.tellg();
-#endif
-#ifdef HAVE_EXCEPTIONS
-        if ( !fileBuf.assign(new(std::nothrow) uint_least8_t[fileLen],fileLen) )
-#else
-        if ( !fileBuf.assign(new uint_least8_t[fileLen],fileLen) )
-#endif
-        {
-            info.statusString = SidTune::txt_notEnoughMemory;
-            return false;
-        }
-        myIn.seekg(0,std::ios::beg);
-        uint_least32_t restFileLen = fileLen;
-        // 16-bit compatible loading. Is this really necessary?
-        while ( restFileLen > INT_MAX )
-        {
-            myIn.read((char*)fileBuf.get()+(fileLen-restFileLen),INT_MAX);  // !cast!
-            restFileLen -= INT_MAX;
-        }
-        if ( restFileLen > 0 )
-        {
-            myIn.read((char*)fileBuf.get()+(fileLen-restFileLen),restFileLen);  // !cast!
-        }
-        if ( myIn.bad() )
-        {
-            info.statusString = SidTune::txt_cantLoadFile;
-            return false;
-        }
-        else
-        {
-            info.statusString = SidTune::txt_noErrors;
-        }
-    }
-    myIn.close();
-    if ( fileLen==0 )
+
+    myIn.seekg(0, std::ios::end);
+    const uint_least32_t fileLen = (uint_least32_t)myIn.tellg();
+
+    if ( fileLen == 0 )
     {
         info.statusString = SidTune::txt_empty;
         return false;
     }
 
-    bufferRef.assign(fileBuf.xferPtr(),fileBuf.xferLen());
+    Buffer_sidtt<const uint_least8_t> fileBuf;
+
+#ifdef HAVE_EXCEPTIONS
+    if ( !fileBuf.assign(new(std::nothrow) uint_least8_t[fileLen], fileLen) )
+#else
+    if ( !fileBuf.assign(new uint_least8_t[fileLen], fileLen) )
+#endif
+    {
+        info.statusString = SidTune::txt_notEnoughMemory;
+        return false;
+    }
+
+    myIn.seekg(0, std::ios::beg);
+
+    myIn.read((char*)fileBuf.get(), fileLen);
+
+    if ( myIn.bad() )
+    {
+        info.statusString = SidTune::txt_cantLoadFile;
+        return false;
+    }
+
+    info.statusString = SidTune::txt_noErrors;
+
+    myIn.close();
+
+    bufferRef.assign(fileBuf.xferPtr(), fileBuf.xferLen());
     return true;
 }
 
@@ -461,25 +443,26 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
         info.statusString = SidTune::txt_empty;
         return;
     }
-    else if (bufferLen > SIDTUNE_MAX_FILELEN)
+
+    if (bufferLen > SIDTUNE_MAX_FILELEN)
     {
         info.statusString = SidTune::txt_fileTooLong;
         return;
     }
 
-    uint_least8_t* tmpBuf;
 #ifdef HAVE_EXCEPTIONS
-    if ( 0 == (tmpBuf = new(std::nothrow) uint_least8_t[bufferLen]) )
+    uint_least8_t* tmpBuf = new(std::nothrow) uint_least8_t[bufferLen];
 #else
-    if ( 0 == (tmpBuf = new uint_least8_t[bufferLen]) )
+    uint_least8_t* tmpBuf = new uint_least8_t[bufferLen];
 #endif
+    if ( tmpBuf == 0 )
     {
         info.statusString = SidTune::txt_notEnoughMemory;
         return;
     }
     memcpy(tmpBuf,buffer,bufferLen);
 
-    Buffer_sidtt<const uint_least8_t> buf1(tmpBuf,bufferLen);
+    Buffer_sidtt<const uint_least8_t> buf1(tmpBuf, bufferLen);
 
     bool foundFormat = false;
     // Here test for the possible single file formats. --------------
@@ -775,14 +758,11 @@ void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, int clock)
 bool SidTune::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer,
                              uint_least32_t bufLen )
 {
-    uint_least32_t lenToWrite = bufLen;
-    while ( lenToWrite > INT_MAX )
-    {
-        toFile.write((char*)buffer+(bufLen-lenToWrite),INT_MAX);
-        lenToWrite -= INT_MAX;
-    }
-    if ( lenToWrite > 0 )
-        toFile.write((char*)buffer+(bufLen-lenToWrite),lenToWrite);
+    if ( !bufLen  )
+        return false;
+
+    toFile.write((char*)buffer, bufLen);
+
     if ( toFile.bad() )
     {
         info.statusString = SidTune::txt_fileIoError;
