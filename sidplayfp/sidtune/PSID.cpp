@@ -115,8 +115,8 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
     if (bufLen<6)
         return LOAD_NOT_MINE;
 
-    int clock = SIDTUNE_CLOCK_UNKNOWN;
-    int compatibility = SIDTUNE_COMPATIBILITY_C64;
+    sidtune_clock_t clock = SIDTUNE_CLOCK_UNKNOWN;
+    sidtune_compatibility_t compatibility = SIDTUNE_COMPATIBILITY_C64;
 
     // Require minimum size to allow access to the first few bytes.
     // Require a valid ID and version number.
@@ -208,23 +208,31 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             break;
         }
 
-        if (flags & PSID_CLOCK_PAL)
-            clock |= SIDTUNE_CLOCK_PAL;
-        if (flags & PSID_CLOCK_NTSC)
-            clock |= SIDTUNE_CLOCK_NTSC;
+        if (flags & PSID_CLOCK_ANY == PSID_CLOCK_ANY)
+            clock = SIDTUNE_CLOCK_ANY;
+        else if (flags & PSID_CLOCK_PAL)
+            clock = SIDTUNE_CLOCK_PAL;
+        else if (flags & PSID_CLOCK_NTSC)
+            clock = SIDTUNE_CLOCK_NTSC;
         info.clockSpeed = clock;
 
-        info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
-        if (flags & PSID_SIDMODEL1_6581)
-            info.sidModel1 |= SIDTUNE_SIDMODEL_6581;
-        if (flags & PSID_SIDMODEL1_8580)
-            info.sidModel1 |= SIDTUNE_SIDMODEL_8580;
+        if (flags & PSID_SIDMODEL1_ANY == PSID_SIDMODEL1_ANY)
+            info.sidModel1 = SIDTUNE_SIDMODEL_ANY;
+        else if (flags & PSID_SIDMODEL1_6581)
+            info.sidModel1 = SIDTUNE_SIDMODEL_6581;
+        else if (flags & PSID_SIDMODEL1_8580)
+            info.sidModel1 = SIDTUNE_SIDMODEL_8580;
+        else
+            info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
 
-        info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
-        if (flags & PSID_SIDMODEL2_6581)
-            info.sidModel2 |= SIDTUNE_SIDMODEL_6581;
-        if (flags & PSID_SIDMODEL2_8580)
-            info.sidModel2 |= SIDTUNE_SIDMODEL_8580;
+        if (flags & PSID_SIDMODEL2_ANY == PSID_SIDMODEL2_ANY)
+            info.sidModel2 = SIDTUNE_SIDMODEL_ANY;
+        else if (flags & PSID_SIDMODEL2_6581)
+            info.sidModel2 = SIDTUNE_SIDMODEL_6581;
+        else if (flags & PSID_SIDMODEL2_8580)
+            info.sidModel2 = SIDTUNE_SIDMODEL_8580;
+        else
+            info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
 
         info.relocStartPage = pHeader->relocStartPage;
         info.relocPages     = pHeader->relocPages;

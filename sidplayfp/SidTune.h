@@ -45,20 +45,26 @@ const int SIDTUNE_SPEED_VBI = 0;
 /// CIA 1 Timer A
 const int SIDTUNE_SPEED_CIA_1A = 60;
 
-const int SIDTUNE_CLOCK_UNKNOWN = 0x00;
-const int SIDTUNE_CLOCK_PAL     = 0x01; // These are also used in the
-const int SIDTUNE_CLOCK_NTSC    = 0x02; // emulator engine!
-const int SIDTUNE_CLOCK_ANY     = (SIDTUNE_CLOCK_PAL | SIDTUNE_CLOCK_NTSC);
+typedef enum {
+    SIDTUNE_CLOCK_UNKNOWN,
+    SIDTUNE_CLOCK_PAL,
+    SIDTUNE_CLOCK_NTSC,
+    SIDTUNE_CLOCK_ANY
+} sidtune_clock_t;
 
-const int SIDTUNE_SIDMODEL_UNKNOWN = 0x00;
-const int SIDTUNE_SIDMODEL_6581    = 0x01; // These are also used in the
-const int SIDTUNE_SIDMODEL_8580    = 0x02; // emulator engine!
-const int SIDTUNE_SIDMODEL_ANY     = (SIDTUNE_SIDMODEL_6581 | SIDTUNE_SIDMODEL_8580);
+typedef enum {
+    SIDTUNE_SIDMODEL_UNKNOWN,
+    SIDTUNE_SIDMODEL_6581,
+    SIDTUNE_SIDMODEL_8580,
+    SIDTUNE_SIDMODEL_ANY
+} sidtune_model_t;
 
-const int SIDTUNE_COMPATIBILITY_C64   = 0x00; ///< File is C64 compatible
-const int SIDTUNE_COMPATIBILITY_PSID  = 0x01; ///< File is PSID specific
-const int SIDTUNE_COMPATIBILITY_R64   = 0x02; ///< File is Real C64 only
-const int SIDTUNE_COMPATIBILITY_BASIC = 0x03; ///< File requires C64 Basic
+typedef enum {
+    SIDTUNE_COMPATIBILITY_C64,   ///< File is C64 compatible
+    SIDTUNE_COMPATIBILITY_PSID,  ///< File is PSID specific
+    SIDTUNE_COMPATIBILITY_R64,   ///< File is Real C64 only
+    SIDTUNE_COMPATIBILITY_BASIC  ///< File requires C64 Basic
+} sidtune_compatibility_t;
 
 template class SID_EXTERN Buffer_sidtt<const uint_least8_t>;
 
@@ -112,7 +118,7 @@ struct SidTuneInfo
     uint_least8_t songSpeed;
 
     /// -"-
-    uint_least8_t clockSpeed;
+    sidtune_clock_t clockSpeed;
 
     /// First available page for relocation
     uint_least8_t relocStartPage;
@@ -124,13 +130,13 @@ struct SidTuneInfo
     bool musPlayer;
 
     /// Sid Model required for first sid
-    int  sidModel1;
+    sidtune_model_t  sidModel1;
 
     /// Sid Model required for second sid
-    int  sidModel2;
+    sidtune_model_t  sidModel2;
 
     /// compatibility requirements 
-    int  compatibility;
+    sidtune_compatibility_t  compatibility;
 
     /// whether load address might be duplicate
     bool fixLoad;
@@ -312,7 +318,7 @@ class SID_EXTERN SidTune
     bool status;
 
     uint_least8_t songSpeed[SIDTUNE_MAX_SONGS];
-    uint_least8_t clockSpeed[SIDTUNE_MAX_SONGS];
+    sidtune_clock_t clockSpeed[SIDTUNE_MAX_SONGS];
 
     /// holds text info from the format headers etc.
     char infoString[SIDTUNE_MAX_CREDIT_STRINGS][SIDTUNE_MAX_CREDIT_STRLEN];
@@ -344,7 +350,7 @@ class SID_EXTERN SidTune
 
     /// Convert 32-bit PSID-style speed word to internal tables.
     void convertOldStyleSpeedToTables(uint_least32_t speed,
-         int clock = SIDTUNE_CLOCK_PAL);
+         sidtune_clock_t clock = SIDTUNE_CLOCK_PAL);
 
     static int convertPetsciiToAscii (SmartPtr_sidtt<const uint_least8_t>&, char*);
 

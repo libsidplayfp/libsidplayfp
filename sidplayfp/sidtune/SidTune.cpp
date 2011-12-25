@@ -728,7 +728,7 @@ void SidTune::getFromFiles(const char* fileName)
     return;
 }
 
-void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, int clock)
+void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, sidtune_clock_t clock)
 {
     // Create the speed/clock setting tables.
     //
