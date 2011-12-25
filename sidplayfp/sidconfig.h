@@ -30,7 +30,7 @@
 
 
 /* Namespace support */
-#define SIDPLAY2_NAMESPACE __sidplay2__
+#define SIDPLAY2_NAMESPACE __sidplayfp__
 #ifdef  SIDPLAY2_NAMESPACE
 #   define SIDPLAY2_NAMESPACE_START \
     namespace SIDPLAY2_NAMESPACE    \
