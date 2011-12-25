@@ -39,7 +39,7 @@ typedef double   float64_t;
     const uint_least16_t SID2_DEFAULT_POWER_ON_DELAY = SID2_MAX_POWER_ON_DELAY + 1;
 #endif // SIDPLAY2_DEFAULTS
 
-typedef enum {sid2_playing = 0, sid2_paused, sid2_stopped} sid2_player_t;
+typedef enum {sid2_playing = 0, sid2_stopped} sid2_player_t;
 typedef enum {sid2_mono = 1,  sid2_stereo} sid2_playback_t;
 typedef enum {SID2_MODEL_CORRECT, SID2_MOS6581, SID2_MOS8580} sid2_model_t;
 typedef enum {SID2_CLOCK_CORRECT, SID2_CLOCK_PAL, SID2_CLOCK_NTSC} sid2_clock_t;

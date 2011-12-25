@@ -78,11 +78,6 @@ public:
     int            load         (SidTune *tune);
 
     /**
-    * Pause the engine
-    */
-    void           pause        (void);
-
-    /**
     * Produce samples to play
     *
     * @param buffer pointer to the buffer to fill with samples.

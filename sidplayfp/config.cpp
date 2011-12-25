@@ -39,8 +39,7 @@ int Player::config (const sid2_config_t &cfg)
     // Only do these if we have a loaded tune
     if (m_tune)
     {
-        if (m_playerState != sid2_paused)
-            m_tune->getInfo(m_tuneInfo);
+        m_tune->getInfo(m_tuneInfo);
 
         // SID emulation setup (must be performed before the
         // environment setup call)
@@ -50,38 +49,35 @@ int Player::config (const sid2_config_t &cfg)
             goto Player_configure_restore;
         }
 
-        if (m_playerState != sid2_paused)
+        // Must be this order:
+        // Determine clock speed
+        m_cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
+                              cfg.clockForced);
+
+        if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
         {
-            // Must be this order:
-            // Determine clock speed
-            m_cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
-                                  cfg.clockForced);
+            const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
+            cia.clock  (clockPAL);
+            cia2.clock (clockPAL);
+            vic.chip   (MOS6569);
+        }
+        else
+        {
+            const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
+            cia.clock  (clockNTSC);
+            cia2.clock (clockNTSC);
+            vic.chip   (MOS6567R8);
+        }
 
-            if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
-            {
-                const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
-                cia.clock  (clockPAL);
-                cia2.clock (clockPAL);
-                vic.chip   (MOS6569);
-            }
-            else
-            {
-                const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
-                cia.clock  (clockNTSC);
-                cia2.clock (clockNTSC);
-                vic.chip   (MOS6567R8);
-            }
+        // Configure, setup and install C64 environment/events
+        if (initialise() < 0) {
+            goto Player_configure_error;
+        }
 
-            // Configure, setup and install C64 environment/events
-            if (initialise() < 0) {
-                goto Player_configure_error;
-            }
-
-            /* inform ReSID of the desired sampling rate */
-            for (int i = 0; i < SID2_MAX_SIDS; i++) {
-                if (sid[i])
-                    sid[i]->sampling((long)m_cpuFreq, cfg.frequency, cfg.samplingMethod, false);
-            }
+        /* inform ReSID of the desired sampling rate */
+        for (int i = 0; i < SID2_MAX_SIDS; i++) {
+            if (sid[i])
+                sid[i]->sampling((long)m_cpuFreq, cfg.frequency, cfg.samplingMethod, false);
         }
     }
 

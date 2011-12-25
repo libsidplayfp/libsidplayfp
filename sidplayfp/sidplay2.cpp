@@ -56,9 +56,6 @@ const sid2_config_t &sidplay2::config (void) const
 void sidplay2::stop (void)
 {   sidplayer.stop (); }
 
-void sidplay2::pause (void)
-{   sidplayer.pause (); }
-
 uint_least32_t sidplay2::play (short *buffer, uint_least32_t count)
 {   return sidplayer.play (buffer, count); }
 

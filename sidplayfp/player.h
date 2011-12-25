@@ -177,7 +177,6 @@ public:
     int            load         (SidTune *tune);
     uint_least32_t mileage      (void) const { return m_mileage + time(); }
     float64_t      cpuFreq      (void) const { return m_cpuFreq; }
-    void           pause        (void) {}
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     sid2_player_t  state        (void) const { return m_playerState; }
     void           stop         (void);
