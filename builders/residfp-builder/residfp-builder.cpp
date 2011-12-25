@@ -144,7 +144,7 @@ uint ReSIDfpBuilder::devices (bool created)
 
 void ReSIDfpBuilder::filter (bool enable)
 {
-    int size = sidobjs.size ();
+    const int size = sidobjs.size ();
     m_status = true;
     for (int i = 0; i < size; i++)
     {

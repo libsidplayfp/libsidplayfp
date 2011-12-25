@@ -36,12 +36,12 @@ template <class T> class Buffer_sidtt
 	{
 		kill();
 		if (inBuf!=0 && inLen!=0)
-		{	
+		{
 			buf = inBuf;
 			bufLen = inLen;
 		}
 	}
-	
+
 	bool assign(T* newBuf, uint_least32_t newLen)
 	{
 		erase();
@@ -49,32 +49,29 @@ template <class T> class Buffer_sidtt
 		bufLen = newLen;
 		return (buf!=0);
 	}
-	
+
 	T* get(void) const  { return buf; }
 	uint_least32_t len(void) const  { return bufLen; }
-	
-	T* xferPtr(void)  
+
+	T* xferPtr(void)
 	{
 		T* tmpBuf = buf;
 		buf = 0;
 		return tmpBuf;
 	}
 
-	uint_least32_t xferLen(void)  
+	uint_least32_t xferLen(void)
 	{
-		uint_least32_t tmpBufLen = bufLen;
+		const uint_least32_t tmpBufLen = bufLen;
 		bufLen = 0;
 		return tmpBufLen;
 	}
 
 	T& operator[](uint_least32_t index)
 	{
-		if (index < bufLen)
-			return buf[index];
-		else
-			return dummy;
+		return (index < bufLen) ? buf[index] : dummy;
 	}
-	
+
 	bool isEmpty(void) const  { return (buf==0); }
 
 	void erase(void)
@@ -89,7 +86,7 @@ template <class T> class Buffer_sidtt
 		}
 		kill();
 	}
-	
+
 	~Buffer_sidtt(void)
 	{
 		erase();
@@ -105,7 +102,7 @@ template <class T> class Buffer_sidtt
 		buf = 0;
 		bufLen = 0;
 	}
-	
+
  private:	// prevent copying
 	// SAW - Need function body so code can be fully instatiated
 	// for exporting from dll.  Use asserts in debug mode as these
