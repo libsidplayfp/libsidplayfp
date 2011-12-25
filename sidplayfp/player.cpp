@@ -55,11 +55,8 @@ const char  Player::TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 const char  Player::TXT_NA[]             = "NA";
 
 // Error Strings
-const char  Player::ERR_CONF_WHILST_ACTIVE[]    = "SIDPLAYER ERROR: Trying to configure player whilst active.";
 const char  Player::ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 const char  Player::ERR_UNSUPPORTED_PRECISION[] = "SIDPLAYER ERROR: Unsupported sample precision.";
-const char  Player::ERR_MEM_ALLOC[]             = "SIDPLAYER ERROR: Memory Allocation Failure.";
-const char  Player::ERR_UNSUPPORTED_MODE[]      = "SIDPLAYER ERROR: Unsupported Environment Mode (Coming Soon).";
 const char  Player::ERR_UNKNOWN_ROM[]           = "SIDPLAYER ERROR: Unknown Rom.";
 
 const char  *Player::credit[];

@@ -64,18 +64,13 @@ private:
     static const char  TXT_NTSC_UNKNOWN[];
     static const char  TXT_NA[];
 
-    static const char  ERR_CONF_WHILST_ACTIVE[];
     static const char  ERR_UNSUPPORTED_FREQ[];
     static const char  ERR_UNSUPPORTED_PRECISION[];
-    static const char  ERR_MEM_ALLOC[];
-    static const char  ERR_UNSUPPORTED_MODE[];
     static const char  ERR_UNKNOWN_ROM[];
-    static const char  *credit[10]; // 10 credits max
-
     static const char  ERR_PSIDDRV_NO_SPACE[];
     static const char  ERR_PSIDDRV_RELOC[];
 
-    static const int MIXER_EVENT_RATE;
+    static const char  *credit[10]; // 10 credits max
 
     EventScheduler m_scheduler;
 
