@@ -62,6 +62,7 @@ sidplayfp/player.cpp \
 sidplayfp/player.h \
 sidplayfp/psiddrv.cpp \
 sidplayfp/mixer.cpp \
+sidplayfp/mixer.h \
 sidplayfp/reloc65.c \
 sidplayfp/sidplay2.cpp \
 sidplayfp/psiddrv.a65 \

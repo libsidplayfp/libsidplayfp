@@ -74,20 +74,17 @@ Player::Player (void)
  cia     (this),
  cia2    (this),
  vic     (this),
- m_mixerEvent ("Mixer", *this, &Player::mixer),
+ m_mixer (&m_scheduler),
  m_tune (NULL),
  m_errorString       (TXT_NA),
- m_fastForwardFactor (1),
  m_mileage           (0),
  m_playerState       (sid2_stopped),
- m_running           (false),
  m_cpuFreq(CLOCK_FREQ_PAL),
 #if EMBEDDED_ROMS
- m_status            (true),
+ m_status            (true)
 #else
- m_status            (false),
+ m_status            (false)
 #endif
- m_sampleCount       (0)
 {
     srand ((uint) ::time(NULL));
     m_rand = (uint_least32_t) rand ();
@@ -203,15 +200,12 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
     m_status = true;
 }
 
-int Player::fastForward (uint percent)
+int Player::fastForward (const uint percent)
 {
-    if (percent > 3200) {
+    if (!m_mixer.setFastForward(percent / 100)) {
         m_errorString = "SIDPLAYER ERROR: Percentage value out of range.";
         return -1;
     }
-    m_fastForwardFactor = percent / 100;
-    if (m_fastForwardFactor < 1)
-        m_fastForwardFactor = 1;
 
     return 0;
 }
@@ -221,8 +215,12 @@ int Player::initialise ()
     if (!m_status)
         return -1;
 
+    // Calculate 1 bit below the timebase so we can round the
+    // mileage count
+    if (((m_mixer.sampleCount() * 2) / m_cfg.frequency) & 1)
+        m_mileage++;
+
     // Fix the mileage counter if just finished another song.
-    mileageCorrect ();
     m_mileage += time ();
 
     reset ();
@@ -250,7 +248,8 @@ int Player::initialise ()
 
     cpu.reset ();
 
-    context().schedule(m_mixerEvent, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
+    m_mixer.reset ();
+
     return 0;
 }
 
@@ -291,57 +290,31 @@ void Player::mute(int voice, bool enable) {
         sid[0]->voice(voice, enable);
 }
 
-void Player::mileageCorrect (void)
-{   // Calculate 1 bit below the timebase so we can round the
-    // mileage count
-    if (((m_sampleCount * 2) / m_cfg.frequency) & 1)
-        m_mileage++;
-    m_sampleCount = 0;
-}
-
-void Player::pause (void)
-{
-    if (m_running)
-    {
-        m_playerState = sid2_paused;
-        m_running     = false;
-    }
-}
-
 uint_least32_t Player::play (short *buffer, uint_least32_t count)
 {
     // Make sure a _tune is loaded
     if (!m_tune)
         return 0;
 
-    // Setup Sample Information
-    m_sampleIndex  = 0;
-    m_sampleCount  = count;
-    m_sampleBuffer = buffer;
+    m_mixer.begin(buffer, count);
 
     // Start the player loop
     m_playerState = sid2_playing;
-    m_running     = true;
 
-    while (m_running)
-        m_scheduler.clock ();
+    while (m_mixer.notFinished())
+        m_scheduler.clock();
 
     if (m_playerState == sid2_stopped)
         initialise ();
-    return m_sampleIndex;
+
+    return m_mixer.samplesGenerated();
 }
 
 void Player::stop (void)
 {   // Re-start song
     if (m_tune && (m_playerState != sid2_stopped))
     {
-        if (!m_running)
-            initialise ();
-        else
-        {
-            m_playerState = sid2_stopped;
-            m_running     = false;
-        }
+        m_playerState = sid2_stopped;
     }
 }
 
@@ -471,7 +444,6 @@ void Player::m_writeMemByte (const uint_least16_t addr, const uint8_t data)
 void Player::reset (void)
 {
     m_playerState  = sid2_stopped;
-    m_running      = false;
 
     m_scheduler.reset ();
 

@@ -29,12 +29,6 @@ SIDPLAY2_NAMESPACE_START
 
 int Player::config (const sid2_config_t &cfg)
 {
-    if (m_running)
-    {
-        m_errorString = ERR_CONF_WHILST_ACTIVE;
-        goto Player_configure_error;
-    }
-
     // Check for base sampling frequency
     if (cfg.frequency < 4000)
     {   // Rev 1.6 (saw) - Added descriptive error
@@ -111,12 +105,13 @@ int Player::config (const sid2_config_t &cfg)
     } else
         m_info.channels = 1;
 
-    m_leftVolume  = cfg.leftVolume;
-    m_rightVolume = cfg.rightVolume;
-
     /* without stereo SID mode, we don't emulate the second chip! */
     if (m_info.channels == 1)
         sid[1] = 0;
+
+    m_mixer.setSids(sid[0], sid[1]);
+    m_mixer.setStereo(cfg.playback == sid2_stereo);
+    m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
 
     // Update Configuration
     m_cfg = cfg;

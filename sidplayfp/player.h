@@ -28,6 +28,7 @@
 #include "c64/c64cia.h"
 #include "c64/c64vic.h"
 #include "c64/mmu.h"
+#include "mixer.h"
 
 #include "mos6510/mos6510.h"
 
@@ -86,7 +87,7 @@ private:
     sidemu *sid[SID2_MAX_SIDS];
     int     m_sidmapper[32]; // Mapping table in d4xx-d7xx
 
-    EventCallback<Player> m_mixerEvent;
+    Mixer   m_mixer;
 
     // User Configuration Settings
     SidTuneInfo   m_tuneInfo;
@@ -95,22 +96,13 @@ private:
     sid2_config_t m_cfg;
 
     const char     *m_errorString;
-    int             m_fastForwardFactor;
     uint_least32_t  m_mileage;
-    int_least32_t   m_leftVolume;
-    int_least32_t   m_rightVolume;
     volatile sid2_player_t m_playerState;
-    volatile bool   m_running;
     int             m_rand;
 
     float64_t m_cpuFreq;
 
     bool           m_status;
-
-    // Mixer settings
-    uint_least32_t m_sampleCount;
-    uint_least32_t m_sampleIndex;
-    short         *m_sampleBuffer;
 
     // RTC clock - Based of mixer sample period
     // to make sure time is right when we ask
@@ -126,8 +118,6 @@ private:
                               const bool forced);
     int       initialise     (void);
     void      nextSequence   (void);
-    void      mixer          (void);
-    void      mileageCorrect (void);
     int       sidCreate      (sidbuilder *builder, sid2_model_t model,
                               sid2_model_t defaultModel);
     void      reset          ();
@@ -187,7 +177,7 @@ public:
     int            load         (SidTune *tune);
     uint_least32_t mileage      (void) const { return m_mileage + time(); }
     float64_t      cpuFreq      (void) const { return m_cpuFreq; }
-    void           pause        (void);
+    void           pause        (void) {}
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     sid2_player_t  state        (void) const { return m_playerState; }
     void           stop         (void);
