@@ -35,10 +35,14 @@ const double FilterModelConfig::opamp_voltage[OPAMP_SIZE][2] = {
 		{ 10.25, 0.91 }, // Approximate end of actual range
 };
 
+std::auto_ptr<FilterModelConfig> FilterModelConfig::instance(0);
+
 FilterModelConfig* FilterModelConfig::getInstance() {
 
-	static FilterModelConfig instance;
-	return &instance;
+	if (!instance.get())
+		instance.reset(new FilterModelConfig());
+
+	return instance.get();
 }
 
 FilterModelConfig::FilterModelConfig() :
