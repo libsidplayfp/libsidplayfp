@@ -99,12 +99,6 @@ private:
 
     bool           m_status;
 
-    // RTC clock - Based of mixer sample period
-    // to make sure time is right when we ask
-    // for n samples
-    event_clock_t  m_rtcClock;
-    event_clock_t  m_rtcPeriod;
-
     // C64 environment settings
     MMU mmu;
 
