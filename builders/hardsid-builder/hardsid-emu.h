@@ -162,7 +162,7 @@ public:
     void          flush   (void);
 
     // Must lock the SID before using the standard functions.
-    bool          lock    (c64env *env);
+    bool          lock    (EventContext *env);
 
 private:
     // Fixed interval timer delay to prevent sidplay2

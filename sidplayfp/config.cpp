@@ -294,7 +294,7 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
 
         for (int i = 0; i < SID2_MAX_SIDS; i++)
         {   // Get first SID emulation
-            sid[i] = builder->lock (this, userModels[i]);
+            sid[i] = builder->lock (&m_scheduler, userModels[i]);
             if ((i == 0) && !builder->getStatus())
                 return -1;
         }

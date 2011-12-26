@@ -165,7 +165,7 @@ void ReSIDBuilder::bias (const double dac_bias)
 }
 
 // Find a free SID of the required specs
-sidemu *ReSIDBuilder::lock (c64env *env, sid2_model_t model)
+sidemu *ReSIDBuilder::lock (EventContext *env, sid2_model_t model)
 {
     const int size = sidobjs.size ();
     m_status = true;

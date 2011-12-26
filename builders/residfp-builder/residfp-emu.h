@@ -67,5 +67,5 @@ public:
     void filter8580Curve (const double filterCurve);
     void model    (sid2_model_t model);
     // Must lock the SID before using the standard functions.
-    bool lock     (c64env *env);
+    bool lock     (EventContext *env);
 };

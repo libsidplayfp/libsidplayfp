@@ -176,7 +176,7 @@ void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 }
 
 // Find a free SID of the required specs
-sidemu *ReSIDfpBuilder::lock (c64env *env, sid2_model_t model)
+sidemu *ReSIDfpBuilder::lock (EventContext *env, sid2_model_t model)
 {
     const int size = sidobjs.size ();
     m_status = true;

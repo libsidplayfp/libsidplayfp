@@ -50,7 +50,7 @@ public:
     */
     uint        devices (bool used);
     uint        create  (uint sids);
-    sidemu     *lock    (c64env *env, sid2_model_t model);
+    sidemu     *lock    (EventContext *env, sid2_model_t model);
     void        unlock  (sidemu *device);
     void        remove  (void);
     const char *error   (void) const { return m_error; }

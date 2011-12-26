@@ -73,5 +73,5 @@ public:
     void bias     (const double dac_bias);
     void model    (sid2_model_t model);
     // Must lock the SID before using the standard functions.
-    bool lock     (c64env *env);
+    bool lock     (EventContext *env);
 };

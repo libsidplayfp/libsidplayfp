@@ -262,22 +262,22 @@ void HardSID::flush(void)
     ioctl(m_handle, HSID_IOCTL_FLUSH);
 }
 
-bool HardSID::lock(c64env* env)
+bool HardSID::lock(EventContext* env)
 {
-    if( env == NULL )
+    if( !env )
     {
         if (!m_locked)
             return false;
         m_eventContext->cancel (*this);
         m_locked = false;
-        m_eventContext = NULL;
+        m_eventContext = 0;
     }
     else
     {
         if (m_locked)
             return false;
         m_locked = true;
-        m_eventContext = &env->context();
+        m_eventContext = env;
         m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, m_phase);
     }
     return true;

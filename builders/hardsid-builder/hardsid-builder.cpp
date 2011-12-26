@@ -198,7 +198,7 @@ void HardSIDBuilder::filter (bool enable)
 }
 
 // Find a free SID of the required specs
-sidemu *HardSIDBuilder::lock (c64env *env, sid2_model_t model)
+sidemu *HardSIDBuilder::lock (EventContext *env, sid2_model_t model)
 {
     const int size = sidobjs.size ();
     m_status = true;

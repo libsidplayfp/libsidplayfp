@@ -162,9 +162,9 @@ void HardSID::voice (uint_least8_t num, bool mute)
 }
 
 // Set execution environment and lock sid to it
-bool HardSID::lock (c64env *env)
+bool HardSID::lock (EventContext *env)
 {
-    if (env == NULL)
+    if (!env)
     {
         if (!m_locked)
             return false;
@@ -172,7 +172,7 @@ bool HardSID::lock (c64env *env)
             hsid2.Unlock (m_instance);
         m_locked = false;
         cancel ();
-        m_eventContext = NULL;
+        m_eventContext = 0;
     }
     else
     {
@@ -184,7 +184,7 @@ bool HardSID::lock (c64env *env)
                 return false;
         }
         m_locked = true;
-        m_eventContext = &env->context ();
+        m_eventContext = env;
         schedule ((EventContext&) *m_eventContext, HARDSID_DELAY_CYCLES, m_phase);
     }
     return true;

@@ -159,21 +159,21 @@ void ReSIDfp::sampling (float systemclock, float freq,
 }
 
 // Set execution environment and lock sid to it
-bool ReSIDfp::lock (c64env *env)
+bool ReSIDfp::lock (EventContext *env)
 {
-    if (env == NULL)
+    if (!env)
     {
         if (!m_locked)
             return false;
         m_locked  = false;
-        m_context = NULL;
+        m_context = 0;
     }
     else
     {
         if (m_locked)
             return false;
         m_locked  = true;
-        m_context = &env->context ();
+        m_context = env;
     }
     return true;
 }

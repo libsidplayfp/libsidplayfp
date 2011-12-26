@@ -20,7 +20,7 @@
 
 #include "sid2types.h"
 #include "component.h"
-#include "c64env.h"
+#include "event.h"
 
 
 // Inherit this class to create a new SID emulations for libsidplay2.
@@ -72,7 +72,7 @@ public:
         : m_name(name), m_status (true) {;}
     virtual ~sidbuilder() {;}
 
-    virtual  sidemu      *lock    (c64env *env, sid2_model_t model) = 0;
+    virtual  sidemu      *lock    (EventContext *env, sid2_model_t model) = 0;
     virtual  void         unlock  (sidemu *device) = 0;
     const    char        *name    (void) const { return m_name; }
     virtual  const  char *error   (void) const = 0;
