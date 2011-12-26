@@ -95,7 +95,7 @@ void MMU::c64pla_config_changed(const bool tape_sense, const bool caps_sense, co
 	dir_read = dir;
 }
 
-void MMU::reset(const bool compatibility) {
+void MMU::reset() {
 
 	data = 0x3f;
 	data_out = 0x3f;
@@ -121,7 +121,7 @@ void MMU::reset(const bool compatibility) {
 	m_rom[0xfdc4] = 0xea; // Ingore sid volume reset to avoid DC
 	m_rom[0xfdc5] = 0xea; // click (potentially incompatibility)!!
 	m_rom[0xfdc6] = 0xea;
-	if (compatibility && basicRom)
+	if (basicRom)
 		memcpy(&m_rom[0xa000], basicRom, 8192);
 
 	// Copy in power on settings.  These were created by running

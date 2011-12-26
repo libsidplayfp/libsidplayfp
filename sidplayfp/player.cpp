@@ -455,7 +455,7 @@ void Player::reset (void)
     vic.reset  ();
 
     // Initalise Memory
-    mmu.reset(m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC);
+    mmu.reset();
 
     // Will get done later if can't now
     mmu.writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);

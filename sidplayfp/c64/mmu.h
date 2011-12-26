@@ -68,7 +68,7 @@ public:
 	MMU();
 	~MMU () {}
 
-	void reset(const bool compatibility);
+	void reset();
 
 	void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character) {
 		kernalRom=kernal;
