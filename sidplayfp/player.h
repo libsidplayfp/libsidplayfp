@@ -106,7 +106,6 @@ private:
     float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
                               const bool forced);
     int       initialise     (void);
-    void      nextSequence   (void);
     int       sidCreate      (sidbuilder *builder, sid2_model_t model,
                               sid2_model_t defaultModel);
     void      reset          ();
