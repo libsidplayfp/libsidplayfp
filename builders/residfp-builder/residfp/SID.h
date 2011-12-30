@@ -190,7 +190,7 @@ public:
 	/**
 	 * SID voice muting.
 	 *
-	 * @param channel channe to modify
+	 * @param channel channel to modify
 	 * @param enable is muted?
 	 */
 	void mute(const int channel, const bool enable);
