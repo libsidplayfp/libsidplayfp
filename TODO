@@ -1,9 +1,6 @@
-* rewrite floating point number parser
-* document API
-* port MOS6510 emulation code from jsidplay2
-* fix spec file
+* finish documenting API (at least public interface)
 * fix Visual Studio build files
+* port improvements from jsiplay2
 
 * merge builders into main lib (?)
-* remove filter parser and add some hardcoded presets (?)
 * add a STIL parser (?)
