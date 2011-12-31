@@ -45,7 +45,8 @@ ReSID::ReSID (sidbuilder *builder)
  m_sid(*(new RESID_NS::SID)),
 #endif
  m_status(true),
- m_locked(false)
+ m_locked(false),
+ m_voiceMask(0x0f)
 {
     char *p = m_credit;
     m_error = "N/A";
@@ -139,6 +140,16 @@ void ReSID::sampling (float systemclock, float freq,
         m_status = false;
         m_error = "Unable to set desired output frequency.";
     }
+}
+
+void ReSID::voice (uint_least8_t num, bool mute)
+{
+    if (mute)
+        m_voiceMask &= ~(1<<num);
+    else
+        m_voiceMask |= 1<<num;
+
+    m_sid.set_voice_mask(m_voiceMask);
 }
 
 // Set execution environment and lock sid to it
