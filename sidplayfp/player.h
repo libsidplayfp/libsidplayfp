@@ -286,12 +286,6 @@ private:
     uint_least32_t m_sampleIndex;
     short         *m_sampleBuffer;
 
-    // RTC clock - Based of mixer sample period
-    // to make sure time is right when we ask
-    // for n samples
-    event_clock_t  m_rtcClock;
-    event_clock_t  m_rtcPeriod;
-
     // C64 environment settings
     struct
     {
@@ -316,7 +310,6 @@ private:
     int       environment    (sid2_env_t env);
     void      fakeIRQ        (void);
     int       initialise     (void);
-    void      nextSequence   (void);
     void      mixer          (void);
     void      mixerReset     (void);
     void      mileageCorrect (void);
@@ -350,7 +343,6 @@ private:
     // Environment Function entry Points
     void           envReset           (const bool safe);
     void           envReset           (void) { envReset (true); }
-    inline uint8_t envReadRomByte     (const uint_least16_t addr);
     inline uint8_t envReadMemByte     (const uint_least16_t addr);
     inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
     bool           envCheckBankJump   (const uint_least16_t addr);

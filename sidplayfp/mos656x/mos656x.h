@@ -52,6 +52,9 @@ protected:
 
     uint8_t        regs[0x40];
 
+private:
+    event_clock_t  clock   (void);
+
 protected:
     MOS656X (EventContext *context);
     void    event       (void);

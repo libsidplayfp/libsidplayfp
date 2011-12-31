@@ -4,6 +4,8 @@
 #define OPAMP_SIZE 22
 #define DAC_SIZE 11
 
+#include <memory>
+
 namespace reSIDfp
 {
 
@@ -14,6 +16,10 @@ class Integrator;
 class FilterModelConfig {
 
 private:
+	static std::auto_ptr<FilterModelConfig> instance;
+	// This allows access to the private constructor
+	friend class std::auto_ptr<FilterModelConfig>;
+
 	static const double opamp_voltage[OPAMP_SIZE][2];
 
 	const double voice_voltage_range;
@@ -46,7 +52,6 @@ private:
 	unsigned short vcr_Vg[1 << 16];
 	unsigned short vcr_n_Ids_term[1 << 16];
 	int opamp_rev[1 << 16];
-
 
 	double evaluateTransistor(const double Vw, const double vi, const double vx);
 
