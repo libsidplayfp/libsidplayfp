@@ -86,38 +86,6 @@ public:
     bool    pending () const { return m_pending; }
 };
 
-
-template< class This >
-class EventCallback: public Event
-{
-private:
-    typedef void (This::*Callback) ();
-    This          &m_this;
-    Callback const m_callback;
-    void event(void) { (m_this.*m_callback) (); }
-
-public:
-    EventCallback (const char * const name, This &_this, Callback callback)
-      : Event(name), m_this(_this),
-        m_callback(callback) {}
-};
-
-
-// Public Event Context
-class EventContext
-{
-    friend class Event;
-
-public:
-    virtual void cancel   (Event &event) = 0;
-    virtual void schedule (Event &event, const event_clock_t cycles,
-                           const event_phase_t phase) = 0;
-    virtual void schedule (Event &event, const event_clock_t cycles) = 0;
-    virtual event_clock_t getTime (const event_phase_t phase) const = 0;
-    virtual event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const = 0;
-    virtual event_phase_t phase () const = 0;
-};
-
 /**
 * Fast EventScheduler, which maintains a linked list of Events.
 * This scheduler takes neglible time even when it is used to
@@ -134,38 +102,15 @@ public:
 *
 * @author Antti S. Lankila
 */
-class EventScheduler: public EventContext
+class EventContext
 {
-private:
-    /** EventScheduler's current clock */
-    event_clock_t  currentTime;
-
-    /** The first event of the chain */
-    Event *firstEvent;
-
-private:
-    /**
-    * Scan the event queue and schedule event for execution.
+public:
+    /** Cancel the specified event.
     *
-    * @param event The event to add
+    * @param event the event to cancel
     */
-    void schedule(Event &event) {
+    virtual void cancel   (Event &event) = 0;
 
-        event.m_pending = true;
-
-        /* find the right spot where to tuck this new event */
-        Event **scan = &firstEvent;
-        for (;;) {
-            if (*scan == 0 || (*scan)->triggerTime > event.triggerTime) {
-                 event.next = *scan;
-                 *scan = &event;
-                 break;
-             }
-             scan = &((*scan)->next);
-         }
-    }
-
-protected:
     /** Add event to pending queue.
     *
     * At PHI2, specify cycles=0 and Phase=PHI1 to fire on the very next PHI1.
@@ -174,54 +119,22 @@ protected:
     * @param cycles how many cycles from now to fire
     * @param phase the phase when to fire the event
     */
-    void schedule (Event &event, const event_clock_t cycles,
-                   const event_phase_t phase) {
-        // this strange formulation always selects the next available slot regardless of specified phase.
-        event.triggerTime = (cycles << 1) + currentTime + (currentTime & 1 ^ phase);
-        schedule(event);
-    }
+    virtual void schedule (Event &event, const event_clock_t cycles,
+                           const event_phase_t phase) = 0;
 
     /** Add event to pending queue in the same phase as current event.
     *
     * @param event the event to add
     * @param cycles how many cycles from now to fire
     */
-    void schedule(Event &event, const event_clock_t cycles) {
-        event.triggerTime = (cycles << 1) + currentTime;
-        schedule(event);
-    }
-
-    /** Cancel the specified event.
-    *
-    * @param event the event to cancel
-    */
-    void cancel (Event &event);
-
-public:
-    EventScheduler ()
-        : currentTime(0),
-          firstEvent(0) {}
-
-    /** Cancel all pending events and reset time. */
-    void reset     (void);
-
-    /** Fire next event, advance system time to that event */
-    void clock (void)
-    {
-        Event &event = *firstEvent;
-        firstEvent = firstEvent->next;
-        event.m_pending = false;
-        currentTime = event.triggerTime;
-        event.event();
-    }
+    virtual void schedule (Event &event, const event_clock_t cycles) = 0;
 
     /** Get time with respect to a specific clock phase
     *
     * @param phase the phase
     * @return the time according to specified phase.
     */
-    event_clock_t getTime (const event_phase_t phase) const
-    {   return (currentTime + (phase ^ 1)) >> 1; }
+    virtual event_clock_t getTime (const event_phase_t phase) const = 0;
 
     /** Get clocks since specified clock in given phase.
     *
@@ -229,14 +142,13 @@ public:
     * @param phase the phase to comapre to
     * @return the time between specified clock and now
     */
-    event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const
-    {   return getTime (phase) - clock; }
+    virtual event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const = 0;
 
     /** Return current clock phase
     *
     * @return The current phase
     */
-    event_phase_t phase () const { return (event_phase_t) (currentTime & 1); }
+    virtual event_phase_t phase () const = 0;
 };
 
 #endif // _event_h_

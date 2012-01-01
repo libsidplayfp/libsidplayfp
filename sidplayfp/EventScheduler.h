@@ -1,90 +1,29 @@
-/***************************************************************************
-                          event.h  -  Event scheduler (based on alarm
-                                      from Vice)
-                             -------------------
-    begin                : Wed May 9 2001
-    copyright            : (C) 2001 by Simon White
-    email                : s_a_white@email.com
- ***************************************************************************/
+/*
+ *  Copyright (C) 2011-2012 Leandro Nini
+ *  Copyright (C) 2009 Antti S. Lankila
+ *  Copyright (C) 2001 Simon White
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
-#ifndef _event_h_
-#define _event_h_
+#ifndef EVENTSCHEDULER_H
+#define EVENTSCHEDULER_H
 
 #include <stdint.h>
 
-#include "sidconfig.h"
-
-typedef int_fast64_t event_clock_t;
-
-/**
-* C64 system runs actions at system clock high and low
-* states. The PHI1 corresponds to the auxiliary chip activity
-* and PHI2 to CPU activity. For any clock, PHI1s are before
-* PHI2s.
-*/
-typedef enum {EVENT_CLOCK_PHI1 = 0, EVENT_CLOCK_PHI2 = 1} event_phase_t;
-
-
-/**
-* Event scheduler (based on alarm from Vice). Created in 2001 by Simon A.
-* White.
-*
-* Optimized EventScheduler and corresponding Event class by Antti S. Lankila
-* in 2009.
-*
-* @author Antti Lankila
-*/
-class SID_EXTERN Event
-{
-    friend class EventScheduler;
-
-private:
-    /** Describe event for humans. */
-    const char * const m_name;
-
-    /** The clock this event fires */
-    event_clock_t triggerTime;
-
-    /**
-    * This variable is set by the event context
-    * when it is scheduled
-    */
-    bool m_pending;
-
-    /** The next event in sequence */
-    Event *next;
-
-public:
-    /**
-    * Events are used for delayed execution. Name is
-    * not used by code, but is useful for debugging.
-    *
-    * @param name Descriptive string of the event.
-    */
-    Event(const char * const name)
-        : m_name(name),
-          m_pending(false) {}
-    ~Event() {}
-
-    /**
-    * Event code to be executed. Events are allowed to safely
-    * reschedule themselves with the EventScheduler during
-    * invocations.
-    */
-    virtual void event (void) = 0;
-
-    /** Is Event scheduled? */
-    bool    pending () const { return m_pending; }
-};
+#include "event.h"
 
 
 template< class This >
@@ -103,34 +42,8 @@ public:
 };
 
 
-// Public Event Context
-class EventContext
-{
-    friend class Event;
-
-public:
-    virtual void cancel   (Event &event) = 0;
-    virtual void schedule (Event &event, const event_clock_t cycles,
-                           const event_phase_t phase) = 0;
-    virtual void schedule (Event &event, const event_clock_t cycles) = 0;
-    virtual event_clock_t getTime (const event_phase_t phase) const = 0;
-    virtual event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const = 0;
-    virtual event_phase_t phase () const = 0;
-};
-
-/**
-* Fast EventScheduler, which maintains a linked list of Events.
-* This scheduler takes neglible time even when it is used to
-* schedule events for nearly every clock.
-*
-* Events occur on an internal clock which is 2x the visible clock.
-* The visible clock is divided to two phases called phi1 and phi2.
-*
-* The phi1 clocks are used by VIC and CIA chips, phi2 clocks by CPU.
-*
-* Scheduling an event for a phi1 clock when system is in phi2 causes the
-* event to be moved to the next phi1 cycle. Correspondingly, requesting 
-* a phi1 time when system is in phi2 returns the value of the next phi1.
+/** @internal
+* Fast EventScheduler implementation
 *
 * @author Antti S. Lankila
 */
@@ -166,14 +79,6 @@ private:
     }
 
 protected:
-    /** Add event to pending queue.
-    *
-    * At PHI2, specify cycles=0 and Phase=PHI1 to fire on the very next PHI1.
-    *
-    * @param event the event to add
-    * @param cycles how many cycles from now to fire
-    * @param phase the phase when to fire the event
-    */
     void schedule (Event &event, const event_clock_t cycles,
                    const event_phase_t phase) {
         // this strange formulation always selects the next available slot regardless of specified phase.
@@ -181,20 +86,11 @@ protected:
         schedule(event);
     }
 
-    /** Add event to pending queue in the same phase as current event.
-    *
-    * @param event the event to add
-    * @param cycles how many cycles from now to fire
-    */
     void schedule(Event &event, const event_clock_t cycles) {
         event.triggerTime = (cycles << 1) + currentTime;
         schedule(event);
     }
 
-    /** Cancel the specified event.
-    *
-    * @param event the event to cancel
-    */
     void cancel (Event &event);
 
 public:
@@ -215,28 +111,13 @@ public:
         event.event();
     }
 
-    /** Get time with respect to a specific clock phase
-    *
-    * @param phase the phase
-    * @return the time according to specified phase.
-    */
     event_clock_t getTime (const event_phase_t phase) const
     {   return (currentTime + (phase ^ 1)) >> 1; }
 
-    /** Get clocks since specified clock in given phase.
-    *
-    * @param clock the time to compare to
-    * @param phase the phase to comapre to
-    * @return the time between specified clock and now
-    */
     event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const
     {   return getTime (phase) - clock; }
 
-    /** Return current clock phase
-    *
-    * @return The current phase
-    */
     event_phase_t phase () const { return (event_phase_t) (currentTime & 1); }
 };
 
-#endif // _event_h_
+#endif // EVENTSCHEDULER_H

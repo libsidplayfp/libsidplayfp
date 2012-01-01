@@ -58,7 +58,8 @@ builders/resid-builder/resid/libresid.la
 sidplayfp_libsidplayfp_la_SOURCES = \
 sidplayfp/c64env.h \
 sidplayfp/config.cpp \
-sidplayfp/event.cpp \
+sidplayfp/EventScheduler.cpp \
+sidplayfp/EventScheduler.h \
 sidplayfp/player.cpp \
 sidplayfp/player.h \
 sidplayfp/psiddrv.cpp \

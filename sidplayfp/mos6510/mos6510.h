@@ -39,7 +39,7 @@
 
 #include "sidplayfp/component.h"
 #include "sidplayfp/sidenv.h"
-#include "sidplayfp/event.h"
+#include "sidplayfp/EventScheduler.h"
 
 #undef  MOS6510_VERSION
 #undef  MOS6510_DATE

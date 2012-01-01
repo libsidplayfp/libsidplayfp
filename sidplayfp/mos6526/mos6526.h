@@ -22,7 +22,7 @@
 
 #include "sidplayfp/sid2types.h"
 #include "sidplayfp/component.h"
-#include "sidplayfp/event.h"
+#include "sidplayfp/EventScheduler.h"
 
 class MOS6526;
 

@@ -19,7 +19,7 @@
 #define _mos656x_h_
 
 #include "sidplayfp/component.h"
-#include "sidplayfp/event.h"
+#include "sidplayfp/EventScheduler.h"
 
 typedef enum
 {
