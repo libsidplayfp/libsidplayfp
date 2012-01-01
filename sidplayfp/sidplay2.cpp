@@ -89,5 +89,8 @@ sid2_player_t sidplay2::state (void) const
 void sidplay2::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {   sidplayer.setRoms(kernal, basic, character); }
 
+SidTuneInfo *sidplay2::getTuneInfo()
+{   return sidplayer.getTuneInfo(); }
+
 bool sidplay2::getStatus() const
 { return sidplayer.getStatus(); }

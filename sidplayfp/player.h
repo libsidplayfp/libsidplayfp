@@ -177,6 +177,8 @@ public:
     bool           getStatus() const { return m_status; }
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
+
+    SidTuneInfo *getTuneInfo() { return m_tune ? &m_tuneInfo : 0; }
 };
 
 

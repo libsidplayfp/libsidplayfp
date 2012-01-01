@@ -103,7 +103,6 @@ Player::Player (void)
     m_info.driverAddr      = 0;
     m_info.driverLength    = 0;
     m_info.name            = PACKAGE_NAME;
-    m_info.tuneInfo        = NULL;
     m_info.version         = PACKAGE_VERSION;
     m_info.eventContext    = &context();
     // Number of SIDs support by this library
@@ -255,10 +254,8 @@ int Player::load (SidTune *tune)
     m_tune = tune;
     if (!tune)
     {   // Unload tune
-        m_info.tuneInfo = NULL;
         return 0;
     }
-    m_info.tuneInfo = &m_tuneInfo;
 
     for (int i = 0; i < SID2_MAX_SIDS; i++)
     {

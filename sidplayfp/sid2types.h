@@ -101,7 +101,6 @@ struct sid2_info_t
     uint_least16_t     driverAddr;
     uint_least16_t     driverLength;
     const char        *name;
-    const SidTuneInfo *tuneInfo; // May not need this
     const char        *version;
     // load, config and stop calls will reset this
     // and remove all pending events! 10th sec resolution.
