@@ -34,7 +34,6 @@ protected:
     std::vector<sidemu *> sidobjs;
 
 private:
-    static const char  *ERR_FILTER_DEFINITION;
     const char *m_error;
     char        m_errorBuffer[100];
 

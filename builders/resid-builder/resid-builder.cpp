@@ -50,9 +50,6 @@
 #include "resid.h"
 #include "resid-emu.h"
 
-// Error String(s)
-//const char *ReSIDBuilder::ERR_FILTER_DEFINITION = "RESID ERROR: Filter definition is not valid (see docs).";
-
 ReSIDBuilder::ReSIDBuilder (const char * const name)
 :sidbuilder (name)
 {
