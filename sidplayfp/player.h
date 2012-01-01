@@ -179,6 +179,8 @@ public:
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
 
     SidTuneInfo *getTuneInfo() { return m_tune ? &m_tuneInfo : 0; }
+
+    EventContext *getEventScheduler() {return &m_scheduler; }
 };
 
 

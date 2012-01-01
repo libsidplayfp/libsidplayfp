@@ -104,7 +104,6 @@ Player::Player (void)
     m_info.driverLength    = 0;
     m_info.name            = PACKAGE_NAME;
     m_info.version         = PACKAGE_VERSION;
-    m_info.eventContext    = &context();
     // Number of SIDs support by this library
     m_info.maxsids         = SID2_MAX_SIDS;
 

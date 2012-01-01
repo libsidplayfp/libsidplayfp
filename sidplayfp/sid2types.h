@@ -102,9 +102,6 @@ struct sid2_info_t
     uint_least16_t     driverLength;
     const char        *name;
     const char        *version;
-    // load, config and stop calls will reset this
-    // and remove all pending events! 10th sec resolution.
-    EventContext      *eventContext;
     uint               maxsids;
     uint_least16_t     powerOnDelay;
 };

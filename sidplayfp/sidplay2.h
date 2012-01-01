@@ -130,6 +130,13 @@ public:
     SidTuneInfo *getTuneInfo();
 
     /**
+    * Get the event scheduler
+    *
+    * @return the scheduler
+    */
+    EventContext *getEventContext();
+
+    /**
     * Check the status of the engine.
     *
     * @return true if the engine is correctly initialized.
