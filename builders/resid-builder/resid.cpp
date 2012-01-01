@@ -52,15 +52,12 @@ ReSID::ReSID (sidbuilder *builder)
     m_error = "N/A";
 
     // Setup credits
-    sprintf (p, "ReSID V%s Engine:", VERSION);
-    p += strlen (p) + 1;
-    strcpy  (p, "\t(C) 1999-2002 Simon White <sidplay2@yahoo.com>");
-    p += strlen (p) + 1;
-    sprintf (p, "MOS6581 (SID) Emulation (ReSID V%s):", resid_version_string);
-    p += strlen (p) + 1;
-    sprintf (p, "\t(C) 1999-2002 Dag Lem <resid@nimrod.no>");
-    p += strlen (p) + 1;
-    *p = '\0';
+    sprintf (p,
+        "ReSID V" VERSION " Engine:"
+        "\t(C) 1999-2002 Simon White <sidplay2@yahoo.com>"
+        "MOS6581 (SID) Emulation (ReSID V%s):"
+        "\t(C) 1999-2002 Dag Lem <resid@nimrod.no>\0", resid_version_string);
+
 
     if (!&m_sid)
     {
