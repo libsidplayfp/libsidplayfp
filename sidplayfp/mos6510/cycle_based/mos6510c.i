@@ -234,6 +234,20 @@ void MOS6510::eventWithSteals  (void)
         (this->*(instrCurrent[cycleCount - 1].func)) ();
         eventContext.schedule(m_steal, 1);
     } else {
+        /* Stalled on I flag changing instruction? The VICE test
+        * irqdma6 seems to prove that the CPU will execute the
+        * count-down delay in any case. */
+        if (instrCurrent == instrTable[CLIn] && cycleCount == 0) {
+            instrCurrent = instrTable[NOPn];
+            flagI = false;
+            irqClk = cycleCount;
+        }
+
+        /* If stalled on SEIn, don't consume IRQ delay. */
+        if (instrCurrent == instrTable[SEIn]) {
+            return;
+        }
+
         /* Even while stalled, the CPU can still process first clock of
         * interrupt delay, but only the first one. However, IRQ may be
         * modified by CLI and SEI, and are specially handled below. */
