@@ -385,6 +385,12 @@ void MOS6510::triggerRST (void)
     instrCurrent = instrTable[oRST];
 }
 
+/**
+* Trigger NMI interrupt on the CPU. Calling this method
+* flags that CPU must enter the NMI routine at earliest
+* opportunity. There is no way to cancel NMI request once
+* given.
+*/
 void MOS6510::triggerNMI (void)
 {
     nmiFlag = true;
@@ -396,7 +402,11 @@ void MOS6510::triggerNMI (void)
     }
 }
 
-// Level triggered interrupt
+/**
+* Trigger IRQ interrupt on the CPU. Calling this method
+* increments the number of sources pulling IRQ line up.
+* To remove IRQ, clearIRQ() call must be made.
+*/
 void MOS6510::triggerIRQ (void)
 {
     /* mark interrupt arrival time */
@@ -417,6 +427,10 @@ void MOS6510::triggerIRQ (void)
     }
 }
 
+/**
+* Remove one source of level-triggered IRQ interrupts.
+* This call must be performed after each triggerIRQ.
+*/
 void MOS6510::clearIRQ (void)
 {
     if (--irqs < 0) {
