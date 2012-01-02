@@ -351,6 +351,7 @@ public:
     // Non-standard functions
     virtual void triggerRST (void);
     virtual void triggerNMI (void);
+    void         clearNMI   (void);
     virtual void triggerIRQ (void);
     void         clearIRQ   (void);
 };

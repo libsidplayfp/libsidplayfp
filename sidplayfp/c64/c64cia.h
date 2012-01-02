@@ -73,8 +73,7 @@ private:
 protected:
     void interrupt (bool state)
     {
-        if (state)
-            m_env.interruptNMI ();
+        m_env.interruptNMI (state);
     }
 
 public:

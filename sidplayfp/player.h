@@ -143,7 +143,7 @@ private:
     uint_least32_t (Player::*output) (char *buffer);
 
     inline void interruptIRQ (const bool state);
-    inline void interruptNMI (void);
+    inline void interruptNMI (const bool state);
     inline void interruptRST (void);
     void signalAEC (const bool state) { cpu.aecSignal (state); }
     void lightpen  () { vic.lightpen (); }
@@ -182,6 +182,10 @@ public:
     EventContext *getEventScheduler() {return &m_scheduler; }
 };
 
+/**
+* CPU IRQ line control. IRQ is asserted if any source asserts IRQ.
+* (Maintains a counter of calls with state=true vs. state=false.)
+*/
 void Player::interruptIRQ (const bool state)
 {
     if (state)
@@ -194,9 +198,20 @@ void Player::interruptIRQ (const bool state)
     }
 }
 
-void Player::interruptNMI ()
+/**
+* CPU NMI line control. NMI is asserted if any source asserts NMI.
+* (Maintains a counter of calls with state=true vs. state=false.)
+*/
+void Player::interruptNMI (const bool state)
 {
-    cpu.triggerNMI ();
+    if (state)
+    {
+        cpu.triggerNMI ();
+    }
+    else
+    {
+        cpu.clearNMI ();
+    }
 }
 
 void Player::interruptRST ()

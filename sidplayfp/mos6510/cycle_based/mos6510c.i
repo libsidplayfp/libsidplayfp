@@ -369,7 +369,6 @@ void MOS6510::PopSR (void)
 // Interrupt Routines                                                      //
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
-#define iIRQSMAX 3
 
 /**
 * This forces the CPU to abort whatever it is doing and immediately
@@ -389,16 +388,34 @@ void MOS6510::triggerRST (void)
 * Trigger NMI interrupt on the CPU. Calling this method
 * flags that CPU must enter the NMI routine at earliest
 * opportunity. There is no way to cancel NMI request once
-* given.
+* given, but the NMI can't be retriggered until a
+* clearNMI() call has been made.
 */
 void MOS6510::triggerNMI (void)
 {
-    nmiFlag = true;
-    nmiClk = cycleCount;
-    /* maybe process 1 clock of interrupt delay. */
-    if (! aec) {
-        eventContext.cancel(m_steal);
-        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+    if (nmis == 0)
+    {
+        nmiFlag = true;
+        nmiClk = cycleCount;
+        /* maybe process 1 clock of interrupt delay. */
+        if (! aec) {
+            eventContext.cancel(m_steal);
+            eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+        }
+    }
+
+    nmis ++;
+}
+
+/**
+* Remove one source of level-triggered NMI interrupts.
+* This call must be performed after each triggerNMI.
+*/
+void MOS6510::clearNMI()
+{
+    if (--nmis < 0) {
+        fprintf (m_fdbg, "\nMOS6510 ERROR: Bizarre attempt to clear untriggered NMI.\n\n");
+        exit (-1);
     }
 }
 
@@ -420,11 +437,7 @@ void MOS6510::triggerIRQ (void)
         }
     }
 
-    if (++irqs > iIRQSMAX)
-    {
-        fprintf (m_fdbg, "\nMOS6510 ERROR: Bizarre attempt to signal more than %d \n\n", iIRQSMAX);
-        exit (-1);
-    }
+    irqs ++;
 }
 
 /**
@@ -495,20 +508,14 @@ void MOS6510::RSTHiRequest (void)
     Register_ProgramCounter = env->cpuRead(0xFFFD);
 }
 
-/*void MOS6510::RSTRequest (void)
-{
-    env->envReset ();
-}*/
-
 void MOS6510::NMILoRequest (void)
 {
-    endian_16lo8 (Cycle_EffectiveAddress, env->cpuRead (0xFFFA));
+    endian_32lo8 (Register_ProgramCounter, env->cpuRead (0xFFFA));
 }
 
 void MOS6510::NMIHiRequest (void)
 {
-    endian_16hi8  (Cycle_EffectiveAddress, env->cpuRead (0xFFFB));
-    endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
+    endian_32hi8 (Register_ProgramCounter, env->cpuRead (0xFFFB));
 }
 
 void MOS6510::IRQRequest (void)
@@ -519,13 +526,12 @@ void MOS6510::IRQRequest (void)
 
 void MOS6510::IRQLoRequest (void)
 {
-    endian_16lo8 (Cycle_EffectiveAddress, env->cpuRead (0xFFFE));
+    endian_32lo8 (Register_ProgramCounter, env->cpuRead (0xFFFE));
 }
 
 void MOS6510::IRQHiRequest (void)
 {
-    endian_16hi8  (Cycle_EffectiveAddress, env->cpuRead (0xFFFF));
-    endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
+    endian_32hi8 (Register_ProgramCounter, env->cpuRead (0xFFFF));
 }
 
 

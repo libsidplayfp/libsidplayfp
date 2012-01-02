@@ -35,7 +35,7 @@ public:
         :m_context (*context) {}
     EventContext &context (void) const { return m_context; }
     virtual void interruptIRQ (const bool state) = 0;
-    virtual void interruptNMI (void) = 0;
+    virtual void interruptNMI (const bool state) = 0;
     virtual void interruptRST (void) = 0;
     virtual void signalAEC    (const bool state) = 0;
     virtual void lightpen     () = 0;
