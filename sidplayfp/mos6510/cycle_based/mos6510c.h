@@ -115,7 +115,14 @@
 #include "sidplayfp/sidendian.h"
 
 /** @internal
-* MOS6510
+/**
+* Cycle-exact 6502/6510 emulation core.
+*
+* Code is based on work by Simon A. White <sidplay2@yahoo.com>.
+* Original Java port by Ken Händel. Later on, it has been hacked to
+* improve compatibility with Lorenz suite on VICE's test suite.
+*
+* @author alankila
 */
 class MOS6510
 {
