@@ -31,11 +31,10 @@ class C64Environment
 {
 public:
     // Eniviroment functions
-    virtual uint8_t envReadMemByte  (const uint_least16_t addr) =0;
-    virtual void    envWriteMemByte (const uint_least16_t addr, const uint8_t data) =0;
+    virtual uint8_t cpuRead  (const uint_least16_t addr) =0;
+    virtual void    cpuWrite (const uint_least16_t addr, const uint8_t data) =0;
 
     // Sidplay compatibily funtions
-    virtual uint8_t envReadMemDataByte (const uint_least16_t addr) =0;
 #ifdef PC64_TESTSUITE
     virtual void    envLoadFile        (const char *file) =0;
 #endif

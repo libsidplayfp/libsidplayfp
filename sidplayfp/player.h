@@ -124,9 +124,8 @@ private:
     uint16_t getChecksum(const uint8_t* rom, const int size);
 
     // Environment Function entry Points
-    inline uint8_t envReadMemByte     (const uint_least16_t addr);
-    inline void    envWriteMemByte    (const uint_least16_t addr, const uint8_t data);
-    inline uint8_t envReadMemDataByte (const uint_least16_t addr);
+    uint8_t cpuRead  (const uint_least16_t addr) { return m_readMemByte (addr); }
+    void    cpuWrite (const uint_least16_t addr, const uint8_t data) { m_writeMemByte (addr, data); }
 
 #ifdef PC64_TESTSUITE
     void   envLoadFile (const char *file)
@@ -182,22 +181,6 @@ public:
 
     EventContext *getEventScheduler() {return &m_scheduler; }
 };
-
-
-uint8_t Player::envReadMemByte (const uint_least16_t addr)
-{   // Read from plain only to prevent execution of rom code
-    return m_readMemByte (addr);
-}
-
-void Player::envWriteMemByte (const uint_least16_t addr, uint8_t data)
-{   // Writes must be passed to env version.
-    m_writeMemByte (addr, data);
-}
-
-uint8_t Player::envReadMemDataByte (const uint_least16_t addr)
-{   // Read from plain only to prevent execution of rom code
-    return m_readMemByte (addr);
-}
 
 void Player::interruptIRQ (const bool state)
 {
