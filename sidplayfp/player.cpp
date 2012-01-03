@@ -456,6 +456,7 @@ void Player::reset (void)
     // Will get done later if can't now
     mmu.writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);
 
+    irqCount = 0;
 }
 
 SIDPLAY2_NAMESPACE_STOP

@@ -169,17 +169,14 @@ protected:
 
     /* Interrupts */
 
-    /** How many chips are asserting IRQ line */
-    int  irqs;
-
     /** IRQ requested */
     bool irqFlag;
 
+    /** IRQ asserted on CPU */
+     bool irqAsserted;
+
      /** When IRQ can trigger earliest */
     event_clock_t  irqClk;
-
-    /** Number of sources pulling NMI line. */
-    int nmis;
 
     /** NMI positive edge sent by CIA2? */
     bool           nmiFlag;

@@ -77,7 +77,7 @@ void MOS6510::DumpState (void)
     fprintf(m_fdbg, " PC  I  A  X  Y  SP  DR PR NV-BDIZC  Instruction (%u)\n",
             m_dbgClk);
     fprintf(m_fdbg, "%04x ",   instrStartPC);
-    fprintf(m_fdbg, "%u ",     irqs);
+    fprintf(m_fdbg, irqAsserted ? "t" : "f");
     fprintf(m_fdbg, "%02x ",   Register_Accumulator);
     fprintf(m_fdbg, "%02x ",   Register_X);
     fprintf(m_fdbg, "%02x ",   Register_Y);

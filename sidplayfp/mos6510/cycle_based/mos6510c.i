@@ -394,6 +394,9 @@ void MOS6510::triggerRST (void)
 */
 void MOS6510::triggerNMI (void)
 {
+    if (nmiFlag)
+        return;
+
     nmiFlag = true;
     nmiClk = cycleCount;
     /* maybe process 1 clock of interrupt delay. */
@@ -411,17 +414,17 @@ void MOS6510::triggerNMI (void)
 void MOS6510::triggerIRQ (void)
 {
     /* mark interrupt arrival time */
-    if (irqs == 0) {
-        irqFlag = true;
-        irqClk = cycleCount;
-        /* maybe process 1 clock of interrupt delay. */
-        if (! rdy) {
-            eventContext.cancel(m_steal);
-            eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
-        }
-    }
+    if (irqAsserted)
+        return;
 
-    irqs ++;
+    irqFlag = true;
+    irqAsserted = true;
+    irqClk = cycleCount;
+    /* maybe process 1 clock of interrupt delay. */
+    if (! rdy) {
+        eventContext.cancel(m_steal);
+        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+    }
 }
 
 /**
@@ -430,10 +433,7 @@ void MOS6510::triggerIRQ (void)
 */
 void MOS6510::clearIRQ (void)
 {
-    if (--irqs < 0) {
-        fprintf (m_fdbg, "\nMOS6510 ERROR: Bizarre attempt to clear untriggered IRQ.\n\n");
-        exit (-1);
-    }
+    irqAsserted = false;
 }
 
 void MOS6510::interruptsAndNextOpcode (void)
@@ -544,7 +544,7 @@ void MOS6510::FetchOpcode (void)
     const uint_least8_t instrOpcode   = env->cpuRead (instrStartPC);
     instrCurrent  = instrTable[instrOpcode];
 
-    irqFlag = irqs != 0;
+    irqFlag = irqAsserted;
     irqClk = -1;
     nmiClk = -1;
 
@@ -2447,9 +2447,8 @@ void MOS6510::Initialise (void)
     Register_ProgramCounter = 0;
 
     // IRQs pending check
-    irqs       = 0;
+    irqAsserted = false;
     irqFlag    = false;
-    nmis       = 0;
     nmiFlag    = false;
     nmiClk     = -1;
     irqClk     = -1;

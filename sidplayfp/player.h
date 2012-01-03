@@ -127,6 +127,9 @@ private:
     uint8_t cpuRead  (const uint_least16_t addr) { return m_readMemByte (addr); }
     void    cpuWrite (const uint_least16_t addr, const uint8_t data) { m_writeMemByte (addr, data); }
 
+    /** Number of sources asserting IRQ */
+    int   irqCount;
+
 #ifdef PC64_TESTSUITE
     void   envLoadFile (const char *file)
     {
@@ -190,11 +193,17 @@ void Player::interruptIRQ (const bool state)
 {
     if (state)
     {
-        cpu.triggerIRQ ();
+        if (irqCount == 0)
+            cpu.triggerIRQ ();
+
+        irqCount ++;
     }
     else
     {
-        cpu.clearIRQ ();
+        irqCount --;
+
+        if (irqCount == 0)
+            cpu.clearIRQ ();
     }
 }
 
