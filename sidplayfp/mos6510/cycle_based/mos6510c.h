@@ -188,7 +188,7 @@ protected:
     event_clock_t  nmiClk;
 
     /** Address Controller, blocks reads */
-    bool aec;
+    bool rdy;
 
     struct ProcessorCycle       fetchCycle;
 
@@ -352,7 +352,7 @@ public:
     virtual void credits   (char *str);
     virtual void DumpState (void);
     void         debug     (const bool enable, FILE *out);
-    void         aecSignal (const bool state);
+    void         setRDY    (const bool state);
     void         setEnvironment(C64Environment *env) { this->env = env; }
 
     // Non-standard functions

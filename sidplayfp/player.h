@@ -145,7 +145,7 @@ private:
     inline void interruptIRQ (const bool state);
     inline void interruptNMI (const bool state);
     inline void interruptRST (void);
-    void signalAEC (const bool state) { cpu.aecSignal (state); }
+    void signalAEC (const bool state) { cpu.setRDY (state); }
     void lightpen  () { vic.lightpen (); }
 
     // PSID driver

@@ -312,18 +312,18 @@ void MOS6510::setStatusRegister(const uint8_t sr)
 
 
 /**
-* Handle bus access signals
+* Handle bus access signals. When RDY line is asserted, the CPU
+* will pause when executing the next read operation.
 *
-* @param state
-*            new state for AEC signals
+* @param rdy new state for RDY signal
 */
-void MOS6510::aecSignal (const bool newAec)
+void MOS6510::setRDY (const bool newAec)
 {
-    if (aec == newAec)
+    if (rdy == newAec)
         return;
 
-    aec = newAec;
-    if (aec) {
+    rdy = newAec;
+    if (rdy) {
         eventContext.cancel(m_steal);
         eventContext.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
     } else {
@@ -400,7 +400,7 @@ void MOS6510::triggerNMI (void)
         nmiFlag = true;
         nmiClk = cycleCount;
         /* maybe process 1 clock of interrupt delay. */
-        if (! aec) {
+        if (! rdy) {
             eventContext.cancel(m_steal);
             eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
         }
@@ -433,7 +433,7 @@ void MOS6510::triggerIRQ (void)
         irqFlag = true;
         irqClk = cycleCount;
         /* maybe process 1 clock of interrupt delay. */
-        if (! aec) {
+        if (! rdy) {
             eventContext.cancel(m_steal);
             eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
         }
@@ -2473,7 +2473,7 @@ void MOS6510::Initialise (void)
     irqClk     = -1;
 
     // Signals
-    aec = true;
+    rdy = true;
 
     eventContext.schedule (m_nosteal, 0, EVENT_CLOCK_PHI2);
 }
