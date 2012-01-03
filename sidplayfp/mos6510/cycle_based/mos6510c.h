@@ -126,6 +126,14 @@
 */
 class MOS6510
 {
+private:
+    /**
+    * IRQ/NMI magic limit values.
+    * Need to be larger than about 0x103 << 3,
+    * but can't be min/max for Integer type.
+    */
+    static const int MAX = 65536;
+
 protected:
     struct ProcessorCycle
     {
@@ -141,12 +149,8 @@ protected:
     /** Our event context copy. */
     EventContext &eventContext;
 
-    struct ProcessorCycle *instrCurrent;
-
+    /** Current instruction and subcycle within instruction */
     int cycleCount;
-
-    uint_least16_t instrStartPC;
-    int_least8_t   lastAddrCycle;
 
     /** Pointers to the current instruction cycle */
     uint_least16_t Cycle_EffectiveAddress;
@@ -169,28 +173,21 @@ protected:
 
     /* Interrupts */
 
-    /** IRQ requested */
-    bool irqFlag;
-
     /** IRQ asserted on CPU */
      bool irqAsserted;
 
-     /** When IRQ can trigger earliest */
-    event_clock_t  irqClk;
+     /** When IRQ was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
+    int  irqCycle;
 
-    /** NMI positive edge sent by CIA2? */
-    bool           nmiFlag;
-
-    /** When NMI can trigger earliest */
-    event_clock_t  nmiClk;
+    /** When NMI was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
+    int  nmiCycle;
 
     /** Address Controller, blocks reads */
     bool rdy;
 
-    struct ProcessorCycle       fetchCycle;
-
     /** Debug info */
-    uint_least16_t Instr_Operand;
+    uint_least16_t instrStartPC;
+    uint_least16_t instrOperand;
 
     FILE *m_fdbg;
 
@@ -199,7 +196,7 @@ protected:
     bool dodump;
 
     /** Table of CPU opcode implementations */
-    struct ProcessorCycle  instrTable[0x103][8];
+    struct ProcessorCycle  instrTable[0x103 << 3];
 
 protected:
     EventCallback<MOS6510> m_nosteal;
@@ -339,8 +336,8 @@ protected:
     void        illegal_instr (void);
 
     // Declare Arithmatic Operations
-    inline void Perform_ADC   (void);
-    inline void Perform_SBC   (void);
+    inline void doADC   (void);
+    inline void doSBC   (void);
 
 public:
     MOS6510 (EventContext *context);

@@ -111,7 +111,7 @@ void MOS6510::DumpState (void)
     case ORAz: case ROLz: case RORz: case SAXz: case SBCz: case SREz:
     case STAz: case STXz: case STYz: case SLOz: case RLAz: case RRAz:
     //ASOz AXSz DCMz INSz LSEz - Optional Opcode Names
-        fprintf(m_fdbg, "%02x    ", (uint8_t) Instr_Operand);
+        fprintf(m_fdbg, "%02x    ", (uint8_t) instrOperand);
         break;
     //Zero Page with X Offset Addressing Mode Handler
     case ADCzx:  case ANDzx: case ASLzx: case CMPzx: case DCPzx: case DECzx:
@@ -119,12 +119,12 @@ void MOS6510::DumpState (void)
     case NOPzx_: case ORAzx: case RLAzx: case ROLzx: case RORzx: case RRAzx:
     case SBCzx:  case SLOzx: case SREzx: case STAzx: case STYzx:
     //ASOzx DCMzx INSzx LSEzx - Optional Opcode Names
-        fprintf(m_fdbg, "%02x    ", (uint8_t) Instr_Operand);
+        fprintf(m_fdbg, "%02x    ", (uint8_t) instrOperand);
         break;
     //Zero Page with Y Offset Addressing Mode Handler
     case LDXzy: case STXzy: case SAXzy: case LAXzy:
     //AXSzx - Optional Opcode Names
-        fprintf(m_fdbg, "%02x    ", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "%02x    ", endian_16lo8 (instrOperand));
         break;
     //Absolute Addressing Mode Handler
     case ADCa: case ANDa: case ASLa: case BITa: case CMPa: case CPXa:
@@ -134,7 +134,7 @@ void MOS6510::DumpState (void)
     case SBCa: case SLOa: case SREa: case STAa: case STXa: case STYa:
     case RLAa: case RRAa:
     //ASOa AXSa DCMa INSa LSEa - Optional Opcode Names
-        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (Instr_Operand), endian_16hi8 (Instr_Operand));
+        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (instrOperand), endian_16hi8 (instrOperand));
         break;
     //Absolute With X Offset Addresing Mode Handler
     case ADCax:  case ANDax: case ASLax: case CMPax: case DCPax: case DECax:
@@ -142,7 +142,7 @@ void MOS6510::DumpState (void)
     case NOPax_: case ORAax: case RLAax: case ROLax: case RORax: case RRAax:
     case SBCax:  case SHYax: case SLOax: case SREax: case STAax:
     //ASOax DCMax INSax LSEax SAYax - Optional Opcode Names
-        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (Instr_Operand), endian_16hi8 (Instr_Operand));
+        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (instrOperand), endian_16hi8 (instrOperand));
         break;
     //Absolute With Y Offset Addresing Mode Handler
     case ADCay: case ANDay: case CMPay: case DCPay: case EORay: case ISBay:
@@ -150,7 +150,7 @@ void MOS6510::DumpState (void)
     case RRAay: case SBCay: case SHAay: case SHSay: case SHXay: case SLOay:
     case SREay: case STAay:
     //ASOay AXAay DCMay INSax LSEay TASay XASay - Optional Opcode Names
-        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (Instr_Operand), endian_16hi8 (Instr_Operand));
+        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (instrOperand), endian_16hi8 (instrOperand));
         break;
     //Immediate and Relative Addressing Mode Handler
     case ADCb: case ANDb: case ANCb_: case ANEb: case ASRb:  case ARRb:
@@ -163,21 +163,21 @@ void MOS6510::DumpState (void)
         break;
     //Indirect Addressing Mode Handler
     case JMPi:
-        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (Instr_Operand), endian_16hi8 (Instr_Operand));
+        fprintf(m_fdbg, "%02x %02x ", endian_16lo8 (instrOperand), endian_16hi8 (instrOperand));
         break;
     //Indexed with X Preinc Addressing Mode Handler
     case ADCix: case ANDix: case CMPix: case DCPix: case EORix: case ISBix:
     case LAXix: case LDAix: case ORAix: case SAXix: case SBCix: case SLOix:
     case SREix: case STAix: case RLAix: case RRAix:
     //ASOix AXSix DCMix INSix LSEix - Optional Opcode Names
-        fprintf(m_fdbg, "%02x    ", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "%02x    ", endian_16lo8 (instrOperand));
         break;
     //Indexed with Y Postinc Addressing Mode Handler
     case ADCiy: case ANDiy: case CMPiy: case DCPiy: case EORiy: case ISBiy:
     case LAXiy: case LDAiy: case ORAiy: case RLAiy: case RRAiy: case SBCiy:
     case SHAiy: case SLOiy: case SREiy: case STAiy:
     //AXAiy ASOiy LSEiy DCMiy INSiy - Optional Opcode Names
-        fprintf(m_fdbg, "%02x    ", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "%02x    ", endian_16lo8 (instrOperand));
         break;
     default:
         fprintf(m_fdbg, "      ");
@@ -375,13 +375,13 @@ void MOS6510::DumpState (void)
     case ROLz: case RORz: case SBCz: case SREz: case SLOz: case RLAz:
     case RRAz:
     //ASOz AXSz DCMz INSz LSEz - Optional Opcode Names
-        fprintf(m_fdbg, "z  %02x {%02x}", (uint8_t) Instr_Operand, Cycle_Data);
+        fprintf(m_fdbg, "z  %02x {%02x}", (uint8_t) instrOperand, Cycle_Data);
     break;
     case SAXz: case STAz: case STXz: case STYz:
 #ifdef MOS6510_DEBUG
     case NOPz_:
 #endif
-        fprintf(m_fdbg, "z  %02x", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "z  %02x", endian_16lo8 (instrOperand));
     break;
 
     //Zero Page with X Offset Addressing Mode Handler
@@ -390,25 +390,25 @@ void MOS6510::DumpState (void)
     case ORAzx: case RLAzx: case ROLzx: case RORzx: case RRAzx: case SBCzx:
     case SLOzx: case SREzx:
     //ASOzx DCMzx INSzx LSEzx - Optional Opcode Names
-        fprintf(m_fdbg, "zx %02x,X", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "zx %02x,X", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]{%02x}", Cycle_EffectiveAddress, Cycle_Data);
     break;
     case STAzx: case STYzx:
 #ifdef MOS6510_DEBUG
     case NOPzx_:
 #endif
-        fprintf(m_fdbg, "zx %02x,X", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "zx %02x,X", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 
     //Zero Page with Y Offset Addressing Mode Handler
     case LAXzy: case LDXzy:
     //AXSzx - Optional Opcode Names
-        fprintf(m_fdbg, "zy %02x,Y", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "zy %02x,Y", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]{%02x}", Cycle_EffectiveAddress, Cycle_Data);
     break;
     case STXzy: case SAXzy:
-        fprintf(m_fdbg, "zy %02x,Y", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "zy %02x,Y", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 
@@ -419,16 +419,16 @@ void MOS6510::DumpState (void)
     case ROLa: case RORa: case SBCa: case SLOa: case SREa: case RLAa:
     case RRAa:
     //ASOa AXSa DCMa INSa LSEa - Optional Opcode Names
-        fprintf(m_fdbg, "a  %04x {%02x}", Instr_Operand, Cycle_Data);
+        fprintf(m_fdbg, "a  %04x {%02x}", instrOperand, Cycle_Data);
     break;
     case SAXa: case STAa: case STXa: case STYa:
 #ifdef MOS6510_DEBUG
     case NOPa:
 #endif
-        fprintf(m_fdbg, "a  %04x", Instr_Operand);
+        fprintf(m_fdbg, "a  %04x", instrOperand);
     break;
     case JMPw: case JSRw:
-        fprintf(m_fdbg, "w  %04x", Instr_Operand);
+        fprintf(m_fdbg, "w  %04x", instrOperand);
     break;
 
     //Absolute With X Offset Addresing Mode Handler
@@ -437,14 +437,14 @@ void MOS6510::DumpState (void)
     case ORAax: case RLAax: case ROLax: case RORax: case RRAax: case SBCax:
     case SLOax: case SREax:
     //ASOax DCMax INSax LSEax SAYax - Optional Opcode Names
-        fprintf(m_fdbg, "ax %04x,X", Instr_Operand);
+        fprintf(m_fdbg, "ax %04x,X", instrOperand);
         fprintf(m_fdbg, " [%04x]{%02x}", Cycle_EffectiveAddress, Cycle_Data);
     break;
     case SHYax: case STAax:
 #ifdef MOS6510_DEBUG
     case NOPax_:
 #endif
-        fprintf(m_fdbg, "ax %04x,X", Instr_Operand);
+        fprintf(m_fdbg, "ax %04x,X", instrOperand);
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 
@@ -453,11 +453,11 @@ void MOS6510::DumpState (void)
     case LASay: case LAXay: case LDAay: case LDXay: case ORAay: case RLAay:
     case RRAay: case SBCay: case SHSay: case SLOay: case SREay:
     //ASOay AXAay DCMay INSax LSEay TASay XASay - Optional Opcode Names
-        fprintf(m_fdbg, "ay %04x,Y", Instr_Operand);
+        fprintf(m_fdbg, "ay %04x,Y", instrOperand);
         fprintf(m_fdbg, " [%04x]{%02x}", Cycle_EffectiveAddress, Cycle_Data);
     break;
     case SHAay: case SHXay: case STAay:
-        fprintf(m_fdbg, "ay %04x,Y", Instr_Operand);
+        fprintf(m_fdbg, "ay %04x,Y", instrOperand);
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 
@@ -469,19 +469,19 @@ void MOS6510::DumpState (void)
 #ifdef MOS6510_DEBUG
     case NOPb_:
 #endif
-        fprintf(m_fdbg, "b  #%02x", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "b  #%02x", endian_16lo8 (instrOperand));
     break;
 
     //Relative Addressing Mode Handler
     case BCCr: case BCSr: case BEQr: case BMIr: case BNEr: case BPLr:
     case BVCr: case BVSr:
-        fprintf(m_fdbg, "r  #%02x", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "r  #%02x", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 
     //Indirect Addressing Mode Handler
     case JMPi:
-        fprintf(m_fdbg, "i  (%04x)", Instr_Operand);
+        fprintf(m_fdbg, "i  (%04x)", instrOperand);
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 
@@ -490,11 +490,11 @@ void MOS6510::DumpState (void)
     case LAXix: case LDAix: case ORAix: case SBCix: case SLOix: case SREix:
     case RLAix: case RRAix:
     //ASOix AXSix DCMix INSix LSEix - Optional Opcode Names
-        fprintf(m_fdbg, "ix (%02x,X)", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "ix (%02x,X)", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]{%02x}", Cycle_EffectiveAddress, Cycle_Data);
     break;
     case SAXix: case STAix:
-        fprintf(m_fdbg, "ix (%02x,X)", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "ix (%02x,X)", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 
@@ -503,11 +503,11 @@ void MOS6510::DumpState (void)
     case LAXiy: case LDAiy: case ORAiy: case RLAiy: case RRAiy: case SBCiy:
     case SLOiy: case SREiy:
     //AXAiy ASOiy LSEiy DCMiy INSiy - Optional Opcode Names
-        fprintf(m_fdbg, "iy (%02x),Y", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "iy (%02x),Y", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]{%02x}", Cycle_EffectiveAddress, Cycle_Data);
     break;
     case SHAiy: case STAiy:
-        fprintf(m_fdbg, "iy (%02x),Y", endian_16lo8 (Instr_Operand));
+        fprintf(m_fdbg, "iy (%02x),Y", endian_16lo8 (instrOperand));
         fprintf(m_fdbg, " [%04x]", Cycle_EffectiveAddress);
     break;
 

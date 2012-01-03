@@ -221,51 +221,52 @@ static int  filepos = 0;
 /** When AEC signal is high, no stealing is possible */
 void MOS6510::eventWithoutSteals  (void)
 {
-    cycleCount++;
-    (this->*(instrCurrent[cycleCount - 1].func)) ();
+    const ProcessorCycle *instr = &instrTable[cycleCount++];
+    (this->*(instr->func)) ();
     eventContext.schedule(m_nosteal, 1);
 }
 
 /** When AEC signal is low, steals permitted */
 void MOS6510::eventWithSteals  (void)
 {
-    if (instrCurrent[cycleCount].nosteal) {
-        cycleCount++;
-        (this->*(instrCurrent[cycleCount - 1].func)) ();
+    if (instrTable[cycleCount].nosteal) {
+        const ProcessorCycle *instr = &instrTable[cycleCount++];
+        (this->*(instr->func)) ();
         eventContext.schedule(m_steal, 1);
     } else {
         /* Even while stalled, the CPU can still process first clock of
         * interrupt delay, but only the first one. However, IRQ may be
         * modified by CLI and SEI, and are specially handled below. */
-        if (nmiClk == cycleCount)
-            nmiClk --;
+        if (nmiCycle == cycleCount)
+            nmiCycle --;
 
-        if (cycleCount == 0) {
-            /* If stalled on first cycle of CLIn, consume IRQ delay
-            * normally and thus allow IRQ to trigger on the next
-            * instruction. */
-            if (instrCurrent == instrTable[CLIn]) {
-                instrCurrent = instrTable[NOPn];
-                flagI = false;
-                irqClk = -1;
-                return;
-            }
-
-            /* If stalled on first cycle of SEIn, don't consume IRQ delay.
-            * This has the effect of causing the interrupt to be skipped
-            * if it arrives during the CPU being stalled on this cycle. */
-            if (instrCurrent == instrTable[SEIn])
-                return;
+        /* If stalled on first cycle of CLIn, consume IRQ delay
+        * normally and thus allow IRQ to trigger on the next
+        * instruction. */
+        if (cycleCount == CLIn << 3) {
+            cycleCount = NOPn << 3;
+            flagI = false;
+            irqCycle = irqAsserted ? -MAX : MAX;
+            return;
         }
 
+        /* If stalled on first cycle of SEIn, don't consume IRQ delay.
+        * This has the effect of causing the interrupt to be skipped
+        * if it arrives during the CPU being stalled on this cycle. */
+        if (cycleCount == SEIn << 3)
+            return;
+
         /* no special conditions matched */
-        if (irqClk == cycleCount)
-            irqClk --;
+        if (irqCycle == cycleCount)
+            irqCycle --;
     }
 }
 
-//-------------------------------------------------------------------------//
-
+/**
+* Set N and Z flag values.
+*
+* @param value to set flags from
+*/
 void MOS6510::setFlagsNZ(const uint8_t value)
 {
     flagZ = value == 0;
@@ -382,8 +383,7 @@ void MOS6510::PopSR (void)
 void MOS6510::triggerRST (void)
 {
     Initialise();
-    cycleCount = 0;
-    instrCurrent = instrTable[oRST];
+    cycleCount = oRST << 3;
 }
 
 /**
@@ -394,11 +394,10 @@ void MOS6510::triggerRST (void)
 */
 void MOS6510::triggerNMI (void)
 {
-    if (nmiFlag)
+    if (nmiCycle != MAX)
         return;
 
-    nmiFlag = true;
-    nmiClk = cycleCount;
+    nmiCycle = cycleCount;
     /* maybe process 1 clock of interrupt delay. */
     if (! rdy) {
         eventContext.cancel(m_steal);
@@ -406,20 +405,15 @@ void MOS6510::triggerNMI (void)
     }
 }
 
-/**
-* Trigger IRQ interrupt on the CPU. Calling this method
-* increments the number of sources pulling IRQ line up.
-* To remove IRQ, clearIRQ() call must be made.
-*/
+/** Pull IRQ line low on CPU. */
 void MOS6510::triggerIRQ (void)
 {
     /* mark interrupt arrival time */
     if (irqAsserted)
         return;
 
-    irqFlag = true;
     irqAsserted = true;
-    irqClk = cycleCount;
+    irqCycle = cycleCount;
     /* maybe process 1 clock of interrupt delay. */
     if (! rdy) {
         eventContext.cancel(m_steal);
@@ -427,10 +421,7 @@ void MOS6510::triggerIRQ (void)
     }
 }
 
-/**
-* Remove one source of level-triggered IRQ interrupts.
-* This call must be performed after each triggerIRQ.
-*/
+/** Inform CPU that IRQ is no longer pulled low. */
 void MOS6510::clearIRQ (void)
 {
     irqAsserted = false;
@@ -439,10 +430,10 @@ void MOS6510::clearIRQ (void)
 void MOS6510::interruptsAndNextOpcode (void)
 {
     int offset;
-    if (nmiFlag && cycleCount > nmiClk + 2) {
-        nmiFlag = false;
+    if (cycleCount > nmiCycle + 2) {
+        nmiCycle = MAX;
         offset = oNMI;
-    } else if (!flagI && irqFlag && cycleCount > irqClk + 2) {
+    } else if (!flagI && cycleCount > irqCycle + 2) {
         offset = oIRQ;
     } else {
 #ifdef MOS6510_DEBUG
@@ -473,10 +464,12 @@ void MOS6510::interruptsAndNextOpcode (void)
         fprintf (m_fdbg, "****************************************************\n");
     }
 #endif
-    // Start the interrupt
-    instrCurrent = instrTable[offset];
-    cycleCount   = 1;
-    (this->*(instrCurrent[cycleCount - 1].func)) ();
+    /* These offset >= 0x100 code paths terminate in FetchOpcode before
+    * coming back. This is important because irqCount is only valid during
+    * 1 instruction's execution. */
+    cycleCount = (offset << 3) + 1;
+    const ProcessorCycle *instr = &instrTable[cycleCount++];
+    (this->*(instr->func)) ();
 }
 
 void MOS6510::RSTLoRequest (void)
@@ -518,15 +511,6 @@ void MOS6510::IRQHiRequest (void)
     endian_32hi8 (Register_ProgramCounter, env->cpuRead (0xFFFF));
 }
 
-
-//-------------------------------------------------------------------------//
-//-------------------------------------------------------------------------//
-// Common Instruction Addressing Routines                                  //
-// Addressing operations as described in 64doc by John West and            //
-// Marko Makela                                                            //
-//-------------------------------------------------------------------------//
-//-------------------------------------------------------------------------//
-
 /**
 * Fetch opcode, increment PC<BR>
 *
@@ -539,16 +523,14 @@ void MOS6510::FetchOpcode (void)
 #endif
 
     // Next line used for Debug
-    instrStartPC  = endian_32lo16 (Register_ProgramCounter++);
+    instrStartPC = Register_ProgramCounter;
 
-    const uint_least8_t instrOpcode   = env->cpuRead (instrStartPC);
-    instrCurrent  = instrTable[instrOpcode];
+    cycleCount = (env->cpuRead(Register_ProgramCounter) & 0xff) << 3;
+    Register_ProgramCounter++;
 
-    irqFlag = irqAsserted;
-    irqClk = -1;
-    nmiClk = -1;
-
-    cycleCount    = 0;
+    irqCycle = irqAsserted ? -MAX : MAX;
+    if (nmiCycle != MAX)
+        nmiCycle = -MAX;
 }
 
 /**
@@ -644,8 +626,8 @@ void MOS6510::FetchHighAddr (void)
     endian_16hi8 (Cycle_EffectiveAddress, env->cpuRead (endian_32lo16 (Register_ProgramCounter)));
     Register_ProgramCounter++;
 
-    // Nextline used for Debug
-    endian_16hi8 (Instr_Operand, endian_16hi8 (Cycle_EffectiveAddress));
+    // Next line used for Debug
+    endian_16hi8 (instrOperand, endian_16hi8 (Cycle_EffectiveAddress));
 }
 
 /**
@@ -713,7 +695,7 @@ void MOS6510::FetchLowPointer (void)
     Register_ProgramCounter++;
 
     // Nextline used for Debug
-    Instr_Operand = Cycle_Pointer;
+    endian_16hi8 (instrOperand, endian_16hi8 (Cycle_Pointer));
 }
 
 /**
@@ -743,7 +725,7 @@ void MOS6510::FetchHighPointer (void)
     Register_ProgramCounter++;
 
     // Nextline used for Debug
-    endian_16hi8 (Instr_Operand, endian_16hi8 (Cycle_Pointer));
+    endian_16hi8 (instrOperand, endian_16hi8 (Cycle_Pointer));
 }
 
 /**
@@ -812,6 +794,9 @@ void MOS6510::FetchEffAddrDataByte (void)
     Cycle_Data = env->cpuRead (Cycle_EffectiveAddress);
 }
 
+/**
+* Write Cycle_Data to effective address.
+*/
 void MOS6510::PutEffAddrDataByte (void)
 {
     env->cpuWrite (Cycle_EffectiveAddress, Cycle_Data);
@@ -887,10 +872,9 @@ void MOS6510::brk_instr (void)
     /* check if we need to transform BRK into NMI.
     * c64doc says "If the interrupt arrives before the
     * flag-setting cycle" */
-    if (nmiFlag && nmiClk < 3) {
-        instrCurrent = instrTable[oNMI];
-        nmiFlag = false;
-        cycleCount = 5;
+    if (nmiCycle < (BRKn << 3) + 3) {
+        cycleCount = (oNMI << 3) + 5;
+        nmiCycle = MAX;
     }
 }
 
@@ -903,7 +887,7 @@ void MOS6510::cld_instr (void)
 void MOS6510::cli_instr (void)
 {
     if (flagI) {
-        irqClk = cycleCount;
+        irqCycle = cycleCount;
     }
 
     flagI = false;
@@ -970,6 +954,7 @@ void MOS6510::rti_instr (void)
 
 void MOS6510::rts_instr (void)
 {
+    env->cpuRead(Cycle_EffectiveAddress);
     endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
     Register_ProgramCounter++;
 }
@@ -1093,13 +1078,8 @@ void MOS6510::xas_instr (void)
 }
 
 
-//-------------------------------------------------------------------------//
-//-------------------------------------------------------------------------//
-// Generic Binary Coded Decimal Correction                                 //
-//-------------------------------------------------------------------------//
-//-------------------------------------------------------------------------//
-
-void MOS6510::Perform_ADC (void)
+/** BCD adding */
+void MOS6510::doADC (void)
 {
     const uint C      = flagC ? 1 : 0;
     const uint A      = Register_Accumulator;
@@ -1132,7 +1112,8 @@ void MOS6510::Perform_ADC (void)
     }
 }
 
-void MOS6510::Perform_SBC (void)
+/** BCD subtracting */
+void MOS6510::doSBC (void)
 {
     const uint C      = flagC? 0 : 1;
     const uint A      = Register_Accumulator;
@@ -1179,7 +1160,7 @@ void MOS6510::Perform_SBC (void)
 
 void MOS6510::adc_instr (void)
 {
-    Perform_ADC ();
+    doADC ();
     interruptsAndNextOpcode ();
 }
 
@@ -1238,8 +1219,10 @@ void MOS6510::branch_instr (const bool condition)
         if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
         {
             cycleCount ++;
-            irqClk += 2;
-            nmiClk +=2;
+            if (irqCycle != -MAX && irqCycle != MAX)
+                irqCycle += 2;
+            if (nmiCycle != -MAX && nmiCycle != MAX)
+                nmiCycle +=2;
         }
         Register_ProgramCounter = Cycle_EffectiveAddress;
     }
@@ -1480,7 +1463,7 @@ void MOS6510::sbx_instr (void)
 
 void MOS6510::sbc_instr (void)
 {
-    Perform_SBC ();
+    doSBC ();
     interruptsAndNextOpcode ();
 }
 
@@ -1626,7 +1609,7 @@ void MOS6510::ins_instr (void)
 {
     PutEffAddrDataByte ();
     Cycle_Data++;
-    Perform_SBC ();
+    doSBC ();
 }
 
 // Undocumented - This opcode ANDs the contents of a memory location with the contents of the
@@ -1689,7 +1672,7 @@ void MOS6510::rra_instr (void)
     Cycle_Data >>= 1;
     if (flagC) Cycle_Data |= 0x80;
     flagC = tmp;
-    Perform_ADC ();
+    doADC ();
 }
 
 // Undocumented - This opcode ANDs the contents of the A and X registers (without changing
@@ -1736,12 +1719,10 @@ MOS6510::MOS6510 (EventContext *context)
         *   if any, are at the end for most instructions.
         */
 
-        struct ProcessorCycle *instrCurrent = instrTable[i];
-        int cycleCount = 0;
+        int buildCycle = i << 3;
 
         typedef enum { WRITE, READ } AccessMode;
         AccessMode access = WRITE;
-        cycleCount = 0;
         bool legalMode  = true;
         bool legalInstr = true;
 
@@ -1753,7 +1734,7 @@ MOS6510::MOS6510 (EventContext *context)
         case PHPn: case PLAn: case PLPn: case ROLn: case RORn:
         case SECn: case SEDn: case SEIn: case TAXn:  case TAYn:
         case TSXn: case TXAn: case TXSn: case TYAn:
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayFetch;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayFetch;
         break;
 
         // Immediate and Relative Addressing Mode Handler
@@ -1762,7 +1743,7 @@ MOS6510::MOS6510 (EventContext *context)
         case BRKn: case BVCr:  case BVSr:  case CMPb: case CPXb: case CPYb:
         case EORb: case LDAb:  case LDXb:  case LDYb: case LXAb: case NOPb_:
         case ORAb: case SBCb_: case SBXb:  case RTIn: case RTSn:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchDataByte;
+            instrTable[buildCycle++].func = &MOS6510::FetchDataByte;
         break;
 
         // Zero Page Addressing Mode Handler - Read & RMW
@@ -1773,7 +1754,7 @@ MOS6510::MOS6510 (EventContext *context)
         case ROLz: case RORz: case SREz: case SLOz: case RLAz: case RRAz:
             access = READ;
         case SAXz: case STAz: case STXz: case STYz:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
         break;
 
         // Zero Page with X Offset Addressing Mode Handler
@@ -1786,16 +1767,16 @@ MOS6510::MOS6510 (EventContext *context)
         case RLAzx:    case ROLzx: case RORzx: case RRAzx: case SLOzx: case SREzx:
             access = READ;
         case STAzx: case STYzx:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddrX;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddrX;
+            instrTable[buildCycle++].func = &MOS6510::WasteCycle;
         break;
 
         // Zero Page with Y Offset Addressing Mode Handler
         case LDXzy: case LAXzy:
             access = READ;
         case STXzy: case SAXzy:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddrY;
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddrY;
+            instrTable[buildCycle++].func = &MOS6510::WasteCycle;
         break;
 
         // Absolute Addressing Mode Handler
@@ -1806,23 +1787,23 @@ MOS6510::MOS6510 (EventContext *context)
         case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
             access = READ;
         case JMPw: case SAXa: case STAa: case STXa: case STYa:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighAddr;
         break;
 
         case JSRw:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
         break;
 
         // Absolute With X Offset Addressing Mode Handler (Read)
         case ADCax: case ANDax:  case CMPax: case EORax: case LDAax:
         case LDYax: case NOPax_: case ORAax: case SBCax:
             access = READ;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighAddrX2;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighAddrX2;
             // this cycle is skipped if the address is already correct.
             // otherwise, it will be read and ignored.
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         // Absolute X (RMW; no page crossing handled, always reads before writing)
@@ -1831,18 +1812,18 @@ MOS6510::MOS6510 (EventContext *context)
         case SLOax: case SREax:
             access = READ;
         case SHYax: case STAax:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighAddrX;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighAddrX;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         // Absolute With Y Offset Addresing Mode Handler (Read)
         case ADCay: case ANDay: case CMPay: case EORay: case LASay:
         case LAXay: case LDAay: case LDXay: case ORAay: case SBCay:
             access = READ;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighAddrY2;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighAddrY2;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         // Absolute Y (No page crossing handled)
@@ -1850,17 +1831,17 @@ MOS6510::MOS6510 (EventContext *context)
         case SREay:
             access = READ;
         case SHAay: case SHSay: case SHXay: case STAay:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighAddrY;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighAddrY;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         // Absolute Indirect Addressing Mode Handler
         case JMPi:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowPointer;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighPointer;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowEffAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighEffAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowPointer;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighPointer;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowEffAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighEffAddr;
         break;
 
         // Indexed with X Preinc Addressing Mode Handler
@@ -1869,10 +1850,10 @@ MOS6510::MOS6510 (EventContext *context)
         case DCPix: case ISBix: case SLOix: case SREix: case RLAix: case RRAix:
             access = READ;
         case SAXix: case STAix:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowPointer;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowPointerX;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowEffAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighEffAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowPointer;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowPointerX;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowEffAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighEffAddr;
 
         break;
 
@@ -1880,10 +1861,10 @@ MOS6510::MOS6510 (EventContext *context)
         case ADCiy: case ANDiy: case CMPiy: case EORiy: case LAXiy:
         case LDAiy: case ORAiy: case SBCiy:
             access = READ;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowPointer;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowEffAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighEffAddrY2;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowPointer;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowEffAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighEffAddrY2;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         // Indexed Y (No page crossing handled)
@@ -1891,10 +1872,10 @@ MOS6510::MOS6510 (EventContext *context)
         case SREiy:
             access = READ;
         case SHAiy: case STAiy:
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowPointer;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchLowEffAddr;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighEffAddrY;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowPointer;
+            instrTable[buildCycle++].func = &MOS6510::FetchLowEffAddr;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighEffAddrY;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
 
         break;
 
@@ -1904,11 +1885,11 @@ MOS6510::MOS6510 (EventContext *context)
         }
 
         if (access == READ) {
-            instrCurrent[cycleCount++].func = &MOS6510::FetchEffAddrDataByte;
+            instrTable[buildCycle++].func = &MOS6510::FetchEffAddrDataByte;
         }
 
 #ifdef MOS6510_DEBUG
-        instrCurrent[cycleCount++].func = &MOS6510::DebugCycle;
+        instrTable[buildCycle++].func = &MOS6510::DebugCycle;
 #endif // MOS6510_DEBUG
 
         //---------------------------------------------------------------------------------------
@@ -1917,152 +1898,152 @@ MOS6510::MOS6510 (EventContext *context)
         {
         case ADCz:  case ADCzx: case ADCa: case ADCax: case ADCay: case ADCix:
         case ADCiy: case ADCb:
-            instrCurrent[cycleCount++].func = &MOS6510::adc_instr;
+            instrTable[buildCycle++].func = &MOS6510::adc_instr;
         break;
 
         case ANCb_:
-            instrCurrent[cycleCount++].func = &MOS6510::anc_instr;
+            instrTable[buildCycle++].func = &MOS6510::anc_instr;
         break;
 
         case ANDz:  case ANDzx: case ANDa: case ANDax: case ANDay: case ANDix:
         case ANDiy: case ANDb:
-            instrCurrent[cycleCount++].func = &MOS6510::and_instr;
+            instrTable[buildCycle++].func = &MOS6510::and_instr;
         break;
 
         case ANEb: // Also known as XAA
-            instrCurrent[cycleCount++].func = &MOS6510::ane_instr;
+            instrTable[buildCycle++].func = &MOS6510::ane_instr;
         break;
 
         case ARRb:
-            instrCurrent[cycleCount++].func = &MOS6510::arr_instr;
+            instrTable[buildCycle++].func = &MOS6510::arr_instr;
         break;
 
         case ASLn:
-            instrCurrent[cycleCount++].func = &MOS6510::asla_instr;
+            instrTable[buildCycle++].func = &MOS6510::asla_instr;
         break;
 
         case ASLz: case ASLzx: case ASLa: case ASLax:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::asl_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::asl_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case ASRb: // Also known as ALR
-            instrCurrent[cycleCount++].func = &MOS6510::alr_instr;
+            instrTable[buildCycle++].func = &MOS6510::alr_instr;
         break;
 
         case BCCr:
-            instrCurrent[cycleCount++].func = &MOS6510::bcc_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::bcc_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case BCSr:
-            instrCurrent[cycleCount++].func = &MOS6510::bcs_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::bcs_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case BEQr:
-            instrCurrent[cycleCount++].func = &MOS6510::beq_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::beq_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case BITz: case BITa:
-            instrCurrent[cycleCount++].func = &MOS6510::bit_instr;
+            instrTable[buildCycle++].func = &MOS6510::bit_instr;
         break;
 
         case BMIr:
-            instrCurrent[cycleCount++].func = &MOS6510::bmi_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::bmi_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case BNEr:
-            instrCurrent[cycleCount++].func = &MOS6510::bne_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::bne_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case BPLr:
-            instrCurrent[cycleCount++].func = &MOS6510::bpl_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::bpl_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case BRKn:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::brk_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::IRQLoRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::IRQHiRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchOpcode;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PushHighPC;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PushLowPC;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::brk_instr;
+            instrTable[buildCycle++].func = &MOS6510::IRQLoRequest;
+            instrTable[buildCycle++].func = &MOS6510::IRQHiRequest;
+            instrTable[buildCycle++].func = &MOS6510::FetchOpcode;
         break;
 
         case BVCr:
-            instrCurrent[cycleCount++].func = &MOS6510::bvc_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::bvc_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case BVSr:
-            instrCurrent[cycleCount++].func = &MOS6510::bvs_instr;
-            instrCurrent[cycleCount++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::bvs_instr;
+            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
         break;
 
         case CLCn:
-            instrCurrent[cycleCount++].func = &MOS6510::clc_instr;
+            instrTable[buildCycle++].func = &MOS6510::clc_instr;
         break;
 
         case CLDn:
-            instrCurrent[cycleCount++].func = &MOS6510::cld_instr;
+            instrTable[buildCycle++].func = &MOS6510::cld_instr;
         break;
 
         case CLIn:
-            instrCurrent[cycleCount++].func = &MOS6510::cli_instr;
+            instrTable[buildCycle++].func = &MOS6510::cli_instr;
         break;
 
         case CLVn:
-            instrCurrent[cycleCount++].func = &MOS6510::clv_instr;
+            instrTable[buildCycle++].func = &MOS6510::clv_instr;
         break;
 
         case CMPz:  case CMPzx: case CMPa: case CMPax: case CMPay: case CMPix:
         case CMPiy: case CMPb:
-            instrCurrent[cycleCount++].func = &MOS6510::cmp_instr;
+            instrTable[buildCycle++].func = &MOS6510::cmp_instr;
         break;
 
         case CPXz: case CPXa: case CPXb:
-            instrCurrent[cycleCount++].func = &MOS6510::cpx_instr;
+            instrTable[buildCycle++].func = &MOS6510::cpx_instr;
         break;
 
         case CPYz: case CPYa: case CPYb:
-            instrCurrent[cycleCount++].func = &MOS6510::cpy_instr;
+            instrTable[buildCycle++].func = &MOS6510::cpy_instr;
         break;
 
         case DCPz: case DCPzx: case DCPa: case DCPax: case DCPay: case DCPix:
         case DCPiy: // Also known as DCM
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::dcm_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::dcm_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case DECz: case DECzx: case DECa: case DECax:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::dec_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::dec_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case DEXn:
-            instrCurrent[cycleCount++].func = &MOS6510::dex_instr;
+            instrTable[buildCycle++].func = &MOS6510::dex_instr;
         break;
 
         case DEYn:
-            instrCurrent[cycleCount++].func = &MOS6510::dey_instr;
+            instrTable[buildCycle++].func = &MOS6510::dey_instr;
         break;
 
         case EORz:  case EORzx: case EORa: case EORax: case EORay: case EORix:
         case EORiy: case EORb:
-            instrCurrent[cycleCount++].func = &MOS6510::eor_instr;
+            instrTable[buildCycle++].func = &MOS6510::eor_instr;
         break;
 
 /* HLT // Also known as JAM
@@ -2070,74 +2051,74 @@ MOS6510::MOS6510 (EventContext *context)
         case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
         case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52:
         case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
-            instrCurrent[cycleCount++].func = hlt_instr;
+            instrTable[buildCycle++].func = hlt_instr;
         break;
 */
 
         case INCz: case INCzx: case INCa: case INCax:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::inc_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::inc_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case INXn:
-            instrCurrent[cycleCount++].func = &MOS6510::inx_instr;
+            instrTable[buildCycle++].func = &MOS6510::inx_instr;
         break;
 
         case INYn:
-            instrCurrent[cycleCount++].func = &MOS6510::iny_instr;
+            instrTable[buildCycle++].func = &MOS6510::iny_instr;
         break;
 
         case ISBz: case ISBzx: case ISBa: case ISBax: case ISBay: case ISBix:
         case ISBiy: // Also known as INS
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::ins_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::ins_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case JSRw:
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
-            instrCurrent[cycleCount++].func = &MOS6510::FetchHighAddr;
+            instrTable[buildCycle++].func = &MOS6510::WasteCycle;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PushHighPC;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PushLowPC;
+            instrTable[buildCycle++].func = &MOS6510::FetchHighAddr;
         case JMPw: case JMPi:
-            instrCurrent[cycleCount++].func = &MOS6510::jmp_instr;
+            instrTable[buildCycle++].func = &MOS6510::jmp_instr;
         break;
 
         case LASay:
-            instrCurrent[cycleCount++].func = &MOS6510::las_instr;
+            instrTable[buildCycle++].func = &MOS6510::las_instr;
         break;
 
         case LAXz: case LAXzy: case LAXa: case LAXay: case LAXix: case LAXiy:
-            instrCurrent[cycleCount++].func = &MOS6510::lax_instr;
+            instrTable[buildCycle++].func = &MOS6510::lax_instr;
         break;
 
         case LDAz:  case LDAzx: case LDAa: case LDAax: case LDAay: case LDAix:
         case LDAiy: case LDAb:
-            instrCurrent[cycleCount++].func = &MOS6510::lda_instr;
+            instrTable[buildCycle++].func = &MOS6510::lda_instr;
         break;
 
         case LDXz: case LDXzy: case LDXa: case LDXay: case LDXb:
-            instrCurrent[cycleCount++].func = &MOS6510::ldx_instr;
+            instrTable[buildCycle++].func = &MOS6510::ldx_instr;
         break;
 
         case LDYz: case LDYzx: case LDYa: case LDYax: case LDYb:
-            instrCurrent[cycleCount++].func = &MOS6510::ldy_instr;
+            instrTable[buildCycle++].func = &MOS6510::ldy_instr;
         break;
 
         case LSRn:
-            instrCurrent[cycleCount++].func = &MOS6510::lsra_instr;
+            instrTable[buildCycle++].func = &MOS6510::lsra_instr;
         break;
 
         case LSRz: case LSRzx: case LSRa: case LSRax:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::lsr_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::lsr_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case NOPn_: case NOPb_:
@@ -2147,192 +2128,192 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case LXAb: // Also known as OAL
-            instrCurrent[cycleCount++].func = &MOS6510::oal_instr;
+            instrTable[buildCycle++].func = &MOS6510::oal_instr;
         break;
 
         case ORAz:  case ORAzx: case ORAa: case ORAax: case ORAay: case ORAix:
         case ORAiy: case ORAb:
-            instrCurrent[cycleCount++].func = &MOS6510::ora_instr;
+            instrTable[buildCycle++].func = &MOS6510::ora_instr;
         break;
 
         case PHAn:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::pha_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::pha_instr;
         break;
 
         case PHPn:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PushSR;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PushSR;
         break;
 
         case PLAn:
             // should read the value at current stack register.
             // Truly side-effect free.
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::pla_instr;
+            instrTable[buildCycle++].func = &MOS6510::WasteCycle;
+            instrTable[buildCycle++].func = &MOS6510::pla_instr;
         break;
 
         case PLPn:
             // should read the value at current stack register.
             // Truly side-effect free.
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::PopSR;
-            instrCurrent[cycleCount++].func = &MOS6510::plp_instr;
+            instrTable[buildCycle++].func = &MOS6510::WasteCycle;
+            instrTable[buildCycle++].func = &MOS6510::PopSR;
+            instrTable[buildCycle++].func = &MOS6510::plp_instr;
         break;
 
         case RLAz: case RLAzx: case RLAix: case RLAa: case RLAax: case RLAay:
         case RLAiy:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::rla_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::rla_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case ROLn:
-            instrCurrent[cycleCount++].func = &MOS6510::rola_instr;
+            instrTable[buildCycle++].func = &MOS6510::rola_instr;
         break;
 
         case ROLz: case ROLzx: case ROLa: case ROLax:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::rol_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::rol_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case RORn:
-            instrCurrent[cycleCount++].func = &MOS6510::rora_instr;
+            instrTable[buildCycle++].func = &MOS6510::rora_instr;
         break;
 
         case RORz: case RORzx: case RORa: case RORax:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::ror_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::ror_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case RRAa: case RRAax: case RRAay: case RRAz: case RRAzx: case RRAix:
         case RRAiy:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::rra_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::rra_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case RTIn:
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::PopSR;
-            instrCurrent[cycleCount++].func = &MOS6510::PopLowPC;
-            instrCurrent[cycleCount++].func = &MOS6510::PopHighPC;
-            instrCurrent[cycleCount++].func = &MOS6510::rti_instr;
+            instrTable[buildCycle++].func = &MOS6510::WasteCycle;
+            instrTable[buildCycle++].func = &MOS6510::PopSR;
+            instrTable[buildCycle++].func = &MOS6510::PopLowPC;
+            instrTable[buildCycle++].func = &MOS6510::PopHighPC;
+            instrTable[buildCycle++].func = &MOS6510::rti_instr;
         break;
 
         case RTSn:
-            instrCurrent[cycleCount++].func = &MOS6510::WasteCycle;
-            instrCurrent[cycleCount++].func = &MOS6510::PopLowPC;
-            instrCurrent[cycleCount++].func = &MOS6510::PopHighPC;
-            instrCurrent[cycleCount++].func = &MOS6510::rts_instr;
+            instrTable[buildCycle++].func = &MOS6510::WasteCycle;
+            instrTable[buildCycle++].func = &MOS6510::PopLowPC;
+            instrTable[buildCycle++].func = &MOS6510::PopHighPC;
+            instrTable[buildCycle++].func = &MOS6510::rts_instr;
         break;
 
         case SAXz: case SAXzy: case SAXa: case SAXix: // Also known as AXS
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::axs_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::axs_instr;
         break;
 
         case SBCz:  case SBCzx: case SBCa: case SBCax: case SBCay: case SBCix:
         case SBCiy: case SBCb_:
-            instrCurrent[cycleCount++].func = &MOS6510::sbc_instr;
+            instrTable[buildCycle++].func = &MOS6510::sbc_instr;
         break;
 
         case SBXb:
-            instrCurrent[cycleCount++].func = &MOS6510::sbx_instr;
+            instrTable[buildCycle++].func = &MOS6510::sbx_instr;
         break;
 
         case SECn:
-            instrCurrent[cycleCount++].func = &MOS6510::sec_instr;
+            instrTable[buildCycle++].func = &MOS6510::sec_instr;
         break;
 
         case SEDn:
-            instrCurrent[cycleCount++].func = &MOS6510::sed_instr;
+            instrTable[buildCycle++].func = &MOS6510::sed_instr;
         break;
 
         case SEIn:
-            instrCurrent[cycleCount++].func = &MOS6510::sei_instr;
+            instrTable[buildCycle++].func = &MOS6510::sei_instr;
         break;
 
         case SHAay: case SHAiy: // Also known as AXA
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::axa_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::axa_instr;
         break;
 
         case SHSay: // Also known as TAS
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::shs_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::shs_instr;
         break;
 
         case SHXay: // Also known as XAS
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::xas_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::xas_instr;
         break;
 
         case SHYax: // Also known as SAY
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::say_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::say_instr;
         break;
 
         case SLOz: case SLOzx: case SLOa: case SLOax: case SLOay: case SLOix:
         case SLOiy: // Also known as ASO
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::aso_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::aso_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case SREz: case SREzx: case SREa: case SREax: case SREay: case SREix:
         case SREiy: // Also known as LSE
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::lse_instr;
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::PutEffAddrDataByte;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::lse_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::PutEffAddrDataByte;
         break;
 
         case STAz: case STAzx: case STAa: case STAax: case STAay: case STAix:
         case STAiy:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::sta_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::sta_instr;
         break;
 
         case STXz: case STXzy: case STXa:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::stx_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::stx_instr;
         break;
 
         case STYz: case STYzx: case STYa:
-            instrCurrent[cycleCount].nosteal = true;
-            instrCurrent[cycleCount++].func = &MOS6510::sty_instr;
+            instrTable[buildCycle].nosteal = true;
+            instrTable[buildCycle++].func = &MOS6510::sty_instr;
         break;
 
         case TAXn:
-            instrCurrent[cycleCount++].func = &MOS6510::tax_instr;
+            instrTable[buildCycle++].func = &MOS6510::tax_instr;
         break;
 
         case TAYn:
-            instrCurrent[cycleCount++].func = &MOS6510::tay_instr;
+            instrTable[buildCycle++].func = &MOS6510::tay_instr;
         break;
 
         case TSXn:
-            instrCurrent[cycleCount++].func = &MOS6510::tsx_instr;
+            instrTable[buildCycle++].func = &MOS6510::tsx_instr;
         break;
 
         case TXAn:
-            instrCurrent[cycleCount++].func = &MOS6510::txa_instr;
+            instrTable[buildCycle++].func = &MOS6510::txa_instr;
         break;
 
         case TXSn:
-            instrCurrent[cycleCount++].func = &MOS6510::txs_instr;
+            instrTable[buildCycle++].func = &MOS6510::txs_instr;
         break;
 
         case TYAn:
-            instrCurrent[cycleCount++].func = &MOS6510::tya_instr;
+            instrTable[buildCycle++].func = &MOS6510::tya_instr;
         break;
 
         default:
@@ -2345,19 +2326,19 @@ MOS6510::MOS6510 (EventContext *context)
         * CPU state machine locks up and will never recover. */
         if (!(legalMode && legalInstr))
         {
-            instrCurrent[cycleCount++].func = &MOS6510::illegal_instr;
+            instrTable[buildCycle++].func = &MOS6510::illegal_instr;
         }
 
         /* check for IRQ triggers or fetch next opcode... */
-        //instrCurrent[cycleCount].nosteal = false;
-        instrCurrent[cycleCount].func = &MOS6510::interruptsAndNextOpcode;
+        //instrTable[buildCycle].nosteal = false;
+        instrTable[buildCycle].func = &MOS6510::interruptsAndNextOpcode;
 
 #if MOS6510_DEBUG > 1
         printf (".");
 #endif
 
 #if MOS6510_DEBUG > 1
-        printf ("Done [%d Cycles]\n", cycleCount);
+        printf ("Done [%d Cycles]\n", buildCycle);
 #endif
     }
 
@@ -2370,47 +2351,46 @@ MOS6510::MOS6510 (EventContext *context)
 #endif
 
         const int offset = i + 0x100;
-        struct ProcessorCycle *instrCurrent = instrTable[offset];
-        int cycleCount = 0;
+        int buildCycle = offset << 3;
 
         /* common interrupt handling lead-in:
         * 2x read from PC, store pc hi, pc lo, sr to stack.
         */
-        instrCurrent[cycleCount++].func = &MOS6510::throwAwayFetch;
-        instrCurrent[cycleCount++].func = &MOS6510::throwAwayFetch;
-        instrCurrent[cycleCount].nosteal = true;
-        instrCurrent[cycleCount++].func = &MOS6510::PushHighPC;
-        instrCurrent[cycleCount].nosteal = true;
-        instrCurrent[cycleCount++].func = &MOS6510::PushLowPC;
-        instrCurrent[cycleCount].nosteal = true;
-        instrCurrent[cycleCount++].func = &MOS6510::IRQRequest;
+        instrTable[buildCycle++].func = &MOS6510::throwAwayFetch;
+        instrTable[buildCycle++].func = &MOS6510::throwAwayFetch;
+        instrTable[buildCycle].nosteal = true;
+        instrTable[buildCycle++].func = &MOS6510::PushHighPC;
+        instrTable[buildCycle].nosteal = true;
+        instrTable[buildCycle++].func = &MOS6510::PushLowPC;
+        instrTable[buildCycle].nosteal = true;
+        instrTable[buildCycle++].func = &MOS6510::IRQRequest;
 
         switch (offset)
         {
         case oRST:
-            instrCurrent[cycleCount++].func = &MOS6510::RSTLoRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::RSTHiRequest;
+            instrTable[buildCycle++].func = &MOS6510::RSTLoRequest;
+            instrTable[buildCycle++].func = &MOS6510::RSTHiRequest;
         break;
 
         case oNMI:
-            instrCurrent[cycleCount++].func = &MOS6510::NMILoRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::NMIHiRequest;
+            instrTable[buildCycle++].func = &MOS6510::NMILoRequest;
+            instrTable[buildCycle++].func = &MOS6510::NMIHiRequest;
         break;
 
         case oIRQ:
-            instrCurrent[cycleCount++].func = &MOS6510::IRQLoRequest;
-            instrCurrent[cycleCount++].func = &MOS6510::IRQHiRequest;
+            instrTable[buildCycle++].func = &MOS6510::IRQLoRequest;
+            instrTable[buildCycle++].func = &MOS6510::IRQHiRequest;
         break;
         }
 
-        instrCurrent[cycleCount].func = &MOS6510::FetchOpcode;
+        instrTable[buildCycle].func = &MOS6510::FetchOpcode;
 
 #if MOS6510_DEBUG > 1
         printf (".");
 #endif
 
 #if MOS6510_DEBUG > 1
-        printf ("Done [%d Cycles]\n", cycleCount);
+        printf ("Done [%d Cycles]\n", buildCycle);
 #endif
     }
 
@@ -2421,23 +2401,22 @@ MOS6510::MOS6510 (EventContext *context)
 
     Cycle_EffectiveAddress = 0;
     Cycle_Data             = 0;
-    fetchCycle.func        = &MOS6510::FetchOpcode;
 
     dodump = false;
     Initialise ();
 return;
 }
 
-//-------------------------------------------------------------------------//
-// Initialise CPU Emulation (Registers)                                    //
+/**
+* Initialise CPU Emulation (Registers)
+*/
 void MOS6510::Initialise (void)
 {
     // Reset stack
     Register_StackPointer = endian_16 (SP_PAGE, 0xFF);
 
     // Reset Cycle Count
-    cycleCount = 0;
-    instrCurrent  = &fetchCycle;
+    cycleCount = (NOPn << 3) + 1;
 
     // Reset Status Register
     flagB = true;
@@ -2448,10 +2427,8 @@ void MOS6510::Initialise (void)
 
     // IRQs pending check
     irqAsserted = false;
-    irqFlag    = false;
-    nmiFlag    = false;
-    nmiClk     = -1;
-    irqClk     = -1;
+    irqCycle = MAX;
+    nmiCycle = MAX;
 
     // Signals
     rdy = true;
@@ -2459,8 +2436,9 @@ void MOS6510::Initialise (void)
     eventContext.schedule (m_nosteal, 0, EVENT_CLOCK_PHI2);
 }
 
-//-------------------------------------------------------------------------//
-// Reset CPU Emulation                                                     //
+/**
+* Reset CPU Emulation
+*/
 void MOS6510::reset (void)
 {   // Internal Stuff
     Initialise ();
