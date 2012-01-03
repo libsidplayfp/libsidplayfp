@@ -390,34 +390,16 @@ void MOS6510::triggerRST (void)
 * Trigger NMI interrupt on the CPU. Calling this method
 * flags that CPU must enter the NMI routine at earliest
 * opportunity. There is no way to cancel NMI request once
-* given, but the NMI can't be retriggered until a
-* clearNMI() call has been made.
+* given.
 */
 void MOS6510::triggerNMI (void)
 {
-    if (nmis == 0)
-    {
-        nmiFlag = true;
-        nmiClk = cycleCount;
-        /* maybe process 1 clock of interrupt delay. */
-        if (! rdy) {
-            eventContext.cancel(m_steal);
-            eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
-        }
-    }
-
-    nmis ++;
-}
-
-/**
-* Remove one source of level-triggered NMI interrupts.
-* This call must be performed after each triggerNMI.
-*/
-void MOS6510::clearNMI()
-{
-    if (--nmis < 0) {
-        fprintf (m_fdbg, "\nMOS6510 ERROR: Bizarre attempt to clear untriggered NMI.\n\n");
-        exit (-1);
+    nmiFlag = true;
+    nmiClk = cycleCount;
+    /* maybe process 1 clock of interrupt delay. */
+    if (! rdy) {
+        eventContext.cancel(m_steal);
+        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
 }
 

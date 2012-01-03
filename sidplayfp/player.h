@@ -143,7 +143,7 @@ private:
     uint_least32_t (Player::*output) (char *buffer);
 
     inline void interruptIRQ (const bool state);
-    inline void interruptNMI (const bool state);
+    inline void interruptNMI ();
     inline void interruptRST (void);
     void signalAEC (const bool state) { cpu.setRDY (state); }
     void lightpen  () { vic.lightpen (); }
@@ -200,18 +200,10 @@ void Player::interruptIRQ (const bool state)
 
 /**
 * CPU NMI line control. NMI is asserted if any source asserts NMI.
-* (Maintains a counter of calls with state=true vs. state=false.)
 */
-void Player::interruptNMI (const bool state)
+void Player::interruptNMI ()
 {
-    if (state)
-    {
-        cpu.triggerNMI ();
-    }
-    else
-    {
-        cpu.clearNMI ();
-    }
+    cpu.triggerNMI ();
 }
 
 void Player::interruptRST ()
