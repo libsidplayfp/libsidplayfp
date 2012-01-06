@@ -1221,6 +1221,7 @@ void MOS6510::branch_instr (const bool condition)
     }
     else
     {
+        /* branch not taken: skip the following spurious read insn and go to FetchNextInstr immediately. */
         interruptsAndNextOpcode ();
     }
 }
@@ -1748,6 +1749,7 @@ MOS6510::MOS6510 (EventContext *context)
             access = READ;
         case STAzx: case STYzx:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddrX;
+            // operates on 0 page in read mode. Truly side-effect free.
             instrTable[buildCycle++].func = &MOS6510::WasteCycle;
         break;
 
@@ -1756,6 +1758,7 @@ MOS6510::MOS6510 (EventContext *context)
             access = READ;
         case STXzy: case SAXzy:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddrY;
+            // operates on 0 page in read mode. Truly side-effect free.
             instrTable[buildCycle++].func = &MOS6510::WasteCycle;
         break;
 
@@ -2180,6 +2183,8 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case RTIn:
+            // should read the value at current stack register.
+            // Truly side-effect free.
             instrTable[buildCycle++].func = &MOS6510::WasteCycle;
             instrTable[buildCycle++].func = &MOS6510::PopSR;
             instrTable[buildCycle++].func = &MOS6510::PopLowPC;
@@ -2188,6 +2193,8 @@ MOS6510::MOS6510 (EventContext *context)
         break;
 
         case RTSn:
+            // should read the value at current stack register.
+            // Truly side-effect free.
             instrTable[buildCycle++].func = &MOS6510::WasteCycle;
             instrTable[buildCycle++].func = &MOS6510::PopLowPC;
             instrTable[buildCycle++].func = &MOS6510::PopHighPC;
@@ -2310,7 +2317,6 @@ MOS6510::MOS6510 (EventContext *context)
         }
 
         /* check for IRQ triggers or fetch next opcode... */
-        //instrTable[buildCycle].nosteal = false;
         instrTable[buildCycle].func = &MOS6510::interruptsAndNextOpcode;
 
 #if MOS6510_DEBUG > 1
