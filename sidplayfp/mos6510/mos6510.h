@@ -41,22 +41,8 @@
 #include "sidplayfp/sidenv.h"
 #include "sidplayfp/EventScheduler.h"
 
-#define MOS6510_INTERRUPT_DELAY 2
-
 #include "opcodes.h"
 #include "conf6510.h"
-
-// Status Register flag definistions
-#define SR_NEGATIVE  7
-#define SR_OVERFLOW  6
-#define SR_NOTUSED   5
-#define SR_BREAK     4
-#define SR_DECIMAL   3
-#define SR_INTERRUPT 2
-#define SR_ZERO      1
-#define SR_CARRY     0
-
-#define SP_PAGE      0x01
 
 #include "cycle_based/mos6510c.h"
 

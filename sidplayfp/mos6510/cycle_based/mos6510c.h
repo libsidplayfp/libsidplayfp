@@ -134,6 +134,15 @@ private:
     */
     static const int MAX = 65536;
 
+    /** Stack page location */
+    static const uint16_t SP_PAGE = 0x01;
+
+    static const int SR_BREAK = 4;
+
+public:
+    /** Status register interrupt bit. */
+    static const int SR_INTERRUPT = 2;
+
 protected:
     struct ProcessorCycle
     {
