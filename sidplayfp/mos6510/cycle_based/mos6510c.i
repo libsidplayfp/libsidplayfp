@@ -343,8 +343,7 @@ void MOS6510::setRDY (const bool newAec)
 void MOS6510::PushSR (const bool b_flag)
 {
     flagB = b_flag;
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     env->cpuWrite (addr, getStatusRegister());
     Register_StackPointer--;
 }
@@ -361,8 +360,7 @@ void MOS6510::PopSR (void)
 {
     // Get status register off stack
     Register_StackPointer++;
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     setStatusRegister(env->cpuRead (addr) | (1 << SR_BREAK));
 }
 
@@ -807,8 +805,7 @@ void MOS6510::PutEffAddrDataByte (void)
 */
 void MOS6510::PushLowPC (void)
 {
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     env->cpuWrite (addr, endian_32lo8 (Register_ProgramCounter));
     Register_StackPointer--;
 }
@@ -818,8 +815,7 @@ void MOS6510::PushLowPC (void)
 */
 void MOS6510::PushHighPC (void)
 {
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     env->cpuWrite (addr, endian_32hi8 (Register_ProgramCounter));
     Register_StackPointer--;
 }
@@ -830,8 +826,7 @@ void MOS6510::PushHighPC (void)
 void MOS6510::PopLowPC (void)
 {
     Register_StackPointer++;
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     endian_16lo8 (Cycle_EffectiveAddress, env->cpuRead (addr));
 }
 
@@ -841,8 +836,7 @@ void MOS6510::PopLowPC (void)
 void MOS6510::PopHighPC (void)
 {
     Register_StackPointer++;
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     endian_16hi8 (Cycle_EffectiveAddress, env->cpuRead (addr));
 }
 
@@ -933,8 +927,7 @@ void MOS6510::jmp_instr (void)
 
 void MOS6510::pha_instr (void)
 {
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     env->cpuWrite (addr, Register_Accumulator);
     Register_StackPointer--;
 }
@@ -1399,8 +1392,7 @@ void MOS6510::ora_instr (void)
 void MOS6510::pla_instr (void)
 {
     Register_StackPointer++;
-    uint_least16_t addr = Register_StackPointer;
-    endian_16hi8 (addr, SP_PAGE);
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     setFlagsNZ (Register_Accumulator = env->cpuRead (addr));
 }
 
@@ -1475,7 +1467,7 @@ void MOS6510::sec_instr (void)
 
 void MOS6510::shs_instr (void)
 {
-    endian_16lo8 (Register_StackPointer, (Register_Accumulator & Register_X));
+    Register_StackPointer = Register_Accumulator & Register_X;
     Cycle_Data = (endian_16hi8 (Cycle_EffectiveAddress) + 1) & Register_StackPointer;
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
         Cycle_EffectiveAddress = endian_16(Cycle_Data, (uint8_t)Cycle_EffectiveAddress);
@@ -1496,7 +1488,7 @@ void MOS6510::tay_instr (void)
 
 void MOS6510::tsx_instr (void)
 {   // Rev 1.03 (saw) - Got these tsx and txs reversed
-    setFlagsNZ (Register_X = endian_16lo8 (Register_StackPointer));
+    setFlagsNZ (Register_X = Register_StackPointer);
     interruptsAndNextOpcode ();
 }
 
@@ -1508,7 +1500,7 @@ void MOS6510::txa_instr (void)
 
 void MOS6510::txs_instr (void)
 {   // Rev 1.03 (saw) - Got these tsx and txs reversed
-    endian_16lo8 (Register_StackPointer, Register_X);
+    Register_StackPointer = Register_X;
     interruptsAndNextOpcode ();
 }
 
@@ -1682,7 +1674,7 @@ void MOS6510::rra_instr (void)
 // memory.
 void MOS6510::tas_instr (void)
 {
-    endian_16lo8  (Register_StackPointer, Register_Accumulator & Register_X);
+    Register_StackPointer = Register_Accumulator & Register_X;
     uint_least16_t tmp = Register_StackPointer & (Cycle_EffectiveAddress + 1);
     Cycle_Data         = (signed) endian_16lo8 (tmp);
 }
@@ -2413,7 +2405,7 @@ return;
 void MOS6510::Initialise (void)
 {
     // Reset stack
-    Register_StackPointer = endian_16 (SP_PAGE, 0xFF);
+    Register_StackPointer = 0xFF;
 
     // Reset Cycle Count
     cycleCount = (NOPn << 3) + 1;

@@ -135,7 +135,7 @@ private:
     static const int MAX = 65536;
 
     /** Stack page location */
-    static const uint16_t SP_PAGE = 0x01;
+    static const uint8_t SP_PAGE = 0x01;
 
     static const int SR_BREAK = 4;
 
@@ -161,16 +161,20 @@ protected:
     /** Current instruction and subcycle within instruction */
     int cycleCount;
 
-    /** Pointers to the current instruction cycle */
-    uint_least16_t Cycle_EffectiveAddress;
-    uint_least16_t Cycle_HighByteWrongEffectiveAddress;
-    uint8_t        Cycle_Data;
-    uint_least16_t Cycle_Pointer;
+    /* Interrupts */
 
-    uint8_t        Register_Accumulator;
-    uint8_t        Register_X;
-    uint8_t        Register_Y;
-    uint_least32_t Register_ProgramCounter;
+    /** IRQ asserted on CPU */
+    bool irqAsserted;
+
+     /** When IRQ was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
+    int irqCycle;
+
+    /** When NMI was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
+    int nmiCycle;
+
+    /** Address Controller, blocks reads */
+    bool rdy;
+
     bool           flagN;
     bool           flagC;
     bool           flagD;
@@ -178,21 +182,19 @@ protected:
     bool           flagV;
     bool           flagI;
     bool           flagB;
-    uint_least16_t Register_StackPointer;
 
-    /* Interrupts */
+    /** Pointers to the current instruction cycle */
+    uint_least32_t Register_ProgramCounter;
 
-    /** IRQ asserted on CPU */
-     bool irqAsserted;
+    uint_least16_t Cycle_EffectiveAddress;
+    uint_least16_t Cycle_HighByteWrongEffectiveAddress;
+    uint_least16_t Cycle_Pointer;
 
-     /** When IRQ was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
-    int  irqCycle;
-
-    /** When NMI was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
-    int  nmiCycle;
-
-    /** Address Controller, blocks reads */
-    bool rdy;
+    uint8_t        Cycle_Data;
+    uint8_t        Register_StackPointer;
+    uint8_t        Register_Accumulator;
+    uint8_t        Register_X;
+    uint8_t        Register_Y;
 
     /** Debug info */
     uint_least16_t instrStartPC;
