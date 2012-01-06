@@ -75,8 +75,7 @@ void MOS656X::reset ()
     sprite_expand_y = 0xff;
     memset (regs, 0, sizeof (regs));
     memset (sprite_mc_base, 0, sizeof (sprite_mc_base));
-    if (pending())
-        event_context.cancel(*this);
+    event_context.cancel(*this);
     event_context.schedule (*this, 0, EVENT_CLOCK_PHI1);
 }
 

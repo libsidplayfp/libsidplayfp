@@ -64,8 +64,6 @@ private:
     */
     void schedule(Event &event) {
 
-        event.m_pending = true;
-
         /* find the right spot where to tuck this new event */
         Event **scan = &firstEvent;
         for (;;) {
@@ -106,10 +104,11 @@ public:
     {
         Event &event = *firstEvent;
         firstEvent = firstEvent->next;
-        event.m_pending = false;
         currentTime = event.triggerTime;
         event.event();
     }
+
+    bool isPending(Event &event) const;
 
     event_clock_t getTime (const event_phase_t phase) const
     {   return (currentTime + (phase ^ 1)) >> 1; }

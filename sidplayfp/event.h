@@ -54,12 +54,6 @@ private:
     /** The clock this event fires */
     event_clock_t triggerTime;
 
-    /**
-    * This variable is set by the event context
-    * when it is scheduled
-    */
-    bool m_pending;
-
     /** The next event in sequence */
     Event *next;
 
@@ -71,8 +65,7 @@ public:
     * @param name Descriptive string of the event.
     */
     Event(const char * const name)
-        : m_name(name),
-          m_pending(false) {}
+        : m_name(name) {}
     ~Event() {}
 
     /**
@@ -81,9 +74,6 @@ public:
     * invocations.
     */
     virtual void event (void) = 0;
-
-    /** Is Event scheduled? */
-    bool    pending () const { return m_pending; }
 };
 
 /**
@@ -128,6 +118,13 @@ public:
     * @param cycles how many cycles from now to fire
     */
     virtual void schedule (Event &event, const event_clock_t cycles) = 0;
+
+    /** Is the event pending in this scheduler?
+    *
+    *  @param event the event
+    *   @return true when pending
+    */
+    virtual bool isPending(Event &event) const = 0;
 
     /** Get time with respect to a specific clock phase
     *

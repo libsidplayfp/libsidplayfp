@@ -23,18 +23,12 @@
 
 void EventScheduler::reset (void)
 {
-    Event *scan = firstEvent;
-    while (scan) {
-        scan->m_pending = false;
-        scan = scan->next;
-    }
     currentTime = 0;
     firstEvent = 0;
 }
 
 void EventScheduler::cancel (Event &event)
 {
-    event.m_pending = false;
     Event *scan = firstEvent;
     Event *prev = 0;
     while (scan) {
@@ -48,4 +42,16 @@ void EventScheduler::cancel (Event &event)
         prev = scan;
         scan = scan->next;
     }
+}
+
+bool EventScheduler::isPending(Event &event) const
+{
+    Event *scan = firstEvent;
+    while (scan) {
+        if (&event == scan) {
+            return true;
+        }
+        scan = scan->next;
+    }
+    return false;
 }
