@@ -2390,7 +2390,6 @@ MOS6510::MOS6510 (EventContext *context)
 
     dodump = false;
     Initialise ();
-return;
 }
 
 /**
