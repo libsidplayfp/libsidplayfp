@@ -46,5 +46,15 @@
 
 #include "cycle_based/mos6510c.h"
 
+#ifdef MOS6510_DEBUG
+
+class MOS6510Debug
+{
+public:
+    static void DumpState (const event_clock_t time, const MOS6510 &cpu);
+};
+
+#endif
+
 #endif // _mos6510_h_
 

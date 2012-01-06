@@ -437,7 +437,7 @@ void MOS6510::interruptsAndNextOpcode (void)
     } else {
 #ifdef MOS6510_DEBUG
         if (dodump)
-            DumpState();
+            MOS6510Debug::DumpState(eventContext.getTime(EVENT_CLOCK_PHI2), *this);
 #endif
         FetchOpcode();
         return;
@@ -461,6 +461,7 @@ void MOS6510::interruptsAndNextOpcode (void)
             break;
         }
         fprintf (m_fdbg, "****************************************************\n");
+        MOS6510Debug::DumpState(cycles, *this);
     }
 #endif
     /* These offset >= 0x100 code paths terminate in FetchOpcode before
@@ -517,10 +518,6 @@ void MOS6510::IRQHiRequest (void)
 */
 void MOS6510::FetchOpcode (void)
 {
-#ifdef MOS6510_DEBUG
-    m_dbgClk = eventContext.getTime (EVENT_CLOCK_PHI2);
-#endif
-
     // Next line used for Debug
     instrStartPC = Register_ProgramCounter;
 
@@ -843,14 +840,6 @@ void MOS6510::PopHighPC (void)
 
 void MOS6510::WasteCycle (void)
 {}
-
-void MOS6510::DebugCycle (void)
-{
-    if (dodump)
-        DumpState ();
-    interruptsAndNextOpcode ();
-}
-
 
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
@@ -1871,10 +1860,6 @@ MOS6510::MOS6510 (EventContext *context)
         if (access == READ) {
             instrTable[buildCycle++].func = &MOS6510::FetchEffAddrDataByte;
         }
-
-#ifdef MOS6510_DEBUG
-        instrTable[buildCycle++].func = &MOS6510::DebugCycle;
-#endif // MOS6510_DEBUG
 
         //---------------------------------------------------------------------------------------
         // Addressing Modes Finished, other cycles are instruction dependent

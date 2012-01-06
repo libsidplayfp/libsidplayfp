@@ -125,6 +125,8 @@
 */
 class MOS6510
 {
+    friend class MOS6510Debug;
+
 private:
     /**
     * IRQ/NMI magic limit values.
@@ -199,8 +201,6 @@ protected:
 
     FILE *m_fdbg;
 
-    event_clock_t m_dbgClk;
-
     bool dodump;
 
     /** Table of CPU opcode implementations */
@@ -263,7 +263,6 @@ protected:
     inline void PopHighPC            (void);
     inline void PopSR                (void);
     inline void WasteCycle           (void);
-    inline void DebugCycle           (void);
 
     // Delcare Instruction Operation Routines
     inline void adc_instr     (void);
@@ -354,7 +353,6 @@ public:
     virtual ~MOS6510 () {}
     virtual void reset     (void);
     virtual void credits   (char *str);
-    virtual void DumpState (void);
     void         debug     (const bool enable, FILE *out);
     void         setRDY    (const bool state);
     void         setEnvironment(C64Environment *env) { this->env = env; }
