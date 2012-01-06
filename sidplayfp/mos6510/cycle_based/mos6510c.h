@@ -136,8 +136,6 @@ private:
     /** Stack page location */
     static const uint8_t SP_PAGE = 0x01;
 
-    static const int SR_BREAK = 4;
-
 public:
     /** Status register interrupt bit. */
     static const int SR_INTERRUPT = 2;

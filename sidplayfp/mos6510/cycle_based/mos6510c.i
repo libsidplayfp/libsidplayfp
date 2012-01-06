@@ -361,7 +361,8 @@ void MOS6510::PopSR (void)
     // Get status register off stack
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    setStatusRegister(env->cpuRead (addr) | (1 << SR_BREAK));
+    setStatusRegister(env->cpuRead (addr));
+    flagB = true;
 }
 
 
