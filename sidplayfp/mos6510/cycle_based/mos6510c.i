@@ -221,8 +221,8 @@ static int  filepos = 0;
 /** When AEC signal is high, no stealing is possible */
 void MOS6510::eventWithoutSteals  (void)
 {
-    const ProcessorCycle *instr = &instrTable[cycleCount++];
-    (this->*(instr->func)) ();
+    const ProcessorCycle &instr = instrTable[cycleCount++];
+    (this->*(instr.func)) ();
     eventContext.schedule(m_nosteal, 1);
 }
 
@@ -230,8 +230,8 @@ void MOS6510::eventWithoutSteals  (void)
 void MOS6510::eventWithSteals  (void)
 {
     if (instrTable[cycleCount].nosteal) {
-        const ProcessorCycle *instr = &instrTable[cycleCount++];
-        (this->*(instr->func)) ();
+        const ProcessorCycle &instr = instrTable[cycleCount++];
+        (this->*(instr.func)) ();
         eventContext.schedule(m_steal, 1);
     } else {
         /* Even while stalled, the CPU can still process first clock of
@@ -466,8 +466,8 @@ void MOS6510::interruptsAndNextOpcode (void)
     * coming back. This is important because irqCount is only valid during
     * 1 instruction's execution. */
     cycleCount = (offset << 3) + 1;
-    const ProcessorCycle *instr = &instrTable[cycleCount++];
-    (this->*(instr->func)) ();
+    const ProcessorCycle &instr = instrTable[cycleCount++];
+    (this->*(instr.func)) ();
 }
 
 void MOS6510::RSTLoRequest (void)
