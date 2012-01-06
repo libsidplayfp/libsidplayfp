@@ -336,7 +336,6 @@ protected:
     inline void sta_instr     (void);
     inline void stx_instr     (void);
     inline void sty_instr     (void);
-    inline void tas_instr     (void);
     inline void tax_instr     (void);
     inline void tay_instr     (void);
     inline void tsx_instr     (void);

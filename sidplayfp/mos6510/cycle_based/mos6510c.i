@@ -1667,18 +1667,6 @@ void MOS6510::rra_instr (void)
     doADC ();
 }
 
-// Undocumented - This opcode ANDs the contents of the A and X registers (without changing
-// the contents of either register) and transfers the result to the stack
-// pointer.  It then ANDs that result with the contents of the high byte of
-// the target address of the operand +1 and stores that final result in
-// memory.
-void MOS6510::tas_instr (void)
-{
-    Register_StackPointer = Register_Accumulator & Register_X;
-    uint_least16_t tmp = Register_StackPointer & (Cycle_EffectiveAddress + 1);
-    Cycle_Data         = (signed) endian_16lo8 (tmp);
-}
-
 //-------------------------------------------------------------------------//
 
 /**
