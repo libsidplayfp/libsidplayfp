@@ -467,7 +467,7 @@ void MOS6510::interruptsAndNextOpcode (void)
     /* These offset >= 0x100 code paths terminate in FetchOpcode before
     * coming back. This is important because irqCount is only valid during
     * 1 instruction's execution. */
-    cycleCount = (offset << 3) + 1;
+    cycleCount = offset << 3;
     const ProcessorCycle &instr = instrTable[cycleCount++];
     (this->*(instr.func)) ();
 }
