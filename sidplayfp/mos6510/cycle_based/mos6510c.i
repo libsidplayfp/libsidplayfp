@@ -477,12 +477,12 @@ void MOS6510::RSTLoRequest (void)
     /* reset the values in MMU */
     env->cpuWrite(0, 0x2f);
     env->cpuWrite(1, 0x37);
-    Register_ProgramCounter = env->cpuRead(0xFFFC);
+    endian_32lo8 (Register_ProgramCounter, env->cpuRead (0xFFFC));
 }
 
 void MOS6510::RSTHiRequest (void)
 {
-    Register_ProgramCounter = env->cpuRead(0xFFFD);
+    endian_32hi8 (Register_ProgramCounter, env->cpuRead (0xFFFD));
 }
 
 void MOS6510::NMILoRequest (void)
@@ -519,9 +519,9 @@ void MOS6510::IRQHiRequest (void)
 void MOS6510::FetchOpcode (void)
 {
     // Next line used for Debug
-    instrStartPC = Register_ProgramCounter;
+    instrStartPC = endian_32lo16 (Register_ProgramCounter);
 
-    cycleCount = (env->cpuRead(Register_ProgramCounter) & 0xff) << 3;
+    cycleCount = (env->cpuRead(endian_32lo16 (Register_ProgramCounter)) & 0xff) << 3;
     Register_ProgramCounter++;
 
     irqCycle = irqAsserted ? -MAX : MAX;
@@ -704,7 +704,7 @@ void MOS6510::FetchLowPointer (void)
 */
 void MOS6510::FetchLowPointerX (void)
 {
-    Cycle_Pointer = (Cycle_Pointer + Register_X) & 0xFF;
+    endian_16lo8 (Cycle_Pointer, (Cycle_Pointer + Register_X) & 0xFF);
 }
 
 /**
@@ -1194,7 +1194,7 @@ void MOS6510::branch_instr (const bool condition)
     if (condition)
     {
         /* issue the spurious read for next insn here. */
-        env->cpuRead(Register_ProgramCounter);
+        env->cpuRead(endian_32lo16 (Register_ProgramCounter));
         Cycle_HighByteWrongEffectiveAddress = Register_ProgramCounter & 0xff00 | Register_ProgramCounter + (int8_t) Cycle_Data & 0xff;
         Cycle_EffectiveAddress = Register_ProgramCounter + (int8_t) Cycle_Data;
 
