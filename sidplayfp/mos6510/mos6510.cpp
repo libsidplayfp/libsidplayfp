@@ -72,7 +72,7 @@ void MOS6510Debug::DumpState (const event_clock_t time, const MOS6510 &cpu)
 {
     fprintf(cpu.m_fdbg, " PC  I  A  X  Y  SP  DR PR NV-BDIZC  Instruction (%u)\n", time);
     fprintf(cpu.m_fdbg, "%04x ",   cpu.instrStartPC);
-    fprintf(cpu.m_fdbg, cpu.irqAsserted ? "t " : "f ");
+    fprintf(cpu.m_fdbg, cpu.irqAssertedOnPin ? "t " : "f ");
     fprintf(cpu.m_fdbg, "%02x ",   cpu.Register_Accumulator);
     fprintf(cpu.m_fdbg, "%02x ",   cpu.Register_X);
     fprintf(cpu.m_fdbg, "%02x ",   cpu.Register_Y);

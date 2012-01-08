@@ -246,7 +246,7 @@ void MOS6510::eventWithSteals  (void)
         if (cycleCount == CLIn << 3) {
             cycleCount = NOPn << 3;
             flagI = false;
-            irqCycle = irqAsserted ? -MAX : MAX;
+            irqCycle = irqAssertedOnPin ? -MAX : MAX;
             return;
         }
 
@@ -318,12 +318,12 @@ void MOS6510::setStatusRegister(const uint8_t sr)
 *
 * @param rdy new state for RDY signal
 */
-void MOS6510::setRDY (const bool newAec)
+void MOS6510::setRDY (const bool newRDY)
 {
-    if (rdy == newAec)
+    if (rdy == newRDY)
         return;
 
-    rdy = newAec;
+    rdy = newRDY;
     if (rdy) {
         eventContext.cancel(m_steal);
         eventContext.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
@@ -408,10 +408,10 @@ void MOS6510::triggerNMI (void)
 void MOS6510::triggerIRQ (void)
 {
     /* mark interrupt arrival time */
-    if (irqAsserted)
+    if (irqAssertedOnPin)
         return;
 
-    irqAsserted = true;
+    irqAssertedOnPin = true;
     irqCycle = cycleCount;
     /* maybe process 1 clock of interrupt delay. */
     if (! rdy) {
@@ -423,7 +423,7 @@ void MOS6510::triggerIRQ (void)
 /** Inform CPU that IRQ is no longer pulled low. */
 void MOS6510::clearIRQ (void)
 {
-    irqAsserted = false;
+    irqAssertedOnPin = false;
 }
 
 void MOS6510::interruptsAndNextOpcode (void)
@@ -524,7 +524,7 @@ void MOS6510::FetchOpcode (void)
     cycleCount = (env->cpuRead(endian_32lo16 (Register_ProgramCounter)) & 0xff) << 3;
     Register_ProgramCounter++;
 
-    irqCycle = irqAsserted ? -MAX : MAX;
+    irqCycle = irqAssertedOnPin ? -MAX : MAX;
     if (nmiCycle != MAX)
         nmiCycle = -MAX;
 }
@@ -2398,7 +2398,7 @@ void MOS6510::Initialise (void)
     Register_ProgramCounter = 0;
 
     // IRQs pending check
-    irqAsserted = false;
+    irqAssertedOnPin = false;
     irqCycle = MAX;
     nmiCycle = MAX;
 

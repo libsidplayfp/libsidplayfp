@@ -163,7 +163,7 @@ protected:
     /* Interrupts */
 
     /** IRQ asserted on CPU */
-    bool irqAsserted;
+    bool irqAssertedOnPin;
 
      /** When IRQ was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
     int irqCycle;
@@ -354,7 +354,7 @@ public:
     virtual void reset     (void);
     virtual void credits   (char *str);
     void         debug     (const bool enable, FILE *out);
-    void         setRDY    (const bool state);
+    void         setRDY    (const bool newRDY);
     void         setEnvironment(C64Environment *env) { this->env = env; }
 
     // Non-standard functions
