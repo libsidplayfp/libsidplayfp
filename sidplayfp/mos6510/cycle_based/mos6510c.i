@@ -1592,7 +1592,7 @@ void MOS6510::dcm_instr (void)
 void MOS6510::ins_instr (void)
 {
     PutEffAddrDataByte ();
-    Cycle_Data++;
+    setFlagsNZ (++Cycle_Data);
     doSBC ();
 }
 
