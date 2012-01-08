@@ -2310,7 +2310,7 @@ MOS6510::MOS6510 (EventContext *context)
 #endif
 
 #if MOS6510_DEBUG > 1
-        printf ("Done [%d Cycles]\n", buildCycle);
+        printf ("Done [%d Cycles]\n", buildCycle - (i << 3));
 #endif
     }
 
@@ -2362,7 +2362,7 @@ MOS6510::MOS6510 (EventContext *context)
 #endif
 
 #if MOS6510_DEBUG > 1
-        printf ("Done [%d Cycles]\n", buildCycle);
+        printf ("Done [%d Cycles]\n", buildCycle - (offset << 3));
 #endif
     }
 
