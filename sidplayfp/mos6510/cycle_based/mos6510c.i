@@ -623,7 +623,7 @@ void MOS6510::FetchHighAddr (void)
     Register_ProgramCounter++;
 
     // Next line used for Debug
-    endian_16hi8 (instrOperand, endian_16hi8 (Cycle_EffectiveAddress));
+    instrOperand = Cycle_EffectiveAddress;
 }
 
 /**
@@ -691,7 +691,7 @@ void MOS6510::FetchLowPointer (void)
     Register_ProgramCounter++;
 
     // Nextline used for Debug
-    endian_16hi8 (instrOperand, endian_16hi8 (Cycle_Pointer));
+    endian_16lo8 (instrOperand, endian_16lo8 (Cycle_Pointer));
 }
 
 /**
