@@ -115,7 +115,7 @@ public:
 		filt2(false),
 		filt3(false),
 		filtE(false),
-		voice3off(0),
+		voice3off(false),
 		hp(false),
 		bp(false),
 		lp(false) {}
