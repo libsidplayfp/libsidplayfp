@@ -144,9 +144,11 @@ int Filter6581::clock(const int voice1, const int voice2, const int voice3) {
 	} else {
 		Vo += v2;
 	}
+	// NB! Voice 3 is not silenced by voice3off if it is routed
+	// through the filter.
 	if (filt3) {
 		Vi += v3;
-	} else {
+	} else if (!voice3off) {
 		Vo += v3;
 	}
 	if (filtE) {

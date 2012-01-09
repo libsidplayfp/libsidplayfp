@@ -44,7 +44,7 @@ void Filter6581::updatedMixing() {
 	}
 	if (filt3) {
 		ni++;
-	} else {
+	} else if (!voice3off) {
 		no++;
 	}
 	if (filtE) {
