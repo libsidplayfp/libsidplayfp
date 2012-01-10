@@ -160,18 +160,19 @@ protected:
     /** Current instruction and subcycle within instruction */
     int cycleCount;
 
-    /* Interrupts */
-
     /** IRQ asserted on CPU */
     bool irqAssertedOnPin;
 
      /** When IRQ was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
-    int irqCycle;
+    int interruptCycle;
 
-    /** When NMI was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
-    int nmiCycle;
+    /** NMI requested? */
+    bool nmiFlag;
 
-    /** Address Controller, blocks reads */
+    /** RST requested? */
+    bool rstFlag;
+
+    /** RDY pin state (stop CPU on read) */
     bool rdy;
 
     bool           flagN;
@@ -182,9 +183,8 @@ protected:
     bool           flagI;
     bool           flagB;
 
-    /** Pointers to the current instruction cycle */
+    /** Data regarding current instruction */
     uint_least32_t Register_ProgramCounter;
-
     uint_least16_t Cycle_EffectiveAddress;
     uint_least16_t Cycle_HighByteWrongEffectiveAddress;
     uint_least16_t Cycle_Pointer;
@@ -204,7 +204,7 @@ protected:
     bool dodump;
 
     /** Table of CPU opcode implementations */
-    struct ProcessorCycle  instrTable[0x103 << 3];
+    struct ProcessorCycle  instrTable[0x101 << 3];
 
 protected:
     /** Represents an instruction subcycle that writes */
@@ -224,17 +224,13 @@ protected:
     inline void setStatusRegister(const uint8_t sr);
 
     // Declare Interrupt Routines
-    inline void RSTLoRequest     (void);
-    inline void RSTHiRequest     (void);
-    inline void NMILoRequest     (void);
-    inline void NMIHiRequest     (void);
-    inline void IRQRequest       (void);
     inline void IRQLoRequest     (void);
     inline void IRQHiRequest     (void);
-    void interruptsAndNextOpcode (void);
+    inline void interruptsAndNextOpcode (void);
+    inline void calculateInterruptTriggerCycle();
 
     // Declare Instruction Routines
-    virtual void FetchOpcode         (void);
+    inline void fetchNextOpcode      (void);
     inline void throwAwayFetch       (void);
     inline void throwAwayRead        (void);
     inline void FetchDataByte        (void);
@@ -257,11 +253,11 @@ protected:
     inline void PutEffAddrDataByte   (void);
     inline void PushLowPC            (void);
     inline void PushHighPC           (void);
-    inline void PushSR               (const bool b_flag);
     inline void PushSR               (void);
     inline void PopLowPC             (void);
     inline void PopHighPC            (void);
     inline void PopSR                (void);
+    inline void brkPushLowPC         (void);
     inline void WasteCycle           (void);
 
     // Delcare Instruction Operation Routines
@@ -347,6 +343,8 @@ protected:
     // Declare Arithmatic Operations
     inline void doADC   (void);
     inline void doSBC   (void);
+
+    inline void doJSR         (void);
 
 public:
     MOS6510 (EventContext *context);

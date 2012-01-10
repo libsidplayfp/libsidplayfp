@@ -235,30 +235,11 @@ void MOS6510::eventWithSteals  (void)
         eventContext.schedule(m_steal, 1);
     } else {
         /* Even while stalled, the CPU can still process first clock of
-        * interrupt delay, but only the first one. However, IRQ may be
-        * modified by CLI and SEI, and are specially handled below. */
-        if (nmiCycle == cycleCount)
-            nmiCycle --;
-
-        /* If stalled on first cycle of CLIn, consume IRQ delay
-        * normally and thus allow IRQ to trigger on the next
-        * instruction. */
-        if (cycleCount == CLIn << 3) {
-            cycleCount = NOPn << 3;
-            flagI = false;
-            irqCycle = irqAssertedOnPin ? -MAX : MAX;
-            return;
+        * interrupt delay, but only the first one. */
+        if (interruptCycle == cycleCount)
+        {
+            interruptCycle --;
         }
-
-        /* If stalled on first cycle of SEIn, don't consume IRQ delay.
-        * This has the effect of causing the interrupt to be skipped
-        * if it arrives during the CPU being stalled on this cycle. */
-        if (cycleCount == SEIn << 3)
-            return;
-
-        /* no special conditions matched */
-        if (irqCycle == cycleCount)
-            irqCycle --;
     }
 }
 
@@ -340,17 +321,11 @@ void MOS6510::setRDY (const bool newRDY)
 * @param newFlagB
 *            new value for B flag to set on CPU and write to RAM
 */
-void MOS6510::PushSR (const bool b_flag)
+void MOS6510::PushSR ()
 {
-    flagB = b_flag;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     env->cpuWrite (addr, getStatusRegister());
     Register_StackPointer--;
-}
-
-void MOS6510::PushSR (void)
-{
-    PushSR (true);
 }
 
 /**
@@ -363,6 +338,8 @@ void MOS6510::PopSR (void)
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     setStatusRegister(env->cpuRead (addr));
     flagB = true;
+
+    calculateInterruptTriggerCycle();
 }
 
 
@@ -382,7 +359,9 @@ void MOS6510::PopSR (void)
 void MOS6510::triggerRST (void)
 {
     Initialise();
-    cycleCount = oRST << 3;
+    cycleCount = BRKn << 3;
+    rstFlag = true;
+    calculateInterruptTriggerCycle();
 }
 
 /**
@@ -393,10 +372,9 @@ void MOS6510::triggerRST (void)
 */
 void MOS6510::triggerNMI (void)
 {
-    if (nmiCycle != MAX)
-        return;
+    nmiFlag = true;
+    calculateInterruptTriggerCycle();
 
-    nmiCycle = cycleCount;
     /* maybe process 1 clock of interrupt delay. */
     if (! rdy) {
         eventContext.cancel(m_steal);
@@ -407,14 +385,11 @@ void MOS6510::triggerNMI (void)
 /** Pull IRQ line low on CPU. */
 void MOS6510::triggerIRQ (void)
 {
-    /* mark interrupt arrival time */
-    if (irqAssertedOnPin)
-        return;
-
     irqAssertedOnPin = true;
-    irqCycle = cycleCount;
+    calculateInterruptTriggerCycle();
+
     /* maybe process 1 clock of interrupt delay. */
-    if (! rdy) {
+    if (! rdy && interruptCycle == cycleCount) {
         eventContext.cancel(m_steal);
         eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
@@ -424,109 +399,86 @@ void MOS6510::triggerIRQ (void)
 void MOS6510::clearIRQ (void)
 {
     irqAssertedOnPin = false;
+    calculateInterruptTriggerCycle();
 }
 
 void MOS6510::interruptsAndNextOpcode (void)
 {
-    int offset;
-    if (cycleCount > nmiCycle + 2) {
-        nmiCycle = MAX;
-        offset = oNMI;
-    } else if (!flagI && cycleCount > irqCycle + 2) {
-        offset = oIRQ;
-    } else {
+    if (cycleCount > interruptCycle + 2)
+    {
 #ifdef MOS6510_DEBUG
         if (dodump)
-            MOS6510Debug::DumpState(eventContext.getTime(EVENT_CLOCK_PHI2), *this);
+        {
+            const event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
+            fprintf (m_fdbg, "****************************************************\n");
+            fprintf (m_fdbg, " interrupt (%d)\n", cycles);
+            fprintf (m_fdbg, "****************************************************\n");
+            MOS6510Debug::DumpState(cycles, *this);
+        }
 #endif
-        FetchOpcode();
-        return;
+        env->cpuRead(endian_32lo16 (Register_ProgramCounter));
+        cycleCount = BRKn << 3;
+        flagB = false;
+        interruptCycle = MAX;
+    } else {
+        fetchNextOpcode();
     }
+}
 
+void MOS6510::fetchNextOpcode (void)
+{
 #ifdef MOS6510_DEBUG
     if (dodump)
     {
-        const event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
-        fprintf (m_fdbg, "****************************************************\n");
-        switch (offset)
-        {
-        case oIRQ:
-            fprintf (m_fdbg, " IRQ Routine (%u)\n", cycles);
-            break;
-        case oNMI:
-            fprintf (m_fdbg, " NMI Routine (%u)\n", cycles);
-            break;
-        case oRST:
-            fprintf (m_fdbg, " RST Routine (%u)\n", cycles);
-            break;
-        }
-        fprintf (m_fdbg, "****************************************************\n");
-        MOS6510Debug::DumpState(cycles, *this);
+        MOS6510Debug::DumpState(eventContext.getTime(EVENT_CLOCK_PHI2), *this);
     }
 #endif
-    /* These offset >= 0x100 code paths terminate in FetchOpcode before
-    * coming back. This is important because irqCount is only valid during
-    * 1 instruction's execution. */
-    cycleCount = offset << 3;
-    const ProcessorCycle &instr = instrTable[cycleCount++];
-    (this->*(instr.func)) ();
+    // Next line used for Debug
+    instrStartPC = endian_32lo16 (Register_ProgramCounter);
+
+    cycleCount = env->cpuRead(instrStartPC) << 3;
+    Register_ProgramCounter++;
+
+    if (!rstFlag && !nmiFlag && !(!flagI && irqAssertedOnPin))
+    {
+        interruptCycle = MAX;
+    }
+    if (interruptCycle != MAX)
+    {
+        interruptCycle = -MAX;
+    }
 }
 
-void MOS6510::RSTLoRequest (void)
+/**
+* Evaluate when to execute an interrupt. Calling this method can also
+* result in the decision that no interrupt at all needs to be scheduled.
+*/
+void MOS6510::calculateInterruptTriggerCycle()
 {
-    /* reset the values in MMU */
-    env->cpuWrite(0, 0x2f);
-    env->cpuWrite(1, 0x37);
-    endian_32lo8 (Register_ProgramCounter, env->cpuRead (0xFFFC));
-}
-
-void MOS6510::RSTHiRequest (void)
-{
-    endian_32hi8 (Register_ProgramCounter, env->cpuRead (0xFFFD));
-}
-
-void MOS6510::NMILoRequest (void)
-{
-    endian_32lo8 (Register_ProgramCounter, env->cpuRead (0xFFFA));
-}
-
-void MOS6510::NMIHiRequest (void)
-{
-    endian_32hi8 (Register_ProgramCounter, env->cpuRead (0xFFFB));
-}
-
-void MOS6510::IRQRequest (void)
-{
-    PushSR (false);
-    flagI = true;
+    /* Interrupt cycle not going to trigger? */
+    if (interruptCycle == MAX)
+    {
+        if (rstFlag || nmiFlag || (!flagI && irqAssertedOnPin))
+        {
+            interruptCycle = cycleCount;
+        }
+    }
 }
 
 void MOS6510::IRQLoRequest (void)
 {
-    endian_32lo8 (Register_ProgramCounter, env->cpuRead (0xFFFE));
+    if (Cycle_EffectiveAddress == 0xFFFC) //FIXME
+    {
+        /* reset the values in MMU */
+        env->cpuWrite(0, 0x2f);
+        env->cpuWrite(1, 0x37);
+    }
+    endian_32lo8 (Register_ProgramCounter, env->cpuRead (Cycle_EffectiveAddress));
 }
 
 void MOS6510::IRQHiRequest (void)
 {
-    endian_32hi8 (Register_ProgramCounter, env->cpuRead (0xFFFF));
-}
-
-/**
-* Fetch opcode, increment PC<BR>
-*
-* Addressing Modes: All
-*/
-void MOS6510::FetchOpcode (void)
-{
-    // Next line used for Debug
-    instrStartPC = endian_32lo16 (Register_ProgramCounter);
-
-    cycleCount = (env->cpuRead(endian_32lo16 (Register_ProgramCounter)) & 0xff) << 3;
-    Register_ProgramCounter++;
-
-    irqCycle = irqAssertedOnPin ? -MAX : MAX;
-    if (nmiCycle != MAX)
-        nmiCycle = -MAX;
+    endian_32hi8 (Register_ProgramCounter, env->cpuRead (Cycle_EffectiveAddress + 1));
 }
 
 /**
@@ -557,7 +509,9 @@ void MOS6510::throwAwayRead (void)
 void MOS6510::FetchDataByte (void)
 {
     Cycle_Data = env->cpuRead (endian_32lo16 (Register_ProgramCounter));
-    Register_ProgramCounter++;
+    if (flagB) {
+        Register_ProgramCounter++;
+    }
 }
 
 /**
@@ -841,6 +795,30 @@ void MOS6510::PopHighPC (void)
 void MOS6510::WasteCycle (void)
 {}
 
+void MOS6510::brkPushLowPC (void)
+{
+    PushLowPC ();
+    if (rstFlag)
+    {
+        /* rst = %10x */
+        Cycle_EffectiveAddress = 0xfffc;
+    }
+    else if (nmiFlag)
+    {
+        /* nmi = %01x */
+        Cycle_EffectiveAddress = 0xfffa;
+    }
+    else
+    {
+        /* irq = %11x */
+        Cycle_EffectiveAddress = 0xfffe;
+    }
+
+    rstFlag = false;
+    nmiFlag = false;
+    calculateInterruptTriggerCycle();
+}
+
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 // Common Instruction Opcodes                                              //
@@ -851,15 +829,8 @@ void MOS6510::WasteCycle (void)
 void MOS6510::brk_instr (void)
 {
     PushSR   ();
+    flagB = true;
     flagI = true;
-
-    /* check if we need to transform BRK into NMI.
-    * c64doc says "If the interrupt arrives before the
-    * flag-setting cycle" */
-    if (nmiCycle < (BRKn << 3) + 3) {
-        cycleCount = (oNMI << 3) + 5;
-        nmiCycle = MAX;
-    }
 }
 
 void MOS6510::cld_instr (void)
@@ -870,15 +841,18 @@ void MOS6510::cld_instr (void)
 
 void MOS6510::cli_instr (void)
 {
-    if (flagI) {
-        irqCycle = cycleCount;
-    }
-
     flagI = false;
+    calculateInterruptTriggerCycle();
     interruptsAndNextOpcode();
 }
 
 void MOS6510::jmp_instr (void)
+{
+    doJSR ();
+    interruptsAndNextOpcode ();
+}
+
+void MOS6510::doJSR (void)
 {
     endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
 
@@ -911,8 +885,6 @@ void MOS6510::jmp_instr (void)
         env->envLoadFile (filetmp);
     }
 #endif // PC64_TESTSUITE
-
-    interruptsAndNextOpcode ();
 }
 
 void MOS6510::pha_instr (void)
@@ -950,8 +922,10 @@ void MOS6510::sed_instr (void)
 
 void MOS6510::sei_instr (void)
 {
-    interruptsAndNextOpcode();
     flagI = true;
+    interruptsAndNextOpcode();
+    if (!rstFlag && !nmiFlag && interruptCycle != MAX)
+        interruptCycle = MAX;
 }
 
 void MOS6510::sta_instr (void)
@@ -1203,10 +1177,9 @@ void MOS6510::branch_instr (const bool condition)
         if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
         {
             cycleCount ++;
-            if (irqCycle != -MAX && irqCycle != MAX)
-                irqCycle += 2;
-            if (nmiCycle != -MAX && nmiCycle != MAX)
-                nmiCycle +=2;
+            /* Hack: delay the interrupt past this instruction. */
+            if (interruptCycle >> 3 == cycleCount >> 3)
+                interruptCycle += 2;
         }
         Register_ProgramCounter = Cycle_EffectiveAddress;
     }
@@ -1941,12 +1914,12 @@ MOS6510::MOS6510 (EventContext *context)
             instrTable[buildCycle].nosteal = true;
             instrTable[buildCycle++].func = &MOS6510::PushHighPC;
             instrTable[buildCycle].nosteal = true;
-            instrTable[buildCycle++].func = &MOS6510::PushLowPC;
+            instrTable[buildCycle++].func = &MOS6510::brkPushLowPC;
             instrTable[buildCycle].nosteal = true;
             instrTable[buildCycle++].func = &MOS6510::brk_instr;
             instrTable[buildCycle++].func = &MOS6510::IRQLoRequest;
             instrTable[buildCycle++].func = &MOS6510::IRQHiRequest;
-            instrTable[buildCycle++].func = &MOS6510::FetchOpcode;
+            instrTable[buildCycle++].func = &MOS6510::fetchNextOpcode;
         break;
 
         case BVCr:
@@ -2315,58 +2288,6 @@ MOS6510::MOS6510 (EventContext *context)
 #endif
     }
 
-    //----------------------------------------------------------------------
-    // Build interrupts
-    for (int i = 0; i < 3; i++)
-    {
-#if MOS6510_DEBUG > 1
-        printf ("Building Interrupt %d[%02x]..", i, i);
-#endif
-
-        const int offset = i + 0x100;
-        int buildCycle = offset << 3;
-
-        /* common interrupt handling lead-in:
-        * 2x read from PC, store pc hi, pc lo, sr to stack.
-        */
-        instrTable[buildCycle++].func = &MOS6510::throwAwayFetch;
-        instrTable[buildCycle++].func = &MOS6510::throwAwayFetch;
-        instrTable[buildCycle].nosteal = true;
-        instrTable[buildCycle++].func = &MOS6510::PushHighPC;
-        instrTable[buildCycle].nosteal = true;
-        instrTable[buildCycle++].func = &MOS6510::PushLowPC;
-        instrTable[buildCycle].nosteal = true;
-        instrTable[buildCycle++].func = &MOS6510::IRQRequest;
-
-        switch (offset)
-        {
-        case oRST:
-            instrTable[buildCycle++].func = &MOS6510::RSTLoRequest;
-            instrTable[buildCycle++].func = &MOS6510::RSTHiRequest;
-        break;
-
-        case oNMI:
-            instrTable[buildCycle++].func = &MOS6510::NMILoRequest;
-            instrTable[buildCycle++].func = &MOS6510::NMIHiRequest;
-        break;
-
-        case oIRQ:
-            instrTable[buildCycle++].func = &MOS6510::IRQLoRequest;
-            instrTable[buildCycle++].func = &MOS6510::IRQHiRequest;
-        break;
-        }
-
-        instrTable[buildCycle].func = &MOS6510::FetchOpcode;
-
-#if MOS6510_DEBUG > 1
-        printf (".");
-#endif
-
-#if MOS6510_DEBUG > 1
-        printf ("Done [%d Cycles]\n", buildCycle - (offset << 3));
-#endif
-    }
-
     // Intialise Processor Registers
     Register_Accumulator   = 0;
     Register_X             = 0;
@@ -2388,7 +2309,7 @@ void MOS6510::Initialise (void)
     Register_StackPointer = 0xFF;
 
     // Reset Cycle Count
-    cycleCount = (NOPn << 3) + 1;
+    cycleCount = (BRKn << 3) + 6; // fetchNextOpcode
 
     // Reset Status Register
     flagB = true;
@@ -2399,8 +2320,9 @@ void MOS6510::Initialise (void)
 
     // IRQs pending check
     irqAssertedOnPin = false;
-    irqCycle = MAX;
-    nmiCycle = MAX;
+    nmiFlag = false;
+    rstFlag = false;
+    interruptCycle = MAX;
 
     // Signals
     rdy = true;
