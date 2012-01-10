@@ -1,8 +1,10 @@
 0.3.2 2012-01-xx
 * Zero (ground) bit 0 of triangle waveform in reSID
 * Enable channel muting for reSID and reSIDfp
+* Fix Voice 3 Off in reSIDfp
 * Do not reject RSID v3 tunes
 * Improve scheduling efficience of CPU and VIC
+
 
 
 0.3.1 2011-10-02

@@ -80,7 +80,7 @@ void Filter::writeMODE_VOL(const unsigned char mode_vol) {
 	lp = (mode_vol & 0x10) != 0;
 	bp = (mode_vol & 0x20) != 0;
 	hp = (mode_vol & 0x40) != 0;
-	voice3off = (mode_vol & 0x80) == 0;
+	voice3off = (mode_vol & 0x80) != 0;
 
 	updatedMixing();
 }

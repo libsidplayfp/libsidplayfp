@@ -79,9 +79,11 @@ int Filter8580::clock(const int v1, const int v2, const int v3) {
 	} else {
 		Vo += voice2;
 	}
+	// NB! Voice 3 is not silenced by voice3off if it is routed
+	// through the filter.
 	if (filt3) {
 		Vi += voice3;
-	} else {
+	} else if (!voice3off) {
 		Vo += voice3;
 	}
 	if (filtE) {
