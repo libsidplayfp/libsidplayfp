@@ -68,6 +68,7 @@ sidplayfp/mixer.h \
 sidplayfp/reloc65.c \
 sidplayfp/sidplay2.cpp \
 sidplayfp/psiddrv.a65 \
+sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/mmu.cpp \
