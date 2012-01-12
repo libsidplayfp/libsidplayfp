@@ -24,6 +24,9 @@
 #include "sidendian.h"
 #include "player.h"
 
+#include "mos6510/opcodes.h"
+
+
 #define PSIDDRV_MAX_PAGE 0xff
 
 SIDPLAY2_NAMESPACE_START

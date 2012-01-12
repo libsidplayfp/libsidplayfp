@@ -77,7 +77,6 @@ sidplayfp/mos656x/mos656x.cpp \
 sidplayfp/mos656x/mos656x.h \
 sidplayfp/mos6510/mos6510.cpp \
 sidplayfp/mos6510/mos6510.h \
-sidplayfp/mos6510/conf6510.h \
 sidplayfp/mos6510/opcodes.h \
 sidplayfp/mos6526/mos6526.cpp \
 sidplayfp/mos6526/mos6526.h \

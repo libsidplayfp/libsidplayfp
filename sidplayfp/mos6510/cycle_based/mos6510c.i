@@ -186,10 +186,6 @@
 #  include "config.h"
 #endif
 
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
-
 #include <string.h>
 
 #ifdef PC64_TESTSUITE
@@ -408,7 +404,7 @@ void MOS6510::interruptsAndNextOpcode (void)
 {
     if (cycleCount > interruptCycle + 2)
     {
-#ifdef MOS6510_DEBUG
+#ifdef DEBUG
         if (dodump)
         {
             const event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
@@ -429,7 +425,7 @@ void MOS6510::interruptsAndNextOpcode (void)
 
 void MOS6510::fetchNextOpcode (void)
 {
-#ifdef MOS6510_DEBUG
+#ifdef DEBUG
     if (dodump)
     {
         MOS6510Debug::DumpState(eventContext.getTime(EVENT_CLOCK_PHI2), *this);
@@ -901,7 +897,7 @@ void MOS6510::pha_instr (void)
  * interrupt routine as soon as the opcode ends, if necessary. */
 void MOS6510::rti_instr (void)
 {
-#ifdef MOS6510_DEBUG
+#ifdef DEBUG
     if (dodump)
         fprintf (m_fdbg, "****************************************************\n\n");
 #endif
@@ -1652,7 +1648,7 @@ MOS6510::MOS6510 (EventContext *context)
     // Build up the processor instruction table
     for (int i = 0; i < 0x100; i++)
     {
-#if MOS6510_DEBUG > 1
+#if DEBUG > 1
         printf ("Building Command %d[%02x]..", i, i);
 #endif
 
@@ -2281,11 +2277,11 @@ MOS6510::MOS6510 (EventContext *context)
         /* check for IRQ triggers or fetch next opcode... */
         instrTable[buildCycle].func = &MOS6510::interruptsAndNextOpcode;
 
-#if MOS6510_DEBUG > 1
+#if DEBUG > 1
         printf (".");
 #endif
 
-#if MOS6510_DEBUG > 1
+#if DEBUG > 1
         printf ("Done [%d Cycles]\n", buildCycle - (i << 3));
 #endif
     }

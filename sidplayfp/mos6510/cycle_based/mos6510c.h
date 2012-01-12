@@ -117,6 +117,8 @@
 #include <stdint.h>
 
 #include "sidplayfp/sidendian.h"
+#include "sidplayfp/component.h"
+#include "sidplayfp/EventScheduler.h"
 
 /** @internal
 * Cycle-exact 6502/6510 emulation core.

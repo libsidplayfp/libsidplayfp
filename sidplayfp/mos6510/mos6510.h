@@ -33,19 +33,9 @@
 #ifndef _mos6510_h_
 #define _mos6510_h_
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#include "sidplayfp/component.h"
-#include "sidplayfp/EventScheduler.h"
-
-#include "opcodes.h"
-#include "conf6510.h"
-
 #include "cycle_based/mos6510c.h"
 
-#ifdef MOS6510_DEBUG
+#ifdef DEBUG
 
 class MOS6510Debug
 {
