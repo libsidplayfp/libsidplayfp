@@ -1,4 +1,4 @@
-0.3.2 2012-01-xx
+0.3.2 2012-01-12
 * Zero (ground) bit 0 of triangle waveform in reSID
 * Enable channel muting for reSID and reSIDfp
 * Fix Voice 3 Off in reSIDfp
