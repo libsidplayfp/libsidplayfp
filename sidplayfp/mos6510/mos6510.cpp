@@ -54,7 +54,6 @@
 #include <stdlib.h>
 
 #include "sidplayfp/sidendian.h"
-#include "sidplayfp/sidenv.h"
 #include "conf6510.h"
 #include "opcodes.h"
 

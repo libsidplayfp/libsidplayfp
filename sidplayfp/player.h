@@ -23,15 +23,12 @@
 #include "SidTune.h"
 #include "sidbuilder.h"
 
-#include "sidenv.h"
 #include "c64env.h"
+#include "c64/c64cpu.h"
 #include "c64/c64cia.h"
 #include "c64/c64vic.h"
 #include "c64/mmu.h"
 #include "mixer.h"
-
-#include "mos6510/mos6510.h"
-
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -46,7 +43,7 @@
 
 SIDPLAY2_NAMESPACE_START
 
-class Player: public C64Environment, private c64env
+class Player: private c64env
 {
 private:
     static const double CLOCK_FREQ_NTSC;
@@ -74,8 +71,7 @@ private:
 
     EventScheduler m_scheduler;
 
-    MOS6510 cpu;
-    // Sid objects to use.
+    c64cpu  cpu;
     c64cia1 cia;
     c64cia2 cia2;
     c64vic  vic;
@@ -131,7 +127,7 @@ private:
     int   irqCount;
 
 #ifdef PC64_TESTSUITE
-    void   envLoadFile (const char *file)
+    void   loadFile (const char *file)
     {
         char name[0x100] = PC64_TESTSUITE;
         strcat (name, file);

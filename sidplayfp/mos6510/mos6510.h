@@ -38,7 +38,6 @@
 #endif
 
 #include "sidplayfp/component.h"
-#include "sidplayfp/sidenv.h"
 #include "sidplayfp/EventScheduler.h"
 
 #include "opcodes.h"

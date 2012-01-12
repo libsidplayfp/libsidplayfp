@@ -109,6 +109,10 @@
 #ifndef _mos6510c_h_
 #define _mos6510c_h_
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdint.h>
 
@@ -152,8 +156,6 @@ protected:
     };
 
 protected:
-    C64Environment *env;
-
     /** Our event context copy. */
     EventContext &eventContext;
 
@@ -346,6 +348,26 @@ protected:
 
     inline void doJSR         (void);
 
+    /**
+    * Get data from system environment
+    *
+    * @param address
+    * @return data byte CPU requested
+    */
+    virtual uint8_t cpuRead(const uint_least16_t addr) =0;
+
+    /**
+    * Write data to system environment
+    *
+    * @param address
+    * @param data
+    */
+    virtual void cpuWrite(const uint_least16_t addr, const uint8_t data) =0;
+
+#ifdef PC64_TESTSUITE
+    virtual void   loadFile (const char *file) =0;
+#endif
+
 public:
     MOS6510 (EventContext *context);
     virtual ~MOS6510 () {}
@@ -353,7 +375,6 @@ public:
     virtual void credits   (char *str);
     void         debug     (const bool enable, FILE *out);
     void         setRDY    (const bool newRDY);
-    void         setEnvironment(C64Environment *env) { this->env = env; }
 
     // Non-standard functions
     virtual void triggerRST (void);

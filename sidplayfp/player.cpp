@@ -67,7 +67,7 @@ const char  *Player::credit[];
 Player::Player (void)
 // Set default settings for system
 :c64env  (&m_scheduler),
- cpu     (&m_scheduler),
+ cpu     (this),
  cia     (this),
  cia2    (this),
  vic     (this),
@@ -85,9 +85,6 @@ Player::Player (void)
 {
     srand ((uint) ::time(NULL));
     m_rand = (uint_least32_t) rand ();
-
-    // Set the ICs to use this environment
-    cpu.setEnvironment (this);
 
     // SID Initialise
     for (int i = 0; i < SID2_MAX_SIDS; i++)

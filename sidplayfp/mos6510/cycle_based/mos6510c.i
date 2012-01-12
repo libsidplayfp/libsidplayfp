@@ -182,7 +182,9 @@
  *
  ***************************************************************************/
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 #ifdef HAVE_EXCEPTIONS
 #   include <new>
@@ -324,7 +326,7 @@ void MOS6510::setRDY (const bool newRDY)
 void MOS6510::PushSR ()
 {
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    env->cpuWrite (addr, getStatusRegister());
+    cpuWrite (addr, getStatusRegister());
     Register_StackPointer--;
 }
 
@@ -336,7 +338,7 @@ void MOS6510::PopSR (void)
     // Get status register off stack
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    setStatusRegister(env->cpuRead (addr));
+    setStatusRegister(cpuRead (addr));
     flagB = true;
 
     calculateInterruptTriggerCycle();
@@ -416,7 +418,7 @@ void MOS6510::interruptsAndNextOpcode (void)
             MOS6510Debug::DumpState(cycles, *this);
         }
 #endif
-        env->cpuRead(endian_32lo16 (Register_ProgramCounter));
+        cpuRead(endian_32lo16 (Register_ProgramCounter));
         cycleCount = BRKn << 3;
         flagB = false;
         interruptCycle = MAX;
@@ -436,7 +438,7 @@ void MOS6510::fetchNextOpcode (void)
     // Next line used for Debug
     instrStartPC = endian_32lo16 (Register_ProgramCounter);
 
-    cycleCount = env->cpuRead(instrStartPC) << 3;
+    cycleCount = cpuRead(instrStartPC) << 3;
     Register_ProgramCounter++;
 
     if (!rstFlag && !nmiFlag && !(!flagI && irqAssertedOnPin))
@@ -470,15 +472,15 @@ void MOS6510::IRQLoRequest (void)
     if (Cycle_EffectiveAddress == 0xFFFC) //FIXME
     {
         /* reset the values in MMU */
-        env->cpuWrite(0, 0x2f);
-        env->cpuWrite(1, 0x37);
+        cpuWrite(0, 0x2f);
+        cpuWrite(1, 0x37);
     }
-    endian_32lo8 (Register_ProgramCounter, env->cpuRead (Cycle_EffectiveAddress));
+    endian_32lo8 (Register_ProgramCounter, cpuRead (Cycle_EffectiveAddress));
 }
 
 void MOS6510::IRQHiRequest (void)
 {
-    endian_32hi8 (Register_ProgramCounter, env->cpuRead (Cycle_EffectiveAddress + 1));
+    endian_32hi8 (Register_ProgramCounter, cpuRead (Cycle_EffectiveAddress + 1));
 }
 
 /**
@@ -486,7 +488,7 @@ void MOS6510::IRQHiRequest (void)
 */
 void MOS6510::throwAwayFetch (void)
 {
-    env->cpuRead (endian_32lo16 (Register_ProgramCounter));
+    cpuRead (endian_32lo16 (Register_ProgramCounter));
 }
 
 /**
@@ -494,7 +496,7 @@ void MOS6510::throwAwayFetch (void)
 */
 void MOS6510::throwAwayRead (void)
 {
-    env->cpuRead (Cycle_HighByteWrongEffectiveAddress);
+    cpuRead (Cycle_HighByteWrongEffectiveAddress);
 }
 
 /**
@@ -508,7 +510,7 @@ void MOS6510::throwAwayRead (void)
 */
 void MOS6510::FetchDataByte (void)
 {
-    Cycle_Data = env->cpuRead (endian_32lo16 (Register_ProgramCounter));
+    Cycle_Data = cpuRead (endian_32lo16 (Register_ProgramCounter));
     if (flagB) {
         Register_ProgramCounter++;
     }
@@ -529,7 +531,7 @@ void MOS6510::FetchDataByte (void)
 */
 void MOS6510::FetchLowAddr (void)
 {
-    Cycle_EffectiveAddress = env->cpuRead (endian_32lo16 (Register_ProgramCounter));
+    Cycle_EffectiveAddress = cpuRead (endian_32lo16 (Register_ProgramCounter));
     Register_ProgramCounter++;
 }
 
@@ -573,7 +575,7 @@ void MOS6510::FetchLowAddrY (void)
 */
 void MOS6510::FetchHighAddr (void)
 {   // Get the high byte of an address from memory
-    endian_16hi8 (Cycle_EffectiveAddress, env->cpuRead (endian_32lo16 (Register_ProgramCounter)));
+    endian_16hi8 (Cycle_EffectiveAddress, cpuRead (endian_32lo16 (Register_ProgramCounter)));
     Register_ProgramCounter++;
 
     // Next line used for Debug
@@ -641,7 +643,7 @@ void MOS6510::FetchHighAddrY2 (void)
 */
 void MOS6510::FetchLowPointer (void)
 {
-    Cycle_Pointer = env->cpuRead (endian_32lo16 (Register_ProgramCounter));
+    Cycle_Pointer = cpuRead (endian_32lo16 (Register_ProgramCounter));
     Register_ProgramCounter++;
 
     // Nextline used for Debug
@@ -671,7 +673,7 @@ void MOS6510::FetchLowPointerX (void)
 */
 void MOS6510::FetchHighPointer (void)
 {
-    endian_16hi8 (Cycle_Pointer, env->cpuRead (endian_32lo16 (Register_ProgramCounter)));
+    endian_16hi8 (Cycle_Pointer, cpuRead (endian_32lo16 (Register_ProgramCounter)));
     Register_ProgramCounter++;
 
     // Nextline used for Debug
@@ -690,7 +692,7 @@ void MOS6510::FetchHighPointer (void)
 */
 void MOS6510::FetchLowEffAddr (void)
 {
-    Cycle_EffectiveAddress = env->cpuRead (Cycle_Pointer);
+    Cycle_EffectiveAddress = cpuRead (Cycle_Pointer);
 }
 
 /**
@@ -705,7 +707,7 @@ void MOS6510::FetchLowEffAddr (void)
 void MOS6510::FetchHighEffAddr (void)
 {   // Rev 1.03 (Mike) - Extra +1 removed
     endian_16lo8 (Cycle_Pointer, (Cycle_Pointer + 1) & 0xff);
-    endian_16hi8 (Cycle_EffectiveAddress, env->cpuRead (Cycle_Pointer));
+    endian_16hi8 (Cycle_EffectiveAddress, cpuRead (Cycle_Pointer));
 }
 
 /**
@@ -741,7 +743,7 @@ void MOS6510::FetchHighEffAddrY2 (void)
 
 void MOS6510::FetchEffAddrDataByte (void)
 {
-    Cycle_Data = env->cpuRead (Cycle_EffectiveAddress);
+    Cycle_Data = cpuRead (Cycle_EffectiveAddress);
 }
 
 /**
@@ -749,7 +751,7 @@ void MOS6510::FetchEffAddrDataByte (void)
 */
 void MOS6510::PutEffAddrDataByte (void)
 {
-    env->cpuWrite (Cycle_EffectiveAddress, Cycle_Data);
+    cpuWrite (Cycle_EffectiveAddress, Cycle_Data);
 }
 
 /**
@@ -758,7 +760,7 @@ void MOS6510::PutEffAddrDataByte (void)
 void MOS6510::PushLowPC (void)
 {
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    env->cpuWrite (addr, endian_32lo8 (Register_ProgramCounter));
+    cpuWrite (addr, endian_32lo8 (Register_ProgramCounter));
     Register_StackPointer--;
 }
 
@@ -768,7 +770,7 @@ void MOS6510::PushLowPC (void)
 void MOS6510::PushHighPC (void)
 {
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    env->cpuWrite (addr, endian_32hi8 (Register_ProgramCounter));
+    cpuWrite (addr, endian_32hi8 (Register_ProgramCounter));
     Register_StackPointer--;
 }
 
@@ -779,7 +781,7 @@ void MOS6510::PopLowPC (void)
 {
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    endian_16lo8 (Cycle_EffectiveAddress, env->cpuRead (addr));
+    endian_16lo8 (Cycle_EffectiveAddress, cpuRead (addr));
 }
 
 /**
@@ -789,7 +791,7 @@ void MOS6510::PopHighPC (void)
 {
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    endian_16hi8 (Cycle_EffectiveAddress, env->cpuRead (addr));
+    endian_16hi8 (Cycle_EffectiveAddress, cpuRead (addr));
 }
 
 void MOS6510::WasteCycle (void)
@@ -882,7 +884,7 @@ void MOS6510::doJSR (void)
     if (pc == 0xe16f)
     {
         filetmp[filepos] = '\0';
-        env->envLoadFile (filetmp);
+        loadFile (filetmp);
     }
 #endif // PC64_TESTSUITE
 }
@@ -890,7 +892,7 @@ void MOS6510::doJSR (void)
 void MOS6510::pha_instr (void)
 {
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    env->cpuWrite (addr, Register_Accumulator);
+    cpuWrite (addr, Register_Accumulator);
     Register_StackPointer--;
 }
 
@@ -909,7 +911,7 @@ void MOS6510::rti_instr (void)
 
 void MOS6510::rts_instr (void)
 {
-    env->cpuRead(Cycle_EffectiveAddress);
+    cpuRead(Cycle_EffectiveAddress);
     endian_32lo16 (Register_ProgramCounter, Cycle_EffectiveAddress);
     Register_ProgramCounter++;
 }
@@ -1168,7 +1170,7 @@ void MOS6510::branch_instr (const bool condition)
     if (condition)
     {
         /* issue the spurious read for next insn here. */
-        env->cpuRead(endian_32lo16 (Register_ProgramCounter));
+        cpuRead(endian_32lo16 (Register_ProgramCounter));
 
         Cycle_HighByteWrongEffectiveAddress = Register_ProgramCounter & 0xff00 | Register_ProgramCounter + (int8_t) Cycle_Data & 0xff;
         Cycle_EffectiveAddress = Register_ProgramCounter + (int8_t) Cycle_Data;
@@ -1358,7 +1360,7 @@ void MOS6510::pla_instr (void)
 {
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    setFlagsNZ (Register_Accumulator = env->cpuRead (addr));
+    setFlagsNZ (Register_Accumulator = cpuRead (addr));
 }
 
 void MOS6510::plp_instr (void)
@@ -2339,8 +2341,8 @@ void MOS6510::reset (void)
 
     // Requires External Bits
     // Read from reset vector for program entry point
-    endian_16lo8 (Cycle_EffectiveAddress, env->cpuRead (0xFFFC));
-    endian_16hi8 (Cycle_EffectiveAddress, env->cpuRead (0xFFFD));
+    endian_16lo8 (Cycle_EffectiveAddress, cpuRead (0xFFFC));
+    endian_16hi8 (Cycle_EffectiveAddress, cpuRead (0xFFFD));
     Register_ProgramCounter = Cycle_EffectiveAddress;
 //    filepos = 0;
 }
