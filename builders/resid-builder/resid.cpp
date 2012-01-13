@@ -48,15 +48,14 @@ ReSID::ReSID (sidbuilder *builder)
  m_locked(false),
  m_voiceMask(0x0f)
 {
-    char *p = m_credit;
     m_error = "N/A";
 
     // Setup credits
-    sprintf (p,
-        "ReSID V" VERSION " Engine:"
-        "\t(C) 1999-2002 Simon White <sidplay2@yahoo.com>"
-        "MOS6581 (SID) Emulation (ReSID V%s):"
-        "\t(C) 1999-2002 Dag Lem <resid@nimrod.no>\0", resid_version_string);
+    sprintf (m_credit,
+        "ReSID V" VERSION " Engine:\n"
+        "\t(C) 1999-2002 Simon White\n"
+        "MOS6581 (SID) Emulation (ReSID V%s):\n"
+        "\t(C) 1999-2002 Dag Lem\n", resid_version_string);
 
 
     if (!&m_sid)

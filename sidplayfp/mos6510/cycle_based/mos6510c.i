@@ -2345,13 +2345,13 @@ void MOS6510::reset (void)
 
 //-------------------------------------------------------------------------//
 // Module Credits                                                          //
-void MOS6510::credits (char *sbuffer)
-{   // Copy credits to buffer
-    strcat (sbuffer, "MOS6510 Cycle Exact Emulation\n");
-    strcat (sbuffer, "\t(C) 2000 Simon A. White\n");
-    strcat (sbuffer, "\t(C) 2008-2010 Antti S. Lankila\n");
-    strcat (sbuffer, "\t(C) 2011-2012 Leandro Nini\n");
-}
+const char *MOS6510::credit =
+{
+    "MOS6510 Cycle Exact Emulation\n"
+    "\t(C) 2000 Simon A. White\n"
+    "\t(C) 2008-2010 Antti S. Lankila\n"
+    "\t(C) 2011-2012 Leandro Nini\n"
+};
 
 void MOS6510::debug (const bool enable, FILE *out)
 {

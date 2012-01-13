@@ -50,16 +50,15 @@ ReSIDfp::ReSIDfp (sidbuilder *builder)
  m_status(true),
  m_locked(false)
 {
-    char *p = m_credit;
     m_error = "N/A";
 
     // Setup credits
-    sprintf (p,
-        "ReSIDfp V" VERSION " Engine:"
-        "\t(C) 1999-2002 Simon White <sidplay2@yahoo.com>"
-        "MOS6581 (SID) Emulation (ReSIDfp V%s):"
-        "\t(C) 1999-2002 Dag Lem <resid@nimrod.no>"
-        "\t(C) 2005-2011 Antti S. Lankila <alankila@bel.fi>\0", residfp_version_string);
+    sprintf (m_credit,
+        "ReSIDfp V" VERSION " Engine:\n"
+        "\t(C) 1999-2002 Simon White\n"
+        "MOS6581 (SID) Emulation (ReSIDfp V%s):\n"
+        "\t(C) 1999-2002 Dag Lem\n"
+        "\t(C) 2005-2011 Antti S. Lankila\n", residfp_version_string);
 
 
     if (!&m_sid)

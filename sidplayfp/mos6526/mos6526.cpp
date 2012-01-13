@@ -223,10 +223,11 @@ void TimerB::underFlow() {
 }
 
 const char *MOS6526::credit = {
-	"*MOS6526 (CIA) Emulation:\0"
-	"\tCopyright (C) 2001-2004 Simon White <sidplay2@yahoo.com>\0"
-	"\tCopyright (C) 2009 VICE Project\0"
-	"\tCopyright (C) 2009-2010 Antti S. Lankila\0"
+	"MOS6526 (CIA) Emulation:\n"
+	"\tCopyright (C) 2001-2004 Simon White\n"
+	"\tCopyright (C) 2009 VICE Project\n"
+	"\tCopyright (C) 2009-2010 Antti S. Lankila\n"
+	"\tCopyright (C) 2011-2012 Leandro Nini\n"
 };
 
 

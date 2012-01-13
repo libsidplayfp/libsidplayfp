@@ -132,6 +132,8 @@
 class MOS6510
 {
     friend class MOS6510Debug;
+private:
+	static const char *credit;
 
 private:
     /**
@@ -374,7 +376,7 @@ public:
     MOS6510 (EventContext *context);
     virtual ~MOS6510 () {}
     virtual void reset     (void);
-    virtual void credits   (char *str);
+    const char  *credits(void) { return credit; }
     void         debug     (const bool enable, FILE *out);
     void         setRDY    (const bool newRDY);
 

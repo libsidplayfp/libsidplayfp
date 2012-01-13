@@ -119,7 +119,9 @@ public:
     void resetSIDMapper();
     void setSecondSIDAddress(const int sidChipBase2);
 
-    const char* credits () { return ""; } //FIXME
+    const char* cpuCredits () { return cpu.credits(); }
+    const char* ciaCredits () { return cia1.credits(); }
+    const char* vicCredits () { return vic.credits(); }
 
     MMU *getMmu() { return &mmu; } //FIXME
 };

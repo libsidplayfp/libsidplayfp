@@ -102,12 +102,15 @@ Player::Player (void)
     config (m_cfg);
 
     // Get component credits
-    credit[0] = PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0"
-                "\tCopyright (C) 2007-2010 Antti Lankila\0"
-                "\thttp://sourceforge.net/projects/sidplay-residfp/\0";
-    credit[1] = "*MOS6510 (CPU) Emulation:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0";
-    credit[2] = m_c64.credits ();
-    credit[3] = NULL;
+    credit[0] = PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\n"
+                "\tCopyright (C) 2000 Simon White\n"
+                "\tCopyright (C) 2007-2010 Antti Lankila\n"
+                "\tCopyright (C) 2010-2012 Leandro Nini\n"
+                "\thttp://sourceforge.net/projects/sidplay-residfp/\n";
+    credit[1] = m_c64.cpuCredits ();
+    credit[2] = m_c64.ciaCredits ();
+    credit[3] = m_c64.vicCredits ();
+    credit[4] = 0;
 }
 
 uint16_t Player::getChecksum(const uint8_t* rom, const int size)

@@ -82,12 +82,11 @@ HardSIDBuilder::HardSIDBuilder (const char * const name)
 
     if (!m_initialised)
     {   // Setup credits
-        char *p = HardSID::credit;
-        sprintf (p, "HardSID V" VERSION " Engine:"
+        sprintf (HardSID::credit, "HardSID V" VERSION " Engine:\n"
 #ifdef _WIN32
-            "\t(C) 1999-2002 Simon White <sidplay2@yahoo.com\0>");
+            "\t(C) 1999-2002 Simon White\n");
 #else
-            "\t(C) 2001-2002 Jarno Paanenen <jpaana@s2.org>\0");
+            "\t(C) 2001-2002 Jarno Paanenen\n");
 #endif
 
         if (init () < 0)
