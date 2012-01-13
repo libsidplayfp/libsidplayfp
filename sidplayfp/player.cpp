@@ -216,7 +216,7 @@ int Player::initialise ()
     m_c64.getMmu()->setDir(0x2F);
     m_c64.getMmu()->setData(0x37);
 
-    m_c64.getCpu()->reset ();
+    m_c64.resetCpu();
 
     m_mixer.reset ();
 

@@ -107,6 +107,7 @@ public:
     void debug(const bool enable, FILE *out) { cpu.debug (enable, out); }
 
     void reset();
+    void resetCpu() { cpu.reset(); }
 
     void setMainCpuSpeed(const float64_t cpuFreq);
     float64_t getMainCpuSpeed() const { return m_cpuFreq; }
@@ -121,7 +122,6 @@ public:
     const char* credits () { return ""; } //FIXME
 
     MMU *getMmu() { return &mmu; } //FIXME
-    MOS6510 *getCpu() { return &cpu; } //FIXME
 };
 
 void c64::interruptIRQ (const bool state)
