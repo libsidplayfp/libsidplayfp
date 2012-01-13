@@ -53,19 +53,34 @@ private:
     static const int MAPPER_SIZE = 32;
 
 private:
+    /** System clock frequency */
     float64_t m_cpuFreq;
 
     /** Number of sources asserting IRQ */
     int   irqCount;
 
+    /** System event context */
     EventScheduler m_scheduler;
 
+    /** CPU */
     c64cpu  cpu;
+
+    /** CIA1 */
     c64cia1 cia1;
+
+    /** CIA2 */
     c64cia2 cia2;
+
+    /** VIC */
     c64vic  vic;
+
+    /** SID chips */
     sidemu *sid[MAX_SIDS];
-    int     sidmapper[32]; // Mapping table in d4xx-d7xx
+
+    /** SID mapping table in d4xx-d7xx */
+    int     sidmapper[32];
+
+    /** MMU chip */
     MMU     mmu;
 
 private:
@@ -102,6 +117,11 @@ public:
     c64();
     ~c64() {}
 
+    /**
+    * Get C64's event scheduler
+    *
+    * @return the scheduler
+    */
     EventScheduler *getEventScheduler() { return &m_scheduler; }
     //const EventScheduler &getEventScheduler() const { return m_scheduler; }
 
@@ -113,15 +133,33 @@ public:
     void setMainCpuSpeed(const float64_t cpuFreq);
     float64_t getMainCpuSpeed() const { return m_cpuFreq; }
 
+    /**
+    * Set the requested SID
+    *
+    * @param i sid number to set
+    * @param sidemu the sid to set
+    */
     void setSid(const int i, sidemu *s) { sid[i] = s; }
+
+    /**
+    * Return the requested SID
+    *
+    * @param i sid number to get
+    * @return the SID
+    */
     sidemu *getSid(const int i) const { return sid[i]; }
 
     void resetSIDMapper();
     void setSecondSIDAddress(const int sidChipBase2);
 
+    /**
+    * Get the components credits
+    */
+    //@{
     const char* cpuCredits () { return cpu.credits(); }
     const char* ciaCredits () { return cia1.credits(); }
     const char* vicCredits () { return vic.credits(); }
+    //@}
 
     MMU *getMmu() { return &mmu; } //FIXME
 };

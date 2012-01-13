@@ -29,6 +29,9 @@
 
 SIDPLAY2_NAMESPACE_START
 
+/**
+ * The C64 MMU chip.
+*/
 class MMU
 {
 private:
@@ -36,25 +39,32 @@ private:
 	const uint8_t* basicRom;
 	const uint8_t* characterRom;
 
+	/** CPU port signals */
+	//@{
 	bool kernal;
 	bool basic;
 	bool ioArea;
+	 //@}
+
 	bool character;
 
-	/* Value written to processor port.  */
+	/** Value written to processor port.  */
 	uint8_t dir;
 	uint8_t data;
 
-	/* Value read from processor port.  */
+	/** Value read from processor port.  */
 	uint8_t dir_read;
 	uint8_t data_read;
 
-	/* State of processor port pins.  */
+	/** State of processor port pins.  */
 	uint8_t data_out;
 
 	// TODO some wired stuff with data_set_bit6 and data_set_bit7
 
+	/** ROM */
 	uint8_t m_rom[65536];
+
+	/** RAM */
 	uint8_t m_ram[65536];
 
 private:
@@ -118,8 +128,20 @@ public:
 		memcpy(m_rom+start, source, size);
 	}
 
-	//
+	/**
+	 * Access memory as seen by CPU
+	 *
+	 * @param address
+	 * @return value at address
+	 */
 	uint8_t cpuRead(const uint_least16_t addr) const;
+
+	/**
+	 * Access memory as seen by CPU.
+	 *
+	 * @param address
+	 * @param value
+	 */
 	void cpuWrite(const uint_least16_t addr, const uint8_t data);
 
 	uint8_t readKernel(const uint_least16_t addr) const { return kernal ? readRomByte(addr) : cpuRead(addr); }
