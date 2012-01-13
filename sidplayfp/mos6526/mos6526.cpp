@@ -52,7 +52,7 @@ enum
     CRA     = 14,
     CRB     = 15
 };
-#include <stdio.h>
+
 void Timer::setControlRegister(const uint8_t cr) {
 	state &= ~CIAT_CR_MASK;
 	state |= cr & CIAT_CR_MASK ^ CIAT_PHI2IN;

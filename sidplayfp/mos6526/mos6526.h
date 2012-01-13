@@ -331,6 +331,7 @@ protected:
 	*/
 	EventContext &event_context;
 
+	// TOD
 	bool    m_todlatched;
 	bool    m_todstopped;
 	uint8_t m_todclock[4], m_todalarm[4], m_todlatch[4];
@@ -339,7 +340,7 @@ protected:
 	/** Have we already scheduled CIA->CPU interrupt transition? */
 	bool triggerScheduled;
 
-
+	// Events
 	EventCallback<MOS6526> bTickEvent;
 	EventCallback<MOS6526> todEvent;
 	EventCallback<MOS6526> triggerEvent;
@@ -366,6 +367,9 @@ protected:
 	*/
 	void bTick(void);
 
+	/**
+	* TOD event.
+	*/
 	void tod(void);
 
 	/**
@@ -390,6 +394,14 @@ protected:
 	*/
 	void trigger(const uint8_t interruptMask);
 
+	/**
+	* Clear interrupt state.
+	*/
+	void clear(void);
+
+	/**
+	* Handle the serial port.
+	*/
 	void serialPort();
 
 	/**
@@ -433,8 +445,6 @@ public:
 	* @return the credits
 	*/
 	const char *credits(void) { return credit; }
-
-	void clear(void);
 
 	/**
 	* Set day-of-time event occurence of rate.
