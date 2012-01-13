@@ -81,7 +81,7 @@ Player::Player (void)
     m_info.name            = PACKAGE_NAME;
     m_info.version         = PACKAGE_VERSION;
     // Number of SIDs support by this library
-    m_info.maxsids         = SID2_MAX_SIDS;
+    m_info.maxsids         = c64::MAX_SIDS;
 
     // Configure default settings
     m_cfg.clockDefault    = SID2_CLOCK_CORRECT;

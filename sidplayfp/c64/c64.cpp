@@ -35,11 +35,11 @@ c64::c64()
  m_cpuFreq(CLOCK_FREQ_PAL)
 {
     // SID Initialise
-    for (int i = 0; i < SID2_MAX_SIDS; i++)
+    for (int i = 0; i < MAX_SIDS; i++)
         sid[i] = 0;
 
     // Setup sid mapping table
-    for (int i = 0; i < SID2_MAPPER_SIZE; i++)
+    for (int i = 0; i < MAPPER_SIZE; i++)
         sidmapper[i] = 0;
 }
 
@@ -70,7 +70,7 @@ uint8_t c64::readMemByte_io (const uint_least16_t addr)
     }
 
     // Read real sid for these
-    const int i = sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
+    const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
     return sid[i]->read (tempAddr & 0xff);
 }
 
@@ -157,7 +157,7 @@ void c64::writeMemByte_io (const uint_least16_t addr, const uint8_t data)
     }
     else
     {
-        const int i = sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
+        const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
         // Convert address to that acceptable by resid
         sid[i]->write(tempAddr & 0x1f, data);
     }
@@ -172,7 +172,7 @@ void c64::reset()
     cia2.reset ();
     vic.reset  ();
 
-    for (int i = 0; i < SID2_MAX_SIDS; i++)
+    for (int i = 0; i < MAX_SIDS; i++)
     {
         if (sid[i])
             sid[i]->reset (0x0f);
@@ -204,7 +204,7 @@ void c64::setMainCpuSpeed(const double cpuFreq)
 
 void c64::freeSIDs()
 {
-    for (int i = 0; i < SID2_MAX_SIDS; i++)
+    for (int i = 0; i < MAX_SIDS; i++)
     {
         if (sid[i])
         {
@@ -218,13 +218,13 @@ void c64::freeSIDs()
 
 void c64::resetSIDMapper()
 {
-    for (int i = 0; i < SID2_MAPPER_SIZE; i++)
+    for (int i = 0; i < MAPPER_SIZE; i++)
         sidmapper[i] = 0;
 }
 
 void c64::setSecondSIDAddress(const int sidChipBase2)
 {
-    sidmapper[sidChipBase2 >> 5 & (SID2_MAPPER_SIZE - 1)] = 1;
+    sidmapper[sidChipBase2 >> 5 & (MAPPER_SIZE - 1)] = 1;
 }
 
 SIDPLAY2_NAMESPACE_STOP

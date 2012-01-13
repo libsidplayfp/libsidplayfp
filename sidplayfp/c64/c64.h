@@ -35,9 +35,6 @@
 #endif
 
 
-#define  SID2_MAX_SIDS 2
-#define  SID2_MAPPER_SIZE 32
-
 SIDPLAY2_NAMESPACE_START
 
 class c64: private c64env
@@ -46,9 +43,13 @@ public:
     static const float64_t CLOCK_FREQ_NTSC;
     static const float64_t CLOCK_FREQ_PAL;
 
+    static const int MAX_SIDS = 2;
+
 private:
     static const float64_t VIC_FREQ_PAL;
     static const float64_t VIC_FREQ_NTSC;
+
+    static const int MAPPER_SIZE = 32;
 
 private:
     float64_t m_cpuFreq;
@@ -62,7 +63,7 @@ private:
     c64cia1 cia1;
     c64cia2 cia2;
     c64vic  vic;
-    sidemu *sid[SID2_MAX_SIDS];
+    sidemu *sid[MAX_SIDS];
     int     sidmapper[32]; // Mapping table in d4xx-d7xx
     MMU     mmu;
 

@@ -246,14 +246,14 @@ int Player::sidCreate (sidbuilder *builder, const sid2_model_t userModel,
     if (builder)
     {   // Detect the Correct SID model
         // Determine model when unknown
-        sid2_model_t userModels[SID2_MAX_SIDS];
+        sid2_model_t userModels[c64::MAX_SIDS];
 
         userModels[0] = getModel(m_tuneInfo.sidModel1, userModel, defaultModel);
         // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
         // model as the first SID.
         userModels[1] = getModel(m_tuneInfo.sidModel2, userModel, userModels[0]);
 
-        for (int i = 0; i < SID2_MAX_SIDS; i++)
+        for (int i = 0; i < c64::MAX_SIDS; i++)
         {   // Get first SID emulation
             sidemu *s = builder->lock (m_c64.getEventScheduler(), userModels[i]);
             if ((i == 0) && !builder->getStatus())
