@@ -19,7 +19,6 @@
 #ifndef C64_H
 #define C64_H
 
-#include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/c64env.h"
 #include "sidplayfp/c64/c64cpu.h"
 #include "sidplayfp/c64/c64cia.h"
@@ -34,6 +33,8 @@
 #  include <string.h>
 #endif
 
+
+class sidemu;
 
 SIDPLAY2_NAMESPACE_START
 
@@ -112,7 +113,6 @@ public:
     void setMainCpuSpeed(const float64_t cpuFreq);
     float64_t getMainCpuSpeed() const { return m_cpuFreq; }
 
-    void freeSIDs();
     void setSid(const int i, sidemu *s) { sid[i] = s; }
     sidemu *getSid(const int i) const { return sid[i]; }
 

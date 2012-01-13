@@ -17,10 +17,7 @@
 
 #include "sid2types.h"
 #include "player.h"
-
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
+#include "sidbuilder.h"
 
 SIDPLAY2_NAMESPACE_START
 
@@ -241,7 +238,17 @@ int Player::sidCreate (sidbuilder *builder, const sid2_model_t userModel,
                        const float64_t cpuFreq, const int frequency,
                        const sampling_method_t sampling)
 {
-    m_c64.freeSIDs();
+    for (int i = 0; i < c64::MAX_SIDS; i++)
+    {
+        sidemu *s = m_c64.getSid(i);
+        if (s)
+        {
+            sidbuilder *b = s->builder ();
+            if (b)
+                b->unlock (s);
+            m_c64.setSid(i, 0);
+        }
+    }
 
     if (builder)
     {   // Detect the Correct SID model

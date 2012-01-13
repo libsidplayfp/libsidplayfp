@@ -17,6 +17,7 @@
  */
 
 #include "c64.h"
+#include "sidbuilder.h"
 
 SIDPLAY2_NAMESPACE_START
 
@@ -199,20 +200,6 @@ void c64::setMainCpuSpeed(const double cpuFreq)
         cia1.clock (clockNTSC);
         cia2.clock (clockNTSC);
         vic.chip   (MOS6567R8);
-    }
-}
-
-void c64::freeSIDs()
-{
-    for (int i = 0; i < MAX_SIDS; i++)
-    {
-        if (sid[i])
-        {
-            sidbuilder *b = sid[i]->builder ();
-            if (b)
-                b->unlock (sid[i]);
-            sid[i] = 0;
-        }
     }
 }
 
