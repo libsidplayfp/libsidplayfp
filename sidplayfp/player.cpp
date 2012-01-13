@@ -213,8 +213,8 @@ int Player::initialise ()
         return -1;
     }
 
-    m_c64.getMmu()->setDir(0x2F);
-    m_c64.getMmu()->setData(0x37);
+    m_c64.getMmu()->cpuWrite(0, 0x2F);
+    m_c64.getMmu()->cpuWrite(1, 0x37);
 
     m_c64.resetCpu();
 

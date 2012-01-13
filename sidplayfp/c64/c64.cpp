@@ -17,7 +17,7 @@
  */
 
 #include "c64.h"
-#include "sidbuilder.h"
+#include "sidplayfp/sidbuilder.h"
 
 SIDPLAY2_NAMESPACE_START
 
@@ -46,25 +46,20 @@ c64::c64()
 
 uint8_t c64::readMemByte_io (const uint_least16_t addr)
 {
-    const uint_least16_t tempAddr = (addr & 0xfc1f);
-
     // Not SID ?
-    if ((( tempAddr & 0xff00 ) != 0xd400 ) && (addr < 0xde00) || (addr > 0xdfff))
+    if (((addr & 0xff00) != 0xd400 ) && (addr < 0xde00))
     {
         switch (endian_16hi8 (addr))
         {
-        case 0:
-        case 1:
-            return mmu.readMemByte (addr);
-        case 0xdc:
-            return cia1.read (addr&0x0f);
-        case 0xdd:
-            return cia2.read (addr&0x0f);
         case 0xd0:
         case 0xd1:
         case 0xd2:
         case 0xd3:
             return vic.read (addr&0x3f);
+        case 0xdc:
+            return cia1.read (addr&0x0f);
+        case 0xdd:
+            return cia2.read (addr&0x0f);
         default:
             return mmu.readRomByte(addr);
         }
@@ -72,7 +67,7 @@ uint8_t c64::readMemByte_io (const uint_least16_t addr)
 
     // Read real sid for these
     const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
-    return sid[i]->read (tempAddr & 0xff);
+    return sid[i]->read (addr & 0x1f);
 }
 
 uint8_t c64::m_readMemByte (const uint_least16_t addr)
@@ -86,58 +81,42 @@ uint8_t c64::m_readMemByte (const uint_least16_t addr)
         {
         case 0xa:
         case 0xb:
-            if (mmu.isBasic())
-                return mmu.readRomByte(addr);
-            else
-                return mmu.readMemByte(addr);
-        break;
+            return mmu.readBasic(addr);
         case 0xc:
-            return mmu.readMemByte(addr);
-        break;
+            return mmu.cpuRead(addr);
         case 0xd:
             if (mmu.isIoArea())
-                return readMemByte_io (addr);
-            else if (mmu.isCharacter())
-                return mmu.readRomByte(addr & 0x4fff);
+                return readMemByte_io(addr);
             else
-                return mmu.readMemByte(addr);
-        break;
+                return mmu.readCharacter(addr);
         case 0xe:
         case 0xf:
-        default:  // <-- just to please the compiler
-            if (mmu.isKernal())
-                return mmu.readRomByte(addr);
-            else
-                return mmu.readMemByte(addr);
+        default:
+            return mmu.readKernel(addr);
         }
     }
 }
 
 void c64::m_writeMemByte (const uint_least16_t addr, const uint8_t data)
 {
-    if (addr < 0xA000)
-        mmu.cpuWrite (addr, data);
+    if (((addr & 0xf000) == 0xd000) && mmu.isIoArea())
+        writeMemByte_io (addr, data);
     else
-    {
-        if (((addr >> 12) == 0xd) && mmu.isIoArea())
-            writeMemByte_io (addr, data);
-        else
-            mmu.writeMemByte(addr, data);
-    }
+        mmu.cpuWrite (addr, data);
 }
 
 void c64::writeMemByte_io (const uint_least16_t addr, const uint8_t data)
 {
-    const uint_least16_t tempAddr = (addr & 0xfc1f);
-
     // Not SID ?
-    if ((( tempAddr & 0xff00 ) != 0xd400 ) && (addr < 0xde00) || (addr > 0xdfff))
+    if (((addr & 0xff00) != 0xd400 ) && (addr < 0xde00))
     {
         switch (endian_16hi8 (addr))
         {
-        case 0:
-        case 1:
-            mmu.cpuWrite (addr, data);
+        case 0xd0:
+        case 0xd1:
+        case 0xd2:
+        case 0xd3:
+            vic.write (addr&0x3f, data);
             break;
         case 0xdc:
             cia1.write (addr&0x0f, data);
@@ -145,14 +124,8 @@ void c64::writeMemByte_io (const uint_least16_t addr, const uint8_t data)
         case 0xdd:
             cia2.write (addr&0x0f, data);
             break;
-        case 0xd0:
-        case 0xd1:
-        case 0xd2:
-        case 0xd3:
-            vic.write (addr&0x3f, data);
-            break;
         default:
-            mmu.writeRomByte(addr, data);
+            mmu.cpuWrite (addr, data);
             break;
         }
     }
@@ -160,7 +133,7 @@ void c64::writeMemByte_io (const uint_least16_t addr, const uint8_t data)
     {
         const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
         // Convert address to that acceptable by resid
-        sid[i]->write(tempAddr & 0x1f, data);
+        sid[i]->write(addr & 0x1f, data);
     }
 }
 

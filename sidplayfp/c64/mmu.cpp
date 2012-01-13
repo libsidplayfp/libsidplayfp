@@ -173,7 +173,7 @@ void MMU::reset() {
 	}
 }
 
-uint8_t MMU::cpuRead(const uint_least16_t addr) {
+uint8_t MMU::cpuRead(const uint_least16_t addr) const {
 
 	// Bank Select Register Value DOES NOT get to ram
 	switch (addr) {

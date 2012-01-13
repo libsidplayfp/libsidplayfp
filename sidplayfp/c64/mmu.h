@@ -64,18 +64,6 @@ private:
 	uint8_t getDirRead() const { return dir_read; }
 	uint8_t getDataRead() const { return data_read; }
 
-public:
-	MMU();
-	~MMU () {}
-
-	void reset();
-
-	void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character) {
-		kernalRom=kernal;
-		basicRom=basic;
-		characterRom=character;
-	}
-
 	void setData(const uint8_t value) {
 		if (data != value) {
 			data = value;
@@ -90,10 +78,19 @@ public:
 		}
 	}
 
-	bool isKernal() const { return kernal; }
-	bool isBasic() const { return basic; }
+public:
+	MMU();
+	~MMU () {}
+
+	void reset();
+
+	void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character) {
+		kernalRom=kernal;
+		basicRom=basic;
+		characterRom=character;
+	}
+
 	bool isIoArea() const { return ioArea; }
-	bool isCharacter() const { return character; }
 
 	// RAM access methods
 	uint8_t* getMem() { return m_ram; }
@@ -112,8 +109,6 @@ public:
 	}
 
 	// ROM access methods
-	uint8_t* getRom() { return m_rom; }
-
 	uint8_t readRomByte(const uint_least16_t addr) const { return m_rom[addr]; }
 
 	void writeRomByte(const uint_least16_t addr, const uint8_t value) { m_rom[addr] = value; }
@@ -124,8 +119,12 @@ public:
 	}
 
 	//
-	uint8_t cpuRead(const uint_least16_t addr);
+	uint8_t cpuRead(const uint_least16_t addr) const;
 	void cpuWrite(const uint_least16_t addr, const uint8_t data);
+
+	uint8_t readKernel(const uint_least16_t addr) const { return kernal ? readRomByte(addr) : cpuRead(addr); }
+	uint8_t readBasic(const uint_least16_t addr) const { return basic ? readRomByte(addr) : cpuRead(addr); }
+	uint8_t readCharacter(const uint_least16_t addr) const { return character ? readRomByte(addr & 0x4fff) : cpuRead(addr); }
 };
 
 SIDPLAY2_NAMESPACE_STOP
