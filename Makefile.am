@@ -71,6 +71,8 @@ sidplayfp/psiddrv.a65 \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64vic.h \
+sidplayfp/c64/c64.cpp \
+sidplayfp/c64/c64.h \
 sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
 sidplayfp/mos656x/mos656x.cpp \

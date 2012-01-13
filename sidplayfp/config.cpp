@@ -41,71 +41,46 @@ int Player::config (const sid2_config_t &cfg)
     {
         m_tune->getInfo(m_tuneInfo);
 
+        // Determine clock speed
+        const float64_t cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
+                              cfg.clockForced);
+
         // SID emulation setup (must be performed before the
         // environment setup call)
-        if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault) < 0) {
+        if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault,
+            cfg.playback == sid2_stereo ? 2 : 1, cpuFreq, cfg.frequency, cfg.samplingMethod) < 0) {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = NULL;
             goto Player_configure_restore;
         }
 
-        // Must be this order:
-        // Determine clock speed
-        m_cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
-                              cfg.clockForced);
-
-        if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
-        {
-            const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
-            cia.clock  (clockPAL);
-            cia2.clock (clockPAL);
-            vic.chip   (MOS6569);
-        }
-        else
-        {
-            const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
-            cia.clock  (clockNTSC);
-            cia2.clock (clockNTSC);
-            vic.chip   (MOS6567R8);
-        }
+        m_c64.setMainCpuSpeed(cpuFreq);
 
         // Configure, setup and install C64 environment/events
         if (initialise() < 0) {
             goto Player_configure_error;
         }
-
-        /* inform ReSID of the desired sampling rate */
-        for (int i = 0; i < SID2_MAX_SIDS; i++) {
-            if (sid[i])
-                sid[i]->sampling((long)m_cpuFreq, cfg.frequency, cfg.samplingMethod, false);
-        }
     }
 
-    // Setup sid mapping table
-    // Note this should be based on m_tuneInfo.sidChipBase1
-    // but this is only temporary code anyway
-    for (int i = 0; i < SID2_MAPPER_SIZE; i++)
-        m_sidmapper[i] = 0;
-
+    m_c64.resetSIDMapper();
     if (m_tune && m_tuneInfo.sidChipBase2) {
         // Assumed to be in d4xx-d7xx range
-        m_sidmapper[(m_tuneInfo.sidChipBase2 >> 5) &
-                    (SID2_MAPPER_SIZE - 1)] = 1;
+        m_c64.setSecondSIDAddress(m_tuneInfo.sidChipBase2);
         m_info.channels = 2;
     } else if (cfg.forceDualSids) {
         /* Tune didn't tell us where; let's put the second SID
          * in every slot apart from 0xd400 - 0xd420. */
         for (int i = 0xd420; i < 0xd7ff; i += 0x20)
-            m_sidmapper[(i >> 5) & (SID2_MAPPER_SIZE - 1)] = 1;
+            m_c64.setSecondSIDAddress(i);
         m_info.channels = 2;
     } else
         m_info.channels = 1;
 
     /* without stereo SID mode, we don't emulate the second chip! */
     if (m_info.channels == 1)
-        sid[1] = 0;
+        m_c64.setSid(1, 0);
 
-    m_mixer.setSids(sid[0], sid[1]);
+    m_mixer.setSids(m_c64.getSid(0), m_c64.getSid(1));
     m_mixer.setStereo(cfg.playback == sid2_stereo);
     m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
 
@@ -126,7 +101,7 @@ Player_configure_error:
 float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
                               bool forced)
 {
-    float64_t cpuFreq = CLOCK_FREQ_PAL;
+    float64_t cpuFreq = c64::CLOCK_FREQ_PAL;
 
     // Detect the Correct Song Speed
     // Determine song speed when unknown
@@ -178,7 +153,7 @@ float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
 
     if (userClock == SID2_CLOCK_PAL)
     {
-        cpuFreq = CLOCK_FREQ_PAL;
+        cpuFreq = c64::CLOCK_FREQ_PAL;
         m_tuneInfo.speedString = TXT_PAL_VBI;
         if (m_tuneInfo.songSpeed == SIDTUNE_SPEED_CIA_1A)
             m_tuneInfo.speedString = TXT_PAL_CIA;
@@ -187,7 +162,7 @@ float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
     }
     else // if (userClock == SID2_CLOCK_NTSC)
     {
-        cpuFreq = CLOCK_FREQ_NTSC;
+        cpuFreq = c64::CLOCK_FREQ_NTSC;
         m_tuneInfo.speedString = TXT_NTSC_VBI;
         if (m_tuneInfo.songSpeed == SIDTUNE_SPEED_CIA_1A)
             m_tuneInfo.speedString = TXT_NTSC_CIA;
@@ -261,28 +236,14 @@ sid2_model_t Player::getModel(int sidModel,
     return userModel;
 }
 
-// Integrate SID emulation from the builder class into
-// libsidplay2
-int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
-                       sid2_model_t defaultModel)
+int Player::sidCreate (sidbuilder *builder, const sid2_model_t userModel,
+                       const sid2_model_t defaultModel, const int channels,
+                       const float64_t cpuFreq, const int frequency,
+                       const sampling_method_t sampling)
 {
-    // Release old sids
-    for (int i = 0; i < SID2_MAX_SIDS; i++)
-    {
-        if (sid[i])
-        {
-            sidbuilder *b = sid[i]->builder ();
-            if (b)
-                b->unlock (sid[i]);
-        }
-    }
+    m_c64.freeSIDs();
 
-    if (!builder)
-    {   // No sid
-        for (int i = 0; i < SID2_MAX_SIDS; i++)
-            sid[i] = 0;
-    }
-    else
+    if (builder)
     {   // Detect the Correct SID model
         // Determine model when unknown
         sid2_model_t userModels[SID2_MAX_SIDS];
@@ -294,9 +255,12 @@ int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
 
         for (int i = 0; i < SID2_MAX_SIDS; i++)
         {   // Get first SID emulation
-            sid[i] = builder->lock (&m_scheduler, userModels[i]);
+            sidemu *s = builder->lock (m_c64.getEventScheduler(), userModels[i]);
             if ((i == 0) && !builder->getStatus())
                 return -1;
+            if (s)
+                s->sampling((long)cpuFreq, frequency, sampling, false);
+            m_c64.setSid(i, s);
         }
     }
 

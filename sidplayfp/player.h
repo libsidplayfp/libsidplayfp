@@ -21,36 +21,16 @@
 
 #include "sid2types.h"
 #include "SidTune.h"
-#include "sidbuilder.h"
 
-#include "c64env.h"
-#include "c64/c64cpu.h"
-#include "c64/c64cia.h"
-#include "c64/c64vic.h"
-#include "c64/mmu.h"
 #include "mixer.h"
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#ifdef PC64_TESTSUITE
-#  include <string.h>
-#endif
-
-#define  SID2_MAX_SIDS 2
-#define  SID2_MAPPER_SIZE 32
+#include "c64/c64.h"
 
 SIDPLAY2_NAMESPACE_START
 
-class Player: private c64env
+class Player
 {
 private:
-    static const double CLOCK_FREQ_NTSC;
-    static const double CLOCK_FREQ_PAL;
-    static const double VIC_FREQ_PAL;
-    static const double VIC_FREQ_NTSC;
-
     static const char  TXT_PAL_VBI[];
     static const char  TXT_PAL_VBI_FIXED[];
     static const char  TXT_PAL_CIA[];
@@ -69,14 +49,7 @@ private:
 
     static const char  *credit[10]; // 10 credits max
 
-    EventScheduler m_scheduler;
-
-    c64cpu  cpu;
-    c64cia1 cia;
-    c64cia2 cia2;
-    c64vic  vic;
-    sidemu *sid[SID2_MAX_SIDS];
-    int     m_sidmapper[32]; // Mapping table in d4xx-d7xx
+    c64     m_c64;
 
     Mixer   m_mixer;
 
@@ -91,61 +64,26 @@ private:
     volatile sid2_player_t m_playerState;
     int             m_rand;
 
-    float64_t m_cpuFreq;
-
-    bool           m_status;
-
-    // C64 environment settings
-    MMU mmu;
+    bool            m_status;
 
 private:
     float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
                               const bool forced);
     int       initialise     (void);
-    int       sidCreate      (sidbuilder *builder, sid2_model_t model,
-                              sid2_model_t defaultModel);
+    int       sidCreate(sidbuilder *builder, const sid2_model_t userModel,
+                       const sid2_model_t defaultModel, const int channels,
+                       const float64_t cpuFreq, const int frequency,
+                       const sampling_method_t sampling);
     void      reset          ();
     uint8_t   iomap          (const uint_least16_t addr);
     sid2_model_t getModel(const int sidModel,
                           sid2_model_t userModel,
                           sid2_model_t defaultModel);
 
-    uint8_t readMemByte_io   (const uint_least16_t addr);
-    void    writeMemByte_io  (const uint_least16_t addr, const uint8_t data);
-
-
-    uint8_t m_readMemByte    (const uint_least16_t);
-    void    m_writeMemByte   (const uint_least16_t, const uint8_t);
-
     uint16_t getChecksum(const uint8_t* rom, const int size);
-
-    // Environment Function entry Points
-    uint8_t cpuRead  (const uint_least16_t addr) { return m_readMemByte (addr); }
-    void    cpuWrite (const uint_least16_t addr, const uint8_t data) { m_writeMemByte (addr, data); }
-
-    /** Number of sources asserting IRQ */
-    int   irqCount;
-
-#ifdef PC64_TESTSUITE
-    void   loadFile (const char *file)
-    {
-        char name[0x100] = PC64_TESTSUITE;
-        strcat (name, file);
-        strcat (name, ".prg");
-
-        m_tune->load (name);
-        stop ();
-    }
-#endif
 
     // Rev 2.0.3 Added - New Mixer Routines
     uint_least32_t (Player::*output) (char *buffer);
-
-    inline void interruptIRQ (const bool state);
-    inline void interruptNMI ();
-    inline void interruptRST (void);
-    void signalAEC (const bool state) { cpu.setRDY (state); }
-    void lightpen  () { vic.lightpen (); }
 
     // PSID driver
     int  psidDrvReloc   (SidTuneInfo &tuneInfo, sid2_info_t &info);
@@ -161,60 +99,26 @@ public:
     int            config       (const sid2_config_t &cfg);
     int            fastForward  (uint percent);
     int            load         (SidTune *tune);
-    uint_least32_t mileage      (void) const { return m_mileage + time(); }
-    float64_t      cpuFreq      (void) const { return m_cpuFreq; }
+    uint_least32_t mileage      (void) { return m_mileage + time(); }
+    float64_t      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     sid2_player_t  state        (void) const { return m_playerState; }
     void           stop         (void);
-    uint_least32_t time         (void) const {return (uint_least32_t)(context().getTime(EVENT_CLOCK_PHI1) / m_cpuFreq); }
-    void           debug        (bool enable, FILE *out)
-                                { cpu.debug (enable, out); }
-    void           mute         (int voice, bool enable);
-    const char    *error        (void) const { return m_errorString; }
+    uint_least32_t time         (void) { return (uint_least32_t)(m_c64.getEventScheduler()->getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
+    void           debug        (const bool enable, FILE *out)
+                                { m_c64.debug (enable, out); }
+    void           mute         (const int voice, const bool enable);
 
+    const char    *error        (void) const { return m_errorString; }
     bool           getStatus() const { return m_status; }
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
 
     SidTuneInfo *getTuneInfo() { return m_tune ? &m_tuneInfo : 0; }
 
-    EventContext *getEventScheduler() {return &m_scheduler; }
+    EventContext *getEventScheduler() {return m_c64.getEventScheduler(); }
+
 };
-
-/**
-* CPU IRQ line control. IRQ is asserted if any source asserts IRQ.
-* (Maintains a counter of calls with state=true vs. state=false.)
-*/
-void Player::interruptIRQ (const bool state)
-{
-    if (state)
-    {
-        if (irqCount == 0)
-            cpu.triggerIRQ ();
-
-        irqCount ++;
-    }
-    else
-    {
-        irqCount --;
-
-        if (irqCount == 0)
-            cpu.clearIRQ ();
-    }
-}
-
-/**
-* CPU NMI line control. NMI is asserted if any source asserts NMI.
-*/
-void Player::interruptNMI ()
-{
-    cpu.triggerNMI ();
-}
-
-void Player::interruptRST ()
-{
-    stop ();
-}
 
 SIDPLAY2_NAMESPACE_STOP
 

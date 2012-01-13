@@ -129,7 +129,7 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
     info.driverLength += 0xff;
     info.driverLength &= 0xff00;
 
-    mmu.fillRom(0xfffc, &reloc_driver[0], 2); /* RESET */
+    m_c64.getMmu()->fillRom(0xfffc, &reloc_driver[0], 2); /* RESET */
 
     // If not a basic tune then the psiddrv must install
     // interrupt hooks and trap programs trying to restart basic
@@ -138,35 +138,35 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
         uint8_t prg[] = {LDAb, (uint8_t) (tuneInfo.currentSong-1),
                          STAa, 0x0c, 0x03, JSRw, 0x2c, 0xa8,
                          JMPw, 0xb1, 0xa7};
-        mmu.fillRom (0xbf53, prg, sizeof (prg));
-        mmu.writeRomByte(0xa7ae, JMPw);
-        mmu.writeRomWord(0xa7af, 0xbf53);
+        m_c64.getMmu()->fillRom (0xbf53, prg, sizeof (prg));
+        m_c64.getMmu()->writeRomByte(0xa7ae, JMPw);
+        m_c64.getMmu()->writeRomWord(0xa7af, 0xbf53);
     }
     else
     {   // Only install irq handle for RSID tunes
-        mmu.fillRam(0x0314, &reloc_driver[2], tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_R64 ? 2 : 6);
+        m_c64.getMmu()->fillRam(0x0314, &reloc_driver[2], tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_R64 ? 2 : 6);
 
         // Experimental restart basic trap
         const uint_least16_t addr = endian_little16(&reloc_driver[8]);
-        mmu.writeRomByte(0xa7ae, JMPw);
-        mmu.writeRomWord(0xa7af, 0xffe1);
-        mmu.writeMemWord(0x0328, addr);
+        m_c64.getMmu()->writeRomByte(0xa7ae, JMPw);
+        m_c64.getMmu()->writeRomWord(0xa7af, 0xffe1);
+        m_c64.getMmu()->writeMemWord(0x0328, addr);
     }
 
     int pos = relocAddr;
 
     // Install driver to ram
-    mmu.fillRam(pos, &reloc_driver[10], reloc_size);
+    m_c64.getMmu()->fillRam(pos, &reloc_driver[10], reloc_size);
 
     // Tell C64 about song
-    mmu.writeMemByte(pos, (uint8_t) (tuneInfo.currentSong-1));
+    m_c64.getMmu()->writeMemByte(pos, (uint8_t) (tuneInfo.currentSong-1));
     pos++;
-    mmu.writeMemByte(pos, tuneInfo.songSpeed == SIDTUNE_SPEED_VBI ? 0 : 1);
+    m_c64.getMmu()->writeMemByte(pos, tuneInfo.songSpeed == SIDTUNE_SPEED_VBI ? 0 : 1);
     pos++;
-    mmu.writeMemWord(pos, tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC ?
+    m_c64.getMmu()->writeMemWord(pos, tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC ?
                      0xbf55 /*Was 0xa7ae, see above*/ : tuneInfo.initAddr);
     pos += 2;
-    mmu.writeMemWord(pos, tuneInfo.playAddr);
+    m_c64.getMmu()->writeMemWord(pos, tuneInfo.playAddr);
     pos += 2;
     // Initialise random number generator
     info.powerOnDelay = m_cfg.powerOnDelay;
@@ -176,34 +176,34 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
         info.powerOnDelay = (uint_least16_t) (m_rand >> 3) &
                             SID2_MAX_POWER_ON_DELAY;
     }
-    mmu.writeMemWord(pos, info.powerOnDelay);
+    m_c64.getMmu()->writeMemWord(pos, info.powerOnDelay);
     pos += 2;
     m_rand  = m_rand * 13 + 1;
-    mmu.writeMemByte(pos, iomap (m_tuneInfo.initAddr));
+    m_c64.getMmu()->writeMemByte(pos, iomap (m_tuneInfo.initAddr));
     pos++;
-    mmu.writeMemByte(pos, iomap (m_tuneInfo.playAddr));
+    m_c64.getMmu()->writeMemByte(pos, iomap (m_tuneInfo.playAddr));
     pos++;
-    const uint8_t flag = mmu.readMemByte(0x02a6); // PAL/NTSC flag
-    mmu.writeMemByte(pos, flag);
+    const uint8_t flag = m_c64.getMmu()->readMemByte(0x02a6); // PAL/NTSC flag
+    m_c64.getMmu()->writeMemByte(pos, flag);
     pos++;
 
     // Add the required tune speed
     switch ((m_tune->getInfo()).clockSpeed)
     {
     case SIDTUNE_CLOCK_PAL:
-        mmu.writeMemByte(pos, 1);
+        m_c64.getMmu()->writeMemByte(pos, 1);
         break;
     case SIDTUNE_CLOCK_NTSC:
-        mmu.writeMemByte(pos, 0);
+        m_c64.getMmu()->writeMemByte(pos, 0);
         break;
     default: // UNKNOWN or ANY
-        mmu.writeMemByte(pos, flag);
+        m_c64.getMmu()->writeMemByte(pos, flag);
         break;
     }
     pos++;
 
     // Default processor register flags on calling init
-    mmu.writeMemByte(pos, tuneInfo.compatibility >= SIDTUNE_COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
+    m_c64.getMmu()->writeMemByte(pos, tuneInfo.compatibility >= SIDTUNE_COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
 
     return 0;
 }

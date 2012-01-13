@@ -38,11 +38,6 @@
 SIDPLAY2_NAMESPACE_START
 
 
-const double Player::CLOCK_FREQ_NTSC = 1022727.14;
-const double Player::CLOCK_FREQ_PAL  = 985248.4;
-const double Player::VIC_FREQ_PAL    = 50.0;
-const double Player::VIC_FREQ_NTSC   = 60.0;
-
 // These texts are used to override the sidtune settings.
 const char  Player::TXT_PAL_VBI[]        = "50 Hz VBI (PAL)";
 const char  Player::TXT_PAL_VBI_FIXED[]  = "60 Hz VBI (PAL FIXED)";
@@ -62,21 +57,13 @@ const char  Player::ERR_UNKNOWN_ROM[]           = "SIDPLAYER ERROR: Unknown Rom.
 const char  *Player::credit[];
 
 
-// Set the ICs environment variable to point to
-// this player
 Player::Player (void)
 // Set default settings for system
-:c64env  (&m_scheduler),
- cpu     (this),
- cia     (this),
- cia2    (this),
- vic     (this),
- m_mixer (&m_scheduler),
+:m_mixer (m_c64.getEventScheduler()),
  m_tune (NULL),
- m_errorString       (TXT_NA),
- m_mileage           (0),
- m_playerState       (sid2_stopped),
- m_cpuFreq(CLOCK_FREQ_PAL),
+ m_errorString(TXT_NA),
+ m_mileage(0),
+ m_playerState(sid2_stopped),
 #if EMBEDDED_ROMS
  m_status            (true)
 #else
@@ -85,14 +72,6 @@ Player::Player (void)
 {
     srand ((uint) ::time(NULL));
     m_rand = (uint_least32_t) rand ();
-
-    // SID Initialise
-    for (int i = 0; i < SID2_MAX_SIDS; i++)
-        sid[i] = 0;
-
-    // Setup sid mapping table
-    for (int i = 0; i < SID2_MAPPER_SIZE; i++)
-        m_sidmapper[i] = 0;
 
     // Setup exported info
     m_info.credits         = credit;
@@ -127,9 +106,8 @@ Player::Player (void)
                 "\tCopyright (C) 2007-2010 Antti Lankila\0"
                 "\thttp://sourceforge.net/projects/sidplay-residfp/\0";
     credit[1] = "*MOS6510 (CPU) Emulation:\0\tCopyright (C) 2000 Simon White <sidplay2@yahoo.com>\0";
-    credit[2] = cia.credits ();
-    credit[3] = vic.credits ();
-    credit[4] = NULL;
+    credit[2] = m_c64.credits ();
+    credit[3] = NULL;
 }
 
 uint16_t Player::getChecksum(const uint8_t* rom, const int size)
@@ -188,7 +166,7 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
         }
     }
 
-    mmu.setRoms(kernal, basic, character);
+    m_c64.getMmu()->setRoms(kernal, basic, character);
     m_status = true;
 }
 
@@ -229,16 +207,16 @@ int Player::initialise ()
     if (psidDrvReloc (m_tuneInfo, m_info) < 0)
         return -1;
 
-    if (!m_tune->placeSidTuneInC64mem (mmu.getMem()))
+    if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()->getMem()))
     {   // Rev 1.6 (saw) - Allow loop through errors
         m_errorString = (m_tune->getInfo()).statusString;
         return -1;
     }
 
-    mmu.setDir(0x2F);
-    mmu.setData(0x37);
+    m_c64.getMmu()->setDir(0x2F);
+    m_c64.getMmu()->setData(0x37);
 
-    cpu.reset ();
+    m_c64.getCpu()->reset ();
 
     m_mixer.reset ();
 
@@ -251,16 +229,6 @@ int Player::load (SidTune *tune)
     if (!tune)
     {   // Unload tune
         return 0;
-    }
-
-    for (int i = 0; i < SID2_MAX_SIDS; i++)
-    {
-        if (sid[i])
-        {
-            sid[i]->voice (2, false);
-            sid[i]->voice (1, false);
-            sid[i]->voice (0, false);
-        }
     }
 
     {   // Must re-configure on fly for stereo support!
@@ -276,8 +244,9 @@ int Player::load (SidTune *tune)
 }
 
 void Player::mute(int voice, bool enable) {
-    if (sid[0])
-        sid[0]->voice(voice, enable);
+    sidemu *s = m_c64.getSid(0);
+    if (s)
+        s->voice(voice, enable);
 }
 
 uint_least32_t Player::play (short *buffer, uint_least32_t count)
@@ -292,7 +261,7 @@ uint_least32_t Player::play (short *buffer, uint_least32_t count)
     m_playerState = sid2_playing;
 
     while (m_mixer.notFinished())
-        m_scheduler.clock();
+        m_c64.getEventScheduler()->clock();
 
     if (m_playerState == sid2_stopped)
         initialise ();
@@ -308,152 +277,17 @@ void Player::stop (void)
     }
 }
 
-uint8_t Player::readMemByte_io (const uint_least16_t addr)
-{
-    uint_least16_t tempAddr = (addr & 0xfc1f);
-
-    // Not SID ?
-    if ((( tempAddr & 0xff00 ) != 0xd400 ) && (addr < 0xde00) || (addr > 0xdfff))
-    {
-        switch (endian_16hi8 (addr))
-        {
-        case 0:
-        case 1:
-            return mmu.readMemByte (addr);
-        case 0xdc:
-            return cia.read (addr&0x0f);
-        case 0xdd:
-            return cia2.read (addr&0x0f);
-        case 0xd0:
-        case 0xd1:
-        case 0xd2:
-        case 0xd3:
-            return vic.read (addr&0x3f);
-        default:
-            return mmu.readRomByte(addr);
-        }
-    }
-
-    {   // Read real sid for these
-        const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
-        return sid[i]->read (tempAddr & 0xff);
-    }
-}
-
-uint8_t Player::m_readMemByte (const uint_least16_t addr)
-{
-    if (addr < 0xA000)
-        return mmu.cpuRead (addr);
-    else
-    {
-        // Get high-nibble of address.
-        switch (addr >> 12)
-        {
-        case 0xa:
-        case 0xb:
-            if (mmu.isBasic())
-                return mmu.readRomByte(addr);
-            else
-                return mmu.readMemByte(addr);
-        break;
-        case 0xc:
-            return mmu.readMemByte(addr);
-        break;
-        case 0xd:
-            if (mmu.isIoArea())
-                return readMemByte_io (addr);
-            else if (mmu.isCharacter())
-                return mmu.readRomByte(addr & 0x4fff);
-            else
-                return mmu.readMemByte(addr);
-        break;
-        case 0xe:
-        case 0xf:
-        default:  // <-- just to please the compiler
-            if (mmu.isKernal())
-                return mmu.readRomByte(addr);
-            else
-                return mmu.readMemByte(addr);
-        }
-    }
-}
-
-void Player::writeMemByte_io (const uint_least16_t addr, const uint8_t data)
-{
-    uint_least16_t tempAddr = (addr & 0xfc1f);
-
-    // Not SID ?
-    if ((( tempAddr & 0xff00 ) != 0xd400 ) && (addr < 0xde00) || (addr > 0xdfff))
-    {
-        switch (endian_16hi8 (addr))
-        {
-        case 0:
-        case 1:
-            mmu.cpuWrite (addr, data);
-            break;
-        case 0xdc:
-            cia.write (addr&0x0f, data);
-            break;
-        case 0xdd:
-            cia2.write (addr&0x0f, data);
-            break;
-        case 0xd0:
-        case 0xd1:
-        case 0xd2:
-        case 0xd3:
-            vic.write (addr&0x3f, data);
-            break;
-        default:
-            mmu.writeRomByte(addr, data);
-            break;
-        }
-    }
-    else
-    {
-        const int i = m_sidmapper[(addr >> 5) & (SID2_MAPPER_SIZE - 1)];
-        // Convert address to that acceptable by resid
-        sid[i]->write(tempAddr & 0x1f, data);
-    }
-}
-
-void Player::m_writeMemByte (const uint_least16_t addr, const uint8_t data)
-{
-    if (addr < 0xA000)
-        mmu.cpuWrite (addr, data);
-    else
-    {
-        if (((addr >> 12) == 0xd) && mmu.isIoArea())
-            writeMemByte_io (addr, data);
-        else
-            mmu.writeMemByte(addr, data);
-    }
-}
-
 // --------------------------------------------------
 // These must be available for use:
 void Player::reset (void)
 {
     m_playerState  = sid2_stopped;
 
-    m_scheduler.reset ();
-
-    for (int i = 0; i < SID2_MAX_SIDS; i++)
-    {
-        if (sid[i])
-            sid[i]->reset (0x0f);
-    }
-
-    cia.reset  ();
-    cia2.reset ();
-    vic.reset  ();
-
-    // Initalise Memory
-    mmu.reset();
+    m_c64.reset ();
 
     // Will get done later if can't now
-    mmu.writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);
+    m_c64.getMmu()->writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);
 
-    irqCount = 0;
 }
 
 SIDPLAY2_NAMESPACE_STOP
