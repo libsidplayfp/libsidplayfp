@@ -407,12 +407,12 @@ void SidTune::getFromStdIn()
     status = false;
     // Assume the memory allocation to fail.
     info.statusString = SidTune::txt_notEnoughMemory;
-    uint_least8_t* fileBuf;
 #ifdef HAVE_EXCEPTIONS
-    if ( 0 == (fileBuf = new(std::nothrow) uint_least8_t[SIDTUNE_MAX_FILELEN]) )
+    uint_least8_t* fileBuf = new(std::nothrow) uint_least8_t[SIDTUNE_MAX_FILELEN];
 #else
-    if ( 0 == (fileBuf = new uint_least8_t[SIDTUNE_MAX_FILELEN]) )
+    uint_least8_t* fileBuf = new uint_least8_t[SIDTUNE_MAX_FILELEN];
 #endif
+    if ( fileBuf == 0 )
     {
         return;
     }
@@ -862,8 +862,6 @@ bool SidTune::savePSIDfile( const char* fileName, bool overWriteFlag )
 
 bool SidTune::checkRelocInfo (void)
 {
-    uint_least8_t startp, endp;
-
     // Fix relocation information
     if (info.relocStartPage == 0xFF)
     {
@@ -877,8 +875,8 @@ bool SidTune::checkRelocInfo (void)
     }
 
     // Calculate start/end page
-    startp = info.relocStartPage;
-    endp   = (startp + info.relocPages - 1) & 0xff;
+    const uint_least8_t startp = info.relocStartPage;
+    const uint_least8_t endp   = (startp + info.relocPages - 1) & 0xff;
     if (endp < startp)
     {
         info.statusString = txt_badReloc;
@@ -886,10 +884,8 @@ bool SidTune::checkRelocInfo (void)
     }
 
     {    // Check against load range
-        uint_least8_t startlp, endlp;
-        startlp = (uint_least8_t) (info.loadAddr >> 8);
-        endlp   = startlp;
-        endlp  += (uint_least8_t) ((info.c64dataLen - 1) >> 8);
+        const uint_least8_t startlp = (uint_least8_t) (info.loadAddr >> 8);
+        const uint_least8_t endlp   = startlp + (uint_least8_t) ((info.c64dataLen - 1) >> 8);
 
         if ( ((startp <= startlp) && (endp >= startlp)) ||
              ((startp <= endlp)   && (endp >= endlp)) )
