@@ -182,7 +182,18 @@ uint8_t MMU::cpuRead(const uint_least16_t addr) const {
 	case 1:
 		return getDataRead();
 	default:
-		return readMemByte(addr);
+		switch (addr >> 12) {
+		case 0xa:
+		case 0xb:
+			return basic ? readRomByte(addr) : readMemByte(addr);
+		case 0xd:
+			return character ? readRomByte(addr & 0x4fff) : readMemByte(addr);
+		case 0xe:
+		case 0xf:
+			return kernal ? readRomByte(addr) : readMemByte(addr);
+		default:
+			return readMemByte(addr);
+		}
 	}
 }
 

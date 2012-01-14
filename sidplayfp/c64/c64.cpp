@@ -46,60 +46,47 @@ c64::c64()
 
 uint8_t c64::readMemByte_io (const uint_least16_t addr)
 {
-    // Not SID ?
-    if (((addr & 0xff00) != 0xd400 ) && (addr < 0xde00))
+    switch (endian_16hi8 (addr))
     {
-        switch (endian_16hi8 (addr))
-        {
         case 0xd0:
         case 0xd1:
         case 0xd2:
         case 0xd3:
-            return vic.read (addr&0x3f);
+            return vic.read(addr & 0x3f);
+        case 0xd4:
+        case 0xd5:
+        case 0xd6:
+        case 0xd7:
+        case 0xd8:
+        case 0xd9:
+        case 0xda:
+        case 0xdb:
+        {
+            // Read real sid for these
+            const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
+            return sid[i]->read(addr & 0x1f);
+        }
         case 0xdc:
-            return cia1.read (addr&0x0f);
+            return cia1.read(addr & 0x0f);
         case 0xdd:
-            return cia2.read (addr&0x0f);
-        default:
+            return cia2.read(addr & 0x0f);
+        case 0xde:
+        case 0xdf:
             return mmu.readRomByte(addr);
         }
-    }
-
-    // Read real sid for these
-    const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
-    return sid[i]->read (addr & 0x1f);
 }
 
 uint8_t c64::m_readMemByte (const uint_least16_t addr)
 {
-    if (addr < 0xA000)
-        return mmu.cpuRead (addr);
-    else
-    {
-        // Get high-nibble of address.
-        switch (addr >> 12)
-        {
-        case 0xa:
-        case 0xb:
-            return mmu.readBasic(addr);
-        case 0xc:
-            return mmu.cpuRead(addr);
-        case 0xd:
-            if (mmu.isIoArea())
-                return readMemByte_io(addr);
-            else
-                return mmu.readCharacter(addr);
-        case 0xe:
-        case 0xf:
-        default:
-            return mmu.readKernel(addr);
-        }
-    }
+    if (((addr >> 12) == 0xd) && mmu.isIoArea())
+        return readMemByte_io(addr);
+
+    return mmu.cpuRead (addr);
 }
 
 void c64::m_writeMemByte (const uint_least16_t addr, const uint8_t data)
 {
-    if (((addr & 0xf000) == 0xd000) && mmu.isIoArea())
+    if (((addr >> 12) == 0xd) && mmu.isIoArea())
         writeMemByte_io (addr, data);
     else
         mmu.cpuWrite (addr, data);
@@ -107,33 +94,38 @@ void c64::m_writeMemByte (const uint_least16_t addr, const uint8_t data)
 
 void c64::writeMemByte_io (const uint_least16_t addr, const uint8_t data)
 {
-    // Not SID ?
-    if (((addr & 0xff00) != 0xd400 ) && (addr < 0xde00))
+    switch (endian_16hi8 (addr))
     {
-        switch (endian_16hi8 (addr))
-        {
         case 0xd0:
         case 0xd1:
         case 0xd2:
         case 0xd3:
-            vic.write (addr&0x3f, data);
+            vic.write(addr & 0x3f, data);
+            break;
+        case 0xd4:
+        case 0xd5:
+        case 0xd6:
+        case 0xd7:
+        case 0xd8:
+        case 0xd9:
+        case 0xda:
+        case 0xdb:
+        {
+            const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
+            // Convert address to that acceptable by resid
+            sid[i]->write(addr & 0x1f, data);
+        }
             break;
         case 0xdc:
-            cia1.write (addr&0x0f, data);
+            cia1.write(addr & 0x0f, data);
             break;
         case 0xdd:
-            cia2.write (addr&0x0f, data);
+            cia2.write(addr & 0x0f, data);
             break;
-        default:
+        case 0xde:
+        case 0xdf:
             mmu.cpuWrite (addr, data);
             break;
-        }
-    }
-    else
-    {
-        const int i = sidmapper[(addr >> 5) & (MAPPER_SIZE - 1)];
-        // Convert address to that acceptable by resid
-        sid[i]->write(addr & 0x1f, data);
     }
 }
 

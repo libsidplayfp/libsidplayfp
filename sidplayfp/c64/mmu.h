@@ -143,10 +143,6 @@ public:
 	 * @param value
 	 */
 	void cpuWrite(const uint_least16_t addr, const uint8_t data);
-
-	uint8_t readKernel(const uint_least16_t addr) const { return kernal ? readRomByte(addr) : cpuRead(addr); }
-	uint8_t readBasic(const uint_least16_t addr) const { return basic ? readRomByte(addr) : cpuRead(addr); }
-	uint8_t readCharacter(const uint_least16_t addr) const { return character ? readRomByte(addr & 0x4fff) : cpuRead(addr); }
 };
 
 SIDPLAY2_NAMESPACE_STOP
