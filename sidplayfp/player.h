@@ -87,7 +87,6 @@ private:
 
     // PSID driver
     int  psidDrvReloc   (SidTuneInfo &tuneInfo, sid2_info_t &info);
-    void psidRelocAddr  (SidTuneInfo &tuneInfo, int startp, int endp);
 
 public:
     Player ();

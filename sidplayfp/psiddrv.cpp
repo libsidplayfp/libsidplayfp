@@ -27,8 +27,6 @@
 #include "mos6510/opcodes.h"
 
 
-#define PSIDDRV_MAX_PAGE 0xff
-
 SIDPLAY2_NAMESPACE_START
 
 const char Player::ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
@@ -65,6 +63,9 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
     const int startlp = tuneInfo.loadAddr >> 8;
     const int endlp   = (tuneInfo.loadAddr + (tuneInfo.c64dataLen - 1)) >> 8;
 
+    // Will get done later if can't now
+    m_c64.getMmu()->writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);
+
     if (tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC)
     {   // The psiddrv is only used for initialisation and to
         // autorun basic tunes as running the kernel falls
@@ -74,30 +75,26 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
     }
 
     // Check for free space in tune
-    if (tuneInfo.relocStartPage == PSIDDRV_MAX_PAGE)
+    if (tuneInfo.relocStartPage == 0xff)
         tuneInfo.relocPages = 0;
     // Check if we need to find the reloc addr
     else if (tuneInfo.relocStartPage == 0)
-    {   // Tune is clean so find some free ram around the
-        // load image
-        psidRelocAddr (tuneInfo, startlp, endlp);
-    }
-    else
-    {   // Check reloc information mode
-        //int startrp = tuneInfo.relocStartPage;
-        //int endrp   = startrp + (tuneInfo.relocPages - 1);
+    {
+        tuneInfo.relocPages = 0;
+        /* find area where to dump the driver in.
+        * It's only 1 block long, so any free block we can find will do. */
+        for (int i = 4; i < 0xd0; i ++)
+        {
+            if (i >= startlp && i <= endlp)
+                continue;
 
-        // New relocation implementation (exclude region)
-        // to complement existing method rejected as being
-        // unnecessary.  From tests in most cases this
-        // method increases memory availibility.
-        /*************************************************
-        if ((startrp <= startlp) && (endrp >= endlp))
-        {   // Is describing used space so find some free
-            // ram outside this range
-            psidRelocAddr (tuneInfo, startrp, endrp);
+            if (i >= 0xa0 && i <= 0xbf)
+                continue;
+
+            tuneInfo.relocStartPage = i;
+            tuneInfo.relocPages = 1;
+            break;
         }
-        *************************************************/
     }
 
     if (tuneInfo.relocPages < 1)
@@ -206,45 +203,6 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
     m_c64.getMmu()->writeMemByte(pos, tuneInfo.compatibility >= SIDTUNE_COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
 
     return 0;
-}
-
-
-void Player::psidRelocAddr (SidTuneInfo &tuneInfo, int startp, int endp)
-{   // Used memory ranges.
-    bool pages[256];
-    int  used[] = {0x00,   0x03,
-                   0xa0,   0xbf,
-                   0xd0,   0xff,
-                   startp, (startp <= endp) &&
-                   (endp <= 0xff) ? endp : 0xff};
-
-    // Mark used pages in table.
-    memset(pages, false, sizeof(pages));
-    for (size_t i = 0; i < sizeof(used)/sizeof(*used); i += 2)
-    {
-        for (int page = used[i]; page <= used[i + 1]; page++)
-            pages[page] = true;
-    }
-
-    {   // Find largest free range.
-        int relocPages, lastPage = 0;
-        tuneInfo.relocPages = 0;
-        for (size_t page = 0; page < sizeof(pages)/sizeof(*pages); page++)
-        {
-            if (pages[page] == false)
-                continue;
-            relocPages = page - lastPage;
-            if (relocPages > tuneInfo.relocPages)
-            {
-                tuneInfo.relocStartPage = lastPage;
-                tuneInfo.relocPages     = relocPages;
-            }
-            lastPage = page + 1;
-        }
-    }
-
-    if (tuneInfo.relocPages    == 0)
-        tuneInfo.relocStartPage = PSIDDRV_MAX_PAGE;
 }
 
 SIDPLAY2_NAMESPACE_STOP

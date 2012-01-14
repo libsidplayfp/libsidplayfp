@@ -287,10 +287,6 @@ void Player::reset (void)
     m_playerState  = sid2_stopped;
 
     m_c64.reset ();
-
-    // Will get done later if can't now
-    m_c64.getMmu()->writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);
-
 }
 
 SIDPLAY2_NAMESPACE_STOP
