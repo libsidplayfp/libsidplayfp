@@ -54,7 +54,10 @@ static const uint8_t POWERON[] = {
 MMU::MMU() :
 	kernalRom(KERNAL),
 	basicRom(BASIC),
-	characterRom(CHARACTER) {}
+	characterRom(CHARACTER),
+	kernalBank(m_rom),
+	basicBank(m_rom),
+	characterBank(m_rom) {}
 
 void MMU::mem_pla_config_changed () {
 
@@ -69,10 +72,11 @@ void MMU::mem_pla_config_changed () {
 	* 6 . * * .
 	* 7 * * * .
 	*/
-	basic      = ((mem_config & 3) == 3);
-	ioArea     = (mem_config >  4);
-	kernal     = ((mem_config & 2) != 0);
-	character  = ((mem_config ^ 4) > 4);
+	kernalBank    = ((mem_config & 2) != 0) ? m_rom : m_ram;
+	basicBank     = ((mem_config & 3) == 3) ? m_rom : m_ram;
+	characterBank = ((mem_config ^ 4) > 4) ? m_rom : m_ram;
+
+	ioArea = (mem_config > 4);
 
 	c64pla_config_changed(false, true, 0x17);
 }
@@ -112,17 +116,16 @@ void MMU::reset() {
 
 	if (kernalRom)
 		memcpy(&m_rom[0xe000], kernalRom, 8192);
-	// ROM should be at 0xd000 but have internally relocated
-	// it here to unused ROM space (does not affect C64 progs)
 	if (characterRom)
-		memcpy(&m_rom[0x4000], characterRom, 4096);
+		memcpy(&m_rom[0xd000], characterRom, 4096);
+	if (basicRom)
+		memcpy(&m_rom[0xa000], basicRom, 8192);
+
 	m_rom[0xfd69] = 0x9f; // Bypass memory check
 	m_rom[0xe55f] = 0x00; // Bypass screen clear
 	m_rom[0xfdc4] = 0xea; // Ingore sid volume reset to avoid DC
 	m_rom[0xfdc5] = 0xea; // click (potentially incompatibility)!!
 	m_rom[0xfdc6] = 0xea;
-	if (basicRom)
-		memcpy(&m_rom[0xa000], basicRom, 8192);
 
 	// Copy in power on settings.  These were created by running
 	// the kernel reset routine and storing the usefull values
@@ -185,14 +188,14 @@ uint8_t MMU::cpuRead(const uint_least16_t addr) const {
 		switch (addr >> 12) {
 		case 0xa:
 		case 0xb:
-			return basic ? readRomByte(addr) : readMemByte(addr);
+			return basicBank[addr];
 		case 0xd:
-			return character ? readRomByte(addr & 0x4fff) : readMemByte(addr);
+			return characterBank[addr];
 		case 0xe:
 		case 0xf:
-			return kernal ? readRomByte(addr) : readMemByte(addr);
+			return kernalBank[addr];
 		default:
-			return readMemByte(addr);
+			return m_ram[addr];
 		}
 	}
 }

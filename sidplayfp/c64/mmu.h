@@ -39,14 +39,13 @@ private:
 	const uint8_t* basicRom;
 	const uint8_t* characterRom;
 
-	/** CPU port signals */
-	//@{
-	bool kernal;
-	bool basic;
-	bool ioArea;
-	 //@}
+	/** ROM banks */
+	const uint8_t* kernalBank;
+	const uint8_t* basicBank;
+	const uint8_t* characterBank;
 
-	bool character;
+	/** CPU port signals */
+	bool ioArea;
 
 	/** Value written to processor port.  */
 	uint8_t dir;
