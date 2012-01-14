@@ -74,7 +74,6 @@ private:
                        const sid2_model_t defaultModel, const int channels,
                        const float64_t cpuFreq, const int frequency,
                        const sampling_method_t sampling);
-    void      reset          ();
     uint8_t   iomap          (const uint_least16_t addr);
     sid2_model_t getModel(const int sidModel,
                           sid2_model_t userModel,

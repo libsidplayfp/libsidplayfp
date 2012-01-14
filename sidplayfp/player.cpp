@@ -196,7 +196,9 @@ int Player::initialise ()
     // Fix the mileage counter if just finished another song.
     m_mileage += time ();
 
-    reset ();
+    m_playerState  = sid2_stopped;
+
+    m_c64.reset ();
 
     {
         const uint_least32_t page = (uint_least32_t) m_tuneInfo.loadAddr + m_tuneInfo.c64dataLen - 1;
@@ -278,15 +280,6 @@ void Player::stop (void)
     {
         m_playerState = sid2_stopped;
     }
-}
-
-// --------------------------------------------------
-// These must be available for use:
-void Player::reset (void)
-{
-    m_playerState  = sid2_stopped;
-
-    m_c64.reset ();
 }
 
 SIDPLAY2_NAMESPACE_STOP
