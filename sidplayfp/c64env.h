@@ -49,7 +49,7 @@ public:
 
     virtual void interruptIRQ (const bool state) = 0;
     virtual void interruptNMI () = 0;
-    virtual void interruptRST (void) = 0;
+    virtual void interruptRST () = 0;
 
     virtual void signalAEC    (const bool state) = 0;
     virtual void lightpen     () = 0;

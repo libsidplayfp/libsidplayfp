@@ -57,7 +57,7 @@ public:
     void          reset   (uint8_t volume);
     uint8_t       read    (uint_least8_t addr);
     void          write   (uint_least8_t addr, uint8_t data);
-    const char   *error   (void) {return m_error;}
+    const char   *error   (void) const {return m_error;}
 
     // Standard SID functions
     void          clock   ();

@@ -61,8 +61,8 @@ protected:
     void    trigger     (int irq);
 
     // Environment Interface
-    virtual void interrupt (bool state) = 0;
-    virtual void addrctrl  (bool state) = 0;
+    virtual void interrupt (const bool state) = 0;
+    virtual void addrctrl  (const bool state) = 0;
 
 public:
     void    chip  (mos656x_model_t model);

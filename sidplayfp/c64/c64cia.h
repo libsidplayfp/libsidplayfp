@@ -22,7 +22,7 @@
 // wire them into the computer (like adding a chip to a PCB).
 
 #include "sidplayfp/c64env.h"
-#include "../mos6526/mos6526.h"
+#include "sidplayfp/mos6526/mos6526.h"
 
 /* CIA 1 specifics:
    Generates IRQs
@@ -34,7 +34,7 @@ private:
     uint8_t lp;
 
 protected:
-    void interrupt (bool state)
+    void interrupt (const bool state)
     {
         m_env.interruptIRQ (state);
     }
@@ -53,7 +53,7 @@ public:
     c64cia1 (c64env *env)
     :MOS6526(&(env->context ())),
      m_env(*env) {}
-    const char *error (void) {return "";}
+    const char *error (void) const {return "";}
 
     void reset ()
     {
@@ -71,7 +71,7 @@ private:
     c64env &m_env;
 
 protected:
-    void interrupt (bool state)
+    void interrupt (const bool state)
     {
         if (state)
             m_env.interruptNMI ();
@@ -81,7 +81,7 @@ public:
     c64cia2 (c64env *env)
     :MOS6526(&(env->context ())),
      m_env(*env) {}
-    const char *error (void) {return "";}
+    const char *error (void) const {return "";}
 };
 
 #endif // _c64cia_h_

@@ -410,7 +410,7 @@ protected:
 	* @param state
 	*            interrupt state
 	*/
-	virtual void interrupt(bool state) = 0;
+	virtual void interrupt(const bool state) = 0;
 
 	virtual void portA() {}
 	virtual void portB() {}

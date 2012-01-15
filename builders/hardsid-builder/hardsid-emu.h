@@ -151,7 +151,7 @@ public:
     uint8_t       read    (uint_least8_t addr);
     void          write   (uint_least8_t addr, uint8_t data);
     void          clock   ();
-    const char   *error   (void) {return m_errorBuffer;}
+    const char   *error   (void) const {return m_errorBuffer;}
     bool          getStatus() const { return m_status; }
 
     // Standard SID functions

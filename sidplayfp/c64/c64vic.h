@@ -21,7 +21,7 @@
 // The VIC emulation is very generic and here we need to effectively
 // wire it into the computer (like adding a chip to a PCB).
 #include "sidplayfp/c64env.h"
-#include "../mos656x/mos656x.h"
+#include "sidplayfp/mos656x/mos656x.h"
 
 class c64vic: public MOS656X
 {
@@ -29,12 +29,12 @@ private:
     c64env &m_env;
 
 protected:
-    void interrupt (bool state)
+    void interrupt (const bool state)
     {
         m_env.interruptIRQ (state);
     }
 
-    void addrctrl (bool state)
+    void addrctrl (const bool state)
     {
         m_env.signalAEC (state);
     }
@@ -43,7 +43,7 @@ public:
     c64vic (c64env *env)
     :MOS656X(&(env->context ())),
      m_env(*env) {}
-    const char *error (void) {return "";}
+    const char *error (void) const {return "";}
 };
 
 #endif // _c64vic_h_

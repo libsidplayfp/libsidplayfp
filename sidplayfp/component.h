@@ -27,7 +27,7 @@ public:
     virtual uint8_t read  (uint_least8_t addr) = 0;
     virtual void    write (uint_least8_t addr, uint8_t data) = 0;
     virtual const   char *credits (void) = 0;
-    virtual const   char *error   (void) = 0;
+    virtual const   char *error   (void) const = 0;
 };
 
 #endif // _component_h_
