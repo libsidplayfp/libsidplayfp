@@ -44,6 +44,13 @@
 #define MOS6569_FIRST_DMA_LINE     0x30
 #define MOS6569_LAST_DMA_LINE      0xf7
 
+enum
+{
+    MOS656X_INTERRUPT_RST     = 1 << 0,
+    MOS656X_INTERRUPT_LP      = 1 << 3,
+    MOS656X_INTERRUPT_REQUEST = 1 << 7
+};
+
 const char *MOS656X::credit =
 {   // Optional information
     "MOS656X (VICII) Emulation:\n"
@@ -79,7 +86,7 @@ void MOS656X::reset ()
     event_context.schedule (*this, 0, EVENT_CLOCK_PHI1);
 }
 
-void MOS656X::chip (mos656x_model_t model)
+void MOS656X::chip (const mos656x_model_t model)
 {
     switch (model)
     {

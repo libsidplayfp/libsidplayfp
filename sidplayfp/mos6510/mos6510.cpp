@@ -14,41 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/***************************************************************************
- *  $Log: mos6510.cpp,v $
- *  Revision 1.13  2004/04/23 01:06:24  s_a_white
- *  Display correct cycle instruction starts on via dbgClk.  This is set at the
- *  start of every instruction correctly allows for cycle stealing.
- *
- *  Revision 1.12  2004/02/21 13:20:10  s_a_white
- *  Zero debug cycle count so is from start of instruction rather than after
- *  the last cpu.Cycle_EffectiveAddressing mode cycle.
- *
- *  Revision 1.11  2004/01/13 22:36:07  s_a_white
- *  Converted some missed printfs to fprintfs
- *
- *  Revision 1.10  2003/10/28 00:22:52  s_a_white
- *  getTime now returns a time with respect to the clocks desired phase.
- *
- *  Revision 1.9  2003/10/16 07:46:05  s_a_white
- *  Allow redirection of debug information of file.
- *
- *  Revision 1.8  2001/08/05 15:46:38  s_a_white
- *  No longer need to check on which cycle to print debug information.
- *
- *  Revision 1.7  2001/07/14 13:04:34  s_a_white
- *  Accumulator is now unsigned, which improves code readability.
- *
- *  Revision 1.6  2001/03/09 22:27:46  s_a_white
- *  Speed optimisation update.
- *
- *  Revision 1.5  2001/02/13 23:01:10  s_a_white
- *  env->cpuRead now used for debugging.
- *
- *  Revision 1.4  2000/12/11 19:03:16  s_a_white
- *  AC99 Update.
- *
- ***************************************************************************/
+
 
 #include <stdio.h>
 #include <stdlib.h>

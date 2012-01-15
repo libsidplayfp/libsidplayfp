@@ -19,7 +19,7 @@
 #define _c64env_h_
 
 #include "event.h"
- 
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif

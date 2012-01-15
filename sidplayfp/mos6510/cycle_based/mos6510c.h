@@ -14,100 +14,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-/***************************************************************************
- *  $Log: mos6510c.h,v $
- *  Revision 1.26  2004/06/26 11:10:47  s_a_white
- *  Changes to support new calling convention for event scheduler.
- *
- *  Revision 1.25  2004/04/23 01:01:37  s_a_white
- *  Added debug clock to record cycle instructions starts on.
- *
- *  Revision 1.24  2004/03/07 22:38:57  s_a_white
- *  Rename write to nosteal since it needs setting for non memory access cycles to
- *
- *  Revision 1.23  2004/03/06 21:07:12  s_a_white
- *  Don't start a new cycle stealing sequence if one is already started!  This can
- *  happen if an interrupt occurs during an optimised sleep.
- *
- *  Revision 1.22  2004/02/29 14:33:59  s_a_white
- *  If an interrupt occurs during a branch instruction but after the decision
- *  has occured then it should not be delayed.
- *
- *  Revision 1.21  2003/10/29 22:18:03  s_a_white
- *  IRQs are now only taken in on phase 1 as previously they could be clocked
- *  in on both phases of the cycle resulting in them sometimes not being
- *  delayed long enough.
- *
- *  Revision 1.20  2003/10/28 00:22:53  s_a_white
- *  getTime now returns a time with respect to the clocks desired phase.
- *
- *  Revision 1.19  2003/10/16 07:48:32  s_a_white
- *  Allow redirection of debug information of file.
- *
- *  Revision 1.18  2003/01/20 23:10:48  s_a_white
- *  Fixed RMW instructions to perform memory re-write on the correct cycle.
- *
- *  Revision 1.17  2003/01/20 18:37:08  s_a_white
- *  Stealing update.  Apparently the cpu does a memory read from any non
- *  write cycle (whether it needs to or not) resulting in those cycles
- *  being stolen.
- *
- *  Revision 1.16  2003/01/17 08:42:09  s_a_white
- *  Event scheduler phase support.  Better handling the operation of IRQs
- *  during stolen cycles.
- *
- *  Revision 1.15  2002/11/28 20:35:06  s_a_white
- *  Reduced number of thrown exceptions when dma occurs.
- *
- *  Revision 1.14  2002/11/25 20:10:55  s_a_white
- *  A bus access failure should stop the CPU dead like the cycle never started.
- *  This is currently simulated using throw (execption handling) for now.
- *
- *  Revision 1.13  2002/11/21 19:52:48  s_a_white
- *  CPU upgraded to be like other components.  Theres nolonger a clock call,
- *  instead events are registered to occur at a specific time.
- *
- *  Revision 1.12  2002/11/19 22:57:33  s_a_white
- *  Initial support for external DMA to steal cycles away from the CPU.
- *
- *  Revision 1.11  2002/11/01 17:35:27  s_a_white
- *  Frame based support for old sidplay1 modes.
- *
- *  Revision 1.10  2001/08/05 15:46:02  s_a_white
- *  No longer need to check on which cycle an instruction ends or when to print
- *  debug information.
- *
- *  Revision 1.9  2001/07/14 16:48:03  s_a_white
- *  cycleCount and related must roject.Syn
- *
- *  Revision 1.8  2001/07/14 13:15:30  s_a_white
- *  Accumulator is now unsigned, which improves code readability.  Emulation
- *  tested with testsuite 2.15.  Various instructions required modification.
- *
- *  Revision 1.7  2001/03/28 21:17:34  s_a_white
- *  Added support for proper RMW instructions.
- *
- *  Revision 1.6  2001/03/24 18:09:17  s_a_white
- *  On entry to interrupt routine the first instruction in the handler is now always
- *  executed before pending interrupts are re-checked.
- *
- *  Revision 1.5  2001/03/19 23:48:21  s_a_white
- *  Interrupts made virtual to allow for redefintion for Sidplay1 compatible
- *  interrupts.
- *
- *  Revision 1.4  2001/03/09 22:28:03  s_a_white
- *  Speed optimisation update.
- *
- *  Revision 1.3  2001/02/13 21:03:33  s_a_white
- *  Changed inlines to non-inlines due to function bodies not being in header.
- *
- *  Revision 1.2  2000/12/11 19:04:32  s_a_white
- *  AC99 Update.
- *
- ***************************************************************************/
 
-#ifndef _mos6510c_h_
-#define _mos6510c_h_
+#ifndef MOS6510_H
+#define MOS6510_H
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -387,4 +296,4 @@ public:
     void         clearIRQ   (void);
 };
 
-#endif // _mos6510c_h_
+#endif // MOS6510_H

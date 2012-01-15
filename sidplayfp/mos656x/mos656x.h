@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _mos656x_h_
-#define _mos656x_h_
+#ifndef MOS656X_H
+#define MOS656X_H
 
 #include "sidplayfp/component.h"
 #include "sidplayfp/EventScheduler.h"
@@ -65,7 +65,7 @@ protected:
     virtual void addrctrl  (const bool state) = 0;
 
 public:
-    void    chip  (mos656x_model_t model);
+    void    chip  (const mos656x_model_t model);
     void    lightpen ();
 
     // Component Standard Calls
@@ -75,16 +75,4 @@ public:
     const   char *credits (void) {return credit;}
 };
 
-
-/***************************************************************************
- * Inline functions
- **************************************************************************/
-
-enum
-{
-    MOS656X_INTERRUPT_RST     = 1 << 0,
-    MOS656X_INTERRUPT_LP      = 1 << 3,
-    MOS656X_INTERRUPT_REQUEST = 1 << 7
-};
-
-#endif // _mos656x_h_
+#endif // MOS656X_H

@@ -14,8 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef _opcodes_h_
-#define _opcodes_h_
+#ifndef OPCODES_H
+#define OPCODES_H
 
 #define OPCODE_MAX 0x100
 
@@ -328,4 +328,4 @@
 #define SKBn  NOPb
 #define SKWn  NOPa
 
-#endif // _opcodes_h_
+#endif // OPCODES_H

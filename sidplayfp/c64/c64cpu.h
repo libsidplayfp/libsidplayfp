@@ -35,7 +35,6 @@ public:
     c64cpu (c64env *env)
     :MOS6510(&(env->context ())),
      m_env(*env) {}
-    const char *error (void) { return ""; }
 
     uint8_t cpuRead  (const uint_least16_t addr) { return m_env.cpuRead (addr); }
     void    cpuWrite (const uint_least16_t addr, const uint8_t data) { m_env.cpuWrite (addr, data); }
