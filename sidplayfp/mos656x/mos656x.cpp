@@ -262,15 +262,16 @@ event_clock_t MOS656X::clock (void)
             }
         }
 
-        delay = 2;
         if (sprite_dma & 0x01)
+        {
             addrctrl (false);
+            delay = 2;
+        }
         else
         {
             addrctrl (true);
             // No sprites before next compulsory cycle
-            if (!(sprite_dma & 0x1f))
-                delay = 9;
+            delay = (sprite_dma & 0x1f) ? 2 : 9;
         }
         break;
     }
@@ -364,24 +365,24 @@ event_clock_t MOS656X::clock (void)
         break;
 
     case 15:
-        delay = 2;
         if (!(sprite_dma & 0xc0))
         {
             addrctrl (true);
             delay = 5;
-        }
+        } else
+            delay = 2;
         break;
 
     case 16:
         break;
 
     case 17:
-        delay = 2;
         if (!(sprite_dma & 0x80))
         {
             addrctrl (true);
             delay = 3;
-        }
+        } else
+            delay = 2;
         break;
 
     case 18:
