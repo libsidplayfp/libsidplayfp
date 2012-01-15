@@ -120,8 +120,7 @@ void MOS656X::chip (const mos656x_model_t model)
 
 uint8_t MOS656X::read (uint_least8_t addr)
 {
-    if (addr > 0x3f) return 0;
-    if (addr > 0x2e) return 0xff;
+    addr &= 0x3f;
 
     // Sync up timers
     clock ();
@@ -140,13 +139,20 @@ uint8_t MOS656X::read (uint_least8_t addr)
         return idr;
     case 0x1a:    // IRQ mask
         return icr | 0xf0;
-    default: return regs[addr];
+    default:
+        // for addresses < $20 read from register directly, when < $2f set
+        // bits of high nibble to 1, for >= $2f return $ff
+        if (addr < 0x20)
+            return regs[addr];
+        if (addr < 0x2f)
+            return regs[addr] | 0xf0;
+        return 0xff;
     }
 }
 
 void MOS656X::write (uint_least8_t addr, uint8_t data)
 {
-    if (addr > 0x3f) return;
+    addr &= 0x3f;
 
     regs[addr] = data;
 
