@@ -50,14 +50,29 @@ protected:
 
 protected:
     event_clock_t m_rasterClk;
+
+    /** CPU's event context. */
     EventContext &event_context;
 
     uint_least16_t yrasters, xrasters, raster_irq;
-    uint_least16_t raster_x, raster_y;
-    uint_least16_t y_scroll;
-    bool           bad_lines_enabled, bad_line;
-    bool           vblanking;
-    bool           lp_triggered;
+    uint_least16_t raster_x;
+
+    /** current raster line */
+    uint_least16_t rasterY;
+
+    /** vertical scrolling value */
+    uint_least16_t yscroll;
+
+    /** are bad lines enabled for this frame? */
+    bool areBadLinesEnabled;
+
+    /** is the current line a bad line */
+    bool isBadLine;
+
+    bool vblanking;
+
+    /** Has light pen IRQ been triggered in this frame already? */
+    bool lp_triggered;
 
     /** internal IRQ flags */
     uint8_t irqFlags;
@@ -65,12 +80,16 @@ protected:
     /** masks for the IRQ flags */
     uint8_t irqMask;
 
-    uint8_t        lpx, lpy;
-    uint8_t       &sprite_enable, &sprite_y_expansion;
-    uint8_t        sprite_dma, sprite_expand_y;
-    uint8_t        sprite_mc_base[8];
+    /** Light pen coordinates */
+    uint8_t lpx, lpy;
 
-    uint8_t        regs[0x40];
+    /** the 8 sprites data*/
+    uint8_t &sprite_enable, &sprite_y_expansion;
+    uint8_t sprite_dma, sprite_expand_y;
+    uint8_t sprite_mc_base[8];
+
+    /** memory for chip registers */
+    uint8_t regs[0x40];
 
 private:
     event_clock_t  clock   (void);
@@ -94,6 +113,14 @@ protected:
     * @return true if DEN is set, otherwise false
     */
     bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
+
+    bool evaluateIsBadLine() const
+    {
+        return areBadLinesEnabled
+            && rasterY >= FIRST_DMA_LINE
+            && rasterY <= LAST_DMA_LINE
+            && (rasterY & 7) == yscroll;
+    }
 
     // Environment Interface
     virtual void interrupt (const bool state) = 0;

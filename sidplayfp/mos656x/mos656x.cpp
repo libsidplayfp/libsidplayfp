@@ -59,10 +59,10 @@ void MOS656X::reset ()
     irqFlags     = 0;
     irqMask      = 0;
     raster_irq   = 0;
-    y_scroll     = 0;
-    raster_y     = yrasters - 1;
+    yscroll      = 0;
+    rasterY      = yrasters - 1;
     raster_x     = 0;
-    bad_lines_enabled = false;
+    areBadLinesEnabled = false;
     m_rasterClk  = 0;
     vblanking    = lp_triggered = false;
     lpx          = lpy = 0;
@@ -111,10 +111,10 @@ uint8_t MOS656X::read (uint_least8_t addr)
     {
     case 0x11:
         // Control register 1
-        return (regs[addr] & 0x7f) | ((raster_y & 0x100) >> 1);
+        return (regs[addr] & 0x7f) | ((rasterY & 0x100) >> 1);
     case 0x12:
         // Raster counter
-        return raster_y & 0xFF;
+        return rasterY & 0xFF;
     case 0x13:
         return lpx;
     case 0x14:
@@ -150,23 +150,20 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
     case 0x11: // Control register 1
     {
         endian_16hi8 (raster_irq, data >> 7);
-        y_scroll = data & 7;
+        yscroll = data & 7;
 
         if (raster_x < 11)
             break;
 
         // In line $30, the DEN bit controls if Bad Lines can occur
-        if (raster_y == FIRST_DMA_LINE)
-            bad_lines_enabled |= readDEN();
+        if (rasterY == FIRST_DMA_LINE)
+            areBadLinesEnabled |= readDEN();
 
         // Bad Line condition?
-        bad_line = (raster_y >= FIRST_DMA_LINE) &&
-                   (raster_y <= LAST_DMA_LINE)  &&
-                   ((raster_y & 7) == y_scroll) &&
-                   bad_lines_enabled;
+        isBadLine = evaluateIsBadLine();
 
         // Start bad dma line now
-        if (bad_line && (raster_x < 53))
+        if (isBadLine && (raster_x < 53))
             addrctrl (false);
         break;
     }
@@ -243,7 +240,7 @@ event_clock_t MOS656X::clock (void)
     {
     case 0:
     {   // Calculate sprite DMA
-        const uint8_t y = raster_y & 0xff;
+        const uint8_t y = rasterY & 0xff;
         sprite_expand_y ^= sprite_y_expansion; // 3.8.1-2
         uint8_t mask = 1;
         for (unsigned int i=1; i<0x10; i+=2, mask<<=1)
@@ -309,13 +306,13 @@ event_clock_t MOS656X::clock (void)
         break;
 
     case 9:  // IRQ occurred (xraster != 0)
-        if (raster_y == (yrasters - 1))
+        if (rasterY == (yrasters - 1))
             vblanking = true;
         else
         {
-            raster_y++;
+            rasterY++;
             // Trigger raster IRQ if IRQ line reached
-            if (raster_y == raster_irq)
+            if (rasterY == raster_irq)
                 activateIRQFlag(IRQ_RASTER);
         }
         if (!(sprite_dma & 0x18))
@@ -326,7 +323,7 @@ event_clock_t MOS656X::clock (void)
         if (vblanking)
         {
             vblanking = lp_triggered = false;
-            raster_y = 0;
+            rasterY = 0;
             // Trigger raster IRQ if IRQ in line 0
             if (raster_irq == 0)
                 activateIRQFlag(IRQ_RASTER);
@@ -388,16 +385,16 @@ event_clock_t MOS656X::clock (void)
 
     case 20: // Start bad line
     {   // In line $30, the DEN bit controls if Bad Lines can occur
-        if (raster_y == FIRST_DMA_LINE)
-            bad_lines_enabled = readDEN();
+        if (rasterY == FIRST_DMA_LINE)
+            areBadLinesEnabled = readDEN();
 
         // Test for bad line condition
-        bad_line = (raster_y >= FIRST_DMA_LINE) &&
-                   (raster_y <= LAST_DMA_LINE)  &&
-                   ((raster_y & 7) == y_scroll) &&
-                   bad_lines_enabled;
+        isBadLine = (rasterY >= FIRST_DMA_LINE) &&
+                   (rasterY <= LAST_DMA_LINE)  &&
+                   ((rasterY & 7) == yscroll) &&
+                   areBadLinesEnabled;
 
-        if (bad_line)
+        if (isBadLine)
         {   // DMA starts on cycle 23
             addrctrl (false);
         }
@@ -454,7 +451,7 @@ void MOS656X::lightpen ()
     if (!lp_triggered)
     {   // Latch current coordinates
         lpx = raster_x << 2;
-        lpy = (uint8_t) raster_y & 0xff;
+        lpy = (uint8_t) rasterY & 0xff;
         activateIRQFlag(IRQ_LIGHTPEN);
     }
 }
