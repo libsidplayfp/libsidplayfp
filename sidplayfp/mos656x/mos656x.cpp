@@ -168,8 +168,8 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
             break;
 
         // In line $30, the DEN bit controls if Bad Lines can occur
-        if ((raster_y == first_dma_line) && (data & 0x10))
-            bad_lines_enabled = true;
+        if (raster_y == first_dma_line)
+            bad_lines_enabled |= readDEN();
 
         // Bad Line condition?
         bad_line = (raster_y >= first_dma_line) &&
@@ -401,7 +401,7 @@ event_clock_t MOS656X::clock (void)
     case 20: // Start bad line
     {   // In line $30, the DEN bit controls if Bad Lines can occur
         if (raster_y == first_dma_line)
-            bad_lines_enabled |= readDEN();
+            bad_lines_enabled = readDEN();
 
         // Test for bad line condition
         bad_line = (raster_y >= first_dma_line) &&
