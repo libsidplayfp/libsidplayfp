@@ -31,18 +31,12 @@
 
 #define MOS6567R56A_SCREEN_HEIGHT  262
 #define MOS6567R56A_SCREEN_WIDTH   64
-#define MOS6567R56A_FIRST_DMA_LINE 0x30
-#define MOS6567R56A_LAST_DMA_LINE  0xf7
 
 #define MOS6567R8_SCREEN_HEIGHT    263
 #define MOS6567R8_SCREEN_WIDTH     65
-#define MOS6567R8_FIRST_DMA_LINE   0x30
-#define MOS6567R8_LAST_DMA_LINE    0xf7
 
 #define MOS6569_SCREEN_HEIGHT      312
 #define MOS6569_SCREEN_WIDTH       63
-#define MOS6569_FIRST_DMA_LINE     0x30
-#define MOS6569_LAST_DMA_LINE      0xf7
 
 const char *MOS656X::credit =
 {   // Optional information
@@ -88,24 +82,18 @@ void MOS656X::chip (const mos656x_model_t model)
     case MOS6567R56A:
         yrasters       = MOS6567R56A_SCREEN_HEIGHT;
         xrasters       = MOS6567R56A_SCREEN_WIDTH;
-        first_dma_line = MOS6567R56A_FIRST_DMA_LINE;
-        last_dma_line  = MOS6567R56A_LAST_DMA_LINE;
     break;
 
     // NTSC Chip
     case MOS6567R8:
         yrasters       = MOS6567R8_SCREEN_HEIGHT;
         xrasters       = MOS6567R8_SCREEN_WIDTH;
-        first_dma_line = MOS6567R8_FIRST_DMA_LINE;
-        last_dma_line  = MOS6567R8_LAST_DMA_LINE;
     break;
 
     // PAL Chip
     case MOS6569:
         yrasters       = MOS6569_SCREEN_HEIGHT;
         xrasters       = MOS6569_SCREEN_WIDTH;
-        first_dma_line = MOS6569_FIRST_DMA_LINE;
-        last_dma_line  = MOS6569_LAST_DMA_LINE;
     break;
     }
 
@@ -168,12 +156,12 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
             break;
 
         // In line $30, the DEN bit controls if Bad Lines can occur
-        if (raster_y == first_dma_line)
+        if (raster_y == FIRST_DMA_LINE)
             bad_lines_enabled |= readDEN();
 
         // Bad Line condition?
-        bad_line = (raster_y >= first_dma_line) &&
-                   (raster_y <= last_dma_line)  &&
+        bad_line = (raster_y >= FIRST_DMA_LINE) &&
+                   (raster_y <= LAST_DMA_LINE)  &&
                    ((raster_y & 7) == y_scroll) &&
                    bad_lines_enabled;
 
@@ -400,12 +388,12 @@ event_clock_t MOS656X::clock (void)
 
     case 20: // Start bad line
     {   // In line $30, the DEN bit controls if Bad Lines can occur
-        if (raster_y == first_dma_line)
+        if (raster_y == FIRST_DMA_LINE)
             bad_lines_enabled = readDEN();
 
         // Test for bad line condition
-        bad_line = (raster_y >= first_dma_line) &&
-                   (raster_y <= last_dma_line)  &&
+        bad_line = (raster_y >= FIRST_DMA_LINE) &&
+                   (raster_y <= LAST_DMA_LINE)  &&
                    ((raster_y & 7) == y_scroll) &&
                    bad_lines_enabled;
 

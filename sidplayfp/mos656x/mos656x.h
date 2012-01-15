@@ -42,12 +42,19 @@ private:
     static const int IRQ_LIGHTPEN = 1 << 3;
 
 protected:
+    /** First line when we check for bad lines */
+    static const int FIRST_DMA_LINE = 0x30;
+
+    /** Last line when we check for bad lines */
+    static const int LAST_DMA_LINE = 0xf7;
+
+protected:
     event_clock_t m_rasterClk;
     EventContext &event_context;
 
     uint_least16_t yrasters, xrasters, raster_irq;
     uint_least16_t raster_x, raster_y;
-    uint_least16_t first_dma_line, last_dma_line, y_scroll;
+    uint_least16_t y_scroll;
     bool           bad_lines_enabled, bad_line;
     bool           vblanking;
     bool           lp_triggered;
