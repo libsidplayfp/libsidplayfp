@@ -60,8 +60,8 @@ void MOS656X::reset ()
     irqMask      = 0;
     raster_irq   = 0;
     yscroll      = 0;
-    rasterY      = yrasters - 1;
-    raster_x     = 0;
+    rasterY      = maxRasters - 1;
+    lineCycle     = 0;
     areBadLinesEnabled = false;
     m_rasterClk  = 0;
     vblanking    = lp_triggered = false;
@@ -80,20 +80,20 @@ void MOS656X::chip (const mos656x_model_t model)
     {
     // Seems to be an older NTSC chip
     case MOS6567R56A:
-        yrasters       = MOS6567R56A_SCREEN_HEIGHT;
-        xrasters       = MOS6567R56A_SCREEN_WIDTH;
+        maxRasters    = MOS6567R56A_SCREEN_HEIGHT;
+        cyclesPerLine = MOS6567R56A_SCREEN_WIDTH;
     break;
 
     // NTSC Chip
     case MOS6567R8:
-        yrasters       = MOS6567R8_SCREEN_HEIGHT;
-        xrasters       = MOS6567R8_SCREEN_WIDTH;
+        maxRasters    = MOS6567R8_SCREEN_HEIGHT;
+        cyclesPerLine = MOS6567R8_SCREEN_WIDTH;
     break;
 
     // PAL Chip
     case MOS6569:
-        yrasters       = MOS6569_SCREEN_HEIGHT;
-        xrasters       = MOS6569_SCREEN_WIDTH;
+        maxRasters    = MOS6569_SCREEN_HEIGHT;
+        cyclesPerLine = MOS6569_SCREEN_WIDTH;
     break;
     }
 
@@ -152,18 +152,18 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
         endian_16hi8 (raster_irq, data >> 7);
         yscroll = data & 7;
 
-        if (raster_x < 11)
+        if (lineCycle < 11)
             break;
 
-        // In line $30, the DEN bit controls if Bad Lines can occur
+        /* display enabled at any cycle of line 48 enables badlines */
         if (rasterY == FIRST_DMA_LINE)
             areBadLinesEnabled |= readDEN();
 
-        // Bad Line condition?
+        /* Re-evaluate badline condition */
         isBadLine = evaluateIsBadLine();
 
         // Start bad dma line now
-        if (isBadLine && (raster_x < 53))
+        if (isBadLine && (lineCycle < 53))
             addrctrl (false);
         break;
     }
@@ -232,9 +232,9 @@ event_clock_t MOS656X::clock (void)
 
     // Update x raster
     m_rasterClk += cycles;
-    raster_x    += cycles;
-    const uint_least16_t cycle = (raster_x + 9) % xrasters;
-    raster_x    %= xrasters;
+    lineCycle    += cycles;
+    const uint_least16_t cycle = (lineCycle + 9) % cyclesPerLine;
+    lineCycle    %= cyclesPerLine;
 
     switch (cycle)
     {
@@ -306,7 +306,7 @@ event_clock_t MOS656X::clock (void)
         break;
 
     case 9:  // IRQ occurred (xraster != 0)
-        if (rasterY == (yrasters - 1))
+        if (rasterY == (maxRasters - 1))
             vblanking = true;
         else
         {
@@ -428,7 +428,7 @@ event_clock_t MOS656X::clock (void)
 
     case 63: // End DMA - Only get here for non PAL
         addrctrl (true);
-        delay = xrasters - cycle;
+        delay = cyclesPerLine - cycle;
         break;
 
     default:
@@ -437,7 +437,7 @@ event_clock_t MOS656X::clock (void)
         else if (cycle < 63)
             delay = 63 - cycle;
         else
-            delay = xrasters - cycle;
+            delay = cyclesPerLine - cycle;
     }
 
     return delay;
@@ -450,7 +450,7 @@ void MOS656X::lightpen ()
 
     if (!lp_triggered)
     {   // Latch current coordinates
-        lpx = raster_x << 2;
+        lpx = lineCycle << 2;
         lpy = (uint8_t) rasterY & 0xff;
         activateIRQFlag(IRQ_LIGHTPEN);
     }

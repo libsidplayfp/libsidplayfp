@@ -54,8 +54,15 @@ protected:
     /** CPU's event context. */
     EventContext &event_context;
 
-    uint_least16_t yrasters, xrasters, raster_irq;
-    uint_least16_t raster_x;
+    /** Number of cycles per line. */
+    uint_least16_t cyclesPerLine;
+
+    uint_least16_t maxRasters;
+
+    uint_least16_t raster_irq;
+
+    /** Current visible line */
+    uint_least16_t lineCycle;
 
     /** current raster line */
     uint_least16_t rasterY;
