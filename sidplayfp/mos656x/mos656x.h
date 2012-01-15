@@ -34,6 +34,13 @@ class MOS656X: public component, private Event
 private:
     static const char *credit;
 
+private:
+    /** raster IRQ flag */
+    static const int IRQ_RASTER = 1 << 0;
+
+    /** Light-Pen IRQ flag */
+    static const int IRQ_LIGHTPEN = 1 << 3;
+
 protected:
     event_clock_t m_rasterClk;
     EventContext &event_context;
@@ -44,7 +51,14 @@ protected:
     bool           bad_lines_enabled, bad_line;
     bool           vblanking;
     bool           lp_triggered;
-    uint8_t        icr, idr, ctrl1;
+
+    /** internal IRQ flags */
+    uint8_t irqFlags;
+
+    /** masks for the IRQ flags */
+    uint8_t irqMask;
+
+    uint8_t        ctrl1;
     uint8_t        lpx, lpy;
     uint8_t       &sprite_enable, &sprite_y_expansion;
     uint8_t        sprite_dma, sprite_expand_y;
@@ -55,10 +69,18 @@ protected:
 private:
     event_clock_t  clock   (void);
 
+    /** Signal CPU interrupt if requested by VIC. */
+    void handleIrqState();
+
 protected:
     MOS656X (EventContext *context);
     void    event       (void);
-    void    trigger     (int irq);
+
+    /**
+    * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
+    * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
+    */
+    void activateIRQFlag(const int flag);
 
     // Environment Interface
     virtual void interrupt (const bool state) = 0;

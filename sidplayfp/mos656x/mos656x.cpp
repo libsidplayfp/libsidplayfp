@@ -44,13 +44,6 @@
 #define MOS6569_FIRST_DMA_LINE     0x30
 #define MOS6569_LAST_DMA_LINE      0xf7
 
-enum
-{
-    MOS656X_INTERRUPT_RST     = 1 << 0,
-    MOS656X_INTERRUPT_LP      = 1 << 3,
-    MOS656X_INTERRUPT_REQUEST = 1 << 7
-};
-
 const char *MOS656X::credit =
 {   // Optional information
     "MOS656X (VICII) Emulation:\n"
@@ -69,7 +62,9 @@ MOS656X::MOS656X (EventContext *context)
 
 void MOS656X::reset ()
 {
-    icr          = idr = ctrl1 = 0;
+    irqFlags     = 0;
+    irqMask      = 0;
+    ctrl1        = 0;
     raster_irq   = 0;
     y_scroll     = 0;
     raster_y     = yrasters - 1;
@@ -127,18 +122,22 @@ uint8_t MOS656X::read (uint_least8_t addr)
 
     switch (addr)
     {
-    case 0x11:    // Control register 1
+    case 0x11:
+        // Control register 1
         return (ctrl1 & 0x7f) | ((raster_y & 0x100) >> 1);
-    case 0x12:    // Raster counter
+    case 0x12:
+        // Raster counter
         return raster_y & 0xFF;
     case 0x13:
         return lpx;
     case 0x14:
         return lpy;
-    case 0x19:    // IRQ flags
-        return idr;
-    case 0x1a:    // IRQ mask
-        return icr | 0xf0;
+    case 0x19:
+        // Interrupt Pending Register
+        return irqFlags | 0x70;
+    case 0x1a:
+        // Interrupt Mask Register
+        return irqMask | 0xf0;
     default:
         // for addresses < $20 read from register directly, when < $2f set
         // bits of high nibble to 1, for >= $2f return $ff
@@ -194,39 +193,42 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
         sprite_expand_y |= ~data; // 3.8.1-1
         break;
 
-    case 0x19: // IRQ flags
-        idr &= ((~data & 0x0f) | 0x80);
-        if (idr == 0x80)
-            trigger (0);
+    case 0x19:
+        // VIC Interrupt Flag Register
+        irqFlags &= ~data & 0x0f | 0x80;
+        handleIrqState();
         break;
 
-    case 0x1a: // IRQ mask
-        icr = data & 0x0f;
-        trigger (icr & idr);
+    case 0x1a:
+        // IRQ Mask Register
+        irqMask = data & 0x0f;
+        handleIrqState();
         break;
     }
 }
 
-
-void MOS656X::trigger (int irq)
+void MOS656X::handleIrqState()
 {
-    if (!irq)
-    {   // Clear any requested IRQs
-        if (idr & MOS656X_INTERRUPT_REQUEST)
-            interrupt (false);
-        idr = 0;
-        return;
-    }
-
-    idr |= irq;
-    if (icr & idr)
+    /* signal an IRQ unless we already signaled it */
+    if ((irqFlags & irqMask & 0x0f) != 0)
     {
-        if (!(idr & MOS656X_INTERRUPT_REQUEST))
+        if ((irqFlags & 0x80) == 0)
         {
-            idr |= MOS656X_INTERRUPT_REQUEST;
-            interrupt (true);
+            interrupt(true);
+            irqFlags |= 0x80;
         }
     }
+    else if ((irqFlags & 0x80) != 0)
+    {
+        interrupt(false);
+        irqFlags &= 0x7f;
+    }
+}
+
+void MOS656X::activateIRQFlag(const int flag)
+{
+    irqFlags |= flag;
+    handleIrqState();
 }
 
 void MOS656X::event (void)
@@ -328,7 +330,7 @@ event_clock_t MOS656X::clock (void)
             raster_y++;
             // Trigger raster IRQ if IRQ line reached
             if (raster_y == raster_irq)
-                trigger (MOS656X_INTERRUPT_RST);
+                activateIRQFlag(IRQ_RASTER);
         }
         if (!(sprite_dma & 0x18))
             addrctrl (true);
@@ -341,7 +343,7 @@ event_clock_t MOS656X::clock (void)
             raster_y = 0;
             // Trigger raster IRQ if IRQ in line 0
             if (raster_irq == 0)
-                trigger (MOS656X_INTERRUPT_RST);
+                activateIRQFlag(IRQ_RASTER);
         }
         if (sprite_dma & 0x20)
             addrctrl (false);
@@ -467,6 +469,6 @@ void MOS656X::lightpen ()
     {   // Latch current coordinates
         lpx = raster_x << 2;
         lpy = (uint8_t) raster_y & 0xff;
-        trigger(MOS656X_INTERRUPT_LP);
+        activateIRQFlag(IRQ_LIGHTPEN);
     }
 }
