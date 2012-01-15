@@ -64,7 +64,6 @@ void MOS656X::reset ()
 {
     irqFlags     = 0;
     irqMask      = 0;
-    ctrl1        = 0;
     raster_irq   = 0;
     y_scroll     = 0;
     raster_y     = yrasters - 1;
@@ -124,7 +123,7 @@ uint8_t MOS656X::read (uint_least8_t addr)
     {
     case 0x11:
         // Control register 1
-        return (ctrl1 & 0x7f) | ((raster_y & 0x100) >> 1);
+        return (regs[addr] & 0x7f) | ((raster_y & 0x100) >> 1);
     case 0x12:
         // Raster counter
         return raster_y & 0xFF;
@@ -163,7 +162,6 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
     case 0x11: // Control register 1
     {
         endian_16hi8 (raster_irq, data >> 7);
-        ctrl1    = data;
         y_scroll = data & 7;
 
         if (raster_x < 11)
@@ -403,7 +401,7 @@ event_clock_t MOS656X::clock (void)
     case 20: // Start bad line
     {   // In line $30, the DEN bit controls if Bad Lines can occur
         if (raster_y == first_dma_line)
-            bad_lines_enabled = (ctrl1 & 0x10) != 0;
+            bad_lines_enabled |= readDEN();
 
         // Test for bad line condition
         bad_line = (raster_y >= first_dma_line) &&

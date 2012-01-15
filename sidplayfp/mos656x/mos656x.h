@@ -58,7 +58,6 @@ protected:
     /** masks for the IRQ flags */
     uint8_t irqMask;
 
-    uint8_t        ctrl1;
     uint8_t        lpx, lpy;
     uint8_t       &sprite_enable, &sprite_y_expansion;
     uint8_t        sprite_dma, sprite_expand_y;
@@ -81,6 +80,13 @@ protected:
     * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
     */
     void activateIRQFlag(const int flag);
+
+    /**
+    * Read the DEN flag which tells whether the display is enabled
+    *
+    * @return true if DEN is set, otherwise false
+    */
+    bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
 
     // Environment Interface
     virtual void interrupt (const bool state) = 0;
