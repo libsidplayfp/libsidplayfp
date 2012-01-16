@@ -28,7 +28,7 @@
 
 #ifdef DEBUG
 
-void MOS6510Debug::DumpState (const event_clock_t time, const MOS6510 &cpu)
+void MOS6510Debug::DumpState (const event_clock_t time, MOS6510 &cpu)
 {
     fprintf(cpu.m_fdbg, " PC  I  A  X  Y  SP  DR PR NV-BDIZC  Instruction (%u)\n", time);
     fprintf(cpu.m_fdbg, "%04x ",   cpu.instrStartPC);
@@ -37,8 +37,8 @@ void MOS6510Debug::DumpState (const event_clock_t time, const MOS6510 &cpu)
     fprintf(cpu.m_fdbg, "%02x ",   cpu.Register_X);
     fprintf(cpu.m_fdbg, "%02x ",   cpu.Register_Y);
     fprintf(cpu.m_fdbg, "01%02x ", endian_16lo8 (cpu.Register_StackPointer));
-    fprintf(cpu.m_fdbg, "%02x ",   cpu.env->cpuRead (0));
-    fprintf(cpu.m_fdbg, "%02x ",   cpu.env->cpuRead (1));
+    fprintf(cpu.m_fdbg, "%02x ",   cpu.cpuRead (0));
+    fprintf(cpu.m_fdbg, "%02x ",   cpu.cpuRead (1));
 
     fprintf(cpu.m_fdbg, cpu.flagN ? "1" : "0");
     fprintf(cpu.m_fdbg, cpu.flagV ? "1" : "0");
@@ -49,7 +49,7 @@ void MOS6510Debug::DumpState (const event_clock_t time, const MOS6510 &cpu)
     fprintf(cpu.m_fdbg, cpu.flagZ ? "1" : "0");
     fprintf(cpu.m_fdbg, cpu.flagC ? "1" : "0");
 
-    const int opcode  = cpu.env->cpuRead(cpu.instrStartPC);
+    const int opcode  = cpu.cpuRead(cpu.instrStartPC);
 
     fprintf(cpu.m_fdbg, "  %02x ", opcode);
 
