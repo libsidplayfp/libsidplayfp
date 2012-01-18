@@ -108,6 +108,10 @@ protected:
     MOS656X (EventContext *context);
     void    event       (void);
 
+    EventCallback<MOS656X> badLineStateChangeEvent;
+
+    void badLineStateChange();
+
     /**
     * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
     * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.

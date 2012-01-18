@@ -48,10 +48,16 @@ const char *MOS656X::credit =
 MOS656X::MOS656X (EventContext *context)
 :Event("VIC Raster"),
  event_context(*context),
+ badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange),
  sprite_enable(regs[0x15]),
  sprite_y_expansion(regs[0x17])
 {
     chip (MOS6569);
+}
+
+void MOS656X::badLineStateChange()
+{
+    addrctrl(false);
 }
 
 void MOS656X::reset ()
@@ -164,7 +170,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
 
         // Start bad dma line now
         if (isBadLine && (lineCycle < 53))
-            addrctrl (false);
+            event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
         break;
     }
 
