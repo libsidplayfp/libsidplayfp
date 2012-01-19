@@ -390,10 +390,7 @@ event_clock_t MOS656X::clock (void)
             areBadLinesEnabled = readDEN();
 
         // Test for bad line condition
-        isBadLine = (rasterY >= FIRST_DMA_LINE) &&
-                   (rasterY <= LAST_DMA_LINE)  &&
-                   ((rasterY & 7) == yscroll) &&
-                   areBadLinesEnabled;
+        isBadLine = evaluateIsBadLine();
 
         if (isBadLine)
         {   // DMA starts on cycle 23
