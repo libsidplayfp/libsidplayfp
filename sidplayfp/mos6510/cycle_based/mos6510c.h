@@ -290,10 +290,10 @@ public:
     void         setRDY    (const bool newRDY);
 
     // Non-standard functions
-    virtual void triggerRST (void);
-    virtual void triggerNMI (void);
-    virtual void triggerIRQ (void);
-    void         clearIRQ   (void);
+    void triggerRST (void);
+    void triggerNMI (void);
+    void triggerIRQ (void);
+    void clearIRQ   (void);
 };
 
 #endif // MOS6510_H
