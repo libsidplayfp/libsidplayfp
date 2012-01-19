@@ -110,7 +110,7 @@ protected:
 
     EventCallback<MOS656X> badLineStateChangeEvent;
 
-    void badLineStateChange();
+    void badLineStateChange() { addrctrl(false); }
 
     /**
     * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.

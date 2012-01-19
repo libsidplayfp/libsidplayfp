@@ -55,11 +55,6 @@ MOS656X::MOS656X (EventContext *context)
     chip (MOS6569);
 }
 
-void MOS656X::badLineStateChange()
-{
-    addrctrl(false);
-}
-
 void MOS656X::reset ()
 {
     irqFlags     = 0;
