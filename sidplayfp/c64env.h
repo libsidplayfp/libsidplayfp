@@ -51,7 +51,7 @@ public:
     virtual void interruptNMI () = 0;
     virtual void interruptRST () = 0;
 
-    virtual void signalAEC    (const bool state) = 0;
+    virtual void setBA        (const bool state) = 0;
     virtual void lightpen     () = 0;
 };
 

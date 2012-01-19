@@ -34,9 +34,9 @@ protected:
         m_env.interruptIRQ (state);
     }
 
-    void addrctrl (const bool state)
+    void setBA (const bool state)
     {
-        m_env.signalAEC (state);
+        m_env.setBA (state);
     }
 
 public:

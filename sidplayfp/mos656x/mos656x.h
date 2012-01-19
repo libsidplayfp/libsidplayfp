@@ -110,7 +110,7 @@ protected:
 
     EventCallback<MOS656X> badLineStateChangeEvent;
 
-    void badLineStateChange() { addrctrl(false); }
+    void badLineStateChange() { setBA(false); }
 
     /**
     * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
@@ -135,7 +135,7 @@ protected:
 
     // Environment Interface
     virtual void interrupt (const bool state) = 0;
-    virtual void addrctrl  (const bool state) = 0;
+    virtual void setBA     (const bool state) = 0;
 
 public:
     void    chip  (const mos656x_model_t model);

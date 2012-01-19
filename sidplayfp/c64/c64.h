@@ -59,6 +59,9 @@ private:
     /** Number of sources asserting IRQ */
     int   irqCount;
 
+    /** BA state */
+    bool oldBAState;
+
     /** System event context */
     EventScheduler m_scheduler;
 
@@ -90,16 +93,52 @@ private:
     uint8_t m_readMemByte    (const uint_least16_t);
     void    m_writeMemByte   (const uint_least16_t, const uint8_t);
 
-    // Environment Function entry Points
+    /**
+    * Access memory as seen by CPU.
+    *
+    * @param address
+    * @return value at address
+    */
     uint8_t cpuRead  (const uint_least16_t addr) { return m_readMemByte (addr); }
+
+    /**
+    * Access memory as seen by CPU.
+    *
+    * @param address
+    * @param value
+    */
     void    cpuWrite (const uint_least16_t addr, const uint8_t data) { m_writeMemByte (addr, data); }
 
+    /**
+    * IRQ trigger signal.
+    *
+    * Calls permitted any time, but normally originated by chips at PHI1.
+    *
+    * @param state
+    */
     inline void interruptIRQ (const bool state);
+
+    /**
+    * NMI trigger signal.
+    *
+    * Calls permitted any time, but normally originated by chips at PHI1.
+    *
+    * @param state
+    */
     inline void interruptNMI (void) { cpu.triggerNMI (); }
+
     inline void interruptRST (void) { /*stop ();*/ }
 
-    void signalAEC (const bool state) { cpu.setRDY (state); }
-    void lightpen  () { vic.lightpen (); }
+    /**
+    * BA signal.
+    *
+    * Calls permitted during PHI1.
+    *
+    * @param state
+    */
+    inline void setBA (const bool state);
+
+    inline void lightpen () { vic.lightpen (); }
 
 #ifdef PC64_TESTSUITE
     void   loadFile (const char *file)
@@ -179,6 +218,17 @@ void c64::interruptIRQ (const bool state)
         if (irqCount == 0)
              cpu.clearIRQ ();
     }
+}
+
+void c64::setBA (const bool state) {
+    /* only react to changes in state */
+    if (state ^ oldBAState == false)
+        return;
+
+    oldBAState = state;
+
+    /* Signal changes in BA to interested parties */
+    cpu.setRDY (state);
 }
 
 SIDPLAY2_NAMESPACE_STOP

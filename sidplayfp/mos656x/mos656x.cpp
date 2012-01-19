@@ -256,12 +256,12 @@ event_clock_t MOS656X::clock (void)
 
         if (sprite_dma & 0x01)
         {
-            addrctrl (false);
+            setBA (false);
             delay = 2;
         }
         else
         {
-            addrctrl (true);
+            setBA (true);
             // No sprites before next compulsory cycle
             delay = (sprite_dma & 0x1f) ? 2 : 9;
         }
@@ -273,37 +273,37 @@ event_clock_t MOS656X::clock (void)
 
     case 2:
         if (sprite_dma & 0x02)
-            addrctrl (false);
+            setBA (false);
         break;
 
     case 3:
         if (!(sprite_dma & 0x03))
-            addrctrl (true);
+            setBA (true);
         break;
 
     case 4:
         if (sprite_dma & 0x04)
-            addrctrl (false);
+            setBA (false);
         break;
 
     case 5:
         if (!(sprite_dma & 0x06))
-            addrctrl (true);
+            setBA (true);
         break;
 
     case 6:
         if (sprite_dma & 0x08)
-            addrctrl (false);
+            setBA (false);
         break;
 
     case 7:
         if (!(sprite_dma & 0x0c))
-            addrctrl (true);
+            setBA (true);
         break;
 
     case 8:
         if (sprite_dma & 0x10)
-            addrctrl (false);
+            setBA (false);
         break;
 
     case 9:  // IRQ occurred (xraster != 0)
@@ -317,7 +317,7 @@ event_clock_t MOS656X::clock (void)
                 activateIRQFlag(IRQ_RASTER);
         }
         if (!(sprite_dma & 0x18))
-            addrctrl (true);
+            setBA (true);
         break;
 
     case 10:  // Vertical blank (line 0)
@@ -330,7 +330,7 @@ event_clock_t MOS656X::clock (void)
                 activateIRQFlag(IRQ_RASTER);
         }
         if (sprite_dma & 0x20)
-            addrctrl (false);
+            setBA (false);
         // No sprites before next compulsory cycle
         else if (!(sprite_dma & 0xf8))
            delay = 10;
@@ -338,28 +338,28 @@ event_clock_t MOS656X::clock (void)
 
     case 11:
         if (!(sprite_dma & 0x30))
-            addrctrl (true);
+            setBA (true);
         break;
 
     case 12:
         if (sprite_dma & 0x40)
-            addrctrl (false);
+            setBA (false);
         break;
 
     case 13:
         if (!(sprite_dma & 0x60))
-            addrctrl (true);
+            setBA (true);
         break;
 
     case 14:
         if (sprite_dma & 0x80)
-            addrctrl (false);
+            setBA (false);
         break;
 
     case 15:
         if (!(sprite_dma & 0xc0))
         {
-            addrctrl (true);
+            setBA (true);
             delay = 5;
         } else
             delay = 2;
@@ -371,7 +371,7 @@ event_clock_t MOS656X::clock (void)
     case 17:
         if (!(sprite_dma & 0x80))
         {
-            addrctrl (true);
+            setBA (true);
             delay = 3;
         } else
             delay = 2;
@@ -381,7 +381,7 @@ event_clock_t MOS656X::clock (void)
         break;
 
     case 19:
-        addrctrl (true);
+        setBA (true);
         break;
 
     case 20: // Start bad line
@@ -397,7 +397,7 @@ event_clock_t MOS656X::clock (void)
 
         if (isBadLine)
         {   // DMA starts on cycle 23
-            addrctrl (false);
+            setBA (false);
         }
         delay = 3;
         break;
@@ -428,7 +428,7 @@ event_clock_t MOS656X::clock (void)
     }
 
     case 63: // End DMA - Only get here for non PAL
-        addrctrl (true);
+        setBA (true);
         delay = cyclesPerLine - cycle;
         break;
 

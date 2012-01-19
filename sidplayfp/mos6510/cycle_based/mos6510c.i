@@ -133,10 +133,8 @@ void MOS6510::setStatusRegister(const uint8_t sr)
 */
 void MOS6510::setRDY (const bool newRDY)
 {
-    if (rdy == newRDY)
-        return;
-
     rdy = newRDY;
+
     if (rdy) {
         eventContext.cancel(m_steal);
         eventContext.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);

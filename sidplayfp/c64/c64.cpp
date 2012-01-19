@@ -147,6 +147,7 @@ void c64::reset()
     mmu.reset();
 
     irqCount = 0;
+    oldBAState = true;
 }
 
 void c64::setMainCpuSpeed(const double cpuFreq)
