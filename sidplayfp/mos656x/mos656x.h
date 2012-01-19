@@ -76,6 +76,7 @@ protected:
     /** is the current line a bad line */
     bool isBadLine;
 
+    /** Set when new frame starts. */
     bool vblanking;
 
     /** Has light pen IRQ been triggered in this frame already? */
@@ -110,6 +111,7 @@ protected:
 
     EventCallback<MOS656X> badLineStateChangeEvent;
 
+    /** AEC state was updated. */
     void badLineStateChange() { setBA(false); }
 
     /**
@@ -143,8 +145,25 @@ public:
 
     // Component Standard Calls
     void    reset (void);
+
+    /**
+    * Read VIC register.
+    *
+    * @param register
+    *            Register to read.
+    */
     uint8_t read  (uint_least8_t addr);
+
+    /**
+    * Write to VIC register.
+    *
+    * @param register
+    *            Register to write to.
+    * @param data
+    *            Data byte to write.
+    */
     void    write (uint_least8_t addr, uint8_t data);
+
     const   char *credits (void) {return credit;}
 };
 
