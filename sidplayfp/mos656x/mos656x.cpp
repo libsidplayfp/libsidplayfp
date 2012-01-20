@@ -209,12 +209,6 @@ void MOS656X::handleIrqState()
     }
 }
 
-void MOS656X::activateIRQFlag(const int flag)
-{
-    irqFlags |= flag;
-    handleIrqState();
-}
-
 void MOS656X::event (void)
 {
     const event_clock_t delay = clock();
