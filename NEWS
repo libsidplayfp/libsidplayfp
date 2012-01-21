@@ -1,3 +1,8 @@
+0.3.3 2012-01-21
+* fixed CPU/VICII interaction which affected Rayden/Boot_Zak_v2
+
+
+
 0.3.2 2012-01-12
 * Zero (ground) bit 0 of triangle waveform in reSID
 * Enable channel muting for reSID and reSIDfp
