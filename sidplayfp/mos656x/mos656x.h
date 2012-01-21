@@ -60,6 +60,10 @@ protected:
     void    event       (void);
     void    trigger     (int irq);
 
+    EventCallback<MOS656X> badLineStateChangeEvent;
+
+    void badLineStateChange() { addrctrl(false); }
+
     // Environment Interface
     virtual void interrupt (bool state) = 0;
     virtual void addrctrl  (bool state) = 0;

@@ -191,7 +191,7 @@ public:
 	 */
 	void clock();
 
-	int output() const;
+	short output() const;
 
 	/**
 	 * Constructor.
@@ -339,7 +339,7 @@ void EnvelopeGenerator::clock() {
 }
 
 RESID_INLINE
-int EnvelopeGenerator::output() const {
+short EnvelopeGenerator::output() const {
 	// DAC imperfections are emulated by using envelope_counter as an index
 	// into a DAC lookup table. readENV() uses envelope_counter directly.
 	return dac[envelope_counter & 0xff];
