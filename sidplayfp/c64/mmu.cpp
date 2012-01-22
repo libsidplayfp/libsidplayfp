@@ -54,10 +54,11 @@ static const uint8_t POWERON[] = {
 MMU::MMU() :
 	kernalRom(KERNAL),
 	basicRom(BASIC),
-	characterRom(CHARACTER),
-	kernalBank(m_rom),
-	basicBank(m_rom),
-	characterBank(m_rom) {}
+	characterRom(CHARACTER) {
+
+	for (int i = 0; i < 16; i++)
+		romBank[i] = m_ram;
+}
 
 void MMU::mem_pla_config_changed () {
 
@@ -72,9 +73,9 @@ void MMU::mem_pla_config_changed () {
 	* 6 . * * .
 	* 7 * * * .
 	*/
-	kernalBank    = ((mem_config & 2) != 0) ? m_rom : m_ram;
-	basicBank     = ((mem_config & 3) == 3) ? m_rom : m_ram;
-	characterBank = ((mem_config ^ 4) > 4) ? m_rom : m_ram;
+	romBank[0x0e] = romBank[0x0f] = ((mem_config & 2) != 0) ? m_rom : m_ram;
+	romBank[0x0a] = romBank[0x0b] = ((mem_config & 3) == 3) ? m_rom : m_ram;
+	romBank[0x0d] = ((mem_config ^ 4) > 4) ? m_rom : m_ram;
 
 	ioArea = (mem_config > 4);
 
@@ -185,18 +186,7 @@ uint8_t MMU::cpuRead(const uint_least16_t addr) const {
 	case 1:
 		return getDataRead();
 	default:
-		switch (addr >> 12) {
-		case 0xa:
-		case 0xb:
-			return basicBank[addr];
-		case 0xd:
-			return characterBank[addr];
-		case 0xe:
-		case 0xf:
-			return kernalBank[addr];
-		default:
-			return m_ram[addr];
-		}
+		return romBank[addr >> 12][addr];
 	}
 }
 

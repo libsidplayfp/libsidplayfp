@@ -39,11 +39,6 @@ private:
 	const uint8_t* basicRom;
 	const uint8_t* characterRom;
 
-	/** ROM banks */
-	const uint8_t* kernalBank;
-	const uint8_t* basicBank;
-	const uint8_t* characterBank;
-
 	/** CPU port signals */
 	bool ioArea;
 
@@ -59,6 +54,8 @@ private:
 	uint8_t data_out;
 
 	// TODO some wired stuff with data_set_bit6 and data_set_bit7
+
+	uint8_t* romBank[16];
 
 	/** ROM */
 	uint8_t m_rom[65536];
