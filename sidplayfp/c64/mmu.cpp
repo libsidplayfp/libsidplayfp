@@ -17,47 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "mmu.h"
 
 #include "sidplayfp/mos6510/opcodes.h"
 
 SIDPLAY2_NAMESPACE_START
 
-#if EMBEDDED_ROMS
-
-static const uint8_t KERNAL[] = {
-#include "kernal.bin"
-};
-
-static const uint8_t CHARACTER[] = {
-#include "char.bin"
-};
-
-static const uint8_t BASIC[] = {
-#include "basic.bin"
-};
-
-#else
-#  define KERNAL 0
-#  define CHARACTER 0
-#  define BASIC 0
-#endif
-
 static const uint8_t POWERON[] = {
 #include "poweron.bin"
 };
 
-MMU::MMU() :
-	kernalRom(KERNAL),
-	basicRom(BASIC),
-	characterRom(CHARACTER) {
+MMU::MMU() {
 
 	for (int i = 0; i < 16; i++)
-		romBank[i] = m_ram;
+		memBank[i] = &ramBank;
 }
 
 void MMU::mem_pla_config_changed () {
@@ -73,9 +46,9 @@ void MMU::mem_pla_config_changed () {
 	* 6 . * * .
 	* 7 * * * .
 	*/
-	romBank[0x0e] = romBank[0x0f] = ((mem_config & 2) != 0) ? m_rom : m_ram;
-	romBank[0x0a] = romBank[0x0b] = ((mem_config & 3) == 3) ? m_rom : m_ram;
-	romBank[0x0d] = ((mem_config ^ 4) > 4) ? m_rom : m_ram;
+	memBank[0x0e] = memBank[0x0f] = ((mem_config & 2) != 0) ? (Bank*)&kernalRomBank : &ramBank;
+	memBank[0x0a] = memBank[0x0b] = ((mem_config & 3) == 3) ? (Bank*)&basicRomBank : &ramBank;
+	memBank[0x0d] = ((mem_config ^ 4) > 4) ? (Bank*)&characterRomBank : &ramBank;
 
 	ioArea = (mem_config > 4);
 
@@ -107,26 +80,17 @@ void MMU::reset() {
 	data_read = 0x3f;
 	dir = 0;
 	dir_read = 0;
-	memset(m_ram, 0, 65536);
 
-	// Initialize RAM with powerup pattern
-	for (int i=0x07c0; i<0x10000; i+=128)
-		memset(m_ram+i, 0xff, 64);
+	ramBank.reset();
+	kernalRomBank.reset();
+	basicRomBank.reset();
+	characterRomBank.reset();
 
-	memset(m_rom, 0, 0x10000);
-
-	if (kernalRom)
-		memcpy(&m_rom[0xe000], kernalRom, 8192);
-	if (characterRom)
-		memcpy(&m_rom[0xd000], characterRom, 4096);
-	if (basicRom)
-		memcpy(&m_rom[0xa000], basicRom, 8192);
-
-	m_rom[0xfd69] = 0x9f; // Bypass memory check
-	m_rom[0xe55f] = 0x00; // Bypass screen clear
-	m_rom[0xfdc4] = 0xea; // Ingore sid volume reset to avoid DC
-	m_rom[0xfdc5] = 0xea; // click (potentially incompatibility)!!
-	m_rom[0xfdc6] = 0xea;
+	kernalRomBank.write(0xfd69, 0x9f); // Bypass memory check
+	kernalRomBank.write(0xe55f, 0x00); // Bypass screen clear
+	kernalRomBank.write(0xfdc4, 0xea); // Ingore sid volume reset to avoid DC
+	kernalRomBank.write(0xfdc5, 0xea); // click (potentially incompatibility)!!
+	kernalRomBank.write(0xfdc6, 0xea);
 
 	// Copy in power on settings.  These were created by running
 	// the kernel reset routine and storing the usefull values
@@ -165,13 +129,13 @@ void MMU::reset() {
 			{
 				const uint8_t data = POWERON[i++];
 				while (count-- > 0)
-					m_ram[addr++] = data;
+					ramBank.write(addr++, data);
 			}
 			// Extract uncompressed data
 			else
 			{
 				while (count-- > 0)
-					m_ram[addr++] = POWERON[i++];
+					ramBank.write(addr++, POWERON[i++]);
 			}
 		}
 	}
@@ -186,7 +150,7 @@ uint8_t MMU::cpuRead(const uint_least16_t addr) const {
 	case 1:
 		return getDataRead();
 	default:
-		return romBank[addr >> 12][addr];
+		return memBank[addr >> 12]->read(addr);
 	}
 }
 

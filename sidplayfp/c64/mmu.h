@@ -25,6 +25,10 @@
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidconfig.h"
 
+#include "Bank.h"
+#include "SystemRAMBank.h"
+#include "SystemROMBanks.h"
+
 #include "sidplayfp/mos6510/opcodes.h"
 
 #include <string.h>
@@ -37,10 +41,6 @@ SIDPLAY2_NAMESPACE_START
 class MMU
 {
 private:
-	const uint8_t* kernalRom;
-	const uint8_t* basicRom;
-	const uint8_t* characterRom;
-
 	/** CPU port signals */
 	bool ioArea;
 
@@ -57,13 +57,19 @@ private:
 
 	// TODO some wired stuff with data_set_bit6 and data_set_bit7
 
-	uint8_t* romBank[16];
+	Bank* memBank[16];
 
-	/** ROM */
-	uint8_t m_rom[65536];
+	/** Kernal ROM */
+	KernalRomBank kernalRomBank;
+
+	/** BASIC ROM */
+	BasicRomBank basicRomBank;
+
+	/** Character ROM */
+	CharacterRomBank characterRomBank;
 
 	/** RAM */
-	uint8_t m_ram[65536];
+	SystemRAMBank ramBank;
 
 private:
 	void mem_pla_config_changed();
@@ -93,51 +99,53 @@ public:
 	void reset();
 
 	void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character) {
-		kernalRom=kernal;
-		basicRom=basic;
-		characterRom=character;
+		kernalRomBank.set(kernal);
+		basicRomBank.set(basic);
+		characterRomBank.set(character);
 	}
 
 	bool isIoArea() const { return ioArea; }
 
 	// RAM access methods
-	uint8_t* getMem() { return m_ram; }
+	uint8_t* getMem() { return ramBank.array(); }
 
-	uint8_t readMemByte(const uint_least16_t addr) const { return m_ram[addr]; }
-	uint_least16_t readMemWord(const uint_least16_t addr) const { return endian_little16(&m_ram[addr]); }
+	uint8_t readMemByte(const uint_least16_t addr) { return ramBank.read(addr); }
+	uint_least16_t readMemWord(const uint_least16_t addr) { return endian_little16(ramBank.array()+addr); }
 
-	void writeMemByte(const uint_least16_t addr, const uint8_t value) { m_ram[addr] = value; }
-	void writeMemWord(const uint_least16_t addr, const uint_least16_t value) { endian_little16(&m_ram[addr], value); }
+	void writeMemByte(const uint_least16_t addr, const uint8_t value) { ramBank.write(addr, value); }
+	void writeMemWord(const uint_least16_t addr, const uint_least16_t value) { endian_little16(ramBank.array()+addr, value); }
 
 	void fillRam(const uint_least16_t start, const uint8_t value, const int size) {
-		memset(m_ram+start, value, size);
+		memset(ramBank.array()+start, value, size);
 	}
 	void fillRam(const uint_least16_t start, const uint8_t* source, const int size) {
-		memcpy(m_ram+start, source, size);
+		memcpy(ramBank.array()+start, source, size);
 	}
 
 	// SID specific hacks
 	void installResetHook(const uint_least16_t addr) {
-		endian_little16(&m_rom[0xfffc], addr);
+		kernalRomBank.write(0xfffc, endian_16lo8(addr));
+		kernalRomBank.write(0xfffd, endian_16hi8(addr));
 	}
 
 	void installBasicTrap(const uint_least16_t addr) {
-		m_rom[0xa7ae] = JMPw;
-		endian_little16(&m_rom[0xa7af], addr);
+		basicRomBank.write(0xa7ae, JMPw);
+		basicRomBank.write(0xa7af, endian_16lo8(addr));
+		basicRomBank.write(0xa7b0, endian_16hi8(addr));
 	}
 
 	void setBasicSubtune(const uint8_t tune) {
-		m_rom[0xbf53] = LDAb;
-		m_rom[0xbf54] = tune;
-		m_rom[0xbf55] = STAa;
-		m_rom[0xbf56] = 0x0c;
-		m_rom[0xbf57] = 0x03;
-		m_rom[0xbf58] = JSRw;
-		m_rom[0xbf59] = 0x2c;
-		m_rom[0xbf5a] = 0xa8;
-		m_rom[0xbf5b] = JMPw;
-		m_rom[0xbf5c] = 0xb1;
-		m_rom[0xbf5d] = 0xa7;
+		basicRomBank.write(0xbf53, LDAb);
+		basicRomBank.write(0xbf54, tune);
+		basicRomBank.write(0xbf55, STAa);
+		basicRomBank.write(0xbf56, 0x0c);
+		basicRomBank.write(0xbf57, 0x03);
+		basicRomBank.write(0xbf58, JSRw);
+		basicRomBank.write(0xbf59, 0x2c);
+		basicRomBank.write(0xbf5a, 0xa8);
+		basicRomBank.write(0xbf5b, JMPw);
+		basicRomBank.write(0xbf5c, 0xb1);
+		basicRomBank.write(0xbf5d, 0xa7);
 	}
 
 	/**

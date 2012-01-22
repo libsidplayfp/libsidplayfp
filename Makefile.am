@@ -78,6 +78,8 @@ sidplayfp/c64/ColorRAMBank.h \
 sidplayfp/c64/IOBank.h \
 sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
+sidplayfp/c64/SystemRAMBank.h \
+sidplayfp/c64/SystemROMBanks.h \
 sidplayfp/mos656x/mos656x.cpp \
 sidplayfp/mos656x/mos656x.h \
 sidplayfp/mos6510/mos6510.cpp \
