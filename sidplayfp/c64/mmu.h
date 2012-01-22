@@ -116,14 +116,28 @@ public:
 		memcpy(m_ram+start, source, size);
 	}
 
-	// ROM access methods
-	void fillRom(const uint_least16_t start, const uint8_t* source, const int size) {
-		memcpy(m_rom+start, source, size);
+	// SID specific hacks
+	void installResetHook(const uint_least16_t addr) {
+		endian_little16(&m_rom[0xfffc], addr);
 	}
 
 	void installBasicTrap(const uint_least16_t addr) {
 		m_rom[0xa7ae] = JMPw;
 		endian_little16(&m_rom[0xa7af], addr);
+	}
+
+	void setBasicSubtune(const uint8_t tune) {
+		m_rom[0xbf53] = LDAb;
+		m_rom[0xbf54] = tune;
+		m_rom[0xbf55] = STAa;
+		m_rom[0xbf56] = 0x0c;
+		m_rom[0xbf57] = 0x03;
+		m_rom[0xbf58] = JSRw;
+		m_rom[0xbf59] = 0x2c;
+		m_rom[0xbf5a] = 0xa8;
+		m_rom[0xbf5b] = JMPw;
+		m_rom[0xbf5c] = 0xb1;
+		m_rom[0xbf5d] = 0xa7;
 	}
 
 	/**

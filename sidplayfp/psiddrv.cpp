@@ -126,16 +126,13 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
     info.driverLength += 0xff;
     info.driverLength &= 0xff00;
 
-    m_c64.getMmu()->fillRom(0xfffc, &reloc_driver[0], 2); /* RESET */
+    m_c64.getMmu()->installResetHook(endian_little16(reloc_driver));
 
     // If not a basic tune then the psiddrv must install
     // interrupt hooks and trap programs trying to restart basic
     if (tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_BASIC)
     {   // Install hook to set subtune number for basic
-        uint8_t prg[] = {LDAb, (uint8_t) (tuneInfo.currentSong-1),
-                         STAa, 0x0c, 0x03, JSRw, 0x2c, 0xa8,
-                         JMPw, 0xb1, 0xa7};
-        m_c64.getMmu()->fillRom (0xbf53, prg, sizeof (prg));
+        m_c64.getMmu()->setBasicSubtune((uint8_t) (tuneInfo.currentSong-1));
         m_c64.getMmu()->installBasicTrap(0xbf53);
     }
     else
