@@ -136,8 +136,7 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
                          STAa, 0x0c, 0x03, JSRw, 0x2c, 0xa8,
                          JMPw, 0xb1, 0xa7};
         m_c64.getMmu()->fillRom (0xbf53, prg, sizeof (prg));
-        m_c64.getMmu()->writeRomByte(0xa7ae, JMPw);
-        m_c64.getMmu()->writeRomWord(0xa7af, 0xbf53);
+        m_c64.getMmu()->installBasicTrap(0xbf53);
     }
     else
     {   // Only install irq handle for RSID tunes
@@ -145,8 +144,7 @@ int Player::psidDrvReloc (SidTuneInfo &tuneInfo, sid2_info_t &info)
 
         // Experimental restart basic trap
         const uint_least16_t addr = endian_little16(&reloc_driver[8]);
-        m_c64.getMmu()->writeRomByte(0xa7ae, JMPw);
-        m_c64.getMmu()->writeRomWord(0xa7af, 0xffe1);
+        m_c64.getMmu()->installBasicTrap(0xffe1);
         m_c64.getMmu()->writeMemWord(0x0328, addr);
     }
 

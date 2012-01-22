@@ -25,6 +25,8 @@
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidconfig.h"
 
+#include "sidplayfp/mos6510/opcodes.h"
+
 #include <string.h>
 
 SIDPLAY2_NAMESPACE_START
@@ -115,13 +117,13 @@ public:
 	}
 
 	// ROM access methods
-	uint8_t readRomByte(const uint_least16_t addr) const { return m_rom[addr]; }
-
-	void writeRomByte(const uint_least16_t addr, const uint8_t value) { m_rom[addr] = value; }
-	void writeRomWord(const uint_least16_t addr, const uint_least16_t value) { endian_little16(&m_rom[addr], value); }
-
 	void fillRom(const uint_least16_t start, const uint8_t* source, const int size) {
 		memcpy(m_rom+start, source, size);
+	}
+
+	void installBasicTrap(const uint_least16_t addr) {
+		m_rom[0xa7ae] = JMPw;
+		endian_little16(&m_rom[0xa7af], addr);
 	}
 
 	/**
