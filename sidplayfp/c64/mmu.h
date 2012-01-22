@@ -26,6 +26,7 @@
 #include "sidplayfp/sidconfig.h"
 
 #include "Bank.h"
+#include "IOBank.h"
 #include "SystemRAMBank.h"
 #include "SystemROMBanks.h"
 
@@ -41,9 +42,6 @@ SIDPLAY2_NAMESPACE_START
 class MMU
 {
 private:
-	/** CPU port signals */
-	bool ioArea;
-
 	/** Value written to processor port.  */
 	uint8_t dir;
 	uint8_t data;
@@ -57,7 +55,14 @@ private:
 
 	// TODO some wired stuff with data_set_bit6 and data_set_bit7
 
-	Bank* memBank[16];
+	/** CPU read memory mapping in 4k chunks */
+	Bank* cpuReadMap[16];
+
+	/** CPU write memory mapping in 4k chunks */
+	Bank* cpuWriteMap[16];
+
+	/** IO region handler */
+	Bank* ioBank;
 
 	/** Kernal ROM */
 	KernalRomBank kernalRomBank;
@@ -93,7 +98,7 @@ private:
 	}
 
 public:
-	MMU();
+	MMU(Bank* ioBank);
 	~MMU () {}
 
 	void reset();
@@ -103,8 +108,6 @@ public:
 		basicRomBank.set(basic);
 		characterRomBank.set(character);
 	}
-
-	bool isIoArea() const { return ioArea; }
 
 	// RAM access methods
 	uint8_t* getMem() { return ramBank.array(); }

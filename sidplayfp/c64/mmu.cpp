@@ -27,10 +27,13 @@ static const uint8_t POWERON[] = {
 #include "poweron.bin"
 };
 
-MMU::MMU() {
+MMU::MMU(Bank* ioBank) :
+	ioBank(ioBank) {
 
-	for (int i = 0; i < 16; i++)
-		memBank[i] = &ramBank;
+	for (int i = 0; i < 16; i++) {
+		cpuReadMap[i] = &ramBank;
+		cpuWriteMap[i] = &ramBank;
+	}
 }
 
 void MMU::mem_pla_config_changed () {
@@ -46,11 +49,15 @@ void MMU::mem_pla_config_changed () {
 	* 6 . * * .
 	* 7 * * * .
 	*/
-	memBank[0x0e] = memBank[0x0f] = ((mem_config & 2) != 0) ? (Bank*)&kernalRomBank : &ramBank;
-	memBank[0x0a] = memBank[0x0b] = ((mem_config & 3) == 3) ? (Bank*)&basicRomBank : &ramBank;
-	memBank[0x0d] = ((mem_config ^ 4) > 4) ? (Bank*)&characterRomBank : &ramBank;
+	cpuReadMap[0x0e] = cpuReadMap[0x0f] = ((mem_config & 2) != 0) ? (Bank*)&kernalRomBank : &ramBank;
+	cpuReadMap[0x0a] = cpuReadMap[0x0b] = ((mem_config & 3) == 3) ? (Bank*)&basicRomBank : &ramBank;
 
-	ioArea = (mem_config > 4);
+	if (mem_config > 4) {
+		cpuReadMap[0x0d] = cpuWriteMap[0x0d] = ioBank;
+	} else {
+		cpuReadMap[0x0d] = ((mem_config ^ 4) > 4) ? (Bank*)&characterRomBank : &ramBank;
+		cpuWriteMap[0x0d] = &ramBank;
+	}
 
 	c64pla_config_changed(false, true, 0x17);
 }
@@ -150,7 +157,7 @@ uint8_t MMU::cpuRead(const uint_least16_t addr) const {
 	case 1:
 		return getDataRead();
 	default:
-		return memBank[addr >> 12]->read(addr);
+		return cpuReadMap[addr >> 12]->read(addr);
 	}
 }
 
@@ -164,7 +171,7 @@ void MMU::cpuWrite(const uint_least16_t addr, const uint8_t data) {
 		setData(data);
 		break;
 	default:
-		writeMemByte(addr, data);
+		cpuWriteMap[addr >> 12]->write(addr, data);
 	}
 }
 

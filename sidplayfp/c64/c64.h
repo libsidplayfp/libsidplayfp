@@ -174,10 +174,7 @@ private:
     * @param address
     * @return value at address
     */
-    uint8_t cpuRead (const uint_least16_t addr)
-    {
-        return (((addr >> 12) == 0xd) && mmu.isIoArea()) ? ioBank.read(addr) : mmu.cpuRead(addr);
-    }
+    uint8_t cpuRead (const uint_least16_t addr) { return mmu.cpuRead(addr); }
 
     /**
     * Access memory as seen by CPU.
@@ -185,10 +182,7 @@ private:
     * @param address
     * @param value
     */
-    void cpuWrite (const uint_least16_t addr, const uint8_t data)
-    {
-        (((addr >> 12) == 0xd) && mmu.isIoArea()) ? ioBank.write(addr, data) : mmu.cpuWrite(addr, data);
-    }
+    void cpuWrite (const uint_least16_t addr, const uint8_t data) { mmu.cpuWrite(addr, data); }
 
     /**
     * IRQ trigger signal.
