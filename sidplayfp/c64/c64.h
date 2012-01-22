@@ -19,6 +19,10 @@
 #ifndef C64_H
 #define C64_H
 
+#include "Bank.h"
+#include "IOBank.h"
+#include "ColorRAMBank.h"
+
 #include "sidplayfp/c64env.h"
 #include "sidplayfp/c64/c64cpu.h"
 #include "sidplayfp/c64/c64cia.h"
@@ -33,10 +37,85 @@
 #  include <string.h>
 #endif
 
-
-class sidemu;
+#include "sidplayfp/sidbuilder.h"
 
 SIDPLAY2_NAMESPACE_START
+
+/**
+* IO1/IO2
+*/
+class DisconnectedBusBank : public Bank
+{
+    void write(const uint_least16_t addr, const uint8_t data) {}
+
+    // FIXME this should actually return last byte read from VIC
+    uint8_t read(const uint_least16_t addr) { return 0; }
+};
+
+/**
+*
+*/
+class SidBank : public Bank
+{
+public:
+    static const int MAX_SIDS = 2;
+
+private:
+    static const int MAPPER_SIZE = 32;
+
+private:
+    /** SID chips */
+    sidemu *sid[MAX_SIDS];
+
+    /** SID mapping table in d4xx-d7xx */
+    int sidmapper[32];
+
+public:
+    SidBank()
+    {
+        for (int i = 0; i < MAX_SIDS; i++)
+            sid[i] = 0;
+
+        resetSIDMapper();
+    }
+
+    void reset()
+    {
+        for (int i = 0; i < MAX_SIDS; i++)
+        {
+            if (sid[i])
+                sid[i]->reset(0xf);
+        }
+    }
+
+    void resetSIDMapper()
+    {
+        for (int i = 0; i < MAPPER_SIZE; i++)
+            sidmapper[i] = 0;
+    }
+
+    void setSIDMapping(const int address, const int chipNum)
+    {
+        sidmapper[address >> 5 & (MAPPER_SIZE - 1)] = chipNum;
+    }
+
+    uint8_t read(const uint_least16_t addr)
+    {
+        const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
+        return sid[i] ? sid[i]->read(addr & 0x1f) : 0xff;
+    }
+
+    void write(const uint_least16_t addr, const uint8_t data)
+    {
+        const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
+        if (sid[i])
+            sid[i]->write(addr & 0x1f, data);
+    }
+
+    void setSID(const int i, sidemu *s) { sid[i] = s; }
+
+    sidemu *getSID(const int i) const { return sid[i]; }
+};
 
 class c64: private c64env
 {
@@ -44,13 +123,9 @@ public:
     static const float64_t CLOCK_FREQ_NTSC;
     static const float64_t CLOCK_FREQ_PAL;
 
-    static const int MAX_SIDS = 2;
-
 private:
     static const float64_t VIC_FREQ_PAL;
     static const float64_t VIC_FREQ_NTSC;
-
-    static const int MAPPER_SIZE = 32;
 
 private:
     /** System clock frequency */
@@ -77,29 +152,32 @@ private:
     /** VIC */
     c64vic  vic;
 
-    /** SID chips */
-    sidemu *sid[MAX_SIDS];
+    /** Color RAM */
+    ColorRAMBank colorRAMBank;
 
-    /** SID mapping table in d4xx-d7xx */
-    int     sidmapper[32];
+    /** SID */
+    SidBank sidBank;
+
+    /** I/O Area #1 and #2 */
+    DisconnectedBusBank disconnectedBusBank;
+
+    /** I/O Area */
+    IOBank ioBank;
 
     /** MMU chip */
     MMU     mmu;
 
 private:
-    uint8_t readMemByte_io   (const uint_least16_t addr);
-    void    writeMemByte_io  (const uint_least16_t addr, const uint8_t data);
-
-    uint8_t m_readMemByte    (const uint_least16_t);
-    void    m_writeMemByte   (const uint_least16_t, const uint8_t);
-
     /**
     * Access memory as seen by CPU.
     *
     * @param address
     * @return value at address
     */
-    uint8_t cpuRead  (const uint_least16_t addr) { return m_readMemByte (addr); }
+    uint8_t cpuRead (const uint_least16_t addr)
+    {
+        return (((addr >> 12) == 0xd) && mmu.isIoArea()) ? ioBank.read(addr) : mmu.cpuRead(addr);
+    }
 
     /**
     * Access memory as seen by CPU.
@@ -107,7 +185,10 @@ private:
     * @param address
     * @param value
     */
-    void    cpuWrite (const uint_least16_t addr, const uint8_t data) { m_writeMemByte (addr, data); }
+    void cpuWrite (const uint_least16_t addr, const uint8_t data)
+    {
+        (((addr >> 12) == 0xd) && mmu.isIoArea()) ? ioBank.write(addr, data) : mmu.cpuWrite(addr, data);
+    }
 
     /**
     * IRQ trigger signal.
@@ -178,7 +259,7 @@ public:
     * @param i sid number to set
     * @param sidemu the sid to set
     */
-    void setSid(const int i, sidemu *s) { sid[i] = s; }
+    void setSid(const int i, sidemu *s) { sidBank.setSID(i, s); }
 
     /**
     * Return the requested SID
@@ -186,10 +267,10 @@ public:
     * @param i sid number to get
     * @return the SID
     */
-    sidemu *getSid(const int i) const { return sid[i]; }
+    sidemu *getSid(const int i) const { return sidBank.getSID(i); }
 
-    void resetSIDMapper();
-    void setSecondSIDAddress(const int sidChipBase2);
+    void resetSIDMapper() { sidBank.resetSIDMapper(); }
+    void setSecondSIDAddress(const int sidChipBase2) { sidBank.setSIDMapping(sidChipBase2, 1); }
 
     /**
     * Get the components credits

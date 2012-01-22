@@ -21,19 +21,31 @@
 // The CIA emulations are very generic and here we need to effectively
 // wire them into the computer (like adding a chip to a PCB).
 
+#include "Bank.h"
 #include "sidplayfp/c64env.h"
+#include "sidplayfp/sidendian.h"
 #include "sidplayfp/mos6526/mos6526.h"
 
 /* CIA 1 specifics:
    Generates IRQs
 */
-class c64cia1: public MOS6526
+class c64cia1: public MOS6526, public Bank
 {
 private:
     c64env &m_env;
     uint8_t lp;
 
 protected:
+    void write(const uint_least16_t address, const uint8_t value)
+    {
+        MOS6526::write(endian_16lo8(address), value);
+    }
+
+    uint8_t read(const uint_least16_t address)
+    {
+        return MOS6526::read(endian_16lo8(address));
+    }
+
     void interrupt (const bool state)
     {
         m_env.interruptIRQ (state);
@@ -65,12 +77,22 @@ public:
 /* CIA 2 specifics:
    Generates NMIs
 */
-class c64cia2: public MOS6526
+class c64cia2: public MOS6526, public Bank
 {
 private:
     c64env &m_env;
 
 protected:
+    void write(const uint_least16_t address, const uint8_t value)
+    {
+        MOS6526::write(address, value);
+    }
+
+    uint8_t read(const uint_least16_t address)
+    {
+        return MOS6526::read(address);
+    }
+
     void interrupt (const bool state)
     {
         if (state)

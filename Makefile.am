@@ -68,11 +68,14 @@ sidplayfp/mixer.h \
 sidplayfp/reloc65.c \
 sidplayfp/sidplay2.cpp \
 sidplayfp/psiddrv.a65 \
+sidplayfp/c64/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64.cpp \
 sidplayfp/c64/c64.h \
+sidplayfp/c64/ColorRAMBank.h \
+sidplayfp/c64/IOBank.h \
 sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
 sidplayfp/mos656x/mos656x.cpp \

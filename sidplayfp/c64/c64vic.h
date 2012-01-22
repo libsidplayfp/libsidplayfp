@@ -20,15 +20,28 @@
 
 // The VIC emulation is very generic and here we need to effectively
 // wire it into the computer (like adding a chip to a PCB).
+
+#include "Bank.h"
 #include "sidplayfp/c64env.h"
+#include "sidplayfp/sidendian.h"
 #include "sidplayfp/mos656x/mos656x.h"
 
-class c64vic: public MOS656X
+class c64vic: public MOS656X, public Bank
 {
 private:
     c64env &m_env;
 
 protected:
+    void write(const uint_least16_t address, const uint8_t value)
+    {
+        MOS656X::write(endian_16lo8(address), value);
+    }
+
+    uint8_t read(const uint_least16_t address)
+    {
+        return MOS656X::read(endian_16lo8(address));
+    }
+
     void interrupt (const bool state)
     {
         m_env.interruptIRQ (state);
