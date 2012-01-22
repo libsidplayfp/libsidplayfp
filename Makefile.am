@@ -80,6 +80,7 @@ sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
 sidplayfp/c64/SystemRAMBank.h \
 sidplayfp/c64/SystemROMBanks.h \
+sidplayfp/c64/ZeroRAMBank.h \
 sidplayfp/mos656x/mos656x.cpp \
 sidplayfp/mos656x/mos656x.h \
 sidplayfp/mos6510/mos6510.cpp \

@@ -29,6 +29,7 @@
 #include "IOBank.h"
 #include "SystemRAMBank.h"
 #include "SystemROMBanks.h"
+#include "ZeroRAMBank.h"
 
 #include "sidplayfp/mos6510/opcodes.h"
 
@@ -39,7 +40,7 @@ SIDPLAY2_NAMESPACE_START
 /**
  * The C64 MMU chip.
 */
-class MMU
+class MMU : public PLA
 {
 private:
 	/** Value written to processor port.  */
@@ -75,6 +76,8 @@ private:
 
 	/** RAM */
 	SystemRAMBank ramBank;
+
+	ZeroRAMBank zeroRAMBank;
 
 private:
 	void mem_pla_config_changed();
@@ -157,7 +160,7 @@ public:
 	 * @param address
 	 * @return value at address
 	 */
-	uint8_t cpuRead(const uint_least16_t addr) const;
+	uint8_t cpuRead(const uint_least16_t addr) const { return cpuReadMap[addr >> 12]->read(addr); }
 
 	/**
 	 * Access memory as seen by CPU.
@@ -165,7 +168,7 @@ public:
 	 * @param address
 	 * @param value
 	 */
-	void cpuWrite(const uint_least16_t addr, const uint8_t data);
+	void cpuWrite(const uint_least16_t addr, const uint8_t data) { cpuWriteMap[addr >> 12]->write(addr, data); }
 };
 
 SIDPLAY2_NAMESPACE_STOP

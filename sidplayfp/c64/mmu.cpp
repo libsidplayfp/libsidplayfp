@@ -28,9 +28,13 @@ static const uint8_t POWERON[] = {
 };
 
 MMU::MMU(Bank* ioBank) :
-	ioBank(ioBank) {
+	ioBank(ioBank),
+	zeroRAMBank(this, &ramBank) {
 
-	for (int i = 0; i < 16; i++) {
+	cpuReadMap[0] = &zeroRAMBank;
+	cpuWriteMap[0] = &zeroRAMBank;
+
+	for (int i = 1; i < 16; i++) {
 		cpuReadMap[i] = &ramBank;
 		cpuWriteMap[i] = &ramBank;
 	}
@@ -145,33 +149,6 @@ void MMU::reset() {
 					ramBank.write(addr++, POWERON[i++]);
 			}
 		}
-	}
-}
-
-uint8_t MMU::cpuRead(const uint_least16_t addr) const {
-
-	// Bank Select Register Value DOES NOT get to ram
-	switch (addr) {
-	case 0:
-		return getDirRead();
-	case 1:
-		return getDataRead();
-	default:
-		return cpuReadMap[addr >> 12]->read(addr);
-	}
-}
-
-void MMU::cpuWrite(const uint_least16_t addr, const uint8_t data) {
-
-	switch (addr) {
-	case 0:
-		setDir(data);
-		break;
-	case 1:
-		setData(data);
-		break;
-	default:
-		cpuWriteMap[addr >> 12]->write(addr, data);
 	}
 }
 
