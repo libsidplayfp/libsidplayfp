@@ -43,18 +43,10 @@ SIDPLAY2_NAMESPACE_START
 class MMU : public PLA
 {
 private:
-	/** Value written to processor port.  */
-	uint8_t dir;
-	uint8_t data;
+	EventContext &context;
 
-	/** Value read from processor port.  */
-	uint8_t dir_read;
-	uint8_t data_read;
-
-	/** State of processor port pins.  */
-	uint8_t data_out;
-
-	// TODO some wired stuff with data_set_bit6 and data_set_bit7
+	/** CPU port signals */
+	bool basic, kernal, io;
 
 	/** CPU read memory mapping in 4k chunks */
 	Bank* cpuReadMap[16];
@@ -80,28 +72,13 @@ private:
 	ZeroRAMBank zeroRAMBank;
 
 private:
-	void mem_pla_config_changed();
-	void c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup);
-
-	uint8_t getDirRead() const { return dir_read; }
-	uint8_t getDataRead() const { return data_read; }
-
-	void setData(const uint8_t value) {
-		if (data != value) {
-			data = value;
-			mem_pla_config_changed();
-		}
-	}
-
-	void setDir(const uint8_t value) {
-		if (dir != value) {
-			dir = value;
-			mem_pla_config_changed();
-		}
-	}
+	void setCpuPort(const int state);
+	void updateMappingPHI2();
+	uint8_t getLastReadByte() const { return 0; }
+	event_clock_t getPhi2Time() const { return context.getTime(EVENT_CLOCK_PHI2); }
 
 public:
-	MMU(Bank* ioBank);
+	MMU(EventContext *context, Bank* ioBank);
 	~MMU () {}
 
 	void reset();

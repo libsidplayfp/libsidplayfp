@@ -27,7 +27,11 @@ static const uint8_t POWERON[] = {
 #include "poweron.bin"
 };
 
-MMU::MMU(Bank* ioBank) :
+MMU::MMU(EventContext *context, Bank* ioBank) :
+	context(*context),
+	basic(false),
+	kernal(false),
+	io(false),
 	ioBank(ioBank),
 	zeroRAMBank(this, &ramBank) {
 
@@ -40,57 +44,28 @@ MMU::MMU(Bank* ioBank) :
 	}
 }
 
-void MMU::mem_pla_config_changed () {
+void MMU::setCpuPort (const int state) {
 
-	const uint8_t mem_config = (data | ~dir) & 0x7;
-	/*  B I K C
-	* 0 . . . .
-	* 1 . . . *
-	* 2 . . * *
-	* 3 * . * *
-	* 4 . . . .
-	* 5 . * . .
-	* 6 . * * .
-	* 7 * * * .
-	*/
-	cpuReadMap[0x0e] = cpuReadMap[0x0f] = ((mem_config & 2) != 0) ? (Bank*)&kernalRomBank : &ramBank;
-	cpuReadMap[0x0a] = cpuReadMap[0x0b] = ((mem_config & 3) == 3) ? (Bank*)&basicRomBank : &ramBank;
-
-	if (mem_config > 4) {
-		cpuReadMap[0x0d] = cpuWriteMap[0x0d] = ioBank;
-	} else {
-		cpuReadMap[0x0d] = ((mem_config ^ 4) > 4) ? (Bank*)&characterRomBank : &ramBank;
-		cpuWriteMap[0x0d] = &ramBank;
-	}
-
-	c64pla_config_changed(false, true, 0x17);
+	basic = (state & 1) != 0;
+	kernal = (state & 2) != 0;
+	io = (state & 4) != 0;
+	updateMappingPHI2();
 }
 
-void MMU::c64pla_config_changed(const bool tape_sense, const bool caps_sense, const uint8_t pullup) {
+void MMU::updateMappingPHI2() {
 
-	data_out = (data_out & ~dir) | (data & dir);
-	data_read = (data | ~dir) & (data_out | pullup);
+	cpuReadMap[0xe] = cpuReadMap[0xf] = kernal ? (Bank*)&kernalRomBank : &ramBank;
+	cpuReadMap[0xa] = cpuReadMap[0xb] = (basic && kernal) ? (Bank*)&basicRomBank : &ramBank;
 
-	if ((pullup & 0x40) != 0 && !caps_sense) {
-		data_read &= 0xbf;
+	if (io && (basic || kernal)) {
+		cpuReadMap[0xd] = cpuWriteMap[0xd] = ioBank;
+	} else {
+		cpuReadMap[0xd] = (!io && (basic || kernal)) ? (Bank*)&characterRomBank : &ramBank;
+		cpuWriteMap[0xd] = &ramBank;
 	}
-	if ((dir & 0x20) == 0) {
-		data_read &= 0xdf;
-	}
-	if (tape_sense && (dir & 0x10) == 0) {
-		data_read &= 0xef;
-	}
-
-	dir_read = dir;
 }
 
 void MMU::reset() {
-
-	data = 0x3f;
-	data_out = 0x3f;
-	data_read = 0x3f;
-	dir = 0;
-	dir_read = 0;
 
 	ramBank.reset();
 	kernalRomBank.reset();
@@ -102,6 +77,8 @@ void MMU::reset() {
 	kernalRomBank.write(0xfdc4, 0xea); // Ingore sid volume reset to avoid DC
 	kernalRomBank.write(0xfdc5, 0xea); // click (potentially incompatibility)!!
 	kernalRomBank.write(0xfdc6, 0xea);
+
+	updateMappingPHI2();
 
 	// Copy in power on settings.  These were created by running
 	// the kernel reset routine and storing the usefull values
