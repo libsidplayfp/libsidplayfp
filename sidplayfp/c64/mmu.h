@@ -46,7 +46,7 @@ private:
 	EventContext &context;
 
 	/** CPU port signals */
-	bool basic, kernal, io;
+	bool loram, hiram, charen;
 
 	/** CPU read memory mapping in 4k chunks */
 	Bank* cpuReadMap[16];

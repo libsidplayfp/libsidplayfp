@@ -29,9 +29,9 @@ static const uint8_t POWERON[] = {
 
 MMU::MMU(EventContext *context, Bank* ioBank) :
 	context(*context),
-	basic(false),
-	kernal(false),
-	io(false),
+	loram(false),
+	hiram(false),
+	charen(false),
 	ioBank(ioBank),
 	zeroRAMBank(this, &ramBank) {
 
@@ -46,21 +46,21 @@ MMU::MMU(EventContext *context, Bank* ioBank) :
 
 void MMU::setCpuPort (const int state) {
 
-	basic = (state & 1) != 0;
-	kernal = (state & 2) != 0;
-	io = (state & 4) != 0;
+	loram = (state & 1) != 0;
+	hiram = (state & 2) != 0;
+	charen = (state & 4) != 0;
 	updateMappingPHI2();
 }
 
 void MMU::updateMappingPHI2() {
 
-	cpuReadMap[0xe] = cpuReadMap[0xf] = kernal ? (Bank*)&kernalRomBank : &ramBank;
-	cpuReadMap[0xa] = cpuReadMap[0xb] = (basic && kernal) ? (Bank*)&basicRomBank : &ramBank;
+	cpuReadMap[0xe] = cpuReadMap[0xf] = hiram ? (Bank*)&kernalRomBank : &ramBank;
+	cpuReadMap[0xa] = cpuReadMap[0xb] = (loram && hiram) ? (Bank*)&basicRomBank : &ramBank;
 
-	if (io && (basic || kernal)) {
+	if (charen && (loram || hiram)) {
 		cpuReadMap[0xd] = cpuWriteMap[0xd] = ioBank;
 	} else {
-		cpuReadMap[0xd] = (!io && (basic || kernal)) ? (Bank*)&characterRomBank : &ramBank;
+		cpuReadMap[0xd] = (!charen && (loram || hiram)) ? (Bank*)&characterRomBank : &ramBank;
 		cpuWriteMap[0xd] = &ramBank;
 	}
 }
