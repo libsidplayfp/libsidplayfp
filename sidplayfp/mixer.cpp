@@ -54,10 +54,11 @@ void Mixer::event()
                 sample2 += buf2[i + j];
         }
         /* increment i to mark we ate some samples, finish the boxcar thing. */
+        const int dither = triangularDithering();
         i += j;
-        sample1 = sample1 * m_leftVolume / VOLUME_MAX;
+        sample1 = (sample1 * m_leftVolume + dither) / VOLUME_MAX;
         sample1 /= j;
-        sample2 = sample2 * m_rightVolume / VOLUME_MAX;
+        sample2 = (sample2 * m_rightVolume + dither) / VOLUME_MAX;
         sample2 /= j;
 
         /* mono mix. */

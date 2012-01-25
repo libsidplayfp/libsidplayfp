@@ -25,18 +25,22 @@
 
 #include "sidbuilder.h"
 
+#include <stdlib.h>
+
 /** @internal
 * This class implements the mixer.
 */
 class Mixer : private Event {
 
 private:
-    static const int_least32_t VOLUME_MAX = 255;
-
     /**
     * Scheduling time for next sample mixing event. 5000 is roughly 5 ms
     */
     static const int MIXER_EVENT_RATE = 5000;
+
+public:
+    /** Maximum allowed volume, must be a power of 2 */
+    static const int_least32_t VOLUME_MAX = 1024;
 
 private:
     /**
@@ -47,15 +51,25 @@ private:
     sidemu *m_chip1;
     sidemu *m_chip2;
 
+    int oldRandomValue;
+    int m_fastForwardFactor;
+
+    int_least32_t  m_leftVolume;
+    int_least32_t  m_rightVolume;
+    bool           m_stereo;
+
     // Mixer settings
     uint_least32_t m_sampleCount;
     uint_least32_t m_sampleIndex;
     short         *m_sampleBuffer;
 
-    int            m_fastForwardFactor;
-    int_least32_t  m_leftVolume;
-    int_least32_t  m_rightVolume;
-    bool           m_stereo;
+private:
+    int triangularDithering()
+    {
+        const int prevValue = oldRandomValue;
+        oldRandomValue = rand() & (VOLUME_MAX-1);
+        return oldRandomValue - prevValue;
+    }
 
 public:
     /**
@@ -66,8 +80,9 @@ public:
     Mixer(EventContext *context) :
         Event("Mixer"),
         event_context(*context),
-        m_sampleCount(0),
-        m_fastForwardFactor(1) {}
+        oldRandomValue(0),
+        m_fastForwardFactor(1),
+        m_sampleCount(0) {}
 
     /**
     * Timer ticking event.

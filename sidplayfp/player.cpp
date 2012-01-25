@@ -93,8 +93,8 @@ Player::Player (void)
     m_cfg.sidDefault      = SID2_MODEL_CORRECT;
     m_cfg.sidEmulation    = NULL;
     m_cfg.sidModel        = SID2_MODEL_CORRECT;
-    m_cfg.leftVolume      = 255;
-    m_cfg.rightVolume     = 255;
+    m_cfg.leftVolume      = Mixer::VOLUME_MAX;
+    m_cfg.rightVolume     = Mixer::VOLUME_MAX;
     m_cfg.powerOnDelay    = SID2_DEFAULT_POWER_ON_DELAY;
     m_cfg.samplingMethod  = SID2_RESAMPLE_INTERPOLATE;
     m_cfg.fastSampling    = false;
