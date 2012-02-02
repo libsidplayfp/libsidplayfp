@@ -33,15 +33,13 @@ public:
 	 *
 	 * @return resampled sample
 	 */
-	short getOutput() {
-		int value = output();
-		if (value > 32767) {
-			value = 32767;
-		}
-		if (value < -32768) {
-			value = -32768;
-		}
-		return (short)value;
+	short getOutput() const {
+		const int value = output();
+		// Clip signed integer value into the -32768,32767 range.
+		if ((value+0x8000) & ~0xFFFF)
+			return (value>>31) ^ 0x7FFF;
+		else
+			return value;
 	}
 
 	virtual void reset()=0;
