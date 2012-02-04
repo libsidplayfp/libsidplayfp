@@ -1404,7 +1404,7 @@ void MOS6510::ins_instr (void)
 // register, and the stack pointer.  Affected flags: N Z.
 void MOS6510::las_instr (void)
 {
-    setFlagsNZ (Cycle_Data &= endian_16lo8 (Register_StackPointer));
+    setFlagsNZ (Cycle_Data &= Register_StackPointer);
     Register_Accumulator  = Cycle_Data;
     Register_X            = Cycle_Data;
     Register_StackPointer = Cycle_Data;
