@@ -99,7 +99,7 @@ protected:
     bool           flagB;
 
     /** Data regarding current instruction */
-    uint_least32_t Register_ProgramCounter;
+    uint_least16_t Register_ProgramCounter;
     uint_least16_t Cycle_EffectiveAddress;
     uint_least16_t Cycle_HighByteWrongEffectiveAddress;
     uint_least16_t Cycle_Pointer;
