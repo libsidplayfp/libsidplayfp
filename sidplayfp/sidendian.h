@@ -19,6 +19,10 @@
 #ifndef _sidendian_h_
 #define _sidendian_h_
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 // NOTE: The optimisations in this file rely on the structure of memory
 // e.g. 2 shorts being contained in 1 long.  Although these sizes are
 // checked to make sure the optimisation is ok, gcc 2.96 (and above)
