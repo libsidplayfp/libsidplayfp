@@ -66,7 +66,7 @@ void MOS6510Debug::DumpState (const event_clock_t time, MOS6510 &cpu)
     case ORAz: case ROLz: case RORz: case SAXz: case SBCz: case SREz:
     case STAz: case STXz: case STYz: case SLOz: case RLAz: case RRAz:
     //ASOz AXSz DCMz INSz LSEz - Optional Opcode Names
-        fprintf(cpu.m_fdbg, "%02x    ", (uint8_t) cpu.instrOperand);
+        fprintf(cpu.m_fdbg, "%02x    ", endian_16lo8 (cpu.instrOperand));
         break;
     //Zero Page with X Offset Addressing Mode Handler
     case ADCzx:  case ANDzx: case ASLzx: case CMPzx: case DCPzx: case DECzx:
@@ -74,7 +74,7 @@ void MOS6510Debug::DumpState (const event_clock_t time, MOS6510 &cpu)
     case NOPzx_: case ORAzx: case RLAzx: case ROLzx: case RORzx: case RRAzx:
     case SBCzx:  case SLOzx: case SREzx: case STAzx: case STYzx:
     //ASOzx DCMzx INSzx LSEzx - Optional Opcode Names
-        fprintf(cpu.m_fdbg, "%02x    ", (uint8_t) cpu.instrOperand);
+        fprintf(cpu.m_fdbg, "%02x    ", endian_16lo8 (cpu.instrOperand));
         break;
     //Zero Page with Y Offset Addressing Mode Handler
     case LDXzy: case STXzy: case SAXzy: case LAXzy:
@@ -330,7 +330,7 @@ void MOS6510Debug::DumpState (const event_clock_t time, MOS6510 &cpu)
     case ROLz: case RORz: case SBCz: case SREz: case SLOz: case RLAz:
     case RRAz:
     //ASOz AXSz DCMz INSz LSEz - Optional Opcode Names
-        fprintf(cpu.m_fdbg, "z  %02x {%02x}", (uint8_t) cpu.instrOperand, cpu.Cycle_Data);
+        fprintf(cpu.m_fdbg, "z  %02x {%02x}", endian_16lo8 (cpu.instrOperand), cpu.Cycle_Data);
     break;
     case SAXz: case STAz: case STXz: case STYz:
 #ifdef DEBUG
