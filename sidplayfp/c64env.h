@@ -18,7 +18,7 @@
 #ifndef _c64env_h_
 #define _c64env_h_
 
-#include "event.h"
+#include "sidplayfp/event.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
