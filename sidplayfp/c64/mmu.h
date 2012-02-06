@@ -31,7 +31,7 @@
 #include "SystemROMBanks.h"
 #include "ZeroRAMBank.h"
 
-#include "sidplayfp/mos6510/opcodes.h"
+#include "sidplayfp/c64/CPU/opcodes.h"
 
 #include <string.h>
 

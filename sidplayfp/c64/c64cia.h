@@ -24,7 +24,7 @@
 #include "Bank.h"
 #include "sidplayfp/c64env.h"
 #include "sidplayfp/sidendian.h"
-#include "sidplayfp/mos6526/mos6526.h"
+#include "CIA/mos6526.h"
 
 /* CIA 1 specifics:
    Generates IRQs

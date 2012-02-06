@@ -24,7 +24,7 @@
 #endif
 
 #include "sidplayfp/c64env.h"
-#include "sidplayfp/mos6510/mos6510.h"
+#include "CPU/mos6510.h"
 
 class c64cpu: public MOS6510
 {

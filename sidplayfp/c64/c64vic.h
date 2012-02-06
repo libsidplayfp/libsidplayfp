@@ -24,7 +24,7 @@
 #include "Bank.h"
 #include "sidplayfp/c64env.h"
 #include "sidplayfp/sidendian.h"
-#include "sidplayfp/mos656x/mos656x.h"
+#include "VIC_II/mos656x.h"
 
 class c64vic: public MOS656X, public Bank
 {

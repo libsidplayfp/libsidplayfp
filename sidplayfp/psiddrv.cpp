@@ -24,7 +24,7 @@
 #include "sidendian.h"
 #include "player.h"
 
-#include "mos6510/opcodes.h"
+#include "c64/CPU/opcodes.h"
 
 
 SIDPLAY2_NAMESPACE_START
