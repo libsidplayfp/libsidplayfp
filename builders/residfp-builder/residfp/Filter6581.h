@@ -34,6 +34,11 @@ private:
 	/** Filter lowpass state. */
 	int Vlp;
 
+	/** Filter external input. */
+	int ve;
+
+	const int voiceScaleS14, voiceDC, vo_T16;
+
 	/** Current volume amplifier setting. */
 	unsigned short* currentGain;
 
@@ -51,11 +56,6 @@ private:
 
 	/** VCR + associated capacitor connected to lowpass output. */
 	Integrator* bpIntegrator;
-
-	/** Filter external input. */
-	int ve;
-
-	const int voiceScaleS14, voiceDC, vo_T16;
 
 	const unsigned int* f0_dac;
 
@@ -127,6 +127,7 @@ namespace reSIDfp
 
 RESID_INLINE
 int Filter6581::clock(const int voice1, const int voice2, const int voice3) {
+
 	const int v1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
 	const int v2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
 	const int v3 = (voice3 * voiceScaleS14 >> 18) + voiceDC;
