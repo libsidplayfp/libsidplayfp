@@ -83,8 +83,8 @@ sidplayfp/c64/SystemROMBanks.h \
 sidplayfp/c64/ZeroRAMBank.h \
 sidplayfp/c64/VIC_II/mos656x.cpp \
 sidplayfp/c64/VIC_II/mos656x.h \
-sidplayfp/c64/CPU/mos6510.cpp \
-sidplayfp/c64/CPU/mos6510.h \
+sidplayfp/c64/CPU/mos6510debug.cpp \
+sidplayfp/c64/CPU/mos6510debug.h \
 sidplayfp/c64/CPU/opcodes.h \
 sidplayfp/c64/CIA/mos6526.cpp \
 sidplayfp/c64/CIA/mos6526.h \
