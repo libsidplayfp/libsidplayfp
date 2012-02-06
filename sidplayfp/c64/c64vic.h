@@ -22,7 +22,7 @@
 // wire it into the computer (like adding a chip to a PCB).
 
 #include "Bank.h"
-#include "sidplayfp/c64env.h"
+#include "sidplayfp/c64/c64env.h"
 #include "sidplayfp/sidendian.h"
 #include "VIC_II/mos656x.h"
 

@@ -56,7 +56,6 @@ builders/resid-builder/resid/libresid.la
 #=========================================================
 # libsidplayfp
 sidplayfp_libsidplayfp_la_SOURCES = \
-sidplayfp/c64env.h \
 sidplayfp/config.cpp \
 sidplayfp/EventScheduler.cpp \
 sidplayfp/EventScheduler.h \
@@ -71,6 +70,7 @@ sidplayfp/psiddrv.a65 \
 sidplayfp/c64/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
+sidplayfp/c64/c64env.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64.cpp \
 sidplayfp/c64/c64.h \

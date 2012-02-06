@@ -23,7 +23,7 @@
 #  include "config.h"
 #endif
 
-#include "sidplayfp/c64env.h"
+#include "sidplayfp/c64/c64env.h"
 #include "CPU/mos6510.h"
 
 class c64cpu: public MOS6510

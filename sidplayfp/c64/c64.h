@@ -23,7 +23,7 @@
 #include "IOBank.h"
 #include "ColorRAMBank.h"
 
-#include "sidplayfp/c64env.h"
+#include "sidplayfp/c64/c64env.h"
 #include "sidplayfp/c64/c64cpu.h"
 #include "sidplayfp/c64/c64cia.h"
 #include "sidplayfp/c64/c64vic.h"
