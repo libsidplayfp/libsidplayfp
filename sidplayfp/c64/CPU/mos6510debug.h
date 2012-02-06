@@ -19,8 +19,6 @@
 #ifndef MOS6510DEBUG_H
 #define MOS6510DEBUG_H
 
-#include "cycle_based/mos6510c.h"
-
 #ifdef DEBUG
 
 class MOS6510Debug

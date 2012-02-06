@@ -19,14 +19,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "mos6510.h"
+#include "mos6510debug.h"
+
+#ifdef DEBUG
 
 #include "sidplayfp/sidendian.h"
 #include "opcodes.h"
-
-#include "cycle_based/mos6510c.i"
-
-#ifdef DEBUG
 
 void MOS6510Debug::DumpState (const event_clock_t time, MOS6510 &cpu)
 {

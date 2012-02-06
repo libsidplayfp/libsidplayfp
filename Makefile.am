@@ -21,7 +21,6 @@ sidplayfp/c64/kernal.bin \
 sidplayfp/c64/poweron.bin \
 sidplayfp/c64/basic.bin \
 sidplayfp/c64/char.bin \
-sidplayfp/c64/CPU/cycle_based \
 builders/residfp-builder/residfp/AUTHORS \
 builders/residfp-builder/residfp/COPYING \
 builders/residfp-builder/residfp/README \
@@ -83,6 +82,8 @@ sidplayfp/c64/SystemROMBanks.h \
 sidplayfp/c64/ZeroRAMBank.h \
 sidplayfp/c64/VIC_II/mos656x.cpp \
 sidplayfp/c64/VIC_II/mos656x.h \
+sidplayfp/c64/CPU/mos6510.cpp \
+sidplayfp/c64/CPU/mos6510.h \
 sidplayfp/c64/CPU/mos6510debug.cpp \
 sidplayfp/c64/CPU/mos6510debug.h \
 sidplayfp/c64/CPU/opcodes.h \

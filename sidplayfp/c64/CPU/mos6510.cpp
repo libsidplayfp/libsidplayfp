@@ -20,6 +20,11 @@
 #  include "config.h"
 #endif
 
+#include "mos6510.h"
+
+#include "opcodes.h"
+#include "sidplayfp/sid2types.h"
+
 #include <string.h>
 
 #ifdef PC64_TESTSUITE
