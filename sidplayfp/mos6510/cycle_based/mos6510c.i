@@ -262,9 +262,9 @@ void MOS6510::fetchNextOpcode (void)
     {
         MOS6510Debug::DumpState(eventContext.getTime(EVENT_CLOCK_PHI2), *this);
     }
-#endif
-    // Next line used for Debug
+
     instrStartPC = Register_ProgramCounter;
+#endif
 
     cycleCount = cpuRead(Register_ProgramCounter) << 3;
     Register_ProgramCounter++;
@@ -406,8 +406,9 @@ void MOS6510::FetchHighAddr (void)
     endian_16hi8 (Cycle_EffectiveAddress, cpuRead (Register_ProgramCounter));
     Register_ProgramCounter++;
 
-    // Next line used for Debug
+#ifdef DEBUG
     instrOperand = Cycle_EffectiveAddress;
+#endif
 }
 
 /**
@@ -474,8 +475,9 @@ void MOS6510::FetchLowPointer (void)
     Cycle_Pointer = cpuRead (Register_ProgramCounter);
     Register_ProgramCounter++;
 
-    // Nextline used for Debug
+#ifdef DEBUG
     endian_16lo8 (instrOperand, endian_16lo8 (Cycle_Pointer));
+#endif
 }
 
 /**
@@ -504,8 +506,9 @@ void MOS6510::FetchHighPointer (void)
     endian_16hi8 (Cycle_Pointer, cpuRead (Register_ProgramCounter));
     Register_ProgramCounter++;
 
-    // Nextline used for Debug
+#ifdef DEBUG
     endian_16hi8 (instrOperand, endian_16hi8 (Cycle_Pointer));
+#endif
 }
 
 /**
@@ -1470,7 +1473,9 @@ void MOS6510::rra_instr (void)
 */
 MOS6510::MOS6510 (EventContext *context)
 :eventContext(*context),
+#ifdef DEBUG
  m_fdbg(stdout),
+#endif
  m_nosteal("CPU-nosteal", *this, &MOS6510::eventWithoutSteals),
  m_steal("CPU-steal", *this, &MOS6510::eventWithSteals)
 {
@@ -2123,8 +2128,9 @@ MOS6510::MOS6510 (EventContext *context)
 
     Cycle_EffectiveAddress = 0;
     Cycle_Data             = 0;
-
+#ifdef DEBUG
     dodump = false;
+#endif
     Initialise ();
 }
 
@@ -2185,9 +2191,11 @@ const char *MOS6510::credit =
 
 void MOS6510::debug (const bool enable, FILE *out)
 {
+#ifdef DEBUG
     dodump = enable;
     if (!(out && enable))
         m_fdbg = stdout;
     else
         m_fdbg = out;
+#endif
 }
