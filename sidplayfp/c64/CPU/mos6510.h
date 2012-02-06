@@ -90,13 +90,13 @@ protected:
     /** RDY pin state (stop CPU on read) */
     bool rdy;
 
-    bool           flagN;
-    bool           flagC;
-    bool           flagD;
-    bool           flagZ;
-    bool           flagV;
-    bool           flagI;
-    bool           flagB;
+    bool flagN;
+    bool flagC;
+    bool flagD;
+    bool flagZ;
+    bool flagV;
+    bool flagI;
+    bool flagB;
 
     /** Data regarding current instruction */
     uint_least16_t Register_ProgramCounter;
@@ -104,11 +104,11 @@ protected:
     uint_least16_t Cycle_HighByteWrongEffectiveAddress;
     uint_least16_t Cycle_Pointer;
 
-    uint8_t        Cycle_Data;
-    uint8_t        Register_StackPointer;
-    uint8_t        Register_Accumulator;
-    uint8_t        Register_X;
-    uint8_t        Register_Y;
+    uint8_t Cycle_Data;
+    uint8_t Register_StackPointer;
+    uint8_t Register_Accumulator;
+    uint8_t Register_X;
+    uint8_t Register_Y;
 
 #ifdef DEBUG
     /** Debug info */
@@ -257,11 +257,11 @@ protected:
     inline void xas_instr     (void);
     void        illegal_instr (void);
 
-    // Declare Arithmatic Operations
+    // Declare Arithmetic Operations
     inline void doADC   (void);
     inline void doSBC   (void);
 
-    inline void doJSR         (void);
+    inline void doJSR   (void);
 
     /**
     * Get data from system environment
