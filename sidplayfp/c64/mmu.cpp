@@ -19,8 +19,6 @@
 
 #include "mmu.h"
 
-#include "sidplayfp/mos6510/opcodes.h"
-
 SIDPLAY2_NAMESPACE_START
 
 static const uint8_t POWERON[] = {
