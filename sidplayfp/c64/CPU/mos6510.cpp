@@ -25,6 +25,10 @@
 #include "opcodes.h"
 #include "sidplayfp/sid2types.h"
 
+#ifdef DEBUG
+#  include "mos6510debug.h"
+#endif
+
 #include <string.h>
 
 #ifdef PC64_TESTSUITE

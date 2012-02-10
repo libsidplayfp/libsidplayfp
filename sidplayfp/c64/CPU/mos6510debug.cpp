@@ -23,6 +23,7 @@
 
 #ifdef DEBUG
 
+#include "mos6510.h"
 #include "sidplayfp/sidendian.h"
 #include "opcodes.h"
 

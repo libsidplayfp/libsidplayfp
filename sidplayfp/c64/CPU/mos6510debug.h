@@ -21,6 +21,10 @@
 
 #ifdef DEBUG
 
+#include "sidplayfp/EventScheduler.h"
+
+class MOS6510;
+
 class MOS6510Debug
 {
 public:
