@@ -156,9 +156,6 @@ void MOS6510::setRDY (const bool newRDY)
 
 /**
 * Push P on stack, decrement S
-*
-* @param newFlagB
-*            new value for B flag to set on CPU and write to RAM
 */
 void MOS6510::PushSR ()
 {
