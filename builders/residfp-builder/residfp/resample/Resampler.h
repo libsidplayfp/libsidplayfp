@@ -1,8 +1,6 @@
 #ifndef RESAMPLER_H
 #define RESAMPLER_H
 
-#include <stdlib.h>
-
 namespace reSIDfp
 {
 
@@ -14,20 +12,10 @@ namespace reSIDfp
  */
 class Resampler {
 
-private:
-	int oldRandomValue;
-
 protected:
-	int triangularDithering() {
-		const int prevValue = oldRandomValue;
-		oldRandomValue = rand() & 0x3ff;
-		return oldRandomValue - prevValue;
-	}
-
 	virtual int output() const =0;
 
-	Resampler() :
-		oldRandomValue(0) {}
+	Resampler() {}
 
 public:
 	virtual ~Resampler() {}
@@ -45,16 +33,13 @@ public:
 	 *
 	 * @return resampled sample
 	 */
-	short getOutput() {
-		const int dither = triangularDithering();
-		int value = (output() * 1024 + dither) >> 10;
-		if (value > 32767) {
-			value = 32767;
-		}
-		if (value < -32768) {
-			value = -32768;
-		}
-		return (short)value;
+	short getOutput() const {
+		const int value = output();
+		// Clip signed integer value into the -32768,32767 range.
+		if ((value+0x8000) & ~0xFFFF)
+			return (value>>31) ^ 0x7FFF;
+		else
+			return value;
 	}
 
 	virtual void reset()=0;

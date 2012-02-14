@@ -251,7 +251,6 @@ protected:
     inline void PopHighPC            (void);
     inline void PopSR                (void);
     inline void WasteCycle           (void);
-    inline void DebugCycle           (void);
 
     // Delcare Instruction Operation Routines
     inline void adc_instr     (void);

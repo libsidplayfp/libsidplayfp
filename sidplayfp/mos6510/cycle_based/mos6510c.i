@@ -640,8 +640,8 @@ void MOS6510::FetchHighAddr (void)
     endian_16hi8 (Cycle_EffectiveAddress, env->envReadMemByte (endian_32lo16 (Register_ProgramCounter)));
     Register_ProgramCounter++;
 
-    // Nextline used for Debug
-    endian_16hi8 (Instr_Operand, endian_16hi8 (Cycle_EffectiveAddress));
+    // Next line used for Debug
+    Instr_Operand = Cycle_EffectiveAddress;
 }
 
 /**
@@ -708,8 +708,8 @@ void MOS6510::FetchLowPointer (void)
     Cycle_Pointer = env->envReadMemByte (endian_32lo16 (Register_ProgramCounter));
     Register_ProgramCounter++;
 
-    // Nextline used for Debug
-    Instr_Operand = Cycle_Pointer;
+    // Next line used for Debug
+    endian_16lo8 (Instr_Operand, endian_16lo8 (Cycle_Pointer));
 }
 
 /**
@@ -859,13 +859,6 @@ void MOS6510::PopHighPC (void)
 
 void MOS6510::WasteCycle (void)
 {}
-
-void MOS6510::DebugCycle (void)
-{
-    if (dodump)
-        DumpState ();
-    interruptsAndNextOpcode ();
-}
 
 
 //-------------------------------------------------------------------------//
@@ -1902,10 +1895,6 @@ MOS6510::MOS6510 (EventContext *context)
         if (access == READ) {
             instrCurrent[cycleCount++].func = &MOS6510::FetchEffAddrDataByte;
         }
-
-#ifdef MOS6510_DEBUG
-        instrCurrent[cycleCount++].func = &MOS6510::DebugCycle;
-#endif // MOS6510_DEBUG
 
         //---------------------------------------------------------------------------------------
         // Addressing Modes Finished, other cycles are instruction dependent
