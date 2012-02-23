@@ -26,9 +26,21 @@
 
 #include "c64/c64.h"
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
+#ifdef PC64_TESTSUITE
+#  include <string.h>
+#endif
+
+
 SIDPLAY2_NAMESPACE_START
 
 class Player
+#ifdef PC64_TESTSUITE
+: public testEnv
+#endif
 {
 private:
     static const char  TXT_PAL_VBI[];
@@ -86,6 +98,18 @@ private:
 
     // PSID driver
     int  psidDrvReloc   (SidTuneInfo &tuneInfo, sid2_info_t &info);
+
+#ifdef PC64_TESTSUITE
+    void load (const char *file)
+    {
+        char name[0x100] = PC64_TESTSUITE;
+        strcat (name, file);
+        strcat (name, ".prg");
+
+        m_tune->load (name);
+        initialise();
+    }
+#endif
 
 public:
     Player ();

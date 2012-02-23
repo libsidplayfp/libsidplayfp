@@ -33,13 +33,17 @@
 #  include "config.h"
 #endif
 
-#ifdef PC64_TESTSUITE
-#  include <string.h>
-#endif
-
 #include "sidplayfp/sidbuilder.h"
 
 SIDPLAY2_NAMESPACE_START
+
+#ifdef PC64_TESTSUITE
+class testEnv
+{
+public:
+    virtual void load(const char *) =0;
+};
+#endif
 
 /**
 * IO1/IO2
@@ -216,20 +220,24 @@ private:
     inline void lightpen () { vic.lightpen (); }
 
 #ifdef PC64_TESTSUITE
-    void   loadFile (const char *file)
-    {
-        /*char name[0x100] = PC64_TESTSUITE;
-        strcat (name, file);
-        strcat (name, ".prg");
+    testEnv *m_env;
 
-        m_tune->load (name);
-        stop ();*/
+    void loadFile(const char *file)
+    {
+        m_env->load(file);
     }
 #endif
 
 public:
     c64();
     ~c64() {}
+
+#ifdef PC64_TESTSUITE
+    void setTestEnv(testEnv *env)
+    {
+        m_env = env;
+    }
+#endif
 
     /**
     * Get C64's event scheduler

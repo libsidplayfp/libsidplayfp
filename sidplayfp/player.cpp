@@ -70,6 +70,10 @@ Player::Player (void)
  m_status            (false)
 #endif
 {
+#ifdef PC64_TESTSUITE
+    m_c64.setTestEnv(this);
+#endif
+
     srand ((uint) ::time(NULL));
     m_rand = (uint_least32_t) rand ();
 
