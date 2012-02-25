@@ -1218,13 +1218,13 @@ void MOS6510::plp_instr (void)
 
 void MOS6510::rol_instr (void)
 {
-    const uint8_t tmp = Cycle_Data & 0x80;
+    const uint8_t newC = Cycle_Data & 0x80;
     PutEffAddrDataByte ();
     Cycle_Data <<= 1;
     if (flagC)
         Cycle_Data |= 0x01;
     setFlagsNZ (Cycle_Data);
-    flagC = tmp;
+    flagC = newC;
 }
 
 void MOS6510::rola_instr (void)
