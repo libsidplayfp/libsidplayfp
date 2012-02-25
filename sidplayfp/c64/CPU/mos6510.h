@@ -42,7 +42,7 @@ class MOS6510
 {
     friend class MOS6510Debug;
 private:
-	static const char *credit;
+    static const char *credit;
 
 private:
     /**
