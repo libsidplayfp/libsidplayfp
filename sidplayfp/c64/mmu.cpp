@@ -1,6 +1,9 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
- * Copyright (C) 2011 Leando Nini <drfiemost@users.sourceforge.net>
+ *
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2000 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

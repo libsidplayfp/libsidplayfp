@@ -1,6 +1,9 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
- * Copyright (C) 2011 Leando Nini <drfiemost@users.sourceforge.net>
+ *
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2000 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +19,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 
 #ifndef MMU_H
 #define MMU_H
