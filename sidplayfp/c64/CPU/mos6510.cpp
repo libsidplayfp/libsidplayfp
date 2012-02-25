@@ -76,11 +76,14 @@ void MOS6510::eventWithoutSteals  (void)
 /** When AEC signal is low, steals permitted */
 void MOS6510::eventWithSteals  (void)
 {
-    if (instrTable[cycleCount].nosteal) {
+    if (instrTable[cycleCount].nosteal)
+    {
         const ProcessorCycle &instr = instrTable[cycleCount++];
         (this->*(instr.func)) ();
         eventContext.schedule(m_steal, 1);
-    } else {
+    }
+    else
+    {
         /* Even while stalled, the CPU can still process first clock of
         * interrupt delay, but only the first one. */
         if (interruptCycle == cycleCount)
@@ -104,25 +107,32 @@ void MOS6510::setFlagsNZ(const uint8_t value)
 uint8_t MOS6510::getStatusRegister(void)
 {
     uint8_t sr = 0x20;
-    if (flagN) {
+    if (flagN)
+    {
         sr |= 0x80;
     }
-    if (flagV) {
+    if (flagV)
+    {
         sr |= 0x40;
     }
-    if (flagB) {
+    if (flagB)
+    {
         sr |= 0x10;
     }
-    if (flagD) {
+    if (flagD)
+    {
         sr |= 0x08;
     }
-    if (flagI) {
+    if (flagI)
+    {
         sr |= 0x04;
     }
-    if (flagZ) {
+    if (flagZ)
+    {
         sr |= 0x02;
     }
-    if (flagC) {
+    if (flagC)
+    {
         sr |= 0x01;
     }
     return sr;
@@ -150,10 +160,13 @@ void MOS6510::setRDY (const bool newRDY)
 {
     rdy = newRDY;
 
-    if (rdy) {
+    if (rdy)
+    {
         eventContext.cancel(m_steal);
         eventContext.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
-    } else {
+    }
+    else
+    {
         eventContext.cancel(m_nosteal);
         eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
@@ -218,7 +231,8 @@ void MOS6510::triggerNMI (void)
     calculateInterruptTriggerCycle();
 
     /* maybe process 1 clock of interrupt delay. */
-    if (! rdy) {
+    if (! rdy)
+    {
         eventContext.cancel(m_steal);
         eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
@@ -231,7 +245,8 @@ void MOS6510::triggerIRQ (void)
     calculateInterruptTriggerCycle();
 
     /* maybe process 1 clock of interrupt delay. */
-    if (! rdy && interruptCycle == cycleCount) {
+    if (! rdy && interruptCycle == cycleCount)
+    {
         eventContext.cancel(m_steal);
         eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
@@ -351,7 +366,8 @@ void MOS6510::throwAwayRead (void)
 void MOS6510::FetchDataByte (void)
 {
     Cycle_Data = cpuRead (Register_ProgramCounter);
-    if (flagB) {
+    if (flagB)
+    {
         Register_ProgramCounter++;
     }
 }
@@ -1687,7 +1703,8 @@ MOS6510::MOS6510 (EventContext *context)
         break;
         }
 
-        if (access == READ) {
+        if (access == READ)
+        {
             instrTable[buildCycle++].func = &MOS6510::FetchEffAddrDataByte;
         }
 

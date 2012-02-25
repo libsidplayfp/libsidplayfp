@@ -108,19 +108,23 @@ private:
         data_read = (data | ~dir) & (data_out | 0x17);
         pla->setCpuPort(data_read);
 
-        if ((dir & 0x20) == 0) {
+        if ((dir & 0x20) == 0)
+        {
             data_read &= 0xdf;
         }
-        if ((dir & 0x10) == 0 && tape_sense) {
+        if ((dir & 0x10) == 0 && tape_sense)
+        {
             data_read &= 0xef;
         }
 
-        if ((dir & data & 0x20) != old_port_data_out) {
+        if ((dir & data & 0x20) != old_port_data_out)
+        {
             old_port_data_out = dir & data & 0x20;
             //C64.this.setMotor(0 == old_port_data_out);
         }
 
-        if (((~dir | data) & 0x8) != old_port_write_bit) {
+        if (((~dir | data) & 0x8) != old_port_write_bit)
+        {
             old_port_write_bit = (~dir | data) & 0x8;
             //C64.this.toggleWriteBit(((~dir | data) & 0x8) != 0);
         }
