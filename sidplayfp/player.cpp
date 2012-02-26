@@ -23,7 +23,6 @@
 #  include "config.h"
 #endif
 
-#include "sidendian.h"
 #include "player.h"
 
 #ifndef PACKAGE_NAME
