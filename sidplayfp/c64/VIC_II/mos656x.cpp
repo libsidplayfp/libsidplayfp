@@ -52,9 +52,9 @@ const char *MOS656X::credit =
 MOS656X::MOS656X (EventContext *context)
 :Event("VIC Raster"),
  event_context(*context),
- badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange),
  sprite_enable(regs[0x15]),
- sprite_y_expansion(regs[0x17])
+ sprite_y_expansion(regs[0x17]),
+ badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange)
 {
     chip (MOS6569);
 }

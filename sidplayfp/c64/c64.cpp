@@ -32,12 +32,12 @@ const float64_t c64::VIC_FREQ_NTSC   = 60.0;
 
 c64::c64()
 :c64env  (&m_scheduler),
+ m_cpuFreq(CLOCK_FREQ_PAL),
  cpu     (this),
  cia1    (this),
  cia2    (this),
  vic     (this),
- mmu     (&m_scheduler, &ioBank),
- m_cpuFreq(CLOCK_FREQ_PAL)
+ mmu     (&m_scheduler, &ioBank)
 {
     ioBank.setBank(0, &vic);
     ioBank.setBank(1, &vic);
