@@ -183,7 +183,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
 
     case 0x19:
         // VIC Interrupt Flag Register
-        irqFlags &= ~data & 0x0f | 0x80;
+        irqFlags &= (~data & 0x0f) | 0x80;
         handleIrqState();
         break;
 

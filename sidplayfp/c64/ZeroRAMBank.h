@@ -174,7 +174,7 @@ public:
                     data_set_bit7 = false;
                 }
             }
-            return data_read & 0xff - (((!data_set_bit6?1:0)<<6)+((!data_set_bit7?1:0)<<7));
+            return data_read & (0xff - (((!data_set_bit6?1:0)<<6) + ((!data_set_bit7?1:0)<<7)));
         }
         else
         {

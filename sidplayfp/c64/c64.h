@@ -310,7 +310,7 @@ void c64::interruptIRQ (const bool state)
 void c64::setBA (const bool state)
 {
     /* only react to changes in state */
-    if (state ^ oldBAState == false)
+    if ((state ^ oldBAState) == false)
         return;
 
     oldBAState = state;

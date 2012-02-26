@@ -211,7 +211,7 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             break;
         }
 
-        if (flags & PSID_CLOCK_ANY == PSID_CLOCK_ANY)
+        if ((flags & PSID_CLOCK_ANY) == PSID_CLOCK_ANY)
             clock = SIDTUNE_CLOCK_ANY;
         else if (flags & PSID_CLOCK_PAL)
             clock = SIDTUNE_CLOCK_PAL;
@@ -219,7 +219,7 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             clock = SIDTUNE_CLOCK_NTSC;
         info.clockSpeed = clock;
 
-        if (flags & PSID_SIDMODEL1_ANY == PSID_SIDMODEL1_ANY)
+        if ((flags & PSID_SIDMODEL1_ANY) == PSID_SIDMODEL1_ANY)
             info.sidModel1 = SIDTUNE_SIDMODEL_ANY;
         else if (flags & PSID_SIDMODEL1_6581)
             info.sidModel1 = SIDTUNE_SIDMODEL_6581;
@@ -228,7 +228,7 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
         else
             info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
 
-        if (flags & PSID_SIDMODEL2_ANY == PSID_SIDMODEL2_ANY)
+        if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
             info.sidModel2 = SIDTUNE_SIDMODEL_ANY;
         else if (flags & PSID_SIDMODEL2_6581)
             info.sidModel2 = SIDTUNE_SIDMODEL_6581;
