@@ -46,7 +46,7 @@ ReSID::ReSID (sidbuilder *builder)
 #endif
  m_status(true),
  m_locked(false),
- m_voiceMask(0x0f)
+ m_voiceMask(0x07)
 {
     char *p = m_credit;
     m_error = "N/A";
