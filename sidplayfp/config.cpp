@@ -260,7 +260,7 @@ int Player::sidCreate (sidbuilder *builder, const sid2_model_t userModel,
         // model as the first SID.
         userModels[1] = getModel(m_tuneInfo.sidModel2, userModel, userModels[0]);
 
-        for (int i = 0; i < SidBank::MAX_SIDS; i++)
+        for (int i = 0; i < channels; i++)
         {   // Get first SID emulation
             sidemu *s = builder->lock (m_c64.getEventScheduler(), userModels[i]);
             if ((i == 0) && !builder->getStatus())
