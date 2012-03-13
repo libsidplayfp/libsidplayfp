@@ -96,7 +96,7 @@ void MMU::reset()
     //if (m_tuneInfo.compatibility >= SIDTUNE_COMPATIBILITY_R64)
     {
         uint_least16_t addr = 0;
-        for (int i = 0; i < sizeof (POWERON);)
+        for (unsigned int i = 0; i < sizeof (POWERON);)
         {
             uint8_t off   = POWERON[i++];
             uint8_t count = 0;
