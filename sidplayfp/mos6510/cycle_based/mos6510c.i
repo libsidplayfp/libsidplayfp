@@ -682,7 +682,7 @@ void MOS6510::FetchHighAddrX2 (void)
 void MOS6510::FetchHighAddrY (void)
 {
     FetchHighAddr ();
-    Cycle_HighByteWrongEffectiveAddress = Cycle_EffectiveAddress & 0xff00 | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
+    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress & 0xff00) | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
     Cycle_EffectiveAddress += Register_Y;
 }
 
@@ -1220,7 +1220,7 @@ void MOS6510::branch_instr (const bool condition)
     {
         /* issue the spurious read for next insn here. */
         env->envReadMemByte(Register_ProgramCounter);
-        Cycle_HighByteWrongEffectiveAddress = Register_ProgramCounter & 0xff00 | Register_ProgramCounter + (int8_t) Cycle_Data & 0xff;
+        Cycle_HighByteWrongEffectiveAddress = (Register_ProgramCounter & 0xff00) | ((Register_ProgramCounter + (int8_t) Cycle_Data) & 0xff);
         Cycle_EffectiveAddress = Register_ProgramCounter + (int8_t) Cycle_Data;
 
         // Check for page boundary crossing

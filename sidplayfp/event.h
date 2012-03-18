@@ -199,7 +199,8 @@ protected:
     */
     void schedule (Event &event, const event_clock_t cycles,
                    const event_phase_t phase) {
-        event.triggerTime = (cycles << 1) + currentTime + (currentTime & 1 ^ (phase == EVENT_CLOCK_PHI1 ? 0 : 1));
+        // this strange formulation always selects the next available slot regardless of specified phase.
+        event.triggerTime = (cycles << 1) + currentTime + ((currentTime & 1) ^ phase);
         schedule(event);
     }
 

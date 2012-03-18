@@ -369,7 +369,7 @@ int HardSIDBuilder::init ()
         // if it is truely one of ours then it will be
         // followed by numerics only
         const char *p = entry->d_name+3;
-        int index     = 0;
+        unsigned int index = 0;
         while (*p)
         {
             if (!isdigit (*p))
