@@ -111,7 +111,7 @@ const char *ReSIDfpBuilder::credits ()
     m_status = true;
 
     // Available devices
-    if (sidobjs.size ())
+    if (!sidobjs.empty ())
     {
         ReSIDfp *sid = static_cast<ReSIDfp*>(sidobjs[0]);
         return sid->credits ();

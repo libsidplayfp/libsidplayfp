@@ -111,7 +111,7 @@ const char *ReSIDBuilder::credits ()
     m_status = true;
 
     // Available devices
-    if (sidobjs.size ())
+    if (!sidobjs.empty ())
     {
         ReSID *sid = static_cast<ReSID*>(sidobjs[0]);
         return sid->credits ();
