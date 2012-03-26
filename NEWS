@@ -1,3 +1,13 @@
+0.3.4 2012-03-26
+* fixed possible crackling when muting and unmuting channels in reSID
+* removed useless dithering and implemented clipping with a single branch
+  in reSIDfp
+* fixed various warnings
+* fixed PETSCII conversion table to show lowercase letters in testsuite
+* fixed debugging info
+
+
+
 0.3.3 2012-01-21
 * fixed CPU/VICII interaction which affected Rayden/Boot_Zak_v2
 
