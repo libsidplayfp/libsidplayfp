@@ -96,7 +96,6 @@ HardSID::HardSID (sidbuilder *builder)
  Event("HardSID Delay"),
  m_handle(0),
  m_eventContext(NULL),
- m_phase(EVENT_CLOCK_PHI1),
  m_instance(sid++),
  m_status(false),
  m_locked(false)
@@ -161,7 +160,7 @@ void HardSID::reset (uint8_t volume)
     ioctl(m_handle, HSID_IOCTL_RESET, volume);
     m_accessClk = 0;
     if (m_eventContext != NULL)
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, m_phase);
+        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 
 void HardSID::clock()
@@ -169,7 +168,7 @@ void HardSID::clock()
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, m_phase);
+    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while (cycles > 0xffff) {
@@ -185,7 +184,7 @@ uint8_t HardSID::read (uint_least8_t addr)
     if (!m_handle)
         return 0;
 
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, m_phase);
+    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while ( cycles > 0xffff )
@@ -207,7 +206,7 @@ void HardSID::write (uint_least8_t addr, uint8_t data)
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, m_phase);
+    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while ( cycles > 0xffff )
@@ -238,17 +237,17 @@ void HardSID::voice (uint_least8_t num, bool mute)
 
 void HardSID::event (void)
 {
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, m_phase);
+    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     if (cycles < HARDSID_DELAY_CYCLES)
     {
         m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES - cycles,
-                  m_phase);
+                  EVENT_CLOCK_PHI1);
     }
     else
     {
         m_accessClk += cycles;
         ioctl(m_handle, HSID_IOCTL_DELAY, (uint) cycles);
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, m_phase);
+        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
 }
 
@@ -278,7 +277,7 @@ bool HardSID::lock(EventContext* env)
             return false;
         m_locked = true;
         m_eventContext = env;
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, m_phase);
+        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
     return true;
 }

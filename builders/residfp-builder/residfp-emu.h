@@ -31,7 +31,6 @@ class ReSIDfp: public sidemu
 {
 private:
     EventContext *m_context;
-    event_phase_t m_phase;
     class RESID_NAMESPACE::SID &m_sid;
     event_clock_t m_accessClk;
     const  char  *m_error;
