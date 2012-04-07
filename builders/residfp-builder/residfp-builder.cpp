@@ -1,40 +1,24 @@
-/***************************************************************************
-         resid-builder.cpp - ReSIDfp builder class for creating/controlling
-                             resids.
-                             -------------------
-    begin                : Wed Sep 5 2001
-    copyright            : (C) 2001 by Simon White
-    email                : s_a_white@email.com
- ***************************************************************************/
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-/***************************************************************************
- *  $Log: resid-builder.cpp,v $
- *  Revision 1.6  2002/10/17 18:45:31  s_a_white
- *  Exit unlock function early once correct sid is found.
+/*
+ * This file is part of libsidplayfp, a SID player engine.
  *
- *  Revision 1.5  2002/03/04 19:06:38  s_a_white
- *  Fix C++ use of nothrow.
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2001 Simon White
  *
- *  Revision 1.4  2002/01/29 21:58:28  s_a_white
- *  Moved out sid emulation to a private header file.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  Revision 1.3  2001/12/11 19:33:18  s_a_white
- *  More GCC3 Fixes.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  Revision 1.2  2001/12/09 10:53:50  s_a_white
- *  Added exporting of credits.
- *
- *  Revision 1.1.1.1  2001/11/25 15:03:20  s_a_white
- *  Initial Release
- *
- ***************************************************************************/
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #include <stdio.h>
 #include <cstring>
@@ -130,7 +114,7 @@ const char *ReSIDfpBuilder::credits ()
 }
 
 
-uint ReSIDfpBuilder::devices (bool created)
+uint ReSIDfpBuilder::devices (const bool created)
 {
     m_status = true;
     if (created)
@@ -139,7 +123,7 @@ uint ReSIDfpBuilder::devices (bool created)
         return 0;
 }
 
-void ReSIDfpBuilder::filter (bool enable)
+void ReSIDfpBuilder::filter (const bool enable)
 {
     const int size = sidobjs.size ();
     m_status = true;
@@ -173,7 +157,7 @@ void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 }
 
 // Find a free SID of the required specs
-sidemu *ReSIDfpBuilder::lock (EventContext *env, sid2_model_t model)
+sidemu *ReSIDfpBuilder::lock (EventContext *env, const sid2_model_t model)
 {
     const int size = sidobjs.size ();
     m_status = true;

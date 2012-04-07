@@ -1,30 +1,36 @@
-/***************************************************************************
-                          sidbuilder.h  -  Sid Builder Classes
-                             -------------------
-    begin                : Sat May 6 2001
-    copyright            : (C) 2000 by Simon White
-    email                : s_a_white@email.com
- ***************************************************************************/
+/*
+ * This file is part of libsidplayfp, a SID player engine.
+ *
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2000-2001 Simon White
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-
-#ifndef _sidbuilder_h_
-#define _sidbuilder_h_
+#ifndef SIDBUILDER_H
+#define SIDBUILDER_H
 
 #include "sid2types.h"
 #include "component.h"
 #include "event.h"
 
 
-// Inherit this class to create a new SID emulations for libsidplay2.
+// Inherit this class to create a new SID emulation.
 class sidbuilder;
+
 class sidemu: public component
 {
 private:
@@ -48,12 +54,12 @@ public:
     virtual const   char *credits (void) = 0;
 
     // Standard SID functions
-    virtual void          voice   (uint_least8_t num, bool mute) = 0;
-    sidbuilder           *builder (void) const { return m_builder; }
+    virtual void    voice   (uint_least8_t num, bool mute) = 0;
+    sidbuilder     *builder (void) const { return m_builder; }
 
-    virtual int bufferpos() { return m_bufferpos; }
-    virtual void bufferpos(int pos) { m_bufferpos = pos; }
-    virtual short *buffer() { return m_buffer; }
+    virtual int bufferpos() const { return m_bufferpos; }
+    virtual void bufferpos(const int pos) { m_bufferpos = pos; }
+    virtual short *buffer() const { return m_buffer; }
 
     virtual void sampling(float systemfreq, float outputfreq,
     const sampling_method_t method, const bool fast) { return; }
@@ -72,7 +78,7 @@ public:
         : m_name(name), m_status (true) {;}
     virtual ~sidbuilder() {;}
 
-    virtual  sidemu      *lock    (EventContext *env, sid2_model_t model) = 0;
+    virtual  sidemu      *lock    (EventContext *env, const sid2_model_t model) = 0;
     virtual  void         unlock  (sidemu *device) = 0;
     const    char        *name    (void) const { return m_name; }
     virtual  const  char *error   (void) const = 0;
@@ -80,7 +86,7 @@ public:
     virtual  void         filter  (bool enable) = 0;
 
     // Determine current state of object (true = okay, false = error).
-    bool           getStatus() const { return m_status; }
+    bool     getStatus() const { return m_status; }
 };
 
-#endif // _sidbuilder_h_
+#endif // SIDBUILDER_H

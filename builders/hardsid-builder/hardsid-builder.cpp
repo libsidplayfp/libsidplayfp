@@ -1,50 +1,24 @@
-/***************************************************************************
-         hardsid-builder.cpp - HardSID builder class for creating/controlling
-                               HardSIDs.
-                               -------------------
-    begin                : Wed Sep 5 2001
-    copyright            : (C) 2001 by Simon White
-    email                : s_a_white@email.com
- ***************************************************************************/
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-/***************************************************************************
- *  $Log: hardsid-builder.cpp,v $
- *  Revision 1.9  2004/05/05 23:48:01  s_a_white
- *  Detect available sid devices on Unix system.
+/*
+ * This file is part of libsidplayfp, a SID player engine.
  *
- *  Revision 1.8  2003/10/18 13:31:58  s_a_white
- *  Improved hardsid.dll load failure error messages.
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2001 Simon White
  *
- *  Revision 1.7  2003/06/27 07:07:00  s_a_white
- *  Use new hardsid.dll muting interface.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  Revision 1.6  2002/10/17 18:37:43  s_a_white
- *  Exit unlock function early once correct sid is found.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  Revision 1.5  2002/08/20 19:21:53  s_a_white
- *  Updated version information.
- *
- *  Revision 1.4  2002/08/09 18:11:35  s_a_white
- *  Added backwards compatibility support for older hardsid.dll.
- *
- *  Revision 1.3  2002/07/20 08:36:24  s_a_white
- *  Remove unnecessary and pointless conts.
- *
- *  Revision 1.2  2002/03/04 19:07:07  s_a_white
- *  Fix C++ use of nothrow.
- *
- *  Revision 1.1  2002/01/28 22:35:20  s_a_white
- *  Initial Release.
- *
- *
- ***************************************************************************/
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #include <stdio.h>
 #include <cstring>
@@ -144,7 +118,7 @@ HardSIDBuilder_create_error:
     return count;
 }
 
-uint HardSIDBuilder::devices (bool created)
+uint HardSIDBuilder::devices (const bool created)
 {
     m_status = true;
     if (created)
@@ -182,7 +156,7 @@ void HardSIDBuilder::flush(void)
         static_cast<HardSID*>(sidobjs[i])->flush();
 }
 
-void HardSIDBuilder::filter (bool enable)
+void HardSIDBuilder::filter (const bool enable)
 {
     const int size = sidobjs.size ();
     m_status = true;
@@ -194,7 +168,7 @@ void HardSIDBuilder::filter (bool enable)
 }
 
 // Find a free SID of the required specs
-sidemu *HardSIDBuilder::lock (EventContext *env, sid2_model_t model)
+sidemu *HardSIDBuilder::lock (EventContext *env, const sid2_model_t model)
 {
     const int size = sidobjs.size ();
     m_status = true;
