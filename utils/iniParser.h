@@ -16,38 +16,38 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _INIPARSER_
-#define _INIPARSER_
+#ifndef INIPARSER_H
+#define INIPARSER_H
 
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <map>
 
-class iniParser {
+class iniParser
+{
 
 private:
-	typedef std::map<std::string, std::string> keys_t;
+    typedef std::map<std::string, std::string> keys_t;
 
-	std::map<std::string, keys_t> sections;
+    std::map<std::string, keys_t> sections;
 
-	class emptyPair {};
+    class emptyPair {};
 
-	std::string parseSection(const char* buffer);
-	std::pair<std::string, std::string> parseKey(const char* buffer);
+    std::string parseSection(const char* buffer);
+    std::pair<std::string, std::string> parseKey(const char* buffer);
 
-	std::map<std::string, keys_t>::const_iterator curSection;
+    std::map<std::string, keys_t>::const_iterator curSection;
 
 public:
-	iniParser() {};
-	~iniParser() {};
+    iniParser() {};
+    ~iniParser() {};
 
-	bool open(const char* fName);
-	void close();
+    bool open(const char* fName);
+    void close();
 
-	bool setSection(const char* section);
-	const char* getValue(const char* key);
+    bool setSection(const char* section);
+    const char* getValue(const char* key);
 };
 
-#endif
-
+#endif // INIPARSER_H
