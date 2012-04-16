@@ -175,7 +175,13 @@ void WaveformGenerator::writeCONTROL_REG(const unsigned char control) {
 	if (waveform == 0 && waveform_prev != 0) {
 		// Change to floating DAC input.
 		// Reset fading time for floating DAC input.
-		floating_output_ttl = 0x4000;
+
+		// FIXME
+		// This value has been adjusted aleatorily from the original reSID value (0x4000)
+		// to fix MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
+		// see VICE Bug 3515933
+		// http://sourceforge.net/tracker/?func=detail&aid=3515933&group_id=223021&atid=1057617
+		floating_output_ttl = 0x9000;
 	}
 }
 
