@@ -1,6 +1,6 @@
 m4_define([lib_major], [0])
 m4_define([lib_minor], [3])
-m4_define([lib_level], [4])
+m4_define([lib_level], [5])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version])
@@ -93,7 +93,7 @@ LIBRESIDAGE=1
 LIBRESIDVERSION=$LIBRESIDCUR:$LIBRESIDREV:$LIBRESIDAGE
 
 LIBRESIDFPCUR=1
-LIBRESIDFPREV=4
+LIBRESIDFPREV=5
 LIBRESIDFPAGE=0
 LIBRESIDFPVERSION=$LIBRESIDFPCUR:$LIBRESIDFPREV:$LIBRESIDFPAGE
 

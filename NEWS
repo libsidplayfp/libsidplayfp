@@ -1,3 +1,9 @@
+0.3.5 2012-04-22
+* Increase the waveform TTL in reSIDfp
+* Restore external filter high-pass resistor value to 1kOhm in reSIDfp
+
+
+
 0.3.4 2012-03-26
 * fixed possible crackling when muting and unmuting channels in reSID
 * removed useless dithering and implemented clipping with a single branch
