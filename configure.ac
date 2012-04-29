@@ -141,11 +141,12 @@ AC_CHECK_HEADERS([mmintrin.h])
 CPPFLAGS=$saveCPPFLAGS
 
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
-[AC_TRY_COMPILE(,
-[
-bool flag;
-],
-ac_cv_cxx_bool=yes, ac_cv_cxx_bool=no)])
+[AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM([],
+    [[bool flag;]])],
+  [ac_cv_cxx_bool=yes],
+  [ac_cv_cxx_bool=no])]
+)
 
 if test $ac_cv_cxx_bool = no; then
   RESID_HAVE_BOOL=0
@@ -167,8 +168,7 @@ AS_IF([test "$enable_branch_hints" != no],
 
 
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
-  [AC_COMPILE_IFELSE(
-    [AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
+  [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
     [resid_cv_builtin_expect=yes], [resid_cv_builtin_expect=no])])
 
 AS_IF([test "$resid_cv_builtin_expect" = no],
