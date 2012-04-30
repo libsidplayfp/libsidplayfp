@@ -111,6 +111,7 @@ struct SidTuneInfo
     //@}
 
     /// Available after song initialization.
+
     /// the one that has been initialized
     uint_least16_t currentSong;
 
@@ -144,13 +145,13 @@ struct SidTuneInfo
     /// --- not yet supported ---
     uint_least16_t songLength;
 
+    /// the number of available text info lines
+    uint_least8_t numberOfInfoStrings;
+
     /**
     * Song title, credits, ...
     * 0 = Title, 1 = Author, 2 = Copyright/Publisher
     */
-    uint_least8_t numberOfInfoStrings;
-
-    /// the number of available text info lines
     char* infoString[SIDTUNE_MAX_CREDIT_STRINGS];
 
     /// --- not yet supported ---
