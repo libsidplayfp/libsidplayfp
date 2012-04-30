@@ -142,9 +142,6 @@ struct SidTuneInfo
     /// whether load address might be duplicate
     bool fixLoad;
 
-    /// --- not yet supported ---
-    uint_least16_t songLength;
-
     /// the number of available text info lines
     uint_least8_t numberOfInfoStrings;
 

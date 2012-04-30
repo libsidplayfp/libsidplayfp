@@ -196,7 +196,6 @@ uint_least16_t SidTune::selectSong(const uint_least16_t selectedSong)
         info.statusString = SidTune::txt_songNumberExceed;
     }
     info.currentSong = song;
-    info.songLength = 0;
     // Retrieve song speed definition.
     if (info.compatibility == SIDTUNE_COMPATIBILITY_R64)
         info.songSpeed = SIDTUNE_SPEED_CIA_1A;
@@ -345,7 +344,6 @@ void SidTune::init()
     info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
     info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
     info.compatibility = SIDTUNE_COMPATIBILITY_C64;
-    info.songLength = 0;
     info.relocStartPage = 0;
     info.relocPages = 0;
 
