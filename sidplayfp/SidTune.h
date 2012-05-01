@@ -98,7 +98,10 @@ struct SidTuneInfo
     uint_least16_t initAddr;
     uint_least16_t playAddr;
 
+    /// number of songs in the tune
     uint_least16_t songs;
+
+    /// the default starting song
     uint_least16_t startSong;
 
     /**
@@ -110,15 +113,18 @@ struct SidTuneInfo
     uint_least16_t sidChipBase2;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID)
     //@}
 
-    /// Available after song initialization.
+    // Available after song initialization.
 
-    /// the one that has been initialized
+    /// the song that has been initialized
     uint_least16_t currentSong;
 
-    /// intended speed, see top
+    /**
+    * song speed: vertical blank interrupt (50Hz PAL, 60Hz NTSC)
+    * or CIA 1 timer interrupt (default 60Hz)
+    */
     uint_least8_t songSpeed;
 
-    /// -"-
+    /// specifies the video standard (clock)
     sidtune_clock_t clockSpeed;
 
     /// First available page for relocation
