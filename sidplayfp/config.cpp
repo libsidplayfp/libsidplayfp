@@ -96,7 +96,7 @@ Player_configure_error:
 // Clock speed changes due to loading a new song
 float64_t Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced)
 {
-    sid2_clock_t clockSpeed = m_tuneInfo.clockSpeed;
+    sidtune_clock_t clockSpeed = m_tuneInfo.clockSpeed;
 
     // Use preferred speed if forced or if song speed is unknown
     if (forced || clockSpeed == SIDTUNE_CLOCK_UNKNOWN || clockSpeed == SIDTUNE_CLOCK_ANY)
