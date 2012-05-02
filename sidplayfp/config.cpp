@@ -39,8 +39,7 @@ int Player::config (const sid2_config_t &cfg)
         m_tune->getInfo(m_tuneInfo);
 
         // Determine clock speed
-        const float64_t cpuFreq = clockSpeed (cfg.clockSpeed, cfg.clockDefault,
-                              cfg.clockForced);
+        const float64_t cpuFreq = clockSpeed (cfg.clockDefault, cfg.clockForced);
 
         // SID emulation setup (must be performed before the
         // environment setup call)
@@ -95,77 +94,48 @@ Player_configure_error:
 }
 
 // Clock speed changes due to loading a new song
-float64_t Player::clockSpeed (sid2_clock_t userClock, sid2_clock_t defaultClock,
-                              bool forced)
+float64_t Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced)
 {
-    float64_t cpuFreq = c64::CLOCK_FREQ_PAL;
+    sid2_clock_t clockSpeed = m_tuneInfo.clockSpeed;
 
-    // Detect the Correct Song Speed
-    // Determine song speed when unknown
-    if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_UNKNOWN)
+    // Use preferred speed if forced or if song speed is unknown
+    if (forced || clockSpeed == SIDTUNE_CLOCK_UNKNOWN || clockSpeed == SIDTUNE_CLOCK_ANY)
     {
         switch (defaultClock)
         {
         case SID2_CLOCK_PAL:
-            m_tuneInfo.clockSpeed = SIDTUNE_CLOCK_PAL;
+            clockSpeed = SIDTUNE_CLOCK_PAL;
             break;
         case SID2_CLOCK_NTSC:
-            m_tuneInfo.clockSpeed = SIDTUNE_CLOCK_NTSC;
-            break;
-        case SID2_CLOCK_CORRECT:
-            // No default so base it on emulation clock
-            m_tuneInfo.clockSpeed = SIDTUNE_CLOCK_ANY;
-        }
-    }
-
-    // Since song will run correct at any clock speed
-    // set tune speed to the current emulation
-    if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_ANY)
-    {
-        if (userClock == SID2_CLOCK_CORRECT)
-            userClock  = defaultClock;
-
-        m_tuneInfo.clockSpeed = (userClock == SID2_CLOCK_NTSC) ?
-            SIDTUNE_CLOCK_NTSC : SIDTUNE_CLOCK_PAL;
-    }
-
-    if (userClock == SID2_CLOCK_CORRECT)
-    {
-        switch (m_tuneInfo.clockSpeed)
-        {
-        case SIDTUNE_CLOCK_NTSC:
-            userClock = SID2_CLOCK_NTSC;
-            break;
-        case SIDTUNE_CLOCK_PAL:
-            userClock = SID2_CLOCK_PAL;
+            clockSpeed = SIDTUNE_CLOCK_NTSC;
             break;
         }
     }
 
-    if (forced)
-    {
-        m_tuneInfo.clockSpeed = (userClock == SID2_CLOCK_NTSC) ?
-            SIDTUNE_CLOCK_NTSC : SIDTUNE_CLOCK_PAL;
-    }
+    float64_t cpuFreq;
 
-    if (userClock == SID2_CLOCK_PAL)
+    switch (clockSpeed)
     {
+    case SIDTUNE_CLOCK_PAL:
         cpuFreq = c64::CLOCK_FREQ_PAL;
-        m_tuneInfo.speedString = TXT_PAL_VBI;
         if (m_tuneInfo.songSpeed == SIDTUNE_SPEED_CIA_1A)
             m_tuneInfo.speedString = TXT_PAL_CIA;
         else if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_NTSC)
             m_tuneInfo.speedString = TXT_PAL_VBI_FIXED;
-    }
-    else // if (userClock == SID2_CLOCK_NTSC)
-    {
+        else
+            m_tuneInfo.speedString = TXT_PAL_VBI;
+        break;
+    case SIDTUNE_CLOCK_NTSC:
         cpuFreq = c64::CLOCK_FREQ_NTSC;
-        m_tuneInfo.speedString = TXT_NTSC_VBI;
         if (m_tuneInfo.songSpeed == SIDTUNE_SPEED_CIA_1A)
             m_tuneInfo.speedString = TXT_NTSC_CIA;
         else if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
             m_tuneInfo.speedString = TXT_NTSC_VBI_FIXED;
+        else
+            m_tuneInfo.speedString = TXT_NTSC_VBI;
+        break;
     }
+
     return cpuFreq;
 }
 

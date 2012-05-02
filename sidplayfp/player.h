@@ -79,8 +79,7 @@ private:
     bool            m_status;
 
 private:
-    float64_t clockSpeed     (sid2_clock_t clock, sid2_clock_t defaultClock,
-                              const bool forced);
+    float64_t clockSpeed     (const sid2_clock_t defaultClock, const bool forced);
     int       initialise     (void);
     int       sidCreate(sidbuilder *builder, const sid2_model_t userModel,
                        const sid2_model_t defaultModel, const int channels,

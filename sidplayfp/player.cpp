@@ -87,9 +87,8 @@ Player::Player (void)
     m_info.maxsids         = SidBank::MAX_SIDS;
 
     // Configure default settings
-    m_cfg.clockDefault    = SID2_CLOCK_CORRECT;
+    m_cfg.clockDefault    = SID2_CLOCK_PAL;
     m_cfg.clockForced     = false;
-    m_cfg.clockSpeed      = SID2_CLOCK_CORRECT;
     m_cfg.forceDualSids   = false;
     m_cfg.frequency       = SID2_DEFAULT_SAMPLING_FREQ;
     m_cfg.playback        = sid2_mono;
