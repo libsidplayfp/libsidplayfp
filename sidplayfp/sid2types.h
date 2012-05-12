@@ -20,9 +20,7 @@
 
 #include <stdint.h>
 
-class   sidbuilder;
-class   EventContext;
-struct  SidTuneInfo;
+class sidbuilder;
 
 typedef unsigned int uint;
 typedef double   float64_t;

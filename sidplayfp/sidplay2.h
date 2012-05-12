@@ -24,7 +24,9 @@
 #include "sidconfig.h"
 #include "sidversion.h"
 
-class SidTune;
+class  SidTune;
+class  EventContext;
+struct SidTuneInfo;
 
 // Private Sidplayer
 namespace SIDPLAY2_NAMESPACE
