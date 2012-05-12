@@ -51,8 +51,6 @@ const char SidTune::txt_fileTooLong[] = "SIDTUNE ERROR: Input data too long";
 const char SidTune::txt_dataTooLong[] = "SIDTUNE ERROR: Size of music data exceeds C64 memory";
 const char SidTune::txt_cantCreateFile[] = "SIDTUNE ERROR: Could not create output file";
 const char SidTune::txt_fileIoError[] = "SIDTUNE ERROR: File I/O error";
-const char SidTune::txt_VBI[] = "VBI";
-const char SidTune::txt_CIA[] = "CIA 1 Timer A";
 const char SidTune::txt_noErrors[] = "No errors";
 const char SidTune::txt_na[] = "N/A";
 const char SidTune::txt_badAddr[] = "SIDTUNE ERROR: Bad address data";
@@ -210,12 +208,7 @@ uint_least16_t SidTune::selectSong(const uint_least16_t selectedSong)
     else
         info.songSpeed = songSpeed[song-1];
     info.clockSpeed = clockSpeed[song-1];
-    // Assign song speed description string depending on clock speed.
-    // Final speed description is available only after song init.
-    if (info.songSpeed == SIDTUNE_SPEED_VBI)
-        info.speedString = txt_VBI;
-    else
-        info.speedString = txt_CIA;
+
     return info.currentSong;
 }
 
@@ -332,7 +325,6 @@ void SidTune::init()
     info.path = info.infoFileName = info.dataFileName = 0;
     info.dataFileLen = info.c64dataLen = 0;
     info.formatString = SidTune::txt_na;
-    info.speedString = SidTune::txt_na;
     info.loadAddr = ( info.initAddr = ( info.playAddr = 0 ));
     info.songs = ( info.startSong = ( info.currentSong = 0 ));
     info.sidChipBase1 = 0xd400;

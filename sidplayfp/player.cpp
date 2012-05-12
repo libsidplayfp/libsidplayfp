@@ -77,13 +77,14 @@ Player::Player (void)
     m_rand = (uint_least32_t) rand ();
 
     // Setup exported info
+    m_info.name            = PACKAGE_NAME;
+    m_info.version         = PACKAGE_VERSION;
     m_info.credits         = credit;
+    m_info.maxsids         = SidBank::MAX_SIDS;
     m_info.channels        = 1;
     m_info.driverAddr      = 0;
     m_info.driverLength    = 0;
-    m_info.name            = PACKAGE_NAME;
-    m_info.version         = PACKAGE_VERSION;
-    m_info.maxsids         = SidBank::MAX_SIDS;
+    m_info.speedString     = TXT_NA;
 
     // Configure default settings
     m_cfg.clockDefault    = SID2_CLOCK_PAL;

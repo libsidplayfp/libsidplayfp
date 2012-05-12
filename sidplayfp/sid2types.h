@@ -103,20 +103,23 @@ struct sid2_config_t
 */
 struct sid2_info_t
 {
+    const char        *name;
+    const char        *version;
     const char       **credits;
+
+    /// Number of SIDs supported by this library
+    uint               maxsids;
 
     /// Number of output channels (1-mono, 2-stereo)
     uint               channels;
 
     uint_least16_t     driverAddr;
     uint_least16_t     driverLength;
-    const char        *name;
-    const char        *version;
-
-    /// Number of SIDs supported by this library
-    uint               maxsids;
 
     uint_least16_t     powerOnDelay;
+
+    /// Describes the speed current song is running at
+    const char       *speedString;
 };
 
 #endif // _sid2types_h_

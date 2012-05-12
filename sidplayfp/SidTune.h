@@ -91,9 +91,6 @@ struct SidTuneInfo
     /// error/status message of last operation
     const char* statusString;
 
-    /// describing the speed a song is running at
-    const char* speedString;
-
     uint_least16_t loadAddr;
     uint_least16_t initAddr;
     uint_least16_t playAddr;
@@ -402,8 +399,6 @@ class SID_EXTERN SidTune
     static const char txt_dataTooLong[];
     static const char txt_cantCreateFile[];
     static const char txt_fileIoError[];
-    static const char txt_VBI[];
-    static const char txt_CIA[];
     static const char txt_noErrors[];
     static const char txt_na[];
     static const char txt_badAddr[];

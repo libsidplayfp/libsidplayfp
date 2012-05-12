@@ -119,20 +119,20 @@ float64_t Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced
     case SIDTUNE_CLOCK_PAL:
         cpuFreq = c64::CLOCK_FREQ_PAL;
         if (m_tuneInfo.songSpeed == SIDTUNE_SPEED_CIA_1A)
-            m_tuneInfo.speedString = TXT_PAL_CIA;
+            m_info.speedString = TXT_PAL_CIA;
         else if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_NTSC)
-            m_tuneInfo.speedString = TXT_PAL_VBI_FIXED;
+            m_info.speedString = TXT_PAL_VBI_FIXED;
         else
-            m_tuneInfo.speedString = TXT_PAL_VBI;
+            m_info.speedString = TXT_PAL_VBI;
         break;
     case SIDTUNE_CLOCK_NTSC:
         cpuFreq = c64::CLOCK_FREQ_NTSC;
         if (m_tuneInfo.songSpeed == SIDTUNE_SPEED_CIA_1A)
-            m_tuneInfo.speedString = TXT_NTSC_CIA;
+            m_info.speedString = TXT_NTSC_CIA;
         else if (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL)
-            m_tuneInfo.speedString = TXT_NTSC_VBI_FIXED;
+            m_info.speedString = TXT_NTSC_VBI_FIXED;
         else
-            m_tuneInfo.speedString = TXT_NTSC_VBI;
+            m_info.speedString = TXT_NTSC_VBI;
         break;
     }
 
