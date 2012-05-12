@@ -92,9 +92,9 @@ Player::Player (void)
     m_cfg.forceDualSids   = false;
     m_cfg.frequency       = SID2_DEFAULT_SAMPLING_FREQ;
     m_cfg.playback        = sid2_mono;
-    m_cfg.sidDefault      = SID2_MODEL_CORRECT;
+    m_cfg.sidDefault      = SID2_MOS6581;
+    m_cfg.forceModel      = false;
     m_cfg.sidEmulation    = NULL;
-    m_cfg.sidModel        = SID2_MODEL_CORRECT;
     m_cfg.leftVolume      = Mixer::VOLUME_MAX;
     m_cfg.rightVolume     = Mixer::VOLUME_MAX;
     m_cfg.powerOnDelay    = SID2_DEFAULT_POWER_ON_DELAY;

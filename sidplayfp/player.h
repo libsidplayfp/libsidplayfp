@@ -81,14 +81,13 @@ private:
 private:
     float64_t clockSpeed     (const sid2_clock_t defaultClock, const bool forced);
     int       initialise     (void);
-    int       sidCreate(sidbuilder *builder, const sid2_model_t userModel,
-                       const sid2_model_t defaultModel, const int channels,
+    int       sidCreate(sidbuilder *builder, const sid2_model_t defaultModel,
+                       const bool forced, const int channels,
                        const float64_t cpuFreq, const int frequency,
                        const sampling_method_t sampling);
     uint8_t   iomap          (const uint_least16_t addr);
-    sid2_model_t getModel(const int sidModel,
-                          sid2_model_t userModel,
-                          sid2_model_t defaultModel);
+
+    static sid2_model_t getModel (const sidtune_model_t sidModel, const sid2_model_t defaultModel, const bool forced);
 
     uint16_t getChecksum(const uint8_t* rom, const int size);
 

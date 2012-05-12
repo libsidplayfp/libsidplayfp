@@ -41,7 +41,7 @@ typedef double   float64_t;
 
 typedef enum {sid2_playing = 0, sid2_stopped} sid2_player_t;
 typedef enum {sid2_mono = 1,  sid2_stereo} sid2_playback_t;
-typedef enum {SID2_MODEL_CORRECT, SID2_MOS6581, SID2_MOS8580} sid2_model_t;
+typedef enum {SID2_MOS6581, SID2_MOS8580} sid2_model_t;
 typedef enum {SID2_CLOCK_PAL, SID2_CLOCK_NTSC} sid2_clock_t;
 typedef enum {SID2_INTERPOLATE, SID2_RESAMPLE_INTERPOLATE} sampling_method_t;
 
@@ -50,29 +50,35 @@ typedef enum {SID2_INTERPOLATE, SID2_RESAMPLE_INTERPOLATE} sampling_method_t;
 */
 struct sid2_config_t
 {
-    /// Intended tune speed when unknown
+    /**
+    * Intended tune speed when unknown or forced
+    * - SID2_CLOCK_PAL
+    * - SID2_CLOCK_NTSC
+    */
     sid2_clock_t        clockDefault;
     bool                clockForced;
 
     bool                forceDualSids;
     bool                emulateStereo;
     uint_least32_t      frequency;
+
     /**
     * Playbak mode
     * - sid2_mono
     * - sid2_stereo
     */
     sid2_playback_t     playback;
+
     /**
-    * Intended sid model when unknown
-    * - SID2_MODEL_CORRECT
+    * Intended sid model when unknown or forced
     * - SID2_MOS6581
     * - SID2_MOS8580
     */
     sid2_model_t        sidDefault;
+    bool                forceModel;
+
     sidbuilder         *sidEmulation;
-    /// User requested sid model
-    sid2_model_t        sidModel;
+
     uint_least32_t      leftVolume;
     uint_least32_t      rightVolume;
     uint_least16_t      powerOnDelay;

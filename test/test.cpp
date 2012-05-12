@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 	cfg.fastSampling=false;
 	cfg.playback=sid2_stereo;
 	cfg.sidEmulation=rs;
-	cfg.sidModel=SID2_MODEL_CORRECT;
+	cfg.sidDefault=SID2_MOS6581;
 	m_engine.config(cfg);
 
 	tune->selectSong(0);

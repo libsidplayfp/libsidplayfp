@@ -43,7 +43,7 @@ int Player::config (const sid2_config_t &cfg)
 
         // SID emulation setup (must be performed before the
         // environment setup call)
-        if (sidCreate(cfg.sidEmulation, cfg.sidModel, cfg.sidDefault,
+        if (sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
             cfg.playback == sid2_stereo ? 2 : 1, cpuFreq, cfg.frequency, cfg.samplingMethod) < 0) {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = NULL;
@@ -139,72 +139,41 @@ float64_t Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced
     return cpuFreq;
 }
 
-sid2_model_t Player::getModel(int sidModel,
-                              sid2_model_t userModel,
-                              sid2_model_t defaultModel)
+sid2_model_t Player::getModel(const sidtune_model_t sidModel, const sid2_model_t defaultModel, const bool forced)
 {
-    if (sidModel == SIDTUNE_SIDMODEL_UNKNOWN)
+    sidtune_model_t tuneModel = sidModel;
+
+    // Use preferred speed if forced or if song speed is unknown
+    if (forced || tuneModel == SIDTUNE_SIDMODEL_UNKNOWN || tuneModel == SIDTUNE_SIDMODEL_ANY)
     {
         switch (defaultModel)
         {
         case SID2_MOS6581:
-            sidModel = SIDTUNE_SIDMODEL_6581;
+            tuneModel = SIDTUNE_SIDMODEL_6581;
             break;
         case SID2_MOS8580:
-            sidModel = SIDTUNE_SIDMODEL_8580;
-            break;
-        case SID2_MODEL_CORRECT:
-            // No default so base it on emulation clock
-            sidModel = SIDTUNE_SIDMODEL_ANY;
-        }
-    }
-
-    // Since song will run correct on any sid model
-    // set it to the current emulation
-    if (sidModel == SIDTUNE_SIDMODEL_ANY)
-    {
-        if (userModel == SID2_MODEL_CORRECT)
-            userModel  = defaultModel;
-
-        switch (userModel)
-        {
-        case SID2_MOS8580:
-            sidModel = SIDTUNE_SIDMODEL_8580;
-            break;
-        case SID2_MOS6581:
-        default:
-            sidModel = SIDTUNE_SIDMODEL_6581;
+            tuneModel = SIDTUNE_SIDMODEL_8580;
             break;
         }
     }
 
-    switch (userModel)
+    sid2_model_t newModel;
+
+    switch (tuneModel)
     {
-    case SID2_MODEL_CORRECT:
-        switch (sidModel)
-        {
-        case SIDTUNE_SIDMODEL_8580:
-            userModel = SID2_MOS8580;
-            break;
-        case SIDTUNE_SIDMODEL_6581:
-            userModel = SID2_MOS6581;
-            break;
-        }
-    break;
-    // Fixup tune information if model is forced
-    case SID2_MOS6581:
-        sidModel = SIDTUNE_SIDMODEL_6581;
+    case SIDTUNE_CLOCK_PAL:
+        newModel = SID2_MOS6581;
         break;
-    case SID2_MOS8580:
-        sidModel = SIDTUNE_SIDMODEL_8580;
+    case SIDTUNE_CLOCK_NTSC:
+        newModel = SID2_MOS8580;
         break;
     }
 
-    return userModel;
+    return newModel;
 }
 
-int Player::sidCreate (sidbuilder *builder, const sid2_model_t userModel,
-                       const sid2_model_t defaultModel, const int channels,
+int Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
+                       const bool forced, const int channels,
                        const float64_t cpuFreq, const int frequency,
                        const sampling_method_t sampling)
 {
@@ -225,10 +194,10 @@ int Player::sidCreate (sidbuilder *builder, const sid2_model_t userModel,
         // Determine model when unknown
         sid2_model_t userModels[SidBank::MAX_SIDS];
 
-        userModels[0] = getModel(m_tuneInfo.sidModel1, userModel, defaultModel);
+        userModels[0] = getModel(m_tuneInfo.sidModel1, defaultModel, forced);
         // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
         // model as the first SID.
-        userModels[1] = getModel(m_tuneInfo.sidModel2, userModel, userModels[0]);
+        userModels[1] = getModel(m_tuneInfo.sidModel2, userModels[0], forced);
 
         for (int i = 0; i < channels; i++)
         {   // Get first SID emulation
