@@ -60,6 +60,8 @@ struct sid2_config_t
 
     bool                forceDualSids;
     bool                emulateStereo;
+
+    /// Sampling frequency
     uint_least32_t      frequency;
 
     /**
@@ -81,6 +83,7 @@ struct sid2_config_t
 
     uint_least32_t      leftVolume;
     uint_least32_t      rightVolume;
+
     uint_least16_t      powerOnDelay;
 
     /**
@@ -89,6 +92,7 @@ struct sid2_config_t
     * - SID2_RESAMPLE_INTERPOLATE
     */
     sampling_method_t   samplingMethod;
+
     /**
     * Faster low-quality emulation
     * available only for reSID
@@ -102,12 +106,18 @@ struct sid2_config_t
 struct sid2_info_t
 {
     const char       **credits;
+
+    /// Number of output channels (1-mono, 2-stereo)
     uint               channels;
+
     uint_least16_t     driverAddr;
     uint_least16_t     driverLength;
     const char        *name;
     const char        *version;
+
+    /// Number of SIDs supported by this library
     uint               maxsids;
+
     uint_least16_t     powerOnDelay;
 };
 

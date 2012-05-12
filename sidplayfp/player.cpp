@@ -83,7 +83,6 @@ Player::Player (void)
     m_info.driverLength    = 0;
     m_info.name            = PACKAGE_NAME;
     m_info.version         = PACKAGE_VERSION;
-    // Number of SIDs support by this library
     m_info.maxsids         = SidBank::MAX_SIDS;
 
     // Configure default settings
