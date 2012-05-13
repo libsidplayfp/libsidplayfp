@@ -211,7 +211,7 @@ int Player::initialise ()
         }
     }
 
-    if (psidDrvReloc (m_tuneInfo, m_info) < 0)
+    if (psidDrvReloc (m_c64.getMmu()) < 0)
         return -1;
 
     if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()->getMem()))

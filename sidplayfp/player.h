@@ -95,7 +95,7 @@ private:
     uint_least32_t (Player::*output) (char *buffer);
 
     // PSID driver
-    int  psidDrvReloc   (SidTuneInfo &tuneInfo, sid2_info_t &info);
+    int  psidDrvReloc (MMU *mmu);
 
 #ifdef PC64_TESTSUITE
     void load (const char *file)
