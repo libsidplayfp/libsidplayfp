@@ -63,6 +63,9 @@ int Player::psidDrvReloc (MMU *mmu)
     const int startlp = m_tuneInfo.loadAddr >> 8;
     const int endlp   = (m_tuneInfo.loadAddr + (m_tuneInfo.c64dataLen - 1)) >> 8;
 
+    uint_least8_t relocStartPage = m_tuneInfo.relocStartPage;
+    uint_least8_t relocPages = m_tuneInfo.relocPages;
+
     // Will get done later if can't now
     mmu->writeMemByte(0x02a6, (m_tuneInfo.clockSpeed == SIDTUNE_CLOCK_PAL) ? 1 : 0);
 
@@ -70,17 +73,17 @@ int Player::psidDrvReloc (MMU *mmu)
     {   // The psiddrv is only used for initialisation and to
         // autorun basic tunes as running the kernel falls
         // into a manual load/run mode
-        m_tuneInfo.relocStartPage = 0x04;
-        m_tuneInfo.relocPages     = 0x03;
+        relocStartPage = 0x04;
+        relocPages     = 0x03;
     }
 
     // Check for free space in tune
-    if (m_tuneInfo.relocStartPage == 0xff)
-        m_tuneInfo.relocPages = 0;
+    if (relocStartPage == 0xff)
+        relocPages = 0;
     // Check if we need to find the reloc addr
-    else if (m_tuneInfo.relocStartPage == 0)
+    else if (relocStartPage == 0)
     {
-        m_tuneInfo.relocPages = 0;
+        relocPages = 0;
         /* find area where to dump the driver in.
         * It's only 1 block long, so any free block we can find will do. */
         for (int i = 4; i < 0xd0; i ++)
@@ -91,20 +94,20 @@ int Player::psidDrvReloc (MMU *mmu)
             if (i >= 0xa0 && i <= 0xbf)
                 continue;
 
-            m_tuneInfo.relocStartPage = i;
-            m_tuneInfo.relocPages = 1;
+            relocStartPage = i;
+            relocPages = 1;
             break;
         }
     }
 
-    if (m_tuneInfo.relocPages < 1)
+    if (relocPages < 1)
     {
         m_errorString = ERR_PSIDDRV_NO_SPACE;
         return -1;
     }
 
     // Place psid driver into ram
-    uint_least16_t relocAddr = m_tuneInfo.relocStartPage << 8;
+    uint_least16_t relocAddr = relocStartPage << 8;
 
     uint8_t psid_driver[] = {
 #      include "psiddrv.bin"
