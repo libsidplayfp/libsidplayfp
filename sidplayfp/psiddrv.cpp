@@ -183,7 +183,7 @@ int Player::psidDrvReloc (MMU *mmu)
     pos++;
 
     // Add the required tune speed
-    switch ((m_tune->getInfo()).clockSpeed)
+    switch (m_tuneInfo.clockSpeed)
     {
     case SIDTUNE_CLOCK_PAL:
         mmu->writeMemByte(pos, 1);
