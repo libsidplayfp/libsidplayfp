@@ -74,6 +74,7 @@ void MMU::updateMappingPHI2()
 void MMU::reset()
 {
     ramBank.reset();
+    zeroRAMBank.reset();
     kernalRomBank.reset();
     basicRomBank.reset();
     characterRomBank.reset();
