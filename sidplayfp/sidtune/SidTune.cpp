@@ -1010,7 +1010,8 @@ const char *SidTune::createMD5(char *md5)
             for (unsigned int s = 1; s <= info->m_songs; s++)
             {
                 selectSong (s);
-                myMD5.append (&info->m_songSpeed,sizeof(info->m_songSpeed));
+                const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
+                myMD5.append (&songSpeed,sizeof(songSpeed));
             }
             // Restore old song
             selectSong (currentSong);
