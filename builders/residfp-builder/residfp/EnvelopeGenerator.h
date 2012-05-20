@@ -72,9 +72,6 @@ private:
 	 */
 	int exponential_counter_period;
 
-	/** The current digital value of envelope output. */
-	unsigned char envelope_counter;
-
 	/** Attack register */
 	int attack;
 
@@ -100,6 +97,18 @@ private:
 	/** Gate bit */
 	bool gate;
 
+	/** The current digital value of envelope output. */
+	unsigned char envelope_counter;
+
+	/**
+	 * Emulated nonlinearity of the envelope DAC.
+	 *
+	 * @See SID.kinked_dac
+	 */
+	short dac[256];
+
+	void set_exponential_counter();
+
 	/**
 	 * Lookup table to convert from attack, decay, or release value to rate
 	 * counter period.
@@ -112,15 +121,6 @@ private:
 	 * see <a href="http://blog.kevtris.org/?p=13">kevtris.org</a>
 	 */
 	static const int adsrtable[16];
-
-	/**
-	 * Emulated nonlinearity of the envelope DAC.
-	 *
-	 * @See SID.kinked_dac
-	 */
-	short dac[256];
-
-	void set_exponential_counter();
 
 public:
 	/**
