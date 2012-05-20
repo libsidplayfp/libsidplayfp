@@ -114,33 +114,6 @@ private:
 	static const int adsrtable[16];
 
 	/**
-	 * The 16 selectable sustain levels.
-	 * <P>
-	 * For decay and release, the clock to the envelope counter is sequentially divided by 1, 2, 4, 8, 16, 30, 1 to create a piece-wise linear approximation of an exponential. The exponential counter
-	 * period is loaded at the envelope counter values 255, 93, 54, 26, 14, 6, 0. The period can be different for the same envelope counter value, depending on whether the envelope has been rising
-	 * (attack -> release) or sinking (decay/release).
-	 * <P>
-	 * Since it is not possible to reset the rate counter (the test bit has no influence on the envelope generator whatsoever) a method must be devised to do cycle exact sampling of ENV3 to do the
-	 * investigation. This is possible with knowledge of the rate period for A=0, found above.
-	 * <P>
-	 * The CPU can be synchronized with ENV3 by first synchronizing with the rate counter by setting A=0 and wait in a carefully timed loop for the envelope counter _not_ to change for 9 cycles. We
-	 * can then wait for a specific value of ENV3 with another timed loop to fully synchronize with ENV3.
-	 * <P>
-	 * At the first period when an exponential counter period larger than one is used (decay or relase), one extra cycle is spent before the envelope is decremented. The envelope output is then
-	 * delayed one cycle until the state is changed to attack. Now one cycle less will be spent before the envelope is incremented, and the situation is normalized.
-	 * <P>
-	 * The delay is probably caused by the comparison with the exponential counter, and does not seem to affect the rate counter. This has been verified by timing 256 consecutive complete envelopes
-	 * with A = D = R = 1, S = 0, using CIA1 timer A and B in linked mode. If the rate counter is not affected the period of each complete envelope is
-	 * <P>
-	 * (255 + 162*1 + 39*2 + 28*4 + 12*8 + 8*16 + 6*30)*32 = 756*32 = 32352
-	 * <P>
-	 * which corresponds exactly to the timed value divided by the number of complete envelopes.
-	 * <P>
-	 * <P>
-	 * From the sustain levels it follows that both the low and high 4 bits of the envelope counter are compared to the 4-bit sustain value. This has been verified by sampling ENV3.
-	 */
-
-	/**
 	 * Emulated nonlinearity of the envelope DAC.
 	 *
 	 * @See SID.kinked_dac
@@ -151,11 +124,11 @@ private:
 
 public:
 	/**
-	 * Set nonlinearity parameter for imperfect analog DAC emulation.
-	 * 1.0 means perfect 8580-like linearity, values between 0.95 - 0.97
-	 * are probably realistic 6581 nonlinearity values.
+	 * Set chip model.
+	 * This determines the type of the analog DAC emulation:
+	 * 8580 is perfectly linear while 6581 is nonlinear.
 	 *
-	 * @param nonLinearity
+	 * @param chipModel
 	 */
 	void setChipModel(const ChipModel chipModel);
 
@@ -266,23 +239,26 @@ void EnvelopeGenerator::clock() {
 
 		// Check whether the envelope counter is frozen at zero.
 		if (hold_zero) {
-		return;
+			return;
 		}
 
 		switch (state) {
-		case ATTACK:
-		// The envelope counter can flip from 0xff to 0x00 by changing state to
-		// release, then to attack. The envelope counter is then frozen at
-		// zero; to unlock this situation the state must be changed to release,
-		// then to attack. This has been verified by sampling ENV3.
-		//
-		++ envelope_counter;
-		if (envelope_counter == (unsigned char) 0xff) {
-			state = DECAY_SUSTAIN;
-			rate = adsrtable[decay];
-		}
-		break;
+			case ATTACK:
+			// The envelope counter can flip from 0xff to 0x00 by changing state to
+			// release, then to attack. The envelope counter is then frozen at
+			// zero; to unlock this situation the state must be changed to release,
+			// then to attack. This has been verified by sampling ENV3.
+			//
+			++ envelope_counter;
+			if (envelope_counter == (unsigned char) 0xff) {
+				state = DECAY_SUSTAIN;
+				rate = adsrtable[decay];
+			}
+			break;
 		case DECAY_SUSTAIN:
+			// From the sustain levels it follows that both the low and high 4 bits
+			// of the envelope counter are compared to the 4-bit sustain value.
+			// This has been verified by sampling ENV3.
 			if (envelope_counter == (unsigned char) (sustain << 4 | sustain)) {
 				return;
 			}
