@@ -29,7 +29,7 @@ namespace reSIDfp
 {
 
 /** @internal
- * A 15 bit counter is used to implement the envelope rates, in effect dividing
+ * A 15 bit LFSR is used to implement the envelope rates, in effect dividing
  * the clock to the envelope counter by the currently selected rate period.
  * <P>
  * In addition, another counter is used to implement the exponential envelope decay, in effect further dividing the clock to the envelope counter. The period of this counter is set to 1, 2, 4, 8, 16,
@@ -51,16 +51,14 @@ private:
 	};
 
 	/**
-	 * XOR shift register emulated via normal integer which implements delay
-	 * until the next envelope operation occurs. The XOR shift register has
-	 * 0x7fff different values to scan.
+	 * XOR shift register for ADSR prescaling
 	 */
-	int rate_counter;
+	int lfsr;
 
 	/**
 	 * Comparison value (period) of the rate counter before next event.
 	 */
-	int rate_period;
+	int rate;
 
 	/**
 	 * During release mode, the SID arpproximates envelope decay via piecewise
@@ -106,39 +104,14 @@ private:
 	 * Lookup table to convert from attack, decay, or release value to rate
 	 * counter period.
 	 * <P>
-	 * Rate counter periods are calculated from the Envelope Rates table in the Programmer's Reference Guide. The rate counter period is the number of cycles between each increment of the envelope
-	 * counter. The rates have been verified by sampling ENV3.
-	 * <P>
-	 * The rate counter is a 16 bit register which is incremented each cycle. When the counter reaches a specific comparison value, the envelope counter is incremented (attack) or decremented
-	 * (decay/release) and the counter is zeroed.
-	 * <P>
-	 * NB! Sampling ENV3 shows that the calculated values are not exact. It may seem like most calculated values have been rounded (.5 is rounded down) and 1 has beed added to the result. A possible
-	 * explanation for this is that the SID designers have used the calculated values directly as rate counter comparison values, not considering a one cycle delay to zero the counter. This would
-	 * yield an actual period of comparison value + 1.
-	 * <P>
-	 * The time of the first envelope count can not be exactly controlled, except possibly by resetting the chip. Because of this we cannot do cycle exact sampling and must devise another method to
-	 * calculate the rate counter periods.
-	 * <P>
-	 * The exact rate counter periods can be determined e.g. by counting the number of cycles from envelope level 1 to envelope level 129, and dividing the number of cycles by 128. CIA1 timer A and B
-	 * in linked mode can perform the cycle count. This is the method used to find the rates below.
-	 * <P>
-	 * To avoid the ADSR delay bug, sampling of ENV3 should be done using sustain = release = 0. This ensures that the attack state will not lower the current rate counter period.
-	 * <P>
-	 * The ENV3 sampling code below yields a maximum timing error of 14 cycles.
+	 * The rate counter is a 15 bit register which is left shifted each cycle.
+	 * When the counter reaches a specific comparison value,
+	 * the envelope counter is incremented (attack) or decremented
+	 * (decay/release) and the rate counter is resetted.
 	 *
-	 * <pre>
-	 *      lda #$01
-	 *  l1: cmp $d41c
-	 *      bne l1
-	 *      ...
-	 *      lda #$ff
-	 *  l2: cmp $d41c
-	 *      bne l2
-	 * </pre>
-	 * 
-	 * This yields a maximum error for the calculated rate period of 14/128 cycles. The described method is thus sufficient for exact calculation of the rate periods.
+	 * see <a href="http://blog.kevtris.org/?p=13">kevtris.org</a>
 	 */
-	static const int ENVELOPE_PERIOD[16];
+	static const int adsrtable[16];
 
 	/**
 	 * The 16 selectable sustain levels.
@@ -197,8 +170,8 @@ public:
 	 * Constructor.
 	 */
 	EnvelopeGenerator() :
-		rate_counter(0),
-		rate_period(0),
+		lfsr(0),
+		rate(0),
 		exponential_counter(0),
 		exponential_counter_period(1),
 		envelope_counter(0),
@@ -269,15 +242,20 @@ void EnvelopeGenerator::clock() {
 	// envelope can constly be stepped.
 	// This has been verified by sampling ENV3.
 	//
-	if ((++ rate_counter & 0x8000) != 0) {
-		rate_counter = (rate_counter + 1) & 0x7fff;
-	}
+	// Envelope is now implemented like in the real machine with a shift register
+	// so the ADSR delay bug should be correcly modeled
 
-	if (rate_counter != rate_period) {
+	// check to see if LFSR matches table value
+	if (lfsr != rate) {
+		// it wasn't a match, clock the LFSR once
+		// by performing XOR on last 2 bits
+		const int feedback = ((lfsr >> 14) ^ (lfsr >> 13)) & 0x01;
+		lfsr = ((lfsr << 1) & 0x7fff) | feedback;
 		return;
 	}
 
-	rate_counter = 0;
+	// reset LFSR
+	lfsr = 0x7fff;
 
 	// The first envelope step in the attack state also resets the exponential
 	// counter. This has been verified by sampling ENV3.
@@ -301,7 +279,7 @@ void EnvelopeGenerator::clock() {
 		++ envelope_counter;
 		if (envelope_counter == (unsigned char) 0xff) {
 			state = DECAY_SUSTAIN;
-			rate_period = ENVELOPE_PERIOD[decay];
+			rate = adsrtable[decay];
 		}
 		break;
 		case DECAY_SUSTAIN:

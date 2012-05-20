@@ -29,23 +29,23 @@
 namespace reSIDfp
 {
 
-const int EnvelopeGenerator::ENVELOPE_PERIOD[16] = {
-	9, //   2ms*1.0MHz/256 =     7.81
-	32, //   8ms*1.0MHz/256 =    31.25
-	63, //  16ms*1.0MHz/256 =    62.50
-	95, //  24ms*1.0MHz/256 =    93.75
-	149, //  38ms*1.0MHz/256 =   148.44
-	220, //  56ms*1.0MHz/256 =   218.75
-	267, //  68ms*1.0MHz/256 =   265.63
-	313, //  80ms*1.0MHz/256 =   312.50
-	392, // 100ms*1.0MHz/256 =   390.63
-	977, // 250ms*1.0MHz/256 =   976.56
-	1954, // 500ms*1.0MHz/256 =  1953.13
-	3126, // 800ms*1.0MHz/256 =  3125.00
-	3907, //   1 s*1.0MHz/256 =  3906.25
-	11720, //   3 s*1.0MHz/256 = 11718.75
-	19532, //   5 s*1.0MHz/256 = 19531.25
-	31251 //   8 s*1.0MHz/256 = 31250.00
+const int EnvelopeGenerator::adsrtable[16] = {
+	0x7F00,
+	0x0006,
+	0x003C,
+	0x0330,
+	0x20C0,
+	0x6755,
+	0x3800,
+	0x500E,
+	0x1212,
+	0x0222,
+	0x1848,
+	0x59B8,
+	0x3840,
+	0x77E2,
+	0x7625,
+	0x0A93
 };
 
 void EnvelopeGenerator::set_exponential_counter() {
@@ -108,12 +108,12 @@ void EnvelopeGenerator::reset() {
 
 	gate = false;
 
-	rate_counter = 0;
+	lfsr = 0x7fff;
 	exponential_counter = 0;
 	exponential_counter_period = 1;
 
 	state = RELEASE;
-	rate_period = ENVELOPE_PERIOD[release];
+	rate = adsrtable[release];
 	hold_zero = true;
 }
 
@@ -126,7 +126,7 @@ void EnvelopeGenerator::writeCONTROL_REG(const unsigned char control) {
 	// Gate bit on: Start attack, decay, sustain.
 	if (!gate && gate_next) {
 		state = ATTACK;
-		rate_period = ENVELOPE_PERIOD[attack];
+		rate = adsrtable[attack];
 
 		// Switching to attack state unlocks the zero freeze and aborts any
 		// pipelined envelope decrement.
@@ -138,7 +138,7 @@ void EnvelopeGenerator::writeCONTROL_REG(const unsigned char control) {
 	// Gate bit off: Start release.
 	else if (gate && !gate_next) {
 		state = RELEASE;
-		rate_period = ENVELOPE_PERIOD[release];
+		rate = adsrtable[release];
 	}
 
 	gate = gate_next;
@@ -148,9 +148,9 @@ void EnvelopeGenerator::writeATTACK_DECAY(const unsigned char attack_decay) {
 	attack = (attack_decay >> 4) & 0x0f;
 	decay = attack_decay & 0x0f;
 	if (state == ATTACK) {
-		rate_period = ENVELOPE_PERIOD[attack];
+		rate = adsrtable[attack];
 	} else if (state == DECAY_SUSTAIN) {
-		rate_period = ENVELOPE_PERIOD[decay];
+		rate = adsrtable[decay];
 	}
 }
 
@@ -158,7 +158,7 @@ void EnvelopeGenerator::writeSUSTAIN_RELEASE(const unsigned char sustain_release
 	sustain = (sustain_release >> 4) & 0x0f;
 	release = sustain_release & 0x0f;
 	if (state == RELEASE) {
-		rate_period = ENVELOPE_PERIOD[release];
+		rate = adsrtable[release];
 	}
 }
 
