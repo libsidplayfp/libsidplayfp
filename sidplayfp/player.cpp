@@ -202,8 +202,10 @@ int Player::initialise ()
 
     m_c64.reset ();
 
+    const SidTuneInfo* tuneInfo = m_tune->getInfo();
+
     {
-        const uint_least32_t page = (uint_least32_t) m_tuneInfo.loadAddr + m_tuneInfo.c64dataLen - 1;
+        const uint_least32_t page = (uint_least32_t) tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
         if (page > 0xffff)
         {
             m_errorString = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
@@ -216,7 +218,7 @@ int Player::initialise ()
 
     if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()->getMem()))
     {   // Rev 1.6 (saw) - Allow loop through errors
-        m_errorString = (m_tune->getInfo()).statusString;
+        m_errorString = tuneInfo->statusString();
         return -1;
     }
 

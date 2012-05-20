@@ -95,6 +95,7 @@ sidplayfp/sidtune/prg.cpp \
 sidplayfp/sidtune/PSID.cpp \
 sidplayfp/sidtune/SidTune.cpp \
 sidplayfp/sidtune/SidTuneCfg.h \
+sidplayfp/sidtune/SidTuneInfoImpl.h \
 sidplayfp/sidtune/SidTuneTools.cpp \
 sidplayfp/sidtune/SidTuneTools.h \
 utils/iniParser.cpp \
@@ -116,6 +117,7 @@ sidplayfp/sidconfig.h \
 sidplayfp/Buffer.h \
 sidplayfp/component.h \
 sidplayfp/event.h \
+sidplayfp/SidTuneInfo.h \
 sidplayfp/sid2types.h \
 sidplayfp/sidbuilder.h \
 sidplayfp/sidendian.h \

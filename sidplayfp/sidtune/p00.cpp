@@ -19,6 +19,7 @@
 #include "SidTuneCfg.h"
 #include "sidplayfp/SidTune.h"
 #include "SidTuneTools.h"
+#include "SidTuneInfoImpl.h"
 
 #define X00_ID_LEN   8
 #define X00_NAME_LEN 17
@@ -111,7 +112,7 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
     else if (strcmp (pHeader->id, _sidtune_id))
         return LOAD_NOT_MINE;
 
-    info.formatString = format;
+    info->m_formatString = format;
 
     // File types current supported
     if (type != X00_PRG)
@@ -119,7 +120,7 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
 
     if (bufLen < sizeof(X00Header)+2)
     {
-        info.formatString = _sidtune_truncated;
+        info->m_formatString = _sidtune_truncated;
         return LOAD_ERROR;
     }
 
@@ -130,13 +131,13 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
 
     // Automatic settings
     fileOffset         = sizeof(X00Header);
-    info.songs         = 1;
-    info.startSong     = 1;
-    info.compatibility = SIDTUNE_COMPATIBILITY_BASIC;
-    info.numberOfInfoStrings = 1;
-    info.infoString[0] = infoString[0];
+    info->m_songs         = 1;
+    info->m_startSong     = 1;
+    info->m_compatibility = SidTuneInfo::COMPATIBILITY_BASIC;
+    info->m_numberOfInfoStrings = 1;
+    info->m_infoString[0] = infoString[0];
 
     // Create the speed/clock setting table.
-    convertOldStyleSpeedToTables(~0, info.clockSpeed);
+    convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
     return LOAD_OK;
 }

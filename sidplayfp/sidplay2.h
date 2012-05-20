@@ -125,13 +125,6 @@ public:
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
 
     /**
-    * Get the currently loaded tune info
-    *
-    * To be removed, we should get the info directly from tune.
-    */
-    SidTuneInfo *getTuneInfo();
-
-    /**
     * Get the event scheduler
     *
     * @return the scheduler

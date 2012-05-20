@@ -19,6 +19,7 @@
 #include "SidTuneCfg.h"
 #include "sidplayfp/SidTune.h"
 #include "SidTuneTools.h"
+#include "SidTuneInfoImpl.h"
 
 static const char _sidtune_format_prg[] = "Tape image file (PRG)";
 static const char _sidtune_truncated[] = "ERROR: File is most likely truncated";
@@ -34,20 +35,20 @@ SidTune::LoadStatus SidTune::PRG_fileSupport(const char *fileName,
         return LOAD_NOT_MINE;
     }
 
-    info.formatString = _sidtune_format_prg;
+    info->m_formatString = _sidtune_format_prg;
     if (dataBuf.len() < 2)
     {
-        info.formatString = _sidtune_truncated;
+        info->m_formatString = _sidtune_truncated;
         return LOAD_ERROR;
     }
 
     // Automatic settings
-    info.songs         = 1;
-    info.startSong     = 1;
-    info.compatibility = SIDTUNE_COMPATIBILITY_BASIC;
-    info.numberOfInfoStrings = 0;
+    info->m_songs         = 1;
+    info->m_startSong     = 1;
+    info->m_compatibility = SidTuneInfo::COMPATIBILITY_BASIC;
+    info->m_numberOfInfoStrings = 0;
 
     // Create the speed/clock setting table.
-    convertOldStyleSpeedToTables(~0, info.clockSpeed);
+    convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
     return LOAD_OK;
 }

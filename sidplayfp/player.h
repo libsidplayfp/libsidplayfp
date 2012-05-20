@@ -66,7 +66,6 @@ private:
     Mixer   m_mixer;
 
     // User Configuration Settings
-    SidTuneInfo   m_tuneInfo;
     SidTune      *m_tune;
     sid2_info_t   m_info;
     sid2_config_t m_cfg;
@@ -87,7 +86,7 @@ private:
                        const sampling_method_t sampling);
     uint8_t   iomap          (const uint_least16_t addr);
 
-    static sid2_model_t getModel (const sidtune_model_t sidModel, const sid2_model_t defaultModel, const bool forced);
+    static sid2_model_t getModel (const SidTuneInfo::model_t sidModel, const sid2_model_t defaultModel, const bool forced);
 
     uint16_t getChecksum(const uint8_t* rom, const int size);
 
@@ -133,8 +132,6 @@ public:
     bool           getStatus() const { return m_status; }
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
-
-    SidTuneInfo *getTuneInfo() { return m_tune ? &m_tuneInfo : 0; }
 
     EventContext *getEventScheduler() {return m_c64.getEventScheduler(); }
 

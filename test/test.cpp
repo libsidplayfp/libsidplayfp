@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	SidTune		*tune=new SidTune(name);
 
 	if (!tune->getStatus()) {
-		printf("Error: %s\n", tune->getInfo().statusString);
+		printf("Error: %s\n", tune->getInfo()->statusString());
 		goto error;
 	}
 	rs->create(2);

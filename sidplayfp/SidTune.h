@@ -22,159 +22,14 @@
 #include "sidconfig.h"
 #include "Buffer.h"
 #include "SmartPtr.h"
+#include "SidTuneInfo.h"
 
 #include <stdint.h>
 #include <fstream>
 
-/// Also PSID file format limit.
-const uint_least16_t SIDTUNE_MAX_SONGS = 256;
-
-const uint_least16_t SIDTUNE_MAX_CREDIT_STRINGS = 10;
-
-/// 80 characters plus terminating zero.
-const uint_least16_t SIDTUNE_MAX_CREDIT_STRLEN = 80+1;
-
-const uint_least32_t SIDTUNE_MAX_MEMORY = 65536;
-
-/// C64KB+LOAD+PSID
-const uint_least32_t SIDTUNE_MAX_FILELEN = 65536+2+0x7C;
-
-/// Vertical-Blanking-Interrupt
-const int SIDTUNE_SPEED_VBI = 0;
-
-/// CIA 1 Timer A
-const int SIDTUNE_SPEED_CIA_1A = 60;
-
-typedef enum {
-    SIDTUNE_CLOCK_UNKNOWN,
-    SIDTUNE_CLOCK_PAL,
-    SIDTUNE_CLOCK_NTSC,
-    SIDTUNE_CLOCK_ANY
-} sidtune_clock_t;
-
-typedef enum {
-    SIDTUNE_SIDMODEL_UNKNOWN,
-    SIDTUNE_SIDMODEL_6581,
-    SIDTUNE_SIDMODEL_8580,
-    SIDTUNE_SIDMODEL_ANY
-} sidtune_model_t;
-
-typedef enum {
-    SIDTUNE_COMPATIBILITY_C64,   ///< File is C64 compatible
-    SIDTUNE_COMPATIBILITY_PSID,  ///< File is PSID specific
-    SIDTUNE_COMPATIBILITY_R64,   ///< File is Real C64 only
-    SIDTUNE_COMPATIBILITY_BASIC  ///< File requires C64 Basic
-} sidtune_compatibility_t;
-
 template class SID_EXTERN Buffer_sidtt<const uint_least8_t>;
 
-/**
-* An instance of this structure is used to transport values to
-* and from SidTune objects.
-*
-* You must read (i.e. activate) sub-song specific information
-* via:
-*        const SidTuneInfo& tuneInfo = SidTune[songNumber];
-*        const SidTuneInfo& tuneInfo = SidTune.getInfo();
-*        void SidTune.getInfo(tuneInfo&);
-*
-* Consider the following fields as read-only, because the SidTune class
-* does not provide an implementation of: bool setInfo(const SidTuneInfo&).
-* Currently, the only way to get the class to accept values which
-* are written to these fields is by creating a derived class.
-*/
-struct SidTuneInfo
-{
-    /// the name of the identified file format
-    const char* formatString;
-
-    /// error/status message of last operation
-    const char* statusString;
-
-    uint_least16_t loadAddr;
-    uint_least16_t initAddr;
-    uint_least16_t playAddr;
-
-    /// number of songs in the tune
-    uint_least16_t songs;
-
-    /// the default starting song
-    uint_least16_t startSong;
-
-    /**
-    * @name Base addresses
-    * The SID chip base address(es) used by the sidtune.
-    */
-    //@{
-    uint_least16_t sidChipBase1;    ///< 0xD400 (normal, 1st SID)
-    uint_least16_t sidChipBase2;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID)
-    //@}
-
-    // Available after song initialization.
-
-    /// the song that has been initialized
-    uint_least16_t currentSong;
-
-    /**
-    * song speed: vertical blank interrupt (50Hz PAL, 60Hz NTSC)
-    * or CIA 1 timer interrupt (default 60Hz)
-    */
-    uint_least8_t songSpeed;
-
-    /// specifies the video standard (clock)
-    sidtune_clock_t clockSpeed;
-
-    /// First available page for relocation
-    uint_least8_t relocStartPage;
-
-    /// Number of pages available for relocation
-    uint_least8_t relocPages;
-
-    /// whether Sidplayer routine has been installed
-    bool musPlayer;
-
-    /// Sid Model required for first sid
-    sidtune_model_t  sidModel1;
-
-    /// Sid Model required for second sid
-    sidtune_model_t  sidModel2;
-
-    /// compatibility requirements 
-    sidtune_compatibility_t  compatibility;
-
-    /// whether load address might be duplicate
-    bool fixLoad;
-
-    /// the number of available text info lines
-    uint_least8_t numberOfInfoStrings;
-
-    /**
-    * Song title, credits, ...
-    * 0 = Title, 1 = Author, 2 = Copyright/Publisher
-    */
-    char* infoString[SIDTUNE_MAX_CREDIT_STRINGS];
-
-    /// --- not yet supported ---
-    uint_least16_t numberOfCommentStrings;
-
-    /// --- not yet supported ---
-    char ** commentString;
-
-    /// length of single-file sidtune file
-    uint_least32_t dataFileLen;
-
-    /// length of raw C64 data without load address
-    uint_least32_t c64dataLen;
-
-    /// path to sidtune files; "", if cwd
-    char* path;
-
-    /// a first file: e.g. "foo.c64"; "", if none
-    char* dataFileName;
-
-    /// a second file: e.g. "foo.sid"; "", if none
-    char* infoFileName;
-};
+class SidTuneInfoImpl;
 
 #define SIDTUNE_MD5_LENGTH 32
 
@@ -190,6 +45,14 @@ class SID_EXTERN SidTune
         LOAD_OK,
         LOAD_ERROR
     } LoadStatus;
+
+    /// Also PSID file format limit.
+    static const uint_least16_t MAX_SONGS = 256;
+
+    /// C64KB+LOAD+PSID
+    static const uint_least32_t MAX_FILELEN = 65536+2+0x7C;
+
+    static const uint_least32_t MAX_MEMORY = 65536;
 
  private:
     char m_md5[SIDTUNE_MD5_LENGTH+1];
@@ -241,27 +104,20 @@ class SID_EXTERN SidTune
 
     /**
     * Select sub-song (0 = default starting song)
-    * and retrieve active song information.
-    */
-    const SidTuneInfo& operator[](const uint_least16_t songNum);
-
-    /**
-    * Select sub-song (0 = default starting song)
     * and return active song number out of [1,2,..,SIDTUNE_MAX_SONGS].
     */
-    uint_least16_t selectSong(const uint_least16_t songNum);
+    unsigned int selectSong(const unsigned int songNum);
 
     /**
     * Retrieve sub-song specific information.
-    * Beware! Still member-wise copy!
     */
-    const SidTuneInfo& getInfo();
+    const SidTuneInfo* getInfo() const;
 
     /**
-    * Get a copy of sub-song specific information.
-    * Beware! Still member-wise copy!
+    * Select sub-song (0 = default starting song)
+    * and retrieve active song information.
     */
-    void getInfo(SidTuneInfo&);
+    const SidTuneInfo* getInfo(const unsigned int songNum);
 
     /**
     * Determine current state of object (true = okay, false = error).
@@ -273,10 +129,7 @@ class SID_EXTERN SidTune
     /**
     * Whether sidtune uses two SID chips.
     */
-    bool isStereo() const
-    {
-        return (info.sidChipBase1!=0 && info.sidChipBase2!=0);
-    }
+    bool isStereo() const;
 
     /**
     * Copy sidtune into C64 memory (64 KB).
@@ -315,14 +168,14 @@ class SID_EXTERN SidTune
 
  protected:  // -------------------------------------------------------------
 
-    SidTuneInfo info;
+    SidTuneInfoImpl *info;
     bool status;
 
-    uint_least8_t songSpeed[SIDTUNE_MAX_SONGS];
-    sidtune_clock_t clockSpeed[SIDTUNE_MAX_SONGS];
+    uint_least8_t songSpeed[MAX_SONGS];
+    SidTuneInfo::clock_t clockSpeed[MAX_SONGS];
 
     /// holds text info from the format headers etc.
-    char infoString[SIDTUNE_MAX_CREDIT_STRINGS][SIDTUNE_MAX_CREDIT_STRLEN];
+    char infoString[SidTuneInfo::MAX_CREDIT_STRINGS][SidTuneInfo::MAX_CREDIT_STRLEN];
 
     /**
     * If your opendir() and readdir()->d_name return path names
@@ -351,7 +204,7 @@ class SID_EXTERN SidTune
 
     /// Convert 32-bit PSID-style speed word to internal tables.
     void convertOldStyleSpeedToTables(uint_least32_t speed,
-         sidtune_clock_t clock = SIDTUNE_CLOCK_PAL);
+         SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_PAL);
 
     static int convertPetsciiToAscii (SmartPtr_sidtt<const uint_least8_t>&, char*);
 
@@ -400,7 +253,6 @@ class SID_EXTERN SidTune
     static const char txt_cantCreateFile[];
     static const char txt_fileIoError[];
     static const char txt_noErrors[];
-    static const char txt_na[];
     static const char txt_badAddr[];
     static const char txt_badReloc[];
     static const char txt_corrupt[];

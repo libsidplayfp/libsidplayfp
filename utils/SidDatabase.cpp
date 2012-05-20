@@ -82,7 +82,7 @@ void SidDatabase::close ()
 
 int_least32_t SidDatabase::length (SidTune &tune)
 {
-    const uint_least16_t song = tune.getInfo().currentSong;
+    const uint_least16_t song = tune.getInfo()->currentSong();
     if (!song)
     {
         errorString = ERR_NO_SELECTED_SONG;

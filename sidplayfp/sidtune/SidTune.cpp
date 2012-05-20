@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include "SidTuneCfg.h"
+#include "SidTuneInfoImpl.h"
 #include "sidplayfp/SidTune.h"
 #include "SidTuneTools.h"
 #include "sidplayfp/sidendian.h"
@@ -52,7 +53,6 @@ const char SidTune::txt_dataTooLong[] = "SIDTUNE ERROR: Size of music data excee
 const char SidTune::txt_cantCreateFile[] = "SIDTUNE ERROR: Could not create output file";
 const char SidTune::txt_fileIoError[] = "SIDTUNE ERROR: File I/O error";
 const char SidTune::txt_noErrors[] = "No errors";
-const char SidTune::txt_na[] = "N/A";
 const char SidTune::txt_badAddr[] = "SIDTUNE ERROR: Bad address data";
 const char SidTune::txt_badReloc[] = "SIDTUNE ERROR: Bad reloc data";
 const char SidTune::txt_corrupt[] = "SIDTUNE ERROR: File is incomplete or corrupt";
@@ -159,57 +159,57 @@ bool SidTune::read(const uint_least8_t* data, uint_least32_t dataLen)
     return status;
 }
 
-const SidTuneInfo& SidTune::operator[](const uint_least16_t songNum)
+const SidTuneInfo* SidTune::getInfo() const
+{
+    return info;
+}
+
+const SidTuneInfo* SidTune::getInfo(const unsigned int songNum)
 {
     selectSong(songNum);
     return info;
 }
 
-void SidTune::getInfo(SidTuneInfo& outInfo)
+bool SidTune::isStereo() const
 {
-    outInfo = info;  // copy
-}
-
-const SidTuneInfo& SidTune::getInfo()
-{
-    return info;
+    return (info->m_sidChipBase1!=0 && info->m_sidChipBase2!=0);
 }
 
 // First check, whether a song is valid. Then copy any song-specific
 // variable information such a speed/clock setting to the info structure.
-uint_least16_t SidTune::selectSong(const uint_least16_t selectedSong)
+unsigned int SidTune::selectSong(const unsigned int selectedSong)
 {
     if ( !status )
         return 0;
     else
-        info.statusString = SidTune::txt_noErrors;
+        info->m_statusString = SidTune::txt_noErrors;
 
-    uint_least16_t song = selectedSong;
+    unsigned int song = selectedSong;
     // Determine and set starting song number.
     if (selectedSong == 0)
-        song = info.startSong;
-    if (selectedSong>info.songs || selectedSong>SIDTUNE_MAX_SONGS)
+        song = info->m_startSong;
+    if (selectedSong>info->m_songs || selectedSong>MAX_SONGS)
     {
-        song = info.startSong;
-        info.statusString = SidTune::txt_songNumberExceed;
+        song = info->m_startSong;
+        info->m_statusString = SidTune::txt_songNumberExceed;
     }
-    info.currentSong = song;
+    info->m_currentSong = song;
     // Retrieve song speed definition.
-    if (info.compatibility == SIDTUNE_COMPATIBILITY_R64)
-        info.songSpeed = SIDTUNE_SPEED_CIA_1A;
-    else if (info.compatibility == SIDTUNE_COMPATIBILITY_PSID)
+    if (info->m_compatibility == SidTuneInfo::COMPATIBILITY_R64)
+        info->m_songSpeed = SidTuneInfo::SPEED_CIA_1A;
+    else if (info->m_compatibility == SidTuneInfo::COMPATIBILITY_PSID)
     {   // This does not take into account the PlaySID bug upon evaluating the
         // SPEED field. It would most likely break compatibility to lots of
         // sidtunes, which have been converted from .SID format and vice versa.
         // The .SID format does the bit-wise/song-wise evaluation of the SPEED
         // value correctly, like it is described in the PlaySID documentation.
-        info.songSpeed = songSpeed[(song-1)&31];
+        info->m_songSpeed = songSpeed[(song-1)&31];
     }
     else
-        info.songSpeed = songSpeed[song-1];
-    info.clockSpeed = clockSpeed[song-1];
+        info->m_songSpeed = songSpeed[song-1];
+    info->m_clockSpeed = clockSpeed[song-1];
 
-    return info.currentSong;
+    return info->m_currentSong;
 }
 
 // ------------------------------------------------- private member functions
@@ -220,8 +220,8 @@ bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
     {
         // The Basic ROM sets these values on loading a file.
         // Program end address
-        const uint_least16_t start = info.loadAddr;
-        const uint_least16_t end   = start + info.c64dataLen;
+        const uint_least16_t start = info->m_loadAddr;
+        const uint_least16_t end   = start + info->m_c64dataLen;
         endian_little16(c64buf + 0x2d, end); // Variables start
         endian_little16(c64buf + 0x2f, end); // Arrays start
         endian_little16(c64buf + 0x31, end); // Strings start
@@ -229,10 +229,10 @@ bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
         endian_little16(c64buf + 0xae, end);
 
         // Copy data from cache to the correct destination.
-        memcpy(c64buf+info.loadAddr, cache.get()+fileOffset, info.c64dataLen);
-        info.statusString = SidTune::txt_noErrors;
+        memcpy(c64buf+info->m_loadAddr, cache.get()+fileOffset, info->m_c64dataLen);
+        info->m_statusString = SidTune::txt_noErrors;
 
-        if (info.musPlayer)
+        if (info->m_musPlayer)
         {
             MUS_installPlayer(c64buf);
         }
@@ -259,7 +259,7 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
 
     if ( !myIn.is_open() )
     {
-        info.statusString = SidTune::txt_cantOpenFile;
+        info->m_statusString = SidTune::txt_cantOpenFile;
         return false;
     }
 
@@ -268,7 +268,7 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
 
     if ( fileLen == 0 )
     {
-        info.statusString = SidTune::txt_empty;
+        info->m_statusString = SidTune::txt_empty;
         return false;
     }
 
@@ -280,7 +280,7 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
     if ( !fileBuf.assign(new uint_least8_t[fileLen], fileLen) )
 #endif
     {
-        info.statusString = SidTune::txt_notEnoughMemory;
+        info->m_statusString = SidTune::txt_notEnoughMemory;
         return false;
     }
 
@@ -290,11 +290,11 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
 
     if ( myIn.bad() )
     {
-        info.statusString = SidTune::txt_cantLoadFile;
+        info->m_statusString = SidTune::txt_cantLoadFile;
         return false;
     }
 
-    info.statusString = SidTune::txt_noErrors;
+    info->m_statusString = SidTune::txt_noErrors;
 
     myIn.close();
 
@@ -305,15 +305,15 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
 void SidTune::deleteFileNameCopies()
 {
     // When will it be fully safe to call delete[](0) on every system?
-    if ( info.dataFileName != 0 )
-        delete[] info.dataFileName;
-    if ( info.infoFileName != 0 )
-        delete[] info.infoFileName;
-    if ( info.path != 0 )
-        delete[] info.path;
-    info.dataFileName = 0;
-    info.infoFileName = 0;
-    info.path = 0;
+    if ( info->m_dataFileName != 0 )
+        delete[] info->m_dataFileName;
+    if ( info->m_infoFileName != 0 )
+        delete[] info->m_infoFileName;
+    if ( info->m_path != 0 )
+        delete[] info->m_path;
+    info->m_dataFileName = 0;
+    info->m_infoFileName = 0;
+    info->m_path = 0;
 }
 
 void SidTune::init()
@@ -321,70 +321,56 @@ void SidTune::init()
     // Initialize the object with some safe defaults.
     status = false;
 
-    info.statusString = SidTune::txt_na;
-    info.path = info.infoFileName = info.dataFileName = 0;
-    info.dataFileLen = info.c64dataLen = 0;
-    info.formatString = SidTune::txt_na;
-    info.loadAddr = ( info.initAddr = ( info.playAddr = 0 ));
-    info.songs = ( info.startSong = ( info.currentSong = 0 ));
-    info.sidChipBase1 = 0xd400;
-    info.sidChipBase2 = 0;
-    info.musPlayer = false;
-    info.fixLoad = false;
-    info.songSpeed = SIDTUNE_SPEED_VBI;
-    info.clockSpeed = SIDTUNE_CLOCK_UNKNOWN;
-    info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
-    info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
-    info.compatibility = SIDTUNE_COMPATIBILITY_C64;
-    info.relocStartPage = 0;
-    info.relocPages = 0;
+    info = new SidTuneInfoImpl();
 
-    for ( uint_least16_t si = 0; si < SIDTUNE_MAX_SONGS; si++ )
+    for ( uint_least16_t si = 0; si < MAX_SONGS; si++ )
     {
-        songSpeed[si] = info.songSpeed;
-        clockSpeed[si] = info.clockSpeed;
+        songSpeed[si] = info->m_songSpeed;
+        clockSpeed[si] = info->m_clockSpeed;
     }
 
     fileOffset = 0;
     musDataLen = 0;
 
-    for ( uint_least16_t sNum = 0; sNum < SIDTUNE_MAX_CREDIT_STRINGS; sNum++ )
+    for ( unsigned int sNum = 0; sNum < SidTuneInfo::MAX_CREDIT_STRINGS; sNum++ )
     {
-        for ( uint_least16_t sPos = 0; sPos < SIDTUNE_MAX_CREDIT_STRLEN; sPos++ )
+        for ( unsigned int sPos = 0; sPos < SidTuneInfo::MAX_CREDIT_STRLEN; sPos++ )
         {
             infoString[sNum][sPos] = 0;
         }
     }
-    info.numberOfInfoStrings = 0;
+    info->m_numberOfInfoStrings = 0;
 
     // Not used!!!
-    info.numberOfCommentStrings = 1;
+    info->m_numberOfCommentStrings = 1;
 #ifdef HAVE_EXCEPTIONS
-    info.commentString = new(std::nothrow) char* [info.numberOfCommentStrings];
+    info->m_commentString = new(std::nothrow) char* [info->m_numberOfCommentStrings];
 #else
-    info.commentString = new char* [info.numberOfCommentStrings];
+    info->m_commentString = new char* [info->m_numberOfCommentStrings];
 #endif
-    if (info.commentString != 0)
-        info.commentString[0] = SidTuneTools::myStrDup("--- SAVED WITH SIDPLAY ---");
+    if (info->m_commentString != 0)
+        info->m_commentString[0] = SidTuneTools::myStrDup("--- SAVED WITH SIDPLAY ---");
 }
 
 void SidTune::cleanup()
 {
     // Remove copy of comment field.
-    uint_least32_t strNum = 0;
+    unsigned int strNum = 0;
     // Check and remove every available line.
-    while (info.numberOfCommentStrings-- > 0)
+    while (info->m_numberOfCommentStrings-- > 0)
     {
-        if (info.commentString[strNum] != 0)
+        if (info->m_commentString[strNum] != 0)
         {
-            delete[] info.commentString[strNum];
-            info.commentString[strNum] = 0;
+            delete[] info->m_commentString[strNum];
+            info->m_commentString[strNum] = 0;
         }
         strNum++;  // next string
     };
-    delete[] info.commentString;  // free the array pointer
+    delete[] info->m_commentString;  // free the array pointer
 
     deleteFileNameCopies();
+
+    delete info;
 
     status = false;
 }
@@ -396,11 +382,11 @@ void SidTune::getFromStdIn()
     // Assume a failure, so we can simply return.
     status = false;
     // Assume the memory allocation to fail.
-    info.statusString = SidTune::txt_notEnoughMemory;
+    info->m_statusString = SidTune::txt_notEnoughMemory;
 #ifdef HAVE_EXCEPTIONS
-    uint_least8_t* fileBuf = new(std::nothrow) uint_least8_t[SIDTUNE_MAX_FILELEN];
+    uint_least8_t* fileBuf = new(std::nothrow) uint_least8_t[MAX_FILELEN];
 #else
-    uint_least8_t* fileBuf = new uint_least8_t[SIDTUNE_MAX_FILELEN];
+    uint_least8_t* fileBuf = new uint_least8_t[MAX_FILELEN];
 #endif
     if ( fileBuf == 0 )
     {
@@ -410,10 +396,10 @@ void SidTune::getFromStdIn()
     // This way we avoid choking on huge data.
     uint_least32_t i = 0;
     char datb;
-    while (std::cin.get(datb) && i<SIDTUNE_MAX_FILELEN)
+    while (std::cin.get(datb) && i<MAX_FILELEN)
         fileBuf[i++] = (uint_least8_t) datb;
-    info.dataFileLen = i;
-    getFromBuffer(fileBuf,info.dataFileLen);
+    info->m_dataFileLen = i;
+    getFromBuffer(fileBuf,info->m_dataFileLen);
     delete[] fileBuf;
 }
 
@@ -426,13 +412,13 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
 
     if (buffer==0 || bufferLen==0)
     {
-        info.statusString = SidTune::txt_empty;
+        info->m_statusString = SidTune::txt_empty;
         return;
     }
 
-    if (bufferLen > SIDTUNE_MAX_FILELEN)
+    if (bufferLen > MAX_FILELEN)
     {
-        info.statusString = SidTune::txt_fileTooLong;
+        info->m_statusString = SidTune::txt_fileTooLong;
         return;
     }
 
@@ -443,7 +429,7 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
 #endif
     if ( tmpBuf == 0 )
     {
-        info.statusString = SidTune::txt_notEnoughMemory;
+        info->m_statusString = SidTune::txt_notEnoughMemory;
         return;
     }
     memcpy(tmpBuf,buffer,bufferLen);
@@ -472,7 +458,7 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
         else
         {
             // No further single-file-formats available.
-            info.statusString = SidTune::txt_unrecognizedFormat;
+            info->m_statusString = SidTune::txt_unrecognizedFormat;
         }
     }
 
@@ -486,14 +472,14 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
                             Buffer_sidtt<const uint_least8_t>& buf)
 {
     // @FIXME@ - MUS
-    if ( info.numberOfInfoStrings == 3 )
+    if ( info->m_numberOfInfoStrings == 3 )
     {   // Add <?> (HVSC standard) to missing title, author, release fields
         for (int i = 0; i < 3; i++)
         {
             if (infoString[i][0] == '\0')
             {
                 strcpy (&infoString[i][0], "<?>");
-                info.infoString[i] = &infoString[i][0];
+                info->m_infoString[i] = &infoString[i][0];
             }
         }
     }
@@ -502,40 +488,40 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
     // Make a copy of the data file name and path, if available.
     if ( dataFileName != 0 )
     {
-        info.path = SidTuneTools::myStrDup(dataFileName);
+        info->m_path = SidTuneTools::myStrDup(dataFileName);
         if (isSlashedFileName)
         {
-            info.dataFileName = SidTuneTools::myStrDup(SidTuneTools::slashedFileNameWithoutPath(info.path));
-            *SidTuneTools::slashedFileNameWithoutPath(info.path) = 0;  // path only
+            info->m_dataFileName = SidTuneTools::myStrDup(SidTuneTools::slashedFileNameWithoutPath(info->m_path));
+            *SidTuneTools::slashedFileNameWithoutPath(info->m_path) = 0;  // path only
         }
         else
         {
-            info.dataFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(info.path));
-            *SidTuneTools::fileNameWithoutPath(info.path) = 0;  // path only
+            info->m_dataFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(info->m_path));
+            *SidTuneTools::fileNameWithoutPath(info->m_path) = 0;  // path only
         }
-        if ((info.path==0) || (info.dataFileName==0))
+        if ((info->m_path==0) || (info->m_dataFileName==0))
         {
-            info.statusString = SidTune::txt_notEnoughMemory;
+            info->m_statusString = SidTune::txt_notEnoughMemory;
             return false;
         }
     }
     else
     {
         // Provide empty strings.
-        info.path = SidTuneTools::myStrDup("");
-        info.dataFileName = SidTuneTools::myStrDup("");
+        info->m_path = SidTuneTools::myStrDup("");
+        info->m_dataFileName = SidTuneTools::myStrDup("");
     }
     // Make a copy of the info file name, if available.
     if ( infoFileName != 0 )
     {
         char* tmp = SidTuneTools::myStrDup(infoFileName);
         if (isSlashedFileName)
-            info.infoFileName = SidTuneTools::myStrDup(SidTuneTools::slashedFileNameWithoutPath(tmp));
+            info->m_infoFileName = SidTuneTools::myStrDup(SidTuneTools::slashedFileNameWithoutPath(tmp));
         else
-            info.infoFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(tmp));
-        if ((tmp==0) || (info.infoFileName==0))
+            info->m_infoFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(tmp));
+        if ((tmp==0) || (info->m_infoFileName==0))
         {
-            info.statusString = SidTune::txt_notEnoughMemory;
+            info->m_statusString = SidTune::txt_notEnoughMemory;
             return false;
         }
         delete[] tmp;
@@ -543,23 +529,23 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
     else
     {
         // Provide empty string.
-        info.infoFileName = SidTuneTools::myStrDup("");
+        info->m_infoFileName = SidTuneTools::myStrDup("");
     }
     // Fix bad sidtune set up.
-    if (info.songs > SIDTUNE_MAX_SONGS)
-        info.songs = SIDTUNE_MAX_SONGS;
-    else if (info.songs == 0)
-        info.songs++;
-    if (info.startSong > info.songs)
-        info.startSong = 1;
-    else if (info.startSong == 0)
-        info.startSong++;
+    if (info->m_songs > MAX_SONGS)
+        info->m_songs = MAX_SONGS;
+    else if (info->m_songs == 0)
+        info->m_songs++;
+    if (info->m_startSong > info->m_songs)
+        info->m_startSong = 1;
+    else if (info->m_startSong == 0)
+        info->m_startSong++;
 
-    if ( info.musPlayer )
+    if ( info->m_musPlayer )
         MUS_setPlayerAddress();
 
-    info.dataFileLen = buf.len();
-    info.c64dataLen = buf.len() - fileOffset;
+    info->m_dataFileLen = buf.len();
+    info->m_c64dataLen = buf.len() - fileOffset;
 
     // Calculate any remaining addresses and then
     // confirm all the file details are correct
@@ -570,29 +556,29 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
     if ( checkCompatibility() == false )
         return false;
 
-    if (info.dataFileLen >= 2)
+    if (info->m_dataFileLen >= 2)
     {
         // We only detect an offset of two. Some position independent
         // sidtunes contain a load address of 0xE000, but are loaded
         // to 0x0FFE and call player at 0x1000.
-        info.fixLoad = (endian_little16(buf.get()+fileOffset)==(info.loadAddr+2));
+        info->m_fixLoad = (endian_little16(buf.get()+fileOffset)==(info->m_loadAddr+2));
     }
 
     // Check the size of the data.
-    if ( info.c64dataLen > SIDTUNE_MAX_MEMORY )
+    if ( info->m_c64dataLen > MAX_MEMORY )
     {
-        info.statusString = SidTune::txt_dataTooLong;
+        info->m_statusString = SidTune::txt_dataTooLong;
         return false;
     }
-    else if ( info.c64dataLen == 0 )
+    else if ( info->m_c64dataLen == 0 )
     {
-        info.statusString = SidTune::txt_empty;
+        info->m_statusString = SidTune::txt_empty;
         return false;
     }
 
     cache.assign(buf.xferPtr(),buf.xferLen());
 
-    info.statusString = SidTune::txt_noErrors;
+    info->m_statusString = SidTune::txt_noErrors;
     return true;
 }
 
@@ -610,7 +596,7 @@ bool SidTune::createNewFileName(Buffer_sidtt<char>& destString,
 #endif
     if ( newBuf.isEmpty() )
     {
-        info.statusString = SidTune::txt_notEnoughMemory;
+        info->m_statusString = SidTune::txt_notEnoughMemory;
         return (status = false);
     }
     strcpy(newBuf.get(),sourceName);
@@ -714,24 +700,24 @@ void SidTune::getFromFiles(const char* fileName)
         return;
     }
 
-    info.statusString = SidTune::txt_unrecognizedFormat;
+    info->m_statusString = SidTune::txt_unrecognizedFormat;
     return;
 }
 
-void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, sidtune_clock_t clock)
+void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo::clock_t clock)
 {
     // Create the speed/clock setting tables.
     //
     // This routine implements the PSIDv2NG compliant speed conversion.  All tunes
     // above 32 use the same song speed as tune 32
-    const int toDo = ((info.songs <= SIDTUNE_MAX_SONGS) ? info.songs : SIDTUNE_MAX_SONGS);
+    const int toDo = ((info->m_songs <= MAX_SONGS) ? info->m_songs : MAX_SONGS);
     for (int s = 0; s < toDo; s++)
     {
         clockSpeed[s] = clock;
         if (speed & 1)
-            songSpeed[s] = SIDTUNE_SPEED_CIA_1A;
+            songSpeed[s] = SidTuneInfo::SPEED_CIA_1A;
         else
-            songSpeed[s] = SIDTUNE_SPEED_VBI;
+            songSpeed[s] = SidTuneInfo::SPEED_VBI;
         if (s < 31)
             speed >>= 1;
     }
@@ -751,12 +737,12 @@ bool SidTune::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer,
 
     if ( toFile.bad() )
     {
-        info.statusString = SidTune::txt_fileIoError;
+        info->m_statusString = SidTune::txt_fileIoError;
         return false;
     }
     else
     {
-        info.statusString = SidTune::txt_noErrors;
+        info->m_statusString = SidTune::txt_noErrors;
         return true;
     }
 }
@@ -781,28 +767,28 @@ bool SidTune::saveC64dataFile( const char* fileName, bool overWriteFlag )
         std::ofstream fMyOut( fileName, createAttr );
         if ( !fMyOut || fMyOut.tellp()>0 )
         {
-            info.statusString = SidTune::txt_cantCreateFile;
+            info->m_statusString = SidTune::txt_cantCreateFile;
         }
         else
         {
-            if ( !info.musPlayer )
+            if ( !info->m_musPlayer )
             {
                 // Save c64 lo/hi load address.
                 uint_least8_t saveAddr[2];
-                saveAddr[0] = info.loadAddr & 255;
-                saveAddr[1] = info.loadAddr >> 8;
+                saveAddr[0] = info->m_loadAddr & 255;
+                saveAddr[1] = info->m_loadAddr >> 8;
                 fMyOut.write((char*)saveAddr,2);
             }
 
             // Data starts at: bufferaddr + fileOffset
-            // Data length: info.dataFileLen - fileOffset
-            if ( !saveToOpenFile( fMyOut,cache.get()+fileOffset, info.dataFileLen - fileOffset ) )
+            // Data length: info->m_dataFileLen - fileOffset
+            if ( !saveToOpenFile( fMyOut,cache.get()+fileOffset, info->m_dataFileLen - fileOffset ) )
             {
-                info.statusString = SidTune::txt_fileIoError;
+                info->m_statusString = SidTune::txt_fileIoError;
             }
             else
             {
-                info.statusString = SidTune::txt_noErrors;
+                info->m_statusString = SidTune::txt_noErrors;
                 success = true;
             }
             fMyOut.close();
@@ -831,17 +817,17 @@ bool SidTune::savePSIDfile( const char* fileName, bool overWriteFlag )
         std::ofstream fMyOut( fileName, createAttr );
         if ( !fMyOut || fMyOut.tellp()>0 )
         {
-            info.statusString = SidTune::txt_cantCreateFile;
+            info->m_statusString = SidTune::txt_cantCreateFile;
         }
         else
         {
             if ( !PSID_fileSupportSave( fMyOut,cache.get() ) )
             {
-                info.statusString = SidTune::txt_fileIoError;
+                info->m_statusString = SidTune::txt_fileIoError;
             }
             else
             {
-                info.statusString = SidTune::txt_noErrors;
+                info->m_statusString = SidTune::txt_noErrors;
                 success = true;
             }
             fMyOut.close();
@@ -853,34 +839,34 @@ bool SidTune::savePSIDfile( const char* fileName, bool overWriteFlag )
 bool SidTune::checkRelocInfo (void)
 {
     // Fix relocation information
-    if (info.relocStartPage == 0xFF)
+    if (info->m_relocStartPage == 0xFF)
     {
-        info.relocPages = 0;
+        info->m_relocPages = 0;
         return true;
     }
-    else if (info.relocPages == 0)
+    else if (info->m_relocPages == 0)
     {
-        info.relocStartPage = 0;
+        info->m_relocStartPage = 0;
         return true;
     }
 
     // Calculate start/end page
-    const uint_least8_t startp = info.relocStartPage;
-    const uint_least8_t endp   = (startp + info.relocPages - 1) & 0xff;
+    const uint_least8_t startp = info->m_relocStartPage;
+    const uint_least8_t endp   = (startp + info->m_relocPages - 1) & 0xff;
     if (endp < startp)
     {
-        info.statusString = txt_badReloc;
+        info->m_statusString = txt_badReloc;
         return false;
     }
 
     {    // Check against load range
-        const uint_least8_t startlp = (uint_least8_t) (info.loadAddr >> 8);
-        const uint_least8_t endlp   = startlp + (uint_least8_t) ((info.c64dataLen - 1) >> 8);
+        const uint_least8_t startlp = (uint_least8_t) (info->m_loadAddr >> 8);
+        const uint_least8_t endlp   = startlp + (uint_least8_t) ((info->m_c64dataLen - 1) >> 8);
 
         if ( ((startp <= startlp) && (endp >= startlp)) ||
              ((startp <= endlp)   && (endp >= endlp)) )
         {
-            info.statusString = txt_badReloc;
+            info->m_statusString = txt_badReloc;
             return false;
         }
     }
@@ -893,7 +879,7 @@ bool SidTune::checkRelocInfo (void)
         || ((0xa0 <= endp) && (endp <= 0xbf))
         || (endp >= 0xd0))
     {
-        info.statusString = txt_badReloc;
+        info->m_statusString = txt_badReloc;
         return false;
     }
     return true;
@@ -902,66 +888,66 @@ bool SidTune::checkRelocInfo (void)
 bool SidTune::resolveAddrs (const uint_least8_t *c64data)
 {   // Originally used as a first attempt at an RSID
     // style format. Now reserved for future use
-    if ( info.playAddr == 0xffff )
-        info.playAddr  = 0;
+    if ( info->m_playAddr == 0xffff )
+        info->m_playAddr  = 0;
 
     // loadAddr = 0 means, the address is stored in front of the C64 data.
-    if ( info.loadAddr == 0 )
+    if ( info->m_loadAddr == 0 )
     {
-        if ( info.c64dataLen < 2 )
+        if ( info->m_c64dataLen < 2 )
         {
-            info.statusString = txt_corrupt;
+            info->m_statusString = txt_corrupt;
             return false;
         }
-        info.loadAddr = endian_16( *(c64data+1), *c64data );
+        info->m_loadAddr = endian_16( *(c64data+1), *c64data );
         fileOffset += 2;
         c64data += 2;
-        info.c64dataLen -= 2;
+        info->m_c64dataLen -= 2;
     }
 
-    if ( info.compatibility == SIDTUNE_COMPATIBILITY_BASIC )
+    if ( info->m_compatibility == SidTuneInfo::COMPATIBILITY_BASIC )
     {
-        if ( info.initAddr != 0 )
+        if ( info->m_initAddr != 0 )
         {
-            info.statusString = txt_badAddr;
+            info->m_statusString = txt_badAddr;
             return false;
         }
     }
-    else if ( info.initAddr == 0 )
-        info.initAddr = info.loadAddr;
+    else if ( info->m_initAddr == 0 )
+        info->m_initAddr = info->m_loadAddr;
     return true;
 }
 
 bool SidTune::checkCompatibility (void)
 {
-    switch ( info.compatibility )
+    switch ( info->m_compatibility )
     {
-    case SIDTUNE_COMPATIBILITY_R64:
+    case SidTuneInfo::COMPATIBILITY_R64:
         // Check valid init address
-        switch (info.initAddr >> 12)
+        switch (info->m_initAddr >> 12)
         {
         case 0x0F:
         case 0x0E:
         case 0x0D:
         case 0x0B:
         case 0x0A:
-            info.statusString = txt_badAddr;
+            info->m_statusString = txt_badAddr;
             return false;
         default:
-            if ( (info.initAddr < info.loadAddr) ||
-                 (info.initAddr > (info.loadAddr + info.c64dataLen - 1)) )
+            if ( (info->m_initAddr < info->m_loadAddr) ||
+                 (info->m_initAddr > (info->m_loadAddr + info->m_c64dataLen - 1)) )
             {
-                info.statusString = txt_badAddr;
+                info->m_statusString = txt_badAddr;
                 return false;
             }
         }
         // deliberate run on
 
-    case SIDTUNE_COMPATIBILITY_BASIC:
+    case SidTuneInfo::COMPATIBILITY_BASIC:
         // Check tune is loadable on a real C64
-        if ( info.loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR )
+        if ( info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR )
         {
-            info.statusString = txt_badAddr;
+            info->m_statusString = txt_badAddr;
             return false;
         }
         break;
@@ -1010,21 +996,21 @@ const char *SidTune::createMD5(char *md5)
     {   // Include C64 data.
         MD5 myMD5;
         md5_byte_t tmp[2];
-        myMD5.append (cache.get()+fileOffset,info.c64dataLen);
+        myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
         // Include INIT and PLAY address.
-        endian_little16 (tmp,info.initAddr);
+        endian_little16 (tmp,info->m_initAddr);
         myMD5.append    (tmp,sizeof(tmp));
-        endian_little16 (tmp,info.playAddr);
+        endian_little16 (tmp,info->m_playAddr);
         myMD5.append    (tmp,sizeof(tmp));
         // Include number of songs.
-        endian_little16 (tmp,info.songs);
+        endian_little16 (tmp,info->m_songs);
         myMD5.append    (tmp,sizeof(tmp));
         {   // Include song speed for each song.
-            const uint_least16_t currentSong = info.currentSong;
-            for (uint_least16_t s = 1; s <= info.songs; s++)
+            const uint_least16_t currentSong = info->m_currentSong;
+            for (uint_least16_t s = 1; s <= info->m_songs; s++)
             {
                 selectSong (s);
-                myMD5.append (&info.songSpeed,sizeof(info.songSpeed));
+                myMD5.append (&info->m_songSpeed,sizeof(info->m_songSpeed));
             }
             // Restore old song
             selectSong (currentSong);
@@ -1033,8 +1019,8 @@ const char *SidTune::createMD5(char *md5)
         // clock speed change the MD5 fingerprint. That way the
         // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
         // PSID v2NG format is the same.
-        if (info.clockSpeed == SIDTUNE_CLOCK_NTSC)
-            myMD5.append (&info.clockSpeed,sizeof(info.clockSpeed));
+        if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
+            myMD5.append (&info->m_clockSpeed,sizeof(info->m_clockSpeed));
         // NB! If the fingerprint is used as an index into a
         // song-lengths database or cache, modify above code to
         // allow for PSID v2NG files which have clock speed set to

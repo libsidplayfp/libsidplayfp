@@ -27,6 +27,7 @@
 #endif
 
 #include "SidTuneCfg.h"
+#include "SidTuneInfoImpl.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/sidendian.h"
 
@@ -115,8 +116,8 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
     if (bufLen<6)
         return LOAD_NOT_MINE;
 
-    sidtune_clock_t clock = SIDTUNE_CLOCK_UNKNOWN;
-    sidtune_compatibility_t compatibility = SIDTUNE_COMPATIBILITY_C64;
+    SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
+    SidTuneInfo::compatibility_t compatibility = SidTuneInfo::COMPATIBILITY_C64;
 
     // Require minimum size to allow access to the first few bytes.
     // Require a valid ID and version number.
@@ -127,16 +128,16 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
        switch (endian_big16(pHeader->version))
        {
        case 1:
-           compatibility = SIDTUNE_COMPATIBILITY_PSID;
+           compatibility = SidTuneInfo::COMPATIBILITY_PSID;
            // Deliberate run on
        case 2:
        case 3:
            break;
        default:
-           info.formatString = _sidtune_unknown_psid;
+           info->m_formatString = _sidtune_unknown_psid;
            return LOAD_ERROR;
        }
-       info.formatString = _sidtune_format_psid;
+       info->m_formatString = _sidtune_format_psid;
     }
     else if (endian_big32((const uint_least8_t*)pHeader->id)==RSID_ID)
     {
@@ -146,11 +147,11 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
        case 3:
            break;
        default:
-           info.formatString = _sidtune_unknown_rsid;
+           info->m_formatString = _sidtune_unknown_rsid;
            return LOAD_ERROR;
        }
-       info.formatString = _sidtune_format_rsid;
-       compatibility = SIDTUNE_COMPATIBILITY_R64;
+       info->m_formatString = _sidtune_format_rsid;
+       compatibility = SidTuneInfo::COMPATIBILITY_R64;
     }
     else
     {
@@ -162,99 +163,99 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
     // accessed.
     if ( bufLen < (sizeof(psidHeader)+2) )
     {
-        info.formatString = _sidtune_truncated;
+        info->m_formatString = _sidtune_truncated;
         return LOAD_ERROR;
     }
 
     fileOffset         = endian_big16(pHeader->data);
-    info.loadAddr      = endian_big16(pHeader->load);
-    info.initAddr      = endian_big16(pHeader->init);
-    info.playAddr      = endian_big16(pHeader->play);
-    info.songs         = endian_big16(pHeader->songs);
-    info.startSong     = endian_big16(pHeader->start);
-    info.sidChipBase1  = 0xd400;
-    info.sidChipBase2  = 0;
-    info.compatibility = compatibility;
+    info->m_loadAddr      = endian_big16(pHeader->load);
+    info->m_initAddr      = endian_big16(pHeader->init);
+    info->m_playAddr      = endian_big16(pHeader->play);
+    info->m_songs         = endian_big16(pHeader->songs);
+    info->m_startSong     = endian_big16(pHeader->start);
+    info->m_sidChipBase1  = 0xd400;
+    info->m_sidChipBase2  = 0;
+    info->m_compatibility = compatibility;
 
     uint_least32_t speed = endian_big32(pHeader->speed);
 
-    if (info.songs > SIDTUNE_MAX_SONGS)
+    if (info->m_songs > MAX_SONGS)
     {
-        info.songs = SIDTUNE_MAX_SONGS;
+        info->m_songs = MAX_SONGS;
     }
 
-    info.musPlayer      = false;
-    info.sidModel1      = SIDTUNE_SIDMODEL_UNKNOWN;
-    info.sidModel2      = SIDTUNE_SIDMODEL_UNKNOWN;
-    info.relocPages     = 0;
-    info.relocStartPage = 0;
+    info->m_musPlayer      = false;
+    info->m_sidModel1      = SidTuneInfo::SIDMODEL_UNKNOWN;
+    info->m_sidModel2      = SidTuneInfo::SIDMODEL_UNKNOWN;
+    info->m_relocPages     = 0;
+    info->m_relocStartPage = 0;
     if ( endian_big16(pHeader->version) >= 2 )
     {
         const uint_least16_t flags = endian_big16(pHeader->flags);
         if (flags & PSID_MUS)
         {   // MUS tunes run at any speed
-            clock = SIDTUNE_CLOCK_ANY;
-            info.musPlayer = true;
+            clock = SidTuneInfo::CLOCK_ANY;
+            info->m_musPlayer = true;
         }
 
         // This flags is only available for the appropriate
         // file formats
         switch (compatibility)
         {
-        case SIDTUNE_COMPATIBILITY_C64:
+        case SidTuneInfo::COMPATIBILITY_C64:
             if (flags & PSID_SPECIFIC)
-                info.compatibility = SIDTUNE_COMPATIBILITY_PSID;
+                info->m_compatibility = SidTuneInfo::COMPATIBILITY_PSID;
             break;
-        case SIDTUNE_COMPATIBILITY_R64:
+        case SidTuneInfo::COMPATIBILITY_R64:
             if (flags & PSID_BASIC)
-                info.compatibility = SIDTUNE_COMPATIBILITY_BASIC;
+                info->m_compatibility = SidTuneInfo::COMPATIBILITY_BASIC;
             break;
         }
 
         if ((flags & PSID_CLOCK_ANY) == PSID_CLOCK_ANY)
-            clock = SIDTUNE_CLOCK_ANY;
+            clock = SidTuneInfo::CLOCK_ANY;
         else if (flags & PSID_CLOCK_PAL)
-            clock = SIDTUNE_CLOCK_PAL;
+            clock = SidTuneInfo::CLOCK_PAL;
         else if (flags & PSID_CLOCK_NTSC)
-            clock = SIDTUNE_CLOCK_NTSC;
-        info.clockSpeed = clock;
+            clock = SidTuneInfo::CLOCK_NTSC;
+        info->m_clockSpeed = clock;
 
         if ((flags & PSID_SIDMODEL1_ANY) == PSID_SIDMODEL1_ANY)
-            info.sidModel1 = SIDTUNE_SIDMODEL_ANY;
+            info->m_sidModel1 = SidTuneInfo::SIDMODEL_ANY;
         else if (flags & PSID_SIDMODEL1_6581)
-            info.sidModel1 = SIDTUNE_SIDMODEL_6581;
+            info->m_sidModel1 = SidTuneInfo::SIDMODEL_6581;
         else if (flags & PSID_SIDMODEL1_8580)
-            info.sidModel1 = SIDTUNE_SIDMODEL_8580;
+            info->m_sidModel1 = SidTuneInfo::SIDMODEL_8580;
         else
-            info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
+            info->m_sidModel1 = SidTuneInfo::SIDMODEL_UNKNOWN;
 
         if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
-            info.sidModel2 = SIDTUNE_SIDMODEL_ANY;
+            info->m_sidModel2 = SidTuneInfo::SIDMODEL_ANY;
         else if (flags & PSID_SIDMODEL2_6581)
-            info.sidModel2 = SIDTUNE_SIDMODEL_6581;
+            info->m_sidModel2 = SidTuneInfo::SIDMODEL_6581;
         else if (flags & PSID_SIDMODEL2_8580)
-            info.sidModel2 = SIDTUNE_SIDMODEL_8580;
+            info->m_sidModel2 = SidTuneInfo::SIDMODEL_8580;
         else
-            info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
+            info->m_sidModel2 = SidTuneInfo::SIDMODEL_UNKNOWN;
 
-        info.relocStartPage = pHeader->relocStartPage;
-        info.relocPages     = pHeader->relocPages;
+        info->m_relocStartPage = pHeader->relocStartPage;
+        info->m_relocPages     = pHeader->relocPages;
 
         if ( endian_big16(pHeader->version) >= 3 )
         {
-            info.sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
+            info->m_sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
         }
     }
 
     // Check reserved fields to force real c64 compliance
     // as required by the RSID specification
-    if (compatibility == SIDTUNE_COMPATIBILITY_R64)
+    if (compatibility == SidTuneInfo::COMPATIBILITY_R64)
     {
-        if ((info.loadAddr != 0) ||
-            (info.playAddr != 0) ||
+        if ((info->m_loadAddr != 0) ||
+            (info->m_playAddr != 0) ||
             (speed != 0))
         {
-            info.formatString = _sidtune_invalid;
+            info->m_formatString = _sidtune_invalid;
             return LOAD_ERROR;
         }
         // Real C64 tunes appear as CIA
@@ -264,18 +265,18 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
     convertOldStyleSpeedToTables(speed, clock);
 
     // Copy info strings, so they will not get lost.
-    info.numberOfInfoStrings = 3;
+    info->m_numberOfInfoStrings = 3;
     // Name
     strncpy(&infoString[0][0],pHeader->name,_sidtune_psid_maxStrLen);
-    info.infoString[0] = &infoString[0][0];
+    info->m_infoString[0] = &infoString[0][0];
     // Author
     strncpy(&infoString[1][0],pHeader->author,_sidtune_psid_maxStrLen);
-    info.infoString[1] = &infoString[1][0];
+    info->m_infoString[1] = &infoString[1][0];
     // Released
     strncpy(&infoString[2][0],pHeader->released,_sidtune_psid_maxStrLen);
-    info.infoString[2] = &infoString[2][0];
+    info->m_infoString[2] = &infoString[2][0];
 
-    if ( info.musPlayer )
+    if ( info->m_musPlayer )
         return MUS_load (dataBuf);
     return LOAD_OK;
 }
@@ -287,21 +288,21 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
     endian_big32((uint_least8_t*)myHeader.id,PSID_ID);
     endian_big16(myHeader.version,2);
     endian_big16(myHeader.data,sizeof(psidHeader));
-    endian_big16(myHeader.songs,info.songs);
-    endian_big16(myHeader.start,info.startSong);
+    endian_big16(myHeader.songs,info->m_songs);
+    endian_big16(myHeader.start,info->m_startSong);
 
     uint_least32_t speed = 0, check = 0;
-    uint_least32_t maxBugSongs = ((info.songs <= 32) ? info.songs : 32);
+    uint_least32_t maxBugSongs = ((info->m_songs <= 32) ? info->m_songs : 32);
     for (uint_least32_t s = 0; s < maxBugSongs; s++)
     {
-        if (songSpeed[s] == SIDTUNE_SPEED_CIA_1A)
+        if (songSpeed[s] == SidTuneInfo::SPEED_CIA_1A)
             speed |= (1<<s);
         check |= (1<<s);
     }
     endian_big32(myHeader.speed,speed);
 
     uint_least16_t tmpFlags = 0;
-    if ( info.musPlayer )
+    if ( info->m_musPlayer )
     {
         endian_big16(myHeader.load,0);
         endian_big16(myHeader.init,0);
@@ -313,23 +314,23 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
     else
     {
         endian_big16(myHeader.load,0);
-        endian_big16(myHeader.init,info.initAddr);
-        myHeader.relocStartPage = info.relocStartPage;
-        myHeader.relocPages     = info.relocPages;
+        endian_big16(myHeader.init,info->m_initAddr);
+        myHeader.relocStartPage = info->m_relocStartPage;
+        myHeader.relocPages     = info->m_relocPages;
 
-        switch (info.compatibility)
+        switch (info->m_compatibility)
         {
-        case SIDTUNE_COMPATIBILITY_BASIC:
+        case SidTuneInfo::COMPATIBILITY_BASIC:
             tmpFlags |= PSID_BASIC;
-        case SIDTUNE_COMPATIBILITY_R64:
+        case SidTuneInfo::COMPATIBILITY_R64:
             endian_big32((uint_least8_t*)myHeader.id,RSID_ID);
             endian_big16(myHeader.play,0);
             endian_big32(myHeader.speed,0);
             break;
-        case SIDTUNE_COMPATIBILITY_PSID:
+        case SidTuneInfo::COMPATIBILITY_PSID:
             tmpFlags |= PSID_SPECIFIC;
         default:
-            endian_big16(myHeader.play,info.playAddr);
+            endian_big16(myHeader.play,info->m_playAddr);
             break;
         }
     }
@@ -342,34 +343,34 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
     }
 
     // @FIXME@ Need better solution.  Make it possible to override MUS strings
-    if ( info.numberOfInfoStrings == 3 )
+    if ( info->m_numberOfInfoStrings == 3 )
     {
-        strncpy( myHeader.name, info.infoString[0], _sidtune_psid_maxStrLen);
-        strncpy( myHeader.author, info.infoString[1], _sidtune_psid_maxStrLen);
-        strncpy( myHeader.released, info.infoString[2], _sidtune_psid_maxStrLen);
+        strncpy( myHeader.name, info->m_infoString[0], _sidtune_psid_maxStrLen);
+        strncpy( myHeader.author, info->m_infoString[1], _sidtune_psid_maxStrLen);
+        strncpy( myHeader.released, info->m_infoString[2], _sidtune_psid_maxStrLen);
     }
 
-    tmpFlags |= (info.clockSpeed << 2);
-    tmpFlags |= (info.sidModel1 << 4);
-    tmpFlags |= (info.sidModel2 << 6);
+    tmpFlags |= (info->m_clockSpeed << 2);
+    tmpFlags |= (info->m_sidModel1 << 4);
+    tmpFlags |= (info->m_sidModel2 << 6);
     endian_big16(myHeader.flags,tmpFlags);
-    myHeader.sidChipBase2 = info.sidChipBase2;
+    myHeader.sidChipBase2 = info->m_sidChipBase2;
     myHeader.reserved = 0;
 
     fMyOut.write( (char*)&myHeader, sizeof(psidHeader) );
 
-    if (info.musPlayer)
-        fMyOut.write( (const char*)dataBuffer, info.dataFileLen );  // !cast!
+    if (info->m_musPlayer)
+        fMyOut.write( (const char*)dataBuffer, info->m_dataFileLen );  // !cast!
     else
     {   // Save C64 lo/hi load address (little-endian).
         uint_least8_t saveAddr[2];
-        saveAddr[0] = info.loadAddr & 255;
-        saveAddr[1] = info.loadAddr >> 8;
+        saveAddr[0] = info->m_loadAddr & 255;
+        saveAddr[1] = info->m_loadAddr >> 8;
         fMyOut.write( (char*)saveAddr, 2 );  // !cast!
 
         // Data starts at: bufferaddr + fileoffset
         // Data length: datafilelen - fileoffset
-        fMyOut.write( (const char*)dataBuffer + fileOffset, info.dataFileLen - fileOffset );  // !cast!
+        fMyOut.write( (const char*)dataBuffer + fileOffset, info->m_dataFileLen - fileOffset );  // !cast!
     }
 
     if ( !fMyOut )
