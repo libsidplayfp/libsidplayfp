@@ -320,7 +320,7 @@ RESID_INLINE
 short EnvelopeGenerator::output() const {
 	// DAC imperfections are emulated by using envelope_counter as an index
 	// into a DAC lookup table. readENV() uses envelope_counter directly.
-	return dac[envelope_counter & 0xff];
+	return dac[envelope_counter];
 }
 
 } // namespace reSIDfp
