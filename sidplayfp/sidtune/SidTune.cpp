@@ -1006,8 +1006,8 @@ const char *SidTune::createMD5(char *md5)
         endian_little16 (tmp,info->m_songs);
         myMD5.append    (tmp,sizeof(tmp));
         {   // Include song speed for each song.
-            const uint_least16_t currentSong = info->m_currentSong;
-            for (uint_least16_t s = 1; s <= info->m_songs; s++)
+            const unsigned int currentSong = info->m_currentSong;
+            for (unsigned int s = 1; s <= info->m_songs; s++)
             {
                 selectSong (s);
                 myMD5.append (&info->m_songSpeed,sizeof(info->m_songSpeed));

@@ -47,7 +47,7 @@ class SID_EXTERN SidTune
     } LoadStatus;
 
     /// Also PSID file format limit.
-    static const uint_least16_t MAX_SONGS = 256;
+    static const unsigned int MAX_SONGS = 256;
 
     /// C64KB+LOAD+PSID
     static const uint_least32_t MAX_FILELEN = 65536+2+0x7C;
