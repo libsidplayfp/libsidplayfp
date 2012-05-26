@@ -89,7 +89,7 @@ int_least32_t SidDatabase::length (SidTune &tune)
         return -1;
     }
 
-    char md5[SIDTUNE_MD5_LENGTH+1];
+    char md5[SidTune::MD5_LENGTH+1];
     tune.createMD5 (md5);
     return length  (md5, song);
 }

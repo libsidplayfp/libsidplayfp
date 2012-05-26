@@ -31,8 +31,6 @@ template class SID_EXTERN Buffer_sidtt<const uint_least8_t>;
 
 class SidTuneInfoImpl;
 
-#define SIDTUNE_MD5_LENGTH 32
-
 /**
 * SidTune
 */
@@ -54,8 +52,11 @@ class SID_EXTERN SidTune
 
     static const uint_least32_t MAX_MEMORY = 65536;
 
+ public:
+    static const int MD5_LENGTH = 32;
+
  private:
-    char m_md5[SIDTUNE_MD5_LENGTH+1];
+    char m_md5[MD5_LENGTH+1];
 
  public:  // ----------------------------------------------------------------
 
@@ -161,7 +162,7 @@ class SID_EXTERN SidTune
     /**
     * Calculates the MD5 hash of the tune.
     * Not providing an md5 buffer will cause the internal one to be used.
-    * If provided, buffer must be SIDTUNE_MD5_LENGTH + 1
+    * If provided, buffer must be MD5_LENGTH + 1
     * @return a pointer to the buffer containing the md5 string.
     */
     const char *createMD5(char *md5 = 0);

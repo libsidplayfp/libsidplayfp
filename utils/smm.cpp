@@ -313,30 +313,30 @@ bool Err_v0::used (const sid2_usage_t &usage)
 void Md5::init (sid2_usage_t &usage)
 {
     usage.md5[0] = '\0';
-    usage.md5[SIDTUNE_MD5_LENGTH] = '\0';
+    usage.md5[SidTune::MD5_LENGTH] = '\0';
 }
 
 bool Md5::read (FILE *file, sid2_usage_t &usage, uint_least32_t length)
 {
-    if (!_read (file, (uint8_t *) usage.md5, SIDTUNE_MD5_LENGTH, length))
+    if (!_read (file, (uint8_t *) usage.md5, SidTune::MD5_LENGTH, length))
         return false;
     // Validate MD5 is legal values
     // @FIXME@ check hex and convert case to lower??
-    if (strlen(usage.md5) != SIDTUNE_MD5_LENGTH)
+    if (strlen(usage.md5) != SidTune::MD5_LENGTH)
         return false;
     return Chunk::read (file, usage, length);
 }
 
 bool Md5::write (FILE *file, const sid2_usage_t &usage, uint_least32_t &length)
 {
-    if (!_write (file, (const uint8_t *) usage.md5, SIDTUNE_MD5_LENGTH, length))
+    if (!_write (file, (const uint8_t *) usage.md5, SidTune::MD5_LENGTH, length))
         return false;
     return Chunk::write (file, usage, length);
 }
 
 bool Md5::used (const sid2_usage_t &usage)
 {
-    if (strlen (usage.md5) != SIDTUNE_MD5_LENGTH)
+    if (strlen (usage.md5) != SidTune::MD5_LENGTH)
         return false;
     return true;
 }
