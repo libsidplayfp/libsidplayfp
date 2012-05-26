@@ -17,6 +17,8 @@
 
 #include "mixer.h"
 
+#include "sidplayfp/sidemu.h"
+
 void Mixer::event()
 {
     short *buf = m_sampleBuffer + m_sampleIndex;

@@ -20,6 +20,8 @@
 #endif
 
 #include "resid/sid.h"
+#include "sidplayfp/sidemu.h"
+#include "sidplayfp/EventScheduler.h"
 
 //FIXME
 #define RESID_NAMESPACE reSID

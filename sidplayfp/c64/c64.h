@@ -33,11 +33,12 @@
 #include "sidplayfp/c64/c64vic.h"
 #include "sidplayfp/c64/mmu.h"
 
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
 
-#include "sidplayfp/sidbuilder.h"
+#include "sidplayfp/sidemu.h"
 
 SIDPLAY2_NAMESPACE_START
 

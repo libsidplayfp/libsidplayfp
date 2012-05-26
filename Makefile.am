@@ -55,6 +55,7 @@ builders/resid-builder/resid/libresid.la
 #=========================================================
 # libsidplayfp
 sidplayfp_libsidplayfp_la_SOURCES = \
+sidplayfp/component.h \
 sidplayfp/config.cpp \
 sidplayfp/EventScheduler.cpp \
 sidplayfp/EventScheduler.h \
@@ -66,6 +67,7 @@ sidplayfp/mixer.h \
 sidplayfp/reloc65.c \
 sidplayfp/sidplay2.cpp \
 sidplayfp/psiddrv.a65 \
+sidplayfp/sidemu.h \
 sidplayfp/c64/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
@@ -115,7 +117,6 @@ sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
 sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/sidconfig.h \
 sidplayfp/Buffer.h \
-sidplayfp/component.h \
 sidplayfp/event.h \
 sidplayfp/SidTuneInfo.h \
 sidplayfp/sid2types.h \

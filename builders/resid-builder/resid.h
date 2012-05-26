@@ -25,6 +25,9 @@
 
 #include <vector>
 #include "sidplayfp/sidbuilder.h"
+#include "sidplayfp/sidconfig.h"
+
+class sidemu;
 
 /**
 * ReSID Builder Class
