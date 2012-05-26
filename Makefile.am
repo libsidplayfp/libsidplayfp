@@ -68,6 +68,7 @@ sidplayfp/reloc65.c \
 sidplayfp/sidplay2.cpp \
 sidplayfp/psiddrv.a65 \
 sidplayfp/sidemu.h \
+sidplayfp/sidendian.h \
 sidplayfp/c64/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
@@ -121,7 +122,6 @@ sidplayfp/event.h \
 sidplayfp/SidTuneInfo.h \
 sidplayfp/sid2types.h \
 sidplayfp/sidbuilder.h \
-sidplayfp/sidendian.h \
 sidplayfp/sidplay2.h \
 sidplayfp/SidTune.h \
 sidplayfp/sidusage.h \
