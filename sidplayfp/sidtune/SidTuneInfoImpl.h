@@ -71,12 +71,12 @@ private:
     uint_least16_t m_sidChipBase1;
     uint_least16_t m_sidChipBase2;
 
-    SidTuneInfo::clock_t m_clockSpeed;
+    clock_t m_clockSpeed;
 
-    SidTuneInfo::model_t m_sidModel1;
-    SidTuneInfo::model_t m_sidModel2;
+    model_t m_sidModel1;
+    model_t m_sidModel2;
 
-    SidTuneInfo::compatibility_t m_compatibility;
+    compatibility_t m_compatibility;
 
     uint_least8_t m_relocStartPage;
 
@@ -106,10 +106,10 @@ public:
         m_playAddr(0),
         m_sidChipBase1(0xd400),
         m_sidChipBase2(0),
-        m_clockSpeed(SidTuneInfo::CLOCK_UNKNOWN),
-        m_sidModel1(SidTuneInfo::SIDMODEL_UNKNOWN),
-        m_sidModel2(SidTuneInfo::SIDMODEL_UNKNOWN),
-        m_compatibility(SidTuneInfo::COMPATIBILITY_C64),
+        m_clockSpeed(CLOCK_UNKNOWN),
+        m_sidModel1(SIDMODEL_UNKNOWN),
+        m_sidModel2(SIDMODEL_UNKNOWN),
+        m_compatibility(COMPATIBILITY_C64),
         m_relocStartPage(0),
         m_relocPages(0) {}
 
@@ -134,10 +134,10 @@ public:
 
     uint_least8_t relocPages() const { return m_relocPages; }
 
-    SidTuneInfo::model_t sidModel1() const { return m_sidModel1; }
-    SidTuneInfo::model_t sidModel2() const { return m_sidModel2; }
+    model_t sidModel1() const { return m_sidModel1; }
+    model_t sidModel2() const { return m_sidModel2; }
 
-    SidTuneInfo::compatibility_t compatibility() const { return m_compatibility; }
+    compatibility_t compatibility() const { return m_compatibility; }
 
     unsigned int numberOfInfoStrings() const { return m_numberOfInfoStrings; }
     const char* infoString(const unsigned int i) const { return i<m_numberOfInfoStrings?m_infoString[i]:""; }
@@ -149,7 +149,7 @@ public:
 
     uint_least32_t c64dataLen() const { return m_c64dataLen; }
 
-    SidTuneInfo::clock_t clockSpeed() const { return m_clockSpeed; }
+    clock_t clockSpeed() const { return m_clockSpeed; }
 
     const char* statusString() const { return m_statusString; }
 
