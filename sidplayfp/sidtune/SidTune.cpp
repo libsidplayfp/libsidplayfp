@@ -323,7 +323,7 @@ void SidTune::init()
 
     info = new SidTuneInfoImpl();
 
-    for ( uint_least16_t si = 0; si < MAX_SONGS; si++ )
+    for ( unsigned int si = 0; si < MAX_SONGS; si++ )
     {
         songSpeed[si] = info->m_songSpeed;
         clockSpeed[si] = info->m_clockSpeed;
@@ -710,8 +710,8 @@ void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo::cl
     //
     // This routine implements the PSIDv2NG compliant speed conversion.  All tunes
     // above 32 use the same song speed as tune 32
-    const int toDo = ((info->m_songs <= MAX_SONGS) ? info->m_songs : MAX_SONGS);
-    for (int s = 0; s < toDo; s++)
+    const unsigned int toDo = ((info->m_songs <= MAX_SONGS) ? info->m_songs : MAX_SONGS);
+    for (unsigned int s = 0; s < toDo; s++)
     {
         clockSpeed[s] = clock;
         if (speed & 1)
