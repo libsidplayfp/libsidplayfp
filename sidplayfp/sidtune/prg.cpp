@@ -35,12 +35,13 @@ SidTune::LoadStatus SidTune::PRG_fileSupport(const char *fileName,
         return LOAD_NOT_MINE;
     }
 
-    info->m_formatString = _sidtune_format_prg;
     if (dataBuf.len() < 2)
     {
         info->m_formatString = _sidtune_truncated;
         return LOAD_ERROR;
     }
+
+    info->m_formatString = _sidtune_format_prg;
 
     // Automatic settings
     info->m_songs         = 1;

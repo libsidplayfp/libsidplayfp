@@ -112,8 +112,6 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
     else if (strcmp (pHeader->id, _sidtune_id))
         return LOAD_NOT_MINE;
 
-    info->m_formatString = format;
-
     // File types current supported
     if (type != X00_PRG)
         return LOAD_ERROR;
@@ -123,6 +121,8 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
         info->m_formatString = _sidtune_truncated;
         return LOAD_ERROR;
     }
+
+    info->m_formatString = format;
 
     {   // Decode file name
         SmartPtr_sidtt<const uint8_t> spPet((const uint8_t*)pHeader->name,X00_NAME_LEN);
