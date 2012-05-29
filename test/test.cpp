@@ -25,14 +25,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <sidplayfp/sidplay2.h>
-#include <sidplayfp/SidTune.h>
-#include <builders/residfp-builder/residfp.h>
+#include "sidplayfp/sidplay2.h"
+#include "sidplayfp/SidTune.h"
+#include "sidplayfp/sidbuilder.h"
+#include "sidplayfp/sidemu.h"
+
+class NullSID: public sidemu
+{
+public:
+    NullSID () : sidemu(0) { m_buffer = 0; }
+
+    void    reset (uint8_t) {}
+    uint8_t read  (uint_least8_t) { return 0; }
+    void    write (uint_least8_t, uint8_t) {}
+    void    clock() {}
+    const   char *credits (void) { return ""; }
+    void    voice (uint_least8_t, bool) {}
+    const   char *error   (void) const { return ""; }
+};
+
+class FakeBuilder: public sidbuilder
+{
+private:
+    NullSID sidobj;
+
+public:
+    FakeBuilder  (const char * const name) : sidbuilder(name) {}
+    ~FakeBuilder (void) {}
+
+    sidemu     *lock    (EventContext *env, const sid2_model_t model) { return &sidobj; }
+    void        unlock  (sidemu *device) {}
+    const char *error   (void) const { return ""; }
+    const char *credits (void) { return ""; }
+    void        filter (const bool enable) {}
+};
 
 int main(int argc, char* argv[])
 {
     sidplay2 m_engine;
-    ReSIDfpBuilder* rs = new ReSIDfpBuilder("Test");
+    FakeBuilder* rs = new FakeBuilder("Test");
 
     char name[0x100] = PC64_TESTSUITE;
 
@@ -53,8 +84,6 @@ int main(int argc, char* argv[])
         printf("Error: %s\n", tune->getInfo()->statusString());
         goto error;
     }
-
-    rs->create(2);
 
     sid2_config_t cfg;
     cfg = m_engine.config();
