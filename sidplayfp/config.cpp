@@ -46,7 +46,8 @@ int Player::config (const sid2_config_t &cfg)
         // SID emulation setup (must be performed before the
         // environment setup call)
         if (sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
-            cfg.playback == sid2_stereo ? 2 : 1, cpuFreq, cfg.frequency, cfg.samplingMethod) < 0) {
+            cfg.playback == sid2_stereo ? 2 : 1, cpuFreq, cfg.frequency,
+            cfg.samplingMethod, cfg.fastSampling) < 0) {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = NULL;
             goto Player_configure_restore;
@@ -179,7 +180,7 @@ sid2_model_t Player::getModel(const SidTuneInfo::model_t sidModel, const sid2_mo
 int Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
                        const bool forced, const int channels,
                        const float64_t cpuFreq, const int frequency,
-                       const sampling_method_t sampling)
+                       const sampling_method_t sampling, const bool fastSampling)
 {
     for (int i = 0; i < SidBank::MAX_SIDS; i++)
     {
@@ -211,7 +212,7 @@ int Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
             if ((i == 0) && !builder->getStatus())
                 return -1;
             if (s)
-                s->sampling((long)cpuFreq, frequency, sampling, false);
+                s->sampling((long)cpuFreq, frequency, sampling, fastSampling);
             m_c64.setSid(i, s);
         }
     }

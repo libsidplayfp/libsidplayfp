@@ -83,7 +83,7 @@ private:
     int       sidCreate(sidbuilder *builder, const sid2_model_t defaultModel,
                        const bool forced, const int channels,
                        const float64_t cpuFreq, const int frequency,
-                       const sampling_method_t sampling);
+                       const sampling_method_t sampling, const bool fastSampling);
     uint8_t   iomap          (const uint_least16_t addr);
 
     static sid2_model_t getModel (const SidTuneInfo::model_t sidModel, const sid2_model_t defaultModel, const bool forced);
