@@ -104,6 +104,7 @@ private:
         strcat (name, ".prg");
 
         m_tune->load (name);
+        m_tune->selectSong(0);
         initialise();
     }
 #endif
