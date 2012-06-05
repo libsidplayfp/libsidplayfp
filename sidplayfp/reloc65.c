@@ -48,7 +48,6 @@ static int read_undef(unsigned char *f);
 static unsigned char *reloc_seg(unsigned char *f, int len, unsigned char *rtab, file65 *fp);
 static unsigned char *reloc_globals(unsigned char *, file65 *fp);
 
-static file65 file;
 static const unsigned char cmp[] = {1, 0, 'o', '6', '5'};
 
 int reloc65(char **buf, int *fsize, int addr)
@@ -58,6 +57,8 @@ int reloc65(char **buf, int *fsize, int addr)
     int tflag = 0, dflag = 0, bflag = 0, zflag = 0;
     int tbase = 0, dbase = 0, bbase = 0, zbase = 0;
     int extract = 0;
+
+    file65 file;
 
     file.buf = (unsigned char *)*buf;
     file.fsize = *fsize;
