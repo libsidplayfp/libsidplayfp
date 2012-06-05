@@ -335,7 +335,7 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
         }
     }
 
-    for ( uint i = 0; i < 32; i++ )
+    for ( unsigned int i = 0; i < 32; i++ )
     {
         myHeader.name[i] = 0;
         myHeader.author[i] = 0;
