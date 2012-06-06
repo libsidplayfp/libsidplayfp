@@ -128,6 +128,8 @@ public:
     uint_least16_t sidChipBase1() const { return m_sidChipBase1; }
     uint_least16_t sidChipBase2() const { return m_sidChipBase2; }
 
+    bool isStereo() const { return (m_sidChipBase1!=0 && m_sidChipBase2!=0); }
+
     int songSpeed() const { return m_songSpeed; }
 
     uint_least8_t relocStartPage() const { return m_relocStartPage; }

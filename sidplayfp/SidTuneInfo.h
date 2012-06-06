@@ -99,6 +99,11 @@ public:
     //@}
 
     /**
+    * Whether sidtune uses two SID chips.
+    */
+    virtual bool isStereo() const=0;
+
+    /**
     * Intended speed
     */
     virtual int songSpeed() const =0;

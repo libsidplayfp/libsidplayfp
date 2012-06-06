@@ -170,11 +170,6 @@ const SidTuneInfo* SidTune::getInfo(const unsigned int songNum)
     return info;
 }
 
-bool SidTune::isStereo() const
-{
-    return (info->m_sidChipBase1!=0 && info->m_sidChipBase2!=0);
-}
-
 // First check, whether a song is valid. Then copy any song-specific
 // variable information such a speed/clock setting to the info structure.
 unsigned int SidTune::selectSong(const unsigned int selectedSong)

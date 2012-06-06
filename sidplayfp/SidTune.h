@@ -128,11 +128,6 @@ class SID_EXTERN SidTune
     bool getStatus() const { return status; }
 
     /**
-    * Whether sidtune uses two SID chips.
-    */
-    bool isStereo() const;
-
-    /**
     * Copy sidtune into C64 memory (64 KB).
     */
     bool placeSidTuneInC64mem(uint_least8_t* c64buf);
