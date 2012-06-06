@@ -45,7 +45,7 @@ static const uint_least16_t SIDTUNE_MUS_DATA_ADDR = 0x0900;
 static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
-SidTune::LoadStatus SidTune::MUS_fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
+bool SidTune::MUS_fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
                                              Buffer_sidtt<const uint_least8_t>& strBuf)
 {
     return MUS_load (musBuf, strBuf, true);
@@ -571,20 +571,20 @@ void SidTune::MUS_installPlayer(uint_least8_t *c64buf)
     }
 }
 
-SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
+bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
 {
     Buffer_sidtt<const uint_least8_t> empty;
     return MUS_load (musBuf, empty, init);
 }
 
-SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
+bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
                                        Buffer_sidtt<const uint_least8_t>& strBuf,
                                        bool init)
 {
     uint_least32_t voice3Index;
     SmartPtr_sidtt<const uint8_t> spPet(musBuf.get()+fileOffset,musBuf.len()-fileOffset);
     if ( !MUS_detect(&spPet[0],spPet.tellLength(),voice3Index) )
-        return LOAD_NOT_MINE;
+        return false;
 
     if (init)
     {
@@ -600,7 +600,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
         (info->m_relocStartPage != 0) || (info->m_relocPages != 0))
     {
         info->m_formatString = _sidtune_txt_invalid;
-        return LOAD_ERROR;
+        throw loadError();
     }
 
     {   // All subtunes should be CIA
@@ -609,7 +609,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
             if (songSpeed[i] != SidTuneInfo::SPEED_CIA_1A)
             {
                 info->m_formatString = _sidtune_txt_invalid;
-                return LOAD_ERROR;
+                throw loadError();
             }
         }
     }
@@ -653,7 +653,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
     if ( !strBuf.isEmpty() )
     {
         if ( !MUS_detect(strBuf.get(),strBuf.len(),voice3Index) )
-            return LOAD_ERROR;
+            throw loadError();
         spPet.setBuffer (strBuf.get(),strBuf.len());
         stereo = true;
     }
@@ -728,5 +728,5 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
             info->m_numberOfInfoStrings++;
         }
     }
-    return LOAD_OK;
+    return true;
 }

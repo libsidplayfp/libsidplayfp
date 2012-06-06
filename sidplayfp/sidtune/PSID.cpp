@@ -108,13 +108,13 @@ static const char _sidtune_invalid[] = "ERROR: File contains invalid data";
 static const int _sidtune_psid_maxStrLen = 32;
 
 
-SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
+bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
     const uint_least32_t bufLen = dataBuf.len();
 
     // File format check
     if (bufLen<6)
-        return LOAD_NOT_MINE;
+        return false;
 
     SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
     SidTuneInfo::compatibility_t compatibility = SidTuneInfo::COMPATIBILITY_C64;
@@ -135,7 +135,7 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
            break;
        default:
            info->m_formatString = _sidtune_unknown_psid;
-           return LOAD_ERROR;
+           throw loadError();
        }
        info->m_formatString = _sidtune_format_psid;
     }
@@ -148,14 +148,14 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
            break;
        default:
            info->m_formatString = _sidtune_unknown_rsid;
-           return LOAD_ERROR;
+           throw loadError();
        }
        info->m_formatString = _sidtune_format_rsid;
        compatibility = SidTuneInfo::COMPATIBILITY_R64;
     }
     else
     {
-        return LOAD_NOT_MINE;
+        return false;
     }
 
     // Due to security concerns, input must be at least as long as version 1
@@ -164,7 +164,7 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
     if ( bufLen < (sizeof(psidHeader)+2) )
     {
         info->m_formatString = _sidtune_truncated;
-        return LOAD_ERROR;
+        throw loadError();
     }
 
     fileOffset         = endian_big16(pHeader->data);
@@ -256,7 +256,7 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             (speed != 0))
         {
             info->m_formatString = _sidtune_invalid;
-            return LOAD_ERROR;
+            throw loadError();
         }
         // Real C64 tunes appear as CIA
         speed = ~0;
@@ -278,7 +278,7 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
 
     if ( info->m_musPlayer )
         return MUS_load (dataBuf);
-    return LOAD_OK;
+    return true;
 }
 
 

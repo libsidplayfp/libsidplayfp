@@ -64,7 +64,7 @@ static const char _sidtune_format_rel[] = "Unsupported tape image file (REL)";
 static const char _sidtune_truncated[]  = "ERROR: File is most likely truncated";
 
 
-SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
+bool SidTune::X00_fileSupport(const char *fileName,
                                              Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
     const char      *ext     = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));
@@ -74,9 +74,9 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
 
     // Combined extension & magic field identification
     if (strlen (ext) != 4)
-        return LOAD_NOT_MINE;
+        return false;
     if (!isdigit(ext[2]) || !isdigit(ext[3]))
-        return LOAD_NOT_MINE;
+        return false;
 
     X00Format type = X00_UNKNOWN;
     switch (toupper(ext[1]))
@@ -104,22 +104,23 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
     }
 
     if (type == X00_UNKNOWN)
-        return LOAD_NOT_MINE;
+        return false;
 
     // Verify the file is what we think it is
     if (bufLen < X00_ID_LEN)
-        return LOAD_NOT_MINE;
-    else if (strcmp (pHeader->id, _sidtune_id))
-        return LOAD_NOT_MINE;
+        return false;
+
+    if (strcmp (pHeader->id, _sidtune_id))
+        return false;
 
     // File types current supported
     if (type != X00_PRG)
-        return LOAD_ERROR;
+        throw loadError();
 
     if (bufLen < sizeof(X00Header)+2)
     {
         info->m_formatString = _sidtune_truncated;
-        return LOAD_ERROR;
+        throw loadError();
     }
 
     info->m_formatString = format;
@@ -139,5 +140,5 @@ SidTune::LoadStatus SidTune::X00_fileSupport(const char *fileName,
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
-    return LOAD_OK;
+    return true;
 }

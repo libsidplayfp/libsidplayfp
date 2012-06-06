@@ -37,13 +37,6 @@ class SidTuneInfoImpl;
 class SID_EXTERN SidTune
 {
  private:
-    typedef enum 
-    {
-        LOAD_NOT_MINE = 0,
-        LOAD_OK,
-        LOAD_ERROR
-    } LoadStatus;
-
     /// Also PSID file format limit.
     static const unsigned int MAX_SONGS = 256;
 
@@ -221,26 +214,28 @@ class SID_EXTERN SidTune
 
     // Support for various file formats.
 
-    virtual LoadStatus PSID_fileSupport    (Buffer_sidtt<const uint_least8_t>& dataBuf);
-    virtual bool       PSID_fileSupportSave(std::ofstream& toFile, const uint_least8_t* dataBuffer);
+    class loadError {};
 
-    virtual LoadStatus MUS_fileSupport     (Buffer_sidtt<const uint_least8_t>& musBuf,
+    virtual bool PSID_fileSupport    (Buffer_sidtt<const uint_least8_t>& dataBuf);
+    virtual bool PSID_fileSupportSave(std::ofstream& toFile, const uint_least8_t* dataBuffer);
+
+    virtual bool MUS_fileSupport     (Buffer_sidtt<const uint_least8_t>& musBuf,
                                             Buffer_sidtt<const uint_least8_t>& strBuf);
-    LoadStatus         MUS_load            (Buffer_sidtt<const uint_least8_t>& musBuf,
+    bool         MUS_load            (Buffer_sidtt<const uint_least8_t>& musBuf,
                                             bool init = false);
-    LoadStatus         MUS_load            (Buffer_sidtt<const uint_least8_t>& musBuf,
+    bool         MUS_load            (Buffer_sidtt<const uint_least8_t>& musBuf,
                                             Buffer_sidtt<const uint_least8_t>& strBuf,
                                             bool init = false);
-    virtual bool       MUS_detect          (const void* buffer, const uint_least32_t bufLen,
+    virtual bool MUS_detect          (const void* buffer, const uint_least32_t bufLen,
                                             uint_least32_t& voice3Index);
-    virtual bool       MUS_mergeParts      (Buffer_sidtt<const uint_least8_t>& musBuf,
-                                            Buffer_sidtt<const uint_least8_t>& strBuf);
-    virtual void       MUS_setPlayerAddress();
-    virtual void       MUS_installPlayer   (uint_least8_t *c64buf);
+    virtual bool MUS_mergeParts      (Buffer_sidtt<const uint_least8_t>& musBuf,
+                                      Buffer_sidtt<const uint_least8_t>& strBuf);
+    virtual void MUS_setPlayerAddress();
+    virtual void MUS_installPlayer   (uint_least8_t *c64buf);
 
-    virtual LoadStatus PRG_fileSupport     (const char* fileName,
+    virtual bool PRG_fileSupport     (const char* fileName,
                                             Buffer_sidtt<const uint_least8_t>& dataBuf);
-    virtual LoadStatus X00_fileSupport     (const char* fileName,
+    virtual bool X00_fileSupport     (const char* fileName,
                                             Buffer_sidtt<const uint_least8_t>& dataBuf);
 
     /// @name Error and status message strings.
