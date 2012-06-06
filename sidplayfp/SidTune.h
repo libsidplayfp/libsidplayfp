@@ -128,6 +128,11 @@ class SID_EXTERN SidTune
     bool getStatus() const { return status; }
 
     /**
+    * Error/status message of last operation
+    */
+    const char* statusString() const  { return m_statusString; }
+
+    /**
     * Copy sidtune into C64 memory (64 KB).
     */
     bool placeSidTuneInC64mem(uint_least8_t* c64buf);
@@ -165,7 +170,10 @@ class SID_EXTERN SidTune
  protected:  // -------------------------------------------------------------
 
     SidTuneInfoImpl *info;
+
     bool status;
+
+    const char* m_statusString;
 
     uint_least8_t songSpeed[MAX_SONGS];
     SidTuneInfo::clock_t clockSpeed[MAX_SONGS];

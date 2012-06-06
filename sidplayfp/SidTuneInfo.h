@@ -168,11 +168,6 @@ public:
     virtual clock_t clockSpeed() const =0;
 
     /**
-    * Error/status message of last operation
-    */
-    virtual const char* statusString() const =0;
-
-    /**
     * The name of the identified file format
     */
     virtual const char* formatString() const =0;

@@ -218,7 +218,7 @@ int Player::initialise ()
 
     if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()->getMem()))
     {   // Rev 1.6 (saw) - Allow loop through errors
-        m_errorString = tuneInfo->statusString();
+        m_errorString = m_tune->statusString();
         return -1;
     }
 

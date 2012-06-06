@@ -509,7 +509,7 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
                             - SIDTUNE_MUS_DATA_ADDR;
     if ( (musBuf.len()+strBuf.len()-4) > freeSpace)
     {
-        info->m_statusString = _sidtune_txt_sizeExceeded;
+        m_statusString = _sidtune_txt_sizeExceeded;
         return false;
     }
 
@@ -519,7 +519,7 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     if ( !mergeBuf.assign(new uint8_t[mergeLen], mergeLen) )
 #endif
     {
-        info->m_statusString = _sidtune_txt_notEnoughMemory;
+        m_statusString = _sidtune_txt_notEnoughMemory;
         return false;
     }
 

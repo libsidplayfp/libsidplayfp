@@ -34,8 +34,6 @@ class SidTuneInfoImpl : public SidTuneInfo
 private:
     const char* m_formatString;
 
-    const char* m_statusString;
-
     const char* m_speedString;
 
     char* m_path;
@@ -89,7 +87,6 @@ private:    // prevent copying
 public:
     SidTuneInfoImpl() :
         m_formatString("N/A"),
-        m_statusString("N/A"),
         m_path(0),
         m_dataFileName(0),
         m_infoFileName(0),
@@ -152,8 +149,6 @@ public:
     uint_least32_t c64dataLen() const { return m_c64dataLen; }
 
     clock_t clockSpeed() const { return m_clockSpeed; }
-
-    const char* statusString() const { return m_statusString; }
 
     const char* formatString() const { return m_formatString; }
 

@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 
     if (!tune->getStatus())
     {
-        printf("Error: %s\n", tune->getInfo()->statusString());
+        printf("Error: %s\n", tune->statusString());
         goto error;
     }
 
