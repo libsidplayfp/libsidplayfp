@@ -226,17 +226,6 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
             info->m_sidModel1 = SidTuneInfo::SIDMODEL_6581;
         else if (flags & PSID_SIDMODEL1_8580)
             info->m_sidModel1 = SidTuneInfo::SIDMODEL_8580;
-        else
-            info->m_sidModel1 = SidTuneInfo::SIDMODEL_UNKNOWN;
-
-        if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
-            info->m_sidModel2 = SidTuneInfo::SIDMODEL_ANY;
-        else if (flags & PSID_SIDMODEL2_6581)
-            info->m_sidModel2 = SidTuneInfo::SIDMODEL_6581;
-        else if (flags & PSID_SIDMODEL2_8580)
-            info->m_sidModel2 = SidTuneInfo::SIDMODEL_8580;
-        else
-            info->m_sidModel2 = SidTuneInfo::SIDMODEL_UNKNOWN;
 
         info->m_relocStartPage = pHeader->relocStartPage;
         info->m_relocPages     = pHeader->relocPages;
@@ -244,6 +233,13 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
         if ( endian_big16(pHeader->version) >= 3 )
         {
             info->m_sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
+
+            if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
+                info->m_sidModel2 = SidTuneInfo::SIDMODEL_ANY;
+            else if (flags & PSID_SIDMODEL2_6581)
+                info->m_sidModel2 = SidTuneInfo::SIDMODEL_6581;
+            else if (flags & PSID_SIDMODEL2_8580)
+                info->m_sidModel2 = SidTuneInfo::SIDMODEL_8580;
         }
     }
 
