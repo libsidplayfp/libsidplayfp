@@ -41,7 +41,7 @@ protected:
 
 public:
     sidemu (sidbuilder *builder)
-        : m_builder (builder) {;}
+        : m_builder (builder), m_buffer(0) {;}
     virtual ~sidemu () {;}
 
     // Standard component functions

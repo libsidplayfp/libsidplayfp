@@ -101,12 +101,9 @@ int main(int argc, char* argv[])
     m_engine.load(tune);
 
     {
-        const int temp = 48000;
-        short buffer[temp];
-
         for (;;)
         {
-            m_engine.play(buffer, temp);
+            m_engine.play(0, 48000);
         }
     }
 

@@ -21,13 +21,14 @@
 
 void Mixer::event()
 {
-    short *buf = m_sampleBuffer + m_sampleIndex;
-
     /* this clocks the SID to the present moment, if it isn't already. */
     m_chip1->clock();
     if (m_chip2)
         m_chip2->clock();
 
+    short *buf = m_sampleBuffer + m_sampleIndex;
+    if (buf)
+    {
     /* extract buffer info now that the SID is updated.
      * clock() may update bufferpos. */
     short *buf1 = m_chip1->buffer();
@@ -89,6 +90,9 @@ void Mixer::event()
     m_chip1->bufferpos(j);
     if (m_chip2)
         m_chip2->bufferpos(j);
+    }
+    else
+        m_sampleIndex++;
 
     /* Post a callback to ourselves. */
     event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
