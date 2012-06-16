@@ -37,9 +37,9 @@
 
 sidplay2::sidplay2 ()
 #ifdef HAVE_EXCEPTIONS
-: sidplayer (*(new(std::nothrow) SIDPLAY2_NAMESPACE::Player))
+: sidplayer (*(new(std::nothrow) SIDPLAYFP_NAMESPACE::Player))
 #else
-: sidplayer (*(new SIDPLAY2_NAMESPACE::Player))
+: sidplayer (*(new SIDPLAYFP_NAMESPACE::Player))
 #endif
 {
 }

@@ -37,7 +37,7 @@
 
 #include <string.h>
 
-SIDPLAY2_NAMESPACE_START
+SIDPLAYFP_NAMESPACE_START
 
 /**
  * The C64 MMU chip.
@@ -156,6 +156,6 @@ public:
     void cpuWrite(const uint_least16_t addr, const uint8_t data) { cpuWriteMap[addr >> 12]->write(addr, data); }
 };
 
-SIDPLAY2_NAMESPACE_STOP
+SIDPLAYFP_NAMESPACE_STOP
 
 #endif

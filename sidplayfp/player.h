@@ -35,7 +35,7 @@
 #endif
 
 
-SIDPLAY2_NAMESPACE_START
+SIDPLAYFP_NAMESPACE_START
 
 class Player
 #ifdef PC64_TESTSUITE
@@ -138,6 +138,6 @@ public:
 
 };
 
-SIDPLAY2_NAMESPACE_STOP
+SIDPLAYFP_NAMESPACE_STOP
 
 #endif // _player_h_

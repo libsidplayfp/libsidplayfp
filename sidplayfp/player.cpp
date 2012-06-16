@@ -34,7 +34,7 @@
 #endif
 
 
-SIDPLAY2_NAMESPACE_START
+SIDPLAYFP_NAMESPACE_START
 
 
 // These texts are used to override the sidtune settings.
@@ -286,4 +286,4 @@ void Player::stop (void)
     }
 }
 
-SIDPLAY2_NAMESPACE_STOP
+SIDPLAYFP_NAMESPACE_STOP

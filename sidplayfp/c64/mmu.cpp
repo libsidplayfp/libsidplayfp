@@ -22,7 +22,7 @@
 
 #include "mmu.h"
 
-SIDPLAY2_NAMESPACE_START
+SIDPLAYFP_NAMESPACE_START
 
 static const uint8_t POWERON[] =
 {
@@ -136,4 +136,4 @@ void MMU::reset()
     }
 }
 
-SIDPLAY2_NAMESPACE_STOP
+SIDPLAYFP_NAMESPACE_STOP

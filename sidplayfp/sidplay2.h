@@ -29,7 +29,7 @@ class  EventContext;
 struct SidTuneInfo;
 
 // Private Sidplayer
-namespace SIDPLAY2_NAMESPACE
+namespace SIDPLAYFP_NAMESPACE
 {
     class Player;
 }
@@ -40,7 +40,7 @@ namespace SIDPLAY2_NAMESPACE
 class SID_EXTERN sidplay2
 {
 private:
-    SIDPLAY2_NAMESPACE::Player &sidplayer;
+    SIDPLAYFP_NAMESPACE::Player &sidplayer;
 
 public:
     sidplay2 ();

@@ -41,16 +41,16 @@
 #endif
 
 /* Namespace support */
-#define SIDPLAY2_NAMESPACE __sidplay2__
-#ifdef  SIDPLAY2_NAMESPACE
-#   define SIDPLAY2_NAMESPACE_START \
-    namespace SIDPLAY2_NAMESPACE    \
+#define SIDPLAYFP_NAMESPACE __sidplayfp__
+#ifdef  SIDPLAYFP_NAMESPACE
+#   define SIDPLAYFP_NAMESPACE_START \
+    namespace SIDPLAYFP_NAMESPACE    \
     {
-#   define SIDPLAY2_NAMESPACE_STOP  \
+#   define SIDPLAYFP_NAMESPACE_STOP  \
     }
 #else
-#   define SIDPLAY2_NAMESPACE_START
-#   define SIDPLAY2_NAMESPACE_STOP
+#   define SIDPLAYFP_NAMESPACE_START
+#   define SIDPLAYFP_NAMESPACE_STOP
 #endif
 
 #endif // _sidconfig_h_

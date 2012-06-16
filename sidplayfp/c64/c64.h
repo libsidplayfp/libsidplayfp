@@ -41,7 +41,7 @@
 #endif
 
 
-SIDPLAY2_NAMESPACE_START
+SIDPLAYFP_NAMESPACE_START
 
 #ifdef PC64_TESTSUITE
 class testEnv
@@ -246,6 +246,6 @@ void c64::setBA (const bool state)
     cpu.setRDY (state);
 }
 
-SIDPLAY2_NAMESPACE_STOP
+SIDPLAYFP_NAMESPACE_STOP
 
 #endif // C64_H

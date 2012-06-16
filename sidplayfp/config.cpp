@@ -19,7 +19,7 @@
 #include "player.h"
 #include "sidbuilder.h"
 
-SIDPLAY2_NAMESPACE_START
+SIDPLAYFP_NAMESPACE_START
 
 // An instance of this structure is used to transport emulator settings
 // to and from the interface class.
@@ -220,4 +220,4 @@ int Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
     return 0;
 }
 
-SIDPLAY2_NAMESPACE_STOP
+SIDPLAYFP_NAMESPACE_STOP

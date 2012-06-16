@@ -27,7 +27,7 @@
 #include "c64/CPU/opcodes.h"
 
 
-SIDPLAY2_NAMESPACE_START
+SIDPLAYFP_NAMESPACE_START
 
 const char Player::ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
 const char Player::ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
@@ -207,4 +207,4 @@ int Player::psidDrvReloc (MMU *mmu)
     return 0;
 }
 
-SIDPLAY2_NAMESPACE_STOP
+SIDPLAYFP_NAMESPACE_STOP
