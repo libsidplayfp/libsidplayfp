@@ -115,12 +115,11 @@ bool SidTune::X00_fileSupport(const char *fileName,
 
     // File types current supported
     if (type != X00_PRG)
-        throw loadError();
+        throw loadError("Not a PRG inside X00");
 
     if (bufLen < sizeof(X00Header)+2)
     {
-        info->m_formatString = _sidtune_truncated;
-        throw loadError();
+        throw loadError(_sidtune_truncated);
     }
 
     info->m_formatString = format;

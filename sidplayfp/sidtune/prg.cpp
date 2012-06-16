@@ -37,8 +37,7 @@ bool SidTune::PRG_fileSupport(const char *fileName,
 
     if (dataBuf.len() < 2)
     {
-        info->m_formatString = _sidtune_truncated;
-        throw loadError();
+        throw loadError(_sidtune_truncated);
     }
 
     info->m_formatString = _sidtune_format_prg;

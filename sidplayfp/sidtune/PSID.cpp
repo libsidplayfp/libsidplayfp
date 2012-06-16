@@ -134,8 +134,7 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
        case 3:
            break;
        default:
-           info->m_formatString = _sidtune_unknown_psid;
-           throw loadError();
+           throw loadError(_sidtune_unknown_psid);
        }
        info->m_formatString = _sidtune_format_psid;
     }
@@ -147,8 +146,7 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
        case 3:
            break;
        default:
-           info->m_formatString = _sidtune_unknown_rsid;
-           throw loadError();
+           throw loadError(_sidtune_unknown_rsid);
        }
        info->m_formatString = _sidtune_format_rsid;
        compatibility = SidTuneInfo::COMPATIBILITY_R64;
@@ -163,8 +161,7 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
     // accessed.
     if ( bufLen < (sizeof(psidHeader)+2) )
     {
-        info->m_formatString = _sidtune_truncated;
-        throw loadError();
+        throw loadError(_sidtune_truncated);
     }
 
     fileOffset         = endian_big16(pHeader->data);
@@ -251,8 +248,7 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
             (info->m_playAddr != 0) ||
             (speed != 0))
         {
-            info->m_formatString = _sidtune_invalid;
-            throw loadError();
+            throw loadError(_sidtune_invalid);
         }
         // Real C64 tunes appear as CIA
         speed = ~0;

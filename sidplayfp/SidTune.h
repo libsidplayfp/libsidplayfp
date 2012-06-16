@@ -214,7 +214,13 @@ class SID_EXTERN SidTune
 
     // Support for various file formats.
 
-    class loadError {};
+    class loadError {
+    private:
+        const char* m_msg;
+    public:
+        loadError(const char* msg) : m_msg(msg) {}
+        const char* message() const {return m_msg; }
+    };
 
     virtual bool PSID_fileSupport    (Buffer_sidtt<const uint_least8_t>& dataBuf);
     virtual bool PSID_fileSupportSave(std::ofstream& toFile, const uint_least8_t* dataBuffer);

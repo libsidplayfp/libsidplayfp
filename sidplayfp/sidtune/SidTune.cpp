@@ -454,7 +454,11 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
             }
         }
     }
-    catch (loadError& e) { return; }
+    catch (loadError& e)
+    {
+        m_statusString = e.message();
+        return;
+    }
 
     if ( foundFormat )
     {
@@ -686,7 +690,11 @@ void SidTune::getFromFiles(const char* fileName)
             return;
         }
     }
-    catch (loadError& e) { return; }
+    catch (loadError& e)
+    {
+        m_statusString = e.message();
+        return;
+    }
 
     m_statusString = SidTune::txt_unrecognizedFormat;
     return;

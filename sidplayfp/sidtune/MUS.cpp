@@ -34,6 +34,7 @@
 #endif
 
 static const char _sidtune_txt_invalid[] = "ERROR: File contains invalid data";
+static const char _sidtune_2nd_invalid[] = "ERROR: 2nd file contains invalid data";
 static const char _sidtune_txt_format_mus[] = "C64 Sidplayer format (MUS)";
 static const char _sidtune_txt_format_str[] = "C64 Stereo Sidplayer format (MUS+STR)";
 static const char _sidtune_txt_notEnoughMemory[] = "ERROR: Not enough free memory";
@@ -599,8 +600,7 @@ bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
     if ((info->m_compatibility != SidTuneInfo::COMPATIBILITY_C64) ||
         (info->m_relocStartPage != 0) || (info->m_relocPages != 0))
     {
-        info->m_formatString = _sidtune_txt_invalid;
-        throw loadError();
+        throw loadError(_sidtune_txt_invalid);
     }
 
     {   // All subtunes should be CIA
@@ -608,8 +608,7 @@ bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
         {
             if (songSpeed[i] != SidTuneInfo::SPEED_CIA_1A)
             {
-                info->m_formatString = _sidtune_txt_invalid;
-                throw loadError();
+                throw loadError(_sidtune_txt_invalid);
             }
         }
     }
@@ -653,7 +652,7 @@ bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
     if ( !strBuf.isEmpty() )
     {
         if ( !MUS_detect(strBuf.get(),strBuf.len(),voice3Index) )
-            throw loadError();
+            throw loadError(_sidtune_2nd_invalid);
         spPet.setBuffer (strBuf.get(),strBuf.len());
         stereo = true;
     }
