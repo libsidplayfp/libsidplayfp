@@ -23,9 +23,11 @@
 #ifndef C64_H
 #define C64_H
 
-#include "Bank.h"
-#include "IOBank.h"
-#include "ColorRAMBank.h"
+#include "Banks/Bank.h"
+#include "Banks/IOBank.h"
+#include "Banks/ColorRAMBank.h"
+#include "Banks/DisconnectedBusBank.h"
+#include "Banks/SidBank.h"
 
 #include "sidplayfp/c64/c64env.h"
 #include "sidplayfp/c64/c64cpu.h"
@@ -38,7 +40,6 @@
 #  include "config.h"
 #endif
 
-#include "sidplayfp/sidemu.h"
 
 SIDPLAY2_NAMESPACE_START
 
@@ -50,81 +51,6 @@ public:
 };
 #endif
 
-/**
-* IO1/IO2
-*/
-class DisconnectedBusBank : public Bank
-{
-    void write(const uint_least16_t addr, const uint8_t data) {}
-
-    // FIXME this should actually return last byte read from VIC
-    uint8_t read(const uint_least16_t addr) { return 0; }
-};
-
-/**
-*
-*/
-class SidBank : public Bank
-{
-public:
-    static const int MAX_SIDS = 2;
-
-private:
-    static const int MAPPER_SIZE = 32;
-
-private:
-    /** SID chips */
-    sidemu *sid[MAX_SIDS];
-
-    /** SID mapping table in d4xx-d7xx */
-    int sidmapper[32];
-
-public:
-    SidBank()
-    {
-        for (int i = 0; i < MAX_SIDS; i++)
-            sid[i] = 0;
-
-        resetSIDMapper();
-    }
-
-    void reset()
-    {
-        for (int i = 0; i < MAX_SIDS; i++)
-        {
-            if (sid[i])
-                sid[i]->reset(0xf);
-        }
-    }
-
-    void resetSIDMapper()
-    {
-        for (int i = 0; i < MAPPER_SIZE; i++)
-            sidmapper[i] = 0;
-    }
-
-    void setSIDMapping(const int address, const int chipNum)
-    {
-        sidmapper[address >> 5 & (MAPPER_SIZE - 1)] = chipNum;
-    }
-
-    uint8_t read(const uint_least16_t addr)
-    {
-        const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
-        return sid[i] ? sid[i]->read(addr & 0x1f) : 0xff;
-    }
-
-    void write(const uint_least16_t addr, const uint8_t data)
-    {
-        const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
-        if (sid[i])
-            sid[i]->write(addr & 0x1f, data);
-    }
-
-    void setSID(const int i, sidemu *s) { sid[i] = s; }
-
-    sidemu *getSID(const int i) const { return sid[i]; }
-};
 
 class c64: private c64env
 {

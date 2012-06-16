@@ -17,10 +17,10 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 #=========================================================
 EXTRA_DIST = \
 sidplayfp/psiddrv.bin \
-sidplayfp/c64/kernal.bin \
 sidplayfp/c64/poweron.bin \
-sidplayfp/c64/basic.bin \
-sidplayfp/c64/char.bin \
+sidplayfp/c64/Banks/basic.bin \
+sidplayfp/c64/Banks/char.bin \
+sidplayfp/c64/Banks/kernal.bin \
 builders/residfp-builder/residfp/AUTHORS \
 builders/residfp-builder/residfp/COPYING \
 builders/residfp-builder/residfp/README \
@@ -69,20 +69,22 @@ sidplayfp/sidplay2.cpp \
 sidplayfp/psiddrv.a65 \
 sidplayfp/sidemu.h \
 sidplayfp/sidendian.h \
-sidplayfp/c64/Bank.h \
+sidplayfp/c64/Banks/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64env.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64.cpp \
 sidplayfp/c64/c64.h \
-sidplayfp/c64/ColorRAMBank.h \
-sidplayfp/c64/IOBank.h \
 sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
-sidplayfp/c64/SystemRAMBank.h \
-sidplayfp/c64/SystemROMBanks.h \
-sidplayfp/c64/ZeroRAMBank.h \
+sidplayfp/c64/Banks/ColorRAMBank.h \
+sidplayfp/c64/Banks/DisconnectedBusBank.h \
+sidplayfp/c64/Banks/IOBank.h \
+sidplayfp/c64/Banks/SidBank.h \
+sidplayfp/c64/Banks/SystemRAMBank.h \
+sidplayfp/c64/Banks/SystemROMBanks.h \
+sidplayfp/c64/Banks/ZeroRAMBank.h \
 sidplayfp/c64/VIC_II/mos656x.cpp \
 sidplayfp/c64/VIC_II/mos656x.h \
 sidplayfp/c64/CPU/mos6510.cpp \

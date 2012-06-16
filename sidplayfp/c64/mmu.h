@@ -27,11 +27,11 @@
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidconfig.h"
 
-#include "Bank.h"
-#include "IOBank.h"
-#include "SystemRAMBank.h"
-#include "SystemROMBanks.h"
-#include "ZeroRAMBank.h"
+#include "Banks/Bank.h"
+#include "Banks/IOBank.h"
+#include "Banks/SystemRAMBank.h"
+#include "Banks/SystemROMBanks.h"
+#include "Banks/ZeroRAMBank.h"
 
 #include "sidplayfp/c64/CPU/opcodes.h"
 

@@ -26,7 +26,7 @@
 // The CIA emulations are very generic and here we need to effectively
 // wire them into the computer (like adding a chip to a PCB).
 
-#include "Bank.h"
+#include "Banks/Bank.h"
 #include "sidplayfp/c64/c64env.h"
 #include "sidplayfp/sidendian.h"
 #include "CIA/mos6526.h"
