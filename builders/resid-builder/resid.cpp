@@ -38,7 +38,6 @@ char ReSID::m_credit[];
 ReSID::ReSID (sidbuilder *builder)
 :sidemu(builder),
  m_context(NULL),
- m_phase(EVENT_CLOCK_PHI1),
 #ifdef HAVE_EXCEPTIONS
  m_sid(*(new(std::nothrow) RESID_NS::SID)),
 #else
@@ -165,7 +164,7 @@ void ReSID::write (uint_least8_t addr, uint8_t data)
 
 void ReSID::clock()
 {
-    RESID_NS::cycle_count cycles = m_context->getTime(m_accessClk, m_phase);
+    RESID_NS::cycle_count cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
     m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
 }

@@ -114,9 +114,9 @@ const char *ReSIDBuilder::credits ()
     m_status = true;
 
     // Available devices
-    if (sidobjs.size ())
+    if (!sidobjs.empty ())
     {
-        ReSID *sid = (ReSID *) sidobjs[0];
+        ReSID *sid = static_cast<ReSID*>(sidobjs[0]);
         return sid->credits ();
     }
 
@@ -165,7 +165,7 @@ void ReSIDBuilder::filter (bool enable)
     m_status = true;
     for (int i = 0; i < size; i++)
     {
-        ReSID *sid = (ReSID *) sidobjs[i];
+        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
         sid->filter (enable);
     }
 }
@@ -176,7 +176,7 @@ void ReSIDBuilder::bias (const double dac_bias)
     m_status = true;
     for (int i = 0; i < size; i++)
     {
-        ReSID *sid = (ReSID *) sidobjs[i];
+        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
         sid->bias (dac_bias);
     }
 }
@@ -189,7 +189,7 @@ sidemu *ReSIDBuilder::lock (c64env *env, sid2_model_t model)
 
     for (int i = 0; i < size; i++)
     {
-        ReSID *sid = (ReSID *) sidobjs[i];
+        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
         if (sid->lock (env))
         {
             sid->model (model);
@@ -209,7 +209,7 @@ void ReSIDBuilder::unlock (sidemu *device)
     // Maek sure this is our SID
     for (int i = 0; i < size; i++)
     {
-        ReSID *sid = (ReSID *) sidobjs[i];
+        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
         if (sid == device)
         {   // Unlock it
             sid->lock (NULL);

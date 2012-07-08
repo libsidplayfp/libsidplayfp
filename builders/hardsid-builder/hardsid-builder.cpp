@@ -183,7 +183,7 @@ void HardSIDBuilder::flush(void)
 {
     const int size = sidobjs.size ();
     for (int i = 0; i < size; i++)
-        ((HardSID*)sidobjs[i])->flush();
+        static_cast<HardSID*>(sidobjs[i])->flush();
 }
 
 void HardSIDBuilder::filter (bool enable)
@@ -192,7 +192,7 @@ void HardSIDBuilder::filter (bool enable)
     m_status = true;
     for (int i = 0; i < size; i++)
     {
-        HardSID *sid = (HardSID *) sidobjs[i];
+        HardSID *sid = static_cast<HardSID*>(sidobjs[i]);
         sid->filter (enable);
     }
 }
@@ -205,7 +205,7 @@ sidemu *HardSIDBuilder::lock (c64env *env, sid2_model_t model)
 
     for (int i = 0; i < size; i++)
     {
-        HardSID *sid = (HardSID *) sidobjs[i];
+        HardSID *sid = static_cast<HardSID*>(sidobjs[i]);
         if (sid->lock (env))
         {
             sid->model (model);
@@ -225,7 +225,7 @@ void HardSIDBuilder::unlock (sidemu *device)
     // Make sure this is our SID
     for (int i = 0; i < size; i++)
     {
-        HardSID *sid = (HardSID *) sidobjs[i];
+        HardSID *sid = static_cast<HardSID*>(sidobjs[i]);
         if (sid == device)
         {   // Unlock it
             sid->lock (NULL);

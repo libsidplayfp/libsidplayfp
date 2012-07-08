@@ -130,7 +130,6 @@ private:
 
     // Generic variables
     EventContext  *m_eventContext;
-    event_phase_t  m_phase;
     event_clock_t  m_accessClk;
     char           m_errorBuffer[100];
 
