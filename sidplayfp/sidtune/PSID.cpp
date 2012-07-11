@@ -22,10 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
 #include "sidplayfp/SidTune.h"
