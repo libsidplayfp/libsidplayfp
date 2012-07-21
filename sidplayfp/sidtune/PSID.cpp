@@ -103,6 +103,7 @@ static const char _sidtune_unknown_psid[] = "Unsupported PSID version";
 static const char _sidtune_unknown_rsid[] = "Unsupported RSID version";
 static const char _sidtune_truncated[] = "ERROR: File is most likely truncated";
 static const char _sidtune_invalid[] = "ERROR: File contains invalid data";
+static const char _sidtune_sid2_address[] = "ERROR: Unsupported SID2 address (must be 0xdxx0)";
 
 static const int _sidtune_psid_maxStrLen = 32;
 
@@ -221,17 +222,10 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
             clock |= SIDTUNE_CLOCK_NTSC;
         info.clockSpeed = clock;
 
-        info.sidModel1 = SIDTUNE_SIDMODEL_UNKNOWN;
         if (flags & PSID_SIDMODEL1_6581)
             info.sidModel1 |= SIDTUNE_SIDMODEL_6581;
         if (flags & PSID_SIDMODEL1_8580)
             info.sidModel1 |= SIDTUNE_SIDMODEL_8580;
-
-        info.sidModel2 = SIDTUNE_SIDMODEL_UNKNOWN;
-        if (flags & PSID_SIDMODEL2_6581)
-            info.sidModel2 |= SIDTUNE_SIDMODEL_6581;
-        if (flags & PSID_SIDMODEL2_8580)
-            info.sidModel2 |= SIDTUNE_SIDMODEL_8580;
 
         info.relocStartPage = pHeader->relocStartPage;
         info.relocPages     = pHeader->relocPages;
@@ -239,6 +233,10 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
         if ( endian_big16(pHeader->version) >= 3 )
         {
             info.sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
+            if (flags & PSID_SIDMODEL2_6581)
+                info.sidModel2 |= SIDTUNE_SIDMODEL_6581;
+            if (flags & PSID_SIDMODEL2_8580)
+                info.sidModel2 |= SIDTUNE_SIDMODEL_8580;
         }
 #endif // SIDTUNE_PSID2NG
     }
@@ -280,9 +278,20 @@ SidTune::LoadStatus SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>&
 
 bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* dataBuffer)
 {
+    uint_least16_t version = 2;
+    if ( info.sidChipBase2 )
+    {
+        if ((info.sidChipBase2 & 0xf00f) != 0xd000)
+        {
+            info.formatString = _sidtune_sid2_address;
+            return false;
+        }
+        version = 3;
+    }
+
     psidHeader myHeader;
     endian_big32((uint_least8_t*)myHeader.id,PSID_ID);
-    endian_big16(myHeader.version,2);
+    endian_big16(myHeader.version,version);
     endian_big16(myHeader.data,sizeof(psidHeader));
     endian_big16(myHeader.songs,info.songs);
     endian_big16(myHeader.start,info.startSong);
@@ -348,9 +357,12 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
 
     tmpFlags |= (info.clockSpeed << 2);
     tmpFlags |= (info.sidModel1 << 4);
-    tmpFlags |= (info.sidModel2 << 6);
+    if (version > 2)
+    {
+        tmpFlags |= (info.sidModel2 << 6);
+        myHeader.sidChipBase2 = (uint8_t)(info.sidChipBase2 >> 4) & 0xff;
+    }
     endian_big16(myHeader.flags,tmpFlags);
-    myHeader.sidChipBase2 = info.sidChipBase2;
     myHeader.reserved = 0;
 
     fMyOut.write( (char*)&myHeader, sizeof(psidHeader) );

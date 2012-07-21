@@ -7,8 +7,8 @@ AC_DEFUN([MY_CHECK_EXCEPTIONS],
 [
     AC_MSG_CHECKING([whether exceptions are available])
     AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM([[#include <new.h>]],
-            [[char* buf = new(nothrow) char[1024];]])],
+        [AC_LANG_PROGRAM([[#include <new>]],
+            [[char* buf = new(std::nothrow) char[1024];]])],
         [have_exceptions=yes],
         [have_exceptions=no]
     )

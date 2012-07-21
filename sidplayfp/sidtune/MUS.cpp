@@ -637,7 +637,7 @@ SidTune::LoadStatus SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf
         for (int line = info.numberOfInfoStrings = 0; spPet[0]; line =
              ++info.numberOfInfoStrings)
         {
-            if (line < 10)
+            if (line < SIDTUNE_MAX_CREDIT_STRINGS)
             {
                 convertPetsciiToAscii(spPet,infoString[line]);
                 info.infoString[line] = infoString[line];

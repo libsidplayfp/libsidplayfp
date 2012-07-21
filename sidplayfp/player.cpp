@@ -403,7 +403,6 @@ Player::Player (void)
     m_info.tuneInfo        = NULL;
     m_info.version         = PACKAGE_VERSION;
     m_info.eventContext    = &context();
-    // Number of SIDs support by this library
     m_info.maxsids         = SID2_MAX_SIDS;
     m_info.environment     = sid2_envR;
     m_info.sid2crc         = 0;
