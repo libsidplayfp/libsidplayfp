@@ -497,6 +497,13 @@ sid2_model_t Player::getModel(int sidModel,
 int Player::sidCreate (sidbuilder *builder, sid2_model_t userModel,
                        sid2_model_t defaultModel)
 {
+    if (m_tuneInfo.compatibility == SIDTUNE_COMPATIBILITY_PSID)
+    {
+        sid[0] = xsid.emulation ();
+        // Make xsid forget it's emulation
+        xsid.emulation (&nullsid);
+    }
+
     // Release old sids
     for (int i = 0; i < SID2_MAX_SIDS; i++)
     {
