@@ -126,6 +126,7 @@ const char *ReSIDfpBuilder::credits ()
         {
             m_status = false;
             strcpy (m_errorBuffer, sid.error ());
+            m_error = m_errorBuffer;
             return 0;
         }
         return sid.credits ();
@@ -210,6 +211,7 @@ sidemu *ReSIDfpBuilder::lock (c64env *env, sid2_model_t model)
     // Unable to locate free SID
     m_status = false;
     sprintf (m_errorBuffer, "%s ERROR: No available SIDs to lock", name ());
+    m_error = m_errorBuffer;
     return NULL;
 }
 
