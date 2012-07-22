@@ -1,3 +1,12 @@
+0.3.6 2012-07-22
+* Correctly report sid builders error messages
+* Fix unlocking SID emulation for PSID tunes which caused an error when
+  changing subtune for PSID files
+* Port a PSIDv3 fix from sidplay2 for saving RSIDv3 files
+* Other minor fixes
+
+
+
 0.3.5 2012-04-22
 * Increase the waveform TTL in reSIDfp
 * Restore external filter high-pass resistor value to 1kOhm in reSIDfp
