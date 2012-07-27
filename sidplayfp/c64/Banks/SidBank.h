@@ -26,22 +26,31 @@
 
 #include "sidplayfp/sidemu.h"
 
-/**
+/** @internal
 *
 */
 class SidBank : public Bank
 {
 public:
+    /** Maximum number of supported SIDs (mono and stereo) */
     static const int MAX_SIDS = 2;
 
 private:
+    /**
+    * Size of mapping table. Each 32 bytes another SID chip base address
+    * can be assigned to.
+    */
     static const int MAPPER_SIZE = 32;
 
 private:
     /** SID chips */
     sidemu *sid[MAX_SIDS];
 
-    /** SID mapping table in d4xx-d7xx */
+    /**
+    * SID mapping table in d4xx-d7xx.
+    * Maps a SID chip base address to a SID
+    * chip number.
+    */
     int sidmapper[32];
 
 public:

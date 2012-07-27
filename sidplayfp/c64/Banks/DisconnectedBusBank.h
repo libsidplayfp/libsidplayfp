@@ -24,7 +24,7 @@
 
 #include "Bank.h"
 
-/**
+/** @internal
 * IO1/IO2
 */
 class DisconnectedBusBank : public Bank

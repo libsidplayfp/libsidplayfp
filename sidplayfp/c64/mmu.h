@@ -39,7 +39,7 @@
 
 SIDPLAYFP_NAMESPACE_START
 
-/**
+/** @internal
  * The C64 MMU chip.
 */
 class MMU : public PLA

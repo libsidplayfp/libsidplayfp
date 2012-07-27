@@ -53,18 +53,22 @@
 class SidTuneTools
 {
  public:
-    // Own version of strdup, which uses new instead of malloc.
+    /** Own version of strdup, which uses new instead of malloc. */
     static char* myStrDup(const char *source);
 
-    // Return pointer to file name position in complete path.
+    /** Return pointer to file name position in complete path. */
     static char* fileNameWithoutPath(char* s);
 
-    // Return pointer to file name position in complete path.
-    // Special version: file separator = forward slash.
+    /**
+    * Return pointer to file name position in complete path.
+    * Special version: file separator = forward slash.
+    */
     static char* slashedFileNameWithoutPath(char* s);
 
-    // Return pointer to file name extension in path.
-    // Searching backwards until first dot is found.
+    /**
+    * Return pointer to file name extension in path.
+    * Searching backwards until first dot is found.
+    */
     static char* fileExtOfPath(char* s);
 };
 

@@ -51,7 +51,17 @@ public:
 };
 #endif
 
-
+/** @internal
+* Commodore 64 emulation core.
+*
+* It consists of the following chips: PLA, MOS6510, MOS6526(a), VIC
+* 6569(PAL)/6567(NTSC), RAM/ROM.<BR>
+*
+* @author Antti Lankila
+* @author Ken Händel
+* @author Leando Nini
+*
+*/
 class c64: private c64env
 {
 public:
@@ -203,6 +213,13 @@ public:
     sidemu *getSid(const int i) const { return sidBank.getSID(i); }
 
     void resetSIDMapper() { sidBank.resetSIDMapper(); }
+
+    /**
+    * Set the base address of a stereo SID chip
+    *
+    * @param secondSidChipBase
+    *            base address (e.g. 0xd420)
+    */
     void setSecondSIDAddress(const int sidChipBase2) { sidBank.setSIDMapping(sidChipBase2, 1); }
 
     /**

@@ -51,10 +51,12 @@ public:
 
     /**
     * Open the songlength DataBase.
+    *
     * @param filename songlengthDB file name with full path.
     * @return -1 in case of errors, 0 otherwise.
     */
     int           open   (const char *filename);
+
     /**
     * Close the songlength DataBase.
     */
@@ -62,12 +64,15 @@ public:
 
     /**
     * Get the length of the current subtune.
+    *
     * @param tune
     * @return tune length in seconds, -1 in case of errors.
     */
     int_least32_t length (SidTune &tune);
+
     /**
     * Get the length of the selected subtune.
+    *
     * @param md5 the md5 hash of the tune.
     * @param song the subtune.
     * @return tune length in seconds, -1 in case of errors.

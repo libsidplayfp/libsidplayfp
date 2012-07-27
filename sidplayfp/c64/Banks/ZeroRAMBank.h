@@ -36,7 +36,7 @@ public:
     virtual event_clock_t getPhi2Time() const =0;
 };
 
-/**
+/** @internal
 * Area backed by RAM, including cpu port addresses 0 and 1.
 *
 * This is bit of a fake. We know that the CPU port is an internal
@@ -91,7 +91,7 @@ private:
     /** State of processor port pins.  */
     uint8_t data_out;
 
-    /** indicated if the unused bits are in the process of falling off. */
+    /** indicates if the unused bits are in the process of falling off. */
     uint8_t data_falloff_bit6;
     uint8_t data_falloff_bit7;
 

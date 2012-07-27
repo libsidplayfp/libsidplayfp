@@ -81,8 +81,8 @@ void MMU::reset()
 
     kernalRomBank.write(0xfd69, 0x9f); // Bypass memory check
     kernalRomBank.write(0xe55f, 0x00); // Bypass screen clear
-    kernalRomBank.write(0xfdc4, 0xea); // Ingore sid volume reset to avoid DC
-    kernalRomBank.write(0xfdc5, 0xea); // click (potentially incompatibility)!!
+    kernalRomBank.write(0xfdc4, 0xea); // Ignore sid volume reset to avoid DC
+    kernalRomBank.write(0xfdc5, 0xea); //   click (potentially incompatibility)!!
     kernalRomBank.write(0xfdc6, 0xea);
 
     updateMappingPHI2();

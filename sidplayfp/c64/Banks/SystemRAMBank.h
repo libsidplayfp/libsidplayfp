@@ -27,7 +27,7 @@
 #include <string.h>
 #include <stdint.h>
 
-/**
+/** @internal
  * Area backed by RAM
  *
  * @author Antti Lankila
