@@ -33,7 +33,7 @@ class ReSIDfp: public sidemu
 {
 private:
     EventContext *m_context;
-    class RESID_NAMESPACE::SID &m_sid;
+    RESID_NAMESPACE::SID &m_sid;
     event_clock_t m_accessClk;
     const  char  *m_error;
     bool          m_status;
@@ -58,7 +58,6 @@ public:
     void          voice   (uint_least8_t num, bool mute) { m_sid.mute(num, mute); }
 
     bool          getStatus() const { return m_status; }
-    static   int  devices (char *error);
 
     // Specific to resid
     void sampling (float systemclock, float freq,

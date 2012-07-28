@@ -41,7 +41,7 @@ class ReSID: public sidemu
 private:
     EventContext *m_context;
     event_phase_t m_phase;
-    class RESID_NS::SID &m_sid;
+    RESID_NS::SID &m_sid;
     event_clock_t m_accessClk;
     const  char  *m_error;
     bool          m_status;
@@ -67,7 +67,6 @@ public:
     void          voice   (uint_least8_t num, bool mute);
 
     bool          getStatus() const { return m_status; }
-    static   int  devices (char *error);
 
     // Specific to resid
     void sampling (float systemclock, float freq,
