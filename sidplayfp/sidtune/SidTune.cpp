@@ -43,22 +43,23 @@
     typedef int openmode;
 #endif
 
+// Error and status message strings.
+const char ERR_SONG_NUMBER_EXCEED[]  = "SIDTUNE WARNING: Selected song number was too high";
+const char ERR_EMPTY[]               = "SIDTUNE ERROR: No data to load";
+const char ERR_UNRECOGNIZED_FORMAT[] = "SIDTUNE ERROR: Could not determine file format";
+const char ERR_NO_DATA_FILE[]        = "SIDTUNE ERROR: Did not find the corresponding data file";
+const char ERR_NOT_ENOUGH_MEMORY[]   = "SIDTUNE ERROR: Not enough free memory";
+const char ERR_CANT_LOAD_FILE[]      = "SIDTUNE ERROR: Could not load input file";
+const char ERR_CANT_OPEN_FILE[]      = "SIDTUNE ERROR: Could not open file for binary input";
+const char ERR_FILE_TOO_LONG[]       = "SIDTUNE ERROR: Input data too long";
+const char ERR_DATA_TOO_LONG[]       = "SIDTUNE ERROR: Size of music data exceeds C64 memory";
+const char ERR_CANT_CREATE_FILE[]    = "SIDTUNE ERROR: Could not create output file";
+const char ERR_FILE_IO_ERROR[]       = "SIDTUNE ERROR: File I/O error";
+const char ERR_BAD_ADDR[]            = "SIDTUNE ERROR: Bad address data";
+const char ERR_BAD_RELOC[]           = "SIDTUNE ERROR: Bad reloc data";
+const char ERR_CORRUPT[]             = "SIDTUNE ERROR: File is incomplete or corrupt";
 
-const char SidTune::txt_songNumberExceed[] = "SIDTUNE WARNING: Selected song number was too high";
-const char SidTune::txt_empty[] = "SIDTUNE ERROR: No data to load";
-const char SidTune::txt_unrecognizedFormat[] = "SIDTUNE ERROR: Could not determine file format";
-const char SidTune::txt_noDataFile[] = "SIDTUNE ERROR: Did not find the corresponding data file";
-const char SidTune::txt_notEnoughMemory[] = "SIDTUNE ERROR: Not enough free memory";
-const char SidTune::txt_cantLoadFile[] = "SIDTUNE ERROR: Could not load input file";
-const char SidTune::txt_cantOpenFile[] = "SIDTUNE ERROR: Could not open file for binary input";
-const char SidTune::txt_fileTooLong[] = "SIDTUNE ERROR: Input data too long";
-const char SidTune::txt_dataTooLong[] = "SIDTUNE ERROR: Size of music data exceeds C64 memory";
-const char SidTune::txt_cantCreateFile[] = "SIDTUNE ERROR: Could not create output file";
-const char SidTune::txt_fileIoError[] = "SIDTUNE ERROR: File I/O error";
-const char SidTune::txt_noErrors[] = "No errors";
-const char SidTune::txt_badAddr[] = "SIDTUNE ERROR: Bad address data";
-const char SidTune::txt_badReloc[] = "SIDTUNE ERROR: Bad reloc data";
-const char SidTune::txt_corrupt[] = "SIDTUNE ERROR: File is incomplete or corrupt";
+const char MSG_NO_ERRORS[]           = "No errors";
 
 // Default sidtune file name extensions. This selection can be overriden
 // by specifying a custom list in the constructor.
@@ -180,7 +181,7 @@ unsigned int SidTune::selectSong(const unsigned int selectedSong)
     if ( !status )
         return 0;
     else
-        m_statusString = txt_noErrors;
+        m_statusString = MSG_NO_ERRORS;
 
     unsigned int song = selectedSong;
     // Determine and set starting song number.
@@ -189,7 +190,7 @@ unsigned int SidTune::selectSong(const unsigned int selectedSong)
     if (selectedSong>info->m_songs || selectedSong>MAX_SONGS)
     {
         song = info->m_startSong;
-        m_statusString = txt_songNumberExceed;
+        m_statusString = ERR_SONG_NUMBER_EXCEED;
     }
     info->m_currentSong = song;
     // Retrieve song speed definition.
@@ -228,7 +229,7 @@ bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
 
         // Copy data from cache to the correct destination.
         memcpy(c64buf+info->m_loadAddr, cache.get()+fileOffset, info->m_c64dataLen);
-        m_statusString = txt_noErrors;
+        m_statusString = MSG_NO_ERRORS;
 
         if (info->m_musPlayer)
         {
@@ -257,7 +258,7 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
 
     if ( !myIn.is_open() )
     {
-        m_statusString = txt_cantOpenFile;
+        m_statusString = ERR_CANT_OPEN_FILE;
         return false;
     }
 
@@ -266,7 +267,7 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
 
     if ( fileLen == 0 )
     {
-        m_statusString = txt_empty;
+        m_statusString = ERR_EMPTY;
         return false;
     }
 
@@ -278,7 +279,7 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
     if ( !fileBuf.assign(new uint_least8_t[fileLen], fileLen) )
 #endif
     {
-        m_statusString = txt_notEnoughMemory;
+        m_statusString = ERR_NOT_ENOUGH_MEMORY;
         return false;
     }
 
@@ -288,11 +289,11 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
 
     if ( myIn.bad() )
     {
-        m_statusString = txt_cantLoadFile;
+        m_statusString = ERR_CANT_LOAD_FILE;
         return false;
     }
 
-    m_statusString = txt_noErrors;
+    m_statusString = MSG_NO_ERRORS;
 
     myIn.close();
 
@@ -381,7 +382,7 @@ void SidTune::getFromStdIn()
     // Assume a failure, so we can simply return.
     status = false;
     // Assume the memory allocation to fail.
-    m_statusString = txt_notEnoughMemory;
+    m_statusString = ERR_NOT_ENOUGH_MEMORY;
 #ifdef HAVE_EXCEPTIONS
     uint_least8_t* fileBuf = new(std::nothrow) uint_least8_t[MAX_FILELEN];
 #else
@@ -411,13 +412,13 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
 
     if (buffer==0 || bufferLen==0)
     {
-        m_statusString = txt_empty;
+        m_statusString = ERR_EMPTY;
         return;
     }
 
     if (bufferLen > MAX_FILELEN)
     {
-        m_statusString = txt_fileTooLong;
+        m_statusString = ERR_FILE_TOO_LONG;
         return;
     }
 
@@ -428,7 +429,7 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
 #endif
     if ( tmpBuf == 0 )
     {
-        m_statusString = txt_notEnoughMemory;
+        m_statusString = ERR_NOT_ENOUGH_MEMORY;
         return;
     }
     memcpy(tmpBuf,buffer,bufferLen);
@@ -453,7 +454,7 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
             else
             {
                 // No further single-file-formats available.
-                m_statusString = txt_unrecognizedFormat;
+                m_statusString = ERR_UNRECOGNIZED_FORMAT;
             }
         }
     }
@@ -502,7 +503,7 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
         }
         if ((info->m_path==0) || (info->m_dataFileName==0))
         {
-            m_statusString = txt_notEnoughMemory;
+            m_statusString = ERR_NOT_ENOUGH_MEMORY;
             return false;
         }
     }
@@ -522,7 +523,7 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
             info->m_infoFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(tmp));
         if ((tmp==0) || (info->m_infoFileName==0))
         {
-            m_statusString = txt_notEnoughMemory;
+            m_statusString = ERR_NOT_ENOUGH_MEMORY;
             return false;
         }
         delete[] tmp;
@@ -568,18 +569,18 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
     // Check the size of the data.
     if ( info->m_c64dataLen > MAX_MEMORY )
     {
-        m_statusString = txt_dataTooLong;
+        m_statusString = ERR_DATA_TOO_LONG;
         return false;
     }
     else if ( info->m_c64dataLen == 0 )
     {
-        m_statusString = txt_empty;
+        m_statusString = ERR_EMPTY;
         return false;
     }
 
     cache.assign(buf.xferPtr(),buf.xferLen());
 
-    m_statusString = txt_noErrors;
+    m_statusString = MSG_NO_ERRORS;
     return true;
 }
 
@@ -597,7 +598,7 @@ bool SidTune::createNewFileName(Buffer_sidtt<char>& destString,
 #endif
     if ( newBuf.isEmpty() )
     {
-        m_statusString = txt_notEnoughMemory;
+        m_statusString = ERR_NOT_ENOUGH_MEMORY;
         return (status = false);
     }
     strcpy(newBuf.get(),sourceName);
@@ -699,7 +700,7 @@ void SidTune::getFromFiles(const char* fileName)
         return;
     }
 
-    m_statusString = txt_unrecognizedFormat;
+    m_statusString = ERR_UNRECOGNIZED_FORMAT;
     return;
 }
 
@@ -736,12 +737,12 @@ bool SidTune::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer,
 
     if ( toFile.bad() )
     {
-        m_statusString = txt_fileIoError;
+        m_statusString = ERR_FILE_IO_ERROR;
         return false;
     }
     else
     {
-        m_statusString = txt_noErrors;
+        m_statusString = MSG_NO_ERRORS;
         return true;
     }
 }
@@ -766,7 +767,7 @@ bool SidTune::saveC64dataFile( const char* fileName, bool overWriteFlag )
         std::ofstream fMyOut( fileName, createAttr );
         if ( !fMyOut || fMyOut.tellp()>0 )
         {
-            m_statusString = txt_cantCreateFile;
+            m_statusString = ERR_CANT_CREATE_FILE;
         }
         else
         {
@@ -783,11 +784,11 @@ bool SidTune::saveC64dataFile( const char* fileName, bool overWriteFlag )
             // Data length: info->m_dataFileLen - fileOffset
             if ( !saveToOpenFile( fMyOut,cache.get()+fileOffset, info->m_dataFileLen - fileOffset ) )
             {
-                m_statusString = txt_fileIoError;
+                m_statusString = ERR_FILE_IO_ERROR;
             }
             else
             {
-                m_statusString = txt_noErrors;
+                m_statusString = MSG_NO_ERRORS;
                 success = true;
             }
             fMyOut.close();
@@ -816,17 +817,17 @@ bool SidTune::savePSIDfile( const char* fileName, bool overWriteFlag )
         std::ofstream fMyOut( fileName, createAttr );
         if ( !fMyOut || fMyOut.tellp()>0 )
         {
-            m_statusString = txt_cantCreateFile;
+            m_statusString = ERR_CANT_CREATE_FILE;
         }
         else
         {
             if ( !PSID_fileSupportSave( fMyOut,cache.get() ) )
             {
-                m_statusString = txt_fileIoError;
+                m_statusString = ERR_FILE_IO_ERROR;
             }
             else
             {
-                m_statusString = txt_noErrors;
+                m_statusString = MSG_NO_ERRORS;
                 success = true;
             }
             fMyOut.close();
@@ -854,7 +855,7 @@ bool SidTune::checkRelocInfo (void)
     const uint_least8_t endp   = (startp + info->m_relocPages - 1) & 0xff;
     if (endp < startp)
     {
-        m_statusString = txt_badReloc;
+        m_statusString = ERR_BAD_RELOC;
         return false;
     }
 
@@ -865,7 +866,7 @@ bool SidTune::checkRelocInfo (void)
         if ( ((startp <= startlp) && (endp >= startlp)) ||
              ((startp <= endlp)   && (endp >= endlp)) )
         {
-            m_statusString = txt_badReloc;
+            m_statusString = ERR_BAD_RELOC;
             return false;
         }
     }
@@ -878,7 +879,7 @@ bool SidTune::checkRelocInfo (void)
         || ((0xa0 <= endp) && (endp <= 0xbf))
         || (endp >= 0xd0))
     {
-        m_statusString = txt_badReloc;
+        m_statusString = ERR_BAD_RELOC;
         return false;
     }
     return true;
@@ -895,7 +896,7 @@ bool SidTune::resolveAddrs (const uint_least8_t *c64data)
     {
         if ( info->m_c64dataLen < 2 )
         {
-            m_statusString = txt_corrupt;
+            m_statusString = ERR_CORRUPT;
             return false;
         }
         info->m_loadAddr = endian_16( *(c64data+1), *c64data );
@@ -908,7 +909,7 @@ bool SidTune::resolveAddrs (const uint_least8_t *c64data)
     {
         if ( info->m_initAddr != 0 )
         {
-            m_statusString = txt_badAddr;
+            m_statusString = ERR_BAD_ADDR;
             return false;
         }
     }
@@ -930,13 +931,13 @@ bool SidTune::checkCompatibility (void)
         case 0x0D:
         case 0x0B:
         case 0x0A:
-            m_statusString = txt_badAddr;
+            m_statusString = ERR_BAD_ADDR;
             return false;
         default:
             if ( (info->m_initAddr < info->m_loadAddr) ||
                  (info->m_initAddr > (info->m_loadAddr + info->m_c64dataLen - 1)) )
             {
-                m_statusString = txt_badAddr;
+                m_statusString = ERR_BAD_ADDR;
                 return false;
             }
         }
@@ -946,7 +947,7 @@ bool SidTune::checkCompatibility (void)
         // Check tune is loadable on a real C64
         if ( info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR )
         {
-            m_statusString = txt_badAddr;
+            m_statusString = ERR_BAD_ADDR;
             return false;
         }
         break;

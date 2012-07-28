@@ -55,13 +55,15 @@ typedef enum
     X00_REL
 } X00Format;
 
-static const char _sidtune_id[]         = "C64File";
-static const char _sidtune_format_del[] = "Unsupported tape image file (DEL)";
-static const char _sidtune_format_seq[] = "Unsupported tape image file (SEQ)";
-static const char _sidtune_format_prg[] = "Tape image file (PRG)";
-static const char _sidtune_format_usr[] = "Unsupported USR file (USR)";
-static const char _sidtune_format_rel[] = "Unsupported tape image file (REL)";
-static const char _sidtune_truncated[]  = "ERROR: File is most likely truncated";
+const char TXT_FORMAT_DEL[] = "Unsupported tape image file (DEL)";
+const char TXT_FORMAT_SEQ[] = "Unsupported tape image file (SEQ)";
+const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
+const char TXT_FORMAT_USR[] = "Unsupported USR file (USR)";
+const char TXT_FORMAT_REL[] = "Unsupported tape image file (REL)";
+
+const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
+
+const char P00_ID[]         = "C64File";
 
 
 bool SidTune::X00_fileSupport(const char *fileName,
@@ -83,23 +85,23 @@ bool SidTune::X00_fileSupport(const char *fileName,
     {
     case 'D':
         type   = X00_DEL;
-        format = _sidtune_format_del;
+        format = TXT_FORMAT_DEL;
         break;
     case 'S':
         type = X00_SEQ;
-        format = _sidtune_format_seq;
+        format = TXT_FORMAT_SEQ;
         break;
     case 'P':
         type = X00_PRG;
-        format = _sidtune_format_prg;
+        format = TXT_FORMAT_PRG;
         break;
     case 'U':
         type = X00_USR;
-        format = _sidtune_format_usr;
+        format = TXT_FORMAT_USR;
         break;
     case 'R':
         type = X00_REL;
-        format = _sidtune_format_rel;
+        format = TXT_FORMAT_REL;
         break;
     }
 
@@ -110,7 +112,7 @@ bool SidTune::X00_fileSupport(const char *fileName,
     if (bufLen < X00_ID_LEN)
         return false;
 
-    if (strcmp (pHeader->id, _sidtune_id))
+    if (strcmp (pHeader->id, P00_ID))
         return false;
 
     // File types current supported
@@ -119,7 +121,7 @@ bool SidTune::X00_fileSupport(const char *fileName,
 
     if (bufLen < sizeof(X00Header)+2)
     {
-        throw loadError(_sidtune_truncated);
+        throw loadError(ERR_TRUNCATED);
     }
 
     info->m_formatString = format;

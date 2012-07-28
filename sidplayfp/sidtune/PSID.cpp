@@ -94,14 +94,15 @@ enum
     PSID_SIDMODEL2_ANY     = PSID_SIDMODEL2_6581 | PSID_SIDMODEL2_8580
 };
 
-static const char _sidtune_format_psid[] = "PlaySID one-file format (PSID)";
-static const char _sidtune_format_rsid[] = "Real C64 one-file format (RSID)";
-static const char _sidtune_unknown_psid[] = "Unsupported PSID version";
-static const char _sidtune_unknown_rsid[] = "Unsupported RSID version";
-static const char _sidtune_truncated[] = "ERROR: File is most likely truncated";
-static const char _sidtune_invalid[] = "ERROR: File contains invalid data";
+const char TXT_FORMAT_PSID[]  = "PlaySID one-file format (PSID)";
+const char TXT_FORMAT_RSID[]  = "Real C64 one-file format (RSID)";
+const char TXT_UNKNOWN_PSID[] = "Unsupported PSID version";
+const char TXT_UNKNOWN_RSID[] = "Unsupported RSID version";
 
-static const int _sidtune_psid_maxStrLen = 32;
+const char ERR_TRUNCATED[]    = "ERROR: File is most likely truncated";
+const char ERR_INVALID[]      = "ERROR: File contains invalid data";
+
+static const int psid_maxStrLen = 32;
 
 
 bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
@@ -130,9 +131,9 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
        case 3:
            break;
        default:
-           throw loadError(_sidtune_unknown_psid);
+           throw loadError(TXT_UNKNOWN_PSID);
        }
-       info->m_formatString = _sidtune_format_psid;
+       info->m_formatString = TXT_FORMAT_PSID;
     }
     else if (endian_big32((const uint_least8_t*)pHeader->id)==RSID_ID)
     {
@@ -142,9 +143,9 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
        case 3:
            break;
        default:
-           throw loadError(_sidtune_unknown_rsid);
+           throw loadError(TXT_UNKNOWN_RSID);
        }
-       info->m_formatString = _sidtune_format_rsid;
+       info->m_formatString = TXT_FORMAT_RSID;
        compatibility = SidTuneInfo::COMPATIBILITY_R64;
     }
     else
@@ -157,7 +158,7 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
     // accessed.
     if ( bufLen < (sizeof(psidHeader)+2) )
     {
-        throw loadError(_sidtune_truncated);
+        throw loadError(ERR_TRUNCATED);
     }
 
     fileOffset         = endian_big16(pHeader->data);
@@ -244,7 +245,7 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
             (info->m_playAddr != 0) ||
             (speed != 0))
         {
-            throw loadError(_sidtune_invalid);
+            throw loadError(ERR_INVALID);
         }
         // Real C64 tunes appear as CIA
         speed = ~0;
@@ -255,13 +256,13 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
     // Copy info strings, so they will not get lost.
     info->m_numberOfInfoStrings = 3;
     // Name
-    strncpy(&infoString[0][0],pHeader->name,_sidtune_psid_maxStrLen);
+    strncpy(&infoString[0][0],pHeader->name,psid_maxStrLen);
     info->m_infoString[0] = &infoString[0][0];
     // Author
-    strncpy(&infoString[1][0],pHeader->author,_sidtune_psid_maxStrLen);
+    strncpy(&infoString[1][0],pHeader->author,psid_maxStrLen);
     info->m_infoString[1] = &infoString[1][0];
     // Released
-    strncpy(&infoString[2][0],pHeader->released,_sidtune_psid_maxStrLen);
+    strncpy(&infoString[2][0],pHeader->released,psid_maxStrLen);
     info->m_infoString[2] = &infoString[2][0];
 
     if ( info->m_musPlayer )
@@ -333,9 +334,9 @@ bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* d
     // @FIXME@ Need better solution.  Make it possible to override MUS strings
     if ( info->m_numberOfInfoStrings == 3 )
     {
-        strncpy( myHeader.name, info->m_infoString[0], _sidtune_psid_maxStrLen);
-        strncpy( myHeader.author, info->m_infoString[1], _sidtune_psid_maxStrLen);
-        strncpy( myHeader.released, info->m_infoString[2], _sidtune_psid_maxStrLen);
+        strncpy( myHeader.name, info->m_infoString[0], psid_maxStrLen);
+        strncpy( myHeader.author, info->m_infoString[1], psid_maxStrLen);
+        strncpy( myHeader.released, info->m_infoString[2], psid_maxStrLen);
     }
 
     tmpFlags |= (info->m_clockSpeed << 2);

@@ -29,8 +29,9 @@
 
 SIDPLAYFP_NAMESPACE_START
 
-const char Player::ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
-const char Player::ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
+// Error Strings
+const char ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
+const char ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
 
 extern "C" int reloc65(unsigned char** buf, int* fsize, int addr);
 

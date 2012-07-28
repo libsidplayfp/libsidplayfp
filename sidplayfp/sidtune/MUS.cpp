@@ -33,16 +33,17 @@
 #   include <new>
 #endif
 
-static const char _sidtune_txt_invalid[] = "ERROR: File contains invalid data";
-static const char _sidtune_2nd_invalid[] = "ERROR: 2nd file contains invalid data";
-static const char _sidtune_txt_format_mus[] = "C64 Sidplayer format (MUS)";
-static const char _sidtune_txt_format_str[] = "C64 Stereo Sidplayer format (MUS+STR)";
-static const char _sidtune_txt_notEnoughMemory[] = "ERROR: Not enough free memory";
-static const char _sidtune_txt_sizeExceeded[] = "ERROR: Total file size too large";
+const char TXT_FORMAT_MUS[]        = "C64 Sidplayer format (MUS)";
+const char TXT_FORMAT_STR[]        = "C64 Stereo Sidplayer format (MUS+STR)";
+
+const char ERR_INVALID[]           = "ERROR: File contains invalid data";
+const char ERR_2ND_INVALID[]       = "ERROR: 2nd file contains invalid data";
+const char ERR_NOT_ENOUGH_MEMORY[] = "ERROR: Not enough free memory";
+const char ERR_SIZE_EXCEEDED[]     = "ERROR: Total file size too large";
 
 static const uint_least16_t SIDTUNE_MUS_HLT_CMD = 0x14F;
 
-static const uint_least16_t SIDTUNE_MUS_DATA_ADDR = 0x0900;
+static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
@@ -86,7 +87,7 @@ void SidTune::MUS_setPlayerAddress()
     }
 }
 
-static const uint8_t _sidtune_sidplayer1[] =
+static const uint8_t sidplayer1[] =
 {
     0x00, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -292,7 +293,7 @@ static const uint8_t _sidtune_sidplayer1[] =
     0x60
 };
 
-static const uint8_t _sidtune_sidplayer2[] =
+static const uint8_t sidplayer2[] =
 {
     0x00, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -506,11 +507,11 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     const uint_least32_t mergeLen = musBuf.len()+strBuf.len();
 
     // Sanity check. I do not trust those MUS/STR files around.
-    const uint_least32_t freeSpace = endian_16(_sidtune_sidplayer1[1],_sidtune_sidplayer1[0])
+    const uint_least32_t freeSpace = endian_16(sidplayer1[1],sidplayer1[0])
                             - SIDTUNE_MUS_DATA_ADDR;
     if ( (musBuf.len()+strBuf.len()-4) > freeSpace)
     {
-        m_statusString = _sidtune_txt_sizeExceeded;
+        m_statusString = ERR_SIZE_EXCEEDED;
         return false;
     }
 
@@ -520,7 +521,7 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     if ( !mergeBuf.assign(new uint8_t[mergeLen], mergeLen) )
 #endif
     {
-        m_statusString = _sidtune_txt_notEnoughMemory;
+        m_statusString = ERR_NOT_ENOUGH_MEMORY;
         return false;
     }
 
@@ -552,9 +553,9 @@ void SidTune::MUS_installPlayer(uint_least8_t *c64buf)
     if (status && (c64buf != 0))
     {
         // Install MUS player #1.
-        uint_least16_t dest = endian_16(_sidtune_sidplayer1[1],
-                                     _sidtune_sidplayer1[0]);
-        memcpy(c64buf+dest,_sidtune_sidplayer1+2,sizeof(_sidtune_sidplayer1)-2);
+        uint_least16_t dest = endian_16(sidplayer1[1],
+                                     sidplayer1[0]);
+        memcpy(c64buf+dest,sidplayer1+2,sizeof(sidplayer1)-2);
         // Point player #1 to data #1.
         c64buf[dest+0xc6e] = (SIDTUNE_MUS_DATA_ADDR+2)&0xFF;
         c64buf[dest+0xc70] = (SIDTUNE_MUS_DATA_ADDR+2)>>8;
@@ -562,9 +563,9 @@ void SidTune::MUS_installPlayer(uint_least8_t *c64buf)
         if (info->m_sidChipBase2 != 0)
         {
             // Install MUS player #2.
-            dest = endian_16(_sidtune_sidplayer2[1],
-                             _sidtune_sidplayer2[0]);
-            memcpy(c64buf+dest,_sidtune_sidplayer2+2,sizeof(_sidtune_sidplayer2)-2);
+            dest = endian_16(sidplayer2[1],
+                             sidplayer2[0]);
+            memcpy(c64buf+dest,sidplayer2+2,sizeof(sidplayer2)-2);
             // Point player #2 to data #2.
             c64buf[dest+0xc6e] = (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)&0xFF;
             c64buf[dest+0xc70] = (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)>>8;
@@ -600,7 +601,7 @@ bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
     if ((info->m_compatibility != SidTuneInfo::COMPATIBILITY_C64) ||
         (info->m_relocStartPage != 0) || (info->m_relocPages != 0))
     {
-        throw loadError(_sidtune_txt_invalid);
+        throw loadError(ERR_INVALID);
     }
 
     {   // All subtunes should be CIA
@@ -608,7 +609,7 @@ bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
         {
             if (songSpeed[i] != SidTuneInfo::SPEED_CIA_1A)
             {
-                throw loadError(_sidtune_txt_invalid);
+                throw loadError(ERR_INVALID);
             }
         }
     }
@@ -652,7 +653,7 @@ bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
     if ( !strBuf.isEmpty() )
     {
         if ( !MUS_detect(strBuf.get(),strBuf.len(),voice3Index) )
-            throw loadError(_sidtune_2nd_invalid);
+            throw loadError(ERR_2ND_INVALID);
         spPet.setBuffer (strBuf.get(),strBuf.len());
         stereo = true;
     }
@@ -696,12 +697,12 @@ bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
         }
 
         info->m_sidChipBase2 = SIDTUNE_SID2_BASE_ADDR;
-        info->m_formatString = _sidtune_txt_format_str;
+        info->m_formatString = TXT_FORMAT_STR;
     }
     else
     {
         info->m_sidChipBase2 = 0;
-        info->m_formatString = _sidtune_txt_format_mus;
+        info->m_formatString = TXT_FORMAT_MUS;
     }
     MUS_setPlayerAddress();
 

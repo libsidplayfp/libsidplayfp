@@ -244,25 +244,6 @@ class SID_EXTERN SidTune
     virtual bool X00_fileSupport     (const char* fileName,
                                             Buffer_sidtt<const uint_least8_t>& dataBuf);
 
-    /// @name Error and status message strings.
-    //@{
-    static const char txt_songNumberExceed[];
-    static const char txt_empty[];
-    static const char txt_unrecognizedFormat[];
-    static const char txt_noDataFile[];
-    static const char txt_notEnoughMemory[];
-    static const char txt_cantLoadFile[];
-    static const char txt_cantOpenFile[];
-    static const char txt_fileTooLong[];
-    static const char txt_dataTooLong[];
-    static const char txt_cantCreateFile[];
-    static const char txt_fileIoError[];
-    static const char txt_noErrors[];
-    static const char txt_badAddr[];
-    static const char txt_badReloc[];
-    static const char txt_corrupt[];
-    //@}
-
  private:  // ---------------------------------------------------------------
 
     void init();

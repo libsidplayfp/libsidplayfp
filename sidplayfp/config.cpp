@@ -21,6 +21,19 @@
 
 SIDPLAYFP_NAMESPACE_START
 
+const char  TXT_PAL_VBI[]        = "50 Hz VBI (PAL)";
+const char  TXT_PAL_VBI_FIXED[]  = "60 Hz VBI (PAL FIXED)";
+const char  TXT_PAL_CIA[]        = "CIA (PAL)";
+const char  TXT_PAL_UNKNOWN[]    = "UNKNOWN (PAL)";
+const char  TXT_NTSC_VBI[]       = "60 Hz VBI (NTSC)";
+const char  TXT_NTSC_VBI_FIXED[] = "50 Hz VBI (NTSC FIXED)";
+const char  TXT_NTSC_CIA[]       = "CIA (NTSC)";
+const char  TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
+
+// Error Strings
+const char  ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
+const char  ERR_UNSUPPORTED_PRECISION[] = "SIDPLAYER ERROR: Unsupported sample precision.";
+
 // An instance of this structure is used to transport emulator settings
 // to and from the interface class.
 

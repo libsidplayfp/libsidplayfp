@@ -32,12 +32,6 @@ class iniParser;
 class SID_EXTERN SidDatabase
 {
 private:
-    static const char ERR_DATABASE_CORRUPT[];
-    static const char ERR_NO_DATABASE_LOADED[];
-    static const char ERR_NO_SELECTED_SONG[];
-    static const char ERR_MEM_ALLOC[];
-    static const char ERR_UNABLE_TO_LOAD_DATABASE[];
-
     iniParser  *m_parser;
     const char *errorString;
 

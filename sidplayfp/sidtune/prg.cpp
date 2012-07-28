@@ -21,8 +21,9 @@
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
 
-static const char _sidtune_format_prg[] = "Tape image file (PRG)";
-static const char _sidtune_truncated[] = "ERROR: File is most likely truncated";
+const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
+
+const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 
 
 bool SidTune::PRG_fileSupport(const char *fileName,
@@ -37,10 +38,10 @@ bool SidTune::PRG_fileSupport(const char *fileName,
 
     if (dataBuf.len() < 2)
     {
-        throw loadError(_sidtune_truncated);
+        throw loadError(ERR_TRUNCATED);
     }
 
-    info->m_formatString = _sidtune_format_prg;
+    info->m_formatString = TXT_FORMAT_PRG;
 
     // Automatic settings
     info->m_songs         = 1;
