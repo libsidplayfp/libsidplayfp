@@ -59,7 +59,7 @@ const char  *Player::credit[];
 Player::Player (void)
 // Set default settings for system
 :m_mixer (m_c64.getEventScheduler()),
- m_tune (NULL),
+ m_tune (0),
  m_errorString(TXT_NA),
  m_mileage(0),
  m_playerState(sid2_stopped),
@@ -73,7 +73,7 @@ Player::Player (void)
     m_c64.setTestEnv(this);
 #endif
 
-    srand ((uint) ::time(NULL));
+    srand ((uint) ::time(0));
     m_rand = (uint_least32_t) rand ();
 
     // Setup exported info
@@ -94,7 +94,7 @@ Player::Player (void)
     m_cfg.playback        = sid2_mono;
     m_cfg.sidDefault      = SID2_MOS6581;
     m_cfg.forceModel      = false;
-    m_cfg.sidEmulation    = NULL;
+    m_cfg.sidEmulation    = 0;
     m_cfg.leftVolume      = Mixer::VOLUME_MAX;
     m_cfg.rightVolume     = Mixer::VOLUME_MAX;
     m_cfg.powerOnDelay    = SID2_DEFAULT_POWER_ON_DELAY;
@@ -245,7 +245,7 @@ int Player::load (SidTune *tune)
         // Failed configuration with new tune, reject it
         if (ret < 0)
         {
-            m_tune = NULL;
+            m_tune = 0;
             return -1;
         }
     }

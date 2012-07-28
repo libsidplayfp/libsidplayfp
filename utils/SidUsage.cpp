@@ -136,11 +136,11 @@ void SidUsage::read (const char *filename, sid2_usage_t &usage)
 {
     FILE *file;
     size_t i = strlen (filename);
-    const char *ext = NULL;
+    const char *ext = 0;
 
     m_status = false;
     file = fopen (filename, "rb");
-    if (file == NULL)
+    if (file == 0)
     {
         m_errorString = txt_file;
         return;
@@ -172,11 +172,11 @@ void SidUsage::write (const char *filename, const sid2_usage_t &usage)
 {
     FILE *file;
     size_t i = strlen (filename);
-    const char *ext = NULL;
+    const char *ext = 0;
 
     m_status = false;
     file = fopen (filename, "wb");
-    if (file == NULL)
+    if (file == 0)
     {
         m_errorString = txt_file;
         return;

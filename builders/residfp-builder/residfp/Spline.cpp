@@ -11,16 +11,16 @@ Spline::Spline(const double input[][2], const int inputLength) :
 	params(new double[paramsLength][6]) {
 
 	for (int i = 0; i < paramsLength; i ++) {
-		const double* p0 = i != 0 ? input[i-1] : NULL;
+		const double* p0 = i != 0 ? input[i-1] : 0;
 		const double* p1 = input[i];
 		const double* p2 = input[i+1];
-		const double* p3 = i != inputLength - 2 ? input[i+2] : NULL;
+		const double* p3 = i != inputLength - 2 ? input[i+2] : 0;
 
 		double k1, k2;
-		if (p0 == NULL) {
+		if (p0 == 0) {
 			k2 = (p3[1] - p1[1])/(p3[0] - p1[0]);
 			k1 = (3.*(p2[1] - p1[1])/(p2[0] - p1[0]) - k2)/2.;
-		} else if (p3 == NULL) {
+		} else if (p3 == 0) {
 			k1 = (p2[1] - p0[1])/(p2[0] - p0[0]);
 			k2 = (3.*(p2[1] - p1[1])/(p2[0] - p1[0]) - k1)/2.;
 		} else {

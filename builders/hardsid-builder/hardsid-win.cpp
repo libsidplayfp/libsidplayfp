@@ -80,7 +80,7 @@ char   HardSID::credit[];
 HardSID::HardSID (sidbuilder *builder)
 :sidemu(builder),
  Event("HardSID Delay"),
- m_eventContext(NULL),
+ m_eventContext(0),
  m_instance(sid++),
  m_status(false),
  m_locked(false)
@@ -148,7 +148,7 @@ void HardSID::reset (uint8_t volume)
         hsid2.Reset  ((BYTE) m_instance);
     hsid2.Sync ((BYTE) m_instance);
 
-    if (m_eventContext != NULL)
+    if (m_eventContext != 0)
         m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 

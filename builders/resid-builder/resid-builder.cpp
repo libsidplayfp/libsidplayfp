@@ -48,7 +48,7 @@ ReSIDBuilder::~ReSIDBuilder (void)
 // Create a new sid emulation.  Called by libsidplay2 only
 uint ReSIDBuilder::create (uint sids)
 {
-    ReSID *sid = NULL;
+    ReSID *sid = 0;
     m_status   = true;
 
     // Check available devices
@@ -163,7 +163,7 @@ sidemu *ReSIDBuilder::lock (EventContext *env, const sid2_model_t model)
     // Unable to locate free SID
     m_status = false;
     sprintf (m_errorBuffer, "%s ERROR: No available SIDs to lock", name ());
-    return NULL;
+    return 0;
 }
 
 // Allow something to use this SID
@@ -176,7 +176,7 @@ void ReSIDBuilder::unlock (sidemu *device)
         ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
         if (sid == device)
         {   // Unlock it
-            sid->lock (NULL);
+            sid->lock (0);
             break;
         }
     }

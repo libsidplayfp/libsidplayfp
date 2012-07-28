@@ -49,7 +49,7 @@ int Player::config (const sid2_config_t &cfg)
             cfg.playback == sid2_stereo ? 2 : 1, cpuFreq, cfg.frequency,
             cfg.samplingMethod, cfg.fastSampling) < 0) {
             m_errorString = cfg.sidEmulation->error();
-            m_cfg.sidEmulation = NULL;
+            m_cfg.sidEmulation = 0;
             goto Player_configure_restore;
         }
 

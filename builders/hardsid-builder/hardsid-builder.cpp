@@ -77,7 +77,7 @@ HardSIDBuilder::~HardSIDBuilder (void)
 // Create a new sid emulation.  Called by libsidplay2 only
 uint HardSIDBuilder::create (uint sids)
 {
-    HardSID *sid = NULL;
+    HardSID *sid = 0;
     m_status     = true;
 
     // Check available devices
@@ -185,7 +185,7 @@ sidemu *HardSIDBuilder::lock (EventContext *env, const sid2_model_t model)
     // Unable to locate free SID
     m_status = false;
     sprintf (m_errorBuffer, "%s ERROR: No available SIDs to lock", name ());
-    return NULL;
+    return 0;
 }
 
 // Allow something to use this SID
@@ -198,7 +198,7 @@ void HardSIDBuilder::unlock (sidemu *device)
         HardSID *sid = static_cast<HardSID*>(sidobjs[i]);
         if (sid == device)
         {   // Unlock it
-            sid->lock (NULL);
+            sid->lock (0);
             break;
         }
     }

@@ -37,7 +37,7 @@ char ReSID::m_credit[];
 
 ReSID::ReSID (sidbuilder *builder)
 :sidemu(builder),
- m_context(NULL),
+ m_context(0),
 #ifdef HAVE_EXCEPTIONS
  m_sid(*(new(std::nothrow) RESID_NS::SID)),
 #else
