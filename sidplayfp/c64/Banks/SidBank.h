@@ -95,9 +95,9 @@ public:
             sid[i]->write(addr & 0x1f, data);
     }
 
-    void setSID(const int i, sidemu *s) { sid[i] = s; }
+    void setSID(const unsigned int i, sidemu *s) { sid[i] = s; }
 
-    sidemu *getSID(const int i) const { return sid[i]; }
+    sidemu *getSID(const unsigned int i) const { return (i < MAX_SIDS)?sid[i]:0; }
 };
 
 #endif

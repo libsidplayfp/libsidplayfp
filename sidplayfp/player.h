@@ -111,7 +111,7 @@ public:
     uint_least32_t time         (void) { return (uint_least32_t)(m_c64.getEventScheduler()->getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
     void           debug        (const bool enable, FILE *out)
                                 { m_c64.debug (enable, out); }
-    void           mute         (const int voice, const bool enable);
+    void           mute         (const unsigned int sidNum, const unsigned int voice, const bool enable);
 
     const char    *error        (void) const { return m_errorString; }
     bool           getStatus() const { return m_status; }

@@ -241,8 +241,8 @@ int Player::load (SidTune *tune)
     return 0;
 }
 
-void Player::mute(int voice, bool enable) {
-    sidemu *s = m_c64.getSid(0);
+void Player::mute(const unsigned int sidNum, const unsigned int voice, const bool enable) {
+    sidemu *s = m_c64.getSid(sidNum);
     if (s)
         s->voice(voice, enable);
 }

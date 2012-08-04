@@ -202,7 +202,7 @@ public:
     * @param i sid number to set
     * @param sidemu the sid to set
     */
-    void setSid(const int i, sidemu *s) { sidBank.setSID(i, s); }
+    void setSid(const unsigned int i, sidemu *s) { sidBank.setSID(i, s); }
 
     /**
     * Return the requested SID
@@ -210,7 +210,7 @@ public:
     * @param i sid number to get
     * @return the SID
     */
-    sidemu *getSid(const int i) const { return sidBank.getSID(i); }
+    sidemu *getSid(const unsigned int i) const { return sidBank.getSID(i); }
 
     void resetSIDMapper() { sidBank.resetSIDMapper(); }
 

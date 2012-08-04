@@ -53,7 +53,7 @@ public:
     virtual const   char *credits (void) = 0;
 
     // Standard SID functions
-    virtual void    voice   (uint_least8_t num, bool mute) = 0;
+    virtual void    voice   (const unsigned int num, const bool mute) = 0;
     sidbuilder     *builder (void) const { return m_builder; }
 
     virtual int bufferpos() const { return m_bufferpos; }

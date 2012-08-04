@@ -77,8 +77,8 @@ const char *sidplay2::error (void) const
 int  sidplay2::fastForward  (uint percent)
 {   return sidplayer.fastForward (percent); }
 
-void sidplay2::mute(int voice, bool enable)
-{   sidplayer.mute(voice, enable); }
+void sidplay2::mute(const unsigned int sidNum, const unsigned int voice, const bool enable)
+{   sidplayer.mute(sidNum, voice, enable); }
 
 void sidplay2::debug (bool enable, FILE *out)
 {   sidplayer.debug (enable, out); }

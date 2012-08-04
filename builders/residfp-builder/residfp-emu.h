@@ -55,7 +55,7 @@ public:
     // Standard SID functions
     void          clock   ();
     void          filter  (bool enable);
-    void          voice   (uint_least8_t num, bool mute) { m_sid.mute(num, mute); }
+    void          voice   (const unsigned int num, const bool mute) { m_sid.mute(num, mute); }
 
     bool          getStatus() const { return m_status; }
 

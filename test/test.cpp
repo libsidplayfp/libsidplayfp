@@ -40,7 +40,7 @@ public:
     void    write (uint_least8_t, uint8_t) {}
     void    clock() {}
     const   char *credits (void) { return ""; }
-    void    voice (uint_least8_t, bool) {}
+    void    voice (const unsigned int num, const bool mute) {}
     const   char *error   (void) const { return ""; }
 };
 

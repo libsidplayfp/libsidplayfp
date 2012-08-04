@@ -137,7 +137,7 @@ void ReSID::sampling (float systemclock, float freq,
     }
 }
 
-void ReSID::voice (uint_least8_t num, bool mute)
+void ReSID::voice (const unsigned int num, const bool mute)
 {
     if (mute)
         m_voiceMask &= ~(1<<num);

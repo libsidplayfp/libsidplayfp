@@ -107,7 +107,7 @@ public:
     * @param out the file where to redirect the debug info.
     */
     void           debug        (bool enable, FILE *out);
-    void           mute         (int voice, bool enable);
+    void           mute         (const unsigned int sidNum, const unsigned int voice, const bool enable);
 
     //@{
     /// Timer functions with respect to resolution returned by timebase
