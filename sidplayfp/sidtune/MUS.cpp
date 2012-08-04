@@ -26,7 +26,7 @@
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
-#include "sidplayfp/SidTune.h"
+#include "SidTuneBase.h"
 #include "sidplayfp/sidendian.h"
 
 #ifdef HAVE_EXCEPTIONS
@@ -47,13 +47,13 @@ static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
-bool SidTune::MUS_fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
+bool SidTuneBase::MUS_fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
                                              Buffer_sidtt<const uint_least8_t>& strBuf)
 {
     return MUS_load (musBuf, strBuf, true);
 }
 
-bool SidTune::MUS_detect(const void* buffer, const uint_least32_t bufLen,
+bool SidTuneBase::MUS_detect(const void* buffer, const uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {
     SmartPtr_sidtt<const uint8_t> spMus((const uint8_t*)buffer,bufLen);
@@ -71,7 +71,7 @@ bool SidTune::MUS_detect(const void* buffer, const uint_least32_t bufLen,
             && spMus);
 }
 
-void SidTune::MUS_setPlayerAddress()
+void SidTuneBase::MUS_setPlayerAddress()
 {
     if (info->m_sidChipBase2 == 0)
     {
@@ -499,7 +499,7 @@ static const uint8_t sidplayer2[] =
     0x60, 0x00, 0x20, 0x60, 0xec, 0x4c, 0x60, 0xfc, 0x20, 0x80, 0xec, 0x4c, 0x80, 0xfc
 };
 
-bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
+bool SidTuneBase::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
                              Buffer_sidtt<const uint_least8_t>& strBuf)
 {
     Buffer_sidtt<uint8_t> mergeBuf;
@@ -548,7 +548,7 @@ bool SidTune::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     return true;
 }
 
-void SidTune::MUS_installPlayer(uint_least8_t *c64buf)
+void SidTuneBase::MUS_installPlayer(uint_least8_t *c64buf)
 {
     if (status && (c64buf != 0))
     {
@@ -573,13 +573,13 @@ void SidTune::MUS_installPlayer(uint_least8_t *c64buf)
     }
 }
 
-bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
+bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
 {
     Buffer_sidtt<const uint_least8_t> empty;
     return MUS_load (musBuf, empty, init);
 }
 
-bool SidTune::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
+bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
                                        Buffer_sidtt<const uint_least8_t>& strBuf,
                                        bool init)
 {

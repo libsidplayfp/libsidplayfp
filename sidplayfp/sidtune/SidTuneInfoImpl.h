@@ -29,7 +29,7 @@
 */
 class SidTuneInfoImpl : public SidTuneInfo
 {
-    friend class SidTune;
+    friend class SidTuneBase;
 
 private:
     const char* m_formatString;

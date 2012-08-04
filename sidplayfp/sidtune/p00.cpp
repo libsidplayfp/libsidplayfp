@@ -17,7 +17,7 @@
  */
 
 #include "SidTuneCfg.h"
-#include "sidplayfp/SidTune.h"
+#include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
 
@@ -66,7 +66,7 @@ const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 const char P00_ID[]         = "C64File";
 
 
-bool SidTune::X00_fileSupport(const char *fileName,
+bool SidTuneBase::X00_fileSupport(const char *fileName,
                                              Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
     const char      *ext     = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));

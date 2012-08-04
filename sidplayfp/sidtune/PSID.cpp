@@ -24,7 +24,7 @@
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
-#include "sidplayfp/SidTune.h"
+#include "SidTuneBase.h"
 #include "sidplayfp/sidendian.h"
 
 #define PSID_ID 0x50534944
@@ -105,7 +105,7 @@ const char ERR_INVALID[]      = "ERROR: File contains invalid data";
 static const int psid_maxStrLen = 32;
 
 
-bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
+bool SidTuneBase::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
     const uint_least32_t bufLen = dataBuf.len();
 
@@ -271,7 +271,7 @@ bool SidTune::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
 }
 
 
-bool SidTune::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* dataBuffer)
+bool SidTuneBase::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* dataBuffer)
 {
     psidHeader myHeader;
     endian_big32((uint_least8_t*)myHeader.id,PSID_ID);

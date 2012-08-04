@@ -17,7 +17,7 @@
  */
 
 #include "SidTuneCfg.h"
-#include "sidplayfp/SidTune.h"
+#include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
 
@@ -26,7 +26,7 @@ const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 
 
-bool SidTune::PRG_fileSupport(const char *fileName,
+bool SidTuneBase::PRG_fileSupport(const char *fileName,
                                              Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
     const char *ext = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));

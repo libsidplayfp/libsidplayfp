@@ -1,40 +1,45 @@
 /*
- * /home/ms/files/source/libsidtune/RCS/SidTune.h,v
+ * This file is part of libsidplayfp, a SID player engine.
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2000 Simon White
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SIDTUNE_H
-#define SIDTUNE_H
+#ifndef SIDTUNEBASE_H
+#define SIDTUNEBASE_H
 
-#include "sidconfig.h"
-#include "Buffer.h"
-#include "SmartPtr.h"
-#include "SidTuneInfo.h"
+#include "sidplayfp/Buffer.h"
+#include "sidplayfp/SmartPtr.h"
+
+#include "sidplayfp/SidTuneInfo.h"
+#include "sidplayfp/SidTune.h"
 
 #include <stdint.h>
 #include <fstream>
 
-template class SID_EXTERN Buffer_sidtt<const uint_least8_t>;
+template class Buffer_sidtt<const uint_least8_t>;
 
 class SidTuneInfoImpl;
 
-/**
-* SidTune
+/** @internal
+* SidTuneBaseBase
 */
-class SID_EXTERN SidTune
+class SidTuneBase
 {
  private:
     /// Also PSID file format limit.
@@ -45,11 +50,8 @@ class SID_EXTERN SidTune
 
     static const uint_least32_t MAX_MEMORY = 65536;
 
- public:
-    static const int MD5_LENGTH = 32;
-
  private:
-    char m_md5[MD5_LENGTH+1];
+    char m_md5[SidTune::MD5_LENGTH+1];
 
  public:  // ----------------------------------------------------------------
 
@@ -65,23 +67,23 @@ class SID_EXTERN SidTune
     * You can specific ``sidTuneFileName = 0'', if you do not want to
     * load a sidtune. You can later load one with open().
     */
-    SidTune(const char* fileName, const char **fileNameExt = 0,
+    SidTuneBase(const char* fileName, const char **fileNameExt = 0,
             const bool separatorIsSlash = false);
 
     /**
     * Load a single-file sidtune from a memory buffer.
     * Currently supported: PSID format
     */
-    SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength);
+    SidTuneBase(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength);
 
-    virtual ~SidTune();
+    virtual ~SidTuneBase();
 
     /**
     * The sidTune class does not copy the list of file name extensions,
     * so make sure you keep it. If the provided pointer is 0, the
     * default list will be activated. This is a static list which
     *
-    * is used by all SidTune objects.
+    * is used by all SidTuneBase objects.
     */
     void setFileNameExtensions(const char **fileNameExt);
 
@@ -269,8 +271,8 @@ class SID_EXTERN SidTune
                            const char* sourceName, const char* sourceExt);
 
  private:    // prevent copying
-    SidTune(const SidTune&);
-    SidTune& operator=(SidTune&);
+    SidTuneBase(const SidTuneBase&);
+    SidTuneBase& operator=(SidTuneBase&);
 };
 
-#endif  /* SIDTUNE_H */
+#endif  /* SIDTUNEBASE_H */

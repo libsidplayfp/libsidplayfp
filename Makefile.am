@@ -55,6 +55,7 @@ builders/resid-builder/resid/libresid.la
 #=========================================================
 # libsidplayfp
 sidplayfp_libsidplayfp_la_SOURCES = \
+sidplayfp/Buffer.h \
 sidplayfp/component.h \
 sidplayfp/config.cpp \
 sidplayfp/EventScheduler.cpp \
@@ -66,6 +67,8 @@ sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
 sidplayfp/reloc65.c \
 sidplayfp/sidplay2.cpp \
+sidplayfp/SidTune.cpp \
+sidplayfp/SmartPtr.h \
 sidplayfp/psiddrv.a65 \
 sidplayfp/sidemu.h \
 sidplayfp/sidendian.h \
@@ -98,7 +101,8 @@ sidplayfp/sidtune/MUS.cpp \
 sidplayfp/sidtune/p00.cpp \
 sidplayfp/sidtune/prg.cpp \
 sidplayfp/sidtune/PSID.cpp \
-sidplayfp/sidtune/SidTune.cpp \
+sidplayfp/sidtune/SidTuneBase.cpp \
+sidplayfp/sidtune/SidTuneBase.h \
 sidplayfp/sidtune/SidTuneCfg.h \
 sidplayfp/sidtune/SidTuneInfoImpl.h \
 sidplayfp/sidtune/SidTuneTools.cpp \
@@ -119,7 +123,6 @@ sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
 
 sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/sidconfig.h \
-sidplayfp/Buffer.h \
 sidplayfp/event.h \
 sidplayfp/SidTuneInfo.h \
 sidplayfp/sid2types.h \
@@ -127,7 +130,6 @@ sidplayfp/sidbuilder.h \
 sidplayfp/sidplay2.h \
 sidplayfp/SidTune.h \
 sidplayfp/sidusage.h \
-sidplayfp/SmartPtr.h \
 utils/SidDatabase.h \
 utils/SidUsage.h
 

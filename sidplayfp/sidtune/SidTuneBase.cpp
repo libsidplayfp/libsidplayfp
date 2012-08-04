@@ -1,22 +1,24 @@
 /*
- * /home/ms/files/source/libsidtune/RCS/SidTune.cpp,v
+ * This file is part of libsidplayfp, a SID player engine.
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2000 Simon White
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-#define _SidTune_cpp_
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -24,7 +26,7 @@
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
-#include "sidplayfp/SidTune.h"
+#include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "sidplayfp/sidendian.h"
 #include "utils/MD5/MD5.h"
@@ -32,6 +34,7 @@
 #ifdef HAVE_EXCEPTIONS
 #   include <new>
 #endif
+
 #include <iostream>
 #include <iomanip>
 #include <string.h>
@@ -103,14 +106,14 @@ static const char _sidtune_CHRtab[256] =  // CHR$ conversion table (0x01 = no ou
   0x2f,0x2d,0x2d,0x7c,0x7c,0x7c,0x7c,0x2d,0x2d,0x2d,0x2f,0x5c,0x5c,0x2f,0x2f,0x23
 };
 
-const char** SidTune::fileNameExtensions = defaultFileNameExt;
+const char** SidTuneBase::fileNameExtensions = defaultFileNameExt;
 
-inline void SidTune::setFileNameExtensions(const char **fileNameExt)
+void SidTuneBase::setFileNameExtensions(const char **fileNameExt)
 {
     fileNameExtensions = ((fileNameExt!=0)?fileNameExt:defaultFileNameExt);
 }
 
-SidTune::SidTune(const char* fileName, const char **fileNameExt,
+SidTuneBase::SidTuneBase(const char* fileName, const char **fileNameExt,
                  const bool separatorIsSlash)
 {
     init();
@@ -130,18 +133,18 @@ SidTune::SidTune(const char* fileName, const char **fileNameExt,
     }
 }
 
-SidTune::SidTune(const uint_least8_t* data, const uint_least32_t dataLen)
+SidTuneBase::SidTuneBase(const uint_least8_t* data, const uint_least32_t dataLen)
 {
     init();
     getFromBuffer(data,dataLen);
 }
 
-SidTune::~SidTune()
+SidTuneBase::~SidTuneBase()
 {
     cleanup();
 }
 
-bool SidTune::load(const char* fileName, const bool separatorIsSlash)
+bool SidTuneBase::load(const char* fileName, const bool separatorIsSlash)
 {
     cleanup();
     init();
@@ -155,7 +158,7 @@ bool SidTune::load(const char* fileName, const bool separatorIsSlash)
     return status;
 }
 
-bool SidTune::read(const uint_least8_t* data, uint_least32_t dataLen)
+bool SidTuneBase::read(const uint_least8_t* data, uint_least32_t dataLen)
 {
     cleanup();
     init();
@@ -163,12 +166,12 @@ bool SidTune::read(const uint_least8_t* data, uint_least32_t dataLen)
     return status;
 }
 
-const SidTuneInfo* SidTune::getInfo() const
+const SidTuneInfo* SidTuneBase::getInfo() const
 {
     return info;
 }
 
-const SidTuneInfo* SidTune::getInfo(const unsigned int songNum)
+const SidTuneInfo* SidTuneBase::getInfo(const unsigned int songNum)
 {
     selectSong(songNum);
     return info;
@@ -176,7 +179,7 @@ const SidTuneInfo* SidTune::getInfo(const unsigned int songNum)
 
 // First check, whether a song is valid. Then copy any song-specific
 // variable information such a speed/clock setting to the info structure.
-unsigned int SidTune::selectSong(const unsigned int selectedSong)
+unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
 {
     if ( !status )
         return 0;
@@ -213,7 +216,7 @@ unsigned int SidTune::selectSong(const unsigned int selectedSong)
 
 // ------------------------------------------------- private member functions
 
-bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
+bool SidTuneBase::placeSidTuneInC64mem(uint_least8_t* c64buf)
 {
     if ( status && c64buf )
     {
@@ -240,7 +243,7 @@ bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
     return false;
 }
 
-bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
+bool SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
 {
     // This sucks big time
     openmode createAtrr = std::ios::in;
@@ -301,7 +304,7 @@ bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& 
     return true;
 }
 
-void SidTune::deleteFileNameCopies()
+void SidTuneBase::deleteFileNameCopies()
 {
     // When will it be fully safe to call delete[](0) on every system?
     if ( info->m_dataFileName != 0 )
@@ -315,7 +318,7 @@ void SidTune::deleteFileNameCopies()
     info->m_path = 0;
 }
 
-void SidTune::init()
+void SidTuneBase::init()
 {
     // Initialize the object with some safe defaults.
     status = false;
@@ -352,7 +355,7 @@ void SidTune::init()
         info->m_commentString[0] = SidTuneTools::myStrDup("--- SAVED WITH SIDPLAY ---");
 }
 
-void SidTune::cleanup()
+void SidTuneBase::cleanup()
 {
     // Remove copy of comment field.
     unsigned int strNum = 0;
@@ -377,7 +380,7 @@ void SidTune::cleanup()
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
 
-void SidTune::getFromStdIn()
+void SidTuneBase::getFromStdIn()
 {
     // Assume a failure, so we can simply return.
     status = false;
@@ -405,7 +408,7 @@ void SidTune::getFromStdIn()
 
 #endif
 
-void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen)
+void SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen)
 {
     // Assume a failure, so we can simply return.
     status = false;
@@ -470,7 +473,7 @@ void SidTune::getFromBuffer(const uint_least8_t* const buffer, const uint_least3
     }
 }
 
-bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
+bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
                             Buffer_sidtt<const uint_least8_t>& buf)
 {
     // @FIXME@ - MUS
@@ -584,7 +587,7 @@ bool SidTune::acceptSidTune(const char* dataFileName, const char* infoFileName,
     return true;
 }
 
-bool SidTune::createNewFileName(Buffer_sidtt<char>& destString,
+bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
                                 const char* sourceName,
                                 const char* sourceExt)
 {
@@ -609,7 +612,7 @@ bool SidTune::createNewFileName(Buffer_sidtt<char>& destString,
 
 // Initializing the object based upon what we find in the specified file.
 
-void SidTune::getFromFiles(const char* fileName)
+void SidTuneBase::getFromFiles(const char* fileName)
 {
     // Assume a failure, so we can simply return.
     status = false;
@@ -704,7 +707,7 @@ void SidTune::getFromFiles(const char* fileName)
     return;
 }
 
-void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo::clock_t clock)
+void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo::clock_t clock)
 {
     // Create the speed/clock setting tables.
     //
@@ -727,7 +730,7 @@ void SidTune::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo::cl
 // File format conversion ---------------------------------------------------
 //
 
-bool SidTune::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer,
+bool SidTuneBase::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer,
                              uint_least32_t bufLen )
 {
     if ( !bufLen  )
@@ -747,7 +750,7 @@ bool SidTune::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer,
     }
 }
 
-bool SidTune::saveC64dataFile( const char* fileName, bool overWriteFlag )
+bool SidTuneBase::saveC64dataFile( const char* fileName, bool overWriteFlag )
 {
     bool success = false;  // assume error
     // This prevents saving from a bad object.
@@ -797,7 +800,7 @@ bool SidTune::saveC64dataFile( const char* fileName, bool overWriteFlag )
     return success;
 }
 
-bool SidTune::savePSIDfile( const char* fileName, bool overWriteFlag )
+bool SidTuneBase::savePSIDfile( const char* fileName, bool overWriteFlag )
 {
     bool success = false;  // assume error
     // This prevents saving from a bad object.
@@ -836,7 +839,7 @@ bool SidTune::savePSIDfile( const char* fileName, bool overWriteFlag )
     return success;
 }
 
-bool SidTune::checkRelocInfo (void)
+bool SidTuneBase::checkRelocInfo (void)
 {
     // Fix relocation information
     if (info->m_relocStartPage == 0xFF)
@@ -885,7 +888,7 @@ bool SidTune::checkRelocInfo (void)
     return true;
 }
 
-bool SidTune::resolveAddrs (const uint_least8_t *c64data)
+bool SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
 {   // Originally used as a first attempt at an RSID
     // style format. Now reserved for future use
     if ( info->m_playAddr == 0xffff )
@@ -918,7 +921,7 @@ bool SidTune::resolveAddrs (const uint_least8_t *c64data)
     return true;
 }
 
-bool SidTune::checkCompatibility (void)
+bool SidTuneBase::checkCompatibility (void)
 {
     switch ( info->m_compatibility )
     {
@@ -955,7 +958,7 @@ bool SidTune::checkCompatibility (void)
     return true;
 }
 
-int SidTune::convertPetsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet, char* dest)
+int SidTuneBase::convertPetsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet, char* dest)
 {
     int count = 0;
     char c;
@@ -986,7 +989,7 @@ int SidTune::convertPetsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet, char* d
     return count;
 }
 
-const char *SidTune::createMD5(char *md5)
+const char *SidTuneBase::createMD5(char *md5)
 {
     if (!md5)
         md5 = m_md5;
