@@ -33,8 +33,6 @@
 #include "Banks/SystemROMBanks.h"
 #include "Banks/ZeroRAMBank.h"
 
-#include "sidplayfp/c64/CPU/opcodes.h"
-
 #include <string.h>
 
 SIDPLAYFP_NAMESPACE_START
@@ -111,33 +109,11 @@ public:
     }
 
     // SID specific hacks
-    void installResetHook(const uint_least16_t addr)
-    {
-        kernalRomBank.write(0xfffc, endian_16lo8(addr));
-        kernalRomBank.write(0xfffd, endian_16hi8(addr));
-    }
+    void installResetHook(const uint_least16_t addr) { kernalRomBank.installResetHook(addr); }
 
-    void installBasicTrap(const uint_least16_t addr)
-    {
-        basicRomBank.write(0xa7ae, JMPw);
-        basicRomBank.write(0xa7af, endian_16lo8(addr));
-        basicRomBank.write(0xa7b0, endian_16hi8(addr));
-    }
+    void installBasicTrap(const uint_least16_t addr) { basicRomBank.installTrap(addr); }
 
-    void setBasicSubtune(const uint8_t tune)
-    {
-        basicRomBank.write(0xbf53, LDAb);
-        basicRomBank.write(0xbf54, tune);
-        basicRomBank.write(0xbf55, STAa);
-        basicRomBank.write(0xbf56, 0x0c);
-        basicRomBank.write(0xbf57, 0x03);
-        basicRomBank.write(0xbf58, JSRw);
-        basicRomBank.write(0xbf59, 0x2c);
-        basicRomBank.write(0xbf5a, 0xa8);
-        basicRomBank.write(0xbf5b, JMPw);
-        basicRomBank.write(0xbf5c, 0xb1);
-        basicRomBank.write(0xbf5d, 0xa7);
-    }
+    void setBasicSubtune(const uint8_t tune) { basicRomBank.setSubtune(tune); }
 
     /**
      * Access memory as seen by CPU

@@ -31,6 +31,8 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "sidplayfp/c64/CPU/opcodes.h"
+
 #if EMBEDDED_ROMS
 
 static const uint8_t KERNAL[] = {
@@ -51,7 +53,7 @@ static const uint8_t CHARACTER[] = {
 #  define CHARACTER 0
 #endif
 
-/**
+/** @internal
  * Kernal ROM
  */
 class KernalRomBank : public Bank
@@ -74,6 +76,12 @@ public:
     {
         if (kernalRom)
             memcpy(rom, kernalRom, 8192);
+
+        rom[0xfd69 & 0x1fff] = 0x9f; // Bypass memory check
+        rom[0xe55f & 0x1fff] = 0x00; // Bypass screen clear
+        rom[0xfdc4 & 0x1fff] = 0xea; // Ignore sid volume reset to avoid DC
+        rom[0xfdc5 & 0x1fff] = 0xea; //   click (potentially incompatibility)!!
+        rom[0xfdc6 & 0x1fff] = 0xea;
     }
 
     uint8_t read(const uint_least16_t address)
@@ -81,13 +89,21 @@ public:
         return rom[address & 0x1fff];
     }
 
-    void write(const uint_least16_t address, const uint8_t value)
+    void write(const uint_least16_t address, const uint8_t value) {}
+
+    /**
+    * Change the RESET vector
+    *
+    * @param addr the new addres to point to
+    */
+    void installResetHook(const uint_least16_t addr)
     {
-        rom[address & 0x1fff] = value;
+        rom[0xfffc & 0x1fff] = endian_16lo8(addr);
+        rom[0xfffd & 0x1fff] = endian_16hi8(addr);
     }
 };
 
-/**
+/** @internal
  * BASIC ROM
  */
 class BasicRomBank : public Bank
@@ -117,13 +133,37 @@ public:
         return rom[address & 0x1fff];
     }
 
-    void write(const uint_least16_t address, const uint8_t value)
+    void write(const uint_least16_t address, const uint8_t value) {}
+
+    /**
+    * Set BASIC Warm Start address
+    *
+    * @param addr
+    */
+    void installTrap(const uint_least16_t addr)
     {
-        rom[address & 0x1fff] = value;
+        rom[0xa7ae & 0x1fff] = JMPw;
+        rom[0xa7af & 0x1fff] = endian_16lo8(addr);
+        rom[0xa7b0 & 0x1fff] = endian_16hi8(addr);
+    }
+
+    void setSubtune(const uint8_t tune)
+    {
+        rom[0xbf53 & 0x1fff] = LDAb;
+        rom[0xbf54 & 0x1fff] = tune;
+        rom[0xbf55 & 0x1fff] = STAa;
+        rom[0xbf56 & 0x1fff] = 0x0c;
+        rom[0xbf57 & 0x1fff] = 0x03;
+        rom[0xbf58 & 0x1fff] = JSRw;
+        rom[0xbf59 & 0x1fff] = 0x2c;
+        rom[0xbf5a & 0x1fff] = 0xa8;
+        rom[0xbf5b & 0x1fff] = JMPw;
+        rom[0xbf5c & 0x1fff] = 0xb1;
+        rom[0xbf5d & 0x1fff] = 0xa7;
     }
 };
 
-/**
+/** @internal
  * Character ROM
  */
 class CharacterRomBank : public Bank
