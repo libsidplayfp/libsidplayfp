@@ -84,7 +84,6 @@ public:
 	/**
 	 * Register functions.
 	 *
-	 * @param ring_modulator Ring modulator for waveform
 	 * @param control Control register value.
 	 */
 	void writeCONTROL_REG(const unsigned char control) {
