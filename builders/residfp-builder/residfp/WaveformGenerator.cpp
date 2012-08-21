@@ -181,7 +181,7 @@ void WaveformGenerator::writeCONTROL_REG(const unsigned char control) {
 		// to fix MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
 		// see VICE Bug 3515933
 		// http://sourceforge.net/tracker/?func=detail&aid=3515933&group_id=223021&atid=1057617
-		floating_output_ttl = 0x9000;
+		floating_output_ttl = 0x28000;
 	}
 }
 
