@@ -211,7 +211,7 @@ public:
 	 *
 	 * @return OSC3 value
 	 */
-	unsigned char readOSC() { return (unsigned char) (waveform_output >> 4); }
+	unsigned char readOSC() const { return (unsigned char) (waveform_output >> 4); }
 
 	/**
 	* Read accumulator value.

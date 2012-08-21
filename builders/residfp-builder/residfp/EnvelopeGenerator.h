@@ -189,7 +189,7 @@ public:
 	 *
 	 * @return envelope counter
 	 */
-	unsigned char readENV() { return envelope_counter; }
+	unsigned char readENV() const { return envelope_counter; }
 };
 
 } // namespace reSIDfp

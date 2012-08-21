@@ -150,7 +150,7 @@ public:
 	 */
 	void setChipModel(const ChipModel model);
 
-	ChipModel getChipModel() { return model; }
+	ChipModel getChipModel() const { return model; }
 
 	/**
 	 * SID reset.
@@ -244,14 +244,14 @@ public:
 	 *
 	 * @return filter
 	 */
-	Filter6581* getFilter6581() { return filter6581; }
+	Filter6581* getFilter6581() const { return filter6581; }
 
 	/**
 	 * Get chip's 8580 filter.
 	 *
 	 * @return filter
 	 */
-	Filter8580* getFilter8580() { return filter8580; }
+	Filter8580* getFilter8580() const { return filter8580; }
 };
 
 } // namespace reSIDfp
