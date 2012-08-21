@@ -41,19 +41,18 @@ class SidTuneInfoImpl;
 */
 class SidTuneBase
 {
- private:
+ protected:
     /// Also PSID file format limit.
     static const unsigned int MAX_SONGS = 256;
 
+ private:
     /// C64KB+LOAD+PSID
     static const uint_least32_t MAX_FILELEN = 65536+2+0x7C;
 
     static const uint_least32_t MAX_MEMORY = 65536;
 
- private:
-    char m_md5[SidTune::MD5_LENGTH+1];
-
  public:  // ----------------------------------------------------------------
+    virtual ~SidTuneBase();
 
     /**
     * Load a sidtune from a file.
@@ -67,36 +66,20 @@ class SidTuneBase
     * You can specific ``sidTuneFileName = 0'', if you do not want to
     * load a sidtune. You can later load one with open().
     */
-    SidTuneBase(const char* fileName, const char **fileNameExt = 0,
-            const bool separatorIsSlash = false);
+    //static SidTuneBase* load(const char* fileName, const char* statusString=0);
+
+    /**
+    * Load a sidtune from a file.
+    */
+    static SidTuneBase* load(const char* fileName, const char **fileNameExt = 0, const bool separatorIsSlash = false);
 
     /**
     * Load a single-file sidtune from a memory buffer.
     * Currently supported: PSID format
     */
-    SidTuneBase(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength);
+    static SidTuneBase* read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
 
-    virtual ~SidTuneBase();
-
-    /**
-    * The sidTune class does not copy the list of file name extensions,
-    * so make sure you keep it. If the provided pointer is 0, the
-    * default list will be activated. This is a static list which
-    *
-    * is used by all SidTuneBase objects.
-    */
-    void setFileNameExtensions(const char **fileNameExt);
-
-    /**
-    * Load a sidtune into an existing object.
-    * From a file.
-    */
-    bool load(const char* fileName, const bool separatorIsSlash = false);
-
-    /**
-    * From a buffer.
-    */
-    bool read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
+void setFileNameExtensions(const char **fileNameExt);
 
     /**
     * Select sub-song (0 = default starting song)
@@ -130,29 +113,7 @@ class SidTuneBase
     /**
     * Copy sidtune into C64 memory (64 KB).
     */
-    bool placeSidTuneInC64mem(uint_least8_t* c64buf);
-
-    // --- file save & format conversion ---
-
-    /**
-    * These functions work for any successfully created object.
-    * overWriteFlag: true  = Overwrite existing file.
-    *                  false = Default, return error when file already
-    *                          exists.
-    * One could imagine an "Are you sure ?"-checkbox before overwriting
-    * any file.
-    * returns: true = Successful, false = Error condition.
-    */
-    bool saveC64dataFile( const char* destFileName, const bool overWriteFlag = false );
-    bool savePSIDfile( const char* destFileName, const bool overWriteFlag = false );
-
-    /**
-    * Does not affect status of object, and therefore can be used
-    * to load files. Error string is put into info.statusString, though.
-    */
-    bool loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef);
-
-    bool saveToOpenFile( std::ofstream& toFile, const uint_least8_t* buffer, uint_least32_t bufLen );
+    virtual bool placeSidTuneInC64mem(uint_least8_t* c64buf);
 
     /**
     * Calculates the MD5 hash of the tune.
@@ -160,7 +121,7 @@ class SidTuneBase
     * If provided, buffer must be MD5_LENGTH + 1
     * @return a pointer to the buffer containing the md5 string.
     */
-    const char *createMD5(char *md5 = 0);
+    virtual const char *createMD5(char *md5) { return 0; }
 
  protected:  // -------------------------------------------------------------
 
@@ -199,13 +160,25 @@ class SidTuneBase
     /// Filename extensions to append for various file types.
     static const char** fileNameExtensions;
 
-    // --- protected member functions ---
+ protected:
+    SidTuneBase();
+
+    /**
+    * Does not affect status of object, and therefore can be used
+    * to load files. Error string is put into info.statusString, though.
+    */
+    static void loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef);
 
     /// Convert 32-bit PSID-style speed word to internal tables.
     void convertOldStyleSpeedToTables(uint_least32_t speed,
          SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_PAL);
 
     static int convertPetsciiToAscii (SmartPtr_sidtt<const uint_least8_t>&, char*);
+
+    void init();
+    void cleanup();
+
+    void deleteFileNameCopies();
 
     /// Check compatibility details are sensible
     bool checkCompatibility(void);
@@ -214,7 +187,12 @@ class SidTuneBase
     /// Common address resolution procedure
     bool resolveAddrs(const uint_least8_t* c64data);
 
-    // Support for various file formats.
+    /**
+    * Cache the data of a single-file or two-file sidtune and its
+    * corresponding file names.
+    */
+    virtual bool acceptSidTune(const char* dataFileName, const char* infoFileName,
+                       Buffer_sidtt<const uint_least8_t>& buf);
 
     class loadError {
     private:
@@ -224,50 +202,17 @@ class SidTuneBase
         const char* message() const {return m_msg; }
     };
 
-    virtual bool PSID_fileSupport    (Buffer_sidtt<const uint_least8_t>& dataBuf);
-    virtual bool PSID_fileSupportSave(std::ofstream& toFile, const uint_least8_t* dataBuffer);
-
-    virtual bool MUS_fileSupport     (Buffer_sidtt<const uint_least8_t>& musBuf,
-                                            Buffer_sidtt<const uint_least8_t>& strBuf);
-    bool         MUS_load            (Buffer_sidtt<const uint_least8_t>& musBuf,
-                                            bool init = false);
-    bool         MUS_load            (Buffer_sidtt<const uint_least8_t>& musBuf,
-                                            Buffer_sidtt<const uint_least8_t>& strBuf,
-                                            bool init = false);
-    virtual bool MUS_detect          (const void* buffer, const uint_least32_t bufLen,
-                                            uint_least32_t& voice3Index);
-    virtual bool MUS_mergeParts      (Buffer_sidtt<const uint_least8_t>& musBuf,
-                                      Buffer_sidtt<const uint_least8_t>& strBuf);
-    virtual void MUS_setPlayerAddress();
-    virtual void MUS_installPlayer   (uint_least8_t *c64buf);
-
-    virtual bool PRG_fileSupport     (const char* fileName,
-                                            Buffer_sidtt<const uint_least8_t>& dataBuf);
-    virtual bool X00_fileSupport     (const char* fileName,
-                                            Buffer_sidtt<const uint_least8_t>& dataBuf);
-
  private:  // ---------------------------------------------------------------
 
-    void init();
-    void cleanup();
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
-    void getFromStdIn();
+    static SidTuneBase* getFromStdIn();
 #endif
-    void getFromFiles(const char* name);
-
-    void deleteFileNameCopies();
+    static SidTuneBase* getFromFiles(const char* name);
 
     /// Try to retrieve single-file sidtune from specified buffer.
-    void getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen);
+    static SidTuneBase* getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen);
 
-    /**
-    * Cache the data of a single-file or two-file sidtune and its
-    * corresponding file names.
-    */
-    bool acceptSidTune(const char* dataFileName, const char* infoFileName,
-                       Buffer_sidtt<const uint_least8_t>& buf);
-
-    bool createNewFileName(Buffer_sidtt<char>& destString,
+    static bool createNewFileName(Buffer_sidtt<char>& destString,
                            const char* sourceName, const char* sourceExt);
 
  private:    // prevent copying

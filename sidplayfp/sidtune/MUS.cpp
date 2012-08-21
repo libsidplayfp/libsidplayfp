@@ -18,6 +18,8 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "MUS.h"
+
 #include <string.h>
 
 #ifdef HAVE_CONFIG_H
@@ -26,7 +28,6 @@
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
-#include "SidTuneBase.h"
 #include "sidplayfp/sidendian.h"
 
 #ifdef HAVE_EXCEPTIONS
@@ -47,13 +48,13 @@ static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
-bool SidTuneBase::MUS_fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
+bool MUS::fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
                                              Buffer_sidtt<const uint_least8_t>& strBuf)
 {
-    return MUS_load (musBuf, strBuf, true);
+    return load (musBuf, strBuf, true);
 }
 
-bool SidTuneBase::MUS_detect(const void* buffer, const uint_least32_t bufLen,
+bool MUS::detect(const uint_least8_t* buffer, const uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {
     SmartPtr_sidtt<const uint8_t> spMus((const uint8_t*)buffer,bufLen);
@@ -71,7 +72,7 @@ bool SidTuneBase::MUS_detect(const void* buffer, const uint_least32_t bufLen,
             && spMus);
 }
 
-void SidTuneBase::MUS_setPlayerAddress()
+void MUS::setPlayerAddress()
 {
     if (info->m_sidChipBase2 == 0)
     {
@@ -85,6 +86,23 @@ void SidTuneBase::MUS_setPlayerAddress()
         info->m_initAddr = 0xfc90;
         info->m_playAddr = 0xfc96;
     }
+}
+
+bool MUS::acceptSidTune(const char* dataFileName, const char* infoFileName,
+                            Buffer_sidtt<const uint_least8_t>& buf)
+{
+    setPlayerAddress();
+    return SidTuneBase::acceptSidTune(dataFileName, infoFileName, buf);
+}
+
+bool MUS::placeSidTuneInC64mem(uint_least8_t* c64buf)
+{
+    if (SidTuneBase::placeSidTuneInC64mem(c64buf))
+    {
+        installPlayer(c64buf);
+        return true;
+    }
+    return false;
 }
 
 static const uint8_t sidplayer1[] =
@@ -499,7 +517,7 @@ static const uint8_t sidplayer2[] =
     0x60, 0x00, 0x20, 0x60, 0xec, 0x4c, 0x60, 0xfc, 0x20, 0x80, 0xec, 0x4c, 0x80, 0xfc
 };
 
-bool SidTuneBase::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
+bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
                              Buffer_sidtt<const uint_least8_t>& strBuf)
 {
     Buffer_sidtt<uint8_t> mergeBuf;
@@ -548,7 +566,7 @@ bool SidTuneBase::MUS_mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     return true;
 }
 
-void SidTuneBase::MUS_installPlayer(uint_least8_t *c64buf)
+void MUS::installPlayer(uint_least8_t *c64buf)
 {
     if (status && (c64buf != 0))
     {
@@ -573,25 +591,46 @@ void SidTuneBase::MUS_installPlayer(uint_least8_t *c64buf)
     }
 }
 
-bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
+SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
 {
     Buffer_sidtt<const uint_least8_t> empty;
-    return MUS_load (musBuf, empty, init);
+    return load (musBuf, empty, 0, init);
 }
 
-bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
+SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf,
                                        Buffer_sidtt<const uint_least8_t>& strBuf,
+                                       const uint_least32_t fileOffset,
                                        bool init)
 {
     uint_least32_t voice3Index;
-    SmartPtr_sidtt<const uint8_t> spPet(musBuf.get()+fileOffset,musBuf.len()-fileOffset);
-    if ( !MUS_detect(&spPet[0],spPet.tellLength(),voice3Index) )
-        return false;
+    SmartPtr_sidtt<const uint8_t> spPet(musBuf.get()+fileOffset, musBuf.len()-fileOffset);
+    if ( !detect(&spPet[0], spPet.tellLength(), voice3Index) )
+        return 0;
 
+    MUS *tune = new MUS();
+    try
+    {
+        tune->tryLoad(musBuf, strBuf, spPet, voice3Index, init);
+        tune->mergeParts(musBuf, strBuf);
+    }
+    catch (loadError& e)
+    {
+        delete tune;
+        throw e;
+    }
+
+    return tune;
+}
+
+void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
+                                       Buffer_sidtt<const uint_least8_t>& strBuf,
+                                       SmartPtr_sidtt<const uint8_t> &spPet,
+                                       uint_least32_t voice3Index,
+                                       bool init)
+{
     if (init)
     {
         info->m_songs = (info->m_startSong = 1);
-        info->m_musPlayer = true;
 
         songSpeed[0]  = SidTuneInfo::SPEED_CIA_1A;
         clockSpeed[0] = SidTuneInfo::CLOCK_ANY;
@@ -652,7 +691,7 @@ bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
     bool stereo = false;
     if ( !strBuf.isEmpty() )
     {
-        if ( !MUS_detect(strBuf.get(),strBuf.len(),voice3Index) )
+        if ( !detect(strBuf.get(), strBuf.len(), voice3Index) )
             throw loadError(ERR_2ND_INVALID);
         spPet.setBuffer (strBuf.get(),strBuf.len());
         stereo = true;
@@ -662,7 +701,7 @@ bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
         if ( spPet.good() )
         {
             uint_least16_t pos = (uint_least16_t) spPet.tellPos();
-            if ( MUS_detect(&spPet[0],spPet.tellLength()-pos,voice3Index) )
+            if ( detect(&spPet[0],spPet.tellLength()-pos,voice3Index) )
             {
                 musDataLen = pos;
                 stereo = true;
@@ -704,7 +743,8 @@ bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
         info->m_sidChipBase2 = 0;
         info->m_formatString = TXT_FORMAT_MUS;
     }
-    MUS_setPlayerAddress();
+
+    setPlayerAddress();
 
     if (!credits)
     {   // Remove trailing empty lines.
@@ -728,5 +768,6 @@ bool SidTuneBase::MUS_load (Buffer_sidtt<const uint_least8_t>& musBuf,
             info->m_numberOfInfoStrings++;
         }
     }
-    return true;
+
+    status = true; // FIXME
 }

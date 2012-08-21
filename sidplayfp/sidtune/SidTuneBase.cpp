@@ -29,7 +29,11 @@
 #include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "sidplayfp/sidendian.h"
-#include "utils/MD5/MD5.h"
+
+#include "MUS.h"
+#include "p00.h"
+#include "prg.h"
+#include "PSID.h"
 
 #ifdef HAVE_EXCEPTIONS
 #   include <new>
@@ -113,57 +117,25 @@ void SidTuneBase::setFileNameExtensions(const char **fileNameExt)
     fileNameExtensions = ((fileNameExt!=0)?fileNameExt:defaultFileNameExt);
 }
 
-SidTuneBase::SidTuneBase(const char* fileName, const char **fileNameExt,
+SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
                  const bool separatorIsSlash)
 {
-    init();
-    isSlashedFileName = separatorIsSlash;
-    setFileNameExtensions(fileNameExt);
+    if (!fileName)
+        return 0;
+
+    //isSlashedFileName = separatorIsSlash;
+    //setFileNameExtensions(fileNameExt);
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     // Filename ``-'' is used as a synonym for standard input.
-    if ( fileName!=0 && (strcmp(fileName,"-")==0) )
-    {
-        getFromStdIn();
-    }
-    else
-#endif
-    if (fileName != 0)
-    {
-        getFromFiles(fileName);
-    }
-}
-
-SidTuneBase::SidTuneBase(const uint_least8_t* data, const uint_least32_t dataLen)
-{
-    init();
-    getFromBuffer(data,dataLen);
-}
-
-SidTuneBase::~SidTuneBase()
-{
-    cleanup();
-}
-
-bool SidTuneBase::load(const char* fileName, const bool separatorIsSlash)
-{
-    cleanup();
-    init();
-    isSlashedFileName = separatorIsSlash;
-#if !defined(SIDTUNE_NO_STDIN_LOADER)
     if ( strcmp(fileName,"-")==0 )
-        getFromStdIn();
-    else
+        return getFromStdIn();
 #endif
-    getFromFiles(fileName);
-    return status;
+    return getFromFiles(fileName);
 }
 
-bool SidTuneBase::read(const uint_least8_t* data, uint_least32_t dataLen)
+SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
 {
-    cleanup();
-    init();
-    getFromBuffer(data,dataLen);
-    return status;
+    return getFromBuffer(sourceBuffer, bufferLen);
 }
 
 const SidTuneInfo* SidTuneBase::getInfo() const
@@ -183,8 +155,8 @@ unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
 {
     if ( !status )
         return 0;
-    else
-        m_statusString = MSG_NO_ERRORS;
+
+    m_statusString = MSG_NO_ERRORS;
 
     unsigned int song = selectedSong;
     // Determine and set starting song number.
@@ -234,35 +206,31 @@ bool SidTuneBase::placeSidTuneInC64mem(uint_least8_t* c64buf)
         memcpy(c64buf+info->m_loadAddr, cache.get()+fileOffset, info->m_c64dataLen);
         m_statusString = MSG_NO_ERRORS;
 
-        if (info->m_musPlayer)
-        {
-            MUS_installPlayer(c64buf);
-        }
         return true;
     }
     return false;
 }
 
-bool SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
+void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
 {
     // This sucks big time
-    openmode createAtrr = std::ios::in;
+    openmode createAttr = std::ios::in;
 #ifdef HAVE_IOS_NOCREATE
-    createAtrr |= std::ios::nocreate;
+    createAttr |= std::ios::nocreate;
 #endif
     // Open binary input file stream at end of file.
 #if defined(HAVE_IOS_BIN)
-    createAtrr |= std::ios::bin;
+    createAttr |= std::ios::bin;
 #else
-    createAtrr |= std::ios::binary;
+    createAttr |= std::ios::binary;
 #endif
 
-    std::fstream myIn(fileName, createAtrr);
+    std::fstream myIn(fileName, createAttr);
 
     if ( !myIn.is_open() )
     {
-        m_statusString = ERR_CANT_OPEN_FILE;
-        return false;
+        //m_statusString = ERR_CANT_OPEN_FILE;
+        throw loadError(ERR_CANT_OPEN_FILE);
     }
 
     myIn.seekg(0, std::ios::end);
@@ -270,8 +238,8 @@ bool SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
 
     if ( fileLen == 0 )
     {
-        m_statusString = ERR_EMPTY;
-        return false;
+        //m_statusString = ERR_EMPTY;
+         throw loadError(ERR_EMPTY);
     }
 
     Buffer_sidtt<const uint_least8_t> fileBuf;
@@ -282,8 +250,8 @@ bool SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
     if ( !fileBuf.assign(new uint_least8_t[fileLen], fileLen) )
 #endif
     {
-        m_statusString = ERR_NOT_ENOUGH_MEMORY;
-        return false;
+        //m_statusString = ERR_NOT_ENOUGH_MEMORY;
+        throw loadError(ERR_NOT_ENOUGH_MEMORY); //FIXME
     }
 
     myIn.seekg(0, std::ios::beg);
@@ -292,16 +260,15 @@ bool SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
 
     if ( myIn.bad() )
     {
-        m_statusString = ERR_CANT_LOAD_FILE;
-        return false;
+        //m_statusString = ERR_CANT_LOAD_FILE;
+        throw loadError(ERR_CANT_LOAD_FILE);
     }
 
-    m_statusString = MSG_NO_ERRORS;
+    //m_statusString = MSG_NO_ERRORS;
 
     myIn.close();
 
     bufferRef.assign(fileBuf.xferPtr(), fileBuf.xferLen());
-    return true;
 }
 
 void SidTuneBase::deleteFileNameCopies()
@@ -318,7 +285,7 @@ void SidTuneBase::deleteFileNameCopies()
     info->m_path = 0;
 }
 
-void SidTuneBase::init()
+SidTuneBase::SidTuneBase()
 {
     // Initialize the object with some safe defaults.
     status = false;
@@ -355,7 +322,7 @@ void SidTuneBase::init()
         info->m_commentString[0] = SidTuneTools::myStrDup("--- SAVED WITH SIDPLAY ---");
 }
 
-void SidTuneBase::cleanup()
+SidTuneBase::~SidTuneBase()
 {
     // Remove copy of comment field.
     unsigned int strNum = 0;
@@ -380,12 +347,12 @@ void SidTuneBase::cleanup()
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
 
-void SidTuneBase::getFromStdIn()
+SidTuneBase* SidTuneBase::getFromStdIn()
 {
     // Assume a failure, so we can simply return.
-    status = false;
+    //status = false;
     // Assume the memory allocation to fail.
-    m_statusString = ERR_NOT_ENOUGH_MEMORY;
+    //m_statusString = ERR_NOT_ENOUGH_MEMORY;
 #ifdef HAVE_EXCEPTIONS
     uint_least8_t* fileBuf = new(std::nothrow) uint_least8_t[MAX_FILELEN];
 #else
@@ -393,7 +360,7 @@ void SidTuneBase::getFromStdIn()
 #endif
     if ( fileBuf == 0 )
     {
-        return;
+        return 0; //FIXME
     }
     // We only read as much as fits in the buffer.
     // This way we avoid choking on huge data.
@@ -401,28 +368,26 @@ void SidTuneBase::getFromStdIn()
     char datb;
     while (std::cin.get(datb) && i<MAX_FILELEN)
         fileBuf[i++] = (uint_least8_t) datb;
-    info->m_dataFileLen = i;
-    getFromBuffer(fileBuf,info->m_dataFileLen);
+    //info->m_dataFileLen = i; //FIXME
+    getFromBuffer(fileBuf, i);
     delete[] fileBuf;
 }
 
 #endif
 
-void SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen)
+SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen)
 {
     // Assume a failure, so we can simply return.
-    status = false;
+    //status = false;
 
     if (buffer==0 || bufferLen==0)
     {
-        m_statusString = ERR_EMPTY;
-        return;
+        throw loadError(ERR_EMPTY);
     }
 
     if (bufferLen > MAX_FILELEN)
     {
-        m_statusString = ERR_FILE_TOO_LONG;
-        return;
+        throw loadError(ERR_FILE_TOO_LONG);
     }
 
 #ifdef HAVE_EXCEPTIONS
@@ -432,8 +397,7 @@ void SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const uint_le
 #endif
     if ( tmpBuf == 0 )
     {
-        m_statusString = ERR_NOT_ENOUGH_MEMORY;
-        return;
+        throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
     memcpy(tmpBuf,buffer,bufferLen);
 
@@ -441,36 +405,22 @@ void SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const uint_le
 
     bool foundFormat = false;
     // Here test for the possible single file formats. --------------
-    try
+    SidTuneBase* s = PSID::load(buf1);
+    if (!s)
     {
-        if ( PSID_fileSupport( buf1 ) )
-        {
-            foundFormat = true;
-        }
-        else
-        {
-            Buffer_sidtt<const uint_least8_t> buf2;  // empty
-            if ( MUS_fileSupport(buf1,buf2) )
-            {
-                foundFormat = MUS_mergeParts(buf1,buf2);
-            }
-            else
-            {
-                // No further single-file-formats available.
-                m_statusString = ERR_UNRECOGNIZED_FORMAT;
-            }
-        }
-    }
-    catch (loadError& e)
-    {
-        m_statusString = e.message();
-        return;
+        Buffer_sidtt<const uint_least8_t> buf2;  // empty
+        s = MUS::load(buf1, buf2, 0, true);
     }
 
-    if ( foundFormat )
+    if (s)
     {
-        status = acceptSidTune("-","-",buf1);
+        if (s->acceptSidTune("-","-",buf1))
+            return s;
+        delete s;
+        //throw loadError(m_statusString);
     }
+
+    throw loadError(ERR_UNRECOGNIZED_FORMAT);
 }
 
 bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
@@ -546,9 +496,6 @@ bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     else if (info->m_startSong == 0)
         info->m_startSong++;
 
-    if ( info->m_musPlayer )
-        MUS_setPlayerAddress();
-
     info->m_dataFileLen = buf.len();
     info->m_c64dataLen = buf.len() - fileOffset;
 
@@ -570,6 +517,7 @@ bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
 
     // Check the size of the data.
+
     if ( info->m_c64dataLen > MAX_MEMORY )
     {
         m_statusString = ERR_DATA_TOO_LONG;
@@ -601,8 +549,8 @@ bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
 #endif
     if ( newBuf.isEmpty() )
     {
-        m_statusString = ERR_NOT_ENOUGH_MEMORY;
-        return (status = false);
+        //m_statusString = ERR_NOT_ENOUGH_MEMORY;
+        return false;
     }
     strcpy(newBuf.get(),sourceName);
     strcpy(SidTuneTools::fileExtOfPath(newBuf.get()),sourceExt);
@@ -612,99 +560,97 @@ bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
 
 // Initializing the object based upon what we find in the specified file.
 
-void SidTuneBase::getFromFiles(const char* fileName)
+SidTuneBase* SidTuneBase::getFromFiles(const char* fileName)
 {
     // Assume a failure, so we can simply return.
-    status = false;
+    //status = false;
 
     Buffer_sidtt<const uint_least8_t> fileBuf1;
 
-    if ( !loadFile(fileName,fileBuf1) )
-        return;
+    loadFile(fileName, fileBuf1);
 
-    try
+    // File loaded. Now check if it is in a valid single-file-format.
+    SidTuneBase* s = PSID::load(fileBuf1);
+    if (!s)
     {
-        // File loaded. Now check if it is in a valid single-file-format.
-        if ( PSID_fileSupport(fileBuf1) )
-        {
-            status = acceptSidTune(fileName,0,fileBuf1);
-            return;
-        }
-
-// ---------------------------------- Support for multiple-files formats.
         Buffer_sidtt<const uint_least8_t> fileBuf2;
 
         // Try some native C64 file formats
-        if ( MUS_fileSupport(fileBuf1,fileBuf2) )
+        s = MUS::load(fileBuf1, fileBuf2, 0, true);
+        if (s)
         {
             // Try to find second file.
             Buffer_sidtt<char> fileName2;
             int n = 0;
             while (fileNameExtensions[n] != 0)
             {
-                if ( !createNewFileName(fileName2,fileName,fileNameExtensions[n]) )
-                    return;
+                if ( !createNewFileName(fileName2, fileName, fileNameExtensions[n]) )
+                    return 0;
                 // 1st data file was loaded into ``fileBuf1'',
                 // so we load the 2nd one into ``fileBuf2''.
                 // Do not load the first file again if names are equal.
-                if ( MYSTRICMP(fileName,fileName2.get())!=0 &&
-                    loadFile(fileName2.get(),fileBuf2) )
+                if (MYSTRICMP(fileName, fileName2.get()) != 0)
                 {
-                    // Check if tunes in wrong order and therefore swap them here
-                    if ( MYSTRICMP (fileNameExtensions[n], ".mus")==0 )
+                    try
                     {
-                        if ( MUS_fileSupport(fileBuf2,fileBuf1) )
+                        loadFile(fileName2.get(), fileBuf2);
+                    // Check if tunes in wrong order and therefore swap them here
+                    if (MYSTRICMP (fileNameExtensions[n], ".mus") == 0)
+                    {
+                        SidTuneBase* s2 = MUS::load(fileBuf2, fileBuf1, 0, true);
+                        if (s2)
                         {
-                            if ( MUS_mergeParts(fileBuf2,fileBuf1) )
-                                status = acceptSidTune(fileName2.get(),fileName,
-                                                    fileBuf2);
-                            return;
+                            if (s2->acceptSidTune(fileName2.get(), fileName, fileBuf2))
+                            {
+                                delete s;
+                                return s2;
+                            }
+                            delete s2;
                         }
                     }
                     else
                     {
-                        if ( MUS_fileSupport(fileBuf1,fileBuf2) )
+                        SidTuneBase* s2 = MUS::load(fileBuf1, fileBuf2, 0, true);
+                        if (s2)
                         {
-                            if ( MUS_mergeParts(fileBuf1,fileBuf2) )
-                                status = acceptSidTune(fileName,fileName2.get(),
-                                                    fileBuf1);
-                            return;
+                            if (s2->acceptSidTune(fileName, fileName2.get(), fileBuf1))
+                            {
+                                delete s;
+                                return s2;
+                            }
+                            delete s2;
                         }
                     }
                     // The first tune loaded ok, so ignore errors on the
                     // second tune, may find an ok one later
+                    }
+                    catch (loadError& e) {}
                 }
-            n++;
+                n++;
             }
             // No (suitable) second file, so reload first without second
-            fileBuf2.erase();
-            MUS_fileSupport(fileBuf1,fileBuf2);
-            status = acceptSidTune(fileName,0,fileBuf1);
-            return;
-        }
+            /*fileBuf2.erase();
+            s = MUS::load(fileBuf1, fileBuf2, true);*/
 
-        // Now directly support x00 (p00, etc)
-        if ( X00_fileSupport(fileName,fileBuf1) )
-        {
-            status = acceptSidTune(fileName,0,fileBuf1);
-            return;
-        }
-
-        // Now directly support prgs and equivalents
-        if ( PRG_fileSupport(fileName,fileBuf1) )
-        {
-            status = acceptSidTune(fileName,0,fileBuf1);
-            return;
+            if (s->acceptSidTune(fileName, 0, fileBuf1))
+                return s;
+            delete s;
+            return 0;
         }
     }
-    catch (loadError& e)
+    if (!s) s = p00::load(fileName, fileBuf1);
+    if (!s) s = prg::load(fileName, fileBuf1);
+
+    if (s)
     {
-        m_statusString = e.message();
-        return;
+        if (s->acceptSidTune(fileName, 0, fileBuf1))
+            return s;
+        delete s;
+        //throw loadError(m_statusString);
     }
 
-    m_statusString = ERR_UNRECOGNIZED_FORMAT;
-    return;
+    //m_statusString = ERR_UNRECOGNIZED_FORMAT;
+    throw loadError(ERR_UNRECOGNIZED_FORMAT);
 }
 
 void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo::clock_t clock)
@@ -724,119 +670,6 @@ void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo
         if (s < 31)
             speed >>= 1;
     }
-}
-
-//
-// File format conversion ---------------------------------------------------
-//
-
-bool SidTuneBase::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer,
-                             uint_least32_t bufLen )
-{
-    if ( !bufLen  )
-        return false;
-
-    toFile.write((char*)buffer, bufLen);
-
-    if ( toFile.bad() )
-    {
-        m_statusString = ERR_FILE_IO_ERROR;
-        return false;
-    }
-    else
-    {
-        m_statusString = MSG_NO_ERRORS;
-        return true;
-    }
-}
-
-bool SidTuneBase::saveC64dataFile( const char* fileName, bool overWriteFlag )
-{
-    bool success = false;  // assume error
-    // This prevents saving from a bad object.
-    if ( status )
-    {
-        // Open binary output file stream.
-        openmode createAttr = std::ios::out;
-#if defined(HAVE_IOS_BIN)
-        createAttr |= std::ios::bin;
-#else
-        createAttr |= std::ios::binary;
-#endif
-        if ( overWriteFlag )
-            createAttr |= std::ios::trunc;
-        else
-            createAttr |= std::ios::app;
-        std::ofstream fMyOut( fileName, createAttr );
-        if ( !fMyOut || fMyOut.tellp()>0 )
-        {
-            m_statusString = ERR_CANT_CREATE_FILE;
-        }
-        else
-        {
-            if ( !info->m_musPlayer )
-            {
-                // Save c64 lo/hi load address.
-                uint_least8_t saveAddr[2];
-                saveAddr[0] = info->m_loadAddr & 255;
-                saveAddr[1] = info->m_loadAddr >> 8;
-                fMyOut.write((char*)saveAddr,2);
-            }
-
-            // Data starts at: bufferaddr + fileOffset
-            // Data length: info->m_dataFileLen - fileOffset
-            if ( !saveToOpenFile( fMyOut,cache.get()+fileOffset, info->m_dataFileLen - fileOffset ) )
-            {
-                m_statusString = ERR_FILE_IO_ERROR;
-            }
-            else
-            {
-                m_statusString = MSG_NO_ERRORS;
-                success = true;
-            }
-            fMyOut.close();
-        }
-    }
-    return success;
-}
-
-bool SidTuneBase::savePSIDfile( const char* fileName, bool overWriteFlag )
-{
-    bool success = false;  // assume error
-    // This prevents saving from a bad object.
-    if ( status )
-    {
-        // Open binary output file stream.
-        openmode createAttr = std::ios::out;
-#if defined(HAVE_IOS_BIN)
-        createAttr |= std::ios::bin;
-#else
-        createAttr |= std::ios::binary;
-#endif
-      if ( overWriteFlag )
-            createAttr |= std::ios::trunc;
-        else
-            createAttr |= std::ios::app;
-        std::ofstream fMyOut( fileName, createAttr );
-        if ( !fMyOut || fMyOut.tellp()>0 )
-        {
-            m_statusString = ERR_CANT_CREATE_FILE;
-        }
-        else
-        {
-            if ( !PSID_fileSupportSave( fMyOut,cache.get() ) )
-            {
-                m_statusString = ERR_FILE_IO_ERROR;
-            }
-            else
-            {
-                m_statusString = MSG_NO_ERRORS;
-                success = true;
-            }
-            fMyOut.close();
-        }
-    }
-    return success;
 }
 
 bool SidTuneBase::checkRelocInfo (void)
@@ -987,61 +820,4 @@ int SidTuneBase::convertPetsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet, cha
         while ( !((c==0x0D)||(c==0x00)||spPet.fail()) );
     }
     return count;
-}
-
-const char *SidTuneBase::createMD5(char *md5)
-{
-    if (!md5)
-        md5 = m_md5;
-    *md5 = '\0';
-
-    if (status)
-    {   // Include C64 data.
-        MD5 myMD5;
-        md5_byte_t tmp[2];
-        myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
-        // Include INIT and PLAY address.
-        endian_little16 (tmp,info->m_initAddr);
-        myMD5.append    (tmp,sizeof(tmp));
-        endian_little16 (tmp,info->m_playAddr);
-        myMD5.append    (tmp,sizeof(tmp));
-        // Include number of songs.
-        endian_little16 (tmp,info->m_songs);
-        myMD5.append    (tmp,sizeof(tmp));
-        {   // Include song speed for each song.
-            const unsigned int currentSong = info->m_currentSong;
-            for (unsigned int s = 1; s <= info->m_songs; s++)
-            {
-                selectSong (s);
-                const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
-                myMD5.append (&songSpeed,sizeof(songSpeed));
-            }
-            // Restore old song
-            selectSong (currentSong);
-        }
-        // Deal with PSID v2NG clock speed flags: Let only NTSC
-        // clock speed change the MD5 fingerprint. That way the
-        // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
-        // PSID v2NG format is the same.
-        if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
-            myMD5.append (&info->m_clockSpeed,sizeof(info->m_clockSpeed));
-        // NB! If the fingerprint is used as an index into a
-        // song-lengths database or cache, modify above code to
-        // allow for PSID v2NG files which have clock speed set to
-        // SIDTUNE_CLOCK_ANY. If the SID player program fully
-        // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
-        // either create two different fingerprints depending on
-        // the clock speed chosen by the player, or there could be
-        // two different values stored in the database/cache.
-
-        myMD5.finish();
-        // Construct fingerprint.
-        char *m = md5;
-        for (int di = 0; di < 16; ++di)
-        {
-            sprintf (m, "%02x", (int) myMD5.getDigest()[di]);
-            m += 2;
-        }
-    }
-    return md5;
 }

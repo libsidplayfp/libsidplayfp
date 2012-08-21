@@ -16,8 +16,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "p00.h"
+
 #include "SidTuneCfg.h"
-#include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
 
@@ -66,8 +67,7 @@ const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 const char P00_ID[]         = "C64File";
 
 
-bool SidTuneBase::X00_fileSupport(const char *fileName,
-                                             Buffer_sidtt<const uint_least8_t>& dataBuf)
+SidTuneBase* p00::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
     const char      *ext     = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));
     const char      *format  = 0;
@@ -88,51 +88,65 @@ bool SidTuneBase::X00_fileSupport(const char *fileName,
         format = TXT_FORMAT_DEL;
         break;
     case 'S':
-        type = X00_SEQ;
+        type   = X00_SEQ;
         format = TXT_FORMAT_SEQ;
         break;
     case 'P':
-        type = X00_PRG;
+        type   = X00_PRG;
         format = TXT_FORMAT_PRG;
         break;
     case 'U':
-        type = X00_USR;
+        type   = X00_USR;
         format = TXT_FORMAT_USR;
         break;
     case 'R':
-        type = X00_REL;
+        type   = X00_REL;
         format = TXT_FORMAT_REL;
         break;
     }
 
     if (type == X00_UNKNOWN)
-        return false;
+        return 0;
 
     // Verify the file is what we think it is
     if (bufLen < X00_ID_LEN)
-        return false;
+        return 0;
 
     if (strcmp (pHeader->id, P00_ID))
-        return false;
+        return 0;
 
     // File types current supported
     if (type != X00_PRG)
         throw loadError("Not a PRG inside X00");
 
     if (bufLen < sizeof(X00Header)+2)
-    {
         throw loadError(ERR_TRUNCATED);
+
+    p00 *tune = new p00();
+    try
+    {
+        tune->load(format, pHeader);
+    }
+    catch (loadError& e)
+    {
+        delete tune;
+        throw e;
     }
 
+    return tune;
+}
+
+void p00::load(const char* format, const X00Header* pHeader)
+{
     info->m_formatString = format;
 
     {   // Decode file name
-        SmartPtr_sidtt<const uint8_t> spPet((const uint8_t*)pHeader->name,X00_NAME_LEN);
-        convertPetsciiToAscii(spPet,infoString[0]);
+        SmartPtr_sidtt<const uint8_t> spPet((const uint8_t*)pHeader->name, X00_NAME_LEN);
+        convertPetsciiToAscii(spPet, infoString[0]);
     }
 
     // Automatic settings
-    fileOffset         = sizeof(X00Header);
+    fileOffset            = sizeof(X00Header);
     info->m_songs         = 1;
     info->m_startSong     = 1;
     info->m_compatibility = SidTuneInfo::COMPATIBILITY_BASIC;
@@ -141,5 +155,6 @@ bool SidTuneBase::X00_fileSupport(const char *fileName,
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
-    return true;
+
+    status = true; // FIXME
 }

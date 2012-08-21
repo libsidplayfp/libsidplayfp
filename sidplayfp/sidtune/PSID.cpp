@@ -1,7 +1,7 @@
 /*
- * /home/ms/files/source/libsidtune/RCS/PSID.cpp,v
+ * This file is part of libsidplayfp, a SID player engine.
  *
- * PlaySID one-file format support.
+ * Copyright 2012 Leando Nini <drfiemost@users.sourceforge.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "PSID.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +28,7 @@
 #include "SidTuneInfoImpl.h"
 #include "SidTuneBase.h"
 #include "sidplayfp/sidendian.h"
+#include "utils/MD5/MD5.h"
 
 #define PSID_ID 0x50534944
 #define RSID_ID 0x52534944
@@ -105,14 +108,33 @@ const char ERR_INVALID[]      = "ERROR: File contains invalid data";
 static const int psid_maxStrLen = 32;
 
 
-bool SidTuneBase::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
+SidTuneBase* PSID::load(Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
-    const uint_least32_t bufLen = dataBuf.len();
-
     // File format check
-    if (bufLen<6)
-        return false;
+    if (dataBuf.len()<6)
+        return 0;
 
+    const psidHeader* pHeader = (const psidHeader*)dataBuf.get();
+    if ( (endian_big32((const uint_least8_t*)pHeader->id)!=PSID_ID) &&
+         (endian_big32((const uint_least8_t*)pHeader->id)!=RSID_ID) )
+         return 0;
+
+    PSID *tune = new PSID();
+    try
+    {
+        tune->tryLoad(dataBuf);
+    }
+    catch (loadError& e)
+    {
+        delete tune;
+        throw e;
+    }
+
+    return tune;
+}
+
+void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
+{
     SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
     SidTuneInfo::compatibility_t compatibility = SidTuneInfo::COMPATIBILITY_C64;
 
@@ -148,20 +170,17 @@ bool SidTuneBase::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
        info->m_formatString = TXT_FORMAT_RSID;
        compatibility = SidTuneInfo::COMPATIBILITY_R64;
     }
-    else
-    {
-        return false;
-    }
 
     // Due to security concerns, input must be at least as long as version 1
     // header plus 16-bit C64 load address. That is the area which will be
     // accessed.
+    const uint_least32_t bufLen = dataBuf.len();
     if ( bufLen < (sizeof(psidHeader)+2) )
     {
         throw loadError(ERR_TRUNCATED);
     }
 
-    fileOffset         = endian_big16(pHeader->data);
+    fileOffset            = endian_big16(pHeader->data);
     info->m_loadAddr      = endian_big16(pHeader->load);
     info->m_initAddr      = endian_big16(pHeader->init);
     info->m_playAddr      = endian_big16(pHeader->play);
@@ -178,7 +197,8 @@ bool SidTuneBase::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
         info->m_songs = MAX_SONGS;
     }
 
-    info->m_musPlayer      = false;
+    bool m_musPlayer = false;
+
     info->m_sidModel1      = SidTuneInfo::SIDMODEL_UNKNOWN;
     info->m_sidModel2      = SidTuneInfo::SIDMODEL_UNKNOWN;
     info->m_relocPages     = 0;
@@ -189,7 +209,7 @@ bool SidTuneBase::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
         if (flags & PSID_MUS)
         {   // MUS tunes run at any speed
             clock = SidTuneInfo::CLOCK_ANY;
-            info->m_musPlayer = true;
+            m_musPlayer = true;
         }
 
         // This flags is only available for the appropriate
@@ -265,105 +285,65 @@ bool SidTuneBase::PSID_fileSupport(Buffer_sidtt<const uint_least8_t>& dataBuf)
     strncpy(&infoString[2][0],pHeader->released,psid_maxStrLen);
     info->m_infoString[2] = &infoString[2][0];
 
-    if ( info->m_musPlayer )
-        return MUS_load (dataBuf);
-    return true;
+    /*if ( m_musPlayer ) FIXME
+        return MUS_load (dataBuf);*/
+
+    status = true; // FIXME
 }
 
-
-bool SidTuneBase::PSID_fileSupportSave(std::ofstream& fMyOut, const uint_least8_t* dataBuffer)
+const char *PSID::createMD5(char *md5)
 {
-    psidHeader myHeader;
-    endian_big32((uint_least8_t*)myHeader.id,PSID_ID);
-    endian_big16(myHeader.version,2);
-    endian_big16(myHeader.data,sizeof(psidHeader));
-    endian_big16(myHeader.songs,info->m_songs);
-    endian_big16(myHeader.start,info->m_startSong);
+    if (!md5)
+        md5 = m_md5;
+    *md5 = '\0';
 
-    uint_least32_t speed = 0, check = 0;
-    uint_least32_t maxBugSongs = ((info->m_songs <= 32) ? info->m_songs : 32);
-    for (uint_least32_t s = 0; s < maxBugSongs; s++)
-    {
-        if (songSpeed[s] == SidTuneInfo::SPEED_CIA_1A)
-            speed |= (1<<s);
-        check |= (1<<s);
-    }
-    endian_big32(myHeader.speed,speed);
+    if (status)
+    {   // Include C64 data.
+        MD5 myMD5;
+        md5_byte_t tmp[2];
+        myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
+        // Include INIT and PLAY address.
+        endian_little16 (tmp,info->m_initAddr);
+        myMD5.append    (tmp,sizeof(tmp));
+        endian_little16 (tmp,info->m_playAddr);
+        myMD5.append    (tmp,sizeof(tmp));
+        // Include number of songs.
+        endian_little16 (tmp,info->m_songs);
+        myMD5.append    (tmp,sizeof(tmp));
+        {   // Include song speed for each song.
+            const unsigned int currentSong = info->m_currentSong;
+            for (unsigned int s = 1; s <= info->m_songs; s++)
+            {
+                selectSong (s);
+                const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
+                myMD5.append (&songSpeed,sizeof(songSpeed));
+            }
+            // Restore old song
+            selectSong (currentSong);
+        }
+        // Deal with PSID v2NG clock speed flags: Let only NTSC
+        // clock speed change the MD5 fingerprint. That way the
+        // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
+        // PSID v2NG format is the same.
+        if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
+            myMD5.append (&info->m_clockSpeed,sizeof(info->m_clockSpeed));
+        // NB! If the fingerprint is used as an index into a
+        // song-lengths database or cache, modify above code to
+        // allow for PSID v2NG files which have clock speed set to
+        // SIDTUNE_CLOCK_ANY. If the SID player program fully
+        // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
+        // either create two different fingerprints depending on
+        // the clock speed chosen by the player, or there could be
+        // two different values stored in the database/cache.
 
-    uint_least16_t tmpFlags = 0;
-    if ( info->m_musPlayer )
-    {
-        endian_big16(myHeader.load,0);
-        endian_big16(myHeader.init,0);
-        endian_big16(myHeader.play,0);
-        myHeader.relocStartPage = 0;
-        myHeader.relocPages     = 0;
-        tmpFlags |= PSID_MUS;
-    }
-    else
-    {
-        endian_big16(myHeader.load,0);
-        endian_big16(myHeader.init,info->m_initAddr);
-        myHeader.relocStartPage = info->m_relocStartPage;
-        myHeader.relocPages     = info->m_relocPages;
-
-        switch (info->m_compatibility)
+        myMD5.finish();
+        // Construct fingerprint.
+        char *m = md5;
+        for (int di = 0; di < 16; ++di)
         {
-        case SidTuneInfo::COMPATIBILITY_BASIC:
-            tmpFlags |= PSID_BASIC;
-        case SidTuneInfo::COMPATIBILITY_R64:
-            endian_big32((uint_least8_t*)myHeader.id,RSID_ID);
-            endian_big16(myHeader.play,0);
-            endian_big32(myHeader.speed,0);
-            break;
-        case SidTuneInfo::COMPATIBILITY_PSID:
-            tmpFlags |= PSID_SPECIFIC;
-        default:
-            endian_big16(myHeader.play,info->m_playAddr);
-            break;
+            sprintf (m, "%02x", (int) myMD5.getDigest()[di]);
+            m += 2;
         }
     }
-
-    for ( unsigned int i = 0; i < 32; i++ )
-    {
-        myHeader.name[i] = 0;
-        myHeader.author[i] = 0;
-        myHeader.released[i] = 0;
-    }
-
-    // @FIXME@ Need better solution.  Make it possible to override MUS strings
-    if ( info->m_numberOfInfoStrings == 3 )
-    {
-        strncpy( myHeader.name, info->m_infoString[0], psid_maxStrLen);
-        strncpy( myHeader.author, info->m_infoString[1], psid_maxStrLen);
-        strncpy( myHeader.released, info->m_infoString[2], psid_maxStrLen);
-    }
-
-    tmpFlags |= (info->m_clockSpeed << 2);
-    tmpFlags |= (info->m_sidModel1 << 4);
-    tmpFlags |= (info->m_sidModel2 << 6);
-    endian_big16(myHeader.flags,tmpFlags);
-    myHeader.sidChipBase2 = info->m_sidChipBase2;
-    myHeader.reserved = 0;
-
-    fMyOut.write( (char*)&myHeader, sizeof(psidHeader) );
-
-    if (info->m_musPlayer)
-        fMyOut.write( (const char*)dataBuffer, info->m_dataFileLen );  // !cast!
-    else
-    {   // Save C64 lo/hi load address (little-endian).
-        uint_least8_t saveAddr[2];
-        saveAddr[0] = info->m_loadAddr & 255;
-        saveAddr[1] = info->m_loadAddr >> 8;
-        fMyOut.write( (char*)saveAddr, 2 );  // !cast!
-
-        // Data starts at: bufferaddr + fileoffset
-        // Data length: datafilelen - fileoffset
-        fMyOut.write( (const char*)dataBuffer + fileOffset, info->m_dataFileLen - fileOffset );  // !cast!
-    }
-
-    if ( !fMyOut )
-        return false;
-    else
-        return true;
+    return md5;
 }

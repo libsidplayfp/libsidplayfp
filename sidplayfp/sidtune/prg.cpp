@@ -16,8 +16,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "prg.h"
+
 #include "SidTuneCfg.h"
-#include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
 
@@ -26,14 +27,13 @@ const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 
 
-bool SidTuneBase::PRG_fileSupport(const char *fileName,
-                                             Buffer_sidtt<const uint_least8_t>& dataBuf)
+SidTuneBase* prg::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
     const char *ext = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));
     if ( (MYSTRICMP(ext,".prg")!=0) &&
          (MYSTRICMP(ext,".c64")!=0) )
     {
-        return false;
+        return 0;
     }
 
     if (dataBuf.len() < 2)
@@ -41,6 +41,14 @@ bool SidTuneBase::PRG_fileSupport(const char *fileName,
         throw loadError(ERR_TRUNCATED);
     }
 
+    prg *tune = new prg();
+    tune->load();
+
+    return tune;
+}
+
+void prg::load()
+{
     info->m_formatString = TXT_FORMAT_PRG;
 
     // Automatic settings
@@ -51,5 +59,7 @@ bool SidTuneBase::PRG_fileSupport(const char *fileName,
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
-    return true;
+
+    //m_statusString = MSG_NO_ERRORS;
+    status = true; // FIXME
 }

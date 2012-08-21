@@ -29,9 +29,7 @@
 */
 class SidTuneInfoImpl : public SidTuneInfo
 {
-    friend class SidTuneBase;
-
-private:
+public:
     const char* m_formatString;
 
     const char* m_speedString;
@@ -53,8 +51,6 @@ private:
     unsigned int m_currentSong;
 
     int m_songSpeed;
-
-    bool m_musPlayer;
 
     bool m_fixLoad;
 
@@ -94,7 +90,6 @@ public:
         m_startSong(0),
         m_currentSong(0),
         m_songSpeed(SPEED_VBI),
-        m_musPlayer(false),
         m_fixLoad(false),
         m_dataFileLen(0),
         m_c64dataLen(0),
@@ -153,8 +148,6 @@ public:
     const char* formatString() const { return m_formatString; }
 
     const char* speedString() const { return m_speedString; }
-
-    bool musPlayer() const { return m_musPlayer; }
 
     bool fixLoad() const { return m_fixLoad; }
 

@@ -173,11 +173,6 @@ public:
     virtual const char* formatString() const =0;
 
     /**
-    * Whether Sidplayer routine has been installed
-    */
-    virtual bool musPlayer() const =0;
-
-    /**
     * Whether load address might be duplicate
     */
     virtual bool fixLoad() const =0;

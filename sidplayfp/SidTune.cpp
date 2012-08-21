@@ -24,10 +24,10 @@
 
 SidTune::SidTune(const char* fileName, const char **fileNameExt,
             const bool separatorIsSlash) :
-    tune(new SidTuneBase(fileName, fileNameExt, separatorIsSlash)) {}
+    tune(SidTuneBase::load(fileName, fileNameExt, separatorIsSlash)) {}
 
 SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength) :
-    tune(new SidTuneBase(oneFileFormatSidtune, sidtuneLength)) {}
+    tune(SidTuneBase::read(oneFileFormatSidtune, sidtuneLength)) {}
 
 SidTune::~SidTune()
 {
@@ -36,20 +36,25 @@ SidTune::~SidTune()
 
 void SidTune::setFileNameExtensions(const char **fileNameExt)
 {
-    tune->setFileNameExtensions(fileNameExt);
+    //tune->setFileNameExtensions(fileNameExt);
 }
 
 bool SidTune::load(const char* fileName, const bool separatorIsSlash)
 {
-    return tune->load(fileName, separatorIsSlash);
+    delete tune;
+    tune = SidTuneBase::load(fileName, 0, separatorIsSlash);
+    return true; //FIXME
 }
 
 bool SidTune::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
 {
-    return tune->read(sourceBuffer, bufferLen);
+    delete tune;
+    tune = SidTuneBase::read(sourceBuffer, bufferLen);
+    return true; //FIXME
 }
 
-unsigned int SidTune::selectSong(const unsigned int songNum){
+unsigned int SidTune::selectSong(const unsigned int songNum)
+{
     return tune->selectSong(songNum);
 }
 

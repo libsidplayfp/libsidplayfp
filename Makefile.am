@@ -98,9 +98,13 @@ sidplayfp/c64/CPU/opcodes.h \
 sidplayfp/c64/CIA/mos6526.cpp \
 sidplayfp/c64/CIA/mos6526.h \
 sidplayfp/sidtune/MUS.cpp \
+sidplayfp/sidtune/MUS.h \
 sidplayfp/sidtune/p00.cpp \
+sidplayfp/sidtune/p00.h \
 sidplayfp/sidtune/prg.cpp \
+sidplayfp/sidtune/prg.h \
 sidplayfp/sidtune/PSID.cpp \
+sidplayfp/sidtune/PSID.h \
 sidplayfp/sidtune/SidTuneBase.cpp \
 sidplayfp/sidtune/SidTuneBase.h \
 sidplayfp/sidtune/SidTuneCfg.h \
