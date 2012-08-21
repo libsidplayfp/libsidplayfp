@@ -92,6 +92,7 @@ public:
 	 * at the integrators would need to be statically solved first for 1-voice null
 	 * input.
 	 *
+	 * @param dac_zero
 	 * @param fc
 	 * @return frequency in Hz
 	 */

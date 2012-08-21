@@ -50,6 +50,9 @@ const int EnvelopeGenerator::adsrtable[16] = {
 
 void EnvelopeGenerator::set_exponential_counter() {
 	// Check for change of exponential counter period.
+	//
+	// For a detailed description see:
+	// http://ploguechipsounds.blogspot.it/2010/03/sid-6581r3-adsr-tables-up-close.html
 	switch (envelope_counter) {
 	case 0xff:
 		exponential_counter_period = 1;

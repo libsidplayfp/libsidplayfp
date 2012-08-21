@@ -259,6 +259,9 @@ void EnvelopeGenerator::clock() {
 			// From the sustain levels it follows that both the low and high 4 bits
 			// of the envelope counter are compared to the 4-bit sustain value.
 			// This has been verified by sampling ENV3.
+			//
+			// For a detailed description see:
+			// http://ploguechipsounds.blogspot.it/2010/11/new-research-on-sid-adsr.html
 			if (envelope_counter == (unsigned char) (sustain << 4 | sustain)) {
 				return;
 			}

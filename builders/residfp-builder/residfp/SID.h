@@ -130,6 +130,8 @@ private:
 	/**
 	 * Return the numebr of cycles according to current parameters
 	 * that it takes to reach sync.
+	 *
+	 * @param sync
 	 */
 	void voiceSync(const bool sync);
 
@@ -211,6 +213,7 @@ public:
 	 * @param clockFrequency System clock frequency at Hz
 	 * @param method sampling method to use
 	 * @param samplingFrequency Desired output sampling rate
+	 * @param highestAccurateFrequency
 	 * @return success
 	 */
 	void setSamplingParameters(const double clockFrequency, const SamplingMethod method, const double samplingFrequency, const double highestAccurateFrequency);
@@ -218,7 +221,7 @@ public:
 	/**
 	 * Clock SID forward using chosen output sampling algorithm.
 	 *
-	 * @param delta_t c64 clocks to clock
+	 * @param cycles c64 clocks to clock
 	 * @param buf audio output buffer
 	 * @return
 	 */
@@ -232,7 +235,7 @@ public:
 	 * clock() because components that don't affect OSC3/ENV3 are not
 	 * emulated.
 	 * 
-	 * @param delta_t c64 clocks to clock.
+	 * @param cycles c64 clocks to clock.
 	 */
 	void clockSilent(int cycles);
 

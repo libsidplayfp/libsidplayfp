@@ -49,9 +49,14 @@ private:
 
 	int shift_register;
 
-	// Remaining time to fully reset shift register.
+	/**
+	* Remaining time to fully reset shift register.
+	*/
 	int shift_register_reset;
-	// Emulation of pipeline causing bit 19 to clock the shift register.
+
+	/**
+	* Emulation of pipeline causing bit 19 to clock the shift register.
+	*/
 	int shift_pipeline;
 
 	int ring_msb_mask;
@@ -84,7 +89,9 @@ private:
 	bool test;
 	bool sync;
 
-	// Tell whether the accumulator MSB was set high on this cycle.
+	/**
+	* Tell whether the accumulator MSB was set high on this cycle.
+	*/
 	bool msb_rising;
 
 	short dac[4096];
@@ -106,7 +113,7 @@ public:
 	 * 1.0 means perfect 8580-like linearity, values between 0.95 - 0.97
 	 * are probably realistic 6581 nonlinearity values.
 	 *
-	 * @param nonLinearity
+	 * @param chipModel
 	 */
 	void setChipModel(const ChipModel chipModel);
 
@@ -182,7 +189,6 @@ public:
 	/**
 	 * Register functions.
 	 *
-	 * @param ring_modulator ring-modulator modulating me.
 	 * @param control control register value
 	 */
 	void writeCONTROL_REG(const unsigned char control);
@@ -196,14 +202,13 @@ public:
 	 * 12-bit waveform output.
 	 *
 	 * @param ringModulator The oscillator ring-modulating me.
-	 * @return output from waveformgenerator
+	 * @return output from waveform generator
 	 */
 	short output(const WaveformGenerator* ringModulator);
 
 	/**
 	 * Read OSC3 value (6581, not latched/delayed version)
 	 *
-	 * @param ring_modulator The ring modulating partner of this waveform
 	 * @return OSC3 value
 	 */
 	unsigned char readOSC() { return (unsigned char) (waveform_output >> 4); }

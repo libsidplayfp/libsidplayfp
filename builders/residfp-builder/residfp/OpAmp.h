@@ -33,6 +33,7 @@ public:
 	 * Opamp input -> output voltage conversion
 	 *
 	 * @param opamp opamp mapping table as pairs of points (in -> out)
+	 * @param opamplength length of the opamp array
 	 * @param Vddt transistor dt parameter (in volts)
 	 */
 	OpAmp(const double opamp[][2], const int opamplength, const double Vddt) :

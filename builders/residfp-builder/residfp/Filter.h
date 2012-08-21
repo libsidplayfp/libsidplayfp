@@ -128,7 +128,6 @@ public:
 	 * @param v1 voice 1 in
 	 * @param v2 voice 2 in
 	 * @param v3 voice 3 in
-	 * @param vE external audio in
 	 * @return filtered output
 	 */
 	virtual int clock(const int v1, const int v2, const int v3)=0;
@@ -150,28 +149,28 @@ public:
 	/**
 	 * Register function.
 	 *
-	 * @param fc_lo
+	 * @param fc_lo Frequency Cutoff Low-Byte
 	 */
 	void writeFC_LO(const unsigned char fc_lo);
 
 	/**
 	 * Register function.
 	 *
-	 * @param fc_hi
+	 * @param fc_hi Frequency Cutoff High-Byte
 	 */
 	void writeFC_HI(const unsigned char fc_hi);
 
 	/**
 	 * Register function.
 	 *
-	 * @param res_filt
+	 * @param res_filt Resonance/Filter
 	 */
 	void writeRES_FILT(const unsigned char res_filt);
 
 	/**
 	 * Register function.
 	 *
-	 * @param mode_vol
+	 * @param mode_vol Filter Mode/Volume
 	 */
 	void writeMODE_VOL(const unsigned char mode_vol);
 

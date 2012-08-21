@@ -64,7 +64,7 @@ private:
 public:
 	/**
 	 * SID clocking - 1 cycle.
-	 * 
+	 *
 	 * @param Vi
 	 */
 	int clock(const int Vi);
@@ -77,7 +77,7 @@ public:
 	/**
 	 * Setup of the external filter sampling parameters.
 	 * 
-	 * @param clock
+	 * @param frequency
 	 */
 	void setClockFrequency(const double frequency);
 

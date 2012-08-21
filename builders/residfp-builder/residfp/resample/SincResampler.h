@@ -100,8 +100,8 @@ private:
 	 * Calculate convolution with sample and sinc.
 	 *
 	 * @param a sample buffer input
-	 * @param aPos offset in sample buffer
 	 * @param b sinc
+	 * @param bLength length of the sinc buffer
 	 * @return convolved result
 	 */
 	static int convolve(const short* a, const short* b, const int bLength);
