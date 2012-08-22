@@ -92,7 +92,7 @@ void SidTune::load(const char* fileName, const bool separatorIsSlash)
     delete tune;
     try
     {
-        tune = SidTuneBase::load(fileName, 0, separatorIsSlash);
+        tune = SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash);
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
