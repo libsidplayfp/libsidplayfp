@@ -155,6 +155,4 @@ void p00::load(const char* format, const X00Header* pHeader)
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
-
-    status = true; // FIXME
 }

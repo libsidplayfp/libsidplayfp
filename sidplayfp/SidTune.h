@@ -40,6 +40,13 @@ class SID_EXTERN SidTune
  public:
     static const int MD5_LENGTH = 32;
 
+ private:  // -------------------------------------------------------------
+    SidTuneBase *tune;
+
+    bool m_status;
+
+    const char* m_statusString;
+
  public:  // ----------------------------------------------------------------
 
     /**
@@ -148,9 +155,6 @@ class SID_EXTERN SidTune
     * @return a pointer to the buffer containing the md5 string.
     */
     const char *createMD5(char *md5 = 0);
-
- protected:  // -------------------------------------------------------------
-    SidTuneBase *tune;
 
  private:    // prevent copying
     SidTune(const SidTune&);

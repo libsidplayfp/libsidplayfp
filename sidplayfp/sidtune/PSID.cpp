@@ -197,7 +197,7 @@ void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
         info->m_songs = MAX_SONGS;
     }
 
-    bool m_musPlayer = false;
+    bool musPlayer = false;
 
     info->m_sidModel1      = SidTuneInfo::SIDMODEL_UNKNOWN;
     info->m_sidModel2      = SidTuneInfo::SIDMODEL_UNKNOWN;
@@ -209,7 +209,7 @@ void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
         if (flags & PSID_MUS)
         {   // MUS tunes run at any speed
             clock = SidTuneInfo::CLOCK_ANY;
-            m_musPlayer = true;
+            musPlayer = true;
         }
 
         // This flags is only available for the appropriate
@@ -285,10 +285,8 @@ void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
     strncpy(&infoString[2][0],pHeader->released,psid_maxStrLen);
     info->m_infoString[2] = &infoString[2][0];
 
-    /*if ( m_musPlayer ) FIXME
+    /*if ( musPlayer ) FIXME
         return MUS_load (dataBuf);*/
-
-    status = true; // FIXME
 }
 
 const char *PSID::createMD5(char *md5)
@@ -297,53 +295,52 @@ const char *PSID::createMD5(char *md5)
         md5 = m_md5;
     *md5 = '\0';
 
-    if (status)
-    {   // Include C64 data.
-        MD5 myMD5;
-        md5_byte_t tmp[2];
-        myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
-        // Include INIT and PLAY address.
-        endian_little16 (tmp,info->m_initAddr);
-        myMD5.append    (tmp,sizeof(tmp));
-        endian_little16 (tmp,info->m_playAddr);
-        myMD5.append    (tmp,sizeof(tmp));
-        // Include number of songs.
-        endian_little16 (tmp,info->m_songs);
-        myMD5.append    (tmp,sizeof(tmp));
-        {   // Include song speed for each song.
-            const unsigned int currentSong = info->m_currentSong;
-            for (unsigned int s = 1; s <= info->m_songs; s++)
-            {
-                selectSong (s);
-                const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
-                myMD5.append (&songSpeed,sizeof(songSpeed));
-            }
-            // Restore old song
-            selectSong (currentSong);
-        }
-        // Deal with PSID v2NG clock speed flags: Let only NTSC
-        // clock speed change the MD5 fingerprint. That way the
-        // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
-        // PSID v2NG format is the same.
-        if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
-            myMD5.append (&info->m_clockSpeed,sizeof(info->m_clockSpeed));
-        // NB! If the fingerprint is used as an index into a
-        // song-lengths database or cache, modify above code to
-        // allow for PSID v2NG files which have clock speed set to
-        // SIDTUNE_CLOCK_ANY. If the SID player program fully
-        // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
-        // either create two different fingerprints depending on
-        // the clock speed chosen by the player, or there could be
-        // two different values stored in the database/cache.
-
-        myMD5.finish();
-        // Construct fingerprint.
-        char *m = md5;
-        for (int di = 0; di < 16; ++di)
+    // Include C64 data.
+    MD5 myMD5;
+    md5_byte_t tmp[2];
+    myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
+    // Include INIT and PLAY address.
+    endian_little16 (tmp,info->m_initAddr);
+    myMD5.append    (tmp,sizeof(tmp));
+    endian_little16 (tmp,info->m_playAddr);
+    myMD5.append    (tmp,sizeof(tmp));
+    // Include number of songs.
+    endian_little16 (tmp,info->m_songs);
+    myMD5.append    (tmp,sizeof(tmp));
+    {   // Include song speed for each song.
+        const unsigned int currentSong = info->m_currentSong;
+        for (unsigned int s = 1; s <= info->m_songs; s++)
         {
-            sprintf (m, "%02x", (int) myMD5.getDigest()[di]);
-            m += 2;
+            selectSong (s);
+            const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
+            myMD5.append (&songSpeed,sizeof(songSpeed));
         }
+        // Restore old song
+        selectSong (currentSong);
     }
+    // Deal with PSID v2NG clock speed flags: Let only NTSC
+    // clock speed change the MD5 fingerprint. That way the
+    // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
+    // PSID v2NG format is the same.
+    if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
+        myMD5.append (&info->m_clockSpeed,sizeof(info->m_clockSpeed));
+    // NB! If the fingerprint is used as an index into a
+    // song-lengths database or cache, modify above code to
+    // allow for PSID v2NG files which have clock speed set to
+    // SIDTUNE_CLOCK_ANY. If the SID player program fully
+    // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
+    // either create two different fingerprints depending on
+    // the clock speed chosen by the player, or there could be
+    // two different values stored in the database/cache.
+
+    myMD5.finish();
+    // Construct fingerprint.
+    char *m = md5;
+    for (int di = 0; di < 16; ++di)
+    {
+        sprintf (m, "%02x", (int) myMD5.getDigest()[di]);
+        m += 2;
+    }
+
     return md5;
 }

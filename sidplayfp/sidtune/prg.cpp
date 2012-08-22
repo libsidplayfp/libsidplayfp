@@ -59,7 +59,4 @@ void prg::load()
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
-
-    //m_statusString = MSG_NO_ERRORS;
-    status = true; // FIXME
 }

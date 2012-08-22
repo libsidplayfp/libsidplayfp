@@ -37,6 +37,17 @@ template class Buffer_sidtt<const uint_least8_t>;
 class SidTuneInfoImpl;
 
 /** @internal
+* loadError
+*/
+class loadError {
+private:
+    const char* m_msg;
+public:
+    loadError(const char* msg) : m_msg(msg) {}
+    const char* message() const { return m_msg; }
+};
+
+/** @internal
 * SidTuneBaseBase
 */
 class SidTuneBase
@@ -99,18 +110,6 @@ void setFileNameExtensions(const char **fileNameExt);
     const SidTuneInfo* getInfo(const unsigned int songNum);
 
     /**
-    * Determine current state of object (true = okay, false = error).
-    * Upon error condition use ``getInfo'' to get a descriptive
-    * text string in ``SidTuneInfo.statusString''.
-    */
-    bool getStatus() const { return status; }
-
-    /**
-    * Error/status message of last operation
-    */
-    const char* statusString() const  { return m_statusString; }
-
-    /**
     * Copy sidtune into C64 memory (64 KB).
     */
     virtual bool placeSidTuneInC64mem(uint_least8_t* c64buf);
@@ -126,10 +125,6 @@ void setFileNameExtensions(const char **fileNameExt);
  protected:  // -------------------------------------------------------------
 
     SidTuneInfoImpl *info;
-
-    bool status;
-
-    const char* m_statusString;
 
     uint_least8_t songSpeed[MAX_SONGS];
     SidTuneInfo::clock_t clockSpeed[MAX_SONGS];
@@ -190,14 +185,6 @@ void setFileNameExtensions(const char **fileNameExt);
     */
     virtual bool acceptSidTune(const char* dataFileName, const char* infoFileName,
                        Buffer_sidtt<const uint_least8_t>& buf);
-
-    class loadError {
-    private:
-        const char* m_msg;
-    public:
-        loadError(const char* msg) : m_msg(msg) {}
-        const char* message() const {return m_msg; }
-    };
 
  private:  // ---------------------------------------------------------------
 

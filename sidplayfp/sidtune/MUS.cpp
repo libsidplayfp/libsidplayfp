@@ -22,17 +22,9 @@
 
 #include <string.h>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
 #include "sidplayfp/sidendian.h"
-
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
 
 const char TXT_FORMAT_MUS[]        = "C64 Sidplayer format (MUS)";
 const char TXT_FORMAT_STR[]        = "C64 Stereo Sidplayer format (MUS+STR)";
@@ -529,18 +521,12 @@ bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
                             - SIDTUNE_MUS_DATA_ADDR;
     if ( (musBuf.len()+strBuf.len()-4) > freeSpace)
     {
-        m_statusString = ERR_SIZE_EXCEEDED;
-        return false;
+        throw loadError(ERR_SIZE_EXCEEDED);
     }
 
-#ifdef HAVE_EXCEPTIONS
-    if ( !mergeBuf.assign(new(std::nothrow) uint8_t[mergeLen], mergeLen) )
-#else
-    if ( !mergeBuf.assign(new uint8_t[mergeLen], mergeLen) )
-#endif
+    if ( !mergeBuf.assign(new uint8_t[mergeLen], mergeLen) ) // FIXME catch bad_alloc exception?
     {
-        m_statusString = ERR_NOT_ENOUGH_MEMORY;
-        return false;
+        throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
 
     // Install MUS data #1 including load address.
@@ -568,7 +554,7 @@ bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
 
 void MUS::installPlayer(uint_least8_t *c64buf)
 {
-    if (status && (c64buf != 0))
+    if (c64buf != 0)
     {
         // Install MUS player #1.
         uint_least16_t dest = endian_16(sidplayer1[1],
@@ -768,6 +754,4 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
             info->m_numberOfInfoStrings++;
         }
     }
-
-    status = true; // FIXME
 }

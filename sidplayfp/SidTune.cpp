@@ -22,12 +22,41 @@
 
 #include "sidtune/SidTuneBase.h"
 
-SidTune::SidTune(const char* fileName, const char **fileNameExt,
-            const bool separatorIsSlash) :
-    tune(SidTuneBase::load(fileName, fileNameExt, separatorIsSlash)) {}
+const char MSG_NO_ERRORS[]           = "No errors";
 
-SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength) :
-    tune(SidTuneBase::read(oneFileFormatSidtune, sidtuneLength)) {}
+SidTune::SidTune(const char* fileName, const char **fileNameExt, const bool separatorIsSlash)
+{
+    try
+    {
+        tune = SidTuneBase::load(fileName, fileNameExt, separatorIsSlash);
+    }
+    catch (loadError& e)
+    {
+        m_status = false;
+        m_statusString = e.message();
+        tune = 0;
+    }
+
+    m_status = true;
+    m_statusString = MSG_NO_ERRORS;
+}
+
+SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength)
+{
+    try
+    {
+        tune = SidTuneBase::read(oneFileFormatSidtune, sidtuneLength);
+    }
+    catch (loadError& e)
+    {
+        m_status = false;
+        m_statusString = e.message();
+        tune = 0;
+    }
+
+    m_status = true;
+    m_statusString = MSG_NO_ERRORS;
+}
 
 SidTune::~SidTune()
 {
@@ -68,9 +97,9 @@ const SidTuneInfo* SidTune::getInfo(const unsigned int songNum)
     return tune->getInfo(songNum);
 }
 
-bool SidTune::getStatus() const { return tune->getStatus(); }
+bool SidTune::getStatus() const { return m_status; }
 
-const char* SidTune::statusString() const { return tune->statusString(); }
+const char* SidTune::statusString() const { return m_statusString; }
 
 bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
 {

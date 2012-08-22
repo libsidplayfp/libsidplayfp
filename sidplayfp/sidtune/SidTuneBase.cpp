@@ -66,8 +66,6 @@ const char ERR_BAD_ADDR[]            = "SIDTUNE ERROR: Bad address data";
 const char ERR_BAD_RELOC[]           = "SIDTUNE ERROR: Bad reloc data";
 const char ERR_CORRUPT[]             = "SIDTUNE ERROR: File is incomplete or corrupt";
 
-const char MSG_NO_ERRORS[]           = "No errors";
-
 // Default sidtune file name extensions. This selection can be overriden
 // by specifying a custom list in the constructor.
 const char* defaultFileNameExt[] =
@@ -153,11 +151,6 @@ const SidTuneInfo* SidTuneBase::getInfo(const unsigned int songNum)
 // variable information such a speed/clock setting to the info structure.
 unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
 {
-    if ( !status )
-        return 0;
-
-    m_statusString = MSG_NO_ERRORS;
-
     unsigned int song = selectedSong;
     // Determine and set starting song number.
     if (selectedSong == 0)
@@ -165,7 +158,7 @@ unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
     if (selectedSong>info->m_songs || selectedSong>MAX_SONGS)
     {
         song = info->m_startSong;
-        m_statusString = ERR_SONG_NUMBER_EXCEED;
+        //m_statusString = ERR_SONG_NUMBER_EXCEED; FIXME
     }
     info->m_currentSong = song;
     // Retrieve song speed definition.
@@ -190,7 +183,7 @@ unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
 
 bool SidTuneBase::placeSidTuneInC64mem(uint_least8_t* c64buf)
 {
-    if ( status && c64buf )
+    if (c64buf != 0)
     {
         // The Basic ROM sets these values on loading a file.
         // Program end address
@@ -204,7 +197,6 @@ bool SidTuneBase::placeSidTuneInC64mem(uint_least8_t* c64buf)
 
         // Copy data from cache to the correct destination.
         memcpy(c64buf+info->m_loadAddr, cache.get()+fileOffset, info->m_c64dataLen);
-        m_statusString = MSG_NO_ERRORS;
 
         return true;
     }
@@ -288,9 +280,6 @@ void SidTuneBase::deleteFileNameCopies()
 SidTuneBase::SidTuneBase()
 {
     // Initialize the object with some safe defaults.
-    status = false;
-    m_statusString = "N/A";
-
     info = new SidTuneInfoImpl();
 
     for ( unsigned int si = 0; si < MAX_SONGS; si++ )
@@ -340,8 +329,6 @@ SidTuneBase::~SidTuneBase()
     deleteFileNameCopies();
 
     delete info;
-
-    status = false;
 }
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
@@ -413,7 +400,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
 
     if (s)
     {
-        if (s->acceptSidTune("-","-",buf1))
+        if (s->acceptSidTune("-","-",buf1)) //FIXME catch loadError
             return s;
         delete s;
         //throw loadError(m_statusString);
@@ -455,8 +442,7 @@ bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
         }
         if ((info->m_path==0) || (info->m_dataFileName==0))
         {
-            m_statusString = ERR_NOT_ENOUGH_MEMORY;
-            return false;
+            throw loadError(ERR_NOT_ENOUGH_MEMORY);
         }
     }
     else
@@ -475,8 +461,7 @@ bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
             info->m_infoFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(tmp));
         if ((tmp==0) || (info->m_infoFileName==0))
         {
-            m_statusString = ERR_NOT_ENOUGH_MEMORY;
-            return false;
+            throw loadError(ERR_NOT_ENOUGH_MEMORY);
         }
         delete[] tmp;
     }
@@ -519,18 +504,15 @@ bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
 
     if ( info->m_c64dataLen > MAX_MEMORY )
     {
-        m_statusString = ERR_DATA_TOO_LONG;
-        return false;
+        throw loadError(ERR_DATA_TOO_LONG);
     }
     else if ( info->m_c64dataLen == 0 )
     {
-        m_statusString = ERR_EMPTY;
-        return false;
+        throw loadError(ERR_EMPTY);
     }
 
     cache.assign(buf.xferPtr(),buf.xferLen());
 
-    m_statusString = MSG_NO_ERRORS;
     return true;
 }
 
@@ -599,7 +581,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName)
                         SidTuneBase* s2 = MUS::load(fileBuf2, fileBuf1, 0, true);
                         if (s2)
                         {
-                            if (s2->acceptSidTune(fileName2.get(), fileName, fileBuf2))
+                            if (s2->acceptSidTune(fileName2.get(), fileName, fileBuf2)) //FIXME catch loadError
                             {
                                 delete s;
                                 return s2;
@@ -612,7 +594,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName)
                         SidTuneBase* s2 = MUS::load(fileBuf1, fileBuf2, 0, true);
                         if (s2)
                         {
-                            if (s2->acceptSidTune(fileName, fileName2.get(), fileBuf1))
+                            if (s2->acceptSidTune(fileName, fileName2.get(), fileBuf1)) //FIXME catch loadError
                             {
                                 delete s;
                                 return s2;
@@ -631,7 +613,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName)
             /*fileBuf2.erase();
             s = MUS::load(fileBuf1, fileBuf2, true);*/
 
-            if (s->acceptSidTune(fileName, 0, fileBuf1))
+            if (s->acceptSidTune(fileName, 0, fileBuf1)) //FIXME catch loadError
                 return s;
             delete s;
             return 0;
@@ -642,7 +624,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName)
 
     if (s)
     {
-        if (s->acceptSidTune(fileName, 0, fileBuf1))
+        if (s->acceptSidTune(fileName, 0, fileBuf1)) //FIXME catch loadError
             return s;
         delete s;
         //throw loadError(m_statusString);
@@ -690,7 +672,7 @@ bool SidTuneBase::checkRelocInfo (void)
     const uint_least8_t endp   = (startp + info->m_relocPages - 1) & 0xff;
     if (endp < startp)
     {
-        m_statusString = ERR_BAD_RELOC;
+        //m_statusString = ERR_BAD_RELOC; FIXME
         return false;
     }
 
@@ -701,7 +683,7 @@ bool SidTuneBase::checkRelocInfo (void)
         if ( ((startp <= startlp) && (endp >= startlp)) ||
              ((startp <= endlp)   && (endp >= endlp)) )
         {
-            m_statusString = ERR_BAD_RELOC;
+            //m_statusString = ERR_BAD_RELOC; FIXME
             return false;
         }
     }
@@ -714,7 +696,7 @@ bool SidTuneBase::checkRelocInfo (void)
         || ((0xa0 <= endp) && (endp <= 0xbf))
         || (endp >= 0xd0))
     {
-        m_statusString = ERR_BAD_RELOC;
+        //m_statusString = ERR_BAD_RELOC; FIXME
         return false;
     }
     return true;
@@ -731,7 +713,7 @@ bool SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
     {
         if ( info->m_c64dataLen < 2 )
         {
-            m_statusString = ERR_CORRUPT;
+            //m_statusString = ERR_CORRUPT; FIXME
             return false;
         }
         info->m_loadAddr = endian_16( *(c64data+1), *c64data );
@@ -744,7 +726,7 @@ bool SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
     {
         if ( info->m_initAddr != 0 )
         {
-            m_statusString = ERR_BAD_ADDR;
+            //m_statusString = ERR_BAD_ADDR; FIXME
             return false;
         }
     }
@@ -766,13 +748,13 @@ bool SidTuneBase::checkCompatibility (void)
         case 0x0D:
         case 0x0B:
         case 0x0A:
-            m_statusString = ERR_BAD_ADDR;
+            //m_statusString = ERR_BAD_ADDR; FIXME
             return false;
         default:
             if ( (info->m_initAddr < info->m_loadAddr) ||
                  (info->m_initAddr > (info->m_loadAddr + info->m_c64dataLen - 1)) )
             {
-                m_statusString = ERR_BAD_ADDR;
+                //m_statusString = ERR_BAD_ADDR; FIXME
                 return false;
             }
         }
@@ -782,7 +764,7 @@ bool SidTuneBase::checkCompatibility (void)
         // Check tune is loadable on a real C64
         if ( info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR )
         {
-            m_statusString = ERR_BAD_ADDR;
+            //m_statusString = ERR_BAD_ADDR; FIXME
             return false;
         }
         break;
