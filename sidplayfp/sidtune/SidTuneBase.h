@@ -155,23 +155,21 @@ class SidTuneBase
 
     static int convertPetsciiToAscii (SmartPtr_sidtt<const uint_least8_t>&, char*);
 
-    void init();
-    void cleanup();
-
     void deleteFileNameCopies();
 
     /// Check compatibility details are sensible
     bool checkCompatibility(void);
     /// Check for valid relocation information
     bool checkRelocInfo(void);
+
     /// Common address resolution procedure
-    bool resolveAddrs(const uint_least8_t* c64data);
+    void resolveAddrs(const uint_least8_t* c64data);
 
     /**
     * Cache the data of a single-file or two-file sidtune and its
     * corresponding file names.
     */
-    virtual bool acceptSidTune(const char* dataFileName, const char* infoFileName,
+    virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
                        Buffer_sidtt<const uint_least8_t>& buf);
 
  private:  // ---------------------------------------------------------------

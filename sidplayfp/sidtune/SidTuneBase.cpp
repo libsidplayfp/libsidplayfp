@@ -208,7 +208,11 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
 
     Buffer_sidtt<const uint_least8_t> fileBuf;
 
-    if ( !fileBuf.assign(new uint_least8_t[fileLen], fileLen) ) //FIXME catch bad_alloc exceptions?
+    try
+    {
+        fileBuf.assign(new uint_least8_t[fileLen], fileLen);
+    }
+    catch (std::bad_alloc &e)
     {
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
@@ -299,7 +303,15 @@ SidTuneBase::~SidTuneBase()
 
 SidTuneBase* SidTuneBase::getFromStdIn()
 {
-    uint_least8_t* fileBuf = new uint_least8_t[MAX_FILELEN]; //FIXME catch bad_alloc exceptions?
+    uint_least8_t* fileBuf;
+    try
+    {
+        fileBuf = new uint_least8_t[MAX_FILELEN];
+    }
+    catch (std::bad_alloc &e)
+    {
+        throw loadError(ERR_NOT_ENOUGH_MEMORY);
+    }
 
     // We only read as much as fits in the buffer.
     // This way we avoid choking on huge data.
@@ -307,8 +319,16 @@ SidTuneBase* SidTuneBase::getFromStdIn()
     char datb;
     while (std::cin.get(datb) && i<MAX_FILELEN)
         fileBuf[i++] = (uint_least8_t) datb;
-    //info->m_dataFileLen = i; //FIXME
-    getFromBuffer(fileBuf, i);
+    try
+    {
+        getFromBuffer(fileBuf, i);
+    }
+    catch (loadError &e)
+    {
+        delete[] fileBuf;
+        throw;
+    }
+
     delete[] fileBuf;
 }
 
@@ -326,16 +346,21 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
         throw loadError(ERR_FILE_TOO_LONG);
     }
 
-    uint_least8_t* tmpBuf = new uint_least8_t[bufferLen]; //FIXME catch bad_alloc exceptions?
-    /*if ( tmpBuf == 0 )
+    uint_least8_t* tmpBuf;
+    try
+    {
+        tmpBuf = new uint_least8_t[bufferLen];
+    }
+    catch (std::bad_alloc &e)
     {
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
-    }*/
-    memcpy(tmpBuf,buffer,bufferLen);
+    }
+    memcpy(tmpBuf, buffer, bufferLen);
 
     Buffer_sidtt<const uint_least8_t> buf1(tmpBuf, bufferLen);
 
     bool foundFormat = false;
+
     // Here test for the possible single file formats. --------------
     SidTuneBase* s = PSID::load(buf1);
     if (!s)
@@ -346,16 +371,23 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
 
     if (s)
     {
-        if (s->acceptSidTune("-","-",buf1)) //FIXME catch loadError
+        try
+        {
+            s->acceptSidTune("-", "-", buf1);
             return s;
+        }
+        catch (loadError &e)
+        {
+            delete s;
+            throw;
+        }
         delete s;
-        //throw loadError(m_statusString);
     }
 
     throw loadError(ERR_UNRECOGNIZED_FORMAT);
 }
 
-bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
+void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
                             Buffer_sidtt<const uint_least8_t>& buf)
 {
     // @FIXME@ - MUS
@@ -431,12 +463,16 @@ bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
 
     // Calculate any remaining addresses and then
     // confirm all the file details are correct
-    if ( resolveAddrs(buf.get() + fileOffset) == false )
-        return false;
+    resolveAddrs(buf.get() + fileOffset);
+
     if ( checkRelocInfo() == false )
-        return false;
+    {
+        throw loadError(ERR_BAD_RELOC);
+    }
     if ( checkCompatibility() == false )
-        return false;
+    {
+         throw loadError(ERR_BAD_ADDR);
+    }
 
     if (info->m_dataFileLen >= 2)
     {
@@ -458,8 +494,6 @@ bool SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
 
     cache.assign(buf.xferPtr(),buf.xferLen());
-
-    return true;
 }
 
 bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
@@ -518,33 +552,41 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                     try
                     {
                         loadFile(fileName2.get(), fileBuf2);
-                    // Check if tunes in wrong order and therefore swap them here
-                    if (MYSTRICMP (fileNameExtensions[n], ".mus") == 0)
-                    {
-                        SidTuneBase* s2 = MUS::load(fileBuf2, fileBuf1, 0, true);
-                        if (s2)
+                        // Check if tunes in wrong order and therefore swap them here
+                        if (MYSTRICMP (fileNameExtensions[n], ".mus") == 0)
                         {
-                            if (s2->acceptSidTune(fileName2.get(), fileName, fileBuf2)) //FIXME catch loadError
+                            SidTuneBase* s2 = MUS::load(fileBuf2, fileBuf1, 0, true);
+                            if (s2)
                             {
-                                delete s;
-                                return s2;
+                                try
+                                {
+                                    s2->acceptSidTune(fileName2.get(), fileName, fileBuf2);
+                                    delete s;
+                                    return s2;
+                                }
+                                catch (loadError& e)
+                                {
+                                    delete s2;
+                                }
                             }
-                            delete s2;
                         }
-                    }
-                    else
-                    {
-                        SidTuneBase* s2 = MUS::load(fileBuf1, fileBuf2, 0, true);
-                        if (s2)
+                        else
                         {
-                            if (s2->acceptSidTune(fileName, fileName2.get(), fileBuf1)) //FIXME catch loadError
+                            SidTuneBase* s2 = MUS::load(fileBuf1, fileBuf2, 0, true);
+                            if (s2)
                             {
-                                delete s;
-                                return s2;
+                                try
+                                {
+                                    s2->acceptSidTune(fileName, fileName2.get(), fileBuf1);
+                                    delete s;
+                                    return s2;
+                                }
+                                catch (loadError& e)
+                                {
+                                    delete s2;
+                                }
                             }
-                            delete s2;
                         }
-                    }
                     // The first tune loaded ok, so ignore errors on the
                     // second tune, may find an ok one later
                     }
@@ -552,14 +594,17 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                 }
                 n++;
             }
-            // No (suitable) second file, so reload first without second
-            /*fileBuf2.erase();
-            s = MUS::load(fileBuf1, fileBuf2, true);*/
 
-            if (s->acceptSidTune(fileName, 0, fileBuf1)) //FIXME catch loadError
+            try
+            {
+                s->acceptSidTune(fileName, 0, fileBuf1);
                 return s;
-            delete s;
-            return 0;
+            }
+            catch (loadError& e)
+            {
+                delete s;
+                throw;
+            }
         }
     }
     if (!s) s = p00::load(fileName, fileBuf1);
@@ -567,10 +612,16 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
 
     if (s)
     {
-        if (s->acceptSidTune(fileName, 0, fileBuf1)) //FIXME catch loadError
+        try
+        {
+            s->acceptSidTune(fileName, 0, fileBuf1);
             return s;
-        delete s;
-        //throw loadError(m_statusString);
+        }
+        catch (loadError& e)
+        {
+            delete s;
+            throw;
+        }
     }
 
     throw loadError(ERR_UNRECOGNIZED_FORMAT);
@@ -614,7 +665,6 @@ bool SidTuneBase::checkRelocInfo (void)
     const uint_least8_t endp   = (startp + info->m_relocPages - 1) & 0xff;
     if (endp < startp)
     {
-        //m_statusString = ERR_BAD_RELOC; FIXME
         return false;
     }
 
@@ -625,7 +675,6 @@ bool SidTuneBase::checkRelocInfo (void)
         if ( ((startp <= startlp) && (endp >= startlp)) ||
              ((startp <= endlp)   && (endp >= endlp)) )
         {
-            //m_statusString = ERR_BAD_RELOC; FIXME
             return false;
         }
     }
@@ -638,13 +687,13 @@ bool SidTuneBase::checkRelocInfo (void)
         || ((0xa0 <= endp) && (endp <= 0xbf))
         || (endp >= 0xd0))
     {
-        //m_statusString = ERR_BAD_RELOC; FIXME
         return false;
     }
+
     return true;
 }
 
-bool SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
+void SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
 {   // Originally used as a first attempt at an RSID
     // style format. Now reserved for future use
     if ( info->m_playAddr == 0xffff )
@@ -655,8 +704,7 @@ bool SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
     {
         if ( info->m_c64dataLen < 2 )
         {
-            //m_statusString = ERR_CORRUPT; FIXME
-            return false;
+            throw loadError(ERR_CORRUPT);
         }
         info->m_loadAddr = endian_16( *(c64data+1), *c64data );
         fileOffset += 2;
@@ -668,13 +716,11 @@ bool SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
     {
         if ( info->m_initAddr != 0 )
         {
-            //m_statusString = ERR_BAD_ADDR; FIXME
-            return false;
+            throw loadError(ERR_BAD_ADDR);
         }
     }
     else if ( info->m_initAddr == 0 )
         info->m_initAddr = info->m_loadAddr;
-    return true;
 }
 
 bool SidTuneBase::checkCompatibility (void)
@@ -690,13 +736,11 @@ bool SidTuneBase::checkCompatibility (void)
         case 0x0D:
         case 0x0B:
         case 0x0A:
-            //m_statusString = ERR_BAD_ADDR; FIXME
             return false;
         default:
             if ( (info->m_initAddr < info->m_loadAddr) ||
                  (info->m_initAddr > (info->m_loadAddr + info->m_c64dataLen - 1)) )
             {
-                //m_statusString = ERR_BAD_ADDR; FIXME
                 return false;
             }
         }
@@ -706,11 +750,11 @@ bool SidTuneBase::checkCompatibility (void)
         // Check tune is loadable on a real C64
         if ( info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR )
         {
-            //m_statusString = ERR_BAD_ADDR; FIXME
             return false;
         }
         break;
     }
+
     return true;
 }
 

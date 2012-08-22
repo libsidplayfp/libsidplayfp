@@ -59,7 +59,7 @@ class MUS : public SidTuneBase
 
     void setPlayerAddress();
 
-    virtual bool acceptSidTune(const char* dataFileName, const char* infoFileName,
+    virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
                        Buffer_sidtt<const uint_least8_t>& buf);
 
  public:

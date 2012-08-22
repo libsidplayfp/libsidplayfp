@@ -80,11 +80,11 @@ void MUS::setPlayerAddress()
     }
 }
 
-bool MUS::acceptSidTune(const char* dataFileName, const char* infoFileName,
+void MUS::acceptSidTune(const char* dataFileName, const char* infoFileName,
                             Buffer_sidtt<const uint_least8_t>& buf)
 {
     setPlayerAddress();
-    return SidTuneBase::acceptSidTune(dataFileName, infoFileName, buf);
+    SidTuneBase::acceptSidTune(dataFileName, infoFileName, buf);
 }
 
 bool MUS::placeSidTuneInC64mem(uint_least8_t* c64buf)
