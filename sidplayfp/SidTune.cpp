@@ -22,13 +22,36 @@
 
 #include "sidtune/SidTuneBase.h"
 
-const char MSG_NO_ERRORS[]           = "No errors";
+const char MSG_NO_ERRORS[] = "No errors";
+
+// Default sidtune file name extensions. This selection can be overriden
+// by specifying a custom list in the constructor.
+const char* defaultFileNameExt[] =
+{
+    // Preferred default file extension for single-file sidtunes
+    // or sidtune description files in SIDPLAY INFOFILE format.
+    ".sid", ".SID",
+    // File extensions used (and created) by various C64 emulators and
+    // related utilities. These extensions are recommended to be used as
+    // a replacement for ".dat" in conjunction with two-file sidtunes.
+    ".c64", ".prg", ".p00", ".C64", ".PRG", ".P00",
+    // Stereo Sidplayer (.mus/.MUS ought not be included because
+    // these must be loaded first; it sometimes contains the first
+    // credit lines of a MUS/STR pair).
+    ".str", ".STR", ".mus", ".MUS",
+    // End.
+    0
+};
+
+const char** SidTune::fileNameExtensions = defaultFileNameExt;
 
 SidTune::SidTune(const char* fileName, const char **fileNameExt, const bool separatorIsSlash)
 {
     try
     {
         tune = SidTuneBase::load(fileName, fileNameExt, separatorIsSlash);
+        m_status = true;
+        m_statusString = MSG_NO_ERRORS;
     }
     catch (loadError& e)
     {
@@ -36,9 +59,6 @@ SidTune::SidTune(const char* fileName, const char **fileNameExt, const bool sepa
         m_statusString = e.message();
         tune = 0;
     }
-
-    m_status = true;
-    m_statusString = MSG_NO_ERRORS;
 }
 
 SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength)
@@ -46,6 +66,8 @@ SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t
     try
     {
         tune = SidTuneBase::read(oneFileFormatSidtune, sidtuneLength);
+        m_status = true;
+        m_statusString = MSG_NO_ERRORS;
     }
     catch (loadError& e)
     {
@@ -53,9 +75,6 @@ SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t
         m_statusString = e.message();
         tune = 0;
     }
-
-    m_status = true;
-    m_statusString = MSG_NO_ERRORS;
 }
 
 SidTune::~SidTune()
@@ -65,21 +84,41 @@ SidTune::~SidTune()
 
 void SidTune::setFileNameExtensions(const char **fileNameExt)
 {
-    //tune->setFileNameExtensions(fileNameExt);
+    fileNameExtensions = ((fileNameExt!=0)?fileNameExt:defaultFileNameExt);
 }
 
-bool SidTune::load(const char* fileName, const bool separatorIsSlash)
+void SidTune::load(const char* fileName, const bool separatorIsSlash)
 {
     delete tune;
-    tune = SidTuneBase::load(fileName, 0, separatorIsSlash);
-    return true; //FIXME
+    try
+    {
+        tune = SidTuneBase::load(fileName, 0, separatorIsSlash);
+        m_status = true;
+        m_statusString = MSG_NO_ERRORS;
+    }
+    catch (loadError& e)
+    {
+        m_status = false;
+        m_statusString = e.message();
+        tune = 0;
+    }
 }
 
-bool SidTune::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
+void SidTune::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
 {
     delete tune;
-    tune = SidTuneBase::read(sourceBuffer, bufferLen);
-    return true; //FIXME
+    try
+    {
+        tune = SidTuneBase::read(sourceBuffer, bufferLen);
+        m_status = true;
+        m_statusString = MSG_NO_ERRORS;
+    }
+    catch (loadError& e)
+    {
+        m_status = false;
+        m_statusString = e.message();
+        tune = 0;
+    }
 }
 
 unsigned int SidTune::selectSong(const unsigned int songNum)
@@ -105,24 +144,7 @@ bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
 {
     return tune->placeSidTuneInC64mem(c64buf);
 }
-#if 0
-bool SidTune::saveC64dataFile(const char* destFileName, const bool overWriteFlag)
-{
-    return tune->saveC64dataFile(destFileName, overWriteFlag);
-}
 
-bool SidTune::savePSIDfile(const char* destFileName, const bool overWriteFlag)
-{
-    return tune->savePSIDfile(destFileName, overWriteFlag);
-}
-
-//bool SidTune::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef);
-
-bool SidTune::saveToOpenFile(std::ofstream& toFile, const uint_least8_t* buffer, uint_least32_t bufLen)
-{
-    return tune->saveToOpenFile(toFile, buffer, bufLen);
-}
-#endif
 const char* SidTune::createMD5(char *md5)
 {
     return tune->createMD5(md5);

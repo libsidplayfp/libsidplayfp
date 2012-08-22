@@ -66,25 +66,6 @@ const char ERR_BAD_ADDR[]            = "SIDTUNE ERROR: Bad address data";
 const char ERR_BAD_RELOC[]           = "SIDTUNE ERROR: Bad reloc data";
 const char ERR_CORRUPT[]             = "SIDTUNE ERROR: File is incomplete or corrupt";
 
-// Default sidtune file name extensions. This selection can be overriden
-// by specifying a custom list in the constructor.
-const char* defaultFileNameExt[] =
-{
-    // Preferred default file extension for single-file sidtunes
-    // or sidtune description files in SIDPLAY INFOFILE format.
-    ".sid", ".SID",
-    // File extensions used (and created) by various C64 emulators and
-    // related utilities. These extensions are recommended to be used as
-    // a replacement for ".dat" in conjunction with two-file sidtunes.
-    ".c64", ".prg", ".p00", ".C64", ".PRG", ".P00",
-    // Stereo Sidplayer (.mus/.MUS ought not be included because
-    // these must be loaded first; it sometimes contains the first
-    // credit lines of a MUS/STR pair).
-    ".str", ".STR", ".mus", ".MUS",
-    // End.
-    0
-};
-
 // Petscii to Ascii conversion table
 static const char _sidtune_CHRtab[256] =  // CHR$ conversion table (0x01 = no output)
 {
@@ -108,13 +89,6 @@ static const char _sidtune_CHRtab[256] =  // CHR$ conversion table (0x01 = no ou
   0x2f,0x2d,0x2d,0x7c,0x7c,0x7c,0x7c,0x2d,0x2d,0x2d,0x2f,0x5c,0x5c,0x2f,0x2f,0x23
 };
 
-const char** SidTuneBase::fileNameExtensions = defaultFileNameExt;
-
-void SidTuneBase::setFileNameExtensions(const char **fileNameExt)
-{
-    fileNameExtensions = ((fileNameExt!=0)?fileNameExt:defaultFileNameExt);
-}
-
 SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
                  const bool separatorIsSlash)
 {
@@ -128,7 +102,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
     if ( strcmp(fileName,"-")==0 )
         return getFromStdIn();
 #endif
-    return getFromFiles(fileName);
+    return getFromFiles(fileName, fileNameExt);
 }
 
 SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
@@ -221,7 +195,6 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
 
     if ( !myIn.is_open() )
     {
-        //m_statusString = ERR_CANT_OPEN_FILE;
         throw loadError(ERR_CANT_OPEN_FILE);
     }
 
@@ -230,20 +203,14 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
 
     if ( fileLen == 0 )
     {
-        //m_statusString = ERR_EMPTY;
          throw loadError(ERR_EMPTY);
     }
 
     Buffer_sidtt<const uint_least8_t> fileBuf;
 
-#ifdef HAVE_EXCEPTIONS
-    if ( !fileBuf.assign(new(std::nothrow) uint_least8_t[fileLen], fileLen) )
-#else
-    if ( !fileBuf.assign(new uint_least8_t[fileLen], fileLen) )
-#endif
+    if ( !fileBuf.assign(new uint_least8_t[fileLen], fileLen) ) //FIXME catch bad_alloc exceptions?
     {
-        //m_statusString = ERR_NOT_ENOUGH_MEMORY;
-        throw loadError(ERR_NOT_ENOUGH_MEMORY); //FIXME
+        throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
 
     myIn.seekg(0, std::ios::beg);
@@ -252,11 +219,8 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
 
     if ( myIn.bad() )
     {
-        //m_statusString = ERR_CANT_LOAD_FILE;
         throw loadError(ERR_CANT_LOAD_FILE);
     }
-
-    //m_statusString = MSG_NO_ERRORS;
 
     myIn.close();
 
@@ -299,7 +263,7 @@ SidTuneBase::SidTuneBase()
     }
     info->m_numberOfInfoStrings = 0;
 
-    // Not used!!!
+    // Not used!!! TODO remove
     info->m_numberOfCommentStrings = 1;
 #ifdef HAVE_EXCEPTIONS
     info->m_commentString = new(std::nothrow) char* [info->m_numberOfCommentStrings];
@@ -335,19 +299,8 @@ SidTuneBase::~SidTuneBase()
 
 SidTuneBase* SidTuneBase::getFromStdIn()
 {
-    // Assume a failure, so we can simply return.
-    //status = false;
-    // Assume the memory allocation to fail.
-    //m_statusString = ERR_NOT_ENOUGH_MEMORY;
-#ifdef HAVE_EXCEPTIONS
-    uint_least8_t* fileBuf = new(std::nothrow) uint_least8_t[MAX_FILELEN];
-#else
-    uint_least8_t* fileBuf = new uint_least8_t[MAX_FILELEN];
-#endif
-    if ( fileBuf == 0 )
-    {
-        return 0; //FIXME
-    }
+    uint_least8_t* fileBuf = new uint_least8_t[MAX_FILELEN]; //FIXME catch bad_alloc exceptions?
+
     // We only read as much as fits in the buffer.
     // This way we avoid choking on huge data.
     uint_least32_t i = 0;
@@ -363,9 +316,6 @@ SidTuneBase* SidTuneBase::getFromStdIn()
 
 SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen)
 {
-    // Assume a failure, so we can simply return.
-    //status = false;
-
     if (buffer==0 || bufferLen==0)
     {
         throw loadError(ERR_EMPTY);
@@ -376,15 +326,11 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
         throw loadError(ERR_FILE_TOO_LONG);
     }
 
-#ifdef HAVE_EXCEPTIONS
-    uint_least8_t* tmpBuf = new(std::nothrow) uint_least8_t[bufferLen];
-#else
-    uint_least8_t* tmpBuf = new uint_least8_t[bufferLen];
-#endif
-    if ( tmpBuf == 0 )
+    uint_least8_t* tmpBuf = new uint_least8_t[bufferLen]; //FIXME catch bad_alloc exceptions?
+    /*if ( tmpBuf == 0 )
     {
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
-    }
+    }*/
     memcpy(tmpBuf,buffer,bufferLen);
 
     Buffer_sidtt<const uint_least8_t> buf1(tmpBuf, bufferLen);
@@ -523,12 +469,12 @@ bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
     Buffer_sidtt<char> newBuf;
     uint_least32_t newLen = strlen(sourceName)+strlen(sourceExt)+1;
     // Get enough memory, so we can appended the extension.
-#ifdef HAVE_EXCEPTIONS
-    newBuf.assign(new(std::nothrow) char[newLen],newLen);
-#else
-    newBuf.assign(new char[newLen],newLen);
-#endif
-    if ( newBuf.isEmpty() )
+
+    try
+    {
+        newBuf.assign(new char[newLen], newLen);
+    }
+    catch (std::bad_alloc &e)
     {
         //m_statusString = ERR_NOT_ENOUGH_MEMORY;
         return false;
@@ -541,11 +487,8 @@ bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
 
 // Initializing the object based upon what we find in the specified file.
 
-SidTuneBase* SidTuneBase::getFromFiles(const char* fileName)
+SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions)
 {
-    // Assume a failure, so we can simply return.
-    //status = false;
-
     Buffer_sidtt<const uint_least8_t> fileBuf1;
 
     loadFile(fileName, fileBuf1);
@@ -630,7 +573,6 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName)
         //throw loadError(m_statusString);
     }
 
-    //m_statusString = ERR_UNRECOGNIZED_FORMAT;
     throw loadError(ERR_UNRECOGNIZED_FORMAT);
 }
 

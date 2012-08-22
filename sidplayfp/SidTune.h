@@ -47,6 +47,9 @@ class SID_EXTERN SidTune
 
     const char* m_statusString;
 
+    /// Filename extensions to append for various file types.
+    static const char** fileNameExtensions;
+
  public:  // ----------------------------------------------------------------
 
     /**
@@ -82,15 +85,14 @@ class SID_EXTERN SidTune
     void setFileNameExtensions(const char **fileNameExt);
 
     /**
-    * Load a sidtune into an existing object.
-    * From a file.
+    * Load a sidtune into an existing object from a file.
     */
-    bool load(const char* fileName, const bool separatorIsSlash = false);
+    void load(const char* fileName, const bool separatorIsSlash = false);
 
     /**
-    * From a buffer.
+    * Load a sidtune into an existing object from a buffer.
     */
-    bool read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
+    void read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
 
     /**
     * Select sub-song (0 = default starting song)
@@ -126,28 +128,6 @@ class SID_EXTERN SidTune
     */
     bool placeSidTuneInC64mem(uint_least8_t* c64buf);
 
-    // --- file save & format conversion ---
-#if 0
-    /**
-    * These functions work for any successfully created object.
-    * overWriteFlag: true  = Overwrite existing file.
-    *                  false = Default, return error when file already
-    *                          exists.
-    * One could imagine an "Are you sure ?"-checkbox before overwriting
-    * any file.
-    * returns: true = Successful, false = Error condition.
-    */
-    bool saveC64dataFile( const char* destFileName, const bool overWriteFlag = false );
-    bool savePSIDfile( const char* destFileName, const bool overWriteFlag = false );
-
-    /**
-    * Does not affect status of object, and therefore can be used
-    * to load files. Error string is put into info.statusString, though.
-    */
-    bool loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef);
-
-    bool saveToOpenFile( std::ofstream& toFile, const uint_least8_t* buffer, uint_least32_t bufLen );
-#endif
     /**
     * Calculates the MD5 hash of the tune.
     * Not providing an md5 buffer will cause the internal one to be used.

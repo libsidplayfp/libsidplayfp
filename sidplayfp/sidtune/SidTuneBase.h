@@ -74,13 +74,6 @@ class SidTuneBase
     * does exist and the loader is able to determine its file format,
     * this function does not try to append any file name extension.
     * See ``sidtune.cpp'' for the default list of file name extensions.
-    * You can specific ``sidTuneFileName = 0'', if you do not want to
-    * load a sidtune. You can later load one with open().
-    */
-    //static SidTuneBase* load(const char* fileName, const char* statusString=0);
-
-    /**
-    * Load a sidtune from a file.
     */
     static SidTuneBase* load(const char* fileName, const char **fileNameExt = 0, const bool separatorIsSlash = false);
 
@@ -89,8 +82,6 @@ class SidTuneBase
     * Currently supported: PSID format
     */
     static SidTuneBase* read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
-
-void setFileNameExtensions(const char **fileNameExt);
 
     /**
     * Select sub-song (0 = default starting song)
@@ -149,9 +140,6 @@ void setFileNameExtensions(const char **fileNameExt);
 
     Buffer_sidtt<const uint_least8_t> cache;
 
-    /// Filename extensions to append for various file types.
-    static const char** fileNameExtensions;
-
  protected:
     SidTuneBase();
 
@@ -191,7 +179,7 @@ void setFileNameExtensions(const char **fileNameExt);
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     static SidTuneBase* getFromStdIn();
 #endif
-    static SidTuneBase* getFromFiles(const char* name);
+    static SidTuneBase* getFromFiles(const char* name, const char **fileNameExtensions);
 
     /// Try to retrieve single-file sidtune from specified buffer.
     static SidTuneBase* getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen);
