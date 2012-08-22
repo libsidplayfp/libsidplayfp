@@ -152,9 +152,6 @@ void setFileNameExtensions(const char **fileNameExt);
     /// For files with header: offset to real data
     uint_least32_t fileOffset;
 
-    /// Needed for MUS/STR player installation.
-    uint_least16_t musDataLen;
-
     Buffer_sidtt<const uint_least8_t> cache;
 
     /// Filename extensions to append for various file types.

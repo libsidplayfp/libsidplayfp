@@ -28,6 +28,9 @@ class MUS : public SidTuneBase
  private:
     //uint_least32_t fileOffset;
 
+    /// Needed for MUS/STR player installation.
+    uint_least16_t musDataLen;
+
  private:
     bool resolveAddrs(const uint_least8_t *c64data);
     bool checkRelocInfo(void);

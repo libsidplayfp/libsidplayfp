@@ -300,7 +300,6 @@ SidTuneBase::SidTuneBase()
     }
 
     fileOffset = 0;
-    musDataLen = 0;
 
     for ( unsigned int sNum = 0; sNum < SidTuneInfo::MAX_CREDIT_STRINGS; sNum++ )
     {
