@@ -47,7 +47,6 @@
 #endif
 
 // Error and status message strings.
-const char ERR_SONG_NUMBER_EXCEED[]  = "SIDTUNE WARNING: Selected song number was too high";
 const char ERR_EMPTY[]               = "SIDTUNE ERROR: No data to load";
 const char ERR_UNRECOGNIZED_FORMAT[] = "SIDTUNE ERROR: Could not determine file format";
 const char ERR_NO_DATA_FILE[]        = "SIDTUNE ERROR: Did not find the corresponding data file";
@@ -127,8 +126,7 @@ unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
         song = info->m_startSong;
     if (selectedSong>info->m_songs || selectedSong>MAX_SONGS)
     {
-        song = info->m_startSong;
-        //m_statusString = ERR_SONG_NUMBER_EXCEED; FIXME
+        return info->m_currentSong;
     }
     info->m_currentSong = song;
     // Retrieve song speed definition.

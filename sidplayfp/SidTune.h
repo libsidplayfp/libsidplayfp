@@ -95,8 +95,10 @@ class SID_EXTERN SidTune
     void read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
 
     /**
-    * Select sub-song (0 = default starting song)
-    * and return active song number out of [1,2,..,SIDTUNE_MAX_SONGS].
+    * Select sub-song.
+    *
+    * @param songNum the selected song (0 = default starting song)
+    * @return active song number
     */
     unsigned int selectSong(const unsigned int songNum);
 
