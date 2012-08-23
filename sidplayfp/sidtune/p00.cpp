@@ -130,7 +130,7 @@ SidTuneBase* p00::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& 
     catch (loadError& e)
     {
         delete tune;
-        throw e;
+        throw;
     }
 
     return tune;

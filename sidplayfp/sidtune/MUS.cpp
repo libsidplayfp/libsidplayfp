@@ -524,7 +524,11 @@ bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
         throw loadError(ERR_SIZE_EXCEEDED);
     }
 
-    if ( !mergeBuf.assign(new uint8_t[mergeLen], mergeLen) ) // FIXME catch bad_alloc exception?
+    try
+    {
+        mergeBuf.assign(new uint8_t[mergeLen], mergeLen);
+    }
+    catch (std::bad_alloc& e)
     {
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
@@ -602,7 +606,7 @@ SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf,
     catch (loadError& e)
     {
         delete tune;
-        throw e;
+        throw;
     }
 
     return tune;

@@ -127,7 +127,7 @@ SidTuneBase* PSID::load(Buffer_sidtt<const uint_least8_t>& dataBuf)
     catch (loadError& e)
     {
         delete tune;
-        throw e;
+        throw;
     }
 
     return tune;
