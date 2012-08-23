@@ -496,7 +496,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     cache.assign(buf.xferPtr(),buf.xferLen());
 }
 
-bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
+void SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
                                 const char* sourceName,
                                 const char* sourceExt)
 {
@@ -510,13 +510,11 @@ bool SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
     }
     catch (std::bad_alloc &e)
     {
-        //m_statusString = ERR_NOT_ENOUGH_MEMORY;
-        return false;
+        throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
     strcpy(newBuf.get(),sourceName);
     strcpy(SidTuneTools::fileExtOfPath(newBuf.get()),sourceExt);
     destString.assign(newBuf.xferPtr(),newBuf.xferLen());
-    return true;
 }
 
 // Initializing the object based upon what we find in the specified file.
@@ -542,8 +540,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
             int n = 0;
             while (fileNameExtensions[n] != 0)
             {
-                if ( !createNewFileName(fileName2, fileName, fileNameExtensions[n]) )
-                    return 0;
+                createNewFileName(fileName2, fileName, fileNameExtensions[n]);
                 // 1st data file was loaded into ``fileBuf1'',
                 // so we load the 2nd one into ``fileBuf2''.
                 // Do not load the first file again if names are equal.
