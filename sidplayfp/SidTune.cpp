@@ -47,9 +47,11 @@ const char** SidTune::fileNameExtensions = defaultFileNameExt;
 
 SidTune::SidTune(const char* fileName, const char **fileNameExt, const bool separatorIsSlash)
 {
+    setFileNameExtensions(fileNameExt);
+
     try
     {
-        tune = SidTuneBase::load(fileName, fileNameExt, separatorIsSlash);
+        tune = SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash);
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }

@@ -91,7 +91,6 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
         return 0;
 
     //isSlashedFileName = separatorIsSlash;
-    //setFileNameExtensions(fileNameExt);
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     // Filename ``-'' is used as a synonym for standard input.
     if ( strcmp(fileName,"-")==0 )
