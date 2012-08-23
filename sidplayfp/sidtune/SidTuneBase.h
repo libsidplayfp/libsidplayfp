@@ -120,9 +120,6 @@ class SidTuneBase
     uint_least8_t songSpeed[MAX_SONGS];
     SidTuneInfo::clock_t clockSpeed[MAX_SONGS];
 
-    /// holds text info from the format headers etc.
-    char infoString[SidTuneInfo::MAX_CREDIT_STRINGS][SidTuneInfo::MAX_CREDIT_STRLEN];
-
     /**
     * If your opendir() and readdir()->d_name return path names
     * that contain the forward slash (/) as file separator, but

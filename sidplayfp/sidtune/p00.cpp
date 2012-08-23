@@ -141,8 +141,10 @@ void p00::load(const char* format, const X00Header* pHeader)
     info->m_formatString = format;
 
     {   // Decode file name
+        char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
         SmartPtr_sidtt<const uint8_t> spPet((const uint8_t*)pHeader->name, X00_NAME_LEN);
-        convertPetsciiToAscii(spPet, infoString[0]);
+        convertPetsciiToAscii(spPet, infoString);
+        info->m_infoString.push_back(infoString);
     }
 
     // Automatic settings
@@ -150,8 +152,6 @@ void p00::load(const char* format, const X00Header* pHeader)
     info->m_songs         = 1;
     info->m_startSong     = 1;
     info->m_compatibility = SidTuneInfo::COMPATIBILITY_BASIC;
-    info->m_numberOfInfoStrings = 1;
-    info->m_infoString[0] = infoString[0];
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);

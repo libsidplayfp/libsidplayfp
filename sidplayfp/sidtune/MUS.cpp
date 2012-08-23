@@ -648,7 +648,7 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
     info->m_sidChipBase1 = SIDTUNE_SID1_BASE_ADDR;
 
     // No credits so extract them from the MUS files
-    const bool credits = (infoString[0][0] | infoString[1][0] | infoString[2][0]) != 0;
+    const bool credits = !info->m_infoString.empty();
 
     // Voice3Index now is offset to text lines (uppercase Pet-strings).
     spPet += voice3Index;
@@ -662,16 +662,11 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
     // Extract credits
     else
     {
-        for (int line = info->m_numberOfInfoStrings = 0; spPet[0]; line =
-             ++info->m_numberOfInfoStrings)
+        while (spPet[0])
         {
-            if (line < SidTuneInfo::MAX_CREDIT_STRINGS)
-            {
-                convertPetsciiToAscii(spPet,infoString[line]);
-                info->m_infoString[line] = infoString[line];
-            }
-            else
-                convertPetsciiToAscii(spPet,0);
+            char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
+            convertPetsciiToAscii(spPet, infoString);
+            info->m_infoString.push_back(infoString);
         }
     }
     spPet++;
@@ -712,16 +707,11 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
         // Extract credits
         else
         {
-            for (int line = info->m_numberOfInfoStrings; spPet[0]; line =
-                ++info->m_numberOfInfoStrings)
+            while (spPet[0])
             {
-                if (line < 10)
-                {
-                    convertPetsciiToAscii(spPet,infoString[line]);
-                    info->m_infoString[line] = infoString[line];
-                }
-                else
-                    convertPetsciiToAscii(spPet,0);
+                char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
+                convertPetsciiToAscii(spPet,infoString);
+                info->m_infoString.push_back(infoString);
             }
         }
 
@@ -738,12 +728,12 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
 
     if (!credits)
     {   // Remove trailing empty lines.
-        const int lines = info->m_numberOfInfoStrings;
+        const int lines = info->m_infoString.size();
         {
             for ( int line = lines-1; line >= 0; line-- )
             {
-                if (strlen(info->m_infoString[line]) == 0)
-                    --info->m_numberOfInfoStrings;
+                if (info->m_infoString[line].length() == 0)
+                    info->m_infoString.pop_back();
                 else
                     break;
             }
@@ -752,10 +742,9 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
         // Three strings are assumed to be credits in
         // the format title, author and released, which
         // these are not
-        if (info->m_numberOfInfoStrings == 3)
+        if (info->numberOfInfoStrings() == 3)
         {
-            info->m_infoString[3] = &infoString[3][0];
-            info->m_numberOfInfoStrings++;
+            info->m_infoString.push_back("");
         }
     }
 }

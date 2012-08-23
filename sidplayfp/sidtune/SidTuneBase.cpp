@@ -35,10 +35,6 @@
 #include "prg.h"
 #include "PSID.h"
 
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
-
 #include <iostream>
 #include <iomanip>
 #include <string.h>
@@ -257,42 +253,12 @@ SidTuneBase::SidTuneBase()
     }
 
     fileOffset = 0;
-
-    for ( unsigned int sNum = 0; sNum < SidTuneInfo::MAX_CREDIT_STRINGS; sNum++ )
-    {
-        for ( unsigned int sPos = 0; sPos < SidTuneInfo::MAX_CREDIT_STRLEN; sPos++ )
-        {
-            infoString[sNum][sPos] = 0;
-        }
-    }
-    info->m_numberOfInfoStrings = 0;
-
-    // Not used!!! TODO remove
-    info->m_numberOfCommentStrings = 1;
-#ifdef HAVE_EXCEPTIONS
-    info->m_commentString = new(std::nothrow) char* [info->m_numberOfCommentStrings];
-#else
-    info->m_commentString = new char* [info->m_numberOfCommentStrings];
-#endif
-    if (info->m_commentString != 0)
-        info->m_commentString[0] = SidTuneTools::myStrDup("--- SAVED WITH SIDPLAY ---");
 }
 
 SidTuneBase::~SidTuneBase()
 {
     // Remove copy of comment field.
     unsigned int strNum = 0;
-    // Check and remove every available line.
-    while (info->m_numberOfCommentStrings-- > 0)
-    {
-        if (info->m_commentString[strNum] != 0)
-        {
-            delete[] info->m_commentString[strNum];
-            info->m_commentString[strNum] = 0;
-        }
-        strNum++;  // next string
-    };
-    delete[] info->m_commentString;  // free the array pointer
 
     deleteFileNameCopies();
 
@@ -391,14 +357,13 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
                             Buffer_sidtt<const uint_least8_t>& buf)
 {
     // @FIXME@ - MUS
-    if ( info->m_numberOfInfoStrings == 3 )
+    if ( info->numberOfInfoStrings() == 3 )
     {   // Add <?> (HVSC standard) to missing title, author, release fields
         for (int i = 0; i < 3; i++)
         {
-            if (infoString[i][0] == '\0')
+            if (info->m_infoString[i].empty())
             {
-                strcpy (&infoString[i][0], "<?>");
-                info->m_infoString[i] = &infoString[i][0];
+                info->m_infoString[i] = "<?>";
             }
         }
     }

@@ -21,7 +21,10 @@
 #ifndef SIDTUNEINFOIMPL_H
 #define SIDTUNEINFOIMPL_H
 
+#include <vector>
+#include <string>
 #include <stdint.h>
+
 #include "sidplayfp/SidTuneInfo.h"
 
 /** @internal
@@ -40,11 +43,9 @@ public:
 
     char* m_infoFileName;
 
-    unsigned int m_numberOfInfoStrings;
-    char* m_infoString[MAX_CREDIT_STRINGS];
+    std::vector<std::string> m_infoString;
 
-    unsigned int m_numberOfCommentStrings;
-    char** m_commentString;
+    std::vector<std::string> m_commentString;
 
     unsigned int m_songs;
     unsigned int m_startSong;
@@ -133,11 +134,11 @@ public:
 
     compatibility_t compatibility() const { return m_compatibility; }
 
-    unsigned int numberOfInfoStrings() const { return m_numberOfInfoStrings; }
-    const char* infoString(const unsigned int i) const { return i<m_numberOfInfoStrings?m_infoString[i]:""; }
+    unsigned int numberOfInfoStrings() const { return m_infoString.size(); }
+    const char* infoString(const unsigned int i) const { return i<numberOfInfoStrings()?m_infoString[i].c_str():""; }
 
-    unsigned int numberOfCommentStrings() const { return m_numberOfCommentStrings; } 
-    const char* commentString(const unsigned int i) const { return i<m_numberOfCommentStrings?m_commentString[i]:""; }
+    unsigned int numberOfCommentStrings() const { return m_commentString.size(); }
+    const char* commentString(const unsigned int i) const { return i<numberOfCommentStrings()?m_commentString[i].c_str():""; }
 
     uint_least32_t dataFileLen() const { return m_dataFileLen; }
 

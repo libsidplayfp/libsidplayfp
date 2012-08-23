@@ -273,17 +273,10 @@ void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(speed, clock);
 
-    // Copy info strings, so they will not get lost.
-    info->m_numberOfInfoStrings = 3;
-    // Name
-    strncpy(&infoString[0][0],pHeader->name,psid_maxStrLen);
-    info->m_infoString[0] = &infoString[0][0];
-    // Author
-    strncpy(&infoString[1][0],pHeader->author,psid_maxStrLen);
-    info->m_infoString[1] = &infoString[1][0];
-    // Released
-    strncpy(&infoString[2][0],pHeader->released,psid_maxStrLen);
-    info->m_infoString[2] = &infoString[2][0];
+    // Copy info strings.
+    info->m_infoString.push_back(std::string(pHeader->name, psid_maxStrLen));
+    info->m_infoString.push_back(std::string(pHeader->author, psid_maxStrLen));
+    info->m_infoString.push_back(std::string(pHeader->released, psid_maxStrLen));
 
     /*if ( musPlayer ) FIXME
         return MUS_load (dataBuf);*/
