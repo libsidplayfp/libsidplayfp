@@ -40,12 +40,6 @@ static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
-bool MUS::fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
-                                             Buffer_sidtt<const uint_least8_t>& strBuf)
-{
-    return load (musBuf, strBuf, true);
-}
-
 bool MUS::detect(const uint_least8_t* buffer, const uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {

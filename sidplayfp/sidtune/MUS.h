@@ -36,9 +36,6 @@ class MUS : public SidTuneBase
     static bool detect(const uint_least8_t* buffer, const uint_least32_t bufLen,
                          uint_least32_t& voice3Index);
 
-    static bool fileSupport(Buffer_sidtt<const uint_least8_t>& musBuf,
-                                             Buffer_sidtt<const uint_least8_t>& strBuf);
-
     bool mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
                              Buffer_sidtt<const uint_least8_t>& strBuf);
 
