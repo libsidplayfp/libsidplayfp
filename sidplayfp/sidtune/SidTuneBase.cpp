@@ -49,14 +49,11 @@
 // Error and status message strings.
 const char ERR_EMPTY[]               = "SIDTUNE ERROR: No data to load";
 const char ERR_UNRECOGNIZED_FORMAT[] = "SIDTUNE ERROR: Could not determine file format";
-const char ERR_NO_DATA_FILE[]        = "SIDTUNE ERROR: Did not find the corresponding data file";
 const char ERR_NOT_ENOUGH_MEMORY[]   = "SIDTUNE ERROR: Not enough free memory";
 const char ERR_CANT_LOAD_FILE[]      = "SIDTUNE ERROR: Could not load input file";
 const char ERR_CANT_OPEN_FILE[]      = "SIDTUNE ERROR: Could not open file for binary input";
 const char ERR_FILE_TOO_LONG[]       = "SIDTUNE ERROR: Input data too long";
 const char ERR_DATA_TOO_LONG[]       = "SIDTUNE ERROR: Size of music data exceeds C64 memory";
-const char ERR_CANT_CREATE_FILE[]    = "SIDTUNE ERROR: Could not create output file";
-const char ERR_FILE_IO_ERROR[]       = "SIDTUNE ERROR: File I/O error";
 const char ERR_BAD_ADDR[]            = "SIDTUNE ERROR: Bad address data";
 const char ERR_BAD_RELOC[]           = "SIDTUNE ERROR: Bad reloc data";
 const char ERR_CORRUPT[]             = "SIDTUNE ERROR: File is incomplete or corrupt";
