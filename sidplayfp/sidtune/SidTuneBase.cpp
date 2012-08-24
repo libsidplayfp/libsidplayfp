@@ -288,8 +288,6 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
 
     Buffer_sidtt<const uint_least8_t> buf1(tmpBuf, bufferLen);
 
-    bool foundFormat = false;
-
     // Here test for the possible single file formats. --------------
     SidTuneBase* s = PSID::load(buf1);
     if (!s)
