@@ -254,9 +254,6 @@ SidTuneBase::SidTuneBase()
 
 SidTuneBase::~SidTuneBase()
 {
-    // Remove copy of comment field.
-    unsigned int strNum = 0;
-
     deleteFileNameCopies();
 
     delete info;
@@ -353,18 +350,6 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
 void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
                             Buffer_sidtt<const uint_least8_t>& buf)
 {
-    // @FIXME@ - MUS
-    if ( info->numberOfInfoStrings() == 3 )
-    {   // Add <?> (HVSC standard) to missing title, author, release fields
-        for (int i = 0; i < 3; i++)
-        {
-            if (info->m_infoString[i].empty())
-            {
-                info->m_infoString[i] = "<?>";
-            }
-        }
-    }
-
     deleteFileNameCopies();
     // Make a copy of the data file name and path, if available.
     if ( dataFileName != 0 )
@@ -720,9 +705,10 @@ bool SidTuneBase::checkCompatibility (void)
 int SidTuneBase::convertPetsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet, char* dest)
 {
     int count = 0;
-    char c;
+
     if (dest)
     {
+        char c;
         do
         {
             c = _sidtune_CHRtab[*spPet];  // ASCII CHR$ conversion
@@ -736,14 +722,6 @@ int SidTuneBase::convertPetsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet, cha
         }
         while ( !((c==0x0D)||(c==0x00)||spPet.fail()) );
     }
-    else
-    {   // Just find end of string
-        do
-        {
-            c = _sidtune_CHRtab[*spPet];  // ASCII CHR$ conversion
-            spPet++;
-        }
-        while ( !((c==0x0D)||(c==0x00)||spPet.fail()) );
-    }
+
     return count;
 }

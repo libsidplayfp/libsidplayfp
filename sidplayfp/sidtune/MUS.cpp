@@ -647,28 +647,17 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
     info->m_loadAddr = SIDTUNE_MUS_DATA_ADDR;
     info->m_sidChipBase1 = SIDTUNE_SID1_BASE_ADDR;
 
-    // No credits so extract them from the MUS files
-    const bool credits = !info->m_infoString.empty();
-
     // Voice3Index now is offset to text lines (uppercase Pet-strings).
     spPet += voice3Index;
 
-    // Already have credits just skip over the ones in the MUS
-    if (credits)
-    {
-        while (spPet[0])
-            convertPetsciiToAscii(spPet,0);
-    }
     // Extract credits
-    else
+    while (spPet[0])
     {
-        while (spPet[0])
-        {
-            char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
-            convertPetsciiToAscii(spPet, infoString);
-            info->m_infoString.push_back(infoString);
-        }
+        char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
+        convertPetsciiToAscii(spPet, infoString);
+        info->m_commentString.push_back(infoString);
     }
+
     spPet++;
 
     // If we appear to have additional data at the end, check is it's
@@ -698,21 +687,12 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
     {   // Voice3Index now is offset to text lines (uppercase Pet-strings).
         spPet += voice3Index;
 
-        // Already have credits just skip over the ones in the MUS
-        if (credits)
-        {
-            while (spPet[0])
-                convertPetsciiToAscii(spPet,0);
-        }
         // Extract credits
-        else
+        while (spPet[0])
         {
-            while (spPet[0])
-            {
-                char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
-                convertPetsciiToAscii(spPet,infoString);
-                info->m_infoString.push_back(infoString);
-            }
+            char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
+            convertPetsciiToAscii(spPet,infoString);
+            info->m_commentString.push_back(infoString);
         }
 
         info->m_sidChipBase2 = SIDTUNE_SID2_BASE_ADDR;
@@ -726,25 +706,15 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
 
     setPlayerAddress();
 
-    if (!credits)
-    {   // Remove trailing empty lines.
-        const int lines = info->m_infoString.size();
+    // Remove trailing empty lines.
+    const int lines = info->m_commentString.size();
+    {
+        for ( int line = lines-1; line >= 0; line-- )
         {
-            for ( int line = lines-1; line >= 0; line-- )
-            {
-                if (info->m_infoString[line].length() == 0)
-                    info->m_infoString.pop_back();
-                else
-                    break;
-            }
-        }
-
-        // Three strings are assumed to be credits in
-        // the format title, author and released, which
-        // these are not
-        if (info->numberOfInfoStrings() == 3)
-        {
-            info->m_infoString.push_back("");
+            if (info->m_commentString[line].length() == 0)
+                info->m_commentString.pop_back();
+            else
+                break;
         }
     }
 }

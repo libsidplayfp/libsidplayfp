@@ -148,8 +148,8 @@ public:
     * MUS comments
     */
     //@{
-    virtual unsigned int numberOfCommentStrings() const =0; ///< Number of comments (2 when STR also has comment)
-    virtual const char* commentString(const unsigned int i) const =0; ///<  Used to stash the MUS comment somewhere. Ignored by everything.
+    virtual unsigned int numberOfCommentStrings() const =0; ///< Number of comments
+    virtual const char* commentString(const unsigned int i) const =0; ///<  Used to stash the MUS comment somewhere.
     //@}
 
     /**
