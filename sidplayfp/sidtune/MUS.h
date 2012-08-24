@@ -26,16 +26,12 @@
 class MUS : public SidTuneBase
 {
  private:
-    //uint_least32_t fileOffset;
-
     /// Needed for MUS/STR player installation.
     uint_least16_t musDataLen;
 
  private:
     bool resolveAddrs(const uint_least8_t *c64data);
     bool checkRelocInfo(void);
-
-    void tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf);
 
     static bool detect(const uint_least8_t* buffer, const uint_least32_t bufLen,
                          uint_least32_t& voice3Index);
@@ -74,4 +70,4 @@ class MUS : public SidTuneBase
     virtual bool placeSidTuneInC64mem(uint_least8_t* c64buf);
 };
 
-#endif // PSID_H
+#endif // MUS_H

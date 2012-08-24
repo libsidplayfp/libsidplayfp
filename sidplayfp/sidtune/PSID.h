@@ -26,8 +26,6 @@
 class PSID : public SidTuneBase
 {
  private:
-    //uint_least32_t fileOffset;
-
     char m_md5[SidTune::MD5_LENGTH+1];
 
  private:
@@ -43,8 +41,6 @@ class PSID : public SidTuneBase
     virtual ~PSID() {}
 
     static SidTuneBase* load(Buffer_sidtt<const uint_least8_t>& dataBuf);
-
-    //bool placeSidTuneInC64mem(uint_least8_t* c64buf);
 
     virtual const char *createMD5(char *md5);
 };
