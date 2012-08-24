@@ -278,8 +278,8 @@ void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
     info->m_infoString.push_back(std::string(pHeader->author, psid_maxStrLen));
     info->m_infoString.push_back(std::string(pHeader->released, psid_maxStrLen));
 
-    /*if ( musPlayer ) FIXME
-        return MUS_load (dataBuf);*/
+    if ( musPlayer )
+        throw loadError("Compute!'s Sidplayer MUS data is not supported yet"); // TODO
 }
 
 const char *PSID::createMD5(char *md5)
