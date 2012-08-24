@@ -42,10 +42,10 @@ char* SidTuneTools::myStrDup(const char *source)
 }
 
 // Return pointer to file name position in complete path.
-char* SidTuneTools::fileNameWithoutPath(char* s)
+size_t SidTuneTools::fileNameWithoutPath(const char* s)
 {
-    int last_slash_pos = -1;
-    for ( uint_least32_t pos = 0; pos < strlen(s); pos++ )
+    size_t last_slash_pos = -1;
+    for ( size_t pos = 0; pos < strlen(s); pos++ )
     {
 #if defined(SID_FS_IS_COLON_AND_BACKSLASH_AND_SLASH)
         if ( s[pos] == ':' || s[pos] == '\\' ||
@@ -65,22 +65,22 @@ char* SidTuneTools::fileNameWithoutPath(char* s)
             last_slash_pos = pos;
         }
     }
-    return( &s[last_slash_pos +1] );
+    return last_slash_pos + 1;
 }
 
 // Return pointer to file name position in complete path.
 // Special version: file separator = forward slash.
-char* SidTuneTools::slashedFileNameWithoutPath(char* s)
+size_t SidTuneTools::slashedFileNameWithoutPath(const char* s)
 {
-    int last_slash_pos = -1;
-    for ( uint_least32_t pos = 0; pos < strlen(s); pos++ )
+    size_t last_slash_pos = -1;
+    for ( size_t pos = 0; pos < strlen(s); pos++ )
     {
         if ( s[pos] == '/' )
         {
             last_slash_pos = pos;
         }
     }
-    return( &s[last_slash_pos +1] );
+    return last_slash_pos + 1;
 }
 
 // Return pointer to file name extension in path.

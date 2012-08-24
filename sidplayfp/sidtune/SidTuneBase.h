@@ -75,7 +75,7 @@ class SidTuneBase
     * this function does not try to append any file name extension.
     * See ``sidtune.cpp'' for the default list of file name extensions.
     */
-    static SidTuneBase* load(const char* fileName, const char **fileNameExt = 0, const bool separatorIsSlash = false);
+    static SidTuneBase* load(const char* fileName, const char **fileNameExt, const bool separatorIsSlash);
 
     /**
     * Load a single-file sidtune from a memory buffer.
@@ -149,8 +149,6 @@ class SidTuneBase
     /// Convert 32-bit PSID-style speed word to internal tables.
     void convertOldStyleSpeedToTables(uint_least32_t speed,
          SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_PAL);
-
-    void deleteFileNameCopies();
 
     /// Check compatibility details are sensible
     bool checkCompatibility(void);

@@ -94,7 +94,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
     if (!fileName)
         return 0;
 
-    //isSlashedFileName = separatorIsSlash;
+    //isSlashedFileName = separatorIsSlash; FIXME
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     // Filename ``-'' is used as a synonym for standard input.
     if ( strcmp(fileName,"-")==0 )
@@ -228,20 +228,6 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
     bufferRef.assign(fileBuf.xferPtr(), fileBuf.xferLen());
 }
 
-void SidTuneBase::deleteFileNameCopies()
-{
-    // When will it be fully safe to call delete[](0) on every system?
-    if ( info->m_dataFileName != 0 )
-        delete[] info->m_dataFileName;
-    if ( info->m_infoFileName != 0 )
-        delete[] info->m_infoFileName;
-    if ( info->m_path != 0 )
-        delete[] info->m_path;
-    info->m_dataFileName = 0;
-    info->m_infoFileName = 0;
-    info->m_path = 0;
-}
-
 SidTuneBase::SidTuneBase()
 {
     // Initialize the object with some safe defaults.
@@ -258,8 +244,6 @@ SidTuneBase::SidTuneBase()
 
 SidTuneBase::~SidTuneBase()
 {
-    deleteFileNameCopies();
-
     delete info;
 }
 
@@ -354,51 +338,25 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
 void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
                             Buffer_sidtt<const uint_least8_t>& buf)
 {
-    deleteFileNameCopies();
     // Make a copy of the data file name and path, if available.
     if ( dataFileName != 0 )
     {
-        info->m_path = SidTuneTools::myStrDup(dataFileName);
-        if (isSlashedFileName)
-        {
-            info->m_dataFileName = SidTuneTools::myStrDup(SidTuneTools::slashedFileNameWithoutPath(info->m_path));
-            *SidTuneTools::slashedFileNameWithoutPath(info->m_path) = 0;  // path only
-        }
-        else
-        {
-            info->m_dataFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(info->m_path));
-            *SidTuneTools::fileNameWithoutPath(info->m_path) = 0;  // path only
-        }
-        if ((info->m_path==0) || (info->m_dataFileName==0))
-        {
-            throw loadError(ERR_NOT_ENOUGH_MEMORY);
-        }
+        const size_t fileNamePos = isSlashedFileName ?
+            SidTuneTools::slashedFileNameWithoutPath(dataFileName) :
+            SidTuneTools::fileNameWithoutPath(dataFileName);
+        info->m_path = std::string(dataFileName, fileNamePos);
+        info->m_dataFileName = std::string(dataFileName + fileNamePos);
     }
-    else
-    {
-        // Provide empty strings.
-        info->m_path = SidTuneTools::myStrDup("");
-        info->m_dataFileName = SidTuneTools::myStrDup("");
-    }
+
     // Make a copy of the info file name, if available.
     if ( infoFileName != 0 )
     {
-        char* tmp = SidTuneTools::myStrDup(infoFileName);
-        if (isSlashedFileName)
-            info->m_infoFileName = SidTuneTools::myStrDup(SidTuneTools::slashedFileNameWithoutPath(tmp));
-        else
-            info->m_infoFileName = SidTuneTools::myStrDup(SidTuneTools::fileNameWithoutPath(tmp));
-        if ((tmp==0) || (info->m_infoFileName==0))
-        {
-            throw loadError(ERR_NOT_ENOUGH_MEMORY);
-        }
-        delete[] tmp;
+        const size_t fileNamePos = isSlashedFileName ?
+            SidTuneTools::slashedFileNameWithoutPath(infoFileName) :
+            SidTuneTools::fileNameWithoutPath(infoFileName);
+        info->m_infoFileName = std::string(infoFileName + fileNamePos);
     }
-    else
-    {
-        // Provide empty string.
-        info->m_infoFileName = SidTuneTools::myStrDup("");
-    }
+
     // Fix bad sidtune set up.
     if (info->m_songs > MAX_SONGS)
         info->m_songs = MAX_SONGS;

@@ -37,16 +37,6 @@ public:
 
     const char* m_speedString;
 
-    char* m_path;
-
-    char* m_dataFileName;
-
-    char* m_infoFileName;
-
-    std::vector<std::string> m_infoString;
-
-    std::vector<std::string> m_commentString;
-
     unsigned int m_songs;
     unsigned int m_startSong;
     unsigned int m_currentSong;
@@ -77,6 +67,16 @@ public:
 
     uint_least8_t m_relocPages;
 
+    std::string m_path;
+
+    std::string m_dataFileName;
+
+    std::string m_infoFileName;
+
+    std::vector<std::string> m_infoString;
+
+    std::vector<std::string> m_commentString;
+
 private:    // prevent copying
     SidTuneInfoImpl(const SidTuneInfoImpl&);
     SidTuneInfoImpl& operator=(SidTuneInfoImpl&);
@@ -84,9 +84,6 @@ private:    // prevent copying
 public:
     SidTuneInfoImpl() :
         m_formatString("N/A"),
-        m_path(0),
-        m_dataFileName(0),
-        m_infoFileName(0),
         m_songs(0),
         m_startSong(0),
         m_currentSong(0),
@@ -152,11 +149,11 @@ public:
 
     bool fixLoad() const { return m_fixLoad; }
 
-    const char* path() const { return m_path; }
+    const char* path() const { return m_path.c_str(); }
 
-    const char* dataFileName() const { return m_dataFileName; }
+    const char* dataFileName() const { return m_dataFileName.c_str(); }
 
-    const char* infoFileName() const { return m_infoFileName; }
+    const char* infoFileName() const { return m_infoFileName.c_str(); }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */

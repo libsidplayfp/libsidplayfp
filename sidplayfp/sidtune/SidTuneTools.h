@@ -57,13 +57,13 @@ class SidTuneTools
     static char* myStrDup(const char *source);
 
     /** Return pointer to file name position in complete path. */
-    static char* fileNameWithoutPath(char* s);
+    static size_t fileNameWithoutPath(const char* s);
 
     /**
     * Return pointer to file name position in complete path.
     * Special version: file separator = forward slash.
     */
-    static char* slashedFileNameWithoutPath(char* s);
+    static size_t slashedFileNameWithoutPath(const char* s);
 
     /**
     * Return pointer to file name extension in path.
