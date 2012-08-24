@@ -22,8 +22,6 @@
 
 #include "mmu.h"
 
-SIDPLAYFP_NAMESPACE_START
-
 static const uint8_t POWERON[] =
 {
 #include "poweron.bin"
@@ -129,5 +127,3 @@ void MMU::reset()
         }
     }
 }
-
-SIDPLAYFP_NAMESPACE_STOP

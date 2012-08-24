@@ -22,8 +22,6 @@
 
 #include "c64.h"
 
-SIDPLAYFP_NAMESPACE_START
-
 const float64_t c64::CLOCK_FREQ_NTSC = 1022727.14;
 const float64_t c64::CLOCK_FREQ_PAL  = 985248.4;
 
@@ -91,5 +89,3 @@ void c64::setMainCpuSpeed(const double cpuFreq)
         vic.chip   (MOS6567R8);
     }
 }
-
-SIDPLAYFP_NAMESPACE_STOP

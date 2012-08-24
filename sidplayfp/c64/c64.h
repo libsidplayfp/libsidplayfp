@@ -41,8 +41,6 @@
 #endif
 
 
-SIDPLAYFP_NAMESPACE_START
-
 #ifdef PC64_TESTSUITE
 class testEnv
 {
@@ -262,7 +260,5 @@ void c64::setBA (const bool state)
     /* Signal changes in BA to interested parties */
     cpu.setRDY (state);
 }
-
-SIDPLAYFP_NAMESPACE_STOP
 
 #endif // C64_H
