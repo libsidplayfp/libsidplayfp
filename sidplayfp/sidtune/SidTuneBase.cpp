@@ -248,33 +248,17 @@ SidTuneBase::~SidTuneBase()
 
 SidTuneBase* SidTuneBase::getFromStdIn()
 {
-    uint_least8_t* fileBuf;
-    try
-    {
-        fileBuf = new uint_least8_t[MAX_FILELEN];
-    }
-    catch (std::bad_alloc &e)
-    {
-        throw loadError(ERR_NOT_ENOUGH_MEMORY);
-    }
+    std::vector<uint_least8_t> fileBuf;
 
     // We only read as much as fits in the buffer.
     // This way we avoid choking on huge data.
-    uint_least32_t i = 0;
     char datb;
-    while (std::cin.get(datb) && i<MAX_FILELEN)
-        fileBuf[i++] = (uint_least8_t) datb;
-    try
+    while (std::cin.get(datb) && fileBuf.size()<MAX_FILELEN)
     {
-        getFromBuffer(fileBuf, i);
-    }
-    catch (loadError &e)
-    {
-        delete[] fileBuf;
-        throw;
+        fileBuf.push_back((uint_least8_t) datb);
     }
 
-    delete[] fileBuf;
+    getFromBuffer(&fileBuf.front(), fileBuf.size());
 }
 
 #endif
