@@ -225,18 +225,16 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
     bufferRef.assign(fileBuf.xferPtr(), fileBuf.xferLen());
 }
 
-SidTuneBase::SidTuneBase()
+SidTuneBase::SidTuneBase() :
+    info(new SidTuneInfoImpl()),
+    fileOffset(0)
 {
     // Initialize the object with some safe defaults.
-    info = new SidTuneInfoImpl();
-
     for ( unsigned int si = 0; si < MAX_SONGS; si++ )
     {
         songSpeed[si] = info->m_songSpeed;
         clockSpeed[si] = info->m_clockSpeed;
     }
-
-    fileOffset = 0;
 }
 
 SidTuneBase::~SidTuneBase()
