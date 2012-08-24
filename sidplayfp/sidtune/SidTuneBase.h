@@ -150,8 +150,6 @@ class SidTuneBase
     void convertOldStyleSpeedToTables(uint_least32_t speed,
          SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_PAL);
 
-    static int convertPetsciiToAscii (SmartPtr_sidtt<const uint_least8_t>&, char*);
-
     void deleteFileNameCopies();
 
     /// Check compatibility details are sensible
@@ -168,6 +166,14 @@ class SidTuneBase
     */
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
                        Buffer_sidtt<const uint_least8_t>& buf);
+
+    class PetsciiToAscii
+    {
+     private:
+        std::string buffer;
+     public:
+        const char* convert(SmartPtr_sidtt<const uint_least8_t>& spPet);
+    };
 
  private:  // ---------------------------------------------------------------
 

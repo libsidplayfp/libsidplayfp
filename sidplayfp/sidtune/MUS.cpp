@@ -653,9 +653,8 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
     // Extract credits
     while (spPet[0])
     {
-        char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
-        convertPetsciiToAscii(spPet, infoString);
-        info->m_commentString.push_back(infoString);
+        PetsciiToAscii converter;
+        info->m_commentString.push_back(converter.convert(spPet));
     }
 
     spPet++;
@@ -690,9 +689,8 @@ void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
         // Extract credits
         while (spPet[0])
         {
-            char infoString[SidTuneInfo::MAX_CREDIT_STRINGS]; // FIXME
-            convertPetsciiToAscii(spPet,infoString);
-            info->m_commentString.push_back(infoString);
+            PetsciiToAscii converter;
+            info->m_commentString.push_back(converter.convert(spPet));
         }
 
         info->m_sidChipBase2 = SIDTUNE_SID2_BASE_ADDR;

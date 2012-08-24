@@ -61,8 +61,12 @@ const char ERR_BAD_ADDR[]            = "SIDTUNE ERROR: Bad address data";
 const char ERR_BAD_RELOC[]           = "SIDTUNE ERROR: Bad reloc data";
 const char ERR_CORRUPT[]             = "SIDTUNE ERROR: File is incomplete or corrupt";
 
-// Petscii to Ascii conversion table
-static const char _sidtune_CHRtab[256] =  // CHR$ conversion table (0x01 = no output)
+/**
+* Petscii to Ascii conversion table.
+*
+* CHR$ conversion table (0x01 = no output)
+*/
+static const char CHR_tab[256] =
 {
    0x0, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0xd, 0x1, 0x1,
    0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1,
@@ -702,26 +706,22 @@ bool SidTuneBase::checkCompatibility (void)
     return true;
 }
 
-int SidTuneBase::convertPetsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet, char* dest)
+const char* SidTuneBase::PetsciiToAscii::convert(SmartPtr_sidtt<const uint8_t>& spPet)
 {
-    int count = 0;
-
-    if (dest)
+    char c;
+    do
     {
-        char c;
-        do
-        {
-            c = _sidtune_CHRtab[*spPet];  // ASCII CHR$ conversion
-            if ((c>=0x20) && (count<=31))
-                dest[count++] = c;  // copy to info string
+        c = CHR_tab[*spPet];  // ASCII CHR$ conversion
+        if ((c>=0x20) && (buffer.length()<=31))
+            buffer.push_back(c);  // copy to info string
 
-            // If character is 0x9d (left arrow key) then move back.
-            if ((*spPet==0x9d) && (count>0))
-                count--;
-            spPet++;
-        }
-        while ( !((c==0x0D)||(c==0x00)||spPet.fail()) );
+        // If character is 0x9d (left arrow key) then move back.
+        if ((*spPet==0x9d) && (!buffer.empty()))
+            buffer.resize(buffer.size() - 1);
+
+        spPet++;
     }
+    while ( !((c==0x0D)||(c==0x00)||spPet.fail()) );
 
-    return count;
+    return buffer.c_str();
 }
