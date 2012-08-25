@@ -91,13 +91,12 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
     if (!fileName)
         return 0;
 
-    //isSlashedFileName = separatorIsSlash; FIXME
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     // Filename ``-'' is used as a synonym for standard input.
     if ( strcmp(fileName,"-")==0 )
         return getFromStdIn();
 #endif
-    return getFromFiles(fileName, fileNameExt);
+    return getFromFiles(fileName, fileNameExt, separatorIsSlash);
 }
 
 SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
@@ -298,7 +297,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
     {
         try
         {
-            s->acceptSidTune("-", "-", buf1);
+            s->acceptSidTune("-", "-", buf1, false);
             return s;
         }
         catch (loadError &e)
@@ -313,7 +312,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
 }
 
 void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
-                            Buffer_sidtt<const uint_least8_t>& buf)
+                            Buffer_sidtt<const uint_least8_t>& buf, const bool isSlashedFileName)
 {
     // Make a copy of the data file name and path, if available.
     if ( dataFileName != 0 )
@@ -405,7 +404,7 @@ void SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
 
 // Initializing the object based upon what we find in the specified file.
 
-SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions)
+SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, const bool separatorIsSlash)
 {
     Buffer_sidtt<const uint_least8_t> fileBuf1;
 
@@ -443,7 +442,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                             {
                                 try
                                 {
-                                    s2->acceptSidTune(fileName2.get(), fileName, fileBuf2);
+                                    s2->acceptSidTune(fileName2.get(), fileName, fileBuf2, separatorIsSlash);
                                     delete s;
                                     return s2;
                                 }
@@ -460,7 +459,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                             {
                                 try
                                 {
-                                    s2->acceptSidTune(fileName, fileName2.get(), fileBuf1);
+                                    s2->acceptSidTune(fileName, fileName2.get(), fileBuf1, separatorIsSlash);
                                     delete s;
                                     return s2;
                                 }
@@ -480,7 +479,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
 
             try
             {
-                s->acceptSidTune(fileName, 0, fileBuf1);
+                s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
                 return s;
             }
             catch (loadError& e)
@@ -497,7 +496,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
     {
         try
         {
-            s->acceptSidTune(fileName, 0, fileBuf1);
+            s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
             return s;
         }
         catch (loadError& e)

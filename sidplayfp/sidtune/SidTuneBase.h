@@ -120,18 +120,6 @@ class SidTuneBase
     uint_least8_t songSpeed[MAX_SONGS];
     SidTuneInfo::clock_t clockSpeed[MAX_SONGS];
 
-    /**
-    * If your opendir() and readdir()->d_name return path names
-    * that contain the forward slash (/) as file separator, but
-    * your operating system uses a different character, there are
-    * extra functions that can deal with this special case. Set
-    * separatorIsSlash to true if you like path names to be split
-    * correctly.
-    * You do not need these extra functions if your systems file
-    * separator is the forward slash.
-    */
-    bool isSlashedFileName;
-
     /// For files with header: offset to real data
     uint_least32_t fileOffset;
 
@@ -161,9 +149,21 @@ class SidTuneBase
     /**
     * Cache the data of a single-file or two-file sidtune and its
     * corresponding file names.
+    *
+    * @param dataFileName
+    * @param infoFileName
+    * @param buf
+    * @param isSlashedFileName If your opendir() and readdir()->d_name return path names
+    * that contain the forward slash (/) as file separator, but
+    * your operating system uses a different character, there are
+    * extra functions that can deal with this special case. Set
+    * separatorIsSlash to true if you like path names to be split
+    * correctly.
+    * You do not need these extra functions if your systems file
+    * separator is the forward slash.
     */
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
-                       Buffer_sidtt<const uint_least8_t>& buf);
+                       Buffer_sidtt<const uint_least8_t>& buf, const bool isSlashedFileName);
 
     class PetsciiToAscii
     {
@@ -178,7 +178,7 @@ class SidTuneBase
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     static SidTuneBase* getFromStdIn();
 #endif
-    static SidTuneBase* getFromFiles(const char* name, const char **fileNameExtensions);
+    static SidTuneBase* getFromFiles(const char* name, const char **fileNameExtensions, const bool separatorIsSlash);
 
     /// Try to retrieve single-file sidtune from specified buffer.
     static SidTuneBase* getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen);

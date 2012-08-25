@@ -53,7 +53,7 @@ class MUS : public SidTuneBase
     void setPlayerAddress();
 
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
-                       Buffer_sidtt<const uint_least8_t>& buf);
+                       Buffer_sidtt<const uint_least8_t>& buf, const bool isSlashedFileName);
 
  public:
     virtual ~MUS() {}
