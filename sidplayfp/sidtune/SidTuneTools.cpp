@@ -20,26 +20,7 @@
 
 #include "SidTuneTools.h"
 
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
-#include <ctype.h>
 #include <string.h>
-
-// Own version of strdup, which uses new instead of malloc.
-char* SidTuneTools::myStrDup(const char *source)
-{
-    char *dest;
-#ifdef HAVE_EXCEPTIONS
-    if ( (dest = new(std::nothrow) char[strlen(source)+1]) != 0)
-#else
-    if ( (dest = new char[strlen(source)+1]) != 0)
-#endif
-    {
-        strcpy(dest,source);
-    }
-    return dest;
-}
 
 // Return pointer to file name position in complete path.
 size_t SidTuneTools::fileNameWithoutPath(const char* s)

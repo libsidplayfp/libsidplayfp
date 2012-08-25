@@ -53,9 +53,6 @@
 class SidTuneTools
 {
  public:
-    /** Own version of strdup, which uses new instead of malloc. */
-    static char* myStrDup(const char *source);
-
     /** Return pointer to file name position in complete path. */
     static size_t fileNameWithoutPath(const char* s);
 
