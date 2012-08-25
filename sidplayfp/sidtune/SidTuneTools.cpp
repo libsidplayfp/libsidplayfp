@@ -24,7 +24,8 @@
 size_t SidTuneTools::fileNameWithoutPath(const char* s)
 {
     size_t last_slash_pos = -1;
-    for ( size_t pos = 0; pos < strlen(s); pos++ )
+    const size_t length = strlen(s);
+    for ( size_t pos = 0; pos < length; pos++ )
     {
 #if defined(SID_FS_IS_COLON_AND_BACKSLASH_AND_SLASH)
         if ( s[pos] == ':' || s[pos] == '\\' ||
@@ -52,7 +53,8 @@ size_t SidTuneTools::fileNameWithoutPath(const char* s)
 size_t SidTuneTools::slashedFileNameWithoutPath(const char* s)
 {
     size_t last_slash_pos = -1;
-    for ( size_t pos = 0; pos < strlen(s); pos++ )
+    const size_t length = strlen(s);
+    for ( size_t pos = 0; pos < length; pos++ )
     {
         if ( s[pos] == '/' )
         {
@@ -67,11 +69,11 @@ size_t SidTuneTools::slashedFileNameWithoutPath(const char* s)
 char* SidTuneTools::fileExtOfPath(char* s)
 {
     size_t last_dot_pos = strlen(s);  // assume no dot and append
-    for ( int pos = last_dot_pos; pos >= 0; --pos )
+    for ( size_t pos = last_dot_pos; pos > 0; pos-- )
     {
-        if ( s[pos] == '.' )
+        if ( s[pos-1] == '.' )
         {
-            last_dot_pos = pos;
+            last_dot_pos = pos - 1;
             break;
         }
     }
