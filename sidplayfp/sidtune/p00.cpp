@@ -22,6 +22,8 @@
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
 
+#include <string.h>
+
 #define X00_ID_LEN   8
 #define X00_NAME_LEN 17
 

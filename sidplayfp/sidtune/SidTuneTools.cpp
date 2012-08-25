@@ -20,8 +20,6 @@
 
 #include "SidTuneTools.h"
 
-#include <string.h>
-
 // Return pointer to file name position in complete path.
 size_t SidTuneTools::fileNameWithoutPath(const char* s)
 {
@@ -68,7 +66,7 @@ size_t SidTuneTools::slashedFileNameWithoutPath(const char* s)
 // The backwards-version.
 char* SidTuneTools::fileExtOfPath(char* s)
 {
-    uint_least32_t last_dot_pos = strlen(s);  // assume no dot and append
+    size_t last_dot_pos = strlen(s);  // assume no dot and append
     for ( int pos = last_dot_pos; pos >= 0; --pos )
     {
         if ( s[pos] == '.' )
