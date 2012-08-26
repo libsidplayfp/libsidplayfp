@@ -114,9 +114,6 @@ sidplayfp/sidtune/SidTuneTools.h \
 utils/iniParser.cpp \
 utils/iniParser.h \
 utils/SidDatabase.cpp \
-utils/SidUsage.cpp \
-utils/smm.cpp \
-utils/smm0.h \
 utils/MD5/MD5.cpp \
 utils/MD5/MD5.h \
 utils/MD5/MD5_Defs.h
@@ -133,9 +130,7 @@ sidplayfp/sid2types.h \
 sidplayfp/sidbuilder.h \
 sidplayfp/sidplay2.h \
 sidplayfp/SidTune.h \
-sidplayfp/sidusage.h \
-utils/SidDatabase.h \
-utils/SidUsage.h
+utils/SidDatabase.h
 
 nodist_sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/sidversion.h
