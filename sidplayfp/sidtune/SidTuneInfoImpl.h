@@ -153,7 +153,7 @@ public:
 
     const char* dataFileName() const { return m_dataFileName.c_str(); }
 
-    const char* infoFileName() const { return m_infoFileName.c_str(); }
+    const char* infoFileName() const { return !m_infoFileName.empty()?m_infoFileName.c_str():0; }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */

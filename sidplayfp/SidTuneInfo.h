@@ -183,12 +183,13 @@ public:
     virtual const char* path() const =0;
 
     /**
-    * A first file: e.g. "foo.c64"; "", if none
+    * A first file: e.g. "foo.c64".
     */
     virtual const char* dataFileName() const =0;
 
     /**
-    * A second file: e.g. "foo.sid"; "", if none
+    * A second file: e.g. "foo.sid".
+    * Returns 0 if none.
     */
     virtual const char* infoFileName() const =0;
 };
