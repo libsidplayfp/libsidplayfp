@@ -58,8 +58,8 @@ private:
 
     int             m_rand;
 
-    volatile bool   m_isPlaying;
     bool            m_status;
+    volatile bool   m_isPlaying;
 
 private:
     float64_t clockSpeed     (const sid2_clock_t defaultClock, const bool forced);
