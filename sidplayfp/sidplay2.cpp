@@ -68,9 +68,6 @@ const sid2_info_t &sidplay2::info () const
 uint_least32_t sidplay2::time (void) const
 {   return sidplayer.time (); }
 
-uint_least32_t sidplay2::mileage (void) const
-{   return sidplayer.mileage (); }
-
 const char *sidplay2::error (void) const
 {   return sidplayer.error (); }
 

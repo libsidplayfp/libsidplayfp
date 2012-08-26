@@ -55,7 +55,6 @@ private:
     sid2_config_t m_cfg;
 
     const char     *m_errorString;
-    uint_least32_t  m_mileage;
     volatile sid2_player_t m_playerState;
     int             m_rand;
 
@@ -103,7 +102,6 @@ public:
     int            config       (const sid2_config_t &cfg);
     int            fastForward  (uint percent);
     int            load         (SidTune *tune);
-    uint_least32_t mileage      (void) { return m_mileage + time(); }
     float64_t      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     sid2_player_t  state        (void) const { return m_playerState; }

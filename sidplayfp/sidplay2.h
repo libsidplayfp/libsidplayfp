@@ -109,11 +109,12 @@ public:
     void           debug        (bool enable, FILE *out);
     void           mute         (const unsigned int sidNum, const unsigned int voice, const bool enable);
 
-    //@{
-    /// Timer functions with respect to resolution returned by timebase
+    /**
+    * Get the current playing time with respect to resolution returned by timebase
+    *
+    * @return the current playing time
+    */
     uint_least32_t time     (void) const;
-    uint_least32_t mileage  (void) const;
-    //@}
 
     /**
     * Set ROMs

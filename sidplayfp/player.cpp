@@ -50,7 +50,6 @@ Player::Player (void)
 :m_mixer (m_c64.getEventScheduler()),
  m_tune (0),
  m_errorString(TXT_NA),
- m_mileage(0),
  m_playerState(sid2_stopped),
 #if EMBEDDED_ROMS
  m_status            (true)
@@ -178,14 +177,6 @@ int Player::initialise ()
 {
     if (!m_status)
         return -1;
-
-    // Calculate 1 bit below the timebase so we can round the
-    // mileage count
-    if (((m_mixer.sampleCount() * 2) / m_cfg.frequency) & 1)
-        m_mileage++;
-
-    // Fix the mileage counter if just finished another song.
-    m_mileage += time ();
 
     m_playerState  = sid2_stopped;
 
