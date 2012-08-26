@@ -46,19 +46,25 @@ public:
     sidplay2 ();
     virtual ~sidplay2 ();
 
+    /**
+    * Get the current engine configuration.
+    *
+    * @return a const reference to the current configuration.
+    */
     const sid2_config_t &config (void) const;
+
     const sid2_info_t   &info   (void) const;
 
     /**
     * Configure the engine.
     *
-    * @param cfg
+    * @param cfg the new configuration
     * @return 0 on sucess, -1 otherwise.
     */
     int            config       (const sid2_config_t &cfg);
 
     /**
-    * Error message
+    * Error message.
     *
     * @return string error message.
     */
@@ -72,15 +78,15 @@ public:
     int            fastForward  (uint percent);
 
     /**
-    * Load a tune
+    * Load a tune.
     *
-    * @param tune the SidTune to load, 0 unloads current tune
-    * @return 0 on sucess, -1 otherwise
+    * @param tune the SidTune to load, 0 unloads current tune.
+    * @return 0 on sucess, -1 otherwise.
     */
     int            load         (SidTune *tune);
 
     /**
-    * Produce samples to play
+    * Produce samples to play.
     *
     * @param buffer pointer to the buffer to fill with samples.
     * @param count the size of the buffer.
@@ -89,9 +95,9 @@ public:
     uint_least32_t play         (short *buffer, uint_least32_t count);
 
     /**
-    * Check if the engine is playing, paused or stopped.
+    * Check if the engine is playing or stopped.
     *
-    * @return
+    * @return true if playing, false otherwise.
     */
     bool           isPlaying    (void) const;
 
@@ -101,23 +107,34 @@ public:
     void           stop         (void);
 
     /**
-    * Control debugging
+    * Control debugging.
     *
     * @param enable enable/disable debugging.
     * @param out the file where to redirect the debug info.
     */
     void           debug        (bool enable, FILE *out);
+
+    /**
+    * Mute/unmute a SID channel.
+    *
+    * @param sidNum the SID chip, 0 for the first one, 1 for the second.
+    * @param voice the channel to mute/unmute.
+    * @param enable true unmutes the channel, false mutes it.
+    */
     void           mute         (const unsigned int sidNum, const unsigned int voice, const bool enable);
 
     /**
-    * Get the current playing time with respect to resolution returned by timebase
+    * Get the current playing time with respect to resolution returned by timebase.
     *
-    * @return the current playing time
+    * @return the current playing time.
     */
     uint_least32_t time     (void) const;
 
     /**
     * Set ROMs
+    * The ROMs are validate against konwn ones and must be available for the
+    * entire class lifetime.
+    * The Kernal ROM is the only one mandatory.
     *
     * @param kernal pointer to Kernal ROM.
     * @param basic pointer to Basic ROM, optional, generally needed only for BASIC tunes.
@@ -126,9 +143,9 @@ public:
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
 
     /**
-    * Get the event scheduler
+    * Get the event scheduler.
     *
-    * @return the scheduler
+    * @return the scheduler.
     */
     EventContext *getEventContext();
 
