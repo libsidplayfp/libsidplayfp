@@ -93,7 +93,7 @@ public:
     *
     * @return
     */
-    sid2_player_t  state        (void) const;
+    bool           isPlaying    (void) const;
 
     /**
     * Stop engine

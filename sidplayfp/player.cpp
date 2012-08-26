@@ -50,7 +50,7 @@ Player::Player (void)
 :m_mixer (m_c64.getEventScheduler()),
  m_tune (0),
  m_errorString(TXT_NA),
- m_playerState(sid2_stopped),
+ m_isPlaying(false),
 #if EMBEDDED_ROMS
  m_status            (true)
 #else
@@ -178,7 +178,7 @@ int Player::initialise ()
     if (!m_status)
         return -1;
 
-    m_playerState  = sid2_stopped;
+    m_isPlaying  = false;
 
     m_c64.reset ();
 
@@ -247,12 +247,12 @@ uint_least32_t Player::play (short *buffer, uint_least32_t count)
     m_mixer.begin(buffer, count);
 
     // Start the player loop
-    m_playerState = sid2_playing;
+    m_isPlaying = true;
 
-    while (m_mixer.notFinished())
+    while (m_isPlaying && m_mixer.notFinished())
         m_c64.getEventScheduler()->clock();
 
-    if (m_playerState == sid2_stopped)
+    if (!m_isPlaying)
         initialise ();
 
     return m_mixer.samplesGenerated();
@@ -260,9 +260,9 @@ uint_least32_t Player::play (short *buffer, uint_least32_t count)
 
 void Player::stop (void)
 {   // Re-start song
-    if (m_tune && (m_playerState != sid2_stopped))
+    if (m_tune && m_isPlaying)
     {
-        m_playerState = sid2_stopped;
+        m_isPlaying = false;
     }
 }
 

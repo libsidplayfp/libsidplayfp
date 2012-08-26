@@ -80,8 +80,8 @@ void sidplay2::mute(const unsigned int sidNum, const unsigned int voice, const b
 void sidplay2::debug (bool enable, FILE *out)
 {   sidplayer.debug (enable, out); }
 
-sid2_player_t sidplay2::state (void) const
-{   return sidplayer.state (); }
+bool sidplay2::isPlaying (void) const
+{   return sidplayer.isPlaying (); }
 
 void sidplay2::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {   sidplayer.setRoms(kernal, basic, character); }

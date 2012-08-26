@@ -55,9 +55,10 @@ private:
     sid2_config_t m_cfg;
 
     const char     *m_errorString;
-    volatile sid2_player_t m_playerState;
+
     int             m_rand;
 
+    volatile bool   m_isPlaying;
     bool            m_status;
 
 private:
@@ -104,7 +105,7 @@ public:
     int            load         (SidTune *tune);
     float64_t      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
     uint_least32_t play         (short *buffer, uint_least32_t samples);
-    sid2_player_t  state        (void) const { return m_playerState; }
+    bool           isPlaying    (void) const { return m_isPlaying; }
     void           stop         (void);
     uint_least32_t time         (void) { return (uint_least32_t)(m_c64.getEventScheduler()->getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
     void           debug        (const bool enable, FILE *out)
