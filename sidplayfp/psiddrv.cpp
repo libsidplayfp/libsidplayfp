@@ -61,7 +61,7 @@ uint8_t Player::iomap (const uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-int Player::psidDrvReloc (MMU *mmu)
+bool Player::psidDrvReloc (MMU *mmu)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -108,7 +108,7 @@ int Player::psidDrvReloc (MMU *mmu)
     if (relocPages < 1)
     {
         m_errorString = ERR_PSIDDRV_NO_SPACE;
-        return -1;
+        return false;
     }
 
     // Place psid driver into ram
@@ -123,7 +123,7 @@ int Player::psidDrvReloc (MMU *mmu)
     if (!reloc65 (&reloc_driver, &reloc_size, relocAddr - 10))
     {
         m_errorString = ERR_PSIDDRV_RELOC;
-        return -1;
+        return false;
     }
 
     // Adjust size to not included initialisation data.
@@ -205,7 +205,7 @@ int Player::psidDrvReloc (MMU *mmu)
     // Default processor register flags on calling init
     mmu->writeMemByte(pos, tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
 
-    return 0;
+    return true;
 }
 
 SIDPLAYFP_NAMESPACE_STOP

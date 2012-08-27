@@ -59,9 +59,9 @@ public:
     * Configure the engine.
     *
     * @param cfg the new configuration
-    * @return 0 on sucess, -1 otherwise.
+    * @return true on sucess, false otherwise.
     */
-    int            config       (const sid2_config_t &cfg);
+    bool            config       (const sid2_config_t &cfg);
 
     /**
     * Error message.
@@ -75,15 +75,15 @@ public:
     *
     * @param percent
     */
-    int            fastForward  (uint percent);
+    bool            fastForward  (uint percent);
 
     /**
     * Load a tune.
     *
     * @param tune the SidTune to load, 0 unloads current tune.
-    * @return 0 on sucess, -1 otherwise.
+    * @return true on sucess, false otherwise.
     */
-    int            load         (SidTune *tune);
+    bool            load         (SidTune *tune);
 
     /**
     * Produce samples to play.

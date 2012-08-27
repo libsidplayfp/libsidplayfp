@@ -37,7 +37,7 @@ const char  ERR_UNSUPPORTED_PRECISION[] = "SIDPLAYER ERROR: Unsupported sample p
 // An instance of this structure is used to transport emulator settings
 // to and from the interface class.
 
-int Player::config (const sid2_config_t &cfg)
+bool Player::config (const sid2_config_t &cfg)
 {
     const SidTuneInfo* tuneInfo = 0;
 
@@ -99,14 +99,14 @@ int Player::config (const sid2_config_t &cfg)
     // Update Configuration
     m_cfg = cfg;
 
-    return 0;
+    return true;
 
 Player_configure_restore:
     // Try restoring old configuration
     if (&m_cfg != &cfg)
         config (m_cfg);
 Player_configure_error:
-    return -1;
+    return false;
 }
 
 // Clock speed changes due to loading a new song
@@ -190,7 +190,7 @@ sid2_model_t Player::getModel(const SidTuneInfo::model_t sidModel, const sid2_mo
     return newModel;
 }
 
-int Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
+bool Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
                        const bool forced, const int channels,
                        const float64_t cpuFreq, const int frequency,
                        const sampling_method_t sampling, const bool fastSampling)
@@ -223,14 +223,14 @@ int Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
         {   // Get first SID emulation
             sidemu *s = builder->lock (m_c64.getEventScheduler(), userModels[i]);
             if ((i == 0) && !builder->getStatus())
-                return -1;
+                return false;
             if (s)
                 s->sampling((long)cpuFreq, frequency, sampling, fastSampling);
             m_c64.setSid(i, s);
         }
     }
 
-    return 0;
+    return true;
 }
 
 SIDPLAYFP_NAMESPACE_STOP

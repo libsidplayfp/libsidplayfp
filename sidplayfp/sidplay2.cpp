@@ -47,7 +47,7 @@ sidplay2::sidplay2 ()
 sidplay2::~sidplay2 ()
 {   if (&sidplayer) delete &sidplayer; }
 
-int sidplay2::config (const sid2_config_t &cfg)
+bool sidplay2::config (const sid2_config_t &cfg)
 {   return sidplayer.config (cfg); }
 
 const sid2_config_t &sidplay2::config (void) const
@@ -59,7 +59,7 @@ void sidplay2::stop (void)
 uint_least32_t sidplay2::play (short *buffer, uint_least32_t count)
 {   return sidplayer.play (buffer, count); }
 
-int sidplay2::load (SidTune *tune)
+bool sidplay2::load (SidTune *tune)
 {   return sidplayer.load (tune); }
 
 const sid2_info_t &sidplay2::info () const
@@ -71,7 +71,7 @@ uint_least32_t sidplay2::time (void) const
 const char *sidplay2::error (void) const
 {   return sidplayer.error (); }
 
-int  sidplay2::fastForward  (uint percent)
+bool  sidplay2::fastForward  (uint percent)
 {   return sidplayer.fastForward (percent); }
 
 void sidplay2::mute(const unsigned int sidNum, const unsigned int voice, const bool enable)

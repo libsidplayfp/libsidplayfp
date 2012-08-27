@@ -166,20 +166,20 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
     m_status = true;
 }
 
-int Player::fastForward (const uint percent)
+bool Player::fastForward (const uint percent)
 {
     if (!m_mixer.setFastForward(percent / 100)) {
         m_errorString = "SIDPLAYER ERROR: Percentage value out of range.";
-        return -1;
+        return false;
     }
 
-    return 0;
+    return true;
 }
 
-int Player::initialise ()
+bool Player::initialise ()
 {
     if (!m_status)
-        return -1;
+        return false;
 
     m_isPlaying  = false;
 
@@ -192,17 +192,17 @@ int Player::initialise ()
         if (page > 0xffff)
         {
             m_errorString = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
-            return -1;
+            return false;
         }
     }
 
-    if (psidDrvReloc (m_c64.getMmu()) < 0)
-        return -1;
+    if (!psidDrvReloc (m_c64.getMmu()))
+        return false;
 
     if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()->getMem()))
     {   // Rev 1.6 (saw) - Allow loop through errors
         m_errorString = m_tune->statusString();
-        return -1;
+        return false;
     }
 
     m_c64.getMmu()->cpuWrite(0, 0x2F);
@@ -212,15 +212,15 @@ int Player::initialise ()
 
     m_mixer.reset ();
 
-    return 0;
+    return true;
 }
 
-int Player::load (SidTune *tune)
+bool Player::load (SidTune *tune)
 {
     m_tune = tune;
     if (!tune)
     {   // Unload tune
-        return 0;
+        return true;
     }
 
     {   // Must re-configure on fly for stereo support!
@@ -229,10 +229,10 @@ int Player::load (SidTune *tune)
         if (ret < 0)
         {
             m_tune = 0;
-            return -1;
+            return false;
         }
     }
-    return 0;
+    return true;
 }
 
 void Player::mute(const unsigned int sidNum, const unsigned int voice, const bool enable) {

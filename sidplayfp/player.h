@@ -63,8 +63,8 @@ private:
 
 private:
     float64_t clockSpeed     (const sid2_clock_t defaultClock, const bool forced);
-    int       initialise     (void);
-    int       sidCreate(sidbuilder *builder, const sid2_model_t defaultModel,
+    bool      initialise     (void);
+    bool      sidCreate(sidbuilder *builder, const sid2_model_t defaultModel,
                        const bool forced, const int channels,
                        const float64_t cpuFreq, const int frequency,
                        const sampling_method_t sampling, const bool fastSampling);
@@ -78,7 +78,7 @@ private:
     uint_least32_t (Player::*output) (char *buffer);
 
     // PSID driver
-    int  psidDrvReloc (MMU *mmu);
+    bool  psidDrvReloc (MMU *mmu);
 
 #ifdef PC64_TESTSUITE
     void load (const char *file)
@@ -100,9 +100,9 @@ public:
     const sid2_config_t &config (void) const { return m_cfg; }
     const sid2_info_t   &info   (void) const { return m_info; }
 
-    int            config       (const sid2_config_t &cfg);
-    int            fastForward  (uint percent);
-    int            load         (SidTune *tune);
+    bool           config       (const sid2_config_t &cfg);
+    bool           fastForward  (uint percent);
+    bool           load         (SidTune *tune);
     float64_t      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     bool           isPlaying    (void) const { return m_isPlaying; }
