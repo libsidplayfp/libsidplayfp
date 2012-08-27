@@ -147,7 +147,6 @@ public:
 		rate(0),
 		exponential_counter(0),
 		exponential_counter_period(1),
-		envelope_counter(0),
 		attack(0),
 		decay(0),
 		sustain(0),
@@ -155,7 +154,8 @@ public:
 		state(RELEASE),
 		hold_zero(true),
 		envelope_pipeline(false),
-		gate(false) {}
+		gate(false),
+		envelope_counter(0) {}
 
 	/**
 	 * SID reset.
