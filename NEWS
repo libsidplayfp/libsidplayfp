@@ -1,3 +1,9 @@
+0.3.7 2012-08-28
+* Actually use the fastSampling parameter
+* Increase the waveform TTL even more to fix games/s-z/Scruples.sid#2
+
+
+
 0.3.6 2012-07-22
 * Correctly report sid builders error messages
 * Fix unlocking SID emulation for PSID tunes which caused an error when
