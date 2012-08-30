@@ -24,34 +24,10 @@
 
 #include "Bank.h"
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include <string.h>
 #include <stdint.h>
 
 #include "sidplayfp/c64/CPU/opcodes.h"
-
-#if EMBEDDED_ROMS
-
-static const uint8_t KERNAL[] = {
-#include "kernal.bin"
-};
-
-static const uint8_t BASIC[] = {
-#include "basic.bin"
-};
-
-static const uint8_t CHARACTER[] = {
-#include "char.bin"
-};
-
-#else
-#  define KERNAL 0
-#  define BASIC 0
-#  define CHARACTER 0
-#endif
 
 /** @internal
  * Kernal ROM
@@ -65,7 +41,7 @@ private:
 
 public:
     KernalRomBank() :
-        kernalRom(KERNAL) {}
+        kernalRom(0) {}
 
     void set(const uint8_t* kernal)
     {
@@ -115,7 +91,7 @@ private:
 
 public:
     BasicRomBank() :
-        basicRom(BASIC) {}
+        basicRom(0) {}
 
     void set(const uint8_t* basic)
     {
@@ -175,7 +151,7 @@ private:
 
 public:
     CharacterRomBank() :
-        characterRom(CHARACTER) {}
+        characterRom(0) {}
 
     void set(const uint8_t* character)
     {

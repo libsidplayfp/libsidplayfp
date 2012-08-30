@@ -203,19 +203,6 @@ AS_IF([test "x$enable_testsuite" != xno],
 
 AM_CONDITIONAL([TESTSUITE], [test "x$enable_testsuite" != xno])
 
-AC_ARG_ENABLE([embedded-roms],
-  [AS_HELP_STRING([--disable-embedded-roms], [Compile without rom dumps. @<:@default=enabled@:>@])],
-  [],
-  [enable_embedded_roms=yes]
-)
-
-AS_IF([test "x$enable_embedded_roms" != xno],
-  AC_DEFINE([EMBEDDED_ROMS],
-    [1],
-    [Define to 1 to compile with embedded roms.]
-  )
-)
-
 AC_SUBST(RESID_HAVE_BOOL)
 AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)

@@ -50,13 +50,8 @@ Player::Player (void)
 // Set default settings for system
 :m_mixer (m_c64.getEventScheduler()),
  m_tune (0),
-#if EMBEDDED_ROMS
- m_errorString(TXT_NA),
- m_status(true),
-#else
  m_errorString(ERR_MISSING_ROM),
  m_status(false),
-#endif
  m_isPlaying(false)
 {
 #ifdef PC64_TESTSUITE
