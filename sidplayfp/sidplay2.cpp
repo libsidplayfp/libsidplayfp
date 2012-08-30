@@ -91,3 +91,6 @@ EventContext *sidplay2::getEventContext()
 
 bool sidplay2::getStatus() const
 { return sidplayer.getStatus(); }
+
+uint_least16_t sidplay2::getCia1TimerA() const
+{ return sidplayer.getCia1TimerA(); }

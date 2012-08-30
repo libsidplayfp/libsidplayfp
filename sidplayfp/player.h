@@ -119,6 +119,7 @@ public:
 
     EventContext *getEventScheduler() {return m_c64.getEventScheduler(); }
 
+    uint_least16_t getCia1TimerA() const { return m_c64.getCia1TimerA(); }
 };
 
 SIDPLAYFP_NAMESPACE_STOP

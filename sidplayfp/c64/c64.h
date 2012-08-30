@@ -230,6 +230,8 @@ public:
     //@}
 
     MMU *getMmu() { return &mmu; } //FIXME
+
+    uint_least16_t getCia1TimerA() const { return cia1.getTimerA(); }
 };
 
 void c64::interruptIRQ (const bool state)
