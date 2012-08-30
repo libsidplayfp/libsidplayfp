@@ -24,11 +24,18 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <fstream>
 
 #include "sidplayfp/sidplay2.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/sidemu.h"
+
+/*
+* Adjust these paths to point to existing ROM dumps
+*/
+#define KERNAL_PATH "/usr/local/lib/vice/C64/kernal"
+#define BASIC_PATH "/usr/local/lib/vice/C64/basic"
 
 class NullSID: public sidemu
 {
@@ -60,9 +67,26 @@ public:
     void        filter (const bool enable) {}
 };
 
+void loadRom(const char* path, char* buffer)
+{
+    std::ifstream is;
+    is.open(path, std::ios::binary);
+    is.read(buffer, 8192);
+    is.close();
+}
+
 int main(int argc, char* argv[])
 {
     sidplay2 m_engine;
+
+    char kernal[8192];
+    char basic[8192];
+
+    loadRom(KERNAL_PATH, kernal);
+    loadRom(BASIC_PATH, basic);
+
+    m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic);
+
     FakeBuilder* rs = new FakeBuilder("Test");
 
     char name[0x100] = PC64_TESTSUITE;
