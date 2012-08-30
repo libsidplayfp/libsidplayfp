@@ -1,6 +1,51 @@
+0.3.7 2012-08-28
+* Actually use the fastSampling parameter
+* Increase the waveform TTL even more to fix games/s-z/Scruples.sid#2
+
+
+
+0.3.6 2012-07-22
+* Correctly report sid builders error messages
+* Fix unlocking SID emulation for PSID tunes which caused an error when
+  changing subtune for PSID files
+* Port a PSIDv3 fix from sidplay2 for saving RSIDv3 files
+* Other minor fixes
+
+
+
+0.3.5 2012-04-22
+* Increase the waveform TTL in reSIDfp
+* Restore external filter high-pass resistor value to 1kOhm in reSIDfp
+
+
+
+0.3.4 2012-03-26
+* fixed possible crackling when muting and unmuting channels in reSID
+* removed useless dithering and implemented clipping with a single branch
+  in reSIDfp
+* fixed various warnings
+* fixed PETSCII conversion table to show lowercase letters in testsuite
+* fixed debugging info
+
+
+
+0.3.3 2012-01-21
+* fixed CPU/VICII interaction which affected Rayden/Boot_Zak_v2
+
+
+
+0.3.2 2012-01-12
+* Zero (ground) bit 0 of triangle waveform in reSID
+* Enable channel muting for reSID and reSIDfp
+* Fix Voice 3 Off in reSIDfp
+* Do not reject RSID v3 tunes
+* Improve scheduling efficience of CPU and VIC
+
+
+
 0.3.1 2011-10-02
-* fix an undefined behaviour construct that caused
-  miscompilation on MSVC compilers
+* fixed undefined behaviour which causes miscompilation on MSVC
+* fixed initialization order of class members
 
 
 
