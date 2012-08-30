@@ -37,17 +37,17 @@ $(noinst_SCRIPTS)
 #=========================================================
 # Libraries
 lib_LTLIBRARIES = \
-sidplayfp/libsidplayfp.la \
+sidplayfp/libsidplayfp.la
+
+noinst_LTLIBRARIES = \
+builders/residfp-builder/residfp/libresidfp.la \
+builders/resid-builder/resid/libresid.la \
 builders/residfp-builder/libsidplayfp-residfp.la \
 builders/resid-builder/libsidplayfp-resid.la
 
 if HARDSID
-  lib_LTLIBRARIES += builders/hardsid-builder/libsidplayfp-hardsid.la
+  noinst_LTLIBRARIES += builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
-
-noinst_LTLIBRARIES = \
-builders/residfp-builder/residfp/libresidfp.la \
-builders/resid-builder/resid/libresid.la
 
 #=========================================================
 # libsidplayfp
@@ -131,6 +131,14 @@ utils/SidDatabase.h
 
 nodist_sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/sidversion.h
+
+sidplayfp_libsidplayfp_la_LIBADD = \
+builders/residfp-builder/libsidplayfp-residfp.la \
+builders/resid-builder/libsidplayfp-resid.la
+
+if HARDSID
+  sidplayfp_libsidplayfp_la_LIBADD += builders/hardsid-builder/libsidplayfp-hardsid.la
+endif
 
 #=========================================================
 # residfp
@@ -229,8 +237,6 @@ builders/residfp-builder/residfp-emu.h
 builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 builders/residfp-builder/residfp/libresidfp.la
 
-builders_residfp_builder_libsidplayfp_residfp_la_LDFLAGS = -version-info $(LIBRESIDFPVERSION)
-
 
 builders_resid_builder_libsidplayfp_resid_ladir = $(includedir)/sidplayfp/builders
 builders_resid_builder_libsidplayfp_resid_la_HEADERS = \
@@ -243,8 +249,6 @@ builders/resid-builder/resid-emu.h
 
 builders_resid_builder_libsidplayfp_resid_la_LIBADD = \
 builders/resid-builder/resid/libresid.la
-
-builders_resid_builder_libsidplayfp_resid_la_LDFLAGS = -version-info $(LIBRESIDVERSION)
 
 if HARDSID
 builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
@@ -261,8 +265,6 @@ builders_hardsid_builder_libsidplayfp_hardsid_la_SOURCES = \
 $(hardsid_src) \
 builders/hardsid-builder/hardsid-builder.cpp  \
 builders/hardsid-builder/hardsid-emu.h
-
-builders_hardsid_builder_libsidplayfp_hardsid_la_LDFLAGS = -version-info $(LIBHARDSIDVERSION)
 endif
 
 #=========================================================
