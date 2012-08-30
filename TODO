@@ -1,11 +1,10 @@
-* move mixer into resid specific class
-* split sid loaders in a hierarchy
-* remove embedded roms
-* share resampling code between resid emulations
+* add an optional VIC II cycle exact emulation
 
-* finish documenting API
+* improve documentation
 * fix Visual Studio build files (or purge them)
 
-* merge builders into main lib (?)
+
+* remove the fastForward support (?)
+* move mixer into resid specific class (?)
 * add a STIL parser (?)
-* make the VIC II emulation cycle exact (?)
+* share resampling code between resid emulations (?)
