@@ -92,7 +92,7 @@ void Mixer::event()
             m_chip2->bufferpos(j);
     }
     else
-        m_sampleIndex++;
+        m_sampleIndex++; // FIXME this might break HardSID
 
     /* Post a callback to ourselves. */
     event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
