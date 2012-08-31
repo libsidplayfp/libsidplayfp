@@ -35,29 +35,34 @@
 class KernalRomBank : public Bank
 {
 private:
-    const uint8_t* kernalRom;
-
     uint8_t rom[8192];
 
-public:
-    KernalRomBank() :
-        kernalRom(0) {}
+    uint8_t resetVectorLo;  // 0xfffc
+    uint8_t resetVectorHi;  // 0xfffd
 
+public:
     void set(const uint8_t* kernal)
     {
-        kernalRom = kernal;
-    }
+        if (kernal)
+            memcpy(rom, kernal, 8192);
 
-    void reset()
-    {
-        if (kernalRom)
-            memcpy(rom, kernalRom, 8192);
+        // Backup Reset Vector
+        resetVectorLo = rom[0xfffc & 0x1fff];
+        resetVectorHi = rom[0xfffd & 0x1fff];
 
+        // Apply Kernal hacks
         rom[0xfd69 & 0x1fff] = 0x9f; // Bypass memory check
         rom[0xe55f & 0x1fff] = 0x00; // Bypass screen clear
         rom[0xfdc4 & 0x1fff] = 0xea; // Ignore sid volume reset to avoid DC
         rom[0xfdc5 & 0x1fff] = 0xea; //   click (potentially incompatibility)!!
         rom[0xfdc6 & 0x1fff] = 0xea;
+    }
+
+    void reset()
+    {
+        // Restore original Reset Vector
+        rom[0xfffc & 0x1fff] = resetVectorLo;
+        rom[0xfffd & 0x1fff] = resetVectorHi;
     }
 
     uint8_t read(const uint_least16_t address)
@@ -85,23 +90,31 @@ public:
 class BasicRomBank : public Bank
 {
 private:
-    const uint8_t* basicRom;
-
     uint8_t rom[8192];
 
+    uint8_t trap[3];
+    uint8_t subTune[11];
+
 public:
-    BasicRomBank() :
-        basicRom(0) {}
+    BasicRomBank() {}
 
     void set(const uint8_t* basic)
     {
-        basicRom = basic;
+        if (basic)
+            memcpy(rom, basic, 8192);
+
+        // Backup BASIC Warm Start
+        memcpy(trap, &rom[0xa7ae & 0x1fff], 3);
+
+        memcpy(subTune, &rom[0xbf53 & 0x1fff], 1);
     }
 
     void reset()
     {
-        if (basicRom)
-            memcpy(rom, basicRom, 8192);
+        // Restore original BASIC Warm Start
+        memcpy(&rom[0xa7ae & 0x1fff], trap, 3);
+
+        memcpy(&rom[0xbf53 & 0x1fff], subTune, 11);
     }
 
     uint8_t read(const uint_least16_t address)
@@ -145,24 +158,18 @@ public:
 class CharacterRomBank : public Bank
 {
 private:
-    const uint8_t* characterRom;
-
     uint8_t rom[4096];
 
 public:
-    CharacterRomBank() :
-        characterRom(0) {}
+    CharacterRomBank() {}
 
     void set(const uint8_t* character)
     {
-        characterRom = character;
+        if (character)
+            memcpy(rom, character, 4096);
     }
 
-    void reset()
-    {
-        if (characterRom)
-            memcpy(rom, characterRom, 4096);
-    }
+    void reset() {}
 
     uint8_t read(const uint_least16_t address)
     {

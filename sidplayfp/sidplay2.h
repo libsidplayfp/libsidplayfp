@@ -142,8 +142,7 @@ public:
 
     /**
     * Set ROMs
-    * The ROMs are validate against konwn ones and must be available for the
-    * entire class lifetime.
+    * The ROMs are validate against konwn ones.
     * The Kernal ROM is the only one mandatory.
     *
     * @param kernal pointer to Kernal ROM.
