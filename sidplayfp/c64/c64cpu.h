@@ -1,4 +1,6 @@
 /*
+ * This file is part of libsidplayfp, a SID player engine.
+ *
  *  Copyright (C) 2012 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
