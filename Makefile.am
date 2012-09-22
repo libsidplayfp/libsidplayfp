@@ -230,8 +230,8 @@ builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
 builders/residfp-builder/residfp.h
 
 builders_residfp_builder_libsidplayfp_residfp_la_SOURCES = \
-builders/residfp-builder/residfp.cpp \
 builders/residfp-builder/residfp-builder.cpp \
+builders/residfp-builder/residfp-emu.cpp \
 builders/residfp-builder/residfp-emu.h
 
 builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
@@ -243,8 +243,8 @@ builders_resid_builder_libsidplayfp_resid_la_HEADERS = \
 builders/resid-builder/resid.h
 
 builders_resid_builder_libsidplayfp_resid_la_SOURCES = \
-builders/resid-builder/resid.cpp \
 builders/resid-builder/resid-builder.cpp \
+builders/resid-builder/resid-emu.cpp \
 builders/resid-builder/resid-emu.h
 
 builders_resid_builder_libsidplayfp_resid_la_LIBADD = \
@@ -256,9 +256,9 @@ builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
 builders/hardsid-builder/hardsid.h
 
 if MINGW32
-  hardsid_src = builders/hardsid-builder/hardsid-win.cpp
+  hardsid_src = builders/hardsid-builder/hardsid-emu-win.cpp
 else
-  hardsid_src = builders/hardsid-builder/hardsid-unix.cpp
+  hardsid_src = builders/hardsid-builder/hardsid-emu-unix.cpp
 endif
 
 builders_hardsid_builder_libsidplayfp_hardsid_la_SOURCES = \
