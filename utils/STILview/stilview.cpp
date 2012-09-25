@@ -22,8 +22,8 @@
 // STILView - command line version
 //
 
-#include <fstream.h>
-#include <iostream.h>
+#include <fstream>
+#include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -48,6 +48,8 @@ char *STIL_DEMO_ENTRY="/Galway_Martin/Green_Beret.sid";
 char *OTHER_HVSC_BASE_DIR="E:\\MUSIC\\SID\\C64music\\";
 
 #define STIL_MAX_PATH_SIZE 1024
+
+using namespace std;
 
 void printUsageStr(void)
 {
