@@ -31,24 +31,20 @@
 
 #include "stildefs.h"
 
-// convertSlashes()
-//
-// FUNCTION: Converts slashes to the one the OS uses to access files.
-// ARGUMENTS:
-//      str - what to convert
-// RETURNS:
-//      NONE
-//
+/**
+* Converts slashes to the one the OS uses to access files.
+*
+* @param
+*      str - what to convert
+*/
 extern void convertSlashes(char *str);
 
-// convertToSlashes()
-//
-// FUNCTION: Converts OS specific dir separators to slashes.
-// ARGUMENTS:
-//      str - what to convert
-// RETURNS:
-//      NONE
-//
+/**
+* Converts OS specific dir separators to slashes.
+*
+* @param
+*      str - what to convert
+*/
 extern void convertToSlashes(char *str);
 
 #endif // _STILCOMM_H
