@@ -31,15 +31,13 @@
 #include "player.h"
 
 #include "c64/CPU/opcodes.h"
-
+#include "reloc65.h"
 
 SIDPLAYFP_NAMESPACE_START
 
 // Error Strings
 const char ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
 const char ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
-
-extern "C" int reloc65(unsigned char** buf, int* fsize, int addr);
 
 // Input: A 16-bit effective address
 // Output: A default bank-select value for $01.
@@ -126,7 +124,10 @@ bool Player::psidDrvReloc (MMU *mmu)
     uint8_t *reloc_driver = psid_driver;
     int      reloc_size   = sizeof (psid_driver);
 
-    if (!reloc65 (&reloc_driver, &reloc_size, relocAddr - 10))
+    reloc65 relocator;
+    relocator.setReloc(reloc65::TEXT, relocAddr - 10);
+    relocator.setExtract(reloc65::TEXT);
+    if (!relocator.reloc(&reloc_driver, &reloc_size))
     {
         m_errorString = ERR_PSIDDRV_RELOC;
         return false;

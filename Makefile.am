@@ -62,7 +62,8 @@ sidplayfp/player.h \
 sidplayfp/psiddrv.cpp \
 sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
-sidplayfp/reloc65.c \
+sidplayfp/reloc65.cpp \
+sidplayfp/reloc65.h \
 sidplayfp/sidplay2.cpp \
 sidplayfp/SidTune.cpp \
 sidplayfp/SmartPtr.h \
