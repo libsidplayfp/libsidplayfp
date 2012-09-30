@@ -17,6 +17,7 @@ supplied contributions or code was derived from their work:
     Antti Lankila     - SID distortion simulation (reSID-fp)
                         emulation improvements
     Leandro Nini      - build system rewrite and packaging
+    LaLa              - stilview
 
 Credit where credit is due, so if I missed anyone please let me know.
 

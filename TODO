@@ -1,5 +1,4 @@
 * add an optional VIC II cycle exact emulation
-* add a STIL/BUGlist parser
 * add SIDid support
 
 * improve documentation

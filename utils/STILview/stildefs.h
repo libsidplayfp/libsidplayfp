@@ -25,16 +25,46 @@
 #ifndef _STILDEFS_H
 #define _STILDEFS_H
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
+/* DLL building support on win32 hosts */
+#ifndef STIL_EXTERN
+#   ifdef DLL_EXPORT      /* defined by libtool (if required) */
+#       define STIL_EXTERN __declspec(dllexport)
+#   endif
+#   ifdef STIL_DLL_IMPORT  /* define if linking with this dll */
+#       define STIL_EXTERN __declspec(dllimport)
+#   endif
+#   ifndef STIL_EXTERN     /* static linking or !_WIN32 */
+#     if defined(__GNUC__) && (__GNUC__ >= 4)
+#       define STIL_EXTERN __attribute__ ((visibility("default")))
+#     else
+#       define STIL_EXTERN
+#     endif
+#   endif
+#endif
+
+/* Deprecated attributes */
+#if defined(_MSCVER)
+#  define STIL_DEPRECATED __declspec(deprecated)
+#elif defined(__GNUC__)
+#  define STIL_DEPRECATED __attribute__ ((deprecated))
+#else
+#  define STIL_DEPRECATED
+#endif
+
 #if defined(__linux__) || defined(__FreeBSD__) || defined(solaris2) || defined(sun) || defined(sparc) || defined(sgi)
-#define UNIX
+#  define UNIX
 #endif
 
 #if defined(__MACOS__)
-#define MAC
+#  define MAC
 #endif
 
 #if defined(__amigaos__)
-#define AMIGA
+#  define AMIGA
 #endif
 
 //
@@ -46,39 +76,39 @@
 //
 
 #ifdef UNIX
-    #define SLASH '/'
+#  define SLASH '/'
 #elif MAC
-    #define SLASH ':'
+#  define SLASH ':'
 #elif AMIGA
-    #define SLASH '/'
+#  define SLASH '/'
 #else // WinDoze
-    #define SLASH '\\'
+#  define SLASH '\\'
 #endif
 
 // Define which one of the following two is supported on your system.
-#define HAVE_STRCASECMP 1
+//#define HAVE_STRCASECMP 1
 // #define HAVE_STRICMP 1
 
 // Define which one of the following two is supported on your system.
-#define HAVE_STRNCASECMP 1
+//#define HAVE_STRNCASECMP 1
 // #define HAVE_STRNICMP 1
 
 // Now let's do the actual definitions.
 
 #ifdef HAVE_STRCASECMP
-#define MYSTRICMP strcasecmp
+#  define MYSTRICMP strcasecmp
 #elif HAVE_STRICMP
-#define MYSTRICMP stricmp
+#  define MYSTRICMP stricmp
 #else
-#error Neither strcasecmp nor stricmp is available.
+#  error Neither strcasecmp nor stricmp is available.
 #endif
 
 #ifdef HAVE_STRNCASECMP
-#define MYSTRNICMP strncasecmp
+#  define MYSTRNICMP strncasecmp
 #elif HAVE_STRNICMP
-#define MYSTRNICMP strnicmp
+#  define MYSTRNICMP strnicmp
 #else
-#error Neither strncasecmp nor strnicmp is available.
+#  error Neither strncasecmp nor strnicmp is available.
 #endif
 
 // These are the hardcoded STIL/BUG field names.

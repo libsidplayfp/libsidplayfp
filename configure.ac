@@ -87,6 +87,11 @@ LIBSIDPLAYREV=0
 LIBSIDPLAYAGE=0
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
+LIBSTILVIEWCUR=0
+LIBSTILVIEWREV=0
+LIBSTILVIEWAGE=0
+LIBSTILVIEWVERSION=$LIBSTILVIEWCUR:$LIBSTILVIEWREV:$LIBSTILVIEWAGE
+
 AC_MSG_CHECKING([for debugging])
 AC_ARG_ENABLE(debug, [AS_HELP_STRING([--enable-debug], [compile for debugging @<:@no/yes/full, default=no@:>@])],
  [], [enable_debug=no])
@@ -190,11 +195,13 @@ AC_SUBST(RESID_HAVE_BOOL)
 AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)
 AC_SUBST(LIBSIDPLAYVERSION)
+AC_SUBST(LIBSTILVIEWVERSION)
 
 
 AC_CONFIG_FILES([
 Makefile
 libsidplayfp.pc
+libstilview.pc
 sidplayfp/sidversion.h
 builders/residfp-builder/residfp/siddefs-fp.h
 builders/resid-builder/resid/siddefs.h

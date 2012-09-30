@@ -37,7 +37,8 @@ $(noinst_SCRIPTS)
 #=========================================================
 # Libraries
 lib_LTLIBRARIES = \
-sidplayfp/libsidplayfp.la
+sidplayfp/libsidplayfp.la \
+sidplayfp/libstilview.la
 
 noinst_LTLIBRARIES = \
 builders/residfp-builder/residfp/libresidfp.la \
@@ -269,6 +270,21 @@ builders/hardsid-builder/hardsid-emu.h
 endif
 
 #=========================================================
+# libstilview
+sidplayfp_libstilview_la_SOURCES = \
+utils/STILview/stil.cpp \
+utils/STILview/stilcomm.cpp
+
+sidplayfp_libstilview_la_LDFLAGS = -version-info $(LIBSTILVIEWVERSION)
+
+sidplayfp_libstilview_ladir = $(includedir)/stilview
+
+sidplayfp_libstilview_la_HEADERS = \
+utils/STILview/stil.h \
+utils/STILview/stilcomm.h \
+utils/STILview/stildefs.h
+
+#=========================================================
 # docs
 if HAVE_DOXYGEN
 doc:
@@ -292,7 +308,7 @@ endif
 #=========================================================
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libsidplayfp.pc
+pkgconfig_DATA = libsidplayfp.pc libstilview.pc
 
 #=========================================================
 # Remove SVN directories from any subdirs that get
