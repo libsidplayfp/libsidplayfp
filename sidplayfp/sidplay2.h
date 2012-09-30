@@ -31,7 +31,7 @@
 
 class  SidTune;
 class  EventContext;
-struct SidTuneInfo;
+class  SidTuneInfo;
 
 // Private Sidplayer
 namespace SIDPLAYFP_NAMESPACE
