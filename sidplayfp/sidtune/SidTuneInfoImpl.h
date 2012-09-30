@@ -37,8 +37,6 @@ class SidTuneInfoImpl : public SidTuneInfo
 public:
     const char* m_formatString;
 
-    const char* m_speedString;
-
     unsigned int m_songs;
     unsigned int m_startSong;
     unsigned int m_currentSong;
@@ -146,8 +144,6 @@ public:
     clock_t clockSpeed() const { return m_clockSpeed; }
 
     const char* formatString() const { return m_formatString; }
-
-    const char* speedString() const { return m_speedString; }
 
     bool fixLoad() const { return m_fixLoad; }
 
