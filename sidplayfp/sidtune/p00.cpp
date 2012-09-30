@@ -82,9 +82,9 @@ SidTuneBase* p00::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& 
 
     // Combined extension & magic field identification
     if (strlen (ext) != 4)
-        return false;
+        return 0;
     if (!isdigit(ext[2]) || !isdigit(ext[3]))
-        return false;
+        return 0;
 
     X00Format type = X00_UNKNOWN;
     switch (toupper(ext[1]))
