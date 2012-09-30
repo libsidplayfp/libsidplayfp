@@ -255,7 +255,7 @@ SidTuneBase* SidTuneBase::getFromStdIn()
         fileBuf.push_back((uint_least8_t) datb);
     }
 
-    getFromBuffer(&fileBuf.front(), fileBuf.size());
+    return getFromBuffer(&fileBuf.front(), fileBuf.size());
 }
 
 #endif
