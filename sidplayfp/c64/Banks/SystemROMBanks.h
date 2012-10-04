@@ -169,8 +169,6 @@ public:
             memcpy(rom, character, 4096);
     }
 
-    void reset() {}
-
     uint8_t read(const uint_least16_t address)
     {
         return rom[address & 0x0fff];
