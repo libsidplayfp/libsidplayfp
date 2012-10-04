@@ -106,7 +106,7 @@ public:
         // Backup BASIC Warm Start
         memcpy(trap, &rom[0xa7ae & 0x1fff], 3);
 
-        memcpy(subTune, &rom[0xbf53 & 0x1fff], 1);
+        memcpy(subTune, &rom[0xbf53 & 0x1fff], 11);
     }
 
     void reset()
