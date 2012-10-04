@@ -36,6 +36,7 @@
 */
 #define KERNAL_PATH "/usr/local/lib/vice/C64/kernal"
 #define BASIC_PATH "/usr/local/lib/vice/C64/basic"
+#define CHARGEN_PATH "/usr/local/lib/vice/C64/chargen"
 
 class NullSID: public sidemu
 {
@@ -69,8 +70,7 @@ public:
 
 void loadRom(const char* path, char* buffer)
 {
-    std::ifstream is;
-    is.open(path, std::ios::binary);
+    std::ifstream is(path, std::ios::binary);
     is.read(buffer, 8192);
     is.close();
 }
@@ -81,11 +81,13 @@ int main(int argc, char* argv[])
 
     char kernal[8192];
     char basic[8192];
+    char chargen[4096];
 
     loadRom(KERNAL_PATH, kernal);
     loadRom(BASIC_PATH, basic);
+    loadRom(CHARGEN_PATH, chargen);
 
-    m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic);
+    m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic, (const uint8_t*)chargen);
 
     FakeBuilder* rs = new FakeBuilder("Test");
 
