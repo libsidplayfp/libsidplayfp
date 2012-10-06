@@ -127,9 +127,9 @@ const char     _BUG_STR[]="BUG: ";
 #define STIL_MAX_ENTRY_SIZE STIL_MAX_LINE_SIZE*100
 
 // HVSC path to STIL.
-const char PATH_TO_STIL[]="/DOCUMENTS/STIL.txt";
+const char DEFAULT_PATH_TO_STIL[]="/DOCUMENTS/STIL.txt";
 
 // HVSC path to BUGlist.
-const char PATH_TO_BUGLIST[]="/DOCUMENTS/BUGlist.txt";
+const char DEFAULT_PATH_TO_BUGLIST[]="/DOCUMENTS/BUGlist.txt";
 
 #endif // _STILDEFS_H

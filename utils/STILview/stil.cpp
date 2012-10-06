@@ -44,7 +44,9 @@ const float VERSION_NO = 2.17;
 #define CERR_STIL_DEBUG if (STIL_DEBUG) cerr << "Line #" << __LINE__ << " STIL::"
 
 // CONSTRUCTOR
-STIL::STIL()
+STIL::STIL(const char* stilPath, const char* bugsPath) :
+  PATH_TO_STIL(stilPath),
+  PATH_TO_BUGLIST(bugsPath)
 {
     snprintf(versionString, 2*STIL_MAX_LINE_SIZE-1, "STILView v%4.2f, (C) 1998, 2002 by LaLa (LaLa@C64.org)\n", VERSION_NO);
     versionString[2*STIL_MAX_LINE_SIZE-1] = '\0';

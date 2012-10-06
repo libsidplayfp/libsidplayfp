@@ -75,8 +75,11 @@ public:
 
     /**
     * Allocates necessary memory.
+    *
+    * @param stilPath relative path to STIL file
+    * @param bugsPath relative path to BUG file
     */
-    STIL();
+    STIL(const char* stilPath=DEFAULT_PATH_TO_STIL, const char* bugsPath=DEFAULT_PATH_TO_BUGLIST);
 
     /**
     * Deallocates the necessary memory.
@@ -263,6 +266,11 @@ public:
     inline const char *getErrorStr() {return (STIL_ERROR_STR[lastError]);}
 
 private:
+    /// Path to STIL.
+    const char* PATH_TO_STIL;
+
+    /// Path to BUGlist.
+    const char* PATH_TO_BUGLIST;
 
     /// Version number/copyright string
     char versionString[2*STIL_MAX_LINE_SIZE];
