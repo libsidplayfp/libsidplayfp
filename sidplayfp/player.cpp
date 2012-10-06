@@ -31,6 +31,8 @@
 
 #include "player.h"
 
+#include "psiddrv.h"
+
 #ifndef PACKAGE_NAME
 #   define PACKAGE_NAME PACKAGE
 #endif
@@ -88,7 +90,7 @@ Player::Player (void)
     m_cfg.sidEmulation    = 0;
     m_cfg.leftVolume      = Mixer::VOLUME_MAX;
     m_cfg.rightVolume     = Mixer::VOLUME_MAX;
-    m_cfg.powerOnDelay    = SID2_DEFAULT_POWER_ON_DELAY;
+    m_cfg.powerOnDelay    = DEFAULT_POWER_ON_DELAY;
     m_cfg.samplingMethod  = SID2_RESAMPLE_INTERPOLATE;
     m_cfg.fastSampling    = false;
 
@@ -197,11 +199,29 @@ bool Player::initialise ()
         }
     }
 
-    if (!psidDrvReloc (m_c64.getMmu()))
+    uint_least16_t powerOnDelay = m_cfg.powerOnDelay;
+    // Delays above MAX result in random delays
+    if (powerOnDelay > MAX_POWER_ON_DELAY)
+    {   // Limit the delay to something sensible.
+        powerOnDelay = (uint_least16_t) (m_rand >> 3) & MAX_POWER_ON_DELAY;
+    }
+
+    m_rand  = m_rand * 13 + 1;
+
+    psiddrv driver(m_tune->getInfo());
+    driver.powerOnDelay(powerOnDelay);
+    if (!driver.drvReloc (m_c64.getMmu()))
+    {
+        m_errorString = driver.errorString();
         return false;
+    }
+
+    m_info.driverAddr = driver.driverAddr();
+    m_info.driverLength = driver.driverLength();
+    m_info.powerOnDelay = powerOnDelay;
 
     if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()))
-    {   // Rev 1.6 (saw) - Allow loop through errors
+    {
         m_errorString = m_tune->statusString();
         return false;
     }

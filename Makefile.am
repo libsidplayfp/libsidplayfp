@@ -61,6 +61,7 @@ sidplayfp/EventScheduler.h \
 sidplayfp/player.cpp \
 sidplayfp/player.h \
 sidplayfp/psiddrv.cpp \
+sidplayfp/psiddrv.h \
 sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
 sidplayfp/reloc65.cpp \

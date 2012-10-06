@@ -48,6 +48,16 @@ class Player
 #endif
 {
 private:
+    /**
+    * Maximum power on delay
+    * Delays <= MAX produce constant results.
+    * Delays >  MAX produce random results
+    */
+    static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
+
+    static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
+
+private:
     static const char  *credit[10]; // 10 credits max
 
     c64     m_c64;
@@ -73,7 +83,6 @@ private:
                        const bool forced, const int channels,
                        const float64_t cpuFreq, const int frequency,
                        const sampling_method_t sampling, const bool fastSampling);
-    uint8_t   iomap          (const uint_least16_t addr);
 
     static sid2_model_t getModel (const SidTuneInfo::model_t sidModel, const sid2_model_t defaultModel, const bool forced);
 
@@ -81,9 +90,6 @@ private:
 
     // Rev 2.0.3 Added - New Mixer Routines
     uint_least32_t (Player::*output) (char *buffer);
-
-    // PSID driver
-    bool  psidDrvReloc (sidmemory *mem);
 
 #ifdef PC64_TESTSUITE
     void load (const char *file)

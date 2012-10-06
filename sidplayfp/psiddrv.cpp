@@ -25,28 +25,25 @@
 // The code here is use to support the PSID Version 2NG
 // (proposal B) file format for player relocation support.
 // --------------------------------------------------------
+#include "psiddrv.h"
+
 #include <string.h>
 
 #include "sidendian.h"
-#include "player.h"
-
-#include "c64/CPU/opcodes.h"
+#include "sidmemory.h"
+#include "SidTuneInfo.h"
 #include "reloc65.h"
 
-SIDPLAYFP_NAMESPACE_START
+#include "c64/CPU/mos6510.h"
 
 // Error Strings
 const char ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
 const char ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
 
-// Input: A 16-bit effective address
-// Output: A default bank-select value for $01.
-uint8_t Player::iomap (const uint_least16_t addr)
+uint8_t psiddrv::iomap (const uint_least16_t addr)
 {
-    const SidTuneInfo* tuneInfo = m_tune->getInfo();
-
     // Force Real C64 Compatibility
-    switch (tuneInfo->compatibility())
+    switch (m_tuneInfo->compatibility())
     {
     case SidTuneInfo::COMPATIBILITY_R64:
     case SidTuneInfo::COMPATIBILITY_BASIC:
@@ -65,20 +62,18 @@ uint8_t Player::iomap (const uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-bool Player::psidDrvReloc (sidmemory *mem)
+bool psiddrv::drvReloc (sidmemory *mem)
 {
-    const SidTuneInfo* tuneInfo = m_tune->getInfo();
+    const int startlp = m_tuneInfo->loadAddr() >> 8;
+    const int endlp   = (m_tuneInfo->loadAddr() + (m_tuneInfo->c64dataLen() - 1)) >> 8;
 
-    const int startlp = tuneInfo->loadAddr() >> 8;
-    const int endlp   = (tuneInfo->loadAddr() + (tuneInfo->c64dataLen() - 1)) >> 8;
-
-    uint_least8_t relocStartPage = tuneInfo->relocStartPage();
-    uint_least8_t relocPages = tuneInfo->relocPages();
+    uint_least8_t relocStartPage = m_tuneInfo->relocStartPage();
+    uint_least8_t relocPages = m_tuneInfo->relocPages();
 
     // Will get done later if can't now
-    mem->writeMemByte(0x02a6, (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
+    mem->writeMemByte(0x02a6, (m_tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
 
-    if (tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
+    if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
     {   // The psiddrv is only used for initialisation and to
         // autorun basic tunes as running the kernel falls
         // into a manual load/run mode
@@ -135,24 +130,24 @@ bool Player::psidDrvReloc (sidmemory *mem)
 
     // Adjust size to not included initialisation data.
     reloc_size -= 10;
-    m_info.driverAddr   = relocAddr;
-    m_info.driverLength = (uint_least16_t) reloc_size;
+    m_driverAddr   = relocAddr;
+    m_driverLength = (uint_least16_t) reloc_size;
     // Round length to end of page
-    m_info.driverLength += 0xff;
-    m_info.driverLength &= 0xff00;
+    m_driverLength += 0xff;
+    m_driverLength &= 0xff00;
 
     mem->installResetHook(endian_little16(reloc_driver));
 
     // If not a basic tune then the psiddrv must install
     // interrupt hooks and trap programs trying to restart basic
-    if (tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
+    if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
     {   // Install hook to set subtune number for basic
-        mem->setBasicSubtune((uint8_t) (tuneInfo->currentSong() - 1));
+        mem->setBasicSubtune((uint8_t) (m_tuneInfo->currentSong() - 1));
         mem->installBasicTrap(0xbf53);
     }
     else
     {   // Only install irq handle for RSID tunes
-        mem->fillRam(0x0314, &reloc_driver[2], tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64 ? 2 : 6);
+        mem->fillRam(0x0314, &reloc_driver[2], m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64 ? 2 : 6);
 
         // Experimental restart basic trap
         const uint_least16_t addr = endian_little16(&reloc_driver[8]);
@@ -166,36 +161,28 @@ bool Player::psidDrvReloc (sidmemory *mem)
     mem->fillRam(pos, &reloc_driver[10], reloc_size);
 
     // Tell C64 about song
-    mem->writeMemByte(pos, (uint8_t) (tuneInfo->currentSong() - 1));
+    mem->writeMemByte(pos, (uint8_t) (m_tuneInfo->currentSong() - 1));
     pos++;
-    mem->writeMemByte(pos, tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
+    mem->writeMemByte(pos, m_tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
     pos++;
-    mem->writeMemWord(pos, tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC ?
-                     0xbf55 /*Was 0xa7ae, see above*/ : tuneInfo->initAddr());
+    mem->writeMemWord(pos, m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC ?
+                     0xbf55 /*Was 0xa7ae, see above*/ : m_tuneInfo->initAddr());
     pos += 2;
-    mem->writeMemWord(pos, tuneInfo->playAddr());
+    mem->writeMemWord(pos, m_tuneInfo->playAddr());
     pos += 2;
-    // Initialise random number generator
-    m_info.powerOnDelay = m_cfg.powerOnDelay;
-    // Delays above MAX result in random delays
-    if (m_info.powerOnDelay > SID2_MAX_POWER_ON_DELAY)
-    {   // Limit the delay to something sensible.
-        m_info.powerOnDelay = (uint_least16_t) (m_rand >> 3) &
-                            SID2_MAX_POWER_ON_DELAY;
-    }
-    mem->writeMemWord(pos, m_info.powerOnDelay);
+    mem->writeMemWord(pos, m_powerOnDelay);
     pos += 2;
-    m_rand  = m_rand * 13 + 1;
-    mem->writeMemByte(pos, iomap (tuneInfo->initAddr()));
+    
+    mem->writeMemByte(pos, iomap (m_tuneInfo->initAddr()));
     pos++;
-    mem->writeMemByte(pos, iomap (tuneInfo->playAddr()));
+    mem->writeMemByte(pos, iomap (m_tuneInfo->playAddr()));
     pos++;
     const uint8_t flag = mem->readMemByte(0x02a6); // PAL/NTSC flag
     mem->writeMemByte(pos, flag);
     pos++;
 
     // Add the required tune speed
-    switch (tuneInfo->clockSpeed())
+    switch (m_tuneInfo->clockSpeed())
     {
     case SidTuneInfo::CLOCK_PAL:
         mem->writeMemByte(pos, 1);
@@ -210,9 +197,7 @@ bool Player::psidDrvReloc (sidmemory *mem)
     pos++;
 
     // Default processor register flags on calling init
-    mem->writeMemByte(pos, tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
+    mem->writeMemByte(pos, m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
 
     return true;
 }
-
-SIDPLAYFP_NAMESPACE_STOP
