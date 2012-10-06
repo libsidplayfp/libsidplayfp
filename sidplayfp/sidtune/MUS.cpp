@@ -27,6 +27,7 @@
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
 #include "sidplayfp/sidendian.h"
+#include "sidplayfp/sidmemory.h"
 
 const char TXT_FORMAT_MUS[]        = "C64 Sidplayer format (MUS)";
 const char TXT_FORMAT_STR[]        = "C64 Stereo Sidplayer format (MUS+STR)";
@@ -83,11 +84,11 @@ void MUS::acceptSidTune(const char* dataFileName, const char* infoFileName,
     SidTuneBase::acceptSidTune(dataFileName, infoFileName, buf, isSlashedFileName);
 }
 
-bool MUS::placeSidTuneInC64mem(uint_least8_t* c64buf)
+bool MUS::placeSidTuneInC64mem(sidmemory* mem)
 {
-    if (SidTuneBase::placeSidTuneInC64mem(c64buf))
+    if (SidTuneBase::placeSidTuneInC64mem(mem))
     {
-        installPlayer(c64buf);
+        installPlayer(mem);
         return true;
     }
     return false;
@@ -552,27 +553,25 @@ bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     return true;
 }
 
-void MUS::installPlayer(uint_least8_t *c64buf)
+void MUS::installPlayer(sidmemory *mem)
 {
-    if (c64buf != 0)
+    if (mem != 0)
     {
         // Install MUS player #1.
-        uint_least16_t dest = endian_16(sidplayer1[1],
-                                     sidplayer1[0]);
-        memcpy(c64buf+dest,sidplayer1+2,sizeof(sidplayer1)-2);
+        uint_least16_t dest = endian_16(sidplayer1[1], sidplayer1[0]);
+        mem->fillRam(dest, sidplayer1+2, sizeof(sidplayer1)-2);
         // Point player #1 to data #1.
-        c64buf[dest+0xc6e] = (SIDTUNE_MUS_DATA_ADDR+2)&0xFF;
-        c64buf[dest+0xc70] = (SIDTUNE_MUS_DATA_ADDR+2)>>8;
+        mem->writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+2)&0xFF);
+        mem->writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+2)>>8);
 
         if (info->m_sidChipBase2 != 0)
         {
             // Install MUS player #2.
-            dest = endian_16(sidplayer2[1],
-                             sidplayer2[0]);
-            memcpy(c64buf+dest,sidplayer2+2,sizeof(sidplayer2)-2);
+            dest = endian_16(sidplayer2[1], sidplayer2[0]);
+            mem->fillRam(dest, sidplayer2+2, sizeof(sidplayer2)-2);
             // Point player #2 to data #2.
-            c64buf[dest+0xc6e] = (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)&0xFF;
-            c64buf[dest+0xc70] = (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)>>8;
+            mem->writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)&0xFF);
+            mem->writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)>>8);
         }
     }
 }

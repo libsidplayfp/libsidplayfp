@@ -200,7 +200,7 @@ bool Player::initialise ()
     if (!psidDrvReloc (m_c64.getMmu()))
         return false;
 
-    if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()->getMem()))
+    if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()))
     {   // Rev 1.6 (saw) - Allow loop through errors
         m_errorString = m_tune->statusString();
         return false;

@@ -142,9 +142,9 @@ bool SidTune::getStatus() const { return m_status; }
 
 const char* SidTune::statusString() const { return m_statusString; }
 
-bool SidTune::placeSidTuneInC64mem(uint_least8_t* c64buf)
+bool SidTune::placeSidTuneInC64mem(sidmemory* mem)
 {
-    return tune->placeSidTuneInC64mem(c64buf);
+    return tune->placeSidTuneInC64mem(mem);
 }
 
 const char* SidTune::createMD5(char *md5)

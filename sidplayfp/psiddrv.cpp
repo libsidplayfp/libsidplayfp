@@ -65,7 +65,7 @@ uint8_t Player::iomap (const uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-bool Player::psidDrvReloc (MMU *mmu)
+bool Player::psidDrvReloc (sidmemory *mem)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -76,7 +76,7 @@ bool Player::psidDrvReloc (MMU *mmu)
     uint_least8_t relocPages = tuneInfo->relocPages();
 
     // Will get done later if can't now
-    mmu->writeMemByte(0x02a6, (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
+    mem->writeMemByte(0x02a6, (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
 
     if (tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
     {   // The psiddrv is only used for initialisation and to
@@ -141,39 +141,39 @@ bool Player::psidDrvReloc (MMU *mmu)
     m_info.driverLength += 0xff;
     m_info.driverLength &= 0xff00;
 
-    mmu->installResetHook(endian_little16(reloc_driver));
+    mem->installResetHook(endian_little16(reloc_driver));
 
     // If not a basic tune then the psiddrv must install
     // interrupt hooks and trap programs trying to restart basic
     if (tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
     {   // Install hook to set subtune number for basic
-        mmu->setBasicSubtune((uint8_t) (tuneInfo->currentSong() - 1));
-        mmu->installBasicTrap(0xbf53);
+        mem->setBasicSubtune((uint8_t) (tuneInfo->currentSong() - 1));
+        mem->installBasicTrap(0xbf53);
     }
     else
     {   // Only install irq handle for RSID tunes
-        mmu->fillRam(0x0314, &reloc_driver[2], tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64 ? 2 : 6);
+        mem->fillRam(0x0314, &reloc_driver[2], tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64 ? 2 : 6);
 
         // Experimental restart basic trap
         const uint_least16_t addr = endian_little16(&reloc_driver[8]);
-        mmu->installBasicTrap(0xffe1);
-        mmu->writeMemWord(0x0328, addr);
+        mem->installBasicTrap(0xffe1);
+        mem->writeMemWord(0x0328, addr);
     }
 
     int pos = relocAddr;
 
     // Install driver to ram
-    mmu->fillRam(pos, &reloc_driver[10], reloc_size);
+    mem->fillRam(pos, &reloc_driver[10], reloc_size);
 
     // Tell C64 about song
-    mmu->writeMemByte(pos, (uint8_t) (tuneInfo->currentSong() - 1));
+    mem->writeMemByte(pos, (uint8_t) (tuneInfo->currentSong() - 1));
     pos++;
-    mmu->writeMemByte(pos, tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
+    mem->writeMemByte(pos, tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
     pos++;
-    mmu->writeMemWord(pos, tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC ?
+    mem->writeMemWord(pos, tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC ?
                      0xbf55 /*Was 0xa7ae, see above*/ : tuneInfo->initAddr());
     pos += 2;
-    mmu->writeMemWord(pos, tuneInfo->playAddr());
+    mem->writeMemWord(pos, tuneInfo->playAddr());
     pos += 2;
     // Initialise random number generator
     m_info.powerOnDelay = m_cfg.powerOnDelay;
@@ -183,34 +183,34 @@ bool Player::psidDrvReloc (MMU *mmu)
         m_info.powerOnDelay = (uint_least16_t) (m_rand >> 3) &
                             SID2_MAX_POWER_ON_DELAY;
     }
-    mmu->writeMemWord(pos, m_info.powerOnDelay);
+    mem->writeMemWord(pos, m_info.powerOnDelay);
     pos += 2;
     m_rand  = m_rand * 13 + 1;
-    mmu->writeMemByte(pos, iomap (tuneInfo->initAddr()));
+    mem->writeMemByte(pos, iomap (tuneInfo->initAddr()));
     pos++;
-    mmu->writeMemByte(pos, iomap (tuneInfo->playAddr()));
+    mem->writeMemByte(pos, iomap (tuneInfo->playAddr()));
     pos++;
-    const uint8_t flag = mmu->readMemByte(0x02a6); // PAL/NTSC flag
-    mmu->writeMemByte(pos, flag);
+    const uint8_t flag = mem->readMemByte(0x02a6); // PAL/NTSC flag
+    mem->writeMemByte(pos, flag);
     pos++;
 
     // Add the required tune speed
     switch (tuneInfo->clockSpeed())
     {
     case SidTuneInfo::CLOCK_PAL:
-        mmu->writeMemByte(pos, 1);
+        mem->writeMemByte(pos, 1);
         break;
     case SidTuneInfo::CLOCK_NTSC:
-        mmu->writeMemByte(pos, 0);
+        mem->writeMemByte(pos, 0);
         break;
     default: // UNKNOWN or ANY
-        mmu->writeMemByte(pos, flag);
+        mem->writeMemByte(pos, flag);
         break;
     }
     pos++;
 
     // Default processor register flags on calling init
-    mmu->writeMemByte(pos, tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
+    mem->writeMemByte(pos, tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
 
     return true;
 }

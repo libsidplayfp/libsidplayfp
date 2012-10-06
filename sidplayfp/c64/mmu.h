@@ -26,6 +26,7 @@
 #include "sidplayfp/sid2types.h"
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidconfig.h"
+#include "sidplayfp/sidmemory.h"
 
 #include "Banks/Bank.h"
 #include "Banks/IOBank.h"
@@ -38,7 +39,7 @@
 /** @internal
  * The C64 MMU chip.
 */
-class MMU : public PLA
+class MMU : public PLA, public sidmemory
 {
 private:
     EventContext &context;
@@ -89,8 +90,6 @@ public:
     }
 
     // RAM access methods
-    uint8_t* getMem() { return ramBank.array(); }
-
     uint8_t readMemByte(const uint_least16_t addr) { return ramBank.read(addr); }
     uint_least16_t readMemWord(const uint_least16_t addr) { return endian_little16(ramBank.array()+addr); }
 

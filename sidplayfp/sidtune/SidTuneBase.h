@@ -103,7 +103,7 @@ class SidTuneBase
     /**
     * Copy sidtune into C64 memory (64 KB).
     */
-    virtual bool placeSidTuneInC64mem(uint_least8_t* c64buf);
+    virtual bool placeSidTuneInC64mem(sidmemory* mem);
 
     /**
     * Calculates the MD5 hash of the tune.

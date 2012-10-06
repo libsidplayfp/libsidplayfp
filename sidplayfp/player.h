@@ -83,7 +83,7 @@ private:
     uint_least32_t (Player::*output) (char *buffer);
 
     // PSID driver
-    bool  psidDrvReloc (MMU *mmu);
+    bool  psidDrvReloc (sidmemory *mem);
 
 #ifdef PC64_TESTSUITE
     void load (const char *file)

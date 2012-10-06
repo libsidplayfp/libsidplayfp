@@ -48,7 +48,7 @@ class MUS : public SidTuneBase
  protected:
     MUS() {}
 
-    void installPlayer(uint_least8_t *c64buf);
+    void installPlayer(sidmemory *mem);
 
     void setPlayerAddress();
 
@@ -64,7 +64,7 @@ class MUS : public SidTuneBase
                                        const uint_least32_t fileOffset,
                                        bool init = false);
 
-    virtual bool placeSidTuneInC64mem(uint_least8_t* c64buf);
+    virtual bool placeSidTuneInC64mem(sidmemory* mem);
 };
 
 #endif // MUS_H

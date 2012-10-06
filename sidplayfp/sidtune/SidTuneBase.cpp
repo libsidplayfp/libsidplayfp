@@ -29,6 +29,7 @@
 #include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "sidplayfp/sidendian.h"
+#include "sidplayfp/sidmemory.h"
 
 #include "MUS.h"
 #include "p00.h"
@@ -148,22 +149,22 @@ unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
 
 // ------------------------------------------------- private member functions
 
-bool SidTuneBase::placeSidTuneInC64mem(uint_least8_t* c64buf)
+bool SidTuneBase::placeSidTuneInC64mem(sidmemory* mem)
 {
-    if (c64buf != 0)
+    if (mem != 0)
     {
         // The Basic ROM sets these values on loading a file.
         // Program end address
         const uint_least16_t start = info->m_loadAddr;
         const uint_least16_t end   = start + info->m_c64dataLen;
-        endian_little16(c64buf + 0x2d, end); // Variables start
-        endian_little16(c64buf + 0x2f, end); // Arrays start
-        endian_little16(c64buf + 0x31, end); // Strings start
-        endian_little16(c64buf + 0xac, start);
-        endian_little16(c64buf + 0xae, end);
+        mem->writeMemWord(0x2d, end); // Variables start
+        mem->writeMemWord(0x2f, end); // Arrays start
+        mem->writeMemWord(0x31, end); // Strings start
+        mem->writeMemWord(0xac, start);
+        mem->writeMemWord(0xae, end);
 
         // Copy data from cache to the correct destination.
-        memcpy(c64buf+info->m_loadAddr, cache.get()+fileOffset, info->m_c64dataLen);
+        mem->fillRam(info->m_loadAddr, cache.get()+fileOffset, info->m_c64dataLen);
 
         return true;
     }
