@@ -73,6 +73,7 @@ sidplayfp/SmartPtr.h \
 sidplayfp/psiddrv.a65 \
 sidplayfp/sidemu.h \
 sidplayfp/sidendian.h \
+sidplayfp/sidrandom.h \
 sidplayfp/c64/Banks/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \

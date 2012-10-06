@@ -60,14 +60,12 @@ Player::Player (void)
  m_tune (0),
  m_errorString(ERR_MISSING_ROM),
  m_status(false),
- m_isPlaying(false)
+ m_isPlaying(false),
+ m_rand((int)::time(0))
 {
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
 #endif
-
-    srand ((uint) ::time(0));
-    m_rand = (uint_least32_t) rand ();
 
     // Setup exported info
     m_info.name            = PACKAGE_NAME;
@@ -203,10 +201,8 @@ bool Player::initialise ()
     // Delays above MAX result in random delays
     if (powerOnDelay > MAX_POWER_ON_DELAY)
     {   // Limit the delay to something sensible.
-        powerOnDelay = (uint_least16_t) (m_rand >> 3) & MAX_POWER_ON_DELAY;
+        powerOnDelay = (uint_least16_t) (m_rand.next() >> 3) & MAX_POWER_ON_DELAY;
     }
-
-    m_rand  = m_rand * 13 + 1;
 
     psiddrv driver(m_tune->getInfo());
     driver.powerOnDelay(powerOnDelay);

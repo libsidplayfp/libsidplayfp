@@ -27,6 +27,7 @@
 #include "sid2types.h"
 #include "SidTune.h"
 
+#include "sidrandom.h"
 #include "mixer.h"
 
 #include "c64/c64.h"
@@ -71,10 +72,10 @@ private:
 
     const char     *m_errorString;
 
-    int             m_rand;
-
     bool            m_status;
     volatile bool   m_isPlaying;
+
+    sidrandom       m_rand;
 
 private:
     float64_t clockSpeed     (const sid2_clock_t defaultClock, const bool forced);
