@@ -18,8 +18,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef TOOLS_H
-#define TOOLS_H
+#ifndef SIDTUNETOOLS_H
+#define SIDTUNETOOLS_H
 
 #include "SidTuneCfg.h"
 
@@ -68,4 +68,4 @@ class SidTuneTools
     static char* fileExtOfPath(char* s);
 };
 
-#endif  /* TOOLS_H */
+#endif  /* SIDTUNETOOLS_H */

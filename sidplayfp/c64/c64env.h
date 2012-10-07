@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _c64env_h_
-#define _c64env_h_
+#ifndef C64ENV_H
+#define C64ENV_H
 
 #include "sidplayfp/event.h"
 
@@ -60,4 +60,4 @@ public:
     virtual void lightpen     () = 0;
 };
 
-#endif // _c64env_h_
+#endif // C64ENV_H

@@ -21,8 +21,8 @@
  */
 
 
-#ifndef _player_h_
-#define _player_h_
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include "sid2types.h"
 #include "SidTune.h"
@@ -136,4 +136,4 @@ public:
 
 SIDPLAYFP_NAMESPACE_STOP
 
-#endif // _player_h_
+#endif // PLAYER_H

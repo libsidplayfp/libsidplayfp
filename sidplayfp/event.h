@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _event_h_
-#define _event_h_
+#ifndef EVENT_H
+#define EVENT_H
 
 #include <stdint.h>
 
@@ -152,4 +152,4 @@ public:
     virtual event_phase_t phase () const = 0;
 };
 
-#endif // _event_h_
+#endif // EVENT_H

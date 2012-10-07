@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _sidendian_h_
-#define _sidendian_h_
+#ifndef SIDENDIAN_H
+#define SIDENDIAN_H
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -258,4 +258,4 @@ inline void endian_big32 (uint8_t ptr[4], uint_least32_t dword)
     ptr[3] = endian_32lo8  (dword);
 }
 
-#endif // _sidendian_h_
+#endif // SIDENDIAN_H

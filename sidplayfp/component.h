@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _component_h_
-#define _component_h_
+#ifndef COMPONENT_H
+#define COMPONENT_H
 
 #include <stdint.h>
 
@@ -35,4 +35,4 @@ public:
     virtual const   char *error   (void) const = 0;
 };
 
-#endif // _component_h_
+#endif // COMPONENT_H

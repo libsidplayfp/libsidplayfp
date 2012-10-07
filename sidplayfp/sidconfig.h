@@ -1,6 +1,6 @@
 /* sidconfig.h (template) */
-#ifndef _sidconfig_h_
-#define _sidconfig_h_
+#ifndef SIDCONFIG_H
+#define SIDCONFIG_H
 
 /* DLL building support on win32 hosts */
 #ifndef SID_EXTERN
@@ -42,4 +42,4 @@
 #   define SIDPLAYFP_NAMESPACE_STOP
 #endif
 
-#endif /* _sidconfig_h_ */
+#endif /* SIDCONFIG_H */

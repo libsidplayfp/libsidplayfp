@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _c64cia_h_
-#define _c64cia_h_
+#ifndef C64CIA_H
+#define C64CIA_H
 
 // The CIA emulations are very generic and here we need to effectively
 // wire them into the computer (like adding a chip to a PCB).
@@ -123,4 +123,4 @@ public:
     const char *error (void) const {return "";}
 };
 
-#endif // _c64cia_h_
+#endif // C64CIA_H

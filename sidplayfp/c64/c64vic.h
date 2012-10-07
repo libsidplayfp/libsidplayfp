@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _c64vic_h_
-#define _c64vic_h_
+#ifndef C64VIC_H
+#define C64VIC_H
 
 // The VIC emulation is very generic and here we need to effectively
 // wire it into the computer (like adding a chip to a PCB).
@@ -64,4 +64,4 @@ public:
     const char *error (void) const {return "";}
 };
 
-#endif // _c64vic_h_
+#endif // C64VIC_H
