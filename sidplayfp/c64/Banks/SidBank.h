@@ -27,7 +27,8 @@
 #include "sidplayfp/sidemu.h"
 
 /** @internal
-*
+* SID
+* located at $D400-$D7FF
 */
 class SidBank : public Bank
 {
@@ -77,6 +78,12 @@ public:
             sidmapper[i] = 0;
     }
 
+    /**
+    * Put a SID at desired location.
+    *
+    * @param address the address
+    * @param chipNum the SID chip number [1-MAX_SIDS[
+    */
     void setSIDMapping(const int address, const int chipNum)
     {
         sidmapper[address >> 5 & (MAPPER_SIZE - 1)] = chipNum;
@@ -95,8 +102,20 @@ public:
             sid[i]->write(addr & 0x1f, data);
     }
 
+    /**
+    * Set SID emulation.
+    *
+    * @param i the SID chip number
+    * @param s the emulation
+    */
     void setSID(const unsigned int i, sidemu *s) { sid[i] = s; }
 
+    /**
+    * Get SID emulation.
+    *
+    * @param i the SID chip number
+    * @ratuen the emulation
+    */
     sidemu *getSID(const unsigned int i) const { return (i < MAX_SIDS)?sid[i]:0; }
 };
 

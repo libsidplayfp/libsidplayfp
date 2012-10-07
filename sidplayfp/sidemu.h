@@ -27,7 +27,9 @@
 #include "component.h"
 
 
-// Inherit this class to create a new SID emulation.
+/** @internal
+* Inherit this class to create a new SID emulation.
+*/
 class sidbuilder;
 
 class sidemu: public component

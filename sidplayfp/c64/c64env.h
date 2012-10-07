@@ -29,11 +29,11 @@
 #  include "config.h"
 #endif
 
-/* An implementation of of this class can be created to perform the C64
-   specifics.  A pointer to this child class can then be passed to
-   each of the conponents so they can interact with it.
+/** @internal
+* An implementation of of this class can be created to perform the C64
+* specifics.  A pointer to this child class can then be passed to
+* each of the components so they can interact with it.
 */
-
 class c64env
 {
 private:

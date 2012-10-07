@@ -28,6 +28,7 @@
 
 /** @internal
  * IO region handler. 4k region, 16 chips, 256b banks.
+ * located at $D000-$DFFF
  *
  * @author Antti Lankila
  */

@@ -74,6 +74,7 @@ void MMU::reset()
     ramBank.reset();
     zeroRAMBank.reset();
 
+    // Reset the ROMs to undo the hacks applied
     kernalRomBank.reset();
     basicRomBank.reset();
 

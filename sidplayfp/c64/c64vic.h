@@ -31,6 +31,10 @@
 #include "sidplayfp/sidendian.h"
 #include "VIC_II/mos656x.h"
 
+/** @internal
+* VIC-II
+* located at $D000-$D3FF
+*/
 class c64vic: public MOS656X, public Bank
 {
 private:
@@ -61,6 +65,7 @@ public:
     c64vic (c64env *env)
     :MOS656X(&(env->context ())),
      m_env(*env) {}
+
     const char *error (void) const {return "";}
 };
 

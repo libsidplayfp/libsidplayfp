@@ -26,9 +26,15 @@
 
 /** @internal
 * IO1/IO2
+* memory mapped registers or machine code routines of optional external devices 
+* I/O Area #1 located at $DE00-$DEFF
+* I/O Area #2 located at $DF00-$DFFF
 */
 class DisconnectedBusBank : public Bank
 {
+    /**
+    * No device is connected so this is a no-op.
+    */
     void write(const uint_least16_t addr, const uint8_t data) {}
 
     // FIXME this should actually return last byte read from VIC

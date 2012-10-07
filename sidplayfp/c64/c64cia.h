@@ -31,8 +31,10 @@
 #include "sidplayfp/sidendian.h"
 #include "CIA/mos6526.h"
 
-/* CIA 1 specifics:
-   Generates IRQs
+/** @internal
+* CIA 1
+* Generates IRQs
+* located at $DC00-$DCFF
 */
 class c64cia1: public MOS6526, public Bank
 {
@@ -80,6 +82,7 @@ public:
     c64cia1 (c64env *env)
     :MOS6526(&(env->context ())),
      m_env(*env) {}
+
     const char *error (void) const {return "";}
 
     void reset ()
@@ -91,8 +94,10 @@ public:
     uint_least16_t getTimerA() const { return t1a; }
 };
 
-/* CIA 2 specifics:
-   Generates NMIs
+/** @internal
+* CIA 2
+* Generates NMIs
+* located at $DD00-$DDFF
 */
 class c64cia2: public MOS6526, public Bank
 {
@@ -120,6 +125,7 @@ public:
     c64cia2 (c64env *env)
     :MOS6526(&(env->context ())),
      m_env(*env) {}
+
     const char *error (void) const {return "";}
 };
 

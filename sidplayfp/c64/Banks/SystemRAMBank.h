@@ -39,9 +39,9 @@ private:
     uint8_t ram[65536];
 
 public:
+    /// Initialize RAM with powerup pattern
     void reset()
     {
-        // Initialize RAM with powerup pattern
         memset(ram, 0, 65536);
         for (int i = 0x07c0; i < 0x10000; i += 128)
         {

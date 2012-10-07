@@ -27,6 +27,11 @@
 #include <stdint.h>
 #include <string.h>
 
+/** @internal
+* Color RAM.
+* 1K x 4-bit Static RAM that stores text screen color information
+* located at $D800-$DBFF (last 24 bytes are unused)
+*/
 class ColorRAMBank : public Bank
 {
 private:
