@@ -129,12 +129,12 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
     const uint16_t kChecksum = getChecksum(kernal, 0x2000);
     // second revision + Japanese version
     if ((rev == 0x00 && (kChecksum != 0xc70b && kChecksum != 0xd183))
-        // third revision
-        || (rev == 0x03 && kChecksum != 0xc70a)
+        // third revision + Swedish version
+        || (rev == 0x03 && (kChecksum != 0xc70a  && kChecksum != 0xc5c9))
         // first revision
         || (rev == 0xaa && kChecksum != 0xd4fd)
-        // Commodore SX-64
-        || (rev == 0x43 && kChecksum != 0xc70b))
+        // Commodore SX-64 + Swedish version
+        || (rev == 0x43 && (kChecksum != 0xc70b && kChecksum != 0xc788)))
     {
         m_errorString = ERR_UNKNOWN_ROM;
         return;
