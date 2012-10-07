@@ -126,6 +126,12 @@ int main(int argc, char* argv[])
 
     m_engine.load(tune);
 
+    if (!m_engine.getStatus())
+    {
+        printf("%s\n", m_engine.error());
+        goto error;
+    }
+
     {
         for (;;)
         {
