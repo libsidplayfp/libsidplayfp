@@ -30,47 +30,68 @@
 #include "sidplayfp/c64/CPU/opcodes.h"
 
 /** @internal
+ * ROM bank base class
+ * N must be a power of two
+ */
+template <int N>
+class romBank : public Bank
+{
+protected:
+    /// The ROM array
+    uint8_t rom[N];
+
+protected:
+    /// Set value at memory address
+    void setVal(uint_least16_t address, uint8_t val) { rom[address & (N-1)]=val; }
+
+    /// Return value from memory address
+    uint8_t getVal(uint_least16_t address) const { return rom[address & (N-1)]; }
+
+    /// Return pointer to memory address
+    void* getPtr(uint_least16_t address) const { return (void*)&rom[address & (N-1)]; }
+
+public:
+    /// Copy content from source buffer
+    void set(const uint8_t* source) { if (source) memcpy(rom, source, N); }
+
+    /// Writing to ROM is a no-op
+    void write(const uint_least16_t address, const uint8_t value) {}
+
+    uint8_t read(const uint_least16_t address) { return rom[address & (N-1)]; }
+};
+
+/** @internal
  * Kernal ROM
  */
-class KernalRomBank : public Bank
+class KernalRomBank : public romBank<0x2000>
 {
 private:
-    uint8_t rom[8192];
-
     uint8_t resetVectorLo;  // 0xfffc
     uint8_t resetVectorHi;  // 0xfffd
 
 public:
     void set(const uint8_t* kernal)
     {
-        if (kernal)
-            memcpy(rom, kernal, 8192);
+        romBank::set(kernal);
 
         // Backup Reset Vector
-        resetVectorLo = rom[0xfffc & 0x1fff];
-        resetVectorHi = rom[0xfffd & 0x1fff];
+        resetVectorLo = getVal(0xfffc);
+        resetVectorHi = getVal(0xfffd);
 
         // Apply Kernal hacks
-        rom[0xfd69 & 0x1fff] = 0x9f; // Bypass memory check
-        rom[0xe55f & 0x1fff] = 0x00; // Bypass screen clear
-        rom[0xfdc4 & 0x1fff] = 0xea; // Ignore sid volume reset to avoid DC
-        rom[0xfdc5 & 0x1fff] = 0xea; //   click (potentially incompatibility)!!
-        rom[0xfdc6 & 0x1fff] = 0xea;
+        setVal(0xfd69, 0x9f); // Bypass memory check
+        setVal(0xe55f, 0x00); // Bypass screen clear
+        setVal(0xfdc4, 0xea); // Ignore sid volume reset to avoid DC
+        setVal(0xfdc5, 0xea); //   click (potentially incompatibility)!!
+        setVal(0xfdc6, 0xea);
     }
 
     void reset()
     {
         // Restore original Reset Vector
-        rom[0xfffc & 0x1fff] = resetVectorLo;
-        rom[0xfffd & 0x1fff] = resetVectorHi;
+        setVal(0xfffc, resetVectorLo);
+        setVal(0xfffd, resetVectorHi);
     }
-
-    uint8_t read(const uint_least16_t address)
-    {
-        return rom[address & 0x1fff];
-    }
-
-    void write(const uint_least16_t address, const uint8_t value) {}
 
     /**
     * Change the RESET vector
@@ -79,50 +100,38 @@ public:
     */
     void installResetHook(const uint_least16_t addr)
     {
-        rom[0xfffc & 0x1fff] = endian_16lo8(addr);
-        rom[0xfffd & 0x1fff] = endian_16hi8(addr);
+        setVal(0xfffc, endian_16lo8(addr));
+        setVal(0xfffd, endian_16hi8(addr));
     }
 };
 
 /** @internal
  * BASIC ROM
  */
-class BasicRomBank : public Bank
+class BasicRomBank : public romBank<0x2000>
 {
 private:
-    uint8_t rom[8192];
-
     uint8_t trap[3];
     uint8_t subTune[11];
 
 public:
-    BasicRomBank() {}
-
     void set(const uint8_t* basic)
     {
-        if (basic)
-            memcpy(rom, basic, 8192);
+        romBank::set(basic);
 
         // Backup BASIC Warm Start
-        memcpy(trap, &rom[0xa7ae & 0x1fff], 3);
+        memcpy(trap, getPtr(0xa7ae), 3);
 
-        memcpy(subTune, &rom[0xbf53 & 0x1fff], 11);
+        memcpy(subTune, getPtr(0xbf53), 11);
     }
 
     void reset()
     {
         // Restore original BASIC Warm Start
-        memcpy(&rom[0xa7ae & 0x1fff], trap, 3);
+        memcpy(getPtr(0xa7ae), trap, 3);
 
-        memcpy(&rom[0xbf53 & 0x1fff], subTune, 11);
+        memcpy(getPtr(0xbf53), subTune, 11);
     }
-
-    uint8_t read(const uint_least16_t address)
-    {
-        return rom[address & 0x1fff];
-    }
-
-    void write(const uint_least16_t address, const uint8_t value) {}
 
     /**
     * Set BASIC Warm Start address
@@ -131,50 +140,30 @@ public:
     */
     void installTrap(const uint_least16_t addr)
     {
-        rom[0xa7ae & 0x1fff] = JMPw;
-        rom[0xa7af & 0x1fff] = endian_16lo8(addr);
-        rom[0xa7b0 & 0x1fff] = endian_16hi8(addr);
+        setVal(0xa7ae, JMPw);
+        setVal(0xa7af, endian_16lo8(addr));
+        setVal(0xa7b0, endian_16hi8(addr));
     }
 
     void setSubtune(const uint8_t tune)
     {
-        rom[0xbf53 & 0x1fff] = LDAb;
-        rom[0xbf54 & 0x1fff] = tune;
-        rom[0xbf55 & 0x1fff] = STAa;
-        rom[0xbf56 & 0x1fff] = 0x0c;
-        rom[0xbf57 & 0x1fff] = 0x03;
-        rom[0xbf58 & 0x1fff] = JSRw;
-        rom[0xbf59 & 0x1fff] = 0x2c;
-        rom[0xbf5a & 0x1fff] = 0xa8;
-        rom[0xbf5b & 0x1fff] = JMPw;
-        rom[0xbf5c & 0x1fff] = 0xb1;
-        rom[0xbf5d & 0x1fff] = 0xa7;
+        setVal(0xbf53, LDAb);
+        setVal(0xbf54, tune);
+        setVal(0xbf55, STAa);
+        setVal(0xbf56, 0x0c);
+        setVal(0xbf57, 0x03);
+        setVal(0xbf58, JSRw);
+        setVal(0xbf59, 0x2c);
+        setVal(0xbf5a, 0xa8);
+        setVal(0xbf5b, JMPw);
+        setVal(0xbf5c, 0xb1);
+        setVal(0xbf5d, 0xa7);
     }
 };
 
 /** @internal
  * Character ROM
  */
-class CharacterRomBank : public Bank
-{
-private:
-    uint8_t rom[4096];
-
-public:
-    CharacterRomBank() {}
-
-    void set(const uint8_t* character)
-    {
-        if (character)
-            memcpy(rom, character, 4096);
-    }
-
-    uint8_t read(const uint_least16_t address)
-    {
-        return rom[address & 0x0fff];
-    }
-
-    void write(const uint_least16_t address, const uint8_t value) {}
-};
+class CharacterRomBank : public romBank<0x1000> {};
 
 #endif
