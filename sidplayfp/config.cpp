@@ -49,7 +49,7 @@ bool Player::config (const sid2_config_t &cfg)
 
     // Check for base sampling frequency
     if (cfg.frequency < 4000)
-    {   // Rev 1.6 (saw) - Added descriptive error
+    {
         m_errorString = ERR_UNSUPPORTED_FREQ;
         goto Player_configure_error;
     }

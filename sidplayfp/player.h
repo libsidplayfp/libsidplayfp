@@ -88,7 +88,6 @@ private:
 
     uint16_t getChecksum(const uint8_t* rom, const int size);
 
-    // Rev 2.0.3 Added - New Mixer Routines
     uint_least32_t (Player::*output) (char *buffer);
 
 #ifdef PC64_TESTSUITE
@@ -128,7 +127,7 @@ public:
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
 
-    EventContext *getEventScheduler() {return m_c64.getEventScheduler(); }
+    EventContext *getEventScheduler() { return m_c64.getEventScheduler(); }
 
     uint_least16_t getCia1TimerA() const { return m_c64.getCia1TimerA(); }
 };

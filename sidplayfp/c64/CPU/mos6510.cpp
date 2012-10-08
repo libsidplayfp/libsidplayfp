@@ -564,7 +564,7 @@ void MOS6510::FetchLowEffAddr (void)
 * </UL>
 */
 void MOS6510::FetchHighEffAddr (void)
-{   // Rev 1.03 (Mike) - Extra +1 removed
+{
     endian_16lo8 (Cycle_Pointer, (Cycle_Pointer + 1) & 0xff);
     endian_16hi8 (Cycle_EffectiveAddress, cpuRead (Cycle_Pointer));
 }
@@ -1327,7 +1327,7 @@ void MOS6510::tay_instr (void)
 }
 
 void MOS6510::tsx_instr (void)
-{   // Rev 1.03 (saw) - Got these tsx and txs reversed
+{
     setFlagsNZ (Register_X = Register_StackPointer);
     interruptsAndNextOpcode ();
 }
@@ -1339,7 +1339,7 @@ void MOS6510::txa_instr (void)
 }
 
 void MOS6510::txs_instr (void)
-{   // Rev 1.03 (saw) - Got these tsx and txs reversed
+{
     Register_StackPointer = Register_X;
     interruptsAndNextOpcode ();
 }
