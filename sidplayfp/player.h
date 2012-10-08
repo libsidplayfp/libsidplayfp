@@ -26,6 +26,7 @@
 
 #include "sid2types.h"
 #include "SidTune.h"
+#include "SidInfoImpl.h"
 
 #include "sidrandom.h"
 #include "mixer.h"
@@ -59,15 +60,13 @@ private:
     static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
 
 private:
-    static const char  *credit[10]; // 10 credits max
-
     c64     m_c64;
 
     Mixer   m_mixer;
 
     // User Configuration Settings
     SidTune      *m_tune;
-    sid2_info_t   m_info;
+    SidInfoImpl   m_info;
     sid2_config_t m_cfg;
 
     const char     *m_errorString;
@@ -110,7 +109,7 @@ public:
     ~Player () {}
 
     const sid2_config_t &config (void) const { return m_cfg; }
-    const sid2_info_t   &info   (void) const { return m_info; }
+    const SidInfo   &info   (void) const { return m_info; }
 
     bool           config       (const sid2_config_t &cfg);
     bool           fastForward  (uint percent);

@@ -84,18 +84,18 @@ bool Player::config (const sid2_config_t &cfg)
     if (m_tune && tuneInfo->sidChipBase2()) {
         // Assumed to be in d4xx-d7xx range
         m_c64.setSecondSIDAddress(tuneInfo->sidChipBase2());
-        m_info.channels = 2;
+        m_info.m_channels = 2;
     } else if (cfg.forceDualSids) {
         /* Tune didn't tell us where; let's put the second SID
          * in every slot apart from 0xd400 - 0xd420. */
         for (int i = 0xd420; i < 0xd7ff; i += 0x20)
             m_c64.setSecondSIDAddress(i);
-        m_info.channels = 2;
+        m_info.m_channels = 2;
     } else
-        m_info.channels = 1;
+        m_info.m_channels = 1;
 
     /* without stereo SID mode, we don't emulate the second chip! */
-    if (m_info.channels == 1)
+    if (m_info.m_channels == 1)
         m_c64.setSid(1, 0);
 
     m_mixer.setSids(m_c64.getSid(0), m_c64.getSid(1));
@@ -143,20 +143,20 @@ float64_t Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced
     case SidTuneInfo::CLOCK_PAL:
         cpuFreq = c64::CLOCK_FREQ_PAL;
         if (tuneInfo->songSpeed() == SidTuneInfo::SPEED_CIA_1A)
-            m_info.speedString = TXT_PAL_CIA;
+            m_info.m_speedString = TXT_PAL_CIA;
         else if (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC)
-            m_info.speedString = TXT_PAL_VBI_FIXED;
+            m_info.m_speedString = TXT_PAL_VBI_FIXED;
         else
-            m_info.speedString = TXT_PAL_VBI;
+            m_info.m_speedString = TXT_PAL_VBI;
         break;
     case SidTuneInfo::CLOCK_NTSC:
         cpuFreq = c64::CLOCK_FREQ_NTSC;
         if (tuneInfo->songSpeed() == SidTuneInfo::SPEED_CIA_1A)
-            m_info.speedString = TXT_NTSC_CIA;
+            m_info.m_speedString = TXT_NTSC_CIA;
         else if (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL)
-            m_info.speedString = TXT_NTSC_VBI_FIXED;
+            m_info.m_speedString = TXT_NTSC_VBI_FIXED;
         else
-            m_info.speedString = TXT_NTSC_VBI;
+            m_info.m_speedString = TXT_NTSC_VBI;
         break;
     }
 

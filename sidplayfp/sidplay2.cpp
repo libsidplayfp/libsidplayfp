@@ -67,7 +67,7 @@ uint_least32_t sidplay2::play (short *buffer, uint_least32_t count)
 bool sidplay2::load (SidTune *tune)
 {   return sidplayer.load (tune); }
 
-const sid2_info_t &sidplay2::info () const
+const SidInfo &sidplay2::info () const
 {   return sidplayer.info (); }
 
 uint_least32_t sidplay2::time (void) const

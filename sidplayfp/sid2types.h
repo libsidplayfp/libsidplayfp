@@ -96,28 +96,4 @@ struct sid2_config_t
     bool                fastSampling;
 };
 
-/**
-* sid2_info_t
-*/
-struct sid2_info_t
-{
-    const char        *name;
-    const char        *version;
-    const char       **credits;
-
-    /// Number of SIDs supported by this library
-    uint               maxsids;
-
-    /// Number of output channels (1-mono, 2-stereo)
-    uint               channels;
-
-    uint_least16_t     driverAddr;
-    uint_least16_t     driverLength;
-
-    uint_least16_t     powerOnDelay;
-
-    /// Describes the speed current song is running at
-    const char        *speedString;
-};
-
 #endif // SID2TYPES_H

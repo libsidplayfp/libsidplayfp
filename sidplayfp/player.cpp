@@ -25,22 +25,9 @@
 #include <string.h>
 #include <time.h>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "player.h"
 
 #include "psiddrv.h"
-
-#ifndef PACKAGE_NAME
-#   define PACKAGE_NAME PACKAGE
-#endif
-
-#ifndef PACKAGE_VERSION
-#   define PACKAGE_VERSION VERSION
-#endif
-
 
 SIDPLAYFP_NAMESPACE_START
 
@@ -50,8 +37,6 @@ const char  TXT_NA[]             = "NA";
 // Error Strings
 const char  ERR_MISSING_ROM[]    = "SIDPLAYER ERROR: Roms have not been loaded.";
 const char  ERR_UNKNOWN_ROM[]    = "SIDPLAYER ERROR: Unknown Rom.";
-
-const char  *Player::credit[];
 
 
 Player::Player (void)
@@ -66,17 +51,6 @@ Player::Player (void)
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
 #endif
-
-    // Setup exported info
-    m_info.name            = PACKAGE_NAME;
-    m_info.version         = PACKAGE_VERSION;
-    m_info.credits         = credit;
-    m_info.maxsids         = SidBank::MAX_SIDS;
-    m_info.channels        = 1;
-    m_info.driverAddr      = 0;
-    m_info.driverLength    = 0;
-    m_info.speedString     = TXT_NA;
-
     // Configure default settings
     m_cfg.clockDefault    = SID2_CLOCK_PAL;
     m_cfg.clockForced     = false;
@@ -95,15 +69,9 @@ Player::Player (void)
     config (m_cfg);
 
     // Get component credits
-    credit[0] = PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\n"
-                "\tCopyright (C) 2000 Simon White\n"
-                "\tCopyright (C) 2007-2010 Antti Lankila\n"
-                "\tCopyright (C) 2010-2012 Leandro Nini\n"
-                "\thttp://sourceforge.net/projects/sidplay-residfp/\n";
-    credit[1] = m_c64.cpuCredits ();
-    credit[2] = m_c64.ciaCredits ();
-    credit[3] = m_c64.vicCredits ();
-    credit[4] = 0;
+    m_info.m_credits.push_back(m_c64.cpuCredits());
+    m_info.m_credits.push_back(m_c64.ciaCredits());
+    m_info.m_credits.push_back(m_c64.vicCredits());
 }
 
 uint16_t Player::getChecksum(const uint8_t* rom, const int size)
@@ -212,9 +180,9 @@ bool Player::initialise ()
         return false;
     }
 
-    m_info.driverAddr = driver.driverAddr();
-    m_info.driverLength = driver.driverLength();
-    m_info.powerOnDelay = powerOnDelay;
+    m_info.m_driverAddr = driver.driverAddr();
+    m_info.m_driverLength = driver.driverLength();
+    m_info.m_powerOnDelay = powerOnDelay;
 
     if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()))
     {

@@ -30,6 +30,7 @@
 #include "sidversion.h"
 
 class  SidTune;
+class  SidInfo;
 class  EventContext;
 class  SidTuneInfo;
 
@@ -63,7 +64,7 @@ public:
     *
     * @return a const reference to the current info.
     */
-    const sid2_info_t &info(void) const;
+    const SidInfo &info(void) const;
 
     /**
     * Configure the engine.

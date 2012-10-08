@@ -68,6 +68,7 @@ sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
 sidplayfp/sidmemory.h \
 sidplayfp/sidplay2.cpp \
+sidplayfp/SidInfoImpl.h \
 sidplayfp/SidTune.cpp \
 sidplayfp/SmartPtr.h \
 sidplayfp/psiddrv.a65 \
@@ -127,6 +128,7 @@ sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
 sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/sidconfig.h \
 sidplayfp/event.h \
+sidplayfp/SidInfo.h \
 sidplayfp/SidTuneInfo.h \
 sidplayfp/sid2types.h \
 sidplayfp/sidbuilder.h \
