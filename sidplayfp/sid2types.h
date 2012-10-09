@@ -55,7 +55,6 @@ struct sid2_config_t
     bool                clockForced;
 
     bool                forceDualSids;
-    bool                emulateStereo;
 
     /// Sampling frequency
     uint_least32_t      frequency;
