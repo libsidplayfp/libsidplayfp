@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
+#include <memory>
 
 #include "sidplayfp/sidplay2.h"
 #include "sidplayfp/SidTune.h"
@@ -89,7 +90,7 @@ int main(int argc, char* argv[])
 
     m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic, (const uint8_t*)chargen);
 
-    FakeBuilder* rs = new FakeBuilder("Test");
+    std::auto_ptr<FakeBuilder> rs(new FakeBuilder("Test"));
 
     char name[0x100] = PC64_TESTSUITE;
 
@@ -103,44 +104,36 @@ int main(int argc, char* argv[])
         strcat (name, " start.prg");
     }
 
-    SidTune* tune = new SidTune(name);
+    std::auto_ptr<SidTune> tune(new SidTune(name));
 
     if (!tune->getStatus())
     {
         printf("Error: %s\n", tune->statusString());
-        goto error;
+        return -1;
     }
 
-    {
     SidConfig cfg;
     cfg.clockForced = false;
     cfg.frequency = 48000;
     cfg.samplingMethod = SidConfig::INTERPOLATE;
     cfg.fastSampling = false;
     cfg.playback = SidConfig::STEREO;
-    cfg.sidEmulation = rs;
+    cfg.sidEmulation = rs.get();
     cfg.sidDefault = SidConfig::MOS6581;
     m_engine.config(cfg);
-    }
 
     tune->selectSong(0);
 
-    m_engine.load(tune);
+    m_engine.load(tune.get());
 
     if (!m_engine.getStatus())
     {
         printf("%s\n", m_engine.error());
-        goto error;
+        return -1;
     }
 
+    for (;;)
     {
-        for (;;)
-        {
-            m_engine.play(0, 48000);
-        }
+        m_engine.play(0, 48000);
     }
-
-error:
-    delete tune;
-    delete rs;
 }
