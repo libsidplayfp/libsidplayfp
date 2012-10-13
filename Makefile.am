@@ -126,7 +126,7 @@ sidplayfp_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION)
 sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
 
 sidplayfp_libsidplayfp_la_HEADERS = \
-sidplayfp/sidconfig.h \
+sidplayfp/siddefs.h \
 sidplayfp/event.h \
 sidplayfp/SidInfo.h \
 sidplayfp/SidTuneInfo.h \

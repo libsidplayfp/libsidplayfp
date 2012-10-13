@@ -25,7 +25,7 @@
 
 #include <vector>
 #include "sidplayfp/sidbuilder.h"
-#include "sidplayfp/sidconfig.h"
+#include "sidplayfp/siddefs.h"
 
 class sidemu;
 

@@ -23,7 +23,7 @@
 #ifndef SIDTUNE_H
 #define SIDTUNE_H
 
-#include "sidconfig.h"
+#include "siddefs.h"
 #include "SidTuneInfo.h"
 
 #include <stdint.h>

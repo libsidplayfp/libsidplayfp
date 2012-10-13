@@ -19,7 +19,7 @@
 #ifndef _stdint_h_
 #define _stdint_h_
 
-#include "sidconfig.h"
+#include "siddefs.h"
 
 /* Wanted: Exactly 8-bit unsigned/signed (1 byte). */
 typedef signed char        int8_t;

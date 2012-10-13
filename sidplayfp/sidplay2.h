@@ -26,7 +26,7 @@
 #include <stdio.h>
 
 #include "sid2types.h"
-#include "sidconfig.h"
+#include "siddefs.h"
 #include "sidversion.h"
 
 class  SidTune;

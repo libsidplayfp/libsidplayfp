@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include "sidconfig.h"
+#include "siddefs.h"
 
 typedef int_fast64_t event_clock_t;
 

@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include "sidplayfp/sidconfig.h"
+#include "sidplayfp/siddefs.h"
 
 class SidTune;
 class iniParser;
