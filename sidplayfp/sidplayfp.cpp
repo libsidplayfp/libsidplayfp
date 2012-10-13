@@ -34,13 +34,13 @@
 #  include <config.h>
 #endif
 #include "player.h"
-#include "sidplay2.h"
+#include "sidplayfp.h"
 
 #ifdef HAVE_EXCEPTIONS
 #   include <new>
 #endif
 
-sidplay2::sidplay2 ()
+sidplayfp::sidplayfp ()
 #ifdef HAVE_EXCEPTIONS
 : sidplayer (*(new(std::nothrow) SIDPLAYFP_NAMESPACE::Player))
 #else
@@ -49,53 +49,53 @@ sidplay2::sidplay2 ()
 {
 }
 
-sidplay2::~sidplay2 ()
+sidplayfp::~sidplayfp ()
 {   if (&sidplayer) delete &sidplayer; }
 
-bool sidplay2::config (const SidConfig &cfg)
+bool sidplayfp::config (const SidConfig &cfg)
 {   return sidplayer.config (cfg); }
 
-const SidConfig &sidplay2::config (void) const
+const SidConfig &sidplayfp::config (void) const
 {   return sidplayer.config (); }
 
-void sidplay2::stop (void)
+void sidplayfp::stop (void)
 {   sidplayer.stop (); }
 
-uint_least32_t sidplay2::play (short *buffer, uint_least32_t count)
+uint_least32_t sidplayfp::play (short *buffer, uint_least32_t count)
 {   return sidplayer.play (buffer, count); }
 
-bool sidplay2::load (SidTune *tune)
+bool sidplayfp::load (SidTune *tune)
 {   return sidplayer.load (tune); }
 
-const SidInfo &sidplay2::info () const
+const SidInfo &sidplayfp::info () const
 {   return sidplayer.info (); }
 
-uint_least32_t sidplay2::time (void) const
+uint_least32_t sidplayfp::time (void) const
 {   return sidplayer.time (); }
 
-const char *sidplay2::error (void) const
+const char *sidplayfp::error (void) const
 {   return sidplayer.error (); }
 
-bool  sidplay2::fastForward  (unsigned int percent)
+bool  sidplayfp::fastForward  (unsigned int percent)
 {   return sidplayer.fastForward (percent); }
 
-void sidplay2::mute(const unsigned int sidNum, const unsigned int voice, const bool enable)
+void sidplayfp::mute(const unsigned int sidNum, const unsigned int voice, const bool enable)
 {   sidplayer.mute(sidNum, voice, enable); }
 
-void sidplay2::debug (bool enable, FILE *out)
+void sidplayfp::debug (bool enable, FILE *out)
 {   sidplayer.debug (enable, out); }
 
-bool sidplay2::isPlaying (void) const
+bool sidplayfp::isPlaying (void) const
 {   return sidplayer.isPlaying (); }
 
-void sidplay2::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
+void sidplayfp::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {   sidplayer.setRoms(kernal, basic, character); }
 
-EventContext *sidplay2::getEventContext()
+EventContext *sidplayfp::getEventContext()
 {   return sidplayer.getEventScheduler(); }
 
-bool sidplay2::getStatus() const
+bool sidplayfp::getStatus() const
 { return sidplayer.getStatus(); }
 
-uint_least16_t sidplay2::getCia1TimerA() const
+uint_least16_t sidplayfp::getCia1TimerA() const
 { return sidplayer.getCia1TimerA(); }

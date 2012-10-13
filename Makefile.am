@@ -68,7 +68,7 @@ sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
 sidplayfp/SidConfig.cpp \
 sidplayfp/sidmemory.h \
-sidplayfp/sidplay2.cpp \
+sidplayfp/sidplayfp.cpp \
 sidplayfp/SidInfoImpl.h \
 sidplayfp/SidTune.cpp \
 sidplayfp/SmartPtr.h \
@@ -134,7 +134,7 @@ sidplayfp/SidConfig.h \
 sidplayfp/SidInfo.h \
 sidplayfp/SidTuneInfo.h \
 sidplayfp/sidbuilder.h \
-sidplayfp/sidplay2.h \
+sidplayfp/sidplayfp.h \
 sidplayfp/SidTune.h \
 utils/SidDatabase.h
 

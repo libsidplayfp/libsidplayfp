@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SIDPLAY2_H
-#define SIDPLAY2_H
+#ifndef SIDPLAYFP_H
+#define SIDPLAYFP_H
 
 #include <stdio.h>
 
@@ -41,16 +41,16 @@ namespace SIDPLAYFP_NAMESPACE
 }
 
 /**
-* sidplay2
+* sidplayfp
 */
-class SID_EXTERN sidplay2
+class SID_EXTERN sidplayfp
 {
 private:
     SIDPLAYFP_NAMESPACE::Player &sidplayer;
 
 public:
-    sidplay2 ();
-    virtual ~sidplay2 ();
+    sidplayfp ();
+    virtual ~sidplayfp ();
 
     /**
     * Get the current engine configuration.
@@ -172,4 +172,4 @@ public:
     uint_least16_t getCia1TimerA() const;
 };
 
-#endif // SIDPLAY2_H
+#endif // SIDPLAYFP_H

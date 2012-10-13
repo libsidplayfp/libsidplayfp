@@ -27,7 +27,7 @@
 #include <fstream>
 #include <memory>
 
-#include "sidplayfp/sidplay2.h"
+#include "sidplayfp/sidplayfp.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/sidemu.h"
@@ -78,7 +78,7 @@ void loadRom(const char* path, char* buffer)
 
 int main(int argc, char* argv[])
 {
-    sidplay2 m_engine;
+    sidplayfp m_engine;
 
     char kernal[8192];
     char basic[8192];
