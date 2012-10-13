@@ -22,20 +22,38 @@
 #define ROMCHECK_H
 
 #include <stdint.h>
+#include <map>
 
+/** @internal
+*/
 class romCheck
 {
 protected:
-    static const char MSG_UNKNOWN_ROM[];
+    /**
+     * Maps checksums to respective ROM description.
+     * Must be filled by derived class.
+     */
+    std::map<int, const char*> m_checksums;
 
-protected:
+    /**
+     * Pointer to the ROM buffer
+     */ 
     const uint8_t* m_rom;
+
+private:
+    /**
+     * Size of the ROM buffer.
+     */
     unsigned int m_size;
-    uint16_t m_checksum;
 
 private:
     romCheck();
 
+    /**
+     * Calculate the checksum.
+     * For now it's a simple sum of all the bytes
+     * should be changed to an md5 digest.
+     */
     uint16_t checksum() const
     {
         uint16_t checksum = 0;
@@ -46,103 +64,89 @@ private:
     }
 
 protected:
+    /**
+     * Construct the class.
+     *
+     * @param rom pointer to the ROM buffer
+     * @param size size of the ROM buffer
+     */
     romCheck(const uint8_t* rom, int size) :
       m_rom(rom),
-      m_size(size),
-      m_checksum(checksum()) {}
+      m_size(size) {}
+
+public:
+    /**
+     * Get ROM description.
+     *
+     * @return the ROM description or "Unknown Rom".
+     */
+    const char* info() const
+    {
+        std::map<int, const char*>::const_iterator res = m_checksums.find(checksum());
+        return (res!=m_checksums.end())?res->second:"Unknown Rom";
+    }
 };
 
-const char romCheck::MSG_UNKNOWN_ROM[] = "Unknown Rom.";
-
+/** @internal
+* romCheck implementation specific for kernal ROM.
+*/
 class kernalCheck : public romCheck
 {
 private:
-    // Kernal revision is located at 0xff80
+    /**
+     * Get Kernal revision ID which is located at 0xff80.
+     */
     uint8_t revision() const { return m_rom[0xff80 - 0xe000]; }
 
 public:
     kernalCheck(const uint8_t* kernal) :
-      romCheck(kernal, 0x2000) {}
-
-    const char* info() const
+      romCheck(kernal, 0x2000)
     {
         switch (revision())
         {
         case 0x00:
-            if (m_checksum == 0xc70b)
-            {
-                return "C64 KERNAL second revision";
-            }
-            if (m_checksum == 0xd183)
-            {
-                return "C64 KERNAL second revision (Japanese).";
-            }
+            m_checksums.insert(std::pair<int, const char*>(0xc70b, "C64 KERNAL second revision"));
+            m_checksums.insert(std::pair<int, const char*>(0xd183, "C64 KERNAL second revision (Japanese)"));
             break;
         case 0x03:
-            if (m_checksum == 0xc70a)
-            {
-                return "C64 KERNAL third revision";
-            }
-            if (m_checksum == 0xc5c9)
-            {
-                return "C64 KERNAL third revision (Swedish)";
-            }
+            m_checksums.insert(std::pair<int, const char*>(0xc70a, "C64 KERNAL third revision"));
+            m_checksums.insert(std::pair<int, const char*>(0xc5c9, "C64 KERNAL third revision (Swedish)"));
             break;
         case 0xaa:
-            if (m_checksum == 0xd4fd)
-            {
-                return "C64 KERNAL first revision";
-            }
+            m_checksums.insert(std::pair<int, const char*>(0xd4fd, "C64 KERNAL first revision"));
             break;
         case 0x43: // Commodore SX-64 + Swedish version
-            if (m_checksum == 0xc70b)
-            {
-                return "Commodore SX-64 KERNAL";
-            }
-            if (m_checksum == 0xc788)
-            {
-                return "Commodore SX-64 KERNAL (Swedish)";
-            }
+            m_checksums.insert(std::pair<int, const char*>(0xc70b, "Commodore SX-64 KERNAL"));
+            m_checksums.insert(std::pair<int, const char*>(0xc788, "Commodore SX-64 KERNAL (Swedish)"));
             break;
         }
-
-        return MSG_UNKNOWN_ROM;
     }
 };
 
+/** @internal
+* romCheck implementation specific for basic ROM.
+*/
 class basicCheck : public romCheck
 {
 public:
-    basicCheck(const uint8_t* basic) : romCheck(basic, 0x2000) {}
-
-    const char* info() const
+    basicCheck(const uint8_t* basic) :
+      romCheck(basic, 0x2000)
     {
-        if (m_checksum == 0x3d56)
-        {
-            return "C64 BASIC V2";
-        }
-
-        return MSG_UNKNOWN_ROM;
+        m_checksums.insert(std::pair<int, const char*>(0x3d56, "C64 BASIC V2"));
     }
 };
 
+/** @internal
+* romCheck implementation specific for character generator ROM.
+*/
 class chargenCheck : public romCheck
 {
 public:
-    chargenCheck(const uint8_t* chargen) : romCheck(chargen, 0x1000) {}
-
-    const char* info() const
+    chargenCheck(const uint8_t* chargen) :
+      romCheck(chargen, 0x1000)
     {
-        if (m_checksum == 0xf7f8)
-        {
-            return "C64 character generator";
-        }
-        if (m_checksum == 0xf800)
-        {
-            return "C64 character generator (Japanese)";
-        }
-
-        return MSG_UNKNOWN_ROM;
+        m_checksums.insert(std::pair<int, const char*>(0xf7f8, "C64 character generator"));
+        m_checksums.insert(std::pair<int, const char*>(0xf800, "C64 character generator (Japanese)"));
     }
 };
 
