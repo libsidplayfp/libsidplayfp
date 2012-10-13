@@ -77,15 +77,15 @@ void c64::setMainCpuSpeed(const double cpuFreq)
     if (m_cpuFreq == CLOCK_FREQ_PAL)
     {
         const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
-        cia1.clock (clockPAL);
-        cia2.clock (clockPAL);
+        cia1.setDayOfTimeRate (clockPAL);
+        cia2.setDayOfTimeRate (clockPAL);
         vic.chip   (MOS6569);
     }
     else
     {
         const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
-        cia1.clock (clockNTSC);
-        cia2.clock (clockNTSC);
+        cia1.setDayOfTimeRate (clockNTSC);
+        cia2.setDayOfTimeRate (clockNTSC);
         vic.chip   (MOS6567R8);
     }
 }

@@ -459,7 +459,7 @@ public:
     *
     * @param clock
     */
-    void clock(float64_t clock);
+    void setDayOfTimeRate(float64_t clock);
 };
 
 #endif // MOS6526_H
