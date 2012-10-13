@@ -60,7 +60,7 @@ bool Player::config (const sid2_config_t &cfg)
         tuneInfo = m_tune->getInfo();
 
         // Determine clock speed
-        const float64_t cpuFreq = clockSpeed (cfg.clockDefault, cfg.clockForced);
+        const double cpuFreq = clockSpeed (cfg.clockDefault, cfg.clockForced);
 
         // SID emulation setup (must be performed before the
         // environment setup call)
@@ -116,7 +116,7 @@ Player_configure_error:
 }
 
 // Clock speed changes due to loading a new song
-float64_t Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced)
+double Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -136,7 +136,7 @@ float64_t Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced
         }
     }
 
-    float64_t cpuFreq;
+    double cpuFreq;
 
     switch (clockSpeed)
     {
@@ -198,7 +198,7 @@ sid2_model_t Player::getModel(const SidTuneInfo::model_t sidModel, const sid2_mo
 
 bool Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
                        const bool forced, const int channels,
-                       const float64_t cpuFreq, const int frequency,
+                       const double cpuFreq, const int frequency,
                        const sampling_method_t sampling, const bool fastSampling)
 {
     for (int i = 0; i < SidBank::MAX_SIDS; i++)

@@ -51,8 +51,8 @@ public:
     * false will give you all available sids.
     *    return values: 0 endless, positive is available sids.
     */
-    uint        devices (const bool created);
-    uint        create  (uint sids);
+    unsigned int        devices (const bool created);
+    unsigned int        create  (unsigned int sids);
     sidemu     *lock    (EventContext *env, const sid2_model_t model);
     void        unlock  (sidemu *device);
     void        remove  (void);

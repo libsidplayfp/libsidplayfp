@@ -46,7 +46,7 @@ HsidDLL2 hsid2 = {0};
 
 bool HardSIDBuilder::m_initialised = false;
 #ifndef _WIN32
-uint HardSIDBuilder::m_count = 0;
+unsigned int HardSIDBuilder::m_count = 0;
 #endif
 
 HardSIDBuilder::HardSIDBuilder (const char * const name)
@@ -75,13 +75,13 @@ HardSIDBuilder::~HardSIDBuilder (void)
 }
 
 // Create a new sid emulation.  Called by libsidplay2 only
-uint HardSIDBuilder::create (uint sids)
+unsigned int HardSIDBuilder::create (unsigned int sids)
 {
     HardSID *sid = 0;
     m_status     = true;
 
     // Check available devices
-    uint count = devices (false);
+    unsigned int count = devices (false);
     if (!m_status)
         goto HardSIDBuilder_create_error;
     if (count && (count < sids))
@@ -118,7 +118,7 @@ HardSIDBuilder_create_error:
     return count;
 }
 
-uint HardSIDBuilder::devices (const bool created)
+unsigned int HardSIDBuilder::devices (const bool created)
 {
     m_status = true;
     if (created)
@@ -129,7 +129,7 @@ uint HardSIDBuilder::devices (const bool created)
 #ifdef _WIN32
     if (hsid2.Instance)
     {
-        uint count = hsid2.Devices ();
+        unsigned int count = hsid2.Devices ();
         if (count == 0)
         {
             sprintf (m_errorBuffer, "HARDSID ERROR: No devices found (run HardSIDConfig)");

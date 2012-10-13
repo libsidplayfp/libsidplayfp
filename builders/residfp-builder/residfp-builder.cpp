@@ -46,13 +46,13 @@ ReSIDfpBuilder::~ReSIDfpBuilder (void)
 }
 
 // Create a new sid emulation.  Called by libsidplay2 only
-uint ReSIDfpBuilder::create (uint sids)
+unsigned int ReSIDfpBuilder::create (unsigned int sids)
 {
     ReSIDfp *sid = 0;
     m_status   = true;
 
     // Check available devices
-    uint count = devices (false);
+    unsigned int count = devices (false);
     if (!m_status)
         goto ReSIDfpBuilder_create_error;
     if (count && (count < sids))
@@ -114,7 +114,7 @@ const char *ReSIDfpBuilder::credits ()
 }
 
 
-uint ReSIDfpBuilder::devices (const bool created)
+unsigned int ReSIDfpBuilder::devices (const bool created)
 {
     m_status = true;
     if (created)

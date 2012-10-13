@@ -25,7 +25,6 @@
 
 #include <stdint.h>
 
-#include "sidplayfp/sid2types.h"
 #include "sidplayfp/component.h"
 #include "sidplayfp/EventScheduler.h"
 
@@ -459,7 +458,7 @@ public:
     *
     * @param clock
     */
-    void setDayOfTimeRate(float64_t clock);
+    void setDayOfTimeRate(double clock);
 };
 
 #endif // MOS6526_H

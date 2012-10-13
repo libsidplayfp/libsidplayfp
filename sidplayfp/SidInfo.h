@@ -38,10 +38,10 @@ public:
     virtual const char *credits(int i) const =0;
 
     /// Number of SIDs supported by this library
-    virtual uint maxsids() const =0;
+    virtual unsigned int maxsids() const =0;
 
     /// Number of output channels (1-mono, 2-stereo)
-    virtual uint channels() const =0;
+    virtual unsigned int channels() const =0;
 
     virtual uint_least16_t driverAddr() const =0;
     virtual uint_least16_t driverLength() const =0;

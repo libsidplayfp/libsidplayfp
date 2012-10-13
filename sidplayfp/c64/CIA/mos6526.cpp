@@ -311,9 +311,9 @@ void MOS6526::clear(void)
 }
 
 
-void MOS6526::setDayOfTimeRate(float64_t clock)
+void MOS6526::setDayOfTimeRate(double clock)
 {
-    m_todPeriod = (event_clock_t) (clock * (float64_t) (1 << 7));
+    m_todPeriod = (event_clock_t) (clock * (double) (1 << 7));
 }
 
 void MOS6526::reset(void)

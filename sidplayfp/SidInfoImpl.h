@@ -55,9 +55,9 @@ public:
 
     std::string m_speedString;
 
-    const uint m_maxsids;
+    const unsigned int m_maxsids;
 
-    uint m_channels;
+    unsigned int m_channels;
 
     uint_least16_t m_driverAddr;
     uint_least16_t m_driverLength;
@@ -91,9 +91,9 @@ public:
     unsigned int numberOfCredits() const { return m_credits.size(); }
     const char *credits(int i) const { return i<m_credits.size()?m_credits[i].c_str():""; }
 
-    uint maxsids() const { return m_maxsids; }
+    unsigned int maxsids() const { return m_maxsids; }
 
-    uint channels() const { return m_channels; }
+    unsigned int channels() const { return m_channels; }
 
     uint_least16_t driverAddr() const { return m_driverAddr; }
     uint_least16_t driverLength() const { return m_driverLength; }

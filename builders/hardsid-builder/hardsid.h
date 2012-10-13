@@ -40,7 +40,7 @@ private:
     std::vector<sidemu *> sidobjs;
 
 #ifndef _WIN32
-    static uint m_count;
+    static unsigned int m_count;
 #endif
 
     int init (void);
@@ -55,7 +55,7 @@ public:
     * false will give you all available sids.
     *    return values: 0 endless, positive is available sids.
     */
-    uint        devices (const bool created);
+    unsigned int        devices (const bool created);
     sidemu     *lock    (EventContext *env, const sid2_model_t model);
     void        unlock  (sidemu *device);
     void        remove  (void);
@@ -64,7 +64,7 @@ public:
     void        flush   (void);
     void        filter  (const bool enable);
 
-    uint        create  (uint sids);
+    unsigned int        create  (unsigned int sids);
 };
 
 #endif // HARDSID_H

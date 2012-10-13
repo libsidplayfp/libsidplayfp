@@ -27,7 +27,6 @@
 #include "mos6510.h"
 
 #include "opcodes.h"
-#include "sidplayfp/sid2types.h"
 
 #ifdef DEBUG
 #  include "mos6510debug.h"
@@ -908,15 +907,15 @@ void MOS6510::xas_instr (void)
 /** BCD adding */
 void MOS6510::doADC (void)
 {
-    const uint C      = flagC ? 1 : 0;
-    const uint A      = Register_Accumulator;
-    const uint s      = Cycle_Data;
-    const uint regAC2 = A + s + C;
+    const unsigned int C      = flagC ? 1 : 0;
+    const unsigned int A      = Register_Accumulator;
+    const unsigned int s      = Cycle_Data;
+    const unsigned int regAC2 = A + s + C;
 
     if (flagD)
     {   // BCD mode
-        uint lo = (A & 0x0f) + (s & 0x0f) + C;
-        uint hi = (A & 0xf0) + (s & 0xf0);
+        unsigned int lo = (A & 0x0f) + (s & 0x0f) + C;
+        unsigned int hi = (A & 0xf0) + (s & 0xf0);
         if (lo > 0x09)
             lo += 0x06;
         if (lo > 0x0f)
@@ -942,10 +941,10 @@ void MOS6510::doADC (void)
 /** BCD subtracting */
 void MOS6510::doSBC (void)
 {
-    const uint C      = flagC? 0 : 1;
-    const uint A      = Register_Accumulator;
-    const uint s      = Cycle_Data;
-    const uint regAC2 = A - s - C;
+    const unsigned int C      = flagC? 0 : 1;
+    const unsigned int A      = Register_Accumulator;
+    const unsigned int s      = Cycle_Data;
+    const unsigned int regAC2 = A - s - C;
 
     flagC = regAC2 < 0x100;
     flagV =((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80);
@@ -953,8 +952,8 @@ void MOS6510::doSBC (void)
 
     if (flagD)
     {   // BCD mode
-        uint lo = (A & 0x0f) - (s & 0x0f) - C;
-        uint hi = (A & 0xf0) - (s & 0xf0);
+        unsigned int lo = (A & 0x0f) - (s & 0x0f) - C;
+        unsigned int hi = (A & 0xf0) - (s & 0xf0);
         if (lo & 0x10)
         {
              lo -= 0x06;
@@ -1287,7 +1286,7 @@ void MOS6510::rora_instr (void)
 
 void MOS6510::sbx_instr (void)
 {
-    const uint tmp = (Register_X & Register_Accumulator) - Cycle_Data;
+    const unsigned int tmp = (Register_X & Register_Accumulator) - Cycle_Data;
     setFlagsNZ (Register_X = tmp & 0xff);
     flagC = tmp < 0x100;
     interruptsAndNextOpcode ();

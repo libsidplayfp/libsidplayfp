@@ -76,7 +76,7 @@ uint_least32_t sidplay2::time (void) const
 const char *sidplay2::error (void) const
 {   return sidplayer.error (); }
 
-bool  sidplay2::fastForward  (uint percent)
+bool  sidplay2::fastForward  (unsigned int percent)
 {   return sidplayer.fastForward (percent); }
 
 void sidplay2::mute(const unsigned int sidNum, const unsigned int voice, const bool enable)

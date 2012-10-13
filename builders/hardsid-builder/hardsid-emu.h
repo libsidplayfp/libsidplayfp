@@ -125,8 +125,8 @@ private:
     int            m_handle;
 #endif
 
-    static const   uint voices;
-    static         uint sid;
+    static const   unsigned int voices;
+    static         unsigned int sid;
     static char    credit[100];
 
 
@@ -137,7 +137,7 @@ private:
 
     // Must stay in this order
     bool           muted[HARDSID_VOICES];
-    uint           m_instance;
+    unsigned int           m_instance;
     bool           m_status;
     bool           m_locked;
 

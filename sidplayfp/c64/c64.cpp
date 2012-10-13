@@ -22,11 +22,11 @@
 
 #include "c64.h"
 
-const float64_t c64::CLOCK_FREQ_NTSC = 1022727.14;
-const float64_t c64::CLOCK_FREQ_PAL  = 985248.4;
+const double c64::CLOCK_FREQ_NTSC = 1022727.14;
+const double c64::CLOCK_FREQ_PAL  = 985248.4;
 
-const float64_t c64::VIC_FREQ_PAL    = 50.0;
-const float64_t c64::VIC_FREQ_NTSC   = 60.0;
+const double c64::VIC_FREQ_PAL    = 50.0;
+const double c64::VIC_FREQ_NTSC   = 60.0;
 
 c64::c64()
 :c64env  (&m_scheduler),
@@ -76,14 +76,14 @@ void c64::setMainCpuSpeed(const double cpuFreq)
     m_cpuFreq = cpuFreq;
     if (m_cpuFreq == CLOCK_FREQ_PAL)
     {
-        const float64_t clockPAL = m_cpuFreq / VIC_FREQ_PAL;
+        const double clockPAL = m_cpuFreq / VIC_FREQ_PAL;
         cia1.setDayOfTimeRate (clockPAL);
         cia2.setDayOfTimeRate (clockPAL);
         vic.chip   (MOS6569);
     }
     else
     {
-        const float64_t clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
+        const double clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
         cia1.setDayOfTimeRate (clockNTSC);
         cia2.setDayOfTimeRate (clockNTSC);
         vic.chip   (MOS6567R8);

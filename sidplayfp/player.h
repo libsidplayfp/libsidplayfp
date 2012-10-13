@@ -77,11 +77,11 @@ private:
     sidrandom       m_rand;
 
 private:
-    float64_t clockSpeed     (const sid2_clock_t defaultClock, const bool forced);
+    double clockSpeed     (const sid2_clock_t defaultClock, const bool forced);
     bool      initialise     (void);
     bool      sidCreate(sidbuilder *builder, const sid2_model_t defaultModel,
                        const bool forced, const int channels,
-                       const float64_t cpuFreq, const int frequency,
+                       const double cpuFreq, const int frequency,
                        const sampling_method_t sampling, const bool fastSampling);
 
     static sid2_model_t getModel (const SidTuneInfo::model_t sidModel, const sid2_model_t defaultModel, const bool forced);
@@ -111,9 +111,9 @@ public:
     const SidInfo   &info   (void) const { return m_info; }
 
     bool           config       (const sid2_config_t &cfg);
-    bool           fastForward  (uint percent);
+    bool           fastForward  (unsigned int percent);
     bool           load         (SidTune *tune);
-    float64_t      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
+    double      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     bool           isPlaying    (void) const { return m_isPlaying; }
     void           stop         (void);

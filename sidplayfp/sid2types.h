@@ -27,9 +27,6 @@
 
 class sidbuilder;
 
-typedef unsigned int uint;
-typedef double   float64_t;
-
 #ifndef SIDPLAY2_DEFAULTS
 #define SIDPLAY2_DEFAULTS
     // Default settings

@@ -44,8 +44,8 @@
 #define HSID_IOCTL_READ      _IOWR('S', 9, int*)
 
 bool       HardSID::m_sidFree[16] = {0};
-const uint HardSID::voices = HARDSID_VOICES;
-uint       HardSID::sid = 0;
+const unsigned int HardSID::voices = HARDSID_VOICES;
+unsigned int       HardSID::sid = 0;
 char       HardSID::credit[];
 
 HardSID::HardSID (sidbuilder *builder)
@@ -57,8 +57,8 @@ HardSID::HardSID (sidbuilder *builder)
  m_status(false),
  m_locked(false)
 {
-    uint num = 16;
-    for ( uint i = 0; i < 16; i++ )
+    unsigned int num = 16;
+    for ( unsigned int i = 0; i < 16; i++ )
     {
         if(m_sidFree[i] == 0)
         {
@@ -112,7 +112,7 @@ HardSID::~HardSID()
 
 void HardSID::reset (uint8_t volume)
 {
-    for (uint i= 0; i < voices; i++)
+    for (unsigned int i= 0; i < voices; i++)
         muted[i] = false;
     ioctl(m_handle, HSID_IOCTL_RESET, volume);
     m_accessClk = 0;
@@ -151,7 +151,7 @@ uint8_t HardSID::read (uint_least8_t addr)
         cycles -= 0xffff;
     }
 
-    uint packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 );
+    unsigned int packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 );
     ioctl(m_handle, HSID_IOCTL_READ, &packet);
 
     cycles = 0;
@@ -173,7 +173,7 @@ void HardSID::write (uint_least8_t addr, uint8_t data)
         cycles -= 0xffff;
     }
 
-    uint packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 )
+    unsigned int packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 )
         | (data & 0xff);
     cycles = 0;
     ::write (m_handle, &packet, sizeof (packet));
@@ -187,7 +187,7 @@ void HardSID::voice (const unsigned int num, const bool mute)
     muted[num] = mute;
 
     int cmute = 0;
-    for ( uint i = 0; i < voices; i++ )
+    for ( unsigned int i = 0; i < voices; i++ )
         cmute |= (muted[i] << i);
     ioctl (m_handle, HSID_IOCTL_MUTE, cmute);
 }

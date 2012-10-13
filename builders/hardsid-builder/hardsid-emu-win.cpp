@@ -36,8 +36,8 @@ Sidplay2 patch
 ***************************************************************************/
 
 extern HsidDLL2 hsid2;
-const  uint HardSID::voices = HARDSID_VOICES;
-uint   HardSID::sid = 0;
+const  unsigned int HardSID::voices = HARDSID_VOICES;
+unsigned int   HardSID::sid = 0;
 char   HardSID::credit[];
 
 

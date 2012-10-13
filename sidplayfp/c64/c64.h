@@ -63,16 +63,16 @@ public:
 class c64: private c64env
 {
 public:
-    static const float64_t CLOCK_FREQ_NTSC;
-    static const float64_t CLOCK_FREQ_PAL;
+    static const double CLOCK_FREQ_NTSC;
+    static const double CLOCK_FREQ_PAL;
 
 private:
-    static const float64_t VIC_FREQ_PAL;
-    static const float64_t VIC_FREQ_NTSC;
+    static const double VIC_FREQ_PAL;
+    static const double VIC_FREQ_NTSC;
 
 private:
     /** System clock frequency */
-    float64_t m_cpuFreq;
+    double m_cpuFreq;
 
     /** Number of sources asserting IRQ */
     int   irqCount;
@@ -191,8 +191,8 @@ public:
     void reset();
     void resetCpu() { cpu.reset(); }
 
-    void setMainCpuSpeed(const float64_t cpuFreq);
-    float64_t getMainCpuSpeed() const { return m_cpuFreq; }
+    void setMainCpuSpeed(const double cpuFreq);
+    double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**
     * Set the requested SID
