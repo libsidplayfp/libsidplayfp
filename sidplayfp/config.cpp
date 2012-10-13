@@ -21,7 +21,7 @@
  */
 
 
-#include "sid2types.h"
+#include "SidConfig.h"
 #include "player.h"
 #include "sidbuilder.h"
 
@@ -43,7 +43,7 @@ const char  ERR_UNSUPPORTED_PRECISION[] = "SIDPLAYER ERROR: Unsupported sample p
 // An instance of this structure is used to transport emulator settings
 // to and from the interface class.
 
-bool Player::config (const sid2_config_t &cfg)
+bool Player::config (const SidConfig &cfg)
 {
     const SidTuneInfo* tuneInfo = 0;
 

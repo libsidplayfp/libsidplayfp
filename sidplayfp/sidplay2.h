@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 
-#include "sid2types.h"
+#include "SidConfig.h"
 #include "siddefs.h"
 #include "sidversion.h"
 
@@ -57,7 +57,7 @@ public:
     *
     * @return a const reference to the current configuration.
     */
-    const sid2_config_t &config(void) const;
+    const SidConfig &config(void) const;
 
     /**
     * Get the current player informations.
@@ -72,7 +72,7 @@ public:
     * @param cfg the new configuration
     * @return true on sucess, false otherwise.
     */
-    bool config(const sid2_config_t &cfg);
+    bool config(const SidConfig &cfg);
 
     /**
     * Error message.

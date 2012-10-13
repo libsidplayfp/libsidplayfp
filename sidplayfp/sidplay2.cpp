@@ -52,10 +52,10 @@ sidplay2::sidplay2 ()
 sidplay2::~sidplay2 ()
 {   if (&sidplayer) delete &sidplayer; }
 
-bool sidplay2::config (const sid2_config_t &cfg)
+bool sidplay2::config (const SidConfig &cfg)
 {   return sidplayer.config (cfg); }
 
-const sid2_config_t &sidplay2::config (void) const
+const SidConfig &sidplay2::config (void) const
 {   return sidplayer.config (); }
 
 void sidplay2::stop (void)

@@ -417,7 +417,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\sid2types.h"
+				RelativePath="..\..\SidConfig.h"
 				>
 			</File>
 			<File

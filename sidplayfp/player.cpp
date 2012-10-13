@@ -51,21 +51,6 @@ Player::Player (void)
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
 #endif
-    // Configure default settings
-    m_cfg.clockDefault    = SID2_CLOCK_PAL;
-    m_cfg.clockForced     = false;
-    m_cfg.forceDualSids   = false;
-    m_cfg.frequency       = SID2_DEFAULT_SAMPLING_FREQ;
-    m_cfg.playback        = sid2_mono;
-    m_cfg.sidDefault      = SID2_MOS6581;
-    m_cfg.forceModel      = false;
-    m_cfg.sidEmulation    = 0;
-    m_cfg.leftVolume      = Mixer::VOLUME_MAX;
-    m_cfg.rightVolume     = Mixer::VOLUME_MAX;
-    m_cfg.powerOnDelay    = DEFAULT_POWER_ON_DELAY;
-    m_cfg.samplingMethod  = SID2_RESAMPLE_INTERPOLATE;
-    m_cfg.fastSampling    = false;
-
     config (m_cfg);
 
     // Get component credits

@@ -66,6 +66,7 @@ sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
 sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
+sidplayfp/SidConfig.cpp \
 sidplayfp/sidmemory.h \
 sidplayfp/sidplay2.cpp \
 sidplayfp/SidInfoImpl.h \
@@ -128,9 +129,9 @@ sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
 sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/siddefs.h \
 sidplayfp/event.h \
+sidplayfp/SidConfig.h \
 sidplayfp/SidInfo.h \
 sidplayfp/SidTuneInfo.h \
-sidplayfp/sid2types.h \
 sidplayfp/sidbuilder.h \
 sidplayfp/sidplay2.h \
 sidplayfp/SidTune.h \

@@ -24,7 +24,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "sid2types.h"
+#include "SidConfig.h"
 #include "SidTune.h"
 #include "SidInfoImpl.h"
 
@@ -67,7 +67,7 @@ private:
     // User Configuration Settings
     SidTune      *m_tune;
     SidInfoImpl   m_info;
-    sid2_config_t m_cfg;
+    SidConfig m_cfg;
 
     const char     *m_errorString;
 
@@ -107,10 +107,10 @@ public:
     Player ();
     ~Player () {}
 
-    const sid2_config_t &config (void) const { return m_cfg; }
+    const SidConfig &config (void) const { return m_cfg; }
     const SidInfo   &info   (void) const { return m_info; }
 
-    bool           config       (const sid2_config_t &cfg);
+    bool           config       (const SidConfig &cfg);
     bool           fastForward  (unsigned int percent);
     bool           load         (SidTune *tune);
     double      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }

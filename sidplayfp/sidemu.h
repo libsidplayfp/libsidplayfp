@@ -23,7 +23,7 @@
 #ifndef SIDEMU_H
 #define SIDEMU_H
 
-#include "sid2types.h"
+#include "SidConfig.h"
 #include "component.h"
 
 

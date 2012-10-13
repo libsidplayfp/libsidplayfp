@@ -111,8 +111,8 @@ int main(int argc, char* argv[])
         goto error;
     }
 
-    sid2_config_t cfg;
-    cfg = m_engine.config();
+    {
+    SidConfig cfg;
     cfg.clockForced = false;
     cfg.frequency = 48000;
     cfg.samplingMethod = SID2_INTERPOLATE;
@@ -121,6 +121,7 @@ int main(int argc, char* argv[])
     cfg.sidEmulation = rs;
     cfg.sidDefault = SID2_MOS6581;
     m_engine.config(cfg);
+    }
 
     tune->selectSong(0);
 

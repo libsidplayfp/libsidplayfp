@@ -20,36 +20,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SIDBUILDER_H
-#define SIDBUILDER_H
-
 #include "SidConfig.h"
 
-class sidemu;
-class EventContext;
+#include "mixer.h"
 
-class sidbuilder
-{
-private:
-    const char * const m_name;
-
-protected:
-    bool m_status;
-
-public:
-    sidbuilder(const char * const name)
-        : m_name(name), m_status (true) {;}
-    virtual ~sidbuilder() {;}
-
-    virtual  sidemu      *lock    (EventContext *env, const sid2_model_t model) = 0;
-    virtual  void         unlock  (sidemu *device) = 0;
-    const    char        *name    (void) const { return m_name; }
-    virtual  const  char *error   (void) const = 0;
-    virtual  const  char *credits (void) = 0;
-    virtual  void         filter  (bool enable) = 0;
-
-    // Determine current state of object (true = okay, false = error).
-    bool     getStatus() const { return m_status; }
-};
-
-#endif // SIDBUILDER_H
+SidConfig::SidConfig() :
+    clockDefault(SID2_CLOCK_PAL),
+    clockForced(false),
+    forceDualSids(false),
+    frequency(DEFAULT_SAMPLING_FREQ),
+    playback(sid2_mono),
+    sidDefault(SID2_MOS6581),
+    forceModel(false),
+    sidEmulation(0),
+    leftVolume(Mixer::VOLUME_MAX),
+    rightVolume(Mixer::VOLUME_MAX),
+    powerOnDelay(DEFAULT_POWER_ON_DELAY),
+    samplingMethod(SID2_RESAMPLE_INTERPOLATE),
+    fastSampling(false)
+{}

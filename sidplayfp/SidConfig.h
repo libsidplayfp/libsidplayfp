@@ -20,18 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SID2TYPES_H
-#define SID2TYPES_H
+#ifndef SIDCONFIG_H
+#define SIDCONFIG_H
+
+#include "siddefs.h"
 
 #include <stdint.h>
 
-class sidbuilder;
 
-#ifndef SIDPLAY2_DEFAULTS
-#define SIDPLAY2_DEFAULTS
-    // Default settings
-    const uint_least32_t SID2_DEFAULT_SAMPLING_FREQ  = 44100;
-#endif // SIDPLAY2_DEFAULTS
+class sidbuilder;
 
 typedef enum {sid2_mono = 1,  sid2_stereo} sid2_playback_t;
 typedef enum {SID2_MOS6581, SID2_MOS8580} sid2_model_t;
@@ -39,18 +36,37 @@ typedef enum {SID2_CLOCK_PAL, SID2_CLOCK_NTSC} sid2_clock_t;
 typedef enum {SID2_INTERPOLATE, SID2_RESAMPLE_INTERPOLATE} sampling_method_t;
 
 /**
-* sid2_config_t
+* SidConfig
 */
-struct sid2_config_t
+class SID_EXTERN SidConfig
 {
+public:
+    /**
+    * Maximum power on delay
+    * Delays <= MAX produce constant results.
+    * Delays >  MAX produce random results
+    */
+    static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
+    static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
+
+    static const uint_least32_t DEFAULT_SAMPLING_FREQ  = 44100;
+
+public:
     /**
     * Intended tune speed when unknown or forced
     * - SID2_CLOCK_PAL
     * - SID2_CLOCK_NTSC
     */
     sid2_clock_t        clockDefault;
+
+    /**
+    * Force the clock to clockDefault
+    */
     bool                clockForced;
 
+    /**
+    * Force an environment with two SID chips installed
+    */
     bool                forceDualSids;
 
     /// Sampling frequency
@@ -69,13 +85,27 @@ struct sid2_config_t
     * - SID2_MOS8580
     */
     sid2_model_t        sidDefault;
+
+    /**
+    * Force the sid model to sidDefault
+    */
     bool                forceModel;
 
     sidbuilder         *sidEmulation;
 
+    /**
+    * Left channel volume
+    */
     uint_least32_t      leftVolume;
+
+    /**
+    * Right channel volume
+    */
     uint_least32_t      rightVolume;
 
+    /**
+    * Power on delay cycles
+    */
     uint_least16_t      powerOnDelay;
 
     /**
@@ -90,6 +120,9 @@ struct sid2_config_t
     * available only for reSID
     */
     bool                fastSampling;
+
+public:
+    SidConfig();
 };
 
-#endif // SID2TYPES_H
+#endif // SIDCONFIG_H
