@@ -63,7 +63,7 @@ public:
     virtual short *buffer() const { return m_buffer; }
 
     virtual void sampling(float systemfreq, float outputfreq,
-    const sampling_method_t method, const bool fast) { return; }
+        const SidConfig::sampling_method_t method, const bool fast) { return; }
 };
 
 #endif // SIDEMU_H

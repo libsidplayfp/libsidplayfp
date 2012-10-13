@@ -61,7 +61,7 @@ public:
     FakeBuilder  (const char * const name) : sidbuilder(name) {}
     ~FakeBuilder (void) {}
 
-    sidemu     *lock    (EventContext *env, const sid2_model_t model) { return &sidobj; }
+    sidemu     *lock    (EventContext *env, const SidConfig::model_t model) { return &sidobj; }
     void        unlock  (sidemu *device) {}
     const char *error   (void) const { return ""; }
     const char *credits (void) { return ""; }
@@ -115,11 +115,11 @@ int main(int argc, char* argv[])
     SidConfig cfg;
     cfg.clockForced = false;
     cfg.frequency = 48000;
-    cfg.samplingMethod = SID2_INTERPOLATE;
+    cfg.samplingMethod = SidConfig::INTERPOLATE;
     cfg.fastSampling = false;
-    cfg.playback = sid2_stereo;
+    cfg.playback = SidConfig::STEREO;
     cfg.sidEmulation = rs;
-    cfg.sidDefault = SID2_MOS6581;
+    cfg.sidDefault = SidConfig::MOS6581;
     m_engine.config(cfg);
     }
 

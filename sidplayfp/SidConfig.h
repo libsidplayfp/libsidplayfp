@@ -30,16 +30,17 @@
 
 class sidbuilder;
 
-typedef enum {sid2_mono = 1,  sid2_stereo} sid2_playback_t;
-typedef enum {SID2_MOS6581, SID2_MOS8580} sid2_model_t;
-typedef enum {SID2_CLOCK_PAL, SID2_CLOCK_NTSC} sid2_clock_t;
-typedef enum {SID2_INTERPOLATE, SID2_RESAMPLE_INTERPOLATE} sampling_method_t;
-
 /**
 * SidConfig
 */
 class SID_EXTERN SidConfig
 {
+public:  
+    typedef enum {MONO = 1,  STEREO} playback_t;
+    typedef enum {MOS6581, MOS8580} model_t;
+    typedef enum {CLOCK_PAL, CLOCK_NTSC} clock_t;
+    typedef enum {INTERPOLATE, RESAMPLE_INTERPOLATE} sampling_method_t;
+
 public:
     /**
     * Maximum power on delay
@@ -57,7 +58,7 @@ public:
     * - SID2_CLOCK_PAL
     * - SID2_CLOCK_NTSC
     */
-    sid2_clock_t        clockDefault;
+    clock_t             clockDefault;
 
     /**
     * Force the clock to clockDefault
@@ -77,14 +78,14 @@ public:
     * - sid2_mono
     * - sid2_stereo
     */
-    sid2_playback_t     playback;
+    playback_t          playback;
 
     /**
     * Intended sid model when unknown or forced
     * - SID2_MOS6581
     * - SID2_MOS8580
     */
-    sid2_model_t        sidDefault;
+    model_t             sidDefault;
 
     /**
     * Force the sid model to sidDefault

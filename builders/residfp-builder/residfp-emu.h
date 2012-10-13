@@ -66,11 +66,11 @@ public:
 
     // Specific to resid
     void sampling (float systemclock, float freq,
-    const sampling_method_t method, const bool fast);
+        const SidConfig::sampling_method_t method, const bool fast);
 
     void filter6581Curve (const double filterCurve);
     void filter8580Curve (const double filterCurve);
-    void model    (sid2_model_t model);
+    void model    (SidConfig::model_t model);
     // Must lock the SID before using the standard functions.
     bool lock     (EventContext *env);
 };

@@ -118,15 +118,15 @@ void ReSID::filter (bool enable)
 }
 
 void ReSID::sampling (float systemclock, float freq,
-        const sampling_method_t method, const bool fast)
+        const SidConfig::sampling_method_t method, const bool fast)
 {
     RESID_NS::sampling_method sampleMethod;
     switch (method)
     {
-    case SID2_INTERPOLATE:
+    case SidConfig::INTERPOLATE:
         sampleMethod = fast ? RESID_NS::SAMPLE_FAST : RESID_NS::SAMPLE_INTERPOLATE;
         break;
-    case SID2_RESAMPLE_INTERPOLATE:
+    case SidConfig::RESAMPLE_INTERPOLATE:
         sampleMethod = fast ? RESID_NS::SAMPLE_RESAMPLE_FASTMEM : RESID_NS::SAMPLE_RESAMPLE;
         break;
     default:
@@ -172,9 +172,9 @@ bool ReSID::lock (EventContext *env)
 }
 
 // Set the emulated SID model
-void ReSID::model (sid2_model_t model)
+void ReSID::model (SidConfig::model_t model)
 {
-    if (model == SID2_MOS8580)
+    if (model == SidConfig::MOS8580)
         m_sid.set_chip_model (RESID_NS::MOS8580);
     else
         m_sid.set_chip_model (RESID_NS::MOS6581);

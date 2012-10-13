@@ -65,7 +65,7 @@ bool Player::config (const SidConfig &cfg)
         // SID emulation setup (must be performed before the
         // environment setup call)
         if (sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
-            cfg.playback == sid2_stereo ? 2 : 1, cpuFreq, cfg.frequency,
+            cfg.playback == SidConfig::STEREO ? 2 : 1, cpuFreq, cfg.frequency,
             cfg.samplingMethod, cfg.fastSampling) < 0) {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = 0;
@@ -99,7 +99,7 @@ bool Player::config (const SidConfig &cfg)
         m_c64.setSid(1, 0);
 
     m_mixer.setSids(m_c64.getSid(0), m_c64.getSid(1));
-    m_mixer.setStereo(cfg.playback == sid2_stereo);
+    m_mixer.setStereo(cfg.playback == SidConfig::STEREO);
     m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
 
     // Update Configuration
@@ -116,7 +116,7 @@ Player_configure_error:
 }
 
 // Clock speed changes due to loading a new song
-double Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced)
+double Player::clockSpeed (const SidConfig::clock_t defaultClock, const bool forced)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -127,10 +127,10 @@ double Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced)
     {
         switch (defaultClock)
         {
-        case SID2_CLOCK_PAL:
+        case SidConfig::CLOCK_PAL:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
             break;
-        case SID2_CLOCK_NTSC:
+        case SidConfig::CLOCK_NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             break;
         }
@@ -163,7 +163,7 @@ double Player::clockSpeed (const sid2_clock_t defaultClock, const bool forced)
     return cpuFreq;
 }
 
-sid2_model_t Player::getModel(const SidTuneInfo::model_t sidModel, const sid2_model_t defaultModel, const bool forced)
+SidConfig::model_t Player::getModel(const SidTuneInfo::model_t sidModel, const SidConfig::model_t defaultModel, const bool forced)
 {
     SidTuneInfo::model_t tuneModel = sidModel;
 
@@ -172,34 +172,34 @@ sid2_model_t Player::getModel(const SidTuneInfo::model_t sidModel, const sid2_mo
     {
         switch (defaultModel)
         {
-        case SID2_MOS6581:
+        case SidConfig::MOS6581:
             tuneModel = SidTuneInfo::SIDMODEL_6581;
             break;
-        case SID2_MOS8580:
+        case SidConfig::MOS8580:
             tuneModel = SidTuneInfo::SIDMODEL_8580;
             break;
         }
     }
 
-    sid2_model_t newModel;
+    SidConfig::model_t newModel;
 
     switch (tuneModel)
     {
     case SidTuneInfo::CLOCK_PAL:
-        newModel = SID2_MOS6581;
+        newModel = SidConfig::MOS6581;
         break;
     case SidTuneInfo::CLOCK_NTSC:
-        newModel = SID2_MOS8580;
+        newModel = SidConfig::MOS8580;
         break;
     }
 
     return newModel;
 }
 
-bool Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
+bool Player::sidCreate (sidbuilder *builder, const SidConfig::model_t defaultModel,
                        const bool forced, const int channels,
                        const double cpuFreq, const int frequency,
-                       const sampling_method_t sampling, const bool fastSampling)
+                       const SidConfig::sampling_method_t sampling, const bool fastSampling)
 {
     for (int i = 0; i < SidBank::MAX_SIDS; i++)
     {
@@ -216,7 +216,7 @@ bool Player::sidCreate (sidbuilder *builder, const sid2_model_t defaultModel,
     if (builder)
     {   // Detect the Correct SID model
         // Determine model when unknown
-        sid2_model_t userModels[SidBank::MAX_SIDS];
+        SidConfig::model_t userModels[SidBank::MAX_SIDS];
 
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 

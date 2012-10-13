@@ -157,7 +157,7 @@ public:
 
     // Standard SID functions
     void          filter  (bool enable);
-    void          model   (sid2_model_t model) {;}
+    void          model   (SidConfig::model_t model) {;}
     void          voice   (const unsigned int num, const bool mute);
     // HardSID specific
     void          flush   (void);

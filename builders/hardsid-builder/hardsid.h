@@ -56,7 +56,7 @@ public:
     *    return values: 0 endless, positive is available sids.
     */
     unsigned int        devices (const bool created);
-    sidemu     *lock    (EventContext *env, const sid2_model_t model);
+    sidemu     *lock    (EventContext *env, const SidConfig::model_t model);
     void        unlock  (sidemu *device);
     void        remove  (void);
     const char *error   (void) const { return m_errorBuffer; }

@@ -25,17 +25,17 @@
 #include "mixer.h"
 
 SidConfig::SidConfig() :
-    clockDefault(SID2_CLOCK_PAL),
+    clockDefault(CLOCK_PAL),
     clockForced(false),
     forceDualSids(false),
     frequency(DEFAULT_SAMPLING_FREQ),
-    playback(sid2_mono),
-    sidDefault(SID2_MOS6581),
+    playback(MONO),
+    sidDefault(MOS6581),
     forceModel(false),
     sidEmulation(0),
     leftVolume(Mixer::VOLUME_MAX),
     rightVolume(Mixer::VOLUME_MAX),
     powerOnDelay(DEFAULT_POWER_ON_DELAY),
-    samplingMethod(SID2_RESAMPLE_INTERPOLATE),
+    samplingMethod(RESAMPLE_INTERPOLATE),
     fastSampling(false)
 {}

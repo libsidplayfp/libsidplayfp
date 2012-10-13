@@ -41,7 +41,7 @@ public:
         : m_name(name), m_status (true) {;}
     virtual ~sidbuilder() {;}
 
-    virtual  sidemu      *lock    (EventContext *env, const sid2_model_t model) = 0;
+    virtual  sidemu      *lock    (EventContext *env, const SidConfig::model_t model) = 0;
     virtual  void         unlock  (sidemu *device) = 0;
     const    char        *name    (void) const { return m_name; }
     virtual  const  char *error   (void) const = 0;
