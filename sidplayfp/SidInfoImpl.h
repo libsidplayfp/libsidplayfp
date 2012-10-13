@@ -55,6 +55,10 @@ public:
 
     std::string m_speedString;
 
+    std::string m_kernalDesc;
+    std::string m_basicDesc;
+    std::string m_chargenDesc;
+
     const unsigned int m_maxsids;
 
     unsigned int m_channels;
@@ -101,6 +105,10 @@ public:
     uint_least16_t powerOnDelay() const { return m_powerOnDelay; }
 
     const char *speedString() const { return m_speedString.c_str(); }
+
+    const char *kernalDesc() const { return m_kernalDesc.c_str(); }
+    const char *basicDesc() const { return m_basicDesc.c_str(); }
+    const char *chargenDesc() const { return m_chargenDesc.c_str(); }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */

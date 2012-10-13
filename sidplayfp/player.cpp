@@ -29,6 +29,8 @@
 
 #include "psiddrv.h"
 
+#include "romCheck.h"
+
 SIDPLAYFP_NAMESPACE_START
 
 
@@ -36,7 +38,6 @@ const char  TXT_NA[]             = "NA";
 
 // Error Strings
 const char  ERR_MISSING_ROM[]    = "SIDPLAYER ERROR: Roms have not been loaded.";
-const char  ERR_UNKNOWN_ROM[]    = "SIDPLAYER ERROR: Unknown Rom.";
 
 
 Player::Player (void)
@@ -59,60 +60,27 @@ Player::Player (void)
     m_info.m_credits.push_back(m_c64.vicCredits());
 }
 
-uint16_t Player::getChecksum(const uint8_t* rom, const int size)
-{
-    uint16_t checksum = 0;
-    for (int i=0; i<size; i++)
-        checksum += rom[i];
-
-    return checksum;
-}
-
 void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {
-    // kernal is mandatory
-    if (!kernal)
-        return;
-
-    // Verify rom checksums and accept only known ones
-
-    // Kernal revision is located at 0xff80
-    const uint8_t rev = kernal[0xff80 - 0xe000];
-
-    const uint16_t kChecksum = getChecksum(kernal, 0x2000);
-    // second revision + Japanese version
-    if ((rev == 0x00 && (kChecksum != 0xc70b && kChecksum != 0xd183))
-        // third revision + Swedish version
-        || (rev == 0x03 && (kChecksum != 0xc70a  && kChecksum != 0xc5c9))
-        // first revision
-        || (rev == 0xaa && kChecksum != 0xd4fd)
-        // Commodore SX-64 + Swedish version
-        || (rev == 0x43 && (kChecksum != 0xc70b && kChecksum != 0xc788)))
+    if (kernal)
     {
-        m_errorString = ERR_UNKNOWN_ROM;
-        return;
+        kernalCheck k(kernal);
+        m_info.m_kernalDesc = k.info();
     }
+    else
+        // kernal is mandatory
+        return;
 
     if (basic)
     {
-        const uint16_t checksum = getChecksum(basic, 0x2000);
-        // Commodore 64 BASIC V2
-        if (checksum != 0x3d56)
-        {
-            m_errorString = ERR_UNKNOWN_ROM;
-            return;
-        }
+        basicCheck b(basic);
+        m_info.m_basicDesc = b.info();
     }
 
     if (character)
     {
-        const uint16_t checksum = getChecksum(character, 0x1000);
-        if (checksum != 0xf7f8
-            && checksum != 0xf800)
-        {
-            m_errorString = ERR_UNKNOWN_ROM;
-            return;
-        }
+        chargenCheck c(character);
+        m_info.m_chargenDesc = c.info();
     }
 
     m_c64.getMmu()->setRoms(kernal, basic, character);

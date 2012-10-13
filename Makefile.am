@@ -73,6 +73,7 @@ sidplayfp/SidInfoImpl.h \
 sidplayfp/SidTune.cpp \
 sidplayfp/SmartPtr.h \
 sidplayfp/psiddrv.a65 \
+sidplayfp/romCheck.h \
 sidplayfp/sidemu.h \
 sidplayfp/sidendian.h \
 sidplayfp/sidrandom.h \

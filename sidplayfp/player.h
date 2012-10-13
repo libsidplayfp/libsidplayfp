@@ -86,8 +86,6 @@ private:
 
     static SidConfig::model_t getModel (const SidTuneInfo::model_t sidModel, const SidConfig::model_t defaultModel, const bool forced);
 
-    uint16_t getChecksum(const uint8_t* rom, const int size);
-
     uint_least32_t (Player::*output) (char *buffer);
 
 #ifdef PC64_TESTSUITE

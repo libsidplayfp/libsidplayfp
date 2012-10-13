@@ -50,6 +50,13 @@ public:
 
     /// Describes the speed current song is running at
     virtual const char *speedString() const =0;
+
+    /// Get description of the laoded ROM images
+    //@{
+    virtual const char *kernalDesc() const =0;
+    virtual const char *basicDesc() const =0;
+    virtual const char *chargenDesc() const =0;
+    //@}
 };
 
 #endif  /* SIDINFO_H */
