@@ -26,9 +26,6 @@
 // Copyright (C) 1998, 2002 by LaLa
 //
 
-#ifndef _STIL
-#define _STIL
-
 #include <iostream>
 #include <iomanip>
 #include <cstring>
@@ -1419,5 +1416,3 @@ STIL::createOneDir(void)
 
     return ptr;
 }
-
-#endif // _STIL

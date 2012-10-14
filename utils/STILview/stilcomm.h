@@ -26,8 +26,8 @@
 // Contains some definitions common to STIL
 //
 
-#ifndef _STILCOMM_H
-#define _STILCOMM_H
+#ifndef STILCOMM_H
+#define STILCOMM_H
 
 #include "stildefs.h"
 
@@ -47,4 +47,4 @@ extern void convertSlashes(char *str);
 */
 extern void convertToSlashes(char *str);
 
-#endif // _STILCOMM_H
+#endif // STILCOMM_H

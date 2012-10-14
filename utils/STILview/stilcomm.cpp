@@ -27,9 +27,6 @@
 // See stilcomm.h for prologs.
 //
 
-#ifndef _STILCOMM
-#define _STILCOMM
-
 #include "stildefs.h"
 #include "stil.h"
 
@@ -74,6 +71,3 @@ void convertToSlashes(char *str)
         str++;
     }
 }
-
-
-#endif //_STILCOMM

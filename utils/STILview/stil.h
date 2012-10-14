@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _STIL_H
-#define _STIL_H
+#ifndef STIL_H
+#define STIL_H
 
 #include <fstream>
 #include <cstdlib>     // For atof() and size_t
@@ -457,4 +457,4 @@ private:
     inline dirList *createOneDir(void);
 };
 
-#endif // _STIL_H
+#endif // STIL_H

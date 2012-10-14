@@ -22,8 +22,8 @@
 // STIL - Common defines
 //
 
-#ifndef _STILDEFS_H
-#define _STILDEFS_H
+#ifndef STILDEFS_H
+#define STILDEFS_H
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -124,4 +124,4 @@ const char DEFAULT_PATH_TO_STIL[]="/DOCUMENTS/STIL.txt";
 // HVSC path to BUGlist.
 const char DEFAULT_PATH_TO_BUGLIST[]="/DOCUMENTS/BUGlist.txt";
 
-#endif // _STILDEFS_H
+#endif // STILDEFS_H
