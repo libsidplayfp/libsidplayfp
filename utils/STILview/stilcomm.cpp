@@ -49,10 +49,7 @@ const char *STIL::STIL_ERROR_STR[] = {
     "No STIL sections were found in BUGlist.txt!"
 };
 
-void convertSlashes(char *str);
-void convertToSlashes(char *str);
-
-void convertSlashes(char *str)
+void stilcomm::convertSlashes(char *str)
 {
     while (*str) {
         if (*str == '/') {
@@ -62,7 +59,7 @@ void convertSlashes(char *str)
     }
 }
 
-void convertToSlashes(char *str)
+void stilcomm::convertToSlashes(char *str)
 {
     while (*str) {
         if (*str == SLASH) {

@@ -22,29 +22,32 @@
 // STIL Common header
 //
 
-//
-// Contains some definitions common to STIL
-//
-
 #ifndef STILCOMM_H
 #define STILCOMM_H
 
 #include "stildefs.h"
 
 /**
-* Converts slashes to the one the OS uses to access files.
-*
-* @param
-*      str - what to convert
+* Contains some definitions common to STIL
 */
-extern void convertSlashes(char *str);
+class stilcomm
+{
+public:
+    /**
+    * Converts slashes to the one the OS uses to access files.
+    *
+    * @param
+    *      str - what to convert
+    */
+    static void convertSlashes(char *str);
 
-/**
-* Converts OS specific dir separators to slashes.
-*
-* @param
-*      str - what to convert
-*/
-extern void convertToSlashes(char *str);
+    /**
+    * Converts OS specific dir separators to slashes.
+    *
+    * @param
+    *      str - what to convert
+    */
+    static void convertToSlashes(char *str);
+};
 
 #endif // STILCOMM_H
