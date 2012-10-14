@@ -50,16 +50,6 @@ class Player
 #endif
 {
 private:
-    /**
-    * Maximum power on delay
-    * Delays <= MAX produce constant results.
-    * Delays >  MAX produce random results
-    */
-    static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
-
-    static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
-
-private:
     c64     m_c64;
 
     Mixer   m_mixer;

@@ -120,9 +120,9 @@ bool Player::initialise ()
 
     uint_least16_t powerOnDelay = m_cfg.powerOnDelay;
     // Delays above MAX result in random delays
-    if (powerOnDelay > MAX_POWER_ON_DELAY)
+    if (powerOnDelay > SidConfig::MAX_POWER_ON_DELAY)
     {   // Limit the delay to something sensible.
-        powerOnDelay = (uint_least16_t) (m_rand.next() >> 3) & MAX_POWER_ON_DELAY;
+        powerOnDelay = (uint_least16_t) ((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
     }
 
     psiddrv driver(m_tune->getInfo());
