@@ -98,11 +98,11 @@ bool Player::config (const SidConfig &cfg)
         m_info.m_channels = 2;
     }
     else
+    {
         m_info.m_channels = 1;
-
-    /* without stereo SID mode, we don't emulate the second chip! */
-    if (m_info.m_channels == 1)
+        // without stereo SID mode, we don't emulate the second chip!
         m_c64.setSid(1, 0);
+    }
 
     m_mixer.setSids(m_c64.getSid(0), m_c64.getSid(1));
     m_mixer.setStereo(cfg.playback == SidConfig::STEREO);
