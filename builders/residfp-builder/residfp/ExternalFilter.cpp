@@ -45,7 +45,7 @@ void ExternalFilter::setClockFrequency(const double frequency) {
 
 void ExternalFilter:: reset() {
 	// State of filter.
-	Vlp = 1 << (15 + 11);
+	Vlp = 0; //1 << (15 + 11);
 	Vhp = 0;
 }
 
