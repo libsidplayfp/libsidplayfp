@@ -24,7 +24,9 @@
 
 #include <fstream>
 #include <cstdlib>     // For atof() and size_t
+
 #include "stilcomm.h"
+#include "stildefs.h"
 
 /**
 * STIL class

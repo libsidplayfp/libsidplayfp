@@ -48,6 +48,25 @@ const char  _ARTIST_STR[]=" ARTIST: ";
 const char _COMMENT_STR[]="COMMENT: ";
 const char     _BUG_STR[]="BUG: ";
 
+const char *STIL::STIL_ERROR_STR[] = {
+    "No error.",
+    "Failed to open BUGlist.txt.",
+    "Base dir path is not the HVSC base dir path.",
+    "The entry was not found in STIL.txt.",
+    "The entry was not found in BUGlist.txt.",
+    "A section-global comment was asked for in the wrong way.",
+    "",
+    "",
+    "",
+    "",
+    "CRITICAL ERROR",
+    "Incorrect HVSC base dir length!",
+    "Failed to open STIL.txt!",
+    "Failed to determine EOL from STIL.txt!",
+    "No STIL sections were found in STIL.txt!",
+    "No STIL sections were found in BUGlist.txt!"
+};
+
 // CONSTRUCTOR
 STIL::STIL(const char* stilPath, const char* bugsPath) :
   PATH_TO_STIL(stilPath),

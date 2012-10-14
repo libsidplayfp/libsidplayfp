@@ -25,8 +25,6 @@
 #ifndef STILCOMM_H
 #define STILCOMM_H
 
-#include "stildefs.h"
-
 /**
 * Contains some definitions common to STIL
 */
