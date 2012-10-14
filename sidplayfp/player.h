@@ -57,14 +57,14 @@ private:
     // User Configuration Settings
     SidTune      *m_tune;
     SidInfoImpl   m_info;
-    SidConfig m_cfg;
+    SidConfig     m_cfg;
 
-    const char     *m_errorString;
+    const char   *m_errorString;
 
-    bool            m_status;
-    volatile bool   m_isPlaying;
+    bool          m_status;
+    volatile bool m_isPlaying;
 
-    sidrandom       m_rand;
+    sidrandom     m_rand;
 
 private:
     double    clockSpeed     (const SidConfig::clock_t defaultClock, const bool forced);
@@ -101,17 +101,16 @@ public:
     bool           config       (const SidConfig &cfg);
     bool           fastForward  (unsigned int percent);
     bool           load         (SidTune *tune);
-    double      cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
+    double         cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
     uint_least32_t play         (short *buffer, uint_least32_t samples);
     bool           isPlaying    (void) const { return m_isPlaying; }
     void           stop         (void);
     uint_least32_t time         (void) { return (uint_least32_t)(m_c64.getEventScheduler()->getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
-    void           debug        (const bool enable, FILE *out)
-                                { m_c64.debug (enable, out); }
+    void           debug        (const bool enable, FILE *out) { m_c64.debug (enable, out); }
     void           mute         (const unsigned int sidNum, const unsigned int voice, const bool enable);
 
     const char    *error        (void) const { return m_errorString; }
-    bool           getStatus() const { return m_status; }
+    bool           getStatus    () const { return m_status; }
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
 
