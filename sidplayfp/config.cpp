@@ -66,7 +66,8 @@ bool Player::config (const SidConfig &cfg)
         // environment setup call)
         if (sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
             cfg.playback == SidConfig::STEREO ? 2 : 1, cpuFreq, cfg.frequency,
-            cfg.samplingMethod, cfg.fastSampling) < 0) {
+            cfg.samplingMethod, cfg.fastSampling) < 0)
+        {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = 0;
             goto Player_configure_restore;
@@ -75,23 +76,28 @@ bool Player::config (const SidConfig &cfg)
         m_c64.setMainCpuSpeed(cpuFreq);
 
         // Configure, setup and install C64 environment/events
-        if (initialise() < 0) {
+        if (initialise() < 0)
+        {
             goto Player_configure_error;
         }
     }
 
     m_c64.resetSIDMapper();
-    if (m_tune && tuneInfo->sidChipBase2()) {
+    if (m_tune && tuneInfo->sidChipBase2())
+    {
         // Assumed to be in d4xx-d7xx range
         m_c64.setSecondSIDAddress(tuneInfo->sidChipBase2());
         m_info.m_channels = 2;
-    } else if (cfg.forceDualSids) {
+    }
+    else if (cfg.forceDualSids)
+    {
         /* Tune didn't tell us where; let's put the second SID
          * in every slot apart from 0xd400 - 0xd420. */
         for (int i = 0xd420; i < 0xd7ff; i += 0x20)
             m_c64.setSecondSIDAddress(i);
         m_info.m_channels = 2;
-    } else
+    }
+    else
         m_info.m_channels = 1;
 
     /* without stereo SID mode, we don't emulate the second chip! */
