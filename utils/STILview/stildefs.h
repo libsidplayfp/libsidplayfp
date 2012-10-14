@@ -111,14 +111,6 @@
 #  error Neither strncasecmp nor strnicmp is available.
 #endif
 
-// These are the hardcoded STIL/BUG field names.
-const char    _NAME_STR[]="   NAME: ";
-const char  _AUTHOR_STR[]=" AUTHOR: ";
-const char   _TITLE_STR[]="  TITLE: ";
-const char  _ARTIST_STR[]=" ARTIST: ";
-const char _COMMENT_STR[]="COMMENT: ";
-const char     _BUG_STR[]="BUG: ";
-
 // Maximum size of a single line in STIL - also accounts for some extra
 // padding, just in case.
 #define STIL_MAX_LINE_SIZE 91

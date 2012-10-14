@@ -43,6 +43,14 @@ const float VERSION_NO = 2.17;
 
 #define CERR_STIL_DEBUG if (STIL_DEBUG) cerr << "Line #" << __LINE__ << " STIL::"
 
+// These are the hardcoded STIL/BUG field names.
+const char    _NAME_STR[]="   NAME: ";
+const char  _AUTHOR_STR[]=" AUTHOR: ";
+const char   _TITLE_STR[]="  TITLE: ";
+const char  _ARTIST_STR[]=" ARTIST: ";
+const char _COMMENT_STR[]="COMMENT: ";
+const char     _BUG_STR[]="BUG: ";
+
 // CONSTRUCTOR
 STIL::STIL(const char* stilPath, const char* bugsPath) :
   PATH_TO_STIL(stilPath),
