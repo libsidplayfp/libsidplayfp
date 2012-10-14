@@ -64,9 +64,9 @@ bool Player::config (const SidConfig &cfg)
 
         // SID emulation setup (must be performed before the
         // environment setup call)
-        if (sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
+        if (!sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
             cfg.playback == SidConfig::STEREO ? 2 : 1, cpuFreq, cfg.frequency,
-            cfg.samplingMethod, cfg.fastSampling) < 0)
+            cfg.samplingMethod, cfg.fastSampling))
         {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = 0;
@@ -76,7 +76,7 @@ bool Player::config (const SidConfig &cfg)
         m_c64.setMainCpuSpeed(cpuFreq);
 
         // Configure, setup and install C64 environment/events
-        if (initialise() < 0)
+        if (!initialise())
         {
             goto Player_configure_error;
         }
