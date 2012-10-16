@@ -51,7 +51,7 @@ bool Player::config (const SidConfig &cfg)
     if (cfg.frequency < 4000)
     {
         m_errorString = ERR_UNSUPPORTED_FREQ;
-        goto Player_configure_error;
+        return false;
     }
 
     // Only do these if we have a loaded tune
@@ -70,7 +70,9 @@ bool Player::config (const SidConfig &cfg)
         {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = 0;
-            goto Player_configure_restore;
+            if (&m_cfg != &cfg)
+                config (m_cfg);
+            return false;
         }
 
         m_c64.setMainCpuSpeed(cpuFreq);
@@ -78,7 +80,7 @@ bool Player::config (const SidConfig &cfg)
         // Configure, setup and install C64 environment/events
         if (!initialise())
         {
-            goto Player_configure_error;
+            return false;
         }
     }
 
@@ -112,13 +114,6 @@ bool Player::config (const SidConfig &cfg)
     m_cfg = cfg;
 
     return true;
-
-Player_configure_restore:
-    // Try restoring old configuration
-    if (&m_cfg != &cfg)
-        config (m_cfg);
-Player_configure_error:
-    return false;
 }
 
 // Clock speed changes due to loading a new song
