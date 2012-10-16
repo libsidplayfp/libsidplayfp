@@ -21,7 +21,6 @@
  */
 
 #include <cstring>
-#include <string.h>
 #include <stdio.h>
 
 #ifdef HAVE_CONFIG_H
