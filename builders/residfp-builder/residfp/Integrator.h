@@ -58,7 +58,7 @@ public:
 		vcr_n_Ids_term(vcr_n_Ids_term),
 		opamp_rev(opamp_rev) {}
 
-	void setVw(const int Vw);
+	void setVw(const int Vw) { Vddt_Vw_2 = (Vddt - Vw) * (Vddt - Vw) >> 1; }
 
 	int solve(const int vi);
 };

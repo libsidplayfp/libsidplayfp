@@ -33,18 +33,10 @@ Filter6581::~Filter6581() {
 	delete [] f0_dac;
 }
 
-void Filter6581::input(const int sample) {
-	ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0];
-}
-
 void Filter6581::updatedCenterFrequency() {
 	const int Vw = f0_dac[fc];
 	hpIntegrator->setVw(Vw);
 	bpIntegrator->setVw(Vw);
-}
-
-void Filter6581::updatedResonance() {
-	currentResonance = gain[~res & 0xf];
 }
 
 void Filter6581::updatedMixing() {

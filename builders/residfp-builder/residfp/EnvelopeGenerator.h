@@ -137,7 +137,12 @@ public:
 	 */
 	void clock();
 
-	short output() const;
+        /**
+         * Get the Envelope Generator output.
+         * DAC imperfections are emulated by using envelope_counter as an index
+         * into a DAC lookup table. readENV() uses envelope_counter directly.
+         */
+	short output() const { return dac[envelope_counter]; }
 
 	/**
 	 * Constructor.
@@ -293,13 +298,6 @@ void EnvelopeGenerator::clock() {
 		// Check for change of exponential counter period.
 		set_exponential_counter();
 	}
-}
-
-RESID_INLINE
-short EnvelopeGenerator::output() const {
-	// DAC imperfections are emulated by using envelope_counter as an index
-	// into a DAC lookup table. readENV() uses envelope_counter directly.
-	return dac[envelope_counter];
 }
 
 } // namespace reSIDfp

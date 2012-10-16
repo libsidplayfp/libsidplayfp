@@ -195,7 +195,7 @@ public:
 	 * @param channel channel to modify
 	 * @param enable is muted?
 	 */
-	void mute(const int channel, const bool enable);
+	void mute(const int channel, const bool enable) { muted[channel] = enable; }
 
 	/**
 	 * Setting of SID sampling parameters.
@@ -267,12 +267,6 @@ public:
 
 namespace reSIDfp
 {
-
-RESID_INLINE
-void SID::mute(const int channel, const bool enable) {
-	muted[channel] = enable;
-}
-
 RESID_INLINE
 int SID::output() const {
 	return externalFilter->clock(

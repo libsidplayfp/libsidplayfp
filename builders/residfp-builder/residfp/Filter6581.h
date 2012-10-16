@@ -111,7 +111,7 @@ public:
 
 	int clock(const int voice1, const int voice2, const int voice3);
 
-	void input(const int sample);
+	void input(const int sample) { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
 
 	/**
 	 * Switch to new distortion curve.
@@ -124,7 +124,7 @@ public:
 	 * - there's a small notch even in allpass mode - size of resonance hump is
 	 * about 8 dB
 	 */
-	void updatedResonance();
+	void updatedResonance() { currentResonance = gain[~res & 0xf]; }
 
 	void updatedMixing();
 

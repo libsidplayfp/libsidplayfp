@@ -61,15 +61,15 @@ public:
 
 	int clock(const int voice1, const int voice2, const int voice3);
 
-	void updatedCenterFrequency();
+	void updatedCenterFrequency() { w0 = (float) (2.*M_PI*highFreq*fc/2047/1e6); }
 
-	void updatedResonance();
+	void updatedResonance() { _1_div_Q = 1.f / (0.707f + res/15.f); }
 
-	void input(const int input);
+	void input(const int input) { ve = input << 4; }
 
 	void updatedMixing() {}
 
-	void setFilterCurve(const double curvePosition);
+	void setFilterCurve(const double curvePosition) { highFreq = curvePosition; }
 };
 
 } // namespace reSIDfp

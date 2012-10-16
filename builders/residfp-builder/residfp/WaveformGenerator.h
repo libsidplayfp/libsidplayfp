@@ -161,14 +161,14 @@ public:
 	 *
 	 * @param freq_lo low 8 bits of frequency
 	 */
-	void writeFREQ_LO(const unsigned char freq_lo);
+	void writeFREQ_LO(const unsigned char freq_lo) { freq = (freq & 0xff00) | (freq_lo & 0xff); }
 
 	/**
 	 * Register functions.
 	 *
 	 * @param freq_hi high 8 bits of frequency
 	 */
-	void writeFREQ_HI(const unsigned char freq_hi);
+	void writeFREQ_HI(const unsigned char freq_hi) { freq = (freq_hi << 8 & 0xff00) | (freq & 0xff); }
 
 	/**
 	 * Register functions.
@@ -177,14 +177,14 @@ public:
 	 *
 	 * @param pw_lo low 8 bits of pulse width
 	 */
-	void writePW_LO(const unsigned char pw_lo);
+	void writePW_LO(const unsigned char pw_lo) { pw = (pw & 0xf00) | (pw_lo & 0x0ff); }
 
 	/**
 	 * Register functions.
 	 * 
 	 * @param pw_hi high 8 bits of pulse width
 	 */
-	void writePW_HI(const unsigned char pw_hi);
+	void writePW_HI(const unsigned char pw_hi) { pw = (pw_hi << 8 & 0xf00) | (pw & 0x0ff); }
 
 	/**
 	 * Register functions.

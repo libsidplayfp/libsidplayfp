@@ -82,13 +82,13 @@ private:
 public:
 	static FilterModelConfig* getInstance();
 
-	double getDacZero(const double adjustment) const;
+	double getDacZero(const double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
 
-	int getVO_T16() const;
+	int getVO_T16() const { return (int) (norm * ((1L << 16) - 1) * vmin); }
 
-	int getVoiceScaleS14() const;
+	int getVoiceScaleS14() const { return (int) ((norm * ((1L << 14) - 1)) * voice_voltage_range); }
 
-	int getVoiceDC() const;
+	int getVoiceDC() const { return (int) ((norm * ((1L << 16) - 1)) * (voice_DC_voltage - vmin)); }
 
 	unsigned short** getGain() { return gain; }
 

@@ -235,22 +235,6 @@ double FilterModelConfig::evaluateTransistor(const double Vw, const double vi, c
 	return n_I_snake + n_I_vcr;
 }
 
-double FilterModelConfig::getDacZero(const double adjustment) const {
-	return dac_zero - (adjustment - 0.5) * 2.;
-}
-
-int FilterModelConfig::getVO_T16() const {
-	return (int) (norm * ((1L << 16) - 1) * vmin);
-}
-
-int FilterModelConfig::getVoiceScaleS14() const {
-	return (int) ((norm * ((1L << 14) - 1)) * voice_voltage_range);
-}
-
-int FilterModelConfig::getVoiceDC() const {
-	return (int) ((norm * ((1L << 16) - 1)) * (voice_DC_voltage - vmin));
-}
-
 unsigned int* FilterModelConfig::getDAC(const double dac_zero) const {
 	const double N16 = norm * ((1L << 16) - 1);
 	const int bits = DAC_SIZE;

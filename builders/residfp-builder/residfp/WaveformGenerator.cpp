@@ -114,22 +114,6 @@ void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformG
 	}
 }
 
-void WaveformGenerator::writeFREQ_LO(const unsigned char freq_lo) {
-	freq = (freq & 0xff00) | (freq_lo & 0xff);
-}
-
-void WaveformGenerator::writeFREQ_HI(const unsigned char freq_hi) {
-	freq = (freq_hi << 8 & 0xff00) | (freq & 0xff);
-}
-
-void WaveformGenerator::writePW_LO(const unsigned char pw_lo) {
-	pw = (pw & 0xf00) | (pw_lo & 0x0ff);
-}
-
-void WaveformGenerator::writePW_HI(const unsigned char pw_hi) {
-	pw = (pw_hi << 8 & 0xf00) | (pw & 0x0ff);
-}
-
 void WaveformGenerator::writeCONTROL_REG(const unsigned char control) {
 	const int waveform_prev = waveform;
 	const bool test_prev = test;
