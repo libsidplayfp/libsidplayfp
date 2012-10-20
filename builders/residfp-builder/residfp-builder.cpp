@@ -117,6 +117,7 @@ const char *ReSIDfpBuilder::credits ()
 unsigned int ReSIDfpBuilder::devices (const bool created)
 {
     m_status = true;
+
     if (created)
         return sidobjs.size ();
     else // Available devices
@@ -125,33 +126,33 @@ unsigned int ReSIDfpBuilder::devices (const bool created)
 
 void ReSIDfpBuilder::filter (const bool enable)
 {
-    const int size = sidobjs.size ();
     m_status = true;
-    for (int i = 0; i < size; i++)
+
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(sidobjs[i]);
+        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         sid->filter (enable);
     }
 }
 
 void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
 {
-    const int size = sidobjs.size ();
     m_status = true;
-    for (int i = 0; i < size; i++)
+
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(sidobjs[i]);
+        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         sid->filter6581Curve (filterCurve);
     }
 }
 
 void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 {
-    const int size = sidobjs.size ();
     m_status = true;
-    for (int i = 0; i < size; i++)
+
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(sidobjs[i]);
+        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         sid->filter8580Curve (filterCurve);
     }
 }
@@ -159,12 +160,11 @@ void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 // Find a free SID of the required specs
 sidemu *ReSIDfpBuilder::lock (EventContext *env, const SidConfig::model_t model)
 {
-    const int size = sidobjs.size ();
     m_status = true;
 
-    for (int i = 0; i < size; i++)
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(sidobjs[i]);
+        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         if (sid->lock (env))
         {
             sid->model (model);
@@ -181,11 +181,10 @@ sidemu *ReSIDfpBuilder::lock (EventContext *env, const SidConfig::model_t model)
 // Allow something to use this SID
 void ReSIDfpBuilder::unlock (sidemu *device)
 {
-    const int size = sidobjs.size ();
-    // Maek sure this is our SID
-    for (int i = 0; i < size; i++)
+    // Make sure this is our SID
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(sidobjs[i]);
+        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         if (sid == device)
         {   // Unlock it
             sid->lock (0);
@@ -197,8 +196,8 @@ void ReSIDfpBuilder::unlock (sidemu *device)
 // Remove all SID emulations.
 void ReSIDfpBuilder::remove ()
 {
-    const int size = sidobjs.size ();
-    for (int i = 0; i < size; i++)
-        delete sidobjs[i];
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+        delete (*it);
+
     sidobjs.clear();
 }

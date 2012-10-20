@@ -150,18 +150,17 @@ const char *HardSIDBuilder::credits ()
 
 void HardSIDBuilder::flush(void)
 {
-    const int size = sidobjs.size ();
-    for (int i = 0; i < size; i++)
-        static_cast<HardSID*>(sidobjs[i])->flush();
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+        static_cast<HardSID*>(*it)->flush();
 }
 
 void HardSIDBuilder::filter (const bool enable)
 {
-    const int size = sidobjs.size ();
     m_status = true;
-    for (int i = 0; i < size; i++)
+
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        HardSID *sid = static_cast<HardSID*>(sidobjs[i]);
+        HardSID *sid = static_cast<HardSID*>(*it);
         sid->filter (enable);
     }
 }
@@ -169,12 +168,11 @@ void HardSIDBuilder::filter (const bool enable)
 // Find a free SID of the required specs
 sidemu *HardSIDBuilder::lock (EventContext *env, const SidConfig::model_t model)
 {
-    const int size = sidobjs.size ();
     m_status = true;
 
-    for (int i = 0; i < size; i++)
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        HardSID *sid = static_cast<HardSID*>(sidobjs[i]);
+        HardSID *sid = static_cast<HardSID*>(*it);
         if (sid->lock (env))
         {
             sid->model (model);
@@ -190,11 +188,10 @@ sidemu *HardSIDBuilder::lock (EventContext *env, const SidConfig::model_t model)
 // Allow something to use this SID
 void HardSIDBuilder::unlock (sidemu *device)
 {
-    const int size = sidobjs.size ();
     // Make sure this is our SID
-    for (int i = 0; i < size; i++)
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        HardSID *sid = static_cast<HardSID*>(sidobjs[i]);
+        HardSID *sid = static_cast<HardSID*>(*it);
         if (sid == device)
         {   // Unlock it
             sid->lock (0);
@@ -206,9 +203,9 @@ void HardSIDBuilder::unlock (sidemu *device)
 // Remove all SID emulations.
 void HardSIDBuilder::remove ()
 {
-    const int size = sidobjs.size ();
-    for (int i = 0; i < size; i++)
-        delete sidobjs[i];
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+        delete (*it);
+
     sidobjs.clear();
 }
 

@@ -125,22 +125,22 @@ unsigned int ReSIDBuilder::devices (const bool created)
 
 void ReSIDBuilder::filter (const bool enable)
 {
-    const int size = sidobjs.size ();
     m_status = true;
-    for (int i = 0; i < size; i++)
+
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
+        ReSID *sid = static_cast<ReSID*>(*it);
         sid->filter (enable);
     }
 }
 
 void ReSIDBuilder::bias (const double dac_bias)
 {
-    const int size = sidobjs.size ();
     m_status = true;
-    for (int i = 0; i < size; i++)
+
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
+        ReSID *sid = static_cast<ReSID*>(*it);
         sid->bias (dac_bias);
     }
 }
@@ -148,12 +148,11 @@ void ReSIDBuilder::bias (const double dac_bias)
 // Find a free SID of the required specs
 sidemu *ReSIDBuilder::lock (EventContext *env, const SidConfig::model_t model)
 {
-    const int size = sidobjs.size ();
     m_status = true;
 
-    for (int i = 0; i < size; i++)
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
+        ReSID *sid = static_cast<ReSID*>(*it);
         if (sid->lock (env))
         {
             sid->model (model);
@@ -170,11 +169,10 @@ sidemu *ReSIDBuilder::lock (EventContext *env, const SidConfig::model_t model)
 // Allow something to use this SID
 void ReSIDBuilder::unlock (sidemu *device)
 {
-    const int size = sidobjs.size ();
-    // Maek sure this is our SID
-    for (int i = 0; i < size; i++)
+    // Make sure this is our SID
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        ReSID *sid = static_cast<ReSID*>(sidobjs[i]);
+        ReSID *sid = static_cast<ReSID*>(*it);
         if (sid == device)
         {   // Unlock it
             sid->lock (0);
@@ -186,8 +184,8 @@ void ReSIDBuilder::unlock (sidemu *device)
 // Remove all SID emulations.
 void ReSIDBuilder::remove ()
 {
-    const int size = sidobjs.size ();
-    for (int i = 0; i < size; i++)
-        delete sidobjs[i];
+    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+        delete (*it);
+
     sidobjs.clear();
 }
