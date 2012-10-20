@@ -23,7 +23,6 @@
 #ifndef RESID_H
 #define RESID_H
 
-#include <vector>
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/siddefs.h"
 
@@ -34,12 +33,8 @@ class sidemu;
 */
 class SID_EXTERN ReSIDBuilder: public sidbuilder
 {
-protected:
-    std::vector<sidemu *> sidobjs;
-
 private:
     const char *m_error;
-    char        m_errorBuffer[100];
 
 public:
     ReSIDBuilder  (const char * const name);

@@ -25,6 +25,8 @@
 
 #include "SidConfig.h"
 
+#include <vector>
+
 class sidemu;
 class EventContext;
 
@@ -35,6 +37,10 @@ private:
 
 protected:
     bool m_status;
+
+    char m_errorBuffer[100];
+
+    std::vector<sidemu *> sidobjs;
 
 public:
     sidbuilder(const char * const name)

@@ -23,7 +23,6 @@
 #ifndef  HARDSID_H
 #define  HARDSID_H
 
-#include <vector>
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/siddefs.h"
 
@@ -36,8 +35,6 @@ class SID_EXTERN HardSIDBuilder: public sidbuilder
 {
 private:
     static bool m_initialised;
-    char   m_errorBuffer[100];
-    std::vector<sidemu *> sidobjs;
 
 #ifndef _WIN32
     static unsigned int m_count;
