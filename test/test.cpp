@@ -48,7 +48,7 @@ public:
     uint8_t read  (uint_least8_t) { return 0; }
     void    write (uint_least8_t, uint8_t) {}
     void    clock() {}
-    const   char *credits (void) { return ""; }
+    const   char *credits (void) const { return ""; }
     void    voice (const unsigned int num, const bool mute) {}
     const   char *error   (void) const { return ""; }
 };

@@ -36,7 +36,25 @@
 #include "resid.h"
 #include "resid-emu.h"
 
-char ReSID::m_credit[];
+#include <sstream>
+
+std::string ReSID::m_credit;
+
+const char* ReSID::getCredits()
+{
+    if (m_credit.empty())
+    {
+        // Setup credits
+        std::ostringstream ss;
+        ss << "ReSID V" << VERSION << " Engine:\n";
+        ss << "\t(C) 1999-2002 Simon White\n";
+        ss << "MOS6581 (SID) Emulation (ReSID V" << resid_version_string << "):\n";
+        ss << "\t(C) 1999-2002 Dag Lem\n";
+        m_credit = ss.str();
+    }
+
+    return m_credit.c_str();
+}
 
 ReSID::ReSID (sidbuilder *builder)
 :sidemu(builder),
@@ -51,14 +69,6 @@ ReSID::ReSID (sidbuilder *builder)
  m_voiceMask(0x07)
 {
     m_error = "N/A";
-
-    // Setup credits
-    sprintf (m_credit,
-        "ReSID V" VERSION " Engine:\n"
-        "\t(C) 1999-2002 Simon White\n"
-        "MOS6581 (SID) Emulation (ReSID V%s):\n"
-        "\t(C) 1999-2002 Dag Lem\n", resid_version_string);
-
 
     if (!&m_sid)
     {

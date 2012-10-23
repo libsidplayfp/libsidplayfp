@@ -22,6 +22,8 @@
 
 #include <stdio.h>
 
+#include <sstream>
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -38,8 +40,22 @@ Sidplay2 patch
 extern HsidDLL2 hsid2;
 const  unsigned int HardSID::voices = HARDSID_VOICES;
 unsigned int   HardSID::sid = 0;
-char   HardSID::credit[];
 
+std::string       HardSID::m_credit;
+
+const char* HardSID::getCredits()
+{
+    if (m_credit.empty())
+    {
+        // Setup credits
+        std::ostringstream ss;
+        ss << "HardSID V" << VERSION << " Engine:\n";
+        ss << "\t(C) 1999-2002 Simon White\n";
+        m_credit = ss.str();
+    }
+
+    return m_credit.c_str();
+}
 
 HardSID::HardSID (sidbuilder *builder)
 :sidemu(builder),

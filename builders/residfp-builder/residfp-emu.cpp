@@ -39,7 +39,26 @@
 #include "residfp.h"
 #include "residfp-emu.h"
 
-char ReSIDfp::m_credit[];
+#include <sstream>
+
+std::string ReSIDfp::m_credit;
+
+const char* ReSIDfp::getCredits()
+{
+    if (m_credit.empty())
+    {
+        // Setup credits
+        std::ostringstream ss;
+        ss << "ReSIDfp V" << VERSION << " Engine:\n";
+        ss << "\t(C) 1999-2002 Simon White\n";
+        ss << "MOS6581 (SID) Emulation (ReSIDfp V" << residfp_version_string << "):\n";
+        ss << "\t(C) 1999-2002 Dag Lem\n";
+        ss << "\t(C) 2005-2011 Antti S. Lankila\n";
+        m_credit = ss.str();
+    }
+
+    return m_credit.c_str();
+}
 
 ReSIDfp::ReSIDfp (sidbuilder *builder)
 :sidemu(builder),
@@ -53,15 +72,6 @@ ReSIDfp::ReSIDfp (sidbuilder *builder)
  m_locked(false)
 {
     m_error = "N/A";
-
-    // Setup credits
-    sprintf (m_credit,
-        "ReSIDfp V" VERSION " Engine:\n"
-        "\t(C) 1999-2002 Simon White\n"
-        "MOS6581 (SID) Emulation (ReSIDfp V%s):\n"
-        "\t(C) 1999-2002 Dag Lem\n"
-        "\t(C) 2005-2011 Antti S. Lankila\n", residfp_version_string);
-
 
     if (!&m_sid)
     {

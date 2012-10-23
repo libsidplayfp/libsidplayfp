@@ -173,7 +173,7 @@ public:
     */
     void    write (uint_least8_t addr, uint8_t data);
 
-    const   char *credits (void) {return credit;}
+    const   char *credits (void) const { return credit; }
 };
 
 #endif // MOS656X_H

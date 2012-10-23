@@ -451,7 +451,7 @@ public:
     *
     * @return the credits
     */
-    const char *credits(void) { return credit; }
+    const char *credits(void) const { return credit; }
 
     /**
     * Set day-of-time event occurence of rate.

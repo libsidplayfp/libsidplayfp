@@ -93,24 +93,7 @@ const char *ReSIDfpBuilder::credits ()
 {
     m_status = true;
 
-    // Available devices
-    if (!sidobjs.empty ())
-    {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(sidobjs[0]);
-        return sid->credits ();
-    }
-
-    {   // Create an emulation to obtain credits
-        ReSIDfp sid(this);
-        if (!sid.getStatus())
-        {
-            m_status = false;
-            strcpy (m_errorBuffer, sid.error ());
-            m_error = m_errorBuffer;
-            return 0;
-        }
-        return sid.credits ();
-    }
+    return ReSIDfp::getCredits ();
 }
 
 

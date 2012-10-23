@@ -54,14 +54,7 @@ HardSIDBuilder::HardSIDBuilder (const char * const name)
     strcpy (m_errorBuffer, "N/A");
 
     if (!m_initialised)
-    {   // Setup credits
-        sprintf (HardSID::credit, "HardSID V" VERSION " Engine:\n"
-#ifdef _WIN32
-            "\t(C) 1999-2002 Simon White\n");
-#else
-            "\t(C) 2001-2002 Jarno Paanenen\n");
-#endif
-
+    {
         if (init () < 0)
             return;
         m_initialised = true;
@@ -145,7 +138,7 @@ unsigned int HardSIDBuilder::devices (const bool created)
 const char *HardSIDBuilder::credits ()
 {
     m_status = true;
-    return HardSID::credit;
+    return HardSID::getCredits();
 }
 
 void HardSIDBuilder::flush(void)

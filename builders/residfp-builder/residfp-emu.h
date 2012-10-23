@@ -28,6 +28,8 @@
 #include "sidplayfp/sidemu.h"
 #include "sidplayfp/EventScheduler.h"
 
+#include <string>
+
 #define RESID_NAMESPACE reSIDfp
 
 enum {
@@ -43,14 +45,19 @@ private:
     const  char  *m_error;
     bool          m_status;
     bool          m_locked;
-    static char   m_credit[250];
+
+    static std::string m_credit;
+
+public:
+    static const char* getCredits();
 
 public:
     ReSIDfp  (sidbuilder *builder);
     ~ReSIDfp (void);
 
     // Standard component functions
-    const char   *credits (void) {return m_credit;}
+    const char   *credits () const { return getCredits(); }
+    
     void          reset   () { sidemu::reset (); }
     void          reset   (uint8_t volume);
     uint8_t       read    (uint_least8_t addr);

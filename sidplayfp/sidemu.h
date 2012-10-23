@@ -52,7 +52,7 @@ public:
     virtual uint8_t read  (uint_least8_t addr) = 0;
     virtual void    write (uint_least8_t addr, uint8_t data) = 0;
     virtual void    clock () = 0;
-    virtual const   char *credits (void) = 0;
+    virtual const   char *credits (void) const = 0;
 
     // Standard SID functions
     virtual void    voice   (const unsigned int num, const bool mute) = 0;

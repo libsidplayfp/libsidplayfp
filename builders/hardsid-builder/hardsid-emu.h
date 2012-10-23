@@ -55,6 +55,8 @@
 #include "sidplayfp/sidemu.h"
 #include "sidplayfp/EventScheduler.h"
 
+#include <string>
+
 #ifdef _WIN32
 
 #include <windows.h>
@@ -127,7 +129,8 @@ private:
 
     static const   unsigned int voices;
     static         unsigned int sid;
-    static char    credit[100];
+
+    static std::string    m_credit;
 
 
     // Generic variables
@@ -142,11 +145,15 @@ private:
     bool           m_locked;
 
 public:
+    static const char* getCredits();
+
+public:
     HardSID  (sidbuilder *builder);
     ~HardSID ();
 
     // Standard component functions
-    const char   *credits (void) {return credit;}
+    const char   *credits (void) const { return getCredits(); }
+
     void          reset   () { sidemu::reset (); }
     void          reset   (uint8_t volume);
     uint8_t       read    (uint_least8_t addr);

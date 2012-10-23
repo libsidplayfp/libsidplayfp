@@ -28,6 +28,8 @@
 #include "sidplayfp/sidemu.h"
 #include "sidplayfp/EventScheduler.h"
 
+#include <string>
+
 //FIXME
 #define RESID_NAMESPACE reSID
 
@@ -52,14 +54,19 @@ private:
     bool          m_status;
     bool          m_locked;
     uint8_t       m_voiceMask;
-    static char   m_credit[180];
+
+    static std::string   m_credit;
+
+public:
+    static const char* getCredits();
 
 public:
     ReSID  (sidbuilder *builder);
     ~ReSID (void);
 
     // Standard component functions
-    const char   *credits (void) {return m_credit;}
+    const char   *credits () const { return getCredits(); }
+
     void          reset   () { sidemu::reset (); }
     void          reset   (uint8_t volume);
     uint8_t       read    (uint_least8_t addr);
