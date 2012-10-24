@@ -218,8 +218,8 @@ STIL::setBaseDir(const char *pathToHVSC)
         CERR_STIL_DEBUG << "setBaseDir() open failed for " << tempName << endl;
         lastError = BUG_OPEN;
     }
-
-    CERR_STIL_DEBUG << "setBaseDir(): open succeeded for " << tempName << endl;
+    else
+        CERR_STIL_DEBUG << "setBaseDir(): open succeeded for " << tempName << endl;
 
     delete[] tempName;
 
