@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _siddatabase_h_
-#define _siddatabase_h_
+#ifndef SIDDATABASE_H
+#define SIDDATABASE_H
 
 #include <stdint.h>
 
@@ -82,4 +82,4 @@ public:
     const char *  error  (void) { return errorString; }
 };
 
-#endif // _siddatabase_h_
+#endif // SIDDATABASE_H
