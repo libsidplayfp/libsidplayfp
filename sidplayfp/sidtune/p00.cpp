@@ -27,6 +27,7 @@
 #include "SidTuneInfoImpl.h"
 
 #include <string.h>
+#include <memory>
 
 #define X00_ID_LEN   8
 #define X00_NAME_LEN 17
@@ -128,18 +129,10 @@ SidTuneBase* p00::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& 
     if (bufLen < sizeof(X00Header)+2)
         throw loadError(ERR_TRUNCATED);
 
-    p00 *tune = new p00();
-    try
-    {
-        tune->load(format, pHeader);
-    }
-    catch (loadError& e)
-    {
-        delete tune;
-        throw;
-    }
+    std::auto_ptr<p00> tune(new p00());
+    tune->load(format, pHeader);
 
-    return tune;
+    return tune.release();
 }
 
 void p00::load(const char* format, const X00Header* pHeader)

@@ -26,6 +26,8 @@
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
 
+#include <memory>
+
 const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 
 const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
@@ -45,10 +47,10 @@ SidTuneBase* prg::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& 
         throw loadError(ERR_TRUNCATED);
     }
 
-    prg *tune = new prg();
+    std::auto_ptr<prg> tune(new prg());
     tune->load();
 
-    return tune;
+    return tune.release();
 }
 
 void prg::load()

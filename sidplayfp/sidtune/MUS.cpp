@@ -23,6 +23,7 @@
 #include "MUS.h"
 
 #include <string.h>
+#include <memory>
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
@@ -592,19 +593,11 @@ SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf,
     if ( !detect(&spPet[0], spPet.tellLength(), voice3Index) )
         return 0;
 
-    MUS *tune = new MUS();
-    try
-    {
-        tune->tryLoad(musBuf, strBuf, spPet, voice3Index, init);
-        tune->mergeParts(musBuf, strBuf);
-    }
-    catch (loadError& e)
-    {
-        delete tune;
-        throw;
-    }
+    std::auto_ptr<MUS> tune(new MUS());
+    tune->tryLoad(musBuf, strBuf, spPet, voice3Index, init);
+    tune->mergeParts(musBuf, strBuf);
 
-    return tune;
+    return tune.release();
 }
 
 void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,

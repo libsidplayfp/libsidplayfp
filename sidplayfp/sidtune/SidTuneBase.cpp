@@ -107,13 +107,13 @@ SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, const uint_lea
 
 const SidTuneInfo* SidTuneBase::getInfo() const
 {
-    return info;
+    return info.get();
 }
 
 const SidTuneInfo* SidTuneBase::getInfo(const unsigned int songNum)
 {
     selectSong(songNum);
-    return info;
+    return info.get();
 }
 
 // First check, whether a song is valid. Then copy any song-specific
@@ -237,11 +237,6 @@ SidTuneBase::SidTuneBase() :
     }
 }
 
-SidTuneBase::~SidTuneBase()
-{
-    delete info;
-}
-
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
 
 SidTuneBase* SidTuneBase::getFromStdIn()
@@ -287,26 +282,18 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
     Buffer_sidtt<const uint_least8_t> buf1(tmpBuf, bufferLen);
 
     // Here test for the possible single file formats. --------------
-    SidTuneBase* s = PSID::load(buf1);
-    if (!s)
+    std::auto_ptr<SidTuneBase> s(PSID::load(buf1));
+    if (!s.get())
     {
         Buffer_sidtt<const uint_least8_t> buf2;  // empty
-        s = MUS::load(buf1, buf2, 0, true);
+        s.reset(MUS::load(buf1, buf2, 0, true));
     }
 
-    if (s)
+    if (s.get())
     {
-        try
-        {
-            s->acceptSidTune("-", "-", buf1, false);
-            return s;
-        }
-        catch (loadError &e)
-        {
-            delete s;
-            throw;
-        }
-        delete s;
+        s->acceptSidTune("-", "-", buf1, false);
+        return s.release();
+
     }
 
     throw loadError(ERR_UNRECOGNIZED_FORMAT);
@@ -412,14 +399,14 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
     loadFile(fileName, fileBuf1);
 
     // File loaded. Now check if it is in a valid single-file-format.
-    SidTuneBase* s = PSID::load(fileBuf1);
-    if (!s)
+    std::auto_ptr<SidTuneBase> s(PSID::load(fileBuf1));
+    if (!s.get())
     {
         Buffer_sidtt<const uint_least8_t> fileBuf2;
 
         // Try some native C64 file formats
-        s = MUS::load(fileBuf1, fileBuf2, 0, true);
-        if (s)
+        s.reset(MUS::load(fileBuf1, fileBuf2, 0, true));
+        if (s.get())
         {
             // Try to find second file.
             Buffer_sidtt<char> fileName2;
@@ -438,36 +425,20 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                         // Check if tunes in wrong order and therefore swap them here
                         if (MYSTRICMP (fileNameExtensions[n], ".mus") == 0)
                         {
-                            SidTuneBase* s2 = MUS::load(fileBuf2, fileBuf1, 0, true);
-                            if (s2)
+                            std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf2, fileBuf1, 0, true));
+                            if (s2.get())
                             {
-                                try
-                                {
-                                    s2->acceptSidTune(fileName2.get(), fileName, fileBuf2, separatorIsSlash);
-                                    delete s;
-                                    return s2;
-                                }
-                                catch (loadError& e)
-                                {
-                                    delete s2;
-                                }
+                                s2->acceptSidTune(fileName2.get(), fileName, fileBuf2, separatorIsSlash);
+                                return s2.release();
                             }
                         }
                         else
                         {
-                            SidTuneBase* s2 = MUS::load(fileBuf1, fileBuf2, 0, true);
-                            if (s2)
+                            std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf1, fileBuf2, 0, true));
+                            if (s2.get())
                             {
-                                try
-                                {
-                                    s2->acceptSidTune(fileName, fileName2.get(), fileBuf1, separatorIsSlash);
-                                    delete s;
-                                    return s2;
-                                }
-                                catch (loadError& e)
-                                {
-                                    delete s2;
-                                }
+                                s2->acceptSidTune(fileName, fileName2.get(), fileBuf1, separatorIsSlash);
+                                return s2.release();
                             }
                         }
                     // The first tune loaded ok, so ignore errors on the
@@ -478,33 +449,17 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                 n++;
             }
 
-            try
-            {
-                s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
-                return s;
-            }
-            catch (loadError& e)
-            {
-                delete s;
-                throw;
-            }
+            s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
+            return s.release();
         }
     }
-    if (!s) s = p00::load(fileName, fileBuf1);
-    if (!s) s = prg::load(fileName, fileBuf1);
+    if (!s.get()) s.reset(p00::load(fileName, fileBuf1));
+    if (!s.get()) s.reset(prg::load(fileName, fileBuf1));
 
-    if (s)
+    if (s.get())
     {
-        try
-        {
-            s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
-            return s;
-        }
-        catch (loadError& e)
-        {
-            delete s;
-            throw;
-        }
+        s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
+        return s.release();
     }
 
     throw loadError(ERR_UNRECOGNIZED_FORMAT);

@@ -28,6 +28,7 @@
 
 #include <stdint.h>
 #include <fstream>
+#include <memory>
 
 class SidTuneInfoImpl;
 class SidTuneBase;
@@ -42,7 +43,7 @@ class SID_EXTERN SidTune
     static const int MD5_LENGTH = 32;
 
  private:  // -------------------------------------------------------------
-    SidTuneBase *tune;
+    std::auto_ptr<SidTuneBase> tune;
 
     bool m_status;
 
@@ -74,7 +75,7 @@ class SID_EXTERN SidTune
     */
     SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength);
 
-    virtual ~SidTune();
+    virtual ~SidTune() {}
 
     /**
     * The sidTune class does not copy the list of file name extensions,

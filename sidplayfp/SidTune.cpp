@@ -51,7 +51,7 @@ SidTune::SidTune(const char* fileName, const char **fileNameExt, const bool sepa
 
     try
     {
-        tune = SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash);
+        tune.reset(SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash));
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
@@ -59,7 +59,6 @@ SidTune::SidTune(const char* fileName, const char **fileNameExt, const bool sepa
     {
         m_status = false;
         m_statusString = e.message();
-        tune = 0;
     }
 }
 
@@ -67,7 +66,7 @@ SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t
 {
     try
     {
-        tune = SidTuneBase::read(oneFileFormatSidtune, sidtuneLength);
+        tune.reset(SidTuneBase::read(oneFileFormatSidtune, sidtuneLength));
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
@@ -75,13 +74,7 @@ SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t
     {
         m_status = false;
         m_statusString = e.message();
-        tune = 0;
     }
-}
-
-SidTune::~SidTune()
-{
-    delete tune;
 }
 
 void SidTune::setFileNameExtensions(const char **fileNameExt)
@@ -91,10 +84,9 @@ void SidTune::setFileNameExtensions(const char **fileNameExt)
 
 void SidTune::load(const char* fileName, const bool separatorIsSlash)
 {
-    delete tune;
     try
     {
-        tune = SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash);
+        tune.reset(SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash));
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
@@ -102,16 +94,14 @@ void SidTune::load(const char* fileName, const bool separatorIsSlash)
     {
         m_status = false;
         m_statusString = e.message();
-        tune = 0;
     }
 }
 
 void SidTune::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
 {
-    delete tune;
     try
     {
-        tune = SidTuneBase::read(sourceBuffer, bufferLen);
+        tune.reset(SidTuneBase::read(sourceBuffer, bufferLen));
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
@@ -119,7 +109,6 @@ void SidTune::read(const uint_least8_t* sourceBuffer, const uint_least32_t buffe
     {
         m_status = false;
         m_statusString = e.message();
-        tune = 0;
     }
 }
 

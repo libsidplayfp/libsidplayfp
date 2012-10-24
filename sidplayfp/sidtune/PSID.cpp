@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <memory>
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
@@ -121,18 +122,10 @@ SidTuneBase* PSID::load(Buffer_sidtt<const uint_least8_t>& dataBuf)
          (endian_big32((const uint_least8_t*)pHeader->id)!=RSID_ID) )
          return 0;
 
-    PSID *tune = new PSID();
-    try
-    {
-        tune->tryLoad(dataBuf);
-    }
-    catch (loadError& e)
-    {
-        delete tune;
-        throw;
-    }
+    std::auto_ptr<PSID> tune(new PSID());
+    tune->tryLoad(dataBuf);
 
-    return tune;
+    return tune.release();
 }
 
 void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)

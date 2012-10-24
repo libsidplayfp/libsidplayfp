@@ -31,6 +31,7 @@
 
 #include <stdint.h>
 #include <fstream>
+#include <memory>
 
 template class Buffer_sidtt<const uint_least8_t>;
 
@@ -63,7 +64,7 @@ class SidTuneBase
     static const uint_least32_t MAX_MEMORY = 65536;
 
  public:  // ----------------------------------------------------------------
-    virtual ~SidTuneBase();
+    virtual ~SidTuneBase() {}
 
     /**
     * Load a sidtune from a file.
@@ -115,7 +116,7 @@ class SidTuneBase
 
  protected:  // -------------------------------------------------------------
 
-    SidTuneInfoImpl *info;
+    std::auto_ptr<SidTuneInfoImpl> info;
 
     uint_least8_t songSpeed[MAX_SONGS];
     SidTuneInfo::clock_t clockSpeed[MAX_SONGS];
