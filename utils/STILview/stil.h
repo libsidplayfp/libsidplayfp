@@ -434,7 +434,7 @@ private:
     * @return
     *      NONE (Maybe it should return a bool for error-checking purposes?)
     */
-    void deleteDirList(dirList *dirs);
+    static void deleteDirList(dirList *dirs);
 
     /**
     * Copies the linked list of dirnames from one linked list
@@ -447,7 +447,7 @@ private:
     * @return
     *      NONE (Maybe it should return a bool for error-checking purposes?)
     */
-    void copyDirList(dirList *toPtr, dirList *fromPtr);
+    static void copyDirList(dirList *toPtr, dirList *fromPtr);
 
     /**
     * Creates a new dirlist entry (allocates memory for it), and
@@ -456,7 +456,7 @@ private:
     * @return
     *      pointer to the newly created entry
     */
-    inline dirList *createOneDir(void);
+    static inline dirList *createOneDir(void);
 };
 
 #endif // STIL_H
