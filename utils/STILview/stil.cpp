@@ -31,7 +31,10 @@
 #include <cstring>
 #include <fstream>
 #include <cstdio>      // For snprintf() and NULL
+#include <sstream>
+
 using namespace std;
+
 #include "stil.h"
 
 #define STILopenFlags (ios::in | ios::binary)
@@ -72,8 +75,7 @@ STIL::STIL(const char* stilPath, const char* bugsPath) :
   PATH_TO_STIL(stilPath),
   PATH_TO_BUGLIST(bugsPath)
 {
-    snprintf(versionString, 2*STIL_MAX_LINE_SIZE-1, "STILView v%4.2f, (C) 1998, 2002 by LaLa (LaLa@C64.org)\n", VERSION_NO);
-    versionString[2*STIL_MAX_LINE_SIZE-1] = '\0';
+    setVersionString();
 
     STILVersion = 0.0;
     baseDir = NULL;
@@ -110,11 +112,19 @@ STIL::~STIL()
     CERR_STIL_DEBUG << "Destructor finished" << endl;
 }
 
-char *
+void STIL::setVersionString()
+{
+    ostringstream ss;
+    ss << fixed << setw(4) << setprecision(2);
+    ss << "STILView v" << VERSION_NO << ", (C) 1998, 2002 by LaLa (LaLa@C64.org)" << endl;
+    versionString = ss.str();
+}
+
+const char *
 STIL::getVersion()
 {
     lastError = NO_STIL_ERROR;
-    return versionString;
+    return versionString.c_str();
 }
 
 float
@@ -140,9 +150,6 @@ STIL::setBaseDir(const char *pathToHVSC)
     size_t tempBaseDirLength;
     size_t pathToHVSCLength = strlen(pathToHVSC);
     size_t tempNameLength;
-
-    // Temporary version number/copyright string.
-    char tempVersionString[2*STIL_MAX_LINE_SIZE];
 
     // Temporary placeholder for STIL.txt's version number.
     float tempSTILVersion = STILVersion;
@@ -233,10 +240,9 @@ STIL::setBaseDir(const char *pathToHVSC)
     }
 
     // Save away the current string so we can restore it if needed.
-    strncpy(tempVersionString, versionString, 2*STIL_MAX_LINE_SIZE-1);
-    tempVersionString[2*STIL_MAX_LINE_SIZE-1] = '\0';
-    snprintf(versionString, 2*STIL_MAX_LINE_SIZE-1, "STILView v%4.2f, (C) 1998, 2002 by LaLa (LaLa@C64.org)\n", VERSION_NO);
-    versionString[2*STIL_MAX_LINE_SIZE-1] = '\0';
+    string tempVersionString(versionString);
+
+    setVersionString();
 
     // This is necessary so the version number gets scanned in from the new
     // file, too.
@@ -257,8 +263,7 @@ STIL::setBaseDir(const char *pathToHVSC)
         deleteDirList(tempStilDirs);
         deleteDirList(tempBugDirs);
         STILVersion = tempSTILVersion;
-        strncpy(versionString, tempVersionString, 2*STIL_MAX_LINE_SIZE-1);
-        versionString[2*STIL_MAX_LINE_SIZE-1] = '\0';
+        versionString = tempVersionString;
         return false;
     }
 
@@ -801,8 +806,7 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
                 // Put it into the string, too.
                 snprintf(line, STIL_MAX_LINE_SIZE-1, "SID Tune Information List (STIL) v%4.2f\n", STILVersion);
                 line[STIL_MAX_LINE_SIZE-1] = '\0';
-                strncat(versionString, line, 2*STIL_MAX_LINE_SIZE-1);
-                versionString[2*STIL_MAX_LINE_SIZE-1] = '\0';
+                versionString.append(line);
 
                 CERR_STIL_DEBUG << "getDirs() STILVersion=" << STILVersion << endl;
 

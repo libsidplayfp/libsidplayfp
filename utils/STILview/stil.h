@@ -24,6 +24,7 @@
 
 #include <fstream>
 #include <cstdlib>     // For atof() and size_t
+#include <string>
 
 #include "stilcomm.h"
 #include "stildefs.h"
@@ -275,7 +276,7 @@ private:
     const char* PATH_TO_BUGLIST;
 
     /// Version number/copyright string
-    char versionString[2*STIL_MAX_LINE_SIZE];
+    std::string versionString;
 
     /// STIL.txt's version number
     float STILVersion;
@@ -332,6 +333,8 @@ private:
     char resultBug[STIL_MAX_ENTRY_SIZE];
 
     ////////////////
+
+    void setVersionString();
 
     /**
     * Determines what the EOL char is (or are) from STIL.txt.
