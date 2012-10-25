@@ -302,6 +302,11 @@ private:
         char *dirName;
         std::streampos position;
         struct dirList *next;
+
+        dirList() :
+          dirName(0),
+          position(0),
+          next(0) {}
     } *stilDirs, *bugDirs;
 
     /**
@@ -459,7 +464,7 @@ private:
     * @return
     *      pointer to the newly created entry
     */
-    static inline dirList *createOneDir(void);
+    static inline dirList *createOneDir(void) { return new dirList; }
 };
 
 #endif // STIL_H

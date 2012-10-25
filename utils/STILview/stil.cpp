@@ -1427,15 +1427,3 @@ STIL::copyDirList(dirList *toPtr, dirList *fromPtr)
     } while (fromPtr);
 }
 
-STIL::dirList *
-STIL::createOneDir(void)
-{
-    dirList *ptr;
-
-    ptr = new dirList;
-    ptr->dirName = NULL;
-    ptr->position = 0;
-    ptr->next = NULL;
-
-    return ptr;
-}
