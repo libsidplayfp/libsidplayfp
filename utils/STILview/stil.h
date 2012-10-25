@@ -100,7 +100,7 @@ public:
     *     (It's kinda dangerous to return a pointer that points
     *     to an internal structure, but I trust you. :)
     */
-    char *getVersion();
+    const char *getVersion();
 
     /**
     * Returns a floating number telling what the version
@@ -244,7 +244,7 @@ public:
     * @return
     *      STILerror - an enumerated error value
     */
-    inline STILerror getError() {return (lastError);}
+    inline STILerror getError() const {return (lastError);}
 
     /**
     * Returns true if the last error encountered was critical
@@ -253,7 +253,7 @@ public:
     * @return
     *      true if the last error encountered was critical
     */
-    inline bool hasCriticalError() {
+    inline bool hasCriticalError() const {
         return ( (lastError >= CRITICAL_STIL_ERROR) ? true : false);
     }
 
@@ -265,7 +265,7 @@ public:
     * @return
     *      pointer to string with the error description
     */
-    inline const char *getErrorStr() {return (STIL_ERROR_STR[lastError]);}
+    inline const char *getErrorStr() const {return (STIL_ERROR_STR[lastError]);}
 
 private:
     /// Path to STIL.
