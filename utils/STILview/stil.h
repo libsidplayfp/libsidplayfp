@@ -299,12 +299,11 @@ private:
     *       lists! (The pointers will never be NULL.)
     */
     struct dirList {
-        char *dirName;
+        std::string dirName;
         std::streampos position;
         struct dirList *next;
 
         dirList() :
-          dirName(0),
           position(0),
           next(0) {}
     } *stilDirs, *bugDirs;

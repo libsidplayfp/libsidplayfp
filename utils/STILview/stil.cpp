@@ -833,7 +833,7 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
                 if (i==0) {
                     newDir = true;
                 }
-                else if (MYSTRNICMP(prevDir->dirName, line, j) != 0) {
+                else if (MYSTRNICMP(prevDir->dirName.c_str(), line, j) != 0) {
                     newDir = true;
                 }
                 else {
@@ -844,9 +844,7 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
             // Store the info
             if (newDir) {
 
-                dirs->dirName = new char [j+1];
-                strncpy(dirs->dirName, line, j);
-                *((dirs->dirName)+j) = '\0';
+                dirs->dirName.assign(line, j);
 
                 dirs->position = inFile.tellg()-(streampos)strlen(line)-1L;
 
@@ -920,9 +918,9 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList *dirs)
 
     // Find it in the table.
 
-    while (dirs->dirName) {
-        if ((MYSTRNICMP(dirs->dirName, entryStr, pathLen) == 0) &&
-            (strlen(dirs->dirName) == pathLen)) {
+    while (!dirs->dirName.empty()) {
+        if ((MYSTRNICMP(dirs->dirName.c_str(), entryStr, pathLen) == 0) &&
+            (dirs->dirName.size() == pathLen)) {
             CERR_STIL_DEBUG << "pos2Entry() found dir, dirName=" << dirs->dirName << endl;
             foundIt = true;
             break;
@@ -952,7 +950,7 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList *dirs)
 
         if (*line == '/') {
 
-            if (MYSTRNICMP(dirs->dirName, line, pathLen) != 0) {
+            if (MYSTRNICMP(dirs->dirName.c_str(), line, pathLen) != 0) {
                 // We are outside the section - get out of the loop,
                 // which will fail the search.
                 break;
@@ -1390,9 +1388,6 @@ STIL::deleteDirList(dirList *dirs)
 
     do {
         ptr = dirs->next;
-        if (dirs->dirName) {
-            delete[] dirs->dirName;
-        }
         delete dirs;
         dirs = ptr;
     } while (ptr);
@@ -1406,13 +1401,7 @@ STIL::copyDirList(dirList *toPtr, dirList *fromPtr)
     do {
         toPtr->position = fromPtr->position;
 
-        if (fromPtr->dirName) {
-            toPtr->dirName = new char [strlen(fromPtr->dirName)+1];
-            strcpy(toPtr->dirName, fromPtr->dirName);
-        }
-        else {
-            toPtr->dirName = NULL;
-        }
+        toPtr->dirName = fromPtr->dirName;
 
         if (fromPtr->next) {
             toPtr->next = createOneDir();
