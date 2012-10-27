@@ -277,8 +277,7 @@ endif
 #=========================================================
 # libstilview
 sidplayfp_libstilview_la_SOURCES = \
-utils/STILview/stil.cpp \
-utils/STILview/stilcomm.cpp
+utils/STILview/stil.cpp
 
 sidplayfp_libstilview_la_LDFLAGS = -version-info $(LIBSTILVIEWVERSION)
 

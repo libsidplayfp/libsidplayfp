@@ -144,13 +144,6 @@ STIL::getSTILVersionNo()
 bool
 STIL::setBaseDir(const char *pathToHVSC)
 {
-    char *temp;         // Just a pointer to help out.
-    char *tempName;     // Points to full pathname to STIL.txt.
-    char *tempBaseDir;
-    size_t tempBaseDirLength;
-    size_t pathToHVSCLength = strlen(pathToHVSC);
-    size_t tempNameLength;
-
     // Temporary placeholder for STIL.txt's version number.
     float tempSTILVersion = STILVersion;
 
@@ -162,36 +155,30 @@ STIL::setBaseDir(const char *pathToHVSC)
 
     CERR_STIL_DEBUG << "setBaseDir() called, pathToHVSC=" << pathToHVSC << endl;
 
+    string tempBaseDir(pathToHVSC);
+
     // Sanity check the length.
-    if (strlen(pathToHVSC) < 1) {
+    if (tempBaseDir.empty()) {
         CERR_STIL_DEBUG << "setBaseDir() has problem with the size of pathToHVSC" << endl;
         lastError = BASE_DIR_LENGTH;
         return false;
     }
 
-    tempBaseDir = new char [pathToHVSCLength+1];
-    strncpy(tempBaseDir, pathToHVSC, pathToHVSCLength);
-    tempBaseDir[pathToHVSCLength] = '\0';
-
     // Chop the trailing slash
-    temp = tempBaseDir+strlen(tempBaseDir)-1;
-    if (*temp == SLASH) {
-        *temp = '\0';
+    const std::string::iterator lastChar = tempBaseDir.end() - 1;
+    if (*lastChar == SLASH) {
+        tempBaseDir.erase(lastChar);
     }
-    tempBaseDirLength = strlen(tempBaseDir);
 
     // Attempt to open STIL
 
     // Create the full path+filename
-    tempNameLength = tempBaseDirLength+strlen(PATH_TO_STIL);
-    tempName = new char [tempNameLength+1];
-    strncpy(tempName, tempBaseDir, tempNameLength);
-    strncat(tempName, PATH_TO_STIL, tempNameLength-tempBaseDirLength);
-    tempName[tempNameLength] = '\0';
+    string tempName = tempBaseDir;
+    tempName.append(PATH_TO_STIL);
     stilcomm::convertSlashes(tempName);
 
     stilFile.clear();
-    stilFile.open(tempName, STILopenFlags);
+    stilFile.open(tempName.c_str(), STILopenFlags);
 
     if (stilFile.fail()) {
         stilFile.close();
@@ -205,16 +192,12 @@ STIL::setBaseDir(const char *pathToHVSC)
     // Attempt to open BUGlist
 
     // Create the full path+filename
-    delete[] tempName;
-    tempNameLength = tempBaseDirLength+strlen(PATH_TO_BUGLIST);
-    tempName = new char [tempNameLength+1];
-    strncpy(tempName, tempBaseDir, tempNameLength);
-    strncat(tempName, PATH_TO_BUGLIST, tempNameLength-tempBaseDirLength);
-    tempName[tempNameLength] = '\0';
+    tempName = tempBaseDir;
+    tempName.append(PATH_TO_BUGLIST);
     stilcomm::convertSlashes(tempName);
 
     bugFile.clear();
-    bugFile.open(tempName, STILopenFlags);
+    bugFile.open(tempName.c_str(), STILopenFlags);
 
     if (bugFile.fail()) {
 
@@ -226,9 +209,9 @@ STIL::setBaseDir(const char *pathToHVSC)
         lastError = BUG_OPEN;
     }
     else
+    {
         CERR_STIL_DEBUG << "setBaseDir(): open succeeded for " << tempName << endl;
-
-    delete[] tempName;
+    }
 
     // Find out what the EOL really is
     if (determineEOL() != true) {
@@ -292,10 +275,10 @@ STIL::setBaseDir(const char *pathToHVSC)
     }
 
     // Copy.
-    baseDir = new char [tempBaseDirLength+1];
-    strncpy(baseDir, tempBaseDir, tempBaseDirLength);
-    baseDir[tempBaseDirLength] = '\0';
-    baseDirLength = tempBaseDirLength;
+    baseDir = new char [tempBaseDir.size()+1];
+    strncpy(baseDir, tempBaseDir.c_str(), tempBaseDir.size());
+    baseDir[tempBaseDir.size()] = '\0';
+    baseDirLength = tempBaseDir.size();
 
     // First, delete whatever may have been there previously.
     deleteDirList(stilDirs);
@@ -317,7 +300,6 @@ STIL::setBaseDir(const char *pathToHVSC)
     // Cleanup.
     deleteDirList(tempStilDirs);
     deleteDirList(tempBugDirs);
-    delete[] tempBaseDir;
 
     CERR_STIL_DEBUG << "setBaseDir() succeeded" << endl;
 
@@ -327,10 +309,6 @@ STIL::setBaseDir(const char *pathToHVSC)
 char *
 STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 {
-    char *tempDir;
-    char *returnPtr;
-    size_t tempDirLength;
-
     lastError = NO_STIL_ERROR;
 
     CERR_STIL_DEBUG << "getAbsEntry() called, absPathToEntry=" << absPathToEntry << endl;
@@ -349,15 +327,11 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
         return NULL;
     }
 
-    tempDirLength = strlen(absPathToEntry)-baseDirLength;
-    tempDir = new char [tempDirLength+1];
-    strncpy(tempDir, absPathToEntry+baseDirLength, tempDirLength);
-    tempDir[tempDirLength] = '\0';
+
+    string tempDir(absPathToEntry+baseDirLength);
     stilcomm::convertToSlashes(tempDir);
 
-    returnPtr = getEntry(tempDir, tuneNo, field);
-    delete[] tempDir;
-    return returnPtr;
+    return getEntry(tempDir.c_str(), tuneNo, field);
 }
 
 char *
@@ -404,21 +378,17 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         CERR_STIL_DEBUG << "getEntry(): entry not in buffer" << endl;
 
         // Create the full path+filename
-        tempNameLength = baseDirLength+strlen(PATH_TO_STIL);
-        tempName = new char [tempNameLength+1];
-        strncpy(tempName, baseDir, tempNameLength);
-        strncat(tempName, PATH_TO_STIL, tempNameLength-baseDirLength);
-        tempName[tempNameLength] = '\0';
+        string tempName(baseDir);
+        tempName.append(PATH_TO_STIL);
         stilcomm::convertSlashes(tempName);
 
         stilFile.clear();
-        stilFile.open(tempName, STILopenFlags);
+        stilFile.open(tempName.c_str(), STILopenFlags);
 
         if (stilFile.fail()) {
             stilFile.close();
             CERR_STIL_DEBUG << "getEntry() open failed for stilFile" << endl;
             lastError = STIL_OPEN;
-            delete[] tempName;
             return NULL;
         }
 
@@ -439,7 +409,6 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         }
 
         stilFile.close();
-        delete[] tempName;
     }
 
     // Put the requested field into the result string.
@@ -455,10 +424,6 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 char *
 STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
 {
-    char *tempDir;
-    char *returnPtr;
-    size_t tempDirLength;
-
     lastError = NO_STIL_ERROR;
 
     CERR_STIL_DEBUG << "getAbsBug() called, absPathToEntry=" << absPathToEntry << endl;
@@ -477,23 +442,15 @@ STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
         return NULL;
     }
 
-    tempDirLength = strlen(absPathToEntry)-baseDirLength;
-    tempDir = new char [tempDirLength+1];
-    strncpy(tempDir, absPathToEntry+baseDirLength, tempDirLength);
-    tempDir[tempDirLength] = '\0';
+    string tempDir(absPathToEntry+baseDirLength);
     stilcomm::convertToSlashes(tempDir);
 
-    returnPtr = getBug(tempDir, tuneNo);
-    delete[] tempDir;
-    return returnPtr;
+    return getBug(tempDir.c_str(), tuneNo);
 }
 
 char *
 STIL::getBug(const char *relPathToEntry, int tuneNo)
 {
-    char *tempName;
-    size_t tempNameLength;
-
     lastError = NO_STIL_ERROR;
 
     CERR_STIL_DEBUG << "getBug() called, relPath=" << relPathToEntry << ", rest=" << tuneNo << endl;
@@ -524,21 +481,17 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         CERR_STIL_DEBUG << "getBug(): entry not in buffer" << endl;
 
         // Create the full path+filename
-        tempNameLength = baseDirLength+strlen(PATH_TO_BUGLIST);
-        tempName = new char [tempNameLength+1];
-        strncpy(tempName, baseDir, tempNameLength);
-        strncat(tempName, PATH_TO_BUGLIST, tempNameLength-baseDirLength);
-        tempName[tempNameLength] = '\0';
+        string tempName(baseDir);
+        tempName.append(PATH_TO_BUGLIST);
         stilcomm::convertSlashes(tempName);
 
         bugFile.clear();
-        bugFile.open(tempName, STILopenFlags);
+        bugFile.open(tempName.c_str(), STILopenFlags);
 
         if (bugFile.fail()) {
             bugFile.close();
             CERR_STIL_DEBUG << "getBug() open failed for bugFile" << endl;
             lastError = BUG_OPEN;
-            delete[] tempName;
             return NULL;
         }
 
@@ -559,7 +512,6 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         }
 
         bugFile.close();
-        delete[] tempName;
     }
 
     // Put the requested field into the result string.
@@ -575,10 +527,6 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
 char *
 STIL::getAbsGlobalComment(const char *absPathToEntry)
 {
-    char *tempDir;
-    char *returnPtr;
-    size_t tempDirLength;
-
     lastError = NO_STIL_ERROR;
 
     CERR_STIL_DEBUG << "getAbsGC() called, absPathToEntry=" << absPathToEntry << endl;
@@ -597,24 +545,16 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
         return NULL;
     }
 
-    tempDirLength = strlen(absPathToEntry)-baseDirLength;
-    tempDir = new char [tempDirLength+1];
-    strncpy(tempDir, absPathToEntry+baseDirLength, tempDirLength);
-    tempDir[tempDirLength] = '\0';
+    string tempDir(absPathToEntry+baseDirLength);
     stilcomm::convertToSlashes(tempDir);
 
-    returnPtr = getGlobalComment(tempDir);
-    delete[] tempDir;
-    return returnPtr;
+    return getGlobalComment(tempDir.c_str());
 }
 
 char *
 STIL::getGlobalComment(const char *relPathToEntry)
 {
-    char *dir;
-    char *tempName;
     size_t pathLen;
-    size_t tempNameLength;
     char *temp;
     char *lastSlash;
 
@@ -638,15 +578,13 @@ STIL::getGlobalComment(const char *relPathToEntry)
     }
 
     pathLen = lastSlash-relPathToEntry+1;
-    dir = new char [pathLen+1];
-    strncpy(dir, relPathToEntry, pathLen);
-    *(dir+pathLen) = '\0';
+    string dir(relPathToEntry, pathLen);
 
     // Find out whether we have this global comment in the buffer.
     // If the baseDir was changed, we'll have to read it in again,
     // even if it might be in the buffer already.
 
-    if ((MYSTRNICMP(globalbuf, dir, pathLen) != 0) ||
+    if ((MYSTRNICMP(globalbuf, dir.c_str(), pathLen) != 0) ||
         ((( (size_t) (strchr(globalbuf, '\n')-globalbuf)) != pathLen) &&
             (STILVersion > 2.59))) {
 
@@ -656,28 +594,23 @@ STIL::getGlobalComment(const char *relPathToEntry)
         CERR_STIL_DEBUG << "getGC(): entry not in buffer" << endl;
 
         // Create the full path+filename
-        tempNameLength = baseDirLength+strlen(PATH_TO_STIL);
-        tempName = new char [tempNameLength+1];
-        strncpy(tempName, baseDir, tempNameLength);
-        strncat(tempName, PATH_TO_STIL, tempNameLength-baseDirLength);
-        tempName[tempNameLength] = '\0';
+        string tempName(baseDir);
+        tempName.append(PATH_TO_STIL);
         stilcomm::convertSlashes(tempName);
 
         stilFile.clear();
-        stilFile.open(tempName, STILopenFlags);
+        stilFile.open(tempName.c_str(), STILopenFlags);
 
         if (stilFile.fail()) {
             stilFile.close();
             CERR_STIL_DEBUG << "getGC() open failed for stilFile" << endl;
             lastError = STIL_OPEN;
-            delete[] dir;
-            delete[] tempName;
             return NULL;
         }
 
-        if (positionToEntry(dir, stilFile, stilDirs) == false) {
+        if (positionToEntry(dir.c_str(), stilFile, stilDirs) == false) {
             // Copy the dirname to the buffer.
-            strncpy(globalbuf, dir, STIL_MAX_ENTRY_SIZE-1);
+            strncpy(globalbuf, dir.c_str(), STIL_MAX_ENTRY_SIZE-1);
             strncat(globalbuf, "\n", 2);
             globalbuf[STIL_MAX_ENTRY_SIZE-1] = '\0';
             CERR_STIL_DEBUG << "getGC() posToEntry() failed" << endl;
@@ -690,7 +623,6 @@ STIL::getGlobalComment(const char *relPathToEntry)
         }
 
         stilFile.close();
-        delete[] tempName;
     }
 
     CERR_STIL_DEBUG << "getGC() globalbuf=" << globalbuf << endl;
@@ -700,8 +632,6 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
     temp = strchr(globalbuf, '\n');
     temp++;
-
-    delete[] dir;
 
     // Check whether this is a NULL entry or not.
 

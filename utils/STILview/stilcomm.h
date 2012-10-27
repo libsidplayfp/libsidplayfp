@@ -25,6 +25,11 @@
 #ifndef STILCOMM_H
 #define STILCOMM_H
 
+#include <string>
+#include <algorithm>
+
+#include "stildefs.h"
+
 /**
 * Contains some definitions common to STIL
 */
@@ -37,7 +42,7 @@ public:
     * @param
     *      str - what to convert
     */
-    static void convertSlashes(char *str);
+    static void convertSlashes(std::string& str) { std::replace(str.begin(), str.end(), '/', SLASH); }
 
     /**
     * Converts OS specific dir separators to slashes.
@@ -45,7 +50,7 @@ public:
     * @param
     *      str - what to convert
     */
-    static void convertToSlashes(char *str);
+    static void convertToSlashes(std::string& str) { std::replace(str.begin(), str.end(), SLASH, '/'); }
 };
 
 #endif // STILCOMM_H
