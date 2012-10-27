@@ -30,24 +30,13 @@
 //---------------------------------------------------------------------------------------------
 
 #include <stdio.h>
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
+
 #include "player.h"
 #include "sidplayfp.h"
 
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
-
 sidplayfp::sidplayfp ()
-#ifdef HAVE_EXCEPTIONS
-: sidplayer (*(new(std::nothrow) SIDPLAYFP_NAMESPACE::Player))
-#else
 : sidplayer (*(new SIDPLAYFP_NAMESPACE::Player))
-#endif
-{
-}
+{}
 
 sidplayfp::~sidplayfp ()
 {   if (&sidplayer) delete &sidplayer; }

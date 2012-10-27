@@ -57,9 +57,6 @@ fi
 dnl Checks for library functions.
 AC_CHECK_FUNCS([strncasecmp strcasecmp])
 
-dnl Check for nothrow allocator.
-MY_CHECK_EXCEPTIONS
-
 dnl Check ANSI C++ ios features
 MY_CHECK_IOS_BIN
 MY_CHECK_IOS_OPENMODE
