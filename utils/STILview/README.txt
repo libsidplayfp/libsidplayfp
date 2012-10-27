@@ -1,9 +1,10 @@
-STILVIEW v2.17
+STILVIEW v3.00
 ==============
 
-(C) 1998, 2002 by LaLa <LaLa@C64.org>
+Copyright (C) 1998, 2002 by LaLa <LaLa@C64.org>
+Copyright (C) 2012 by Leandro Nini <drfiemost@users.sourceforge.net>
 
-URL: http://lala.c64.org/
+URL: http://sourceforge.net/projects/sidplay-residfp/
 
 
 LICENSE
@@ -182,11 +183,11 @@ BUG REPORTS:
 If for whatever reason you cannot get STILView compiled under your OS,
 or it compiles but gives you warnings, or it runs but crashes on you, or it
 doesn't behave as expected (please, do read 'stil.h' before complaining,
-though!), send your *DETAILED* description of the encountered problem along
-with the STIL.txt and BUGlist.txt files found in your HVSC:/DOCUMENTS/
-subdirectory to:
+though!), file a bug with  your *DETAILED* description of the encountered
+problem along with the STIL.txt and BUGlist.txt files found in your
+HVSC:/DOCUMENTS/ subdirectory at the project webpage:
 
-LaLa <LaLa@C64.org>
+http://sourceforge.net/projects/sidplay-residfp/
 
 
 GREETZ TO:
@@ -205,6 +206,12 @@ The rest of the HVSC Crew - for giving me many-many ideas!
 
 HISTORY
 ~~~~~~~
+
+v3.00:
+STILview is now part of the libsidplayfp project and is installed
+as a separate library. Changes are mostly internal refactorings.
+- Replace some internal structures with STL maps and strings.
+- The public get*() methods now return a const pointer.
 
 v2.17:
 - BUGFIX: The get*() member functions used to bomb when any of them was

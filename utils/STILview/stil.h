@@ -2,6 +2,7 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 1998, 2002 by LaLa <LaLa@C64.org>
+ * Copyright 2012 Leando Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

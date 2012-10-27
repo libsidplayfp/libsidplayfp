@@ -2,6 +2,7 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 1998, 2002 by LaLa <LaLa@C64.org>
+ * Copyright 2012 Leando Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +40,7 @@ using namespace std;
 
 #define STILopenFlags (ios::in | ios::binary)
 
-const float VERSION_NO = 2.17;
+const float VERSION_NO = 3.0;
 
 #define CERR_STIL_DEBUG if (STIL_DEBUG) cerr << "Line #" << __LINE__ << " STIL::"
 
@@ -93,7 +94,9 @@ void STIL::setVersionString()
 {
     ostringstream ss;
     ss << fixed << setw(4) << setprecision(2);
-    ss << "STILView v" << VERSION_NO << ", (C) 1998, 2002 by LaLa (LaLa@C64.org)" << endl;
+    ss << "STILView v" << VERSION_NO << endl;
+    ss << "\tCopyright (C) 1998, 2002 by LaLa (LaLa@C64.org)" << endl;
+    ss << "\tCopyright (C) 2012 by Leandro Nini <drfiemost@users.sourceforge.net>" << endl;
     versionString = ss.str();
 }
 
