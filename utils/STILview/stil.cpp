@@ -202,7 +202,7 @@ STIL::setBaseDir(const char *pathToHVSC)
     // file, too.
     STILVersion = 0.0;
 
-    // These will populate the tempStilDirs and tempBugDirs arrays (or not :)
+    // These will populate the tempStilDirs and tempBugDirs maps (or not :)
 
     if (getDirs(stilFile, tempStilDirs, true) != true) {
         CERR_STIL_DEBUG << "getDirs() failed for stilFile" << endl;
@@ -232,9 +232,6 @@ STIL::setBaseDir(const char *pathToHVSC)
 
     // Copy.
     baseDir = tempBaseDir;
-
-    // Now proceed with copy.
-
     stilDirs = tempStilDirs;
     bugDirs = tempBugDirs;
 
@@ -279,9 +276,6 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 char *
 STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 {
-    char *tempName;
-    size_t tempNameLength;
-
     lastError = NO_STIL_ERROR;
 
     CERR_STIL_DEBUG << "getEntry() called, relPath=" << relPathToEntry << ", rest=" << tuneNo << "," << field << endl;
@@ -488,10 +482,6 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
 char *
 STIL::getGlobalComment(const char *relPathToEntry)
 {
-    size_t pathLen;
-    char *temp;
-    char *lastSlash;
-
     lastError = NO_STIL_ERROR;
 
     CERR_STIL_DEBUG << "getGC() called, relPath=" << relPathToEntry << endl;
@@ -504,14 +494,14 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
     // Save the dirpath.
 
-    lastSlash = (char *)strrchr(relPathToEntry, '/');
+    char *lastSlash = (char *)strrchr(relPathToEntry, '/');
 
     if (lastSlash == NULL) {
         lastError = WRONG_DIR;
         return NULL;
     }
 
-    pathLen = lastSlash-relPathToEntry+1;
+    size_t pathLen = lastSlash-relPathToEntry+1;
     string dir(relPathToEntry, pathLen);
 
     // Find out whether we have this global comment in the buffer.
@@ -560,7 +550,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
     // Position pointer to the global comment field.
 
-    temp = strchr(globalbuf, '\n');
+    char *temp = strchr(globalbuf, '\n');
     temp++;
 
     // Check whether this is a NULL entry or not.
@@ -578,9 +568,6 @@ STIL::getGlobalComment(const char *relPathToEntry)
 bool
 STIL::determineEOL(ifstream &stilFile)
 {
-    char line[STIL_MAX_LINE_SIZE+5];
-    int i=0;
-
     CERR_STIL_DEBUG << "detEOL() called" << endl;
 
     if (stilFile.fail()) {
@@ -593,6 +580,8 @@ STIL::determineEOL(ifstream &stilFile)
     // Read in the first line from stilFile to determine what the
     // EOL character is (it can be different from OS to OS).
 
+    char line[STIL_MAX_LINE_SIZE+5];
+
     stilFile.read(line, sizeof(line)-1);
     line[sizeof(line)-1] = '\0';
 
@@ -603,6 +592,7 @@ STIL::determineEOL(ifstream &stilFile)
     STIL_EOL = '\0';
     STIL_EOL2 = '\0';
 
+    int i=0;
     while (line[i] != '\0') {
         if ((line[i] == 0x0d) || (line[i] == 0x0a)) {
             if (STIL_EOL == '\0') {
@@ -632,21 +622,15 @@ bool
 STIL::getDirs(ifstream& inFile, dirList &dirs, bool isSTILFile)
 {
     char line[STIL_MAX_LINE_SIZE];
-    size_t j;
-    bool newDir;
 
-    if (isSTILFile) {
-        newDir = false;
-    }
-    else {
-        newDir = true;
-    }
+    bool newDir = !isSTILFile;
 
     CERR_STIL_DEBUG << "getDirs() called" << endl;
 
     inFile.seekg(0);
 
     while (inFile.good()) {
+
         getStilLine(inFile, line);
 
         if (!isSTILFile) CERR_STIL_DEBUG << line << '\n';
@@ -682,18 +666,13 @@ STIL::getDirs(ifstream& inFile, dirList &dirs, bool isSTILFile)
         if (newDir && (*line == '/')) {
 
             // Get the directory only
-            j = strrchr(line,'/')-line+1;
+            size_t j = strrchr(line,'/')-line+1;
 
             string dirName(line, j);
 
             if (!isSTILFile) {
                 // Compare it to the stored dirnames
-                if (dirs.count(dirName) == 0) {
-                    newDir = true;
-                }
-                else {
-                    newDir = false;
-                }
+                newDir = (dirs.count(dirName) == 0);
             }
 
             // Store the info
@@ -706,12 +685,7 @@ STIL::getDirs(ifstream& inFile, dirList &dirs, bool isSTILFile)
                 dirs.insert(pair<string, streampos>(dirName, position));
             }
 
-            if (isSTILFile) {
-                newDir = false;
-            }
-            else {
-                newDir = true;
-            }
+            newDir = !isSTILFile;
         }
     }
 
@@ -731,20 +705,13 @@ STIL::getDirs(ifstream& inFile, dirList &dirs, bool isSTILFile)
 bool
 STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList &dirs)
 {
-    size_t pathLen;
-    size_t entryStrLen;
-    char line[STIL_MAX_LINE_SIZE];
-    int temp;
-    bool globComm = false;
-    char *chrptr;
-
     CERR_STIL_DEBUG << "pos2Entry() called, entryStr=" << entryStr << endl;
 
     inFile.seekg(0);
 
     // Get the dirpath.
 
-    chrptr = strrchr((char *)entryStr, '/');
+    char *chrptr = strrchr((char *)entryStr, '/');
 
     // If no slash was found, something is screwed up in the entryStr.
 
@@ -752,14 +719,12 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList &dirs)
         return false;
     }
 
-    pathLen = chrptr-entryStr+1;
+    size_t pathLen = chrptr-entryStr+1;
 
     // Determine whether a section-global comment is asked for.
 
-    entryStrLen = strlen(entryStr);
-    if (pathLen == entryStrLen) {
-        globComm = true;
-    }
+    size_t entryStrLen = strlen(entryStr);
+    bool globComm = (pathLen == entryStrLen);
 
     // Find it in the table.
     string entry(entryStr, pathLen);
@@ -776,6 +741,8 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList &dirs)
     bool foundIt = false;
 
     // Now find the desired entry
+
+    char line[STIL_MAX_LINE_SIZE];
 
     do {
         getStilLine(inFile, line);
@@ -795,6 +762,8 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList &dirs)
 
             // Check whether we need to find a section-global comment or
             // a specific entry.
+
+            int temp;
 
             if (globComm || (STILVersion > 2.59)) {
                 temp = MYSTRICMP(line, entryStr);
@@ -845,8 +814,6 @@ STIL::readEntry(ifstream& inFile, char *buffer)
 bool
 STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 {
-    char *start, *firstTuneNo, *temp, *temp2 = NULL;
-
     CERR_STIL_DEBUG << "getField() called, buffer=" << buffer << ", rest=" << tuneNo << "," << field << endl;
 
     // Clean out the result buffer first.
@@ -854,7 +821,7 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
     // Position pointer to the first char beyond the file designation.
 
-    start = strchr(buffer, '\n');
+    char *start = strchr(buffer, '\n');
     start++;
 
     // Check whether this is a NULL entry or not.
@@ -865,7 +832,7 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
     }
 
     // Is this a multitune entry?
-    firstTuneNo = strstr(start, "(#");
+    char *firstTuneNo = strstr(start, "(#");
 
     // This is a tune designation only if the previous char was
     // a newline (ie. if the "(#" is on the beginning of a line).
@@ -881,7 +848,8 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
         // Is the first thing in this STIL entry the COMMENT?
 
-        temp = strstr(start, _COMMENT_STR);
+        char *temp = strstr(start, _COMMENT_STR);
+        char *temp2 = NULL;
 
         // Search for other potential fields beyond the COMMENT.
         if (temp == start) {
@@ -1021,14 +989,13 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
             }
         }
 
-        char *myTuneNo, *nextTuneNo;
         char tuneNoStr[8];
 
         // Search for the requested tune number.
 
         snprintf(tuneNoStr, 7, "(#%d)", tuneNo);
         tuneNoStr[7] = '\0';
-        myTuneNo = strstr(start, tuneNoStr);
+        char *myTuneNo = strstr(start, tuneNoStr);
 
         if (myTuneNo != NULL) {
 
@@ -1038,7 +1005,7 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
             // Where is the next one?
 
-            nextTuneNo = strstr(myTuneNo, "\n(#");
+            char *nextTuneNo = strstr(myTuneNo, "\n(#");
             if (nextTuneNo == NULL) {
                 // There is no next one - set pointer to end of entry.
                 nextTuneNo = start+strlen(start);
@@ -1064,8 +1031,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 bool
 STIL::getOneField(char *result, char *start, char *end, STILField field)
 {
-    char *temp = NULL;
-
     // Sanity checking
 
     if ((end < start) || (*(end-1) != '\n')) {
@@ -1075,6 +1040,8 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
     }
 
     CERR_STIL_DEBUG << "getOneField() called, start=" << start << ", rest=" << field << endl;
+
+    char *temp = NULL;
 
     switch (field) {
 
@@ -1125,13 +1092,11 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
     // Search for the end of this field. This is done by finding
     // where the next field starts.
 
-    char *nextName, *nextAuthor, *nextTitle, *nextArtist, *nextComment, *nextField;
-
-    nextName = strstr(temp+1, _NAME_STR);
-    nextAuthor = strstr(temp+1, _AUTHOR_STR);
-    nextTitle = strstr(temp+1, _TITLE_STR);
-    nextArtist = strstr(temp+1, _ARTIST_STR);
-    nextComment = strstr(temp+1, _COMMENT_STR);
+    char *nextName = strstr(temp+1, _NAME_STR);
+    char *nextAuthor = strstr(temp+1, _AUTHOR_STR);
+    char *nextTitle = strstr(temp+1, _TITLE_STR);
+    char *nextArtist = strstr(temp+1, _ARTIST_STR);
+    char *nextComment = strstr(temp+1, _COMMENT_STR);
 
     // If any of these fields is beyond 'end', they are ignored.
 
@@ -1158,7 +1123,7 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
     // Now determine which one is the closest to our field - that one
     // will mark the end of the required field.
 
-    nextField = nextName;
+    char *nextField = nextName;
 
     if (nextField == NULL) {
         nextField = nextAuthor;
@@ -1202,13 +1167,11 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
 void
 STIL::getStilLine(ifstream& infile, char *line)
 {
-    char temp;
-
     if (STIL_EOL2 != '\0') {
 
         // If there was a remaining EOL char from the previous read, eat it up.
 
-        temp = infile.peek();
+        char temp = infile.peek();
 
         if ((temp == 0x0d) || (temp == 0x0a)) {
             infile.get(temp);
