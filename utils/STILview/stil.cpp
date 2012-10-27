@@ -127,8 +127,8 @@ STIL::setBaseDir(const char *pathToHVSC)
     float tempSTILVersion = STILVersion;
 
     // Temporary placeholders for lists of sections.
-    std::map<std::string, std::streampos> tempStilDirs;
-    std::map<std::string, std::streampos> tempBugDirs;
+    dirList tempStilDirs;
+    dirList tempBugDirs;
 
     lastError = NO_STIL_ERROR;
 
