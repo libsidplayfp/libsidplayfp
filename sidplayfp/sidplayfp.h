@@ -23,12 +23,12 @@
 #ifndef SIDPLAYFP_H
 #define SIDPLAYFP_H
 
-#include <stdio.h>
+#include <stdint.h>
 
-#include "SidConfig.h"
 #include "siddefs.h"
 #include "sidversion.h"
 
+class  SidConfig;
 class  SidTune;
 class  SidInfo;
 class  EventContext;
