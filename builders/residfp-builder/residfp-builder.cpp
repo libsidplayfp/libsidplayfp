@@ -22,7 +22,6 @@
 
 #include <stdio.h>
 #include <cstring>
-#include <memory>
 
 #include "residfp.h"
 #include "residfp-emu.h"
@@ -54,15 +53,7 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
     {
         try
         {
-            std::auto_ptr<ReSIDfp> sid(new ReSIDfp(this));
-
-            // SID init failed?
-            if (!sid->getStatus())
-            {
-                m_error = sid->error ();
-                goto ReSIDfpBuilder_create_error;
-            }
-            sidobjs.push_back (sid.release());
+            sidobjs.push_back (new ReSIDfp(this));
         }
         // Memory alloc failed?
         catch (std::bad_alloc&)

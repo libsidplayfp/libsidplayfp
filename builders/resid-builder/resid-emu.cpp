@@ -23,14 +23,6 @@
 #include <cstring>
 #include <stdio.h>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
-
 #include "resid/siddefs.h"
 #include "resid/spline.h"
 #include "resid.h"
@@ -59,23 +51,12 @@ const char* ReSID::getCredits()
 ReSID::ReSID (sidbuilder *builder)
 :sidemu(builder),
  m_context(0),
-#ifdef HAVE_EXCEPTIONS
- m_sid(*(new(std::nothrow) RESID_NS::SID)),
-#else
  m_sid(*(new RESID_NS::SID)),
-#endif
  m_status(true),
  m_locked(false),
  m_voiceMask(0x07)
 {
     m_error = "N/A";
-
-    if (!&m_sid)
-    {
-        m_error  = "RESID ERROR: Unable to create sid object";
-        m_status = false;
-        return;
-    }
 
     m_buffer = new short[OUTPUTBUFFERSIZE];
     m_bufferpos = 0;
@@ -84,8 +65,7 @@ ReSID::ReSID (sidbuilder *builder)
 
 ReSID::~ReSID ()
 {
-    if (&m_sid)
-        delete &m_sid;
+    delete &m_sid;
     delete[] m_buffer;
 }
 

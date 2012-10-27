@@ -23,17 +23,8 @@
 #include <cstring>
 #include <stdio.h>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
-
 #include "residfp/Filter6581.h"
 #include "residfp/Filter8580.h"
-
 
 #include "residfp/siddefs-fp.h"
 #include "residfp.h"
@@ -63,22 +54,11 @@ const char* ReSIDfp::getCredits()
 ReSIDfp::ReSIDfp (sidbuilder *builder)
 :sidemu(builder),
  m_context(0),
-#ifdef HAVE_EXCEPTIONS
- m_sid(*(new(std::nothrow) RESID_NAMESPACE::SID)),
-#else
  m_sid(*(new RESID_NAMESPACE::SID)),
-#endif
  m_status(true),
  m_locked(false)
 {
     m_error = "N/A";
-
-    if (!&m_sid)
-    {
-        m_error  = "RESID ERROR: Unable to create sid object";
-        m_status = false;
-        return;
-    }
 
     m_buffer = new short[OUTPUTBUFFERSIZE];
     m_bufferpos = 0;
@@ -87,8 +67,7 @@ ReSIDfp::ReSIDfp (sidbuilder *builder)
 
 ReSIDfp::~ReSIDfp ()
 {
-    if (&m_sid)
-        delete &m_sid;
+    delete &m_sid;
     delete[] m_buffer;
 }
 
