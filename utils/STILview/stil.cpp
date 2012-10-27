@@ -84,26 +84,11 @@ STIL::STIL(const char* stilPath, const char* bugsPath) :
     memset((void *)resultEntry, 0, sizeof(resultEntry));
     memset((void *)resultBug, 0, sizeof(resultBug));
 
-    // Just so that we have the first one in here.
-    stilDirs = createOneDir();
-    bugDirs = createOneDir();
-
     STIL_EOL = '\n';
     STIL_EOL2 = '\0';
 
     STIL_DEBUG = false;
     lastError = NO_STIL_ERROR;
-}
-
-// DESTRUCTOR
-STIL::~STIL()
-{
-    CERR_STIL_DEBUG << "Destructor called" << endl;
-
-    deleteDirList(stilDirs);
-    deleteDirList(bugDirs);
-
-    CERR_STIL_DEBUG << "Destructor finished" << endl;
 }
 
 void STIL::setVersionString()
@@ -142,8 +127,8 @@ STIL::setBaseDir(const char *pathToHVSC)
     float tempSTILVersion = STILVersion;
 
     // Temporary placeholders for lists of sections.
-    dirList *tempStilDirs, *tempBugDirs;
-
+    std::map<std::string, std::streampos> tempStilDirs;
+    std::map<std::string, std::streampos> tempBugDirs;
 
     lastError = NO_STIL_ERROR;
 
@@ -227,9 +212,6 @@ STIL::setBaseDir(const char *pathToHVSC)
 
     // These will populate the tempStilDirs and tempBugDirs arrays (or not :)
 
-    tempStilDirs = createOneDir();
-    tempBugDirs = createOneDir();
-
     if (getDirs(stilFile, tempStilDirs, true) != true) {
         stilFile.close();
         bugFile.close();
@@ -237,8 +219,6 @@ STIL::setBaseDir(const char *pathToHVSC)
         lastError = NO_STIL_DIRS;
 
         // Clean up and restore things.
-        deleteDirList(tempStilDirs);
-        deleteDirList(tempBugDirs);
         STILVersion = tempSTILVersion;
         versionString = tempVersionString;
         return false;
@@ -266,26 +246,15 @@ STIL::setBaseDir(const char *pathToHVSC)
     // Copy.
     baseDir = tempBaseDir;
 
-    // First, delete whatever may have been there previously.
-    deleteDirList(stilDirs);
-    deleteDirList(bugDirs);
-
-    stilDirs = createOneDir();
-    bugDirs = createOneDir();
-
     // Now proceed with copy.
 
-    copyDirList(stilDirs, tempStilDirs);
-    copyDirList(bugDirs, tempBugDirs);
+    stilDirs = tempStilDirs;
+    bugDirs = tempBugDirs;
 
     // Clear the buffers (caches).
     memset((void *)entrybuf, 0, sizeof(entrybuf));
     memset((void *)globalbuf, 0, sizeof(globalbuf));
     memset((void *)bugbuf, 0, sizeof(bugbuf));
-
-    // Cleanup.
-    deleteDirList(tempStilDirs);
-    deleteDirList(tempBugDirs);
 
     CERR_STIL_DEBUG << "setBaseDir() succeeded" << endl;
 
@@ -685,13 +654,11 @@ STIL::determineEOL()
 }
 
 bool
-STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
+STIL::getDirs(ifstream& inFile, dirList &dirs, bool isSTILFile)
 {
     char line[STIL_MAX_LINE_SIZE];
-    int i=0;
     size_t j;
     bool newDir;
-    dirList *prevDir;
 
     if (isSTILFile) {
         newDir = false;
@@ -699,8 +666,6 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
     else {
         newDir = true;
     }
-
-    prevDir = dirs;
 
     CERR_STIL_DEBUG << "getDirs() called" << endl;
 
@@ -744,12 +709,11 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
             // Get the directory only
             j = strrchr(line,'/')-line+1;
 
+            string dirName(line, j);
+
             if (!isSTILFile) {
-                // Compare it to the last stored dirname
-                if (i==0) {
-                    newDir = true;
-                }
-                else if (MYSTRNICMP(prevDir->dirName.c_str(), line, j) != 0) {
+                // Compare it to the stored dirnames
+                if (dirs.count(dirName) == 0) {
                     newDir = true;
                 }
                 else {
@@ -760,20 +724,11 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
             // Store the info
             if (newDir) {
 
-                dirs->dirName.assign(line, j);
+                streampos position = inFile.tellg()-(streampos)strlen(line)-1L;
 
-                dirs->position = inFile.tellg()-(streampos)strlen(line)-1L;
+                CERR_STIL_DEBUG << "getDirs() dirName=" << dirName << ", pos=" << position <<  endl;
 
-                CERR_STIL_DEBUG << "getDirs() i=" << i << ", dirName=" << dirs->dirName << ", pos=" << dirs->position <<  endl;
-
-                prevDir = dirs;
-
-                // We create the entries one ahead. This way we also assure that
-                // the last entry will always be a NULL (empty) entry.
-                dirs->next = createOneDir();
-                dirs = dirs->next;
-
-                i++;
+                dirs.insert(pair<string, streampos>(dirName, position));
             }
 
             if (isSTILFile) {
@@ -785,7 +740,7 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
         }
     }
 
-    if (i == 0) {
+    if (dirs.empty()) {
         // No entries found - something is wrong.
         // NOTE: It's perfectly valid to have a BUGlist.txt file with no
         // entries in it!
@@ -799,13 +754,12 @@ STIL::getDirs(ifstream& inFile, dirList *dirs, bool isSTILFile)
 }
 
 bool
-STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList *dirs)
+STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList &dirs)
 {
     size_t pathLen;
     size_t entryStrLen;
     char line[STIL_MAX_LINE_SIZE];
     int temp;
-    bool foundIt = false;
     bool globComm = false;
     char *chrptr;
 
@@ -833,26 +787,18 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList *dirs)
     }
 
     // Find it in the table.
+    string entry(entryStr, pathLen);
+    dirList::iterator elem = dirs.find(entry);
 
-    while (!dirs->dirName.empty()) {
-        if ((MYSTRNICMP(dirs->dirName.c_str(), entryStr, pathLen) == 0) &&
-            (dirs->dirName.size() == pathLen)) {
-            CERR_STIL_DEBUG << "pos2Entry() found dir, dirName=" << dirs->dirName << endl;
-            foundIt = true;
-            break;
-        }
-        dirs = dirs->next;
-    }
-
-    if (!foundIt) {
+    if (elem == dirs.end()) {
         // The directory was not found.
         CERR_STIL_DEBUG << "pos2Entry() did not find the dir" << endl;
         return false;
     }
 
     // Jump to the first entry of this section.
-    inFile.seekg(dirs->position);
-    foundIt = false;
+    inFile.seekg(elem->second);
+    bool foundIt = false;
 
     // Now find the desired entry
 
@@ -866,7 +812,7 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList *dirs)
 
         if (*line == '/') {
 
-            if (MYSTRNICMP(dirs->dirName.c_str(), line, pathLen) != 0) {
+            if (MYSTRNICMP(elem->first.c_str(), line, pathLen) != 0) {
                 // We are outside the section - get out of the loop,
                 // which will fail the search.
                 break;
@@ -1296,39 +1242,3 @@ STIL::getStilLine(ifstream& infile, char *line)
 
     infile.getline(line, STIL_MAX_LINE_SIZE, STIL_EOL);
 }
-
-void
-STIL::deleteDirList(dirList *dirs)
-{
-    dirList *ptr;
-
-    do {
-        ptr = dirs->next;
-        delete dirs;
-        dirs = ptr;
-    } while (ptr);
-}
-
-void
-STIL::copyDirList(dirList *toPtr, dirList *fromPtr)
-{
-    // Big assumption: the first element exists on both linked lists!
-
-    do {
-        toPtr->position = fromPtr->position;
-
-        toPtr->dirName = fromPtr->dirName;
-
-        if (fromPtr->next) {
-            toPtr->next = createOneDir();
-        }
-        else {
-            toPtr->next = NULL;
-        }
-
-        fromPtr = fromPtr->next;
-        toPtr = toPtr->next;
-
-    } while (fromPtr);
-}
-

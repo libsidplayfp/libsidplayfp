@@ -25,6 +25,7 @@
 #include <fstream>
 #include <cstdlib>     // For atof() and size_t
 #include <string>
+#include <map>
 
 #include "stilcomm.h"
 #include "stildefs.h"
@@ -83,11 +84,6 @@ public:
     * @param bugsPath relative path to BUG file
     */
     STIL(const char* stilPath=DEFAULT_PATH_TO_STIL, const char* bugsPath=DEFAULT_PATH_TO_BUGLIST);
-
-    /**
-    * Deallocates the necessary memory.
-    */
-    ~STIL();
 
     /**
     * Returns a formatted string telling what the version
@@ -269,6 +265,8 @@ public:
     inline const char *getErrorStr() const {return (STIL_ERROR_STR[lastError]);}
 
 private:
+    typedef std::map<std::string, std::streampos> dirList;
+
     /// Path to STIL.
     const char* PATH_TO_STIL;
 
@@ -291,19 +289,12 @@ private:
     //@}
 
     /**
-    * Linked list of sections (subdirs) for easier positioning.
-    * NOTE: There's always at least one (empty) member on these
-    *       lists! (The pointers will never be NULL.)
+    * Maps of sections (subdirs) for easier positioning.
     */
-    struct dirList {
-        std::string dirName;
-        std::streampos position;
-        struct dirList *next;
-
-        dirList() :
-          position(0),
-          next(0) {}
-    } *stilDirs, *bugDirs;
+    //@{
+    dirList stilDirs;
+    dirList bugDirs;
+    //@}
 
     /**
     * This tells us what the line delimiter is in STIL.txt.
@@ -361,7 +352,7 @@ private:
     *                inFile
     *      - true  - everything is okay
     */
-    bool getDirs(std::ifstream& inFile, dirList *dirs, bool isSTILFile);
+    bool getDirs(std::ifstream& inFile, dirList &dirs, bool isSTILFile);
 
     /**
     * Positions the file pointer to the given entry in 'inFile'
@@ -374,7 +365,7 @@ private:
     *      - true - if successful
     *      - false - otherwise
     */
-    bool positionToEntry(const char *entryStr, std::ifstream& inFile, dirList *dirs);
+    bool positionToEntry(const char *entryStr, std::ifstream& inFile, dirList &dirs);
 
     /**
     * Reads the entry from 'inFile' into 'buffer'. 'inFile' should
@@ -429,38 +420,6 @@ private:
     * @param line   - char array to put the line into
     */
     void getStilLine(std::ifstream& infile, char *line);
-
-    /**
-    * Deletes *all* of the linked list of dirnames. Assumes that
-    * there is at least one element on the linked list!
-    *
-    * @param  dirs - pointer to the head of the linked list to be deleted.
-    * @return
-    *      NONE (Maybe it should return a bool for error-checking purposes?)
-    */
-    static void deleteDirList(dirList *dirs);
-
-    /**
-    * Copies the linked list of dirnames from one linked list
-    * to another. It creates new dirlist entries in the
-    * destination list as needed. Assumes that there is at least
-    * one element on the source *and* destination linked lists!
-    *
-    * @param toPtr - pointer to the head of the destination linked list
-    * @param fromPtr - pointer to the head of the source linked list
-    * @return
-    *      NONE (Maybe it should return a bool for error-checking purposes?)
-    */
-    static void copyDirList(dirList *toPtr, dirList *fromPtr);
-
-    /**
-    * Creates a new dirlist entry (allocates memory for it), and
-    * returns a pointer to this new entry.
-    *
-    * @return
-    *      pointer to the newly created entry
-    */
-    static inline dirList *createOneDir(void) { return new dirList; }
 };
 
 #endif // STIL_H
