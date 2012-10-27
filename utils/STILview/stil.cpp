@@ -72,23 +72,21 @@ const char *STIL::STIL_ERROR_STR[] = {
 
 // CONSTRUCTOR
 STIL::STIL(const char* stilPath, const char* bugsPath) :
+  STIL_DEBUG(false),
   PATH_TO_STIL(stilPath),
-  PATH_TO_BUGLIST(bugsPath)
+  PATH_TO_BUGLIST(bugsPath),
+  STILVersion(0.0),
+  STIL_EOL('\n'),
+  STIL_EOL2('\0'),
+  lastError(NO_STIL_ERROR)
 {
     setVersionString();
-
-    STILVersion = 0.0;
+    
     memset((void *)entrybuf, 0, sizeof(entrybuf));
     memset((void *)globalbuf, 0, sizeof(globalbuf));
     memset((void *)bugbuf, 0, sizeof(bugbuf));
     memset((void *)resultEntry, 0, sizeof(resultEntry));
     memset((void *)resultBug, 0, sizeof(resultBug));
-
-    STIL_EOL = '\n';
-    STIL_EOL2 = '\0';
-
-    STIL_DEBUG = false;
-    lastError = NO_STIL_ERROR;
 }
 
 void STIL::setVersionString()
