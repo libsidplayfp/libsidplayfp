@@ -22,13 +22,7 @@
 
 #include <stdio.h>
 #include <cstring>
-
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
+#include <memory>
 
 #include "resid.h"
 #include "resid-emu.h"
@@ -44,10 +38,9 @@ ReSIDBuilder::~ReSIDBuilder (void)
     remove ();
 }
 
-// Create a new sid emulation.  Called by libsidplay2 only
+// Create a new sid emulation.
 unsigned int ReSIDBuilder::create (unsigned int sids)
 {
-    ReSID *sid = 0;
     m_status   = true;
 
     // Check available devices
@@ -59,33 +52,30 @@ unsigned int ReSIDBuilder::create (unsigned int sids)
 
     for (count = 0; count < sids; count++)
     {
-#   ifdef HAVE_EXCEPTIONS
-        sid = new(std::nothrow) ReSID(this);
-#   else
-        sid = new ReSID(this);
-#   endif
+        try
+        {
+            std::auto_ptr<ReSID> sid(new ReSID(this));
 
+            // SID init failed?
+            if (!sid->getStatus())
+            {
+                m_error = sid->error ();
+                goto ReSIDBuilder_create_error;
+            }
+            sidobjs.push_back (sid.release());
+        }
         // Memory alloc failed?
-        if (!sid)
+        catch (std::bad_alloc&)
         {
             sprintf (m_errorBuffer, "%s ERROR: Unable to create ReSID object", name ());
             m_error = m_errorBuffer;
             goto ReSIDBuilder_create_error;
         }
-
-        // SID init failed?
-        if (!sid->getStatus())
-        {
-            m_error = sid->error ();
-            goto ReSIDBuilder_create_error;
-        }
-        sidobjs.push_back (sid);
     }
     return count;
 
 ReSIDBuilder_create_error:
     m_status = false;
-    delete sid;
     return count;
 }
 

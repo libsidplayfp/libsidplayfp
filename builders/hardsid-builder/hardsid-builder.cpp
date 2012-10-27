@@ -22,14 +22,7 @@
 
 #include <stdio.h>
 #include <cstring>
-
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#ifdef HAVE_EXCEPTIONS
-#   include <new>
-#endif
+#include <memory>
 
 #include "hardsid.h"
 #include "hardsid-emu.h"
@@ -66,10 +59,9 @@ HardSIDBuilder::~HardSIDBuilder (void)
     remove ();
 }
 
-// Create a new sid emulation.  Called by libsidplay2 only
+// Create a new sid emulation.
 unsigned int HardSIDBuilder::create (unsigned int sids)
 {
-    HardSID *sid = 0;
     m_status     = true;
 
     // Check available devices
@@ -81,32 +73,31 @@ unsigned int HardSIDBuilder::create (unsigned int sids)
 
     for (count = 0; count < sids; count++)
     {
-#   ifdef HAVE_EXCEPTIONS
-        sid = new(std::nothrow) HardSID(this);
-#   else
-        sid = new HardSID(this);
-#   endif
+        try
+        {
+            std::auto_ptr<HardSID> sid(new HardSID(this));
 
+            // SID init failed?
+            if (!sid->getStatus())
+            {
+                strcpy (m_errorBuffer, sid->error ());
+                goto HardSIDBuilder_create_error;
+            }
+            sidobjs.push_back (sid.release());
+        }
         // Memory alloc failed?
-        if (!sid)
+        catch (std::bad_alloc&)
         {
             sprintf (m_errorBuffer, "%s ERROR: Unable to create HardSID object", name ());
             goto HardSIDBuilder_create_error;
         }
 
-        // SID init failed?
-        if (!sid->getStatus())
-        {
-            strcpy (m_errorBuffer, sid->error ());
-            goto HardSIDBuilder_create_error;
-        }
-        sidobjs.push_back (sid);
+
     }
     return count;
 
 HardSIDBuilder_create_error:
     m_status = false;
-    delete sid;
     return count;
 }
 
