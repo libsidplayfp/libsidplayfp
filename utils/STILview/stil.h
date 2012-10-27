@@ -22,8 +22,6 @@
 #ifndef STIL_H
 #define STIL_H
 
-#include <fstream>
-#include <cstdlib>     // For atof() and size_t
 #include <string>
 #include <algorithm>
 #include <map>
