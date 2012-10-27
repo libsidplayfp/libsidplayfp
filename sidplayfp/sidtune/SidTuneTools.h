@@ -25,14 +25,6 @@
 
 #include <string.h>
 
-#if defined(HAVE_SSTREAM)
-#   include <sstream>
-#else
-#   include <strstream>
-#   undef  istringstream
-#   define istringstream istrstream
-#endif
-
 #if defined(HAVE_STRINGS_H)
 #   include <strings.h>
 #endif

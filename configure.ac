@@ -57,9 +57,6 @@ fi
 dnl Checks for library functions.
 AC_CHECK_FUNCS([strncasecmp strcasecmp])
 
-dnl Checks for C++ library functions.
-AC_CHECK_HEADERS([sstream])
-
 dnl Check for nothrow allocator.
 MY_CHECK_EXCEPTIONS
 
