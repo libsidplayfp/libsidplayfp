@@ -170,13 +170,13 @@ public:
     *        to an internal structure, but I trust you. :)
     *      - NULL if there's absolutely no STIL entry for the tune
     */
-    char *getEntry(const char *relPathToEntry, int tuneNo=0, STILField field=all);
+    const char *getEntry(const char *relPathToEntry, int tuneNo=0, STILField field=all);
 
     /**
     * Same as #getEntry, but with an absolute path given
     * given in your machine's format.
     */
-    char *getAbsEntry(const char *absPathToEntry, int tuneNo=0, STILField field=all);
+    const char *getAbsEntry(const char *absPathToEntry, int tuneNo=0, STILField field=all);
 
     /**
     * Given an HVSC pathname and tune number it returns a
@@ -194,13 +194,13 @@ public:
     *      - NULL if there's absolutely no section-global comment
     *        for the tune
     */
-    char *getGlobalComment(const char *relPathToEntry);
+    const char *getGlobalComment(const char *relPathToEntry);
 
     /**
     * Same as #getGlobalComment, but with an absolute path
     * given in your machine's format.
     */
-    char *getAbsGlobalComment(const char *absPathToEntry);
+    const char *getAbsGlobalComment(const char *absPathToEntry);
 
     /**
     * Given an HVSC pathname and tune number it returns a
@@ -224,13 +224,13 @@ public:
     *        to an internal structure, but I trust you. :)
     *      - NULL if there's absolutely no BUG entry for the tune
     */
-    char *getBug(const char *relPathToEntry, int tuneNo=0);
+    const char *getBug(const char *relPathToEntry, int tuneNo=0);
 
     /**
     * Same as #getBug, but with an absolute path
     * given in your machine's format.
     */
-    char *getAbsBug(const char *absPathToEntry, int tuneNo=0);
+    const char *getAbsBug(const char *absPathToEntry, int tuneNo=0);
 
     /**
     * Returns a specific error number identifying the problem

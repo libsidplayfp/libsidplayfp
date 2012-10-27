@@ -245,7 +245,7 @@ STIL::setBaseDir(const char *pathToHVSC)
     return true;
 }
 
-char *
+const char *
 STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 {
     lastError = NO_STIL_ERROR;
@@ -273,7 +273,7 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
     return getEntry(tempDir.c_str(), tuneNo, field);
 }
 
-char *
+const char *
 STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 {
     lastError = NO_STIL_ERROR;
@@ -353,7 +353,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
     }
 }
 
-char *
+const char *
 STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
 {
     lastError = NO_STIL_ERROR;
@@ -380,7 +380,7 @@ STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
     return getBug(tempDir.c_str(), tuneNo);
 }
 
-char *
+const char *
 STIL::getBug(const char *relPathToEntry, int tuneNo)
 {
     lastError = NO_STIL_ERROR;
@@ -452,7 +452,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
     }
 }
 
-char *
+const char *
 STIL::getAbsGlobalComment(const char *absPathToEntry)
 {
     lastError = NO_STIL_ERROR;
@@ -479,7 +479,7 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
     return getGlobalComment(tempDir.c_str());
 }
 
-char *
+const char *
 STIL::getGlobalComment(const char *relPathToEntry)
 {
     lastError = NO_STIL_ERROR;
