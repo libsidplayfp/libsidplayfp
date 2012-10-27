@@ -282,10 +282,7 @@ private:
     float STILVersion;
 
     /// Base dir
-    //@{
-    char *baseDir;
-    size_t baseDirLength;
-    //@}
+    std::string baseDir;
 
     /// File handles
     //@{

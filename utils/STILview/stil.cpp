@@ -78,8 +78,6 @@ STIL::STIL(const char* stilPath, const char* bugsPath) :
     setVersionString();
 
     STILVersion = 0.0;
-    baseDir = NULL;
-    baseDirLength = 0;
     memset((void *)entrybuf, 0, sizeof(entrybuf));
     memset((void *)globalbuf, 0, sizeof(globalbuf));
     memset((void *)bugbuf, 0, sizeof(bugbuf));
@@ -104,10 +102,6 @@ STIL::~STIL()
 
     deleteDirList(stilDirs);
     deleteDirList(bugDirs);
-
-    if (baseDir != NULL) {
-        delete[] baseDir;
-    }
 
     CERR_STIL_DEBUG << "Destructor finished" << endl;
 }
@@ -269,16 +263,8 @@ STIL::setBaseDir(const char *pathToHVSC)
     // NOTE: At this point, STILVersion and the versionString should contain
     // the new info!
 
-    // First, delete what may have been there previously.
-    if (baseDir != NULL) {
-        delete[] baseDir;
-    }
-
     // Copy.
-    baseDir = new char [tempBaseDir.size()+1];
-    strncpy(baseDir, tempBaseDir.c_str(), tempBaseDir.size());
-    baseDir[tempBaseDir.size()] = '\0';
-    baseDirLength = tempBaseDir.size();
+    baseDir = tempBaseDir;
 
     // First, delete whatever may have been there previously.
     deleteDirList(stilDirs);
@@ -313,7 +299,7 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 
     CERR_STIL_DEBUG << "getAbsEntry() called, absPathToEntry=" << absPathToEntry << endl;
 
-    if (baseDir == NULL) {
+    if (baseDir.empty()) {
         CERR_STIL_DEBUG << "HVSC baseDir is not yet set!" << endl;
         lastError = STIL_OPEN;
         return NULL;
@@ -321,14 +307,14 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir, baseDirLength) != 0) {
+    if (MYSTRNICMP(absPathToEntry, baseDir.c_str(), baseDir.size()) != 0) {
         CERR_STIL_DEBUG << "getAbsEntry() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
         return NULL;
     }
 
 
-    string tempDir(absPathToEntry+baseDirLength);
+    string tempDir(absPathToEntry+baseDir.size());
     stilcomm::convertToSlashes(tempDir);
 
     return getEntry(tempDir.c_str(), tuneNo, field);
@@ -344,7 +330,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 
     CERR_STIL_DEBUG << "getEntry() called, relPath=" << relPathToEntry << ", rest=" << tuneNo << "," << field << endl;
 
-    if (baseDir == NULL) {
+    if (baseDir.empty()) {
         CERR_STIL_DEBUG << "HVSC baseDir is not yet set!" << endl;
         lastError = STIL_OPEN;
         return NULL;
@@ -428,7 +414,7 @@ STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
 
     CERR_STIL_DEBUG << "getAbsBug() called, absPathToEntry=" << absPathToEntry << endl;
 
-    if (baseDir == NULL) {
+    if (baseDir.empty()) {
         CERR_STIL_DEBUG << "HVSC baseDir is not yet set!" << endl;
         lastError = BUG_OPEN;
         return NULL;
@@ -436,13 +422,13 @@ STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir, baseDirLength) != 0) {
+    if (MYSTRNICMP(absPathToEntry, baseDir.c_str(), baseDir.size()) != 0) {
         CERR_STIL_DEBUG << "getAbsBug() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
         return NULL;
     }
 
-    string tempDir(absPathToEntry+baseDirLength);
+    string tempDir(absPathToEntry+baseDir.size());
     stilcomm::convertToSlashes(tempDir);
 
     return getBug(tempDir.c_str(), tuneNo);
@@ -455,7 +441,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
 
     CERR_STIL_DEBUG << "getBug() called, relPath=" << relPathToEntry << ", rest=" << tuneNo << endl;
 
-    if (baseDir == NULL) {
+    if (baseDir.empty()) {
         CERR_STIL_DEBUG << "HVSC baseDir is not yet set!" << endl;
         lastError = BUG_OPEN;
         return NULL;
@@ -531,7 +517,7 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
 
     CERR_STIL_DEBUG << "getAbsGC() called, absPathToEntry=" << absPathToEntry << endl;
 
-    if (baseDir == NULL) {
+    if (baseDir.empty()) {
         CERR_STIL_DEBUG << "HVSC baseDir is not yet set!" << endl;
         lastError = STIL_OPEN;
         return NULL;
@@ -539,13 +525,13 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir, baseDirLength) != 0) {
+    if (MYSTRNICMP(absPathToEntry, baseDir.c_str(), baseDir.size()) != 0) {
         CERR_STIL_DEBUG << "getAbsGC() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
         return NULL;
     }
 
-    string tempDir(absPathToEntry+baseDirLength);
+    string tempDir(absPathToEntry+baseDir.size());
     stilcomm::convertToSlashes(tempDir);
 
     return getGlobalComment(tempDir.c_str());
@@ -562,7 +548,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
     CERR_STIL_DEBUG << "getGC() called, relPath=" << relPathToEntry << endl;
 
-    if (baseDir == NULL) {
+    if (baseDir.empty()) {
         CERR_STIL_DEBUG << "HVSC baseDir is not yet set!" << endl;
         lastError = STIL_OPEN;
         return NULL;
