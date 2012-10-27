@@ -156,11 +156,9 @@ STIL::setBaseDir(const char *pathToHVSC)
     tempName.append(PATH_TO_STIL);
     convertSlashes(tempName);
 
-    stilFile.clear();
-    stilFile.open(tempName.c_str(), STILopenFlags);
+    ifstream stilFile(tempName.c_str(), STILopenFlags);
 
     if (stilFile.fail()) {
-        stilFile.close();
         CERR_STIL_DEBUG << "setBaseDir() open failed for " << tempName << endl;
         lastError = STIL_OPEN;
         return false;
@@ -175,15 +173,13 @@ STIL::setBaseDir(const char *pathToHVSC)
     tempName.append(PATH_TO_BUGLIST);
     convertSlashes(tempName);
 
-    bugFile.clear();
-    bugFile.open(tempName.c_str(), STILopenFlags);
+    ifstream bugFile(tempName.c_str(), STILopenFlags);
 
     if (bugFile.fail()) {
 
         // This is not a critical error - some earlier versions of HVSC did
         // not have a BUGlist.txt file at all.
 
-        bugFile.close();
         CERR_STIL_DEBUG << "setBaseDir() open failed for " << tempName << endl;
         lastError = BUG_OPEN;
     }
@@ -193,9 +189,7 @@ STIL::setBaseDir(const char *pathToHVSC)
     }
 
     // Find out what the EOL really is
-    if (determineEOL() != true) {
-        stilFile.close();
-        bugFile.close();
+    if (determineEOL(stilFile) != true) {
         CERR_STIL_DEBUG << "determinEOL() failed" << endl;
         lastError = NO_EOL;
         return false;
@@ -213,8 +207,6 @@ STIL::setBaseDir(const char *pathToHVSC)
     // These will populate the tempStilDirs and tempBugDirs arrays (or not :)
 
     if (getDirs(stilFile, tempStilDirs, true) != true) {
-        stilFile.close();
-        bugFile.close();
         CERR_STIL_DEBUG << "getDirs() failed for stilFile" << endl;
         lastError = NO_STIL_DIRS;
 
@@ -235,9 +227,6 @@ STIL::setBaseDir(const char *pathToHVSC)
             lastError = BUG_OPEN;
         }
     }
-
-    stilFile.close();
-    bugFile.close();
 
     // Now we can copy the stuff into private data.
     // NOTE: At this point, STILVersion and the versionString should contain
@@ -337,11 +326,9 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         tempName.append(PATH_TO_STIL);
         convertSlashes(tempName);
 
-        stilFile.clear();
-        stilFile.open(tempName.c_str(), STILopenFlags);
+        ifstream stilFile(tempName.c_str(), STILopenFlags);
 
         if (stilFile.fail()) {
-            stilFile.close();
             CERR_STIL_DEBUG << "getEntry() open failed for stilFile" << endl;
             lastError = STIL_OPEN;
             return NULL;
@@ -362,8 +349,6 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
             readEntry(stilFile, entrybuf);
             CERR_STIL_DEBUG << "getEntry() entry read" << endl;
         }
-
-        stilFile.close();
     }
 
     // Put the requested field into the result string.
@@ -440,11 +425,9 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         tempName.append(PATH_TO_BUGLIST);
         convertSlashes(tempName);
 
-        bugFile.clear();
-        bugFile.open(tempName.c_str(), STILopenFlags);
+        ifstream bugFile(tempName.c_str(), STILopenFlags);
 
         if (bugFile.fail()) {
-            bugFile.close();
             CERR_STIL_DEBUG << "getBug() open failed for bugFile" << endl;
             lastError = BUG_OPEN;
             return NULL;
@@ -465,8 +448,6 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
             readEntry(bugFile, bugbuf);
             CERR_STIL_DEBUG << "getBug() entry read" << endl;
         }
-
-        bugFile.close();
     }
 
     // Put the requested field into the result string.
@@ -553,11 +534,9 @@ STIL::getGlobalComment(const char *relPathToEntry)
         tempName.append(PATH_TO_STIL);
         convertSlashes(tempName);
 
-        stilFile.clear();
-        stilFile.open(tempName.c_str(), STILopenFlags);
+        ifstream stilFile(tempName.c_str(), STILopenFlags);
 
         if (stilFile.fail()) {
-            stilFile.close();
             CERR_STIL_DEBUG << "getGC() open failed for stilFile" << endl;
             lastError = STIL_OPEN;
             return NULL;
@@ -576,8 +555,6 @@ STIL::getGlobalComment(const char *relPathToEntry)
             readEntry(stilFile, globalbuf);
             CERR_STIL_DEBUG << "getGC() entry read" << endl;
         }
-
-        stilFile.close();
     }
 
     CERR_STIL_DEBUG << "getGC() globalbuf=" << globalbuf << endl;
@@ -601,7 +578,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
 //////// PRIVATE
 
 bool
-STIL::determineEOL()
+STIL::determineEOL(ifstream &stilFile)
 {
     char line[STIL_MAX_LINE_SIZE+5];
     int i=0;

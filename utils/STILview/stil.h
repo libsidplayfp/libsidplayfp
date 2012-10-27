@@ -280,12 +280,6 @@ private:
     /// Base dir
     std::string baseDir;
 
-    /// File handles
-    //@{
-    std::ifstream stilFile;
-    std::ifstream bugFile;
-    //@}
-
     /**
     * Maps of sections (subdirs) for easier positioning.
     */
@@ -334,7 +328,7 @@ private:
     *      - false - something went wrong
     *      - true  - everything is okay
     */
-    bool determineEOL();
+    bool determineEOL(std::ifstream &stilFile);
 
     /**
     * Populates the given dirList array with the directories
