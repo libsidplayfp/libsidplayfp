@@ -285,7 +285,6 @@ sidplayfp_libstilview_ladir = $(includedir)/stilview
 
 sidplayfp_libstilview_la_HEADERS = \
 utils/STILview/stil.h \
-utils/STILview/stilcomm.h \
 utils/STILview/stildefs.h
 
 #=========================================================

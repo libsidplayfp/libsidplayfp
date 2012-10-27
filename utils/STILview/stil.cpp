@@ -154,7 +154,7 @@ STIL::setBaseDir(const char *pathToHVSC)
     // Create the full path+filename
     string tempName = tempBaseDir;
     tempName.append(PATH_TO_STIL);
-    stilcomm::convertSlashes(tempName);
+    convertSlashes(tempName);
 
     stilFile.clear();
     stilFile.open(tempName.c_str(), STILopenFlags);
@@ -173,7 +173,7 @@ STIL::setBaseDir(const char *pathToHVSC)
     // Create the full path+filename
     tempName = tempBaseDir;
     tempName.append(PATH_TO_BUGLIST);
-    stilcomm::convertSlashes(tempName);
+    convertSlashes(tempName);
 
     bugFile.clear();
     bugFile.open(tempName.c_str(), STILopenFlags);
@@ -284,7 +284,7 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 
 
     string tempDir(absPathToEntry+baseDir.size());
-    stilcomm::convertToSlashes(tempDir);
+    convertToSlashes(tempDir);
 
     return getEntry(tempDir.c_str(), tuneNo, field);
 }
@@ -335,7 +335,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         // Create the full path+filename
         string tempName(baseDir);
         tempName.append(PATH_TO_STIL);
-        stilcomm::convertSlashes(tempName);
+        convertSlashes(tempName);
 
         stilFile.clear();
         stilFile.open(tempName.c_str(), STILopenFlags);
@@ -398,7 +398,7 @@ STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
     }
 
     string tempDir(absPathToEntry+baseDir.size());
-    stilcomm::convertToSlashes(tempDir);
+    convertToSlashes(tempDir);
 
     return getBug(tempDir.c_str(), tuneNo);
 }
@@ -438,7 +438,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         // Create the full path+filename
         string tempName(baseDir);
         tempName.append(PATH_TO_BUGLIST);
-        stilcomm::convertSlashes(tempName);
+        convertSlashes(tempName);
 
         bugFile.clear();
         bugFile.open(tempName.c_str(), STILopenFlags);
@@ -501,7 +501,7 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
     }
 
     string tempDir(absPathToEntry+baseDir.size());
-    stilcomm::convertToSlashes(tempDir);
+    convertToSlashes(tempDir);
 
     return getGlobalComment(tempDir.c_str());
 }
@@ -551,7 +551,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
         // Create the full path+filename
         string tempName(baseDir);
         tempName.append(PATH_TO_STIL);
-        stilcomm::convertSlashes(tempName);
+        convertSlashes(tempName);
 
         stilFile.clear();
         stilFile.open(tempName.c_str(), STILopenFlags);

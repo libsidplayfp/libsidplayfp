@@ -25,9 +25,9 @@
 #include <fstream>
 #include <cstdlib>     // For atof() and size_t
 #include <string>
+#include <algorithm>
 #include <map>
 
-#include "stilcomm.h"
 #include "stildefs.h"
 
 /**
@@ -420,6 +420,23 @@ private:
     * @param line   - char array to put the line into
     */
     void getStilLine(std::ifstream& infile, char *line);
+
+private:
+    /**
+    * Converts slashes to the one the OS uses to access files.
+    *
+    * @param
+    *      str - what to convert
+    */
+    static void convertSlashes(std::string& str) { std::replace(str.begin(), str.end(), '/', SLASH); }
+
+    /**
+    * Converts OS specific dir separators to slashes.
+    *
+    * @param
+    *      str - what to convert
+    */
+    static void convertToSlashes(std::string& str) { std::replace(str.begin(), str.end(), SLASH, '/'); }
 };
 
 #endif // STIL_H
