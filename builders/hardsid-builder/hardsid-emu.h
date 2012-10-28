@@ -171,6 +171,7 @@ public:
 
     // Must lock the SID before using the standard functions.
     bool          lock    (EventContext *env);
+    void          unlock  ();
 
 private:
     // Fixed interval timer delay to prevent sidplay2

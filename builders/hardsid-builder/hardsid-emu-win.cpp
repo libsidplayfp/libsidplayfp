@@ -143,30 +143,31 @@ void HardSID::voice (const unsigned int num, const bool mute)
 // Set execution environment and lock sid to it
 bool HardSID::lock (EventContext *env)
 {
-    if (!env)
+    if (m_locked)
+        return false;
+
+    if (hsid2.Version >= HSID_VERSION_204)
     {
-        if (!m_locked)
+        if (hsid2.Lock (m_instance) == FALSE)
             return false;
-        if (hsid2.Version >= HSID_VERSION_204)
-            hsid2.Unlock (m_instance);
-        m_locked = false;
-        m_eventContext->cancel (*this);
-        m_eventContext = 0;
     }
-    else
-    {
-        if (m_locked)
-            return false;
-        if (hsid2.Version >= HSID_VERSION_204)
-        {
-            if (hsid2.Lock (m_instance) == FALSE)
-                return false;
-        }
-        m_locked = true;
-        m_eventContext = env;
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
-    }
+
+    m_locked = true;
+    m_eventContext = env;
+    m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+
     return true;
+}
+
+// Unlock sid
+void HardSID::unlock ()
+{
+    if (hsid2.Version >= HSID_VERSION_204)
+        hsid2.Unlock (m_instance);
+
+    m_locked = false;
+    m_eventContext->cancel (*this);
+    m_eventContext = 0;
 }
 
 void HardSID::event (void)

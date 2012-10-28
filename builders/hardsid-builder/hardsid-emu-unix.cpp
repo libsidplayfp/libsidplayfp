@@ -237,21 +237,19 @@ void HardSID::flush(void)
 
 bool HardSID::lock(EventContext* env)
 {
-    if( !env )
-    {
-        if (!m_locked)
-            return false;
-        m_eventContext->cancel (*this);
-        m_locked = false;
-        m_eventContext = 0;
-    }
-    else
-    {
-        if (m_locked)
-            return false;
-        m_locked = true;
-        m_eventContext = env;
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
-    }
+    if (m_locked)
+        return false;
+
+    m_locked = true;
+    m_eventContext = env;
+    m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+
     return true;
+}
+
+void HardSID::unlock()
+{
+    m_eventContext->cancel (*this);
+    m_locked = false;
+    m_eventContext = 0;
 }

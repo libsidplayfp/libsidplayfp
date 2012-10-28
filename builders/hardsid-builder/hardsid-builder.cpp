@@ -178,7 +178,7 @@ void HardSIDBuilder::unlock (sidemu *device)
         HardSID *sid = static_cast<HardSID*>(*it);
         if (sid == device)
         {   // Unlock it
-            sid->lock (0);
+            sid->unlock ();
             break;
         }
     }

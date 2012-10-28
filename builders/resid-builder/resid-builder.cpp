@@ -139,7 +139,7 @@ void ReSIDBuilder::unlock (sidemu *device)
         ReSID *sid = static_cast<ReSID*>(*it);
         if (sid == device)
         {   // Unlock it
-            sid->lock (0);
+            sid->unlock ();
             break;
         }
     }

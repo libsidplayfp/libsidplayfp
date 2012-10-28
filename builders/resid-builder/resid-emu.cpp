@@ -143,21 +143,20 @@ void ReSID::voice (const unsigned int num, const bool mute)
 // Set execution environment and lock sid to it
 bool ReSID::lock (EventContext *env)
 {
-    if (!env)
-    {
-        if (!m_locked)
-            return false;
-        m_locked  = false;
-        m_context = 0;
-    }
-    else
-    {
-        if (m_locked)
-            return false;
-        m_locked  = true;
-        m_context = env;
-    }
-    return true;
+    if (m_locked)
+        return false;
+
+    m_locked  = true;
+    m_context = env;
+
+    return true; 
+}
+
+// Unlock sid
+void ReSID::unlock ()
+{
+    m_locked  = false;
+    m_context = 0;
 }
 
 // Set the emulated SID model

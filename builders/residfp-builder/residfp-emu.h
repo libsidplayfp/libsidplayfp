@@ -78,6 +78,8 @@ public:
     void filter6581Curve (const double filterCurve);
     void filter8580Curve (const double filterCurve);
     void model    (SidConfig::model_t model);
+
     // Must lock the SID before using the standard functions.
     bool lock     (EventContext *env);
+    void unlock   ();
 };

@@ -151,7 +151,7 @@ void ReSIDfpBuilder::unlock (sidemu *device)
         ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         if (sid == device)
         {   // Unlock it
-            sid->lock (0);
+            sid->unlock ();
             break;
         }
     }

@@ -86,6 +86,8 @@ public:
 
     void bias     (const double dac_bias);
     void model    (SidConfig::model_t model);
+
     // Must lock the SID before using the standard functions.
     bool lock     (EventContext *env);
+    void unlock   ();
 };
