@@ -66,6 +66,7 @@ sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
 sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
+sidplayfp/sidbuilder.cpp \
 sidplayfp/SidConfig.cpp \
 sidplayfp/sidmemory.h \
 sidplayfp/sidplayfp.cpp \

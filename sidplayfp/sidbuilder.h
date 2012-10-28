@@ -47,10 +47,24 @@ public:
         : m_name(name), m_status (true) {;}
     virtual ~sidbuilder() {;}
 
-    virtual  sidemu      *lock    (EventContext *env, const SidConfig::model_t model) = 0;
-    virtual  void         unlock  (sidemu *device) = 0;
+    /**
+    * The number of used devices.
+    *    return values: 0 none, positive is used sids
+    */
+    unsigned int usedDevices () const { return sidobjs.size (); }
+
+    /// Find a free SID of the required specs
+    sidemu      *lock    (EventContext *env, const SidConfig::model_t model);
+
+    /// Release this SID
+    void         unlock  (sidemu *device);
+
+    /// Remove all SID emulations.
+    void         remove  (void);
+
     const    char        *name    (void) const { return m_name; }
-    virtual  const  char *error   (void) const = 0;
+    const  char *error   (void) const { return m_errorBuffer; }
+
     virtual  const  char *credits (void) const = 0;
     virtual  void         filter  (bool enable) = 0;
 

@@ -28,6 +28,7 @@
 
 
 class sidbuilder;
+class EventContext;
 
 /** @internal
 * Inherit this class to create a new SID emulation.
@@ -54,8 +55,12 @@ public:
     virtual void    clock () = 0;
     virtual const   char *credits (void) const = 0;
 
+    virtual bool lock     (EventContext *env) = 0;
+    virtual void unlock   () = 0;
+
     // Standard SID functions
     virtual void    voice   (const unsigned int num, const bool mute) = 0;
+    virtual void    model    (SidConfig::model_t model) = 0;
     sidbuilder     *builder (void) const { return m_builder; }
 
     virtual int bufferpos() const { return m_bufferpos; }

@@ -144,50 +144,6 @@ void HardSIDBuilder::filter (const bool enable)
     }
 }
 
-// Find a free SID of the required specs
-sidemu *HardSIDBuilder::lock (EventContext *env, const SidConfig::model_t model)
-{
-    m_status = true;
-
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        HardSID *sid = static_cast<HardSID*>(*it);
-        if (sid->lock (env))
-        {
-            sid->model (model);
-            return sid;
-        }
-    }
-    // Unable to locate free SID
-    m_status = false;
-    sprintf (m_errorBuffer, "%s ERROR: No available SIDs to lock", name ());
-    return 0;
-}
-
-// Allow something to use this SID
-void HardSIDBuilder::unlock (sidemu *device)
-{
-    // Make sure this is our SID
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        HardSID *sid = static_cast<HardSID*>(*it);
-        if (sid == device)
-        {   // Unlock it
-            sid->unlock ();
-            break;
-        }
-    }
-}
-
-// Remove all SID emulations.
-void HardSIDBuilder::remove ()
-{
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-        delete (*it);
-
-    sidobjs.clear();
-}
-
 #ifdef _WIN32
 
 // Load the library and initialise the hardsid

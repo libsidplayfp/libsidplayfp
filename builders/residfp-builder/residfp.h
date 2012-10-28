@@ -37,22 +37,13 @@ public:
     ReSIDfpBuilder  (const char * const name);
     ~ReSIDfpBuilder (void);
 
-    /**
-    * The number of used devices.
-    *    return values: 0 none, positive is used sids
-    */
-    unsigned int        usedDevices () const { return sidobjs.size (); }
-
     /** All available sids.
     *    return values: 0 endless, positive is available sids.
     */
     unsigned int        availDevices () const { return 0; }
 
     unsigned int        create  (unsigned int sids);
-    sidemu     *lock    (EventContext *env, const SidConfig::model_t model);
-    void        unlock  (sidemu *device);
-    void        remove  (void);
-    const char *error   (void) const { return m_errorBuffer; }
+
     const char *credits (void) const;
 
     /// @name global settings

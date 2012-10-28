@@ -50,7 +50,10 @@ public:
     void    clock() {}
     const   char *credits (void) const { return ""; }
     void    voice (const unsigned int num, const bool mute) {}
+    void    model    (SidConfig::model_t model)  {}
     const   char *error   (void) const { return ""; }
+    bool    lock     (EventContext *env)  {}
+    void    unlock   ()  {}
 };
 
 class FakeBuilder: public sidbuilder
