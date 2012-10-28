@@ -40,7 +40,7 @@ ReSIDBuilder::~ReSIDBuilder (void)
 // Create a new sid emulation.
 unsigned int ReSIDBuilder::create (unsigned int sids)
 {
-    m_status   = true;
+    m_status = true;
 
     // Check available devices
     unsigned int count = availDevices ();
@@ -59,27 +59,20 @@ unsigned int ReSIDBuilder::create (unsigned int sids)
         {
             sprintf (m_errorBuffer, "%s ERROR: Unable to create ReSID object", name ());
             m_error = m_errorBuffer;
-            goto ReSIDBuilder_create_error;
+            m_status = false;
+            break;
         }
     }
-    return count;
-
-ReSIDBuilder_create_error:
-    m_status = false;
     return count;
 }
 
 const char *ReSIDBuilder::credits ()
 {
-    m_status = true;
-
     return ReSID::getCredits ();
 }
 
 void ReSIDBuilder::filter (const bool enable)
 {
-    m_status = true;
-
     for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSID *sid = static_cast<ReSID*>(*it);
@@ -89,8 +82,6 @@ void ReSIDBuilder::filter (const bool enable)
 
 void ReSIDBuilder::bias (const double dac_bias)
 {
-    m_status = true;
-
     for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSID *sid = static_cast<ReSID*>(*it);

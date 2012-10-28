@@ -62,7 +62,7 @@ HardSIDBuilder::~HardSIDBuilder (void)
 // Create a new sid emulation.
 unsigned int HardSIDBuilder::create (unsigned int sids)
 {
-    m_status     = true;
+    m_status = true;
 
     // Check available devices
     unsigned int count = availDevices ();
@@ -126,7 +126,6 @@ unsigned int HardSIDBuilder::availDevices ()
 
 const char *HardSIDBuilder::credits ()
 {
-    m_status = true;
     return HardSID::getCredits();
 }
 
@@ -138,8 +137,6 @@ void HardSIDBuilder::flush(void)
 
 void HardSIDBuilder::filter (const bool enable)
 {
-    m_status = true;
-
     for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         HardSID *sid = static_cast<HardSID*>(*it);

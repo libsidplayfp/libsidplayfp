@@ -40,7 +40,7 @@ ReSIDfpBuilder::~ReSIDfpBuilder (void)
 // Create a new sid emulation.
 unsigned int ReSIDfpBuilder::create (unsigned int sids)
 {
-    m_status   = true;
+    m_status = true;
 
     // Check available devices
     unsigned int count = availDevices ();
@@ -59,27 +59,21 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
         {
             sprintf (m_errorBuffer, "%s ERROR: Unable to create ReSIDfp object", name ());
             m_error = m_errorBuffer;
-            goto ReSIDfpBuilder_create_error;
+            m_status = false;
+            break;
         }
     }
     return count;
 
-ReSIDfpBuilder_create_error:
-    m_status = false;
-    return count;
 }
 
 const char *ReSIDfpBuilder::credits ()
 {
-    m_status = true;
-
     return ReSIDfp::getCredits ();
 }
 
 void ReSIDfpBuilder::filter (const bool enable)
 {
-    m_status = true;
-
     for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
@@ -89,8 +83,6 @@ void ReSIDfpBuilder::filter (const bool enable)
 
 void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
 {
-    m_status = true;
-
     for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
@@ -100,8 +92,6 @@ void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
 
 void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 {
-    m_status = true;
-
     for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
