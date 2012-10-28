@@ -41,12 +41,16 @@ public:
     ~ReSIDBuilder (void);
 
     /**
-    * true will give you the number of used devices.
+    * The number of used devices.
     *    return values: 0 none, positive is used sids
-    * false will give you all available sids.
+    */
+    unsigned int        usedDevices () const { return sidobjs.size (); }
+
+    /** All available sids.
     *    return values: 0 endless, positive is available sids.
     */
-    unsigned int        devices (const bool created);
+    unsigned int        availDevices () const { return 0; }
+
     unsigned int        create  (unsigned int sids);
     sidemu     *lock    (EventContext *env, const SidConfig::model_t model);
     void        unlock  (sidemu *device);

@@ -43,9 +43,8 @@ unsigned int ReSIDBuilder::create (unsigned int sids)
     m_status   = true;
 
     // Check available devices
-    unsigned int count = devices (false);
-    if (!m_status)
-        goto ReSIDBuilder_create_error;
+    unsigned int count = availDevices ();
+
     if (count && (count < sids))
         sids = count;
 
@@ -75,16 +74,6 @@ const char *ReSIDBuilder::credits ()
     m_status = true;
 
     return ReSID::getCredits ();
-}
-
-
-unsigned int ReSIDBuilder::devices (const bool created)
-{
-    m_status = true;
-    if (created)
-        return sidobjs.size ();
-    else // Available devices
-        return 0;
 }
 
 void ReSIDBuilder::filter (const bool enable)

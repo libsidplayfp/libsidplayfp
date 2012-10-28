@@ -43,9 +43,8 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
     m_status   = true;
 
     // Check available devices
-    unsigned int count = devices (false);
-    if (!m_status)
-        goto ReSIDfpBuilder_create_error;
+    unsigned int count = availDevices ();
+
     if (count && (count < sids))
         sids = count;
 
@@ -75,17 +74,6 @@ const char *ReSIDfpBuilder::credits ()
     m_status = true;
 
     return ReSIDfp::getCredits ();
-}
-
-
-unsigned int ReSIDfpBuilder::devices (const bool created)
-{
-    m_status = true;
-
-    if (created)
-        return sidobjs.size ();
-    else // Available devices
-        return 0;
 }
 
 void ReSIDfpBuilder::filter (const bool enable)
