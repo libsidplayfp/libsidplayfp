@@ -124,7 +124,7 @@ unsigned int HardSIDBuilder::availDevices ()
 #endif
 }
 
-const char *HardSIDBuilder::credits ()
+const char *HardSIDBuilder::credits () const
 {
     return HardSID::getCredits();
 }

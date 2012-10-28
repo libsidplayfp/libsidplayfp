@@ -56,7 +56,7 @@ public:
     void        unlock  (sidemu *device);
     void        remove  (void);
     const char *error   (void) const { return m_error; }
-    const char *credits (void);
+    const char *credits (void) const;
 
     /// @name global settings
     /// Settings that affect all SIDs

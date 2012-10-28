@@ -61,7 +61,7 @@ public:
     void        unlock  (sidemu *device);
     void        remove  (void);
     const char *error   (void) const { return m_errorBuffer; }
-    const char *credits (void);
+    const char *credits (void) const;
     void        flush   (void);
     void        filter  (const bool enable);
 

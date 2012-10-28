@@ -65,7 +65,7 @@ public:
     sidemu     *lock    (EventContext *env, const SidConfig::model_t model) { return &sidobj; }
     void        unlock  (sidemu *device) {}
     const char *error   (void) const { return ""; }
-    const char *credits (void) { return ""; }
+    const char *credits (void) const { return ""; }
     void        filter (const bool enable) {}
 };
 

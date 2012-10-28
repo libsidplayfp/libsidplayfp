@@ -66,7 +66,7 @@ unsigned int ReSIDBuilder::create (unsigned int sids)
     return count;
 }
 
-const char *ReSIDBuilder::credits ()
+const char *ReSIDBuilder::credits () const
 {
     return ReSID::getCredits ();
 }

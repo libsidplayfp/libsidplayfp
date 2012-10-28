@@ -51,7 +51,7 @@ public:
     virtual  void         unlock  (sidemu *device) = 0;
     const    char        *name    (void) const { return m_name; }
     virtual  const  char *error   (void) const = 0;
-    virtual  const  char *credits (void) = 0;
+    virtual  const  char *credits (void) const = 0;
     virtual  void         filter  (bool enable) = 0;
 
     // Determine current state of object (true = okay, false = error).
