@@ -66,7 +66,8 @@ unsigned int HardSIDBuilder::create (unsigned int sids)
 
     // Check available devices
     unsigned int count = availDevices ();
-
+    if (!m_status)
+        goto HardSIDBuilder_create_error;
     if (count && (count < sids))
         sids = count;
 
@@ -100,8 +101,10 @@ HardSIDBuilder_create_error:
     return count;
 }
 
-unsigned int HardSIDBuilder::availDevices () const
+unsigned int HardSIDBuilder::availDevices ()
 {
+    m_status = true;
+
     // Available devices
     // @FIXME@ not yet supported on Linux
 #ifdef _WIN32

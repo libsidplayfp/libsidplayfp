@@ -55,7 +55,7 @@ public:
     /** All available sids.
     *    return values: 0 endless, positive is available sids.
     */
-    unsigned int        availDevices () const;
+    unsigned int        availDevices ();
 
     sidemu     *lock    (EventContext *env, const SidConfig::model_t model);
     void        unlock  (sidemu *device);
