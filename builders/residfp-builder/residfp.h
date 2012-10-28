@@ -33,9 +33,6 @@ class sidemu;
 */
 class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 {
-private:
-    const char *m_error;
-
 public:
     ReSIDfpBuilder  (const char * const name);
     ~ReSIDfpBuilder (void);
@@ -55,7 +52,7 @@ public:
     sidemu     *lock    (EventContext *env, const SidConfig::model_t model);
     void        unlock  (sidemu *device);
     void        remove  (void);
-    const char *error   (void) const { return m_error; }
+    const char *error   (void) const { return m_errorBuffer; }
     const char *credits (void) const;
 
     /// @name global settings

@@ -29,7 +29,7 @@
 ReSIDfpBuilder::ReSIDfpBuilder (const char * const name)
 :sidbuilder (name)
 {
-    m_error = "N/A";
+    strcpy (m_errorBuffer, "N/A");
 }
 
 ReSIDfpBuilder::~ReSIDfpBuilder (void)
@@ -58,7 +58,6 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
         catch (std::bad_alloc&)
         {
             sprintf (m_errorBuffer, "%s ERROR: Unable to create ReSIDfp object", name ());
-            m_error = m_errorBuffer;
             m_status = false;
             break;
         }
@@ -116,7 +115,6 @@ sidemu *ReSIDfpBuilder::lock (EventContext *env, const SidConfig::model_t model)
     // Unable to locate free SID
     m_status = false;
     sprintf (m_errorBuffer, "%s ERROR: No available SIDs to lock", name ());
-    m_error = m_errorBuffer;
     return 0;
 }
 
