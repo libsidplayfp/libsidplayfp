@@ -76,7 +76,7 @@ public:
     * @param song the subtune.
     * @return tune length in seconds, -1 in case of errors.
     */
-    int_least32_t length (const char *md5, uint_least16_t song);
+    int_least32_t length (const char *md5, unsigned int song);
 
     /// Get descriptive error message.
     const char *  error  (void) { return errorString; }

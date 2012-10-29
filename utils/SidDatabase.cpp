@@ -87,7 +87,7 @@ void SidDatabase::close ()
 
 int_least32_t SidDatabase::length (SidTune &tune)
 {
-    const uint_least16_t song = tune.getInfo()->currentSong();
+    const unsigned int song = tune.getInfo()->currentSong();
     if (!song)
     {
         errorString = ERR_NO_SELECTED_SONG;
@@ -99,7 +99,7 @@ int_least32_t SidDatabase::length (SidTune &tune)
     return length  (md5, song);
 }
 
-int_least32_t SidDatabase::length (const char *md5, uint_least16_t song)
+int_least32_t SidDatabase::length (const char *md5, unsigned int song)
 {
     if (!m_parser)
     {
@@ -125,7 +125,7 @@ int_least32_t SidDatabase::length (const char *md5, uint_least16_t song)
     const char* str = timeStamp;
     long  time = 0;
 
-    for (uint_least16_t i = 0; i < song; i++)
+    for (unsigned int i = 0; i < song; i++)
     {
         // Validate Time
         try {
