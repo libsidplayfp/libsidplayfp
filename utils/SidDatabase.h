@@ -79,7 +79,7 @@ public:
     int_least32_t length (const char *md5, unsigned int song);
 
     /// Get descriptive error message.
-    const char *  error  (void) { return errorString; }
+    const char *  error  (void) const { return errorString; }
 };
 
 #endif // SIDDATABASE_H
