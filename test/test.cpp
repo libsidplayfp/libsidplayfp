@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
     cfg.frequency = 48000;
     cfg.samplingMethod = SidConfig::INTERPOLATE;
     cfg.fastSampling = false;
-    cfg.playback = SidConfig::STEREO;
+    cfg.playback = SidConfig::MONO;
     cfg.sidEmulation = rs.get();
     cfg.sidDefault = SidConfig::MOS6581;
     m_engine.config(cfg);
