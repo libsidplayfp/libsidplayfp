@@ -89,8 +89,8 @@ private:
     uint8_t data_out;
 
     /** indicates if the unused bits are in the process of falling off. */
-    uint8_t data_falloff_bit6;
-    uint8_t data_falloff_bit7;
+    bool data_falloff_bit6;
+    bool data_falloff_bit7;
 
     /** Tape motor status.  */
     uint8_t old_port_data_out;
@@ -142,8 +142,8 @@ public:
         dir = 0;
         data_set_bit6 = false;
         data_set_bit7 = false;
-        data_falloff_bit6 = 0;
-        data_falloff_bit7 = 0;
+        data_falloff_bit6 = false;
+        data_falloff_bit7 = false;
         updateCpuPort();
     }
 
@@ -155,19 +155,19 @@ public:
         }
         else if (address == 1)
         {
-            if (data_falloff_bit6 != 0 || data_falloff_bit7 != 0)
+            if (data_falloff_bit6 || data_falloff_bit7)
             {
                 const event_clock_t phi2time = pla->getPhi2Time();
 
                 if (data_set_clk_bit6 < phi2time)
                 {
-                    data_falloff_bit6 = 0;
+                    data_falloff_bit6 = false;
                     data_set_bit6 = false;
                 }
 
                 if (data_set_clk_bit7 < phi2time)
                 {
-                    data_falloff_bit7 = 0;
+                    data_falloff_bit7 = false;
                     data_set_bit7 = false;
                 }
             }
@@ -184,23 +184,23 @@ public:
         uint8_t v;
         if (address == 0)
         {
-            if (data_set_bit7 && (value & 0x80) == 0 && data_falloff_bit7 == 0)
+            if (data_set_bit7 && (value & 0x80) == 0 && !data_falloff_bit7)
             {
-                data_falloff_bit7 = 1;
+                data_falloff_bit7 = true;
                 data_set_clk_bit7 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
             }
-            if (data_set_bit6 && (value & 0x40) == 0 && data_falloff_bit6 == 0)
+            if (data_set_bit6 && (value & 0x40) == 0 && !data_falloff_bit6)
             {
-                data_falloff_bit6 = 1;
+                data_falloff_bit6 = true;
                 data_set_clk_bit6 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
             }
-            if (data_set_bit7 && (value & 0x80) != 0 && data_falloff_bit7 != 0)
+            if (data_set_bit7 && (value & 0x80) != 0 && data_falloff_bit7)
             {
-                data_falloff_bit7 = 0;
+                data_falloff_bit7 = false;
             }
-            if (data_set_bit6 && (value & 0x40) != 0 && data_falloff_bit6 != 0)
+            if (data_set_bit6 && (value & 0x40) != 0 && data_falloff_bit6)
             {
-                data_falloff_bit6 = 0;
+                data_falloff_bit6 = false;
             }
             dir = value;
             updateCpuPort();
