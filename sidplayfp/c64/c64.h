@@ -224,9 +224,9 @@ public:
     * Get the components credits
     */
     //@{
-    const char* cpuCredits () { return cpu.credits(); }
-    const char* ciaCredits () { return cia1.credits(); }
-    const char* vicCredits () { return vic.credits(); }
+    const char* cpuCredits () const { return cpu.credits(); }
+    const char* ciaCredits () const { return cia1.credits(); }
+    const char* vicCredits () const { return vic.credits(); }
     //@}
 
     MMU *getMmu() { return &mmu; } //FIXME

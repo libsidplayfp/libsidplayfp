@@ -292,7 +292,7 @@ public:
     MOS6510 (EventContext *context);
     virtual ~MOS6510 () {}
     virtual void reset     (void);
-    const char  *credits(void) { return credit; }
+    const char  *credits(void) const { return credit; }
     void         debug     (const bool enable, FILE *out);
     void         setRDY    (const bool newRDY);
 
