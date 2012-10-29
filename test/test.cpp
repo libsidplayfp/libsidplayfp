@@ -22,9 +22,8 @@
 #  include "config.h"
 #endif
 
-#include <stdlib.h>
-#include <string.h>
-#include <fstream>
+#include <string>
+#include <iostream>
 #include <memory>
 
 #include "sidplayfp/sidplayfp.h"
@@ -93,23 +92,22 @@ int main(int argc, char* argv[])
 
     std::auto_ptr<FakeBuilder> rs(new FakeBuilder("Test"));
 
-    char name[0x100] = PC64_TESTSUITE;
+    std::string name(PC64_TESTSUITE);
 
     if (argc > 1)
     {
-        strcat (name, argv[1]);
-        strcat (name, ".prg");
+        name.append(argv[1]).append(".prg");
     }
     else
     {
-        strcat (name, " start.prg");
+        name.append(" start.prg");
     }
 
-    std::auto_ptr<SidTune> tune(new SidTune(name));
+    std::auto_ptr<SidTune> tune(new SidTune(name.c_str()));
 
     if (!tune->getStatus())
     {
-        printf("Error: %s\n", tune->statusString());
+        std::cerr << "Error: " << tune->statusString() << std::endl;
         return -1;
     }
 
@@ -127,7 +125,7 @@ int main(int argc, char* argv[])
 
     if (!m_engine.load(tune.get()))
     {
-        printf("%s\n", m_engine.error());
+        std::cerr <<  m_engine.error() << std::endl;
         return -1;
     }
 
