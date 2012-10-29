@@ -64,21 +64,23 @@ private:
 
     /** cycle that should invalidate the unused bits of the data port. */
     //@{
-    event_clock_t data_set_clk_bit6;
-    event_clock_t data_set_clk_bit7;
+    event_clock_t dataSetClkBit6;
+    event_clock_t dataSetClkBit7;
     //@}
 
-    /** indicates if the unused bits of the data port are still
-    valid or should be read as 0, 1 = unused bits valid,
-    0 = unused bits should be 0 */
+    /**
+     * indicates if the unused bits of the data port are still
+     * valid or should be read as 0, 1 = unused bits valid,
+     * 0 = unused bits should be 0
+     */
     //@{
-    bool data_set_bit6;
-    bool data_set_bit7;
+    bool dataSetBit6;
+    bool dataSetBit7;
     //@}
 
     /** indicates if the unused bits are in the process of falling off. */
-    bool data_falloff_bit6;
-    bool data_falloff_bit7;
+    bool dataFalloffBit6;
+    bool dataFalloffBit7;
 
     /** Value written to processor port.  */
     //@{
@@ -87,42 +89,42 @@ private:
     //@}
 
     /** Value read from processor port.  */
-    uint8_t data_read;
+    uint8_t dataRead;
 
     /** State of processor port pins.  */
-    uint8_t data_out;
+    uint8_t dataOut;
 
     /** Tape motor status.  */
-    uint8_t old_port_data_out;
+    uint8_t oldPortDataOut;
 
     /** Tape write line status.  */
-    uint8_t old_port_write_bit;
+    uint8_t oldPortWriteBit;
 
 private:
     void updateCpuPort()
     {
-        data_out = (data_out & ~dir) | (data & dir);
-        data_read = (data | ~dir) & (data_out | 0x17);
-        pla->setCpuPort(data_read);
+        dataOut = (dataOut & ~dir) | (data & dir);
+        dataRead = (data | ~dir) & (dataOut | 0x17);
+        pla->setCpuPort(dataRead);
 
         if ((dir & 0x20) == 0)
         {
-            data_read &= 0xdf;
+            dataRead &= 0xdf;
         }
         if ((dir & 0x10) == 0 && tape_sense)
         {
-            data_read &= 0xef;
+            dataRead &= 0xef;
         }
 
-        if ((dir & data & 0x20) != old_port_data_out)
+        if ((dir & data & 0x20) != oldPortDataOut)
         {
-            old_port_data_out = dir & data & 0x20;
-            //C64.this.setMotor(0 == old_port_data_out);
+            oldPortDataOut = dir & data & 0x20;
+            //C64.this.setMotor(0 == oldPortDataOut);
         }
 
-        if (((~dir | data) & 0x8) != old_port_write_bit)
+        if (((~dir | data) & 0x8) != oldPortWriteBit)
         {
-            old_port_write_bit = (~dir | data) & 0x8;
+            oldPortWriteBit = (~dir | data) & 0x8;
             //C64.this.toggleWriteBit(((~dir | data) & 0x8) != 0);
         }
     }
@@ -134,16 +136,16 @@ public:
 
     void reset()
     {
-        old_port_data_out = 0xff;
-        old_port_write_bit = 0xff;
+        oldPortDataOut = 0xff;
+        oldPortWriteBit = 0xff;
         data = 0x3f;
-        data_out = 0x3f;
-        data_read = 0x3f;
+        dataOut = 0x3f;
+        dataRead = 0x3f;
         dir = 0;
-        data_set_bit6 = false;
-        data_set_bit7 = false;
-        data_falloff_bit6 = false;
-        data_falloff_bit7 = false;
+        dataSetBit6 = false;
+        dataSetBit7 = false;
+        dataFalloffBit6 = false;
+        dataFalloffBit7 = false;
         updateCpuPort();
     }
 
@@ -155,23 +157,23 @@ public:
         }
         else if (address == 1)
         {
-            if (data_falloff_bit6 || data_falloff_bit7)
+            if (dataFalloffBit6 || dataFalloffBit7)
             {
                 const event_clock_t phi2time = pla->getPhi2Time();
 
-                if (data_set_clk_bit6 < phi2time)
+                if (dataSetClkBit6 < phi2time)
                 {
-                    data_falloff_bit6 = false;
-                    data_set_bit6 = false;
+                    dataFalloffBit6 = false;
+                    dataSetBit6 = false;
                 }
 
-                if (data_set_clk_bit7 < phi2time)
+                if (dataSetClkBit7 < phi2time)
                 {
-                    data_falloff_bit7 = false;
-                    data_set_bit7 = false;
+                    dataFalloffBit7 = false;
+                    dataSetBit7 = false;
                 }
             }
-            return data_read & (0xff - (((!data_set_bit6?1:0)<<6) + ((!data_set_bit7?1:0)<<7)));
+            return dataRead & (0xff - (((!dataSetBit6?1:0)<<6) + ((!dataSetBit7?1:0)<<7)));
         }
         else
         {
@@ -184,23 +186,23 @@ public:
         uint8_t v;
         if (address == 0)
         {
-            if (data_set_bit7 && (value & 0x80) == 0 && !data_falloff_bit7)
+            if (dataSetBit7 && (value & 0x80) == 0 && !dataFalloffBit7)
             {
-                data_falloff_bit7 = true;
-                data_set_clk_bit7 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                dataFalloffBit7 = true;
+                dataSetClkBit7 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
             }
-            if (data_set_bit6 && (value & 0x40) == 0 && !data_falloff_bit6)
+            if (dataSetBit6 && (value & 0x40) == 0 && !dataFalloffBit6)
             {
-                data_falloff_bit6 = true;
-                data_set_clk_bit6 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                dataFalloffBit6 = true;
+                dataSetClkBit6 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
             }
-            if (data_set_bit7 && (value & 0x80) != 0 && data_falloff_bit7)
+            if (dataSetBit7 && (value & 0x80) != 0 && dataFalloffBit7)
             {
-                data_falloff_bit7 = false;
+                dataFalloffBit7 = false;
             }
-            if (data_set_bit6 && (value & 0x40) != 0 && data_falloff_bit6)
+            if (dataSetBit6 && (value & 0x40) != 0 && dataFalloffBit6)
             {
-                data_falloff_bit6 = false;
+                dataFalloffBit6 = false;
             }
             dir = value;
             updateCpuPort();
@@ -210,11 +212,11 @@ public:
         {
             if ((dir & 0x80) != 0 && (value & 0x80) != 0)
             {
-                data_set_bit7 = true;
+                dataSetBit7 = true;
             }
             if ((dir & 0x40) != 0 && (value & 0x40) != 0)
             {
-                data_set_bit6 = true;
+                dataSetBit6 = true;
             }
             data = value;
             updateCpuPort();
