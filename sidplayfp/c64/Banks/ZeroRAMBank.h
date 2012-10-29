@@ -83,10 +83,7 @@ private:
     //@}
 
     /** Value read from processor port.  */
-    //@{
-    uint8_t dir_read;
     uint8_t data_read;
-    //@}
 
     /** State of processor port pins.  */
     uint8_t data_out;
