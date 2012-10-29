@@ -184,7 +184,7 @@ class SidTuneBase
     /// Try to retrieve single-file sidtune from specified buffer.
     static SidTuneBase* getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen);
 
-    static void createNewFileName(Buffer_sidtt<char>& destString,
+    static void createNewFileName(std::string& destString,
                            const char* sourceName, const char* sourceExt);
 
  private:    // prevent copying

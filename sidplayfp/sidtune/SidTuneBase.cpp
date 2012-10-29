@@ -369,25 +369,13 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     cache.assign(buf.xferPtr(),buf.xferLen());
 }
 
-void SidTuneBase::createNewFileName(Buffer_sidtt<char>& destString,
+void SidTuneBase::createNewFileName(std::string& destString,
                                 const char* sourceName,
                                 const char* sourceExt)
 {
-    Buffer_sidtt<char> newBuf;
-    uint_least32_t newLen = strlen(sourceName)+strlen(sourceExt)+1;
-    // Get enough memory, so we can appended the extension.
-
-    try
-    {
-        newBuf.assign(new char[newLen], newLen);
-    }
-    catch (std::bad_alloc &e)
-    {
-        throw loadError(ERR_NOT_ENOUGH_MEMORY);
-    }
-    strcpy(newBuf.get(),sourceName);
-    strcpy(SidTuneTools::fileExtOfPath(newBuf.get()),sourceExt);
-    destString.assign(newBuf.xferPtr(),newBuf.xferLen());
+    destString.assign(sourceName);
+    destString.erase(destString.find_last_of('.'));
+    destString.append(sourceExt);
 }
 
 // Initializing the object based upon what we find in the specified file.
@@ -409,7 +397,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
         if (s.get())
         {
             // Try to find second file.
-            Buffer_sidtt<char> fileName2;
+            std::string fileName2;
             int n = 0;
             while (fileNameExtensions[n] != 0)
             {
@@ -417,18 +405,18 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                 // 1st data file was loaded into ``fileBuf1'',
                 // so we load the 2nd one into ``fileBuf2''.
                 // Do not load the first file again if names are equal.
-                if (MYSTRICMP(fileName, fileName2.get()) != 0)
+                if (MYSTRICMP(fileName, fileName2.c_str()) != 0)
                 {
                     try
                     {
-                        loadFile(fileName2.get(), fileBuf2);
+                        loadFile(fileName2.c_str(), fileBuf2);
                         // Check if tunes in wrong order and therefore swap them here
                         if (MYSTRICMP (fileNameExtensions[n], ".mus") == 0)
                         {
                             std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf2, fileBuf1, 0, true));
                             if (s2.get())
                             {
-                                s2->acceptSidTune(fileName2.get(), fileName, fileBuf2, separatorIsSlash);
+                                s2->acceptSidTune(fileName2.c_str(), fileName, fileBuf2, separatorIsSlash);
                                 return s2.release();
                             }
                         }
@@ -437,7 +425,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                             std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf1, fileBuf2, 0, true));
                             if (s2.get())
                             {
-                                s2->acceptSidTune(fileName, fileName2.get(), fileBuf1, separatorIsSlash);
+                                s2->acceptSidTune(fileName, fileName2.c_str(), fileBuf1, separatorIsSlash);
                                 return s2.release();
                             }
                         }
