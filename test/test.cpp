@@ -52,8 +52,8 @@ public:
     void    voice (const unsigned int num, const bool mute) {}
     void    model    (SidConfig::model_t model)  {}
     const   char *error   (void) const { return ""; }
-    bool    lock     (EventContext *env)  {}
-    void    unlock   ()  {}
+    bool    lock     (EventContext *env) { return true; }
+    void    unlock   () {}
 };
 
 class FakeBuilder: public sidbuilder
@@ -62,12 +62,10 @@ private:
     NullSID sidobj;
 
 public:
-    FakeBuilder  (const char * const name) : sidbuilder(name) {}
+    FakeBuilder  (const char * const name)
+      : sidbuilder(name) { sidobjs.push_back (new NullSID()); }
     ~FakeBuilder (void) {}
 
-    sidemu     *lock    (EventContext *env, const SidConfig::model_t model) { return &sidobj; }
-    void        unlock  (sidemu *device) {}
-    const char *error   (void) const { return ""; }
     const char *credits (void) const { return ""; }
     void        filter (const bool enable) {}
 };
