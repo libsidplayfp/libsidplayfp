@@ -127,9 +127,7 @@ int main(int argc, char* argv[])
 
     tune->selectSong(0);
 
-    m_engine.load(tune.get());
-
-    if (!m_engine.getStatus())
+    if (!m_engine.load(tune.get()))
     {
         printf("%s\n", m_engine.error());
         return -1;

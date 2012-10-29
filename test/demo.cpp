@@ -110,9 +110,7 @@ int main(int argc, char* argv[])
     m_engine.config(cfg);
 
     // Load tune into engine
-    m_engine.load(tune.get());
-
-    if (!m_engine.getStatus())
+    if (!m_engine.load(tune.get()))
     {
         std::cerr <<  m_engine.error() << std::endl;
         return -1;
