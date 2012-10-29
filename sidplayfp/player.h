@@ -76,8 +76,6 @@ private:
 
     static SidConfig::model_t getModel (const SidTuneInfo::model_t sidModel, const SidConfig::model_t defaultModel, const bool forced);
 
-    uint_least32_t (Player::*output) (char *buffer);
-
 #ifdef PC64_TESTSUITE
     void load (const char *file)
     {
