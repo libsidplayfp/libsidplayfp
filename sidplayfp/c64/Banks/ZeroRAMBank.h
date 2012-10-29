@@ -76,6 +76,10 @@ private:
     bool data_set_bit7;
     //@}
 
+    /** indicates if the unused bits are in the process of falling off. */
+    bool data_falloff_bit6;
+    bool data_falloff_bit7;
+
     /** Value written to processor port.  */
     //@{
     uint8_t dir;
@@ -87,10 +91,6 @@ private:
 
     /** State of processor port pins.  */
     uint8_t data_out;
-
-    /** indicates if the unused bits are in the process of falling off. */
-    bool data_falloff_bit6;
-    bool data_falloff_bit7;
 
     /** Tape motor status.  */
     uint8_t old_port_data_out;
