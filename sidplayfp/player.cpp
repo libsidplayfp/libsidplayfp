@@ -162,10 +162,9 @@ bool Player::load (SidTune *tune)
     }
 
     {   // Must re-configure on fly for stereo support!
-        const int ret = config (m_cfg);
-        // Failed configuration with new tune, reject it
-        if (ret < 0)
+        if (!config (m_cfg))
         {
+            // Failed configuration with new tune, reject it
             m_tune = 0;
             return false;
         }
