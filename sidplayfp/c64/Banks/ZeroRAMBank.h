@@ -52,7 +52,7 @@ class ZeroRAMBank : public Bank
 {
 private:
     /** $01 bits 6 and 7 fall-off cycles (1->0), average is about 350 msec */
-    static const long C64_CPU_DATA_PORT_FALL_OFF_CYCLES = 350000;
+    static const event_clock_t C64_CPU_DATA_PORT_FALL_OFF_CYCLES = 350000;
 
     static const bool tape_sense = false;
 
@@ -64,8 +64,8 @@ private:
 
     /** cycle that should invalidate the unused bits of the data port. */
     //@{
-    long data_set_clk_bit6;
-    long data_set_clk_bit7;
+    event_clock_t data_set_clk_bit6;
+    event_clock_t data_set_clk_bit7;
     //@}
 
     /** indicates if the unused bits of the data port are still
