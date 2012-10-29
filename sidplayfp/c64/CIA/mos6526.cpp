@@ -562,10 +562,6 @@ void MOS6526::underflowB(void)
     trigger(INTERRUPT_UNDERFLOW_B);
 }
 
-// TOD implementation taken from Vice
-#define byte2bcd(byte) (((((byte) / 10) << 4) + ((byte) % 10)) & 0xff)
-#define bcd2byte(bcd)  (((10*(((bcd) & 0xf0) >> 4)) + ((bcd) & 0xf)) & 0xff)
-
 void MOS6526::tod(void)
 {
     // Reload divider according to 50/60 Hz flag
