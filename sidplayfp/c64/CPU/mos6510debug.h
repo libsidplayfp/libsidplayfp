@@ -23,6 +23,10 @@
 #ifndef MOS6510DEBUG_H
 #define MOS6510DEBUG_H
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #ifdef DEBUG
 
 #include "sidplayfp/EventScheduler.h"
