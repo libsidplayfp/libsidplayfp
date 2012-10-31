@@ -34,8 +34,10 @@
 
 #include "MD5_Defs.h"
 
-typedef unsigned char md5_byte_t;  // 8-bit byte
-typedef unsigned int md5_word_t;   // 32-bit word
+#include <stdint.h>
+
+typedef uint8_t md5_byte_t;
+typedef uint32_t md5_word_t;
 
 class MD5
 {
