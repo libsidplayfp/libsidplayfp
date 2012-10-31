@@ -29,7 +29,7 @@ sidemu *sidbuilder::lock (EventContext *env, const SidConfig::model_t model)
 {
     m_status = true;
 
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         sidemu *sid = (*it);
         if (sid->lock (env))
@@ -47,22 +47,14 @@ sidemu *sidbuilder::lock (EventContext *env, const SidConfig::model_t model)
 
 void sidbuilder::unlock (sidemu *device)
 {
-    // Make sure this is our SID
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    std::set<sidemu *>::iterator it = sidobjs.find(device);
+    if (it != sidobjs.end())
     {
-        sidemu *sid = (*it);
-        if (sid == device)
-        {   // Unlock it
-            sid->unlock ();
-            break;
-        }
+        (*it)->unlock ();
     }
 }
 
 void sidbuilder::remove ()
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-        delete (*it);
-
     sidobjs.clear();
 }

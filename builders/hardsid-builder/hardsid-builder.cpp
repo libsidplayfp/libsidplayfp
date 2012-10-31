@@ -83,7 +83,7 @@ unsigned int HardSIDBuilder::create (unsigned int sids)
                 strcpy (m_errorBuffer, sid->error ());
                 goto HardSIDBuilder_create_error;
             }
-            sidobjs.push_back (sid.release());
+            sidobjs.insert (sid.release());
         }
         // Memory alloc failed?
         catch (std::bad_alloc&)
@@ -131,13 +131,13 @@ const char *HardSIDBuilder::credits () const
 
 void HardSIDBuilder::flush(void)
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
         static_cast<HardSID*>(*it)->flush();
 }
 
 void HardSIDBuilder::filter (const bool enable)
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         HardSID *sid = static_cast<HardSID*>(*it);
         sid->filter (enable);

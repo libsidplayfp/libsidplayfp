@@ -52,7 +52,7 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
     {
         try
         {
-            sidobjs.push_back (new ReSIDfp(this));
+            sidobjs.insert (new ReSIDfp(this));
         }
         // Memory alloc failed?
         catch (std::bad_alloc&)
@@ -73,7 +73,7 @@ const char *ReSIDfpBuilder::credits () const
 
 void ReSIDfpBuilder::filter (const bool enable)
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         sid->filter (enable);
@@ -82,7 +82,7 @@ void ReSIDfpBuilder::filter (const bool enable)
 
 void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         sid->filter6581Curve (filterCurve);
@@ -91,7 +91,7 @@ void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
 
 void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
         sid->filter8580Curve (filterCurve);

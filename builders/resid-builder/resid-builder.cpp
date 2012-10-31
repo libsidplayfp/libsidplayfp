@@ -52,7 +52,7 @@ unsigned int ReSIDBuilder::create (unsigned int sids)
     {
         try
         {
-            sidobjs.push_back (new ReSID(this));
+            sidobjs.insert (new ReSID(this));
         }
         // Memory alloc failed?
         catch (std::bad_alloc&)
@@ -72,7 +72,7 @@ const char *ReSIDBuilder::credits () const
 
 void ReSIDBuilder::filter (const bool enable)
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSID *sid = static_cast<ReSID*>(*it);
         sid->filter (enable);
@@ -81,7 +81,7 @@ void ReSIDBuilder::filter (const bool enable)
 
 void ReSIDBuilder::bias (const double dac_bias)
 {
-    for (std::vector<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         ReSID *sid = static_cast<ReSID*>(*it);
         sid->bias (dac_bias);

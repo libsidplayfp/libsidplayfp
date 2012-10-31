@@ -62,7 +62,7 @@ private:
 
 public:
     FakeBuilder  (const char * const name)
-      : sidbuilder(name) { sidobjs.push_back (new NullSID()); }
+      : sidbuilder(name) { sidobjs.insert (new NullSID()); }
     ~FakeBuilder (void) {}
 
     const char *credits (void) const { return ""; }
