@@ -21,13 +21,11 @@
 #ifndef ROMCHECK_H
 #define ROMCHECK_H
 
-#include "utils/MD5/MD5.h"
+#include "sidplayfp/sidmd5.h"
 
 #include <stdint.h>
 #include <map>
 #include <string>
-#include <sstream>
-#include <iomanip>
 
 /** @internal
 */
@@ -59,21 +57,11 @@ private:
      */
     std::string checksum() const
     {
-        MD5 myMD5;
-        myMD5.append (m_rom, m_size);
-        myMD5.finish();
+        sidmd5 md5;
+        md5.append (m_rom, m_size);
+        md5.finish();
 
-        // Construct fingerprint.
-        std::ostringstream ss;
-        ss.fill('0');
-        ss.flags(std::ios::hex);
-
-        for (int di = 0; di < 16; ++di)
-        {
-            ss << std::setw(2) << (int) myMD5.getDigest()[di];
-        }
-
-        return ss.str();
+        return md5.getDigest();
     }
 
 protected:

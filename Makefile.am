@@ -68,6 +68,7 @@ sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
 sidplayfp/sidbuilder.cpp \
 sidplayfp/SidConfig.cpp \
+sidplayfp/sidmd5.h \
 sidplayfp/sidmemory.h \
 sidplayfp/sidplayfp.cpp \
 sidplayfp/SidInfoImpl.h \

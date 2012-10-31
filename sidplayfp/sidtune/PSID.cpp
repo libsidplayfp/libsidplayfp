@@ -24,14 +24,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <memory>
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
 #include "SidTuneBase.h"
 #include "sidplayfp/sidendian.h"
-#include "utils/MD5/MD5.h"
+#include "sidplayfp/sidmd5.h"
 
 #define PSID_ID 0x50534944
 #define RSID_ID 0x52534944
@@ -284,7 +284,7 @@ const char *PSID::createMD5(char *md5)
     *md5 = '\0';
 
     // Include C64 data.
-    MD5 myMD5;
+    sidmd5 myMD5;
     md5_byte_t tmp[2];
     myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
     // Include INIT and PLAY address.
@@ -322,13 +322,10 @@ const char *PSID::createMD5(char *md5)
     // two different values stored in the database/cache.
 
     myMD5.finish();
-    // Construct fingerprint.
-    char *m = md5;
-    for (int di = 0; di < 16; ++di)
-    {
-        sprintf (m, "%02x", (int) myMD5.getDigest()[di]);
-        m += 2;
-    }
+
+    // Get fingerprint.
+    myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
+    md5[SidTune::MD5_LENGTH] ='\0';
 
     return md5;
 }
