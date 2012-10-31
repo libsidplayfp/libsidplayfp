@@ -323,12 +323,6 @@ void MOS6510::calculateInterruptTriggerCycle()
 
 void MOS6510::IRQLoRequest (void)
 {
-    if (Cycle_EffectiveAddress == 0xFFFC) //FIXME
-    {
-        /* reset the values in MMU */
-        cpuWrite(0, 0x2f);
-        cpuWrite(1, 0x37);
-    }
     endian_16lo8 (Register_ProgramCounter, cpuRead (Cycle_EffectiveAddress));
 }
 
@@ -2215,12 +2209,15 @@ void MOS6510::reset (void)
 {   // Internal Stuff
     Initialise ();
 
+    // Set processor port to the default values
+    cpuWrite(0, 0x2F);
+    cpuWrite(1, 0x37);
+
     // Requires External Bits
     // Read from reset vector for program entry point
     endian_16lo8 (Cycle_EffectiveAddress, cpuRead (0xFFFC));
     endian_16hi8 (Cycle_EffectiveAddress, cpuRead (0xFFFD));
     Register_ProgramCounter = Cycle_EffectiveAddress;
-//    filepos = 0;
 }
 
 //-------------------------------------------------------------------------//

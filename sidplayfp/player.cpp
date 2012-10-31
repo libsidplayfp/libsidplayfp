@@ -143,9 +143,6 @@ bool Player::initialise ()
         return false;
     }
 
-    m_c64.getMmu()->cpuWrite(0, 0x2F);
-    m_c64.getMmu()->cpuWrite(1, 0x37);
-
     m_c64.resetCpu();
 
     m_mixer.reset ();
