@@ -145,7 +145,7 @@ private:
     */
     inline void interruptNMI (void) { cpu.triggerNMI (); }
 
-    inline void interruptRST (void) { /*stop ();*/ }
+    inline void interruptRST (void) { cpu.triggerRST (); }
 
     /**
     * BA signal.
