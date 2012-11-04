@@ -65,10 +65,9 @@ HardSID::HardSID (sidbuilder *builder)
  m_status(false),
  m_locked(false)
 {
-    *m_errorBuffer = '\0';
     if (m_instance >= hsid2.Devices ())
     {
-        sprintf (m_errorBuffer, "HARDSID WARNING: System dosen't have enough SID chips.");
+        m_errorBuffer = "HARDSID WARNING: System dosen't have enough SID chips.";
         return;
     }
 

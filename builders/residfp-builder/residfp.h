@@ -34,7 +34,8 @@ class sidemu;
 class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 {
 public:
-    ReSIDfpBuilder  (const char * const name);
+    ReSIDfpBuilder  (const char * const name)
+      : sidbuilder (name) {}
     ~ReSIDfpBuilder (void);
 
     /** All available sids.

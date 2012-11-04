@@ -93,7 +93,6 @@ HardSID::HardSID (sidbuilder *builder)
 
     {
         char device[20];
-        *m_errorBuffer = '\0';
         sprintf (device, "/dev/sid%u", m_instance);
         m_handle = open (device, O_RDWR);
         if (m_handle < 0)
@@ -103,13 +102,13 @@ HardSID::HardSID (sidbuilder *builder)
                 m_handle = open ("/dev/sid", O_RDWR);
                 if (m_handle < 0)
                 {
-                    sprintf (m_errorBuffer, "HARDSID ERROR: Cannot access \"/dev/sid\" or \"%s\"", device);
+                    m_errorBuffer.assign("HARDSID ERROR: Cannot access \"/dev/sid\" or \"").append(device).append("\"");
                     return;
                 }
             }
             else
             {
-                sprintf (m_errorBuffer, "HARDSID ERROR: Cannot access \"%s\"", device);
+                m_errorBuffer.assign("HARDSID ERROR: Cannot access \"").append(device).append("\"");
                 return;
             }
         }

@@ -136,7 +136,7 @@ private:
     // Generic variables
     EventContext  *m_eventContext;
     event_clock_t  m_accessClk;
-    char           m_errorBuffer[100];
+    std::string    m_errorBuffer;
 
     // Must stay in this order
     bool           muted[HARDSID_VOICES];
@@ -159,7 +159,7 @@ public:
     uint8_t       read    (uint_least8_t addr);
     void          write   (uint_least8_t addr, uint8_t data);
     void          clock   ();
-    const char   *error   (void) const {return m_errorBuffer;}
+    const char   *error   (void) const {return m_errorBuffer.c_str();}
     bool          getStatus() const { return m_status; }
 
     // Standard SID functions

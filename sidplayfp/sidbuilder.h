@@ -26,6 +26,7 @@
 #include "SidConfig.h"
 
 #include <set>
+#include <string>
 
 class sidemu;
 class EventContext;
@@ -38,14 +39,16 @@ private:
 protected:
     bool m_status;
 
-    char m_errorBuffer[100];
+    std::string m_errorBuffer;
 
     std::set<sidemu *> sidobjs;
 
 public:
     sidbuilder(const char * const name)
-        : m_name(name), m_status (true) {;}
-    virtual ~sidbuilder() {;}
+      : m_name(name),
+        m_status (true),
+        m_errorBuffer("N/A") {}
+    virtual ~sidbuilder() {}
 
     /**
     * The number of used devices.
@@ -63,7 +66,7 @@ public:
     void         remove  (void);
 
     const    char        *name    (void) const { return m_name; }
-    const  char *error   (void) const { return m_errorBuffer; }
+    const  char *error   (void) const { return m_errorBuffer.c_str(); }
 
     virtual  const  char *credits (void) const = 0;
     virtual  void         filter  (bool enable) = 0;

@@ -20,17 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <cstring>
-
 #include "residfp.h"
 #include "residfp-emu.h"
-
-ReSIDfpBuilder::ReSIDfpBuilder (const char * const name)
-:sidbuilder (name)
-{
-    strcpy (m_errorBuffer, "N/A");
-}
 
 ReSIDfpBuilder::~ReSIDfpBuilder (void)
 {   // Remove all are SID emulations
@@ -57,7 +48,7 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
         // Memory alloc failed?
         catch (std::bad_alloc&)
         {
-            sprintf (m_errorBuffer, "%s ERROR: Unable to create ReSIDfp object", name ());
+            m_errorBuffer.assign(name ()).append(" ERROR: Unable to create ReSIDfp object");
             m_status = false;
             break;
         }

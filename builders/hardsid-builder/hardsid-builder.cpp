@@ -20,9 +20,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <cstring>
+#include <string.h>
+#include <string>
 #include <memory>
+#include <sstream>
 
 #include "hardsid.h"
 #include "hardsid-emu.h"
@@ -44,8 +45,6 @@ unsigned int HardSIDBuilder::m_count = 0;
 HardSIDBuilder::HardSIDBuilder (const char * const name)
 :sidbuilder (name)
 {
-    strcpy (m_errorBuffer, "N/A");
-
     if (!m_initialised)
     {
         if (init () < 0)
@@ -80,7 +79,7 @@ unsigned int HardSIDBuilder::create (unsigned int sids)
             // SID init failed?
             if (!sid->getStatus())
             {
-                strcpy (m_errorBuffer, sid->error ());
+                m_errorBuffer = sid->error ();
                 goto HardSIDBuilder_create_error;
             }
             sidobjs.insert (sid.release());
@@ -88,7 +87,7 @@ unsigned int HardSIDBuilder::create (unsigned int sids)
         // Memory alloc failed?
         catch (std::bad_alloc&)
         {
-            sprintf (m_errorBuffer, "%s ERROR: Unable to create HardSID object", name ());
+            m_errorBuffer.assign(name ()).append(" ERROR: Unable to create HardSID object");
             goto HardSIDBuilder_create_error;
         }
 
@@ -113,7 +112,7 @@ unsigned int HardSIDBuilder::availDevices ()
         unsigned int count = hsid2.Devices ();
         if (count == 0)
         {
-            sprintf (m_errorBuffer, "HARDSID ERROR: No devices found (run HardSIDConfig)");
+            m_errorBuffer = "HARDSID ERROR: No devices found (run HardSIDConfig)";
             m_status = false;
         }
         return count;
@@ -164,9 +163,9 @@ int HardSIDBuilder::init ()
     {
         DWORD err = GetLastError();
         if (err == ERROR_DLL_INIT_FAILED)
-            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll init failed!");
+            m_errorBuffer = "HARDSID ERROR: hardsid.dll init failed!";
         else
-            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll not found!");
+            m_errorBuffer = "HARDSID ERROR: hardsid.dll not found!";
         goto HardSID_init_error;
     }
 
@@ -178,7 +177,7 @@ int HardSIDBuilder::init ()
             mapper();
         else
         {
-            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll is corrupt!");
+            m_errorBuffer = "HARDSID ERROR: hardsid.dll is corrupt!";
             goto HardSID_init_error;
         }
     }
@@ -188,7 +187,7 @@ int HardSIDBuilder::init ()
         version = (HsidDLL2_Version_t) GetProcAddress(dll, "HardSID_Version");
         if (!version)
         {
-            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll not V2");
+            m_errorBuffer = "HARDSID ERROR: hardsid.dll not V2";
             goto HardSID_init_error;
         }
         hsid2.Version = version ();
@@ -198,14 +197,22 @@ int HardSIDBuilder::init ()
         WORD version = hsid2.Version;
         if ((version >> 8) != (HSID_VERSION_MIN >> 8))
         {
-            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll not V%d", HSID_VERSION_MIN >> 8);
+            ostringstream ss;
+            ss << "HARDSID ERROR: hardsid.dll not V" << (HSID_VERSION_MIN >> 8) << endl;
+            m_errorBuffer = ss.str();
             goto HardSID_init_error;
         }
 
         if (version < HSID_VERSION_MIN)
         {
-            sprintf (m_errorBuffer, "HARDSID ERROR: hardsid.dll must be V%02u.%02u or greater",
-                     HSID_VERSION_MIN >> 8, HSID_VERSION_MIN & 0xff);
+            ostringstream ss;
+            ss.fill('0');
+            ss << "HARDSID ERROR: hardsid.dll hardsid.dll must be V";
+            ss << std::setw(2) << (HSID_VERSION_MIN >> 8);
+            ss << ".";
+            ss << std::setw(2) << (HSID_VERSION_MIN & 0xff);
+            ss <<  " or greater" << endl;
+            m_errorBuffer = ss.str();
             goto HardSID_init_error;
         }
     }
