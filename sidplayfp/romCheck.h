@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <map>
 #include <string>
+#include <utility>
 
 /** @internal
 */
@@ -77,7 +78,7 @@ protected:
 
     void add(const char* md5, const char* desc)
     {
-        m_checksums.insert(std::pair<std::string, const char*>(md5, desc));
+        m_checksums.insert(std::make_pair(md5, desc));
     }
 
 public:

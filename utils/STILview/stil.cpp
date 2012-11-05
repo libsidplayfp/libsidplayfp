@@ -33,6 +33,7 @@
 #include <fstream>
 #include <cstdio>      // For snprintf() and NULL
 #include <sstream>
+#include <utility>
 
 using namespace std;
 
@@ -685,7 +686,7 @@ STIL::getDirs(ifstream& inFile, dirList &dirs, bool isSTILFile)
 
                 CERR_STIL_DEBUG << "getDirs() dirName=" << dirName << ", pos=" << position <<  endl;
 
-                dirs.insert(pair<string, streampos>(dirName, position));
+                dirs.insert(std::make_pair(dirName, position));
             }
 
             newDir = !isSTILFile;
