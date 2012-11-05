@@ -32,14 +32,16 @@
 */
 class romCheck
 {
-protected:
+private:
+    typedef std::map<std::string, const char*> md5map;
+
+private:
     /**
      * Maps checksums to respective ROM description.
      * Must be filled by derived class.
      */
-    std::map<std::string, const char*> m_checksums;
+    md5map m_checksums;
 
-private:
     /**
      * Pointer to the ROM buffer
      */ 
@@ -89,7 +91,7 @@ public:
      */
     const char* info() const
     {
-        std::map<std::string, const char*>::const_iterator res = m_checksums.find(checksum());
+        md5map::const_iterator res = m_checksums.find(checksum());
         return (res!=m_checksums.end())?res->second:"Unknown Rom";
     }
 };
