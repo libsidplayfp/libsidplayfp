@@ -3,6 +3,11 @@ ACLOCAL_AMFLAGS = -I m4
 
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
+
+if MINGW32
+  W32_LDFLAGS = -no-undefined
+endif
+
 if HAVE_VISIBILITY
   AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
 endif
@@ -125,7 +130,7 @@ utils/MD5/MD5.cpp \
 utils/MD5/MD5.h \
 utils/MD5/MD5_Defs.h
 
-sidplayfp_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION)
+sidplayfp_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS)
 
 sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
 
@@ -281,7 +286,7 @@ endif
 sidplayfp_libstilview_la_SOURCES = \
 utils/STILview/stil.cpp
 
-sidplayfp_libstilview_la_LDFLAGS = -version-info $(LIBSTILVIEWVERSION)
+sidplayfp_libstilview_la_LDFLAGS = -version-info $(LIBSTILVIEWVERSION) $(W32_LDFLAGS)
 
 sidplayfp_libstilview_ladir = $(includedir)/stilview
 

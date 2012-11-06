@@ -25,7 +25,6 @@ case "$host" in
 esac
 case "$host" in
     *mingw32* )
-        LDFLAGS="${LDFLAGS} -no-undefined"
         MINGW32=yes
         ;;
 esac
