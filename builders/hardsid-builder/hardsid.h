@@ -26,8 +26,6 @@
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/siddefs.h"
 
-class sidemu;
-
 /**
 * HardSID Builder Class
 */
