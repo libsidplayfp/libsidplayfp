@@ -25,6 +25,9 @@
 #include <memory>
 #include <sstream>
 #include <algorithm>
+#ifdef _WIN32
+#  include <iomanip>
+#endif
 
 #include "hardsid.h"
 #include "hardsid-emu.h"
@@ -194,21 +197,21 @@ int HardSIDBuilder::init ()
         WORD version = hsid2.Version;
         if ((version >> 8) != (HSID_VERSION_MIN >> 8))
         {
-            ostringstream ss;
-            ss << "HARDSID ERROR: hardsid.dll not V" << (HSID_VERSION_MIN >> 8) << endl;
+            std::ostringstream ss;
+            ss << "HARDSID ERROR: hardsid.dll not V" << (HSID_VERSION_MIN >> 8) << std::endl;
             m_errorBuffer = ss.str();
             goto HardSID_init_error;
         }
 
         if (version < HSID_VERSION_MIN)
         {
-            ostringstream ss;
+            std::ostringstream ss;
             ss.fill('0');
             ss << "HARDSID ERROR: hardsid.dll hardsid.dll must be V";
             ss << std::setw(2) << (HSID_VERSION_MIN >> 8);
             ss << ".";
             ss << std::setw(2) << (HSID_VERSION_MIN & 0xff);
-            ss <<  " or greater" << endl;
+            ss <<  " or greater" << std::endl;
             m_errorBuffer = ss.str();
             goto HardSID_init_error;
         }
