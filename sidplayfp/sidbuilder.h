@@ -43,6 +43,21 @@ protected:
 
     std::set<sidemu *> sidobjs;
 
+protected:
+    template<class Temu, typename Tparam>
+    class applyParameter
+    {
+    protected:
+        Tparam m_param;
+        void (Temu::*m_method)(Tparam);
+
+    public:
+        applyParameter(void (Temu::*method)(Tparam), Tparam param)
+          : m_param(param),
+            m_method(method) {}
+        void operator() (sidemu *e) { (static_cast<Temu*>(e)->*m_method)(m_param); }
+    };
+
 public:
     sidbuilder(const char * const name)
       : m_name(name),

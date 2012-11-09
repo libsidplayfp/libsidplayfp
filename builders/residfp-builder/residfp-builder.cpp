@@ -23,6 +23,9 @@
 #include "residfp.h"
 #include "residfp-emu.h"
 
+#include <algorithm>
+#include <functional>
+
 ReSIDfpBuilder::~ReSIDfpBuilder (void)
 {   // Remove all are SID emulations
     remove ();
@@ -64,27 +67,15 @@ const char *ReSIDfpBuilder::credits () const
 
 void ReSIDfpBuilder::filter (const bool enable)
 {
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
-        sid->filter (enable);
-    }
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, bool>(&ReSIDfp::filter, enable));
 }
 
 void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
 {
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
-        sid->filter6581Curve (filterCurve);
-    }
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter6581Curve, filterCurve));
 }
 
 void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
 {
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        ReSIDfp *sid = static_cast<ReSIDfp*>(*it);
-        sid->filter8580Curve (filterCurve);
-    }
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter8580Curve, filterCurve));
 }

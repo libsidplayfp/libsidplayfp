@@ -23,6 +23,8 @@
 #include "resid.h"
 #include "resid-emu.h"
 
+#include <algorithm>
+
 ReSIDBuilder::~ReSIDBuilder (void)
 {   // Remove all are SID emulations
     remove ();
@@ -63,18 +65,10 @@ const char *ReSIDBuilder::credits () const
 
 void ReSIDBuilder::filter (const bool enable)
 {
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        ReSID *sid = static_cast<ReSID*>(*it);
-        sid->filter (enable);
-    }
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, bool>(&ReSID::filter, enable));
 }
 
 void ReSIDBuilder::bias (const double dac_bias)
 {
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        ReSID *sid = static_cast<ReSID*>(*it);
-        sid->bias (dac_bias);
-    }
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, double>(&ReSID::bias, dac_bias));
 }

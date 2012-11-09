@@ -24,6 +24,7 @@
 #include <string>
 #include <memory>
 #include <sstream>
+#include <algorithm>
 
 #include "hardsid.h"
 #include "hardsid-emu.h"
@@ -136,11 +137,7 @@ void HardSIDBuilder::flush(void)
 
 void HardSIDBuilder::filter (const bool enable)
 {
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-    {
-        HardSID *sid = static_cast<HardSID*>(*it);
-        sid->filter (enable);
-    }
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<HardSID, bool>(&HardSID::filter, enable));
 }
 
 #ifdef _WIN32
