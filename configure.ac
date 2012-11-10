@@ -49,9 +49,9 @@ AC_C_BIGENDIAN
 
 AC_CHECK_SIZEOF(int, 4)
 
-if test $ac_cv_sizeof_int -lt 4; then
-  AC_MSG_ERROR([only 32 bit or better CPUs are supported])
-fi
+AS_IF([test $ac_cv_sizeof_int -lt 4],
+  [AC_MSG_ERROR([only 32 bit or better CPUs are supported])]
+)
 
 AS_IF([test "x${ac_cv_header_stdint_h}" != "xyes"],
   [AC_MSG_ERROR([Required header stdint.h not found])]
@@ -110,11 +110,13 @@ AC_SUBST([debug_flags])
 
 
 AC_ARG_ENABLE([inline],
-  AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]]))
+  AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]])
+)
 
 AS_IF([test x"$enable_inline" != "xno"],
   [RESID_INLINE=inline; RESID_INLINING=1],
-  [RESID_INLINE=""; RESID_INLINING=0])
+  [RESID_INLINE=""; RESID_INLINING=0]
+)
 
 
 # hack to avoid warnings
@@ -133,38 +135,40 @@ AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
   [ac_cv_cxx_bool=no])]
 )
 
-if test $ac_cv_cxx_bool = no; then
-  RESID_HAVE_BOOL=0
-else
-  RESID_HAVE_BOOL=1
-fi
-
+AS_IF([test "x$ac_cv_cxx_bool" = "xno"],
+  [RESID_HAVE_BOOL=0],
+  [RESID_HAVE_BOOL=1]
+)
 
 dnl Enable branch prediction hints.
 AC_ARG_ENABLE([branch-hints],
   [AS_HELP_STRING([--enable-branch-hints],
     [enable static branch prediction hints [default=yes]])],
   [],
-  [enable_branch_hints=yes])
+  [enable_branch_hints=yes]
+)
 
 AS_IF([test "$enable_branch_hints" != no],
   [AC_SUBST([RESID_BRANCH_HINTS], [1])],
-  [AC_SUBST([RESID_BRANCH_HINTS], [0])])
+  [AC_SUBST([RESID_BRANCH_HINTS], [0])]
+)
 
 
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
   [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
-    [resid_cv_builtin_expect=yes], [resid_cv_builtin_expect=no])])
+    [resid_cv_builtin_expect=yes], [resid_cv_builtin_expect=no])]
+)
 
 AS_IF([test "$resid_cv_builtin_expect" = no],
   [AC_SUBST([HAVE_BUILTIN_EXPECT], [0])],
-  [AC_SUBST([HAVE_BUILTIN_EXPECT], [1])])
+  [AC_SUBST([HAVE_BUILTIN_EXPECT], [1])]
+)
 
 
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
-if test -z "$DOXYGEN"; then
-  AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
-fi
+AS_IF([test -z "$DOXYGEN"],
+  [AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])]
+)
 
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 
