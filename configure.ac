@@ -53,6 +53,10 @@ if test $ac_cv_sizeof_int -lt 4; then
   AC_MSG_ERROR([only 32 bit or better CPUs are supported])
 fi
 
+AS_IF([test "x${ac_cv_header_stdint_h}" != "xyes"],
+  [AC_MSG_ERROR([Required header stdint.h not found])]
+)
+
 dnl Checks for library functions.
 AC_CHECK_FUNCS([strncasecmp strcasecmp])
 
