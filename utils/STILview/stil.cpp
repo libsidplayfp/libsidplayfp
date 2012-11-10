@@ -264,7 +264,7 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir.c_str(), baseDir.size()) != 0) {
+    if (MYSTRNICMP(absPathToEntry, baseDir.data(), baseDir.size()) != 0) {
         CERR_STIL_DEBUG << "getAbsEntry() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
         return NULL;
@@ -372,7 +372,7 @@ STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir.c_str(), baseDir.size()) != 0) {
+    if (MYSTRNICMP(absPathToEntry, baseDir.data(), baseDir.size()) != 0) {
         CERR_STIL_DEBUG << "getAbsBug() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
         return NULL;
@@ -471,7 +471,7 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir.c_str(), baseDir.size()) != 0) {
+    if (MYSTRNICMP(absPathToEntry, baseDir.data(), baseDir.size()) != 0) {
         CERR_STIL_DEBUG << "getAbsGC() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
         return NULL;
@@ -512,7 +512,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
     // If the baseDir was changed, we'll have to read it in again,
     // even if it might be in the buffer already.
 
-    if ((MYSTRNICMP(globalbuf, dir.c_str(), pathLen) != 0) ||
+    if ((MYSTRNICMP(globalbuf, dir.data(), pathLen) != 0) ||
         ((( (size_t) (strchr(globalbuf, '\n')-globalbuf)) != pathLen) &&
             (STILVersion > 2.59))) {
 
@@ -758,7 +758,7 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList &dirs)
 
         if (*line == '/') {
 
-            if (MYSTRNICMP(elem->first.c_str(), line, pathLen) != 0) {
+            if (MYSTRNICMP(elem->first.data(), line, pathLen) != 0) {
                 // We are outside the section - get out of the loop,
                 // which will fail the search.
                 break;
