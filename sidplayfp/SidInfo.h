@@ -35,7 +35,7 @@ public:
     virtual const char *version() const =0;
 
     virtual unsigned int numberOfCredits() const =0;
-    virtual const char *credits(int i) const =0;
+    virtual const char *credits(unsigned int i) const =0;
 
     /// Number of SIDs supported by this library
     virtual unsigned int maxsids() const =0;

@@ -93,7 +93,7 @@ public:
     const char *version() const { return m_version.c_str(); }
 
     unsigned int numberOfCredits() const { return m_credits.size(); }
-    const char *credits(int i) const { return i<m_credits.size()?m_credits[i].c_str():""; }
+    const char *credits(unsigned int i) const { return i<m_credits.size()?m_credits[i].c_str():""; }
 
     unsigned int maxsids() const { return m_maxsids; }
 

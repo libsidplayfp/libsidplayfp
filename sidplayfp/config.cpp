@@ -202,7 +202,7 @@ bool Player::sidCreate (sidbuilder *builder, const SidConfig::model_t defaultMod
                        const double cpuFreq, const int frequency,
                        const SidConfig::sampling_method_t sampling, const bool fastSampling)
 {
-    for (int i = 0; i < SidBank::MAX_SIDS; i++)
+    for (unsigned int i = 0; i < SidBank::MAX_SIDS; i++)
     {
         sidemu *s = m_c64.getSid(i);
         if (s)

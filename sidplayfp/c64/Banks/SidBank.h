@@ -34,7 +34,7 @@ class SidBank : public Bank
 {
 public:
     /** Maximum number of supported SIDs (mono and stereo) */
-    static const int MAX_SIDS = 2;
+    static const unsigned int MAX_SIDS = 2;
 
 private:
     /**
@@ -57,7 +57,7 @@ private:
 public:
     SidBank()
     {
-        for (int i = 0; i < MAX_SIDS; i++)
+        for (unsigned int i = 0; i < MAX_SIDS; i++)
             sid[i] = 0;
 
         resetSIDMapper();
@@ -65,7 +65,7 @@ public:
 
     void reset()
     {
-        for (int i = 0; i < MAX_SIDS; i++)
+        for (unsigned int i = 0; i < MAX_SIDS; i++)
         {
             if (sid[i])
                 sid[i]->reset(0xf);
