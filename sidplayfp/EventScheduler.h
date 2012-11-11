@@ -79,14 +79,14 @@ private:
     }
 
 protected:
-    void schedule (Event &event, const event_clock_t cycles,
-                   const event_phase_t phase) {
+    void schedule (Event &event, event_clock_t cycles,
+                   event_phase_t phase) {
         // this strange formulation always selects the next available slot regardless of specified phase.
         event.triggerTime = (cycles << 1) + currentTime + ((currentTime & 1) ^ phase);
         schedule(event);
     }
 
-    void schedule(Event &event, const event_clock_t cycles) {
+    void schedule(Event &event, event_clock_t cycles) {
         event.triggerTime = (cycles << 1) + currentTime;
         schedule(event);
     }
@@ -112,10 +112,10 @@ public:
 
     bool isPending(Event &event) const;
 
-    event_clock_t getTime (const event_phase_t phase) const
+    event_clock_t getTime (event_phase_t phase) const
     {   return (currentTime + (phase ^ 1)) >> 1; }
 
-    event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const
+    event_clock_t getTime (event_clock_t clock, event_phase_t phase) const
     {   return getTime (phase) - clock; }
 
     event_phase_t phase () const { return (event_phase_t) (currentTime & 1); }

@@ -138,7 +138,7 @@ void HardSIDBuilder::flush(void)
         static_cast<HardSID*>(*it)->flush();
 }
 
-void HardSIDBuilder::filter (const bool enable)
+void HardSIDBuilder::filter (bool enable)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<HardSID, bool>(&HardSID::filter, enable));
 }

@@ -141,9 +141,9 @@ protected:
     void Initialise          (void);
 
     // Flag utility functions
-    inline void setFlagsNZ(const uint8_t value);
+    inline void setFlagsNZ(uint8_t value);
     inline uint8_t getStatusRegister(void);
-    inline void setStatusRegister(const uint8_t sr);
+    inline void setStatusRegister(uint8_t sr);
 
     // Declare Interrupt Routines
     inline void IRQLoRequest     (void);
@@ -200,7 +200,7 @@ protected:
     inline void bit_instr     (void);
     inline void bmi_instr     (void);
     inline void bne_instr     (void);
-    inline void branch_instr  (const bool condition);
+    inline void branch_instr  (bool condition);
     inline void bpl_instr     (void);
     inline void brk_instr     (void);
     inline void bvc_instr     (void);
@@ -274,7 +274,7 @@ protected:
     * @param address
     * @return data byte CPU requested
     */
-    virtual uint8_t cpuRead(const uint_least16_t addr) =0;
+    virtual uint8_t cpuRead(uint_least16_t addr) =0;
 
     /**
     * Write data to system environment
@@ -282,7 +282,7 @@ protected:
     * @param address
     * @param data
     */
-    virtual void cpuWrite(const uint_least16_t addr, const uint8_t data) =0;
+    virtual void cpuWrite(uint_least16_t addr, uint8_t data) =0;
 
 #ifdef PC64_TESTSUITE
     virtual void   loadFile (const char *file) =0;
@@ -293,8 +293,8 @@ public:
     virtual ~MOS6510 () {}
     virtual void reset     (void);
     const char  *credits(void) const { return credit; }
-    void         debug     (const bool enable, FILE *out);
-    void         setRDY    (const bool newRDY);
+    void         debug     (bool enable, FILE *out);
+    void         setRDY    (bool newRDY);
 
     // Non-standard functions
     void triggerRST (void);

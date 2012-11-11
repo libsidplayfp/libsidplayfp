@@ -40,7 +40,7 @@
 const char ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
 const char ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
 
-uint8_t psiddrv::iomap (const uint_least16_t addr)
+uint8_t psiddrv::iomap (uint_least16_t addr)
 {
     // Force Real C64 Compatibility
     switch (m_tuneInfo->compatibility())

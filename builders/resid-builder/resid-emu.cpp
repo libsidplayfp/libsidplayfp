@@ -69,7 +69,7 @@ ReSID::~ReSID ()
     delete[] m_buffer;
 }
 
-void ReSID::bias (const double dac_bias)
+void ReSID::bias (double dac_bias)
 {
     m_sid.adjust_filter_bias(dac_bias);
 }
@@ -107,7 +107,7 @@ void ReSID::filter (bool enable)
 }
 
 void ReSID::sampling (float systemclock, float freq,
-        const SidConfig::sampling_method_t method, const bool fast)
+        SidConfig::sampling_method_t method, bool fast)
 {
     RESID_NS::sampling_method sampleMethod;
     switch (method)
@@ -130,7 +130,7 @@ void ReSID::sampling (float systemclock, float freq,
     }
 }
 
-void ReSID::voice (const unsigned int num, const bool mute)
+void ReSID::voice (unsigned int num, bool mute)
 {
     if (mute)
         m_voiceMask &= ~(1<<num);

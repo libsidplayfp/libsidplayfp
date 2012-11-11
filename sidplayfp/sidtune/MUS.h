@@ -33,7 +33,7 @@ class MUS : public SidTuneBase
     bool resolveAddrs(const uint_least8_t *c64data);
     bool checkRelocInfo(void);
 
-    static bool detect(const uint_least8_t* buffer, const uint_least32_t bufLen,
+    static bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index);
 
     bool mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
@@ -53,7 +53,7 @@ class MUS : public SidTuneBase
     void setPlayerAddress();
 
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
-                       Buffer_sidtt<const uint_least8_t>& buf, const bool isSlashedFileName);
+                       Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName);
 
  public:
     virtual ~MUS() {}
@@ -61,7 +61,7 @@ class MUS : public SidTuneBase
     static SidTuneBase* load(Buffer_sidtt<const uint_least8_t>& dataBuf, bool init = false);
     static SidTuneBase* load(Buffer_sidtt<const uint_least8_t>& musBuf,
                                        Buffer_sidtt<const uint_least8_t>& strBuf,
-                                       const uint_least32_t fileOffset,
+                                       uint_least32_t fileOffset,
                                        bool init = false);
 
     virtual bool placeSidTuneInC64mem(sidmemory* mem);

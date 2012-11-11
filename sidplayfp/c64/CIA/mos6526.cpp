@@ -58,7 +58,7 @@ enum
     CRB     = 15
 };
 
-void Timer::setControlRegister(const uint8_t cr)
+void Timer::setControlRegister(uint8_t cr)
 {
     state &= ~CIAT_CR_MASK;
     state |= (cr & CIAT_CR_MASK) ^ CIAT_PHI2IN;
@@ -226,14 +226,14 @@ void Timer::reset()
     event_context.schedule(*this, 1, EVENT_CLOCK_PHI1);
 }
 
-void Timer::latchLo(const uint8_t data)
+void Timer::latchLo(uint8_t data)
 {
     endian_16lo8(latch, data);
     if (state & CIAT_LOAD)
         endian_16lo8(timer, data);
 }
 
-void Timer::latchHi(const uint8_t data)
+void Timer::latchHi(uint8_t data)
 {
     endian_16hi8 (latch, data);
     if ((state & CIAT_LOAD) || !(state & CIAT_CR_START)) // Reload timer if stopped
@@ -526,7 +526,7 @@ void MOS6526::trigger(void)
     triggerScheduled = false;
 }
 
-void MOS6526::trigger(const uint8_t interruptMask)
+void MOS6526::trigger(uint8_t interruptMask)
 {
     idr |= interruptMask;
     if ((icr & idr) && !(idr & INTERRUPT_REQUEST))

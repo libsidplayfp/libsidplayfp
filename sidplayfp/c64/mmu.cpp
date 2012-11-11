@@ -45,7 +45,7 @@ MMU::MMU(EventContext *context, Bank* ioBank)
     }
 }
 
-void MMU::setCpuPort (const int state)
+void MMU::setCpuPort (int state)
 {
     loram = (state & 1) != 0;
     hiram = (state & 2) != 0;

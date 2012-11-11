@@ -71,7 +71,7 @@ void c64::reset()
     oldBAState = true;
 }
 
-void c64::setMainCpuSpeed(const double cpuFreq)
+void c64::setMainCpuSpeed(double cpuFreq)
 {
     m_cpuFreq = cpuFreq;
     if (m_cpuFreq == CLOCK_FREQ_PAL)

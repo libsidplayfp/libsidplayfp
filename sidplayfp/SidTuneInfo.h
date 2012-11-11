@@ -142,7 +142,7 @@ public:
     */
     //@{
     virtual unsigned int numberOfInfoStrings() const =0; ///< the number of available text info lines
-    virtual const char* infoString(const unsigned int i) const =0; ///< text info from the format headers etc.
+    virtual const char* infoString(unsigned int i) const =0; ///< text info from the format headers etc.
     //@}
 
     /**
@@ -151,7 +151,7 @@ public:
     */
     //@{
     virtual unsigned int numberOfCommentStrings() const =0; ///< Number of comments
-    virtual const char* commentString(const unsigned int i) const =0; ///<  Used to stash the MUS comment somewhere.
+    virtual const char* commentString(unsigned int i) const =0; ///<  Used to stash the MUS comment somewhere.
     //@}
 
     /**

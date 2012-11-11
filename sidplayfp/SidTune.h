@@ -67,7 +67,7 @@ class SID_EXTERN SidTune
     * load a sidtune. You can later load one with open().
     */
     SidTune(const char* fileName, const char **fileNameExt = 0,
-            const bool separatorIsSlash = false);
+            bool separatorIsSlash = false);
 
     /**
     * Load a single-file sidtune from a memory buffer.
@@ -89,12 +89,12 @@ class SID_EXTERN SidTune
     /**
     * Load a sidtune into an existing object from a file.
     */
-    void load(const char* fileName, const bool separatorIsSlash = false);
+    void load(const char* fileName, bool separatorIsSlash = false);
 
     /**
     * Load a sidtune into an existing object from a buffer.
     */
-    void read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
+    void read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen);
 
     /**
     * Select sub-song.
@@ -102,7 +102,7 @@ class SID_EXTERN SidTune
     * @param songNum the selected song (0 = default starting song)
     * @return active song number
     */
-    unsigned int selectSong(const unsigned int songNum);
+    unsigned int selectSong(unsigned int songNum);
 
     /**
     * Retrieve sub-song specific information.
@@ -113,7 +113,7 @@ class SID_EXTERN SidTune
     * Select sub-song (0 = default starting song)
     * and retrieve active song information.
     */
-    const SidTuneInfo* getInfo(const unsigned int songNum);
+    const SidTuneInfo* getInfo(unsigned int songNum);
 
     /**
     * Determine current state of object (true = okay, false = error).

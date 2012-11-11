@@ -71,12 +71,12 @@ ReSIDfp::~ReSIDfp ()
     delete[] m_buffer;
 }
 
-void ReSIDfp::filter6581Curve (const double filterCurve)
+void ReSIDfp::filter6581Curve (double filterCurve)
 {
    m_sid.getFilter6581()->setFilterCurve(filterCurve);
 }
 
-void ReSIDfp::filter8580Curve (const double filterCurve)
+void ReSIDfp::filter8580Curve (double filterCurve)
 {
    m_sid.getFilter8580()->setFilterCurve(filterCurve);
 }
@@ -115,7 +115,7 @@ void ReSIDfp::filter (bool enable)
 }
 
 void ReSIDfp::sampling (float systemclock, float freq,
-        const SidConfig::sampling_method_t method, const bool fast)
+        SidConfig::sampling_method_t method, bool fast)
 {
     reSIDfp::SamplingMethod sampleMethod;
     switch (method)

@@ -84,7 +84,7 @@ public:
     * @param address the address
     * @param chipNum the SID chip number [1-MAX_SIDS[
     */
-    void setSIDMapping(const int address, const int chipNum)
+    void setSIDMapping(int address, int chipNum)
     {
         sidmapper[address >> 5 & (MAPPER_SIZE - 1)] = chipNum;
     }
@@ -95,7 +95,7 @@ public:
         return sid[i] ? sid[i]->read(addr & 0x1f) : 0xff;
     }
 
-    void write(const uint_least16_t addr, const uint8_t data)
+    void write(uint_least16_t addr, uint8_t data)
     {
         const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
         if (sid[i])
@@ -108,7 +108,7 @@ public:
     * @param i the SID chip number
     * @param s the emulation
     */
-    void setSID(const unsigned int i, sidemu *s) { sid[i] = s; }
+    void setSID(unsigned int i, sidemu *s) { sid[i] = s; }
 
     /**
     * Get SID emulation.
@@ -116,7 +116,7 @@ public:
     * @param i the SID chip number
     * @ratuen the emulation
     */
-    sidemu *getSID(const unsigned int i) const { return (i < MAX_SIDS)?sid[i]:0; }
+    sidemu *getSID(unsigned int i) const { return (i < MAX_SIDS)?sid[i]:0; }
 };
 
 #endif

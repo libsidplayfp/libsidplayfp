@@ -131,7 +131,7 @@ void HardSID::reset (uint8_t volume)
         m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 
-void HardSID::voice (const unsigned int num, const bool mute)
+void HardSID::voice (unsigned int num, bool mute)
 {
     if (hsid2.Version >= HSID_VERSION_207)
         hsid2.Mute2 ((BYTE) m_instance, (BYTE) num, (BOOL) mute, FALSE);

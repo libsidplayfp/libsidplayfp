@@ -44,7 +44,7 @@ private:
     uint8_t lp;
 
 protected:
-    void write(const uint_least16_t address, const uint8_t value)
+    void write(uint_least16_t address, uint8_t value)
     {
         // Save the value written to Timer A
         if (address == 0xDC04)
@@ -58,12 +58,12 @@ protected:
         MOS6526::write(endian_16lo8(address), value);
     }
 
-    uint8_t read(const uint_least16_t address)
+    uint8_t read(uint_least16_t address)
     {
         return MOS6526::read(endian_16lo8(address));
     }
 
-    void interrupt (const bool state)
+    void interrupt (bool state)
     {
         m_env.interruptIRQ (state);
     }
@@ -105,17 +105,17 @@ private:
     c64env &m_env;
 
 protected:
-    void write(const uint_least16_t address, const uint8_t value)
+    void write(uint_least16_t address, uint8_t value)
     {
         MOS6526::write(address, value);
     }
 
-    uint8_t read(const uint_least16_t address)
+    uint8_t read(uint_least16_t address)
     {
         return MOS6526::read(address);
     }
 
-    void interrupt (const bool state)
+    void interrupt (bool state)
     {
         if (state)
             m_env.interruptNMI ();

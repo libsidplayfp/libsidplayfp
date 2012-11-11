@@ -38,8 +38,8 @@ public:
     :MOS6510(&(env->context ())),
      m_env(*env) {}
 
-    uint8_t cpuRead  (const uint_least16_t addr) { return m_env.cpuRead (addr); }
-    void    cpuWrite (const uint_least16_t addr, const uint8_t data) { m_env.cpuWrite (addr, data); }
+    uint8_t cpuRead  (uint_least16_t addr) { return m_env.cpuRead (addr); }
+    void    cpuWrite (uint_least16_t addr, uint8_t data) { m_env.cpuWrite (addr, data); }
 
 #ifdef PC64_TESTSUITE
     void   loadFile (const char *file) { m_env.loadFile (file); }

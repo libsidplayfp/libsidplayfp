@@ -113,15 +113,15 @@ public:
     * @param cycles how many cycles from now to fire
     * @param phase the phase when to fire the event
     */
-    virtual void schedule (Event &event, const event_clock_t cycles,
-                           const event_phase_t phase) = 0;
+    virtual void schedule (Event &event, event_clock_t cycles,
+                           event_phase_t phase) = 0;
 
     /** Add event to pending queue in the same phase as current event.
     *
     * @param event the event to add
     * @param cycles how many cycles from now to fire
     */
-    virtual void schedule (Event &event, const event_clock_t cycles) = 0;
+    virtual void schedule (Event &event, event_clock_t cycles) = 0;
 
     /** Is the event pending in this scheduler?
     *
@@ -135,7 +135,7 @@ public:
     * @param phase the phase
     * @return the time according to specified phase.
     */
-    virtual event_clock_t getTime (const event_phase_t phase) const = 0;
+    virtual event_clock_t getTime (event_phase_t phase) const = 0;
 
     /** Get clocks since specified clock in given phase.
     *
@@ -143,7 +143,7 @@ public:
     * @param phase the phase to comapre to
     * @return the time between specified clock and now
     */
-    virtual event_clock_t getTime (const event_clock_t clock, const event_phase_t phase) const = 0;
+    virtual event_clock_t getTime (event_clock_t clock, event_phase_t phase) const = 0;
 
     /** Return current clock phase
     *

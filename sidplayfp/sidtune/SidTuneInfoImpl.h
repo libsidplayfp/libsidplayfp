@@ -132,10 +132,10 @@ public:
     compatibility_t compatibility() const { return m_compatibility; }
 
     unsigned int numberOfInfoStrings() const { return m_infoString.size(); }
-    const char* infoString(const unsigned int i) const { return i<numberOfInfoStrings()?m_infoString[i].c_str():""; }
+    const char* infoString(unsigned int i) const { return i<numberOfInfoStrings()?m_infoString[i].c_str():""; }
 
     unsigned int numberOfCommentStrings() const { return m_commentString.size(); }
-    const char* commentString(const unsigned int i) const { return i<numberOfCommentStrings()?m_commentString[i].c_str():""; }
+    const char* commentString(unsigned int i) const { return i<numberOfCommentStrings()?m_commentString[i].c_str():""; }
 
     uint_least32_t dataFileLen() const { return m_dataFileLen; }
 

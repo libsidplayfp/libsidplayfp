@@ -45,18 +45,18 @@ public:
 
     EventContext &context (void) const { return m_context; }
 
-    virtual uint8_t cpuRead(const uint_least16_t addr) =0;
-    virtual void cpuWrite(const uint_least16_t addr, const uint8_t data) =0;
+    virtual uint8_t cpuRead(uint_least16_t addr) =0;
+    virtual void cpuWrite(uint_least16_t addr, uint8_t data) =0;
 
 #ifdef PC64_TESTSUITE
     virtual void   loadFile (const char *file) =0;
 #endif
 
-    virtual void interruptIRQ (const bool state) = 0;
+    virtual void interruptIRQ (bool state) = 0;
     virtual void interruptNMI () = 0;
     virtual void interruptRST () = 0;
 
-    virtual void setBA        (const bool state) = 0;
+    virtual void setBA        (bool state) = 0;
     virtual void lightpen     () = 0;
 };
 

@@ -44,7 +44,7 @@ static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
-bool MUS::detect(const uint_least8_t* buffer, const uint_least32_t bufLen,
+bool MUS::detect(const uint_least8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {
     SmartPtr_sidtt<const uint8_t> spMus((const uint8_t*)buffer,bufLen);
@@ -79,7 +79,7 @@ void MUS::setPlayerAddress()
 }
 
 void MUS::acceptSidTune(const char* dataFileName, const char* infoFileName,
-                            Buffer_sidtt<const uint_least8_t>& buf, const bool isSlashedFileName)
+                            Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName)
 {
     setPlayerAddress();
     SidTuneBase::acceptSidTune(dataFileName, infoFileName, buf, isSlashedFileName);
@@ -585,7 +585,7 @@ SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
 
 SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf,
                                        Buffer_sidtt<const uint_least8_t>& strBuf,
-                                       const uint_least32_t fileOffset,
+                                       uint_least32_t fileOffset,
                                        bool init)
 {
     uint_least32_t voice3Index;

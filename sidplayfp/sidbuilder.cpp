@@ -25,7 +25,7 @@
 #include "sidemu.h"
 #include <cstdio>
 
-sidemu *sidbuilder::lock (EventContext *env, const SidConfig::model_t model)
+sidemu *sidbuilder::lock (EventContext *env, SidConfig::model_t model)
 {
     m_status = true;
 

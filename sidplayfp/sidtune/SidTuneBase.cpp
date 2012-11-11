@@ -87,7 +87,7 @@ static const char CHR_tab[256] =
 };
 
 SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
-                 const bool separatorIsSlash)
+                 bool separatorIsSlash)
 {
     if (!fileName)
         return 0;
@@ -100,7 +100,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
     return getFromFiles(fileName, fileNameExt, separatorIsSlash);
 }
 
-SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen)
+SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
 {
     return getFromBuffer(sourceBuffer, bufferLen);
 }
@@ -110,7 +110,7 @@ const SidTuneInfo* SidTuneBase::getInfo() const
     return info.get();
 }
 
-const SidTuneInfo* SidTuneBase::getInfo(const unsigned int songNum)
+const SidTuneInfo* SidTuneBase::getInfo(unsigned int songNum)
 {
     selectSong(songNum);
     return info.get();
@@ -118,7 +118,7 @@ const SidTuneInfo* SidTuneBase::getInfo(const unsigned int songNum)
 
 // First check, whether a song is valid. Then copy any song-specific
 // variable information such a speed/clock setting to the info structure.
-unsigned int SidTuneBase::selectSong(const unsigned int selectedSong)
+unsigned int SidTuneBase::selectSong(unsigned int selectedSong)
 {
     unsigned int song = selectedSong;
     // Determine and set starting song number.
@@ -256,7 +256,7 @@ SidTuneBase* SidTuneBase::getFromStdIn()
 
 #endif
 
-SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen)
+SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_least32_t bufferLen)
 {
     if (buffer==0 || bufferLen==0)
     {
@@ -300,7 +300,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, const
 }
 
 void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
-                            Buffer_sidtt<const uint_least8_t>& buf, const bool isSlashedFileName)
+                            Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName)
 {
     // Make a copy of the data file name and path, if available.
     if ( dataFileName != 0 )
@@ -380,7 +380,7 @@ void SidTuneBase::createNewFileName(std::string& destString,
 
 // Initializing the object based upon what we find in the specified file.
 
-SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, const bool separatorIsSlash)
+SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, bool separatorIsSlash)
 {
     Buffer_sidtt<const uint_least8_t> fileBuf1;
 

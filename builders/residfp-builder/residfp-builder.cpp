@@ -65,17 +65,17 @@ const char *ReSIDfpBuilder::credits () const
     return ReSIDfp::getCredits ();
 }
 
-void ReSIDfpBuilder::filter (const bool enable)
+void ReSIDfpBuilder::filter (bool enable)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, bool>(&ReSIDfp::filter, enable));
 }
 
-void ReSIDfpBuilder::filter6581Curve (const double filterCurve)
+void ReSIDfpBuilder::filter6581Curve (double filterCurve)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter6581Curve, filterCurve));
 }
 
-void ReSIDfpBuilder::filter8580Curve (const double filterCurve)
+void ReSIDfpBuilder::filter8580Curve (double filterCurve)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter8580Curve, filterCurve));
 }

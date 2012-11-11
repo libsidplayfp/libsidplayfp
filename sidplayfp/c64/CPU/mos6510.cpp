@@ -97,7 +97,7 @@ void MOS6510::eventWithSteals  (void)
 *
 * @param value to set flags from
 */
-void MOS6510::setFlagsNZ(const uint8_t value)
+void MOS6510::setFlagsNZ(uint8_t value)
 {
     flagZ = value == 0;
     flagN = value & 0x80;
@@ -137,7 +137,7 @@ uint8_t MOS6510::getStatusRegister(void)
     return sr;
 }
 
-void MOS6510::setStatusRegister(const uint8_t sr)
+void MOS6510::setStatusRegister(uint8_t sr)
 {
     flagC = sr & 0x01;
     flagZ = sr & 0x02;
@@ -155,7 +155,7 @@ void MOS6510::setStatusRegister(const uint8_t sr)
 *
 * @param rdy new state for RDY signal
 */
-void MOS6510::setRDY (const bool newRDY)
+void MOS6510::setRDY (bool newRDY)
 {
     rdy = newRDY;
 
@@ -1020,7 +1020,7 @@ void MOS6510::asla_instr (void)
     interruptsAndNextOpcode ();
 }
 
-void MOS6510::branch_instr (const bool condition)
+void MOS6510::branch_instr (bool condition)
 {
     /*
     * 2 cycles spent before arriving here. spend 0 - 2 cycles here;
@@ -2230,7 +2230,7 @@ const char *MOS6510::credit =
     "\t(C) 2011-2012 Leandro Nini\n"
 };
 
-void MOS6510::debug (const bool enable, FILE *out)
+void MOS6510::debug (bool enable, FILE *out)
 {
 #ifdef DEBUG
     dodump = enable;

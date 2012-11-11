@@ -31,7 +31,7 @@
 class PLA
 {
 public:
-    virtual void setCpuPort(const int state) =0;
+    virtual void setCpuPort(int state) =0;
     virtual uint8_t getLastReadByte() const =0;
     virtual event_clock_t getPhi2Time() const =0;
 };
@@ -149,7 +149,7 @@ public:
         updateCpuPort();
     }
 
-    uint8_t read(const uint_least16_t address)
+    uint8_t read(uint_least16_t address)
     {
         if (address == 0)
         {
@@ -181,9 +181,8 @@ public:
         }
     }
 
-    void write(const uint_least16_t address, const uint8_t value)
+    void write(uint_least16_t address, uint8_t value)
     {
-        uint8_t v;
         if (address == 0)
         {
             if (dataSetBit7 && (value & 0x80) == 0 && !dataFalloffBit7)
@@ -206,7 +205,7 @@ public:
             }
             dir = value;
             updateCpuPort();
-            v = pla->getLastReadByte();
+            value = pla->getLastReadByte();
         }
         else if (address == 1)
         {
@@ -220,12 +219,10 @@ public:
             }
             data = value;
             updateCpuPort();
-            v = pla->getLastReadByte();
+            value = pla->getLastReadByte();
         }
-        else
-            v = value;
 
-        ramBank->write(address, v);
+        ramBank->write(address, value);
     }
 };
 

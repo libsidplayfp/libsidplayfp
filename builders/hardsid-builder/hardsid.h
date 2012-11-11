@@ -51,7 +51,7 @@ public:
 
     const char *credits (void) const;
     void        flush   (void);
-    void        filter  (const bool enable);
+    void        filter  (bool enable);
 
     unsigned int        create  (unsigned int sids);
 };

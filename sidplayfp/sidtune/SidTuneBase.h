@@ -76,19 +76,19 @@ class SidTuneBase
     * this function does not try to append any file name extension.
     * See ``sidtune.cpp'' for the default list of file name extensions.
     */
-    static SidTuneBase* load(const char* fileName, const char **fileNameExt, const bool separatorIsSlash);
+    static SidTuneBase* load(const char* fileName, const char **fileNameExt, bool separatorIsSlash);
 
     /**
     * Load a single-file sidtune from a memory buffer.
     * Currently supported: PSID format
     */
-    static SidTuneBase* read(const uint_least8_t* sourceBuffer, const uint_least32_t bufferLen);
+    static SidTuneBase* read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen);
 
     /**
     * Select sub-song (0 = default starting song)
     * and return active song number out of [1,2,..,SIDTUNE_MAX_SONGS].
     */
-    unsigned int selectSong(const unsigned int songNum);
+    unsigned int selectSong(unsigned int songNum);
 
     /**
     * Retrieve sub-song specific information.
@@ -99,7 +99,7 @@ class SidTuneBase
     * Select sub-song (0 = default starting song)
     * and retrieve active song information.
     */
-    const SidTuneInfo* getInfo(const unsigned int songNum);
+    const SidTuneInfo* getInfo(unsigned int songNum);
 
     /**
     * Copy sidtune into C64 memory (64 KB).
@@ -164,7 +164,7 @@ class SidTuneBase
     * separator is the forward slash.
     */
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
-                       Buffer_sidtt<const uint_least8_t>& buf, const bool isSlashedFileName);
+                       Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName);
 
     class PetsciiToAscii
     {
@@ -179,10 +179,10 @@ class SidTuneBase
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     static SidTuneBase* getFromStdIn();
 #endif
-    static SidTuneBase* getFromFiles(const char* name, const char **fileNameExtensions, const bool separatorIsSlash);
+    static SidTuneBase* getFromFiles(const char* name, const char **fileNameExtensions, bool separatorIsSlash);
 
     /// Try to retrieve single-file sidtune from specified buffer.
-    static SidTuneBase* getFromBuffer(const uint_least8_t* const buffer, const uint_least32_t bufferLen);
+    static SidTuneBase* getFromBuffer(const uint_least8_t* const buffer, uint_least32_t bufferLen);
 
     static void createNewFileName(std::string& destString,
                            const char* sourceName, const char* sourceExt);

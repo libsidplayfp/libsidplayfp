@@ -41,22 +41,22 @@ private:
     c64env &m_env;
 
 protected:
-    void write(const uint_least16_t address, const uint8_t value)
+    void write(uint_least16_t address, uint8_t value)
     {
         MOS656X::write(endian_16lo8(address), value);
     }
 
-    uint8_t read(const uint_least16_t address)
+    uint8_t read(uint_least16_t address)
     {
         return MOS656X::read(endian_16lo8(address));
     }
 
-    void interrupt (const bool state)
+    void interrupt (bool state)
     {
         m_env.interruptIRQ (state);
     }
 
-    void setBA (const bool state)
+    void setBA (bool state)
     {
         m_env.setBA (state);
     }

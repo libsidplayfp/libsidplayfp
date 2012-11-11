@@ -41,7 +41,7 @@ private:
     * @param addr a 16-bit effective address
     * @return a default bank-select value for $01
     */
-    uint8_t iomap(const uint_least16_t addr);
+    uint8_t iomap(uint_least16_t addr);
 
 public:
     psiddrv(const SidTuneInfo *tuneInfo) :

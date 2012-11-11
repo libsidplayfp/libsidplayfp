@@ -38,17 +38,17 @@ private:
     Bank* map[16];
 
 public:
-    void setBank(const int num, Bank* bank)
+    void setBank(int num, Bank* bank)
     {
         map[num] = bank;
     }
 
-    uint8_t read(const uint_least16_t addr)
+    uint8_t read(uint_least16_t addr)
     {
         return map[addr >> 8 & 0xf]->read(addr);
     }
 
-    void write(const uint_least16_t addr, const uint8_t data)
+    void write(uint_least16_t addr, uint8_t data)
     {
         map[addr >> 8 & 0xf]->write(addr, data);
     }

@@ -164,7 +164,7 @@ public:
     * @param cr
     *            control register value
     */
-    void setControlRegister(const uint8_t cr);
+    void setControlRegister(uint8_t cr);
 
     /**
     * Perform cycle skipping manually.
@@ -191,7 +191,7 @@ public:
     * @param data
     *            low byte of latch
     */
-    void latchLo(const uint8_t data);
+    void latchLo(uint8_t data);
 
     /**
     * Set high byte of Timer start value (Latch).
@@ -199,7 +199,7 @@ public:
     * @param data
     *            high byte of latch
     */
-    void latchHi(const uint8_t data);
+    void latchHi(uint8_t data);
 
     /**
     * Set PB6/PB7 Flipflop state.
@@ -207,7 +207,7 @@ public:
     * @param state
     *            PB6/PB7 flipflop state
     */
-    inline void setPbToggle(const bool state) { pbToggle = state; }
+    inline void setPbToggle(bool state) { pbToggle = state; }
 
     /**
     * Get current state value.
@@ -229,7 +229,7 @@ public:
     * @param reg value of the control register
     * @return PB6/PB7 flipflop state
     */
-    inline bool getPb(const uint8_t reg) const { return (reg & 0x04) ? pbToggle : (state & CIAT_OUT); }
+    inline bool getPb(uint8_t reg) const { return (reg & 0x04) ? pbToggle : (state & CIAT_OUT); }
 };
 
 /** @internal
@@ -399,7 +399,7 @@ protected:
     *
     * @param interruptMask Interrupt flag number
     */
-    void trigger(const uint8_t interruptMask);
+  void trigger(uint8_t interruptMask);
 
     /**
     * Clear interrupt state.
@@ -417,7 +417,7 @@ protected:
     * @param state
     *            interrupt state
     */
-    virtual void interrupt(const bool state) = 0;
+    virtual void interrupt(bool state) = 0;
 
     virtual void portA() {}
     virtual void portB() {}

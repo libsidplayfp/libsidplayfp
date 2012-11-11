@@ -63,12 +63,12 @@ const char *ReSIDBuilder::credits () const
     return ReSID::getCredits ();
 }
 
-void ReSIDBuilder::filter (const bool enable)
+void ReSIDBuilder::filter (bool enable)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, bool>(&ReSID::filter, enable));
 }
 
-void ReSIDBuilder::bias (const double dac_bias)
+void ReSIDBuilder::bias (double dac_bias)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, double>(&ReSID::bias, dac_bias));
 }

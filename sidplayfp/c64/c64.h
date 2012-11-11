@@ -117,7 +117,7 @@ private:
     * @param address
     * @return value at address
     */
-    uint8_t cpuRead (const uint_least16_t addr) { return mmu.cpuRead(addr); }
+    uint8_t cpuRead (uint_least16_t addr) { return mmu.cpuRead(addr); }
 
     /**
     * Access memory as seen by CPU.
@@ -125,7 +125,7 @@ private:
     * @param address
     * @param value
     */
-    void cpuWrite (const uint_least16_t addr, const uint8_t data) { mmu.cpuWrite(addr, data); }
+    void cpuWrite (uint_least16_t addr, uint8_t data) { mmu.cpuWrite(addr, data); }
 
     /**
     * IRQ trigger signal.
@@ -134,7 +134,7 @@ private:
     *
     * @param state
     */
-    inline void interruptIRQ (const bool state);
+    inline void interruptIRQ (bool state);
 
     /**
     * NMI trigger signal.
@@ -154,7 +154,7 @@ private:
     *
     * @param state
     */
-    inline void setBA (const bool state);
+    inline void setBA (bool state);
 
     inline void lightpen () { vic.lightpen (); }
 
@@ -186,12 +186,12 @@ public:
     EventScheduler *getEventScheduler() { return &m_scheduler; }
     //const EventScheduler &getEventScheduler() const { return m_scheduler; }
 
-    void debug(const bool enable, FILE *out) { cpu.debug (enable, out); }
+    void debug(bool enable, FILE *out) { cpu.debug (enable, out); }
 
     void reset();
     void resetCpu() { cpu.reset(); }
 
-    void setMainCpuSpeed(const double cpuFreq);
+    void setMainCpuSpeed(double cpuFreq);
     double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**
@@ -200,7 +200,7 @@ public:
     * @param i sid number to set
     * @param sidemu the sid to set
     */
-    void setSid(const unsigned int i, sidemu *s) { sidBank.setSID(i, s); }
+    void setSid(unsigned int i, sidemu *s) { sidBank.setSID(i, s); }
 
     /**
     * Return the requested SID
@@ -208,7 +208,7 @@ public:
     * @param i sid number to get
     * @return the SID
     */
-    sidemu *getSid(const unsigned int i) const { return sidBank.getSID(i); }
+    sidemu *getSid(unsigned int i) const { return sidBank.getSID(i); }
 
     void resetSIDMapper() { sidBank.resetSIDMapper(); }
 
@@ -218,7 +218,7 @@ public:
     * @param secondSidChipBase
     *            base address (e.g. 0xd420)
     */
-    void setSecondSIDAddress(const int sidChipBase2) { sidBank.setSIDMapping(sidChipBase2, 1); }
+    void setSecondSIDAddress(int sidChipBase2) { sidBank.setSIDMapping(sidChipBase2, 1); }
 
     /**
     * Get the components credits
@@ -234,7 +234,7 @@ public:
     uint_least16_t getCia1TimerA() const { return cia1.getTimerA(); }
 };
 
-void c64::interruptIRQ (const bool state)
+void c64::interruptIRQ (bool state)
 {
     if (state)
     {
@@ -251,7 +251,7 @@ void c64::interruptIRQ (const bool state)
     }
 }
 
-void c64::setBA (const bool state)
+void c64::setBA (bool state)
 {
     /* only react to changes in state */
     if ((state ^ oldBAState) == false)

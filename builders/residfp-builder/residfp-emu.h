@@ -67,16 +67,16 @@ public:
     // Standard SID functions
     void          clock   ();
     void          filter  (bool enable);
-    void          voice   (const unsigned int num, const bool mute) { m_sid.mute(num, mute); }
+    void          voice   (unsigned int num, bool mute) { m_sid.mute(num, mute); }
 
     bool          getStatus() const { return m_status; }
 
     // Specific to resid
     void sampling (float systemclock, float freq,
-        const SidConfig::sampling_method_t method, const bool fast);
+        SidConfig::sampling_method_t method, bool fast);
 
-    void filter6581Curve (const double filterCurve);
-    void filter8580Curve (const double filterCurve);
+    void filter6581Curve (double filterCurve);
+    void filter8580Curve (double filterCurve);
     void model    (SidConfig::model_t model);
 
     // Must lock the SID before using the standard functions.

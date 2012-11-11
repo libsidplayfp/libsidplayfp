@@ -49,13 +49,13 @@ public:
     /// Settings that affect all SIDs
     //@{
     /// enable/disable filter
-    void filter (const bool enable);
+    void filter (bool enable);
 
     /**
     * The bias is given in millivolts, and a maximum reasonable
     * control range is approximately -500 to 500.
     */
-    void bias (const double dac_bias);
+    void bias (double dac_bias);
     //@}
 };
 

@@ -76,15 +76,15 @@ public:
     // Standard SID functions
     void          clock   ();
     void          filter  (bool enable);
-    void          voice   (const unsigned int num, const bool mute);
+    void          voice   (unsigned int num, bool mute);
 
     bool          getStatus() const { return m_status; }
 
     // Specific to resid
     void sampling (float systemclock, float freq,
-        const SidConfig::sampling_method_t method, const bool fast);
+        SidConfig::sampling_method_t method, bool fast);
 
-    void bias     (const double dac_bias);
+    void bias     (double dac_bias);
     void model    (SidConfig::model_t model);
 
     // Must lock the SID before using the standard functions.

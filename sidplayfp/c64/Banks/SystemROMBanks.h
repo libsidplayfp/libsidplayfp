@@ -55,9 +55,9 @@ public:
     void set(const uint8_t* source) { if (source) memcpy(rom, source, N); }
 
     /// Writing to ROM is a no-op
-    void write(const uint_least16_t address, const uint8_t value) {}
+    void write(uint_least16_t address, uint8_t value) {}
 
-    uint8_t read(const uint_least16_t address) { return rom[address & (N-1)]; }
+    uint8_t read(uint_least16_t address) { return rom[address & (N-1)]; }
 };
 
 /** @internal
@@ -98,7 +98,7 @@ public:
     *
     * @param addr the new addres to point to
     */
-    void installResetHook(const uint_least16_t addr)
+    void installResetHook(uint_least16_t addr)
     {
         setVal(0xfffc, endian_16lo8(addr));
         setVal(0xfffd, endian_16hi8(addr));
@@ -138,14 +138,14 @@ public:
     *
     * @param addr
     */
-    void installTrap(const uint_least16_t addr)
+    void installTrap(uint_least16_t addr)
     {
         setVal(0xa7ae, JMPw);
         setVal(0xa7af, endian_16lo8(addr));
         setVal(0xa7b0, endian_16hi8(addr));
     }
 
-    void setSubtune(const uint8_t tune)
+    void setSubtune(uint8_t tune)
     {
         setVal(0xbf53, LDAb);
         setVal(0xbf54, tune);

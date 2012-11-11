@@ -103,7 +103,7 @@ void Mixer::event()
     event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
 }
 
-void Mixer::begin(short *buffer, const uint_least32_t count)
+void Mixer::begin(short *buffer, uint_least32_t count)
 {
     m_sampleIndex  = 0;
     m_sampleCount  = count;
@@ -116,7 +116,7 @@ void Mixer::setSids(sidemu *chip1, sidemu *chip2)
     m_chip2 = chip2;
 }
 
-bool Mixer::setFastForward(const int ff)
+bool Mixer::setFastForward(int ff)
 {
     if (ff < 1 || ff > 32)
         return false;
@@ -125,7 +125,7 @@ bool Mixer::setFastForward(const int ff)
     return true;
 }
 
-void Mixer::setVolume(const int_least32_t left, const int_least32_t right)
+void Mixer::setVolume(int_least32_t left, int_least32_t right)
 {
     m_leftVolume = left;
     m_rightVolume = right;

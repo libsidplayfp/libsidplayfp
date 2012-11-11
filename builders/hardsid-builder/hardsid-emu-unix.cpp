@@ -195,7 +195,7 @@ void HardSID::write (uint_least8_t addr, uint8_t data)
     ::write (m_handle, &packet, sizeof (packet));
 }
 
-void HardSID::voice (const unsigned int num, const bool mute)
+void HardSID::voice (unsigned int num, bool mute)
 {
     // Only have 3 voices!
     if (num >= voices)

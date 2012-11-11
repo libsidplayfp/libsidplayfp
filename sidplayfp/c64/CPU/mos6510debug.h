@@ -36,7 +36,7 @@ class MOS6510;
 class MOS6510Debug
 {
 public:
-    static void DumpState (const event_clock_t time, MOS6510 &cpu);
+    static void DumpState (event_clock_t time, MOS6510 &cpu);
 };
 
 #endif

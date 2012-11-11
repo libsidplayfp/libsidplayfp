@@ -72,7 +72,7 @@ public:
     unsigned int usedDevices () const { return sidobjs.size (); }
 
     /// Find a free SID of the required specs
-    sidemu      *lock    (EventContext *env, const SidConfig::model_t model);
+    sidemu      *lock    (EventContext *env, SidConfig::model_t model);
 
     /// Release this SID
     void         unlock  (sidemu *device);

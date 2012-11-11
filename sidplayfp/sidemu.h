@@ -59,16 +59,16 @@ public:
     virtual void unlock   () = 0;
 
     // Standard SID functions
-    virtual void    voice   (const unsigned int num, const bool mute) = 0;
+    virtual void    voice   (unsigned int num, bool mute) = 0;
     virtual void    model    (SidConfig::model_t model) = 0;
     sidbuilder     *builder (void) const { return m_builder; }
 
     virtual int bufferpos() const { return m_bufferpos; }
-    virtual void bufferpos(const int pos) { m_bufferpos = pos; }
+    virtual void bufferpos(int pos) { m_bufferpos = pos; }
     virtual short *buffer() const { return m_buffer; }
 
     virtual void sampling(float systemfreq, float outputfreq,
-        const SidConfig::sampling_method_t method, const bool fast) { return; }
+        SidConfig::sampling_method_t method, bool fast) { return; }
 };
 
 #endif // SIDEMU_H
