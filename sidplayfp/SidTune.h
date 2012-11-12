@@ -28,8 +28,8 @@
 #include <memory>
 
 #include "siddefs.h"
-#include "SidTuneInfo.h"
 
+class SidTuneInfo;
 class SidTuneInfoImpl;
 class SidTuneBase;
 class sidmemory;

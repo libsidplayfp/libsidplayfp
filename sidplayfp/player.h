@@ -26,6 +26,7 @@
 
 #include "SidConfig.h"
 #include "SidTune.h"
+#include "SidTuneInfo.h"
 #include "SidInfoImpl.h"
 #include "sidrandom.h"
 #include "mixer.h"

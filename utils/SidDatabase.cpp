@@ -26,6 +26,7 @@
 #include "SidDatabase.h"
 #include "iniParser.h"
 #include "sidplayfp/SidTune.h"
+#include "sidplayfp/SidTuneInfo.h"
 #include "MD5/MD5.h"
 
 #ifdef HAVE_CONFIG_H
