@@ -1,47 +1,25 @@
-/***************************************************************************
-             hardsid-emu.h - Hardsid support interface.
-                             -------------------
-    begin                : Fri Dec 15 2000
-    copyright            : (C) 2000-2002 by Simon White
-                         : (C) 2001-2002 by Jarno Paananen
-    email                : s_a_white@email.com
- ***************************************************************************/
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-/***************************************************************************
- *  $Log: hardsid-emu.h,v $
- *  Revision 1.8  2004/03/18 20:50:21  s_a_white
- *  Indicate the 2.07 extensions.
+/*
+ * This file is part of libsidplayfp, a SID player engine.
  *
- *  Revision 1.7  2003/10/28 00:15:16  s_a_white
- *  Get time with respect to correct clock phase.
+ * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2007-2010 Antti Lankila
+ * Copyright 2001-2002 by Jarno Paananen
+ * Copyright 2000-2002 Simon White
  *
- *  Revision 1.6  2003/06/27 07:08:17  s_a_white
- *  Use new hardsid.dll muting interface.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  Revision 1.5  2002/08/09 18:11:35  s_a_white
- *  Added backwards compatibility support for older hardsid.dll.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  Revision 1.4  2002/07/20 08:36:24  s_a_white
- *  Remove unnecessary and pointless conts.
- *
- *  Revision 1.3  2002/02/17 17:24:50  s_a_white
- *  Updated for new reset interface.
- *
- *  Revision 1.2  2002/01/29 21:47:35  s_a_white
- *  Constant fixed interval delay added to prevent emulation going fast when
- *  there are no writes to the sid.
- *
- *  Revision 1.1  2002/01/28 22:35:20  s_a_white
- *  Initial Release.
- *
- ***************************************************************************/
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 #ifndef _hardsid_emu_h_
 #define _hardsid_emu_h_
