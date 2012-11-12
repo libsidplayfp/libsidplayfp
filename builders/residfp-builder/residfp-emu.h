@@ -20,6 +20,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef RESIDFP_EMU_H
+#define RESIDFP_EMU_H
+
 #include <string>
 
 #include "residfp/SID.h"
@@ -83,3 +86,5 @@ public:
     bool lock     (EventContext *env);
     void unlock   ();
 };
+
+#endif // RESIDFP_EMU_H

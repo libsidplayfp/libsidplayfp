@@ -21,8 +21,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _hardsid_emu_h_
-#define _hardsid_emu_h_
+#ifndef HARDSID_EMU_H
+#define HARDSID_EMU_H
 
 #include <string>
 
@@ -157,4 +157,4 @@ private:
     void event (void);
 };
 
-#endif // _hardsid_emu_h_
+#endif // HARDSID_EMU_H
