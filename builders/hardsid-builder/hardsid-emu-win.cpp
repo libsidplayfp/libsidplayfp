@@ -20,16 +20,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <stdio.h>
+#include "hardsid-emu.h"
 
+#include <stdio.h>
 #include <sstream>
+
+#include "hardsid.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-
-#include "hardsid.h"
-#include "hardsid-emu.h"
 
 /***************************************************************************
 Hardsid support interface.

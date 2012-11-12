@@ -21,12 +21,12 @@
 #ifndef ROMCHECK_H
 #define ROMCHECK_H
 
-#include "sidplayfp/sidmd5.h"
-
 #include <stdint.h>
 #include <map>
 #include <string>
 #include <utility>
+
+#include "sidplayfp/sidmd5.h"
 
 /** @internal
 */

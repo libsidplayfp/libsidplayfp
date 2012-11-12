@@ -21,8 +21,8 @@
 
 #include "Spline.h"
 
-#include <limits>
 #include <stdio.h>
+#include <limits>
 
 namespace reSIDfp
 {

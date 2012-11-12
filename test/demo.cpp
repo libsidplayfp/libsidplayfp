@@ -20,14 +20,13 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <sys/soundcard.h>
+#include <sys/ioctl.h>
 #include <fstream>
 #include <memory>
 #include <vector>
 #include <iostream>
-
-#include <sys/soundcard.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
 
 #include "sidplayfp/sidplayfp.h"
 #include "sidplayfp/SidTune.h"

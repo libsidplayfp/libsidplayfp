@@ -25,13 +25,11 @@
 //     and its application in the Commodore 64
 //     http://www.uni-mainz.de/~bauec002/VIC-Article.gz
 
+#include "mos656x.h"
 
 #include <string.h>
-#if defined(HAVE_CONFIG_H) || defined(_WIN32)
-#  include "config.h"
-#endif
+
 #include "sidplayfp/sidendian.h"
-#include "mos656x.h"
 
 #define MOS6567R56A_SCREEN_HEIGHT  262
 #define MOS6567R56A_SCREEN_WIDTH   64

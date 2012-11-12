@@ -32,9 +32,9 @@
 #ifndef MD5_H
 #define MD5_H
 
-#include "MD5_Defs.h"
-
 #include <stdint.h>
+
+#include "MD5_Defs.h"
 
 typedef uint8_t md5_byte_t;
 typedef uint32_t md5_word_t;

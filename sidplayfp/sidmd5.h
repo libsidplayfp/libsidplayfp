@@ -21,11 +21,11 @@
 #ifndef SIDMD5_H
 #define SIDMD5_H
 
-#include "utils/MD5/MD5.h"
-
 #include <string>
 #include <sstream>
 #include <iomanip>
+
+#include "utils/MD5/MD5.h"
 
 /** @internal
 * A wrapper around the md5 implementation that provides

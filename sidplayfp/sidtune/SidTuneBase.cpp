@@ -20,13 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+#include "SidTuneBase.h"
+
+#include <string.h>
+#include <limits.h>
+#include <iostream>
+#include <iomanip>
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
-#include "SidTuneBase.h"
 #include "SidTuneTools.h"
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidmemory.h"
@@ -36,10 +38,9 @@
 #include "prg.h"
 #include "PSID.h"
 
-#include <iostream>
-#include <iomanip>
-#include <string.h>
-#include <limits.h>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 #ifdef HAVE_IOS_OPENMODE
     typedef std::ios::openmode openmode;

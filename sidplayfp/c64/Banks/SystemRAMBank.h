@@ -22,10 +22,10 @@
 #ifndef SYSTEMRAMBANK_H
 #define SYSTEMRAMBANK_H
 
-#include "Bank.h"
-
 #include <string.h>
 #include <stdint.h>
+
+#include "Bank.h"
 
 /** @internal
  * Area backed by RAM

@@ -46,16 +46,15 @@
 #ifndef _hardsid_emu_h_
 #define _hardsid_emu_h_
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+#include <string>
 
-//#include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/event.h"
 #include "sidplayfp/sidemu.h"
 #include "sidplayfp/EventScheduler.h"
 
-#include <string>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 #ifdef _WIN32
 

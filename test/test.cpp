@@ -18,10 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include <string>
 #include <iostream>
 #include <memory>
@@ -30,6 +26,10 @@
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/sidemu.h"
+
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 /*
 * Adjust these paths to point to existing ROM dumps

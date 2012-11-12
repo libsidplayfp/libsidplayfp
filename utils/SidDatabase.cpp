@@ -23,14 +23,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "SidDatabase.h"
+#include "iniParser.h"
+#include "sidplayfp/SidTune.h"
+#include "MD5/MD5.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-
-#include "SidDatabase.h"
-#include "sidplayfp/SidTune.h"
-#include "iniParser.h"
-#include "MD5/MD5.h"
 
 const char ERR_DATABASE_CORRUPT[]        = "SID DATABASE ERROR: Database seems to be corrupt.";
 const char ERR_NO_DATABASE_LOADED[]      = "SID DATABASE ERROR: Songlength database not loaded.";

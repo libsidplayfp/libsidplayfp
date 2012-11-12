@@ -27,10 +27,8 @@
 #include "SidConfig.h"
 #include "SidTune.h"
 #include "SidInfoImpl.h"
-
 #include "sidrandom.h"
 #include "mixer.h"
-
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H

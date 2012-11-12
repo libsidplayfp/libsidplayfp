@@ -20,17 +20,17 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "SincResampler.h"
 
+#include <assert.h>
+#include <string.h>
 #include <math.h>
 #include <iostream>
 #include <sstream>
-#include <assert.h>
-#include <string.h>
+
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 #ifdef HAVE_MMINTRIN_H
 #  include <mmintrin.h>

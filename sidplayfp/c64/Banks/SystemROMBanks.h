@@ -22,11 +22,10 @@
 #ifndef SYSTEMROMBANKS_H
 #define SYSTEMROMBANKS_H
 
-#include "Bank.h"
-
 #include <string.h>
 #include <stdint.h>
 
+#include "Bank.h"
 #include "sidplayfp/c64/CPU/opcodes.h"
 
 /** @internal

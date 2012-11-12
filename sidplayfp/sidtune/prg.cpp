@@ -22,11 +22,11 @@
 
 #include "prg.h"
 
+#include <memory>
+
 #include "SidTuneCfg.h"
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
-
-#include <memory>
 
 const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 

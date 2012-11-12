@@ -22,10 +22,10 @@
 #ifndef COLORRAMBANK_H
 #define COLORRAMBANK_H
 
-#include "Bank.h"
-
 #include <stdint.h>
 #include <string.h>
+
+#include "Bank.h"
 
 /** @internal
 * Color RAM.

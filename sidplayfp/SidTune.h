@@ -23,12 +23,12 @@
 #ifndef SIDTUNE_H
 #define SIDTUNE_H
 
-#include "siddefs.h"
-#include "SidTuneInfo.h"
-
 #include <stdint.h>
 #include <fstream>
 #include <memory>
+
+#include "siddefs.h"
+#include "SidTuneInfo.h"
 
 class SidTuneInfoImpl;
 class SidTuneBase;

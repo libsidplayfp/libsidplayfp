@@ -27,6 +27,8 @@
 // Copyright (C) 1998, 2002 by LaLa
 //
 
+#include "stil.h"
+
 #include <iostream>
 #include <iomanip>
 #include <cstring>
@@ -36,8 +38,6 @@
 #include <utility>
 
 using namespace std;
-
-#include "stil.h"
 
 #define STILopenFlags (ios::in | ios::binary)
 

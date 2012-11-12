@@ -20,9 +20,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "player.h"
 
 #include "SidConfig.h"
-#include "player.h"
 #include "sidbuilder.h"
 
 SIDPLAYFP_NAMESPACE_START

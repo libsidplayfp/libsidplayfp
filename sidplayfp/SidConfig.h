@@ -23,9 +23,9 @@
 #ifndef SIDCONFIG_H
 #define SIDCONFIG_H
 
-#include "siddefs.h"
-
 #include <stdint.h>
+
+#include "siddefs.h"
 
 
 class sidbuilder;

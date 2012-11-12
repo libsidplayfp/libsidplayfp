@@ -23,10 +23,10 @@
 #ifndef WAVEFORMCALCULATOR_h
 #define WAVEFORMCALCULATOR_h
 
+#include <map>
+
 #include "siddefs-fp.h"
 #include "array.h"
-
-#include <map>
 
 
 namespace reSIDfp

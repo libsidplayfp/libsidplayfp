@@ -22,8 +22,9 @@
 
 #include "sidbuilder.h"
 
-#include "sidemu.h"
 #include <cstdio>
+
+#include "sidemu.h"
 
 sidemu *sidbuilder::lock (EventContext *env, SidConfig::model_t model)
 {

@@ -22,10 +22,10 @@
 #ifndef FILTERMODELCONFIG_H
 #define FILTERMODELCONFIG_H
 
+#include <memory>
+
 #define OPAMP_SIZE 22
 #define DAC_SIZE 11
-
-#include <memory>
 
 namespace reSIDfp
 {

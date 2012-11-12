@@ -21,12 +21,12 @@
 #ifndef C64CPU_H
 #define C64CPU_H
 
+#include "sidplayfp/c64/c64env.h"
+#include "CPU/mos6510.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-
-#include "sidplayfp/c64/c64env.h"
-#include "CPU/mos6510.h"
 
 class c64cpu: public MOS6510
 {

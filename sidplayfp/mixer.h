@@ -24,11 +24,10 @@
 #ifndef MIXER_H
 #define MIXER_H
 
-#include "event.h"
-
-#include "sidbuilder.h"
-
 #include <stdlib.h>
+
+#include "event.h"
+#include "sidbuilder.h"
 
 /** @internal
 * This class implements the mixer.

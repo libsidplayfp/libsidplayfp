@@ -20,15 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+#include <string>
 
 #include "residfp/SID.h"
 #include "sidplayfp/sidemu.h"
 #include "sidplayfp/EventScheduler.h"
 
-#include <string>
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 #define RESID_NAMESPACE reSIDfp
 

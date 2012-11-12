@@ -23,15 +23,14 @@
 #ifndef SIDTUNEBASE_H
 #define SIDTUNEBASE_H
 
-#include "sidplayfp/Buffer.h"
-#include "sidplayfp/SmartPtr.h"
-
-#include "sidplayfp/SidTuneInfo.h"
-#include "sidplayfp/SidTune.h"
-
 #include <stdint.h>
 #include <fstream>
 #include <memory>
+
+#include "sidplayfp/Buffer.h"
+#include "sidplayfp/SmartPtr.h"
+#include "sidplayfp/SidTuneInfo.h"
+#include "sidplayfp/SidTune.h"
 
 template class Buffer_sidtt<const uint_least8_t>;
 

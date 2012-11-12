@@ -1,10 +1,10 @@
 #ifndef TWOPASSSINCRESAMPLER_H
 #define TWOPASSSINCRESAMPLER_H
 
+#include <math.h>
+
 #include "Resampler.h"
 #include "SincResampler.h"
-
-#include <math.h>
 
 namespace reSIDfp
 {

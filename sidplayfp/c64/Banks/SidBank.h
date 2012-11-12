@@ -23,7 +23,6 @@
 #define SIDBANK_H
 
 #include "Bank.h"
-
 #include "sidplayfp/sidemu.h"
 
 /** @internal

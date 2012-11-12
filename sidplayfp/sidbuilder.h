@@ -23,10 +23,10 @@
 #ifndef SIDBUILDER_H
 #define SIDBUILDER_H
 
-#include "SidConfig.h"
-
 #include <set>
 #include <string>
+
+#include "SidConfig.h"
 
 class sidemu;
 class EventContext;

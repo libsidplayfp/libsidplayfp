@@ -20,12 +20,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "mos6510debug.h"
 
 #ifdef DEBUG
+
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "mos6510.h"
 #include "sidplayfp/sidendian.h"

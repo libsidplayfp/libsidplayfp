@@ -21,21 +21,21 @@
 #ifndef SIDTUNETOOLS_H
 #define SIDTUNETOOLS_H
 
-#include "SidTuneCfg.h"
-
 #include <string.h>
 
-#if defined(HAVE_STRINGS_H)
-#   include <strings.h>
+#include "SidTuneCfg.h"
+
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
 #endif
 
-#if defined(HAVE_STRCASECMP)
+#ifdef HAVE_STRCASECMP
 #   define MYSTRICMP strcasecmp
 #else
 #   define MYSTRICMP stricmp
 #endif
 
-#if defined(HAVE_STRNCASECMP)
+#ifdef HAVE_STRNCASECMP
 #   define MYSTRNICMP strncasecmp
 #else
 #   define MYSTRNICMP strnicmp

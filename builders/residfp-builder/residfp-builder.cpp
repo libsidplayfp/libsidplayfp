@@ -21,10 +21,11 @@
  */
 
 #include "residfp.h"
-#include "residfp-emu.h"
 
 #include <algorithm>
 #include <functional>
+
+#include "residfp-emu.h"
 
 ReSIDfpBuilder::~ReSIDfpBuilder (void)
 {   // Remove all are SID emulations

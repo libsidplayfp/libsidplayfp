@@ -20,18 +20,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "hardsid-emu.h"
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
-
 #include <sstream>
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-
-#include "hardsid-emu.h"
 
 // Move these to common header file
 #define HSID_IOCTL_RESET     _IOW('S', 0, int)

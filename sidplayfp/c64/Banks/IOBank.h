@@ -22,9 +22,9 @@
 #ifndef IOBANK_H
 #define IOBANK_H
 
-#include "Bank.h"
-
 #include <stdint.h>
+
+#include "Bank.h"
 
 /** @internal
  * IO region handler. 4k region, 16 chips, 256b banks.

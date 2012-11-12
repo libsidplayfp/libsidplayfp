@@ -20,19 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "mos6510.h"
+
+#include <string.h>
 
 #include "opcodes.h"
 
 #ifdef DEBUG
 #  include "mos6510debug.h"
 #endif
-
-#include <string.h>
 
 #ifdef PC64_TESTSUITE
 #  include <stdlib.h>

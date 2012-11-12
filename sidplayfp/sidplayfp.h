@@ -24,6 +24,7 @@
 #define SIDPLAYFP_H
 
 #include <stdint.h>
+#include <stdio.h>
 
 #include "siddefs.h"
 #include "sidversion.h"

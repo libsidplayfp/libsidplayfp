@@ -23,6 +23,14 @@
 #ifndef SIDINFOIMPL_H
 #define SIDINFOIMPL_H
 
+#include <stdint.h>
+#include <vector>
+#include <string>
+
+#include "sidplayfp/SidInfo.h"
+
+#include "c64/Banks/SidBank.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -34,14 +42,6 @@
 #ifndef PACKAGE_VERSION
 #   define PACKAGE_VERSION VERSION
 #endif
-
-#include <vector>
-#include <string>
-#include <stdint.h>
-
-#include "sidplayfp/SidInfo.h"
-
-#include "c64/Banks/SidBank.h"
 
 /** @internal
 * The implementation of the SidInfo interface.

@@ -25,10 +25,10 @@
 
 #include "Resampler.h"
 
-#include "../array.h"
-
 #include <string>
 #include <map>
+
+#include "../array.h"
 
 namespace reSIDfp
 {

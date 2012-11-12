@@ -32,17 +32,18 @@
 
  */
 
+#include "MD5.h"
+
 #include <string.h>
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
+
 #if defined(HAVE_MSWINDOWS) || defined(DLL_EXPORT)
 // Support for DLLs
 #   define MD5_EXPORT __declspec(dllexport)
 #endif
-
-#include "MD5.h"
 
 /*
  * Compile with -DMD5_TEST to create a self-contained executable test program.

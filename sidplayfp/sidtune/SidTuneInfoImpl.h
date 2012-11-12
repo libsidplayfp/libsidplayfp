@@ -23,9 +23,9 @@
 #ifndef SIDTUNEINFOIMPL_H
 #define SIDTUNEINFOIMPL_H
 
+#include <stdint.h>
 #include <vector>
 #include <string>
-#include <stdint.h>
 
 #include "sidplayfp/SidTuneInfo.h"
 

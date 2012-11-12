@@ -20,17 +20,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <cstring>
+#include "residfp-emu.h"
+
 #include <stdio.h>
+#include <cstring>
+#include <sstream>
 
 #include "residfp/Filter6581.h"
 #include "residfp/Filter8580.h"
-
 #include "residfp/siddefs-fp.h"
-#include "residfp.h"
-#include "residfp-emu.h"
-
-#include <sstream>
 
 std::string ReSIDfp::m_credit;
 
