@@ -109,8 +109,8 @@ bool Player::initialise ()
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
     {
-        const uint_least32_t page = (uint_least32_t) tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
-        if (page > 0xffff)
+        const uint_least32_t size = (uint_least32_t) tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
+        if (size > 0xffff)
         {
             m_errorString = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
             return false;
