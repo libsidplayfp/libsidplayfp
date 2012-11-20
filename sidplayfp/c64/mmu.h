@@ -95,11 +95,11 @@ public:
     void writeMemByte(uint_least16_t addr, uint8_t value) { ramBank.write(addr, value); }
     void writeMemWord(uint_least16_t addr, uint_least16_t value) { endian_little16(ramBank.array()+addr, value); }
 
-    void fillRam(uint_least16_t start, uint8_t value, int size)
+    void fillRam(uint_least16_t start, uint8_t value, unsigned int size)
     {
         memset(ramBank.array()+start, value, size);
     }
-    void fillRam(uint_least16_t start, const uint8_t* source, int size)
+    void fillRam(uint_least16_t start, const uint8_t* source, unsigned int size)
     {
         memcpy(ramBank.array()+start, source, size);
     }
