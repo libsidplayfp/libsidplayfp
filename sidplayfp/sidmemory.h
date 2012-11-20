@@ -35,14 +35,14 @@ public:
     *
     * @param addr the memory location from which to read from
     */
-    virtual uint8_t readMemByte(const uint_least16_t addr) =0;
+    virtual uint8_t readMemByte(uint_least16_t addr) =0;
 
     /**
     * Read two contiguous bytes from memory
     *
     * @param addr the memory location from which to read from
     */
-    virtual uint_least16_t readMemWord(const uint_least16_t addr) =0;
+    virtual uint_least16_t readMemWord(uint_least16_t addr) =0;
 
     /**
     * Write one byte to memory
@@ -50,7 +50,7 @@ public:
     * @param addr the memory location where to write
     * @param value the value to write
     */
-    virtual void writeMemByte(const uint_least16_t addr, const uint8_t value) =0;
+    virtual void writeMemByte(uint_least16_t addr, uint8_t value) =0;
 
     /**
     * Write two contiguous bytes to memory
@@ -58,7 +58,7 @@ public:
     * @param addr the memory location where to write
     * @param value the value to write
     */
-    virtual void writeMemWord(const uint_least16_t addr, const uint_least16_t value) =0;
+    virtual void writeMemWord(uint_least16_t addr, uint_least16_t value) =0;
 
     /**
     * Fill ram area with a constant value
@@ -67,7 +67,7 @@ public:
     * @param value the value to write
     * @param size the number of bytes to fill
     */
-    virtual void fillRam(const uint_least16_t start, const uint8_t value, const int size) =0;
+    virtual void fillRam(uint_least16_t start, uint8_t value, int size) =0;
 
     /**
     * Copy a buffer into a ram area
@@ -76,28 +76,28 @@ public:
     * @param source the source buffer
     * @param size the number of bytes to copy
     */
-    virtual void fillRam(const uint_least16_t start, const uint8_t* source, const int size) =0;
+    virtual void fillRam(uint_least16_t start, const uint8_t* source, int size) =0;
 
     /**
     * Change the RESET vector
     *
     * @param addr the new addres to point to
     */
-    virtual void installResetHook(const uint_least16_t addr) =0;
+    virtual void installResetHook(uint_least16_t addr) =0;
 
     /**
     * Set BASIC Warm Start address
     *
     * @param addr the new addres to point to
     */
-    virtual void installBasicTrap(const uint_least16_t addr) =0;
+    virtual void installBasicTrap(uint_least16_t addr) =0;
 
     /**
     * Set the start tune
     *
     * @param tune the tune number
     */
-    virtual void setBasicSubtune(const uint8_t tune) =0;
+    virtual void setBasicSubtune(uint8_t tune) =0;
 };
 
 #endif

@@ -88,7 +88,7 @@ public:
         sidmapper[address >> 5 & (MAPPER_SIZE - 1)] = chipNum;
     }
 
-    uint8_t read(const uint_least16_t addr)
+    uint8_t read(uint_least16_t addr)
     {
         const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
         return sid[i] ? sid[i]->read(addr & 0x1f) : 0xff;
