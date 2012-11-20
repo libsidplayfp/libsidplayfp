@@ -39,6 +39,11 @@
 const char ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
 const char ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
 
+uint8_t psiddrv::psid_driver[] = {
+#  include "psiddrv.bin"
+};
+
+
 uint8_t psiddrv::iomap (uint_least16_t addr)
 {
     // Force Real C64 Compatibility
@@ -112,11 +117,8 @@ bool psiddrv::drvReloc (sidmemory *mem)
     // Place psid driver into ram
     uint_least16_t relocAddr = relocStartPage << 8;
 
-    uint8_t psid_driver[] = {
-#      include "psiddrv.bin"
-    };
-    uint8_t *reloc_driver = psid_driver;
-    int      reloc_size   = sizeof (psid_driver);
+    reloc_driver = psid_driver;
+    reloc_size   = sizeof (psid_driver);
 
     reloc65 relocator;
     relocator.setReloc(reloc65::TEXT, relocAddr - 10);
@@ -154,7 +156,12 @@ bool psiddrv::drvReloc (sidmemory *mem)
         mem->writeMemWord(0x0328, addr);
     }
 
-    int pos = relocAddr;
+    return true;
+}
+
+void psiddrv::install (sidmemory *mem)
+{
+    int pos = m_driverAddr;
 
     // Install driver to ram
     mem->fillRam(pos, &reloc_driver[10], reloc_size);
@@ -197,6 +204,4 @@ bool psiddrv::drvReloc (sidmemory *mem)
 
     // Default processor register flags on calling init
     mem->writeMemByte(pos, m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
-
-    return true;
 }

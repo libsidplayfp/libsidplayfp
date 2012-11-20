@@ -142,6 +142,8 @@ bool Player::initialise ()
         return false;
     }
 
+    driver.install (m_c64.getMmu());
+
     m_c64.resetCpu();
 
     m_mixer.reset ();

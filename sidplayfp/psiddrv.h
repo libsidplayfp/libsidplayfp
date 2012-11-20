@@ -32,9 +32,15 @@ private:
     const SidTuneInfo *m_tuneInfo;
     const char *m_errorString;
 
+    uint8_t *reloc_driver;
+    int      reloc_size;
+
     uint_least16_t m_driverAddr;
     uint_least16_t m_driverLength;
     uint_least16_t m_powerOnDelay;
+
+private:
+    static uint8_t psid_driver[];
 
 private:
     /**
@@ -61,6 +67,14 @@ public:
     * @param mem the c64 memory interface
     */
     bool drvReloc(sidmemory *mem);
+    
+    /**
+     * Install the driver.
+     * Must be called after the tune has been placed in memory.
+     *
+     * @param mem the c64 memory interface
+     */
+    void install(sidmemory *mem);
 
     /**
     * Get a detailed error message
