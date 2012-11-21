@@ -66,9 +66,6 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
         kernalCheck k(kernal);
         m_info.m_kernalDesc = k.info();
     }
-    else
-        // kernal is mandatory
-        return;
 
     if (basic)
     {
