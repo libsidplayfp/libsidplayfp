@@ -31,7 +31,7 @@ ExternalFilter::ExternalFilter() :
 	Vlp(0),
 	Vhp(0),
 	w0lp_1_s7(0),
-	w0hp_1_s19(0) {
+	w0hp_1_s17(0) {
 
 	reset();
 }
@@ -40,7 +40,7 @@ void ExternalFilter::setClockFrequency(const double frequency) {
 	// Low-pass: R = 10kOhm, C = 1000pF; w0l = 1/RC = 1/(1e4*1e-9) = 100000
 	// High-pass: R = 1kOhm, C = 10uF; w0h = 1/RC = 1/(1e3*1e-5) = 100
 	w0lp_1_s7 = (int) (100000./frequency*(1 << 7) + 0.5);
-	w0hp_1_s19 = (int) (100./frequency*(1 << 19) + 0.5);
+        w0hp_1_s17 = (int) (100./frequency*(1 << 17) + 0.5);
 }
 
 void ExternalFilter:: reset() {

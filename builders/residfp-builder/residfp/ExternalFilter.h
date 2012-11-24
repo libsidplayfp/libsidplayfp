@@ -59,7 +59,7 @@ private:
 
 	int w0lp_1_s7;
 
-	int w0hp_1_s19;
+	int w0hp_1_s17;
 
 public:
 	/**
@@ -97,7 +97,7 @@ namespace reSIDfp
 RESID_INLINE
 int ExternalFilter::clock(const int Vi) {
 	const int dVlp = (w0lp_1_s7*((Vi << 11) - Vlp) >> 7);
-	const int dVhp = (w0hp_1_s19*(Vlp - Vhp) >> 19);
+	const int dVhp = (w0hp_1_s17*(Vlp - Vhp) >> 17);
 	Vlp += dVlp;
 	Vhp += dVhp;
 	return (Vlp - Vhp) >> 11;
