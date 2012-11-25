@@ -183,8 +183,10 @@ public:
     *
     * @return the scheduler
     */
+    //@{
     EventScheduler *getEventScheduler() { return &m_scheduler; }
-    //const EventScheduler &getEventScheduler() const { return m_scheduler; }
+    const EventScheduler &getEventScheduler() const { return m_scheduler; }
+    //@}
 
     void debug(bool enable, FILE *out) { cpu.debug (enable, out); }
 
