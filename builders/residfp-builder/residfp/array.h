@@ -21,6 +21,8 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
+/** @internal
+ */
 class counter {
 
 private:
@@ -33,7 +35,8 @@ public:
 };
 
 /** @internal
-*/
+ * Reference counted pointer to array wrapper, for use with standard containers.
+ */
 template<typename T>
 class array {
 

@@ -97,8 +97,12 @@ public:
 	unsigned short** getMixer() { return mixer; }
 
 	/**
-	 * Make DAC
-	 * must be deleted
+	 * Construct a DAC table.
+	 * Ownership is transferred to the requester which becomes responsible
+	 * of freeing the object when done.
+	 *
+	 * @param dac_zero
+	 * @return the DAC table
 	 */
 	unsigned int* getDAC(const double dac_zero) const;
 

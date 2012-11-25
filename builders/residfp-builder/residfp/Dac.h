@@ -3,6 +3,7 @@
  *
  * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
+ * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,8 +36,8 @@ namespace reSIDfp
 * chiefly in the emulation of the lacking termination of the 2R ladder, which
 * destroys the output with respect to the low bits of the DAC.
 *
-* @param dac 
-* @param dacLength
+* @param dac an array to be filled with the resulting analog values
+* @param dacLength the dac array length
 * @param _2R_div_R nonlinearity parameter, 1.0 for perfect linearity.
 * @param termi is the dac terminated by a 2R resistor? (6581 DACs are not)
 *
