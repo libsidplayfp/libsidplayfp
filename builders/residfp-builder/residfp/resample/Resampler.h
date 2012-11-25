@@ -27,7 +27,7 @@ namespace reSIDfp
 
 /** @internal
  * Abstraction of a resampling process. Given enough input, produces output.
- * Cnstructors take additional arguments that configure these objects.
+ * Constructors take additional arguments that configure these objects.
  *
  * @author Antti Lankila
  */
@@ -44,13 +44,13 @@ public:
 	/**
 	 * Input a sample into resampler. Output "true" when resampler is ready with new sample.
 	 *
-	 * @param sample
+	 * @param sample input sample
 	 * @return true when a sample is ready
 	 */
 	virtual bool input(const int sample)=0;
 
 	/**
-	 * Output a sample from resampler
+	 * Output a sample from resampler.
 	 *
 	 * @return resampled sample
 	 */

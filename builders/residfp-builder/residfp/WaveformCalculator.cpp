@@ -31,6 +31,11 @@ WaveformCalculator* WaveformCalculator::getInstance() {
 	return &instance;
 }
 
+/*
+ * the "bits wrong" figures below are not directly comparable. 0 bits are very easy to predict,
+ * and waveforms that are mostly zero have low scores. More comparable scores would be found by
+ * dividing with the count of 1-bits, or something.
+ */
 const CombinedWaveformConfig WaveformCalculator::config[2][4] =  {
 	{ /* kevtris chip G (6581r2/r3) */
 		{0.880815f, 0.f, 0.f, 0.3279614f, 0.5999545f}, // error 1795

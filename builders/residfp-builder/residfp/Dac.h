@@ -35,9 +35,9 @@ namespace reSIDfp
 * chiefly in the emulation of the lacking termination of the 2R ladder, which
 * destroys the output with respect to the low bits of the DAC.
 *
-* @param input digital value to convert to analog
+* @param dac 
+* @param dacLength
 * @param _2R_div_R nonlinearity parameter, 1.0 for perfect linearity.
-* @param bits highest bit that may be set in input.
 * @param termi is the dac terminated by a 2R resistor? (6581 DACs are not)
 *
 * @return the analog value as modeled from the R-2R network.

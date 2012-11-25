@@ -36,6 +36,9 @@ class Potentiometer;
 class Voice;
 class Resampler;
 
+/** @internal
+ * SID error exception.
+ */
 class SIDError {
 
 private:
@@ -119,6 +122,12 @@ private:
 	bool muted[3];
 
 private:
+	/**
+	 * Write value to register during this clock cycle.
+	 *
+	 * @param offset chip register to write
+	 * @param value value to write
+	 */
 	void writeImmediate(const int offset, const unsigned char value);
 
 	void ageBusValue(const int n);
@@ -169,11 +178,19 @@ public:
 	/**
 	 * Read registers.
 	 * <P>
-	 * Reading a write only register returns the last char written to any SID register. The individual bits in this value start to fade down towards zero after a few cycles. All bits reach zero within
-	 * approximately $2000 - $4000 cycles. It has been claimed that this fading happens in an orderly fashion, however sampling of write only registers reveals that this is not the case. NB! This is
-	 * not correctly modeled. The actual use of write only registers has largely been made in the belief that all SID registers are readable. To support this belief the read would have to be done
-	 * immediately after a write to the same register (remember that an intermediate write to another register would yield that value instead). With this in mind we return the last value written to
-	 * any SID register for $2000 cycles without modeling the bit fading.
+	 * Reading a write only register returns the last char written to any SID register.
+	 * The individual bits in this value start to fade down towards zero after a few cycles.
+	 * All bits reach zero within approximately $2000 - $4000 cycles.
+	 * It has been claimed that this fading happens in an orderly fashion,
+	 * however sampling of write only registers reveals that this is not the case.
+	 * NB! This is not correctly modeled.
+	 * The actual use of write only registers has largely been made
+	 * in the belief that all SID registers are readable.
+	 * To support this belief the read would have to be done immediately
+	 * after a write to the same register (remember that an intermediate write
+	 * to another register would yield that value instead).
+	 * With this in mind we return the last value written to any SID register
+	 * for $2000 cycles without modeling the bit fading.
 	 * 
 	 * @param offset SID register to read
 	 * @return value read from chip
@@ -199,21 +216,26 @@ public:
 	/**
 	 * Setting of SID sampling parameters.
 	 * <P>
-	 * Use a clock freqency of 985248Hz for PAL C64, 1022730Hz for NTSC C64. The default end of passband frequency is pass_freq = 0.9*sample_freq/2 for sample frequencies up to ~ 44.1kHz, and 20kHz
-	 * for higher sample frequencies.
+	 * Use a clock freqency of 985248Hz for PAL C64, 1022730Hz for NTSC C64.
+	 * The default end of passband frequency is pass_freq = 0.9*sample_freq/2
+	 * for sample frequencies up to ~ 44.1kHz, and 20kHz for higher sample frequencies.
 	 * <P>
-	 * For resampling, the ratio between the clock frequency and the sample frequency is limited as follows: 125*clock_freq/sample_freq < 16384 E.g. provided a clock frequency of ~ 1MHz, the sample
-	 * frequency can not be set lower than ~ 8kHz. A lower sample frequency would make the resampling code overfill its 16k sample ring buffer.
+	 * For resampling, the ratio between the clock frequency and the sample frequency
+	 * is limited as follows: 125*clock_freq/sample_freq < 16384
+	 * E.g. provided a clock frequency of ~ 1MHz, the sample frequency can not be set
+	 * lower than ~ 8kHz.A lower sample frequency would make the resampling code
+	 * overfill its 16k sample ring buffer.
 	 * <P>
 	 * The end of passband frequency is also limited: pass_freq <= 0.9*sample_freq/2
 	 * <P>
-	 * E.g. for a 44.1kHz sampling rate the end of passband frequency is limited to slightly below 20kHz. This constraint ensures that the FIR table is not overfilled.
+	 * E.g. for a 44.1kHz sampling rate the end of passband frequency
+	 * is limited to slightly below 20kHz.
+	 * This constraint ensures that the FIR table is not overfilled.
 	 *
 	 * @param clockFrequency System clock frequency at Hz
 	 * @param method sampling method to use
 	 * @param samplingFrequency Desired output sampling rate
 	 * @param highestAccurateFrequency
-	 * @return success
 	 */
 	void setSamplingParameters(const double clockFrequency, const SamplingMethod method, const double samplingFrequency, const double highestAccurateFrequency);
 

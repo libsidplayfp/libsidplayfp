@@ -30,8 +30,12 @@ namespace reSIDfp
 {
 
 /** @internal
- * A 24 bit accumulator is the basis for waveform generation. FREQ is added to the lower 16 bits of the accumulator each cycle. The accumulator is set to zero when TEST is set, and starts counting
- * when TEST is cleared. The noise waveform is taken from intermediate bits of a 23 bit shift register. This register is clocked by bit 19 of the accumulator.
+ * A 24 bit accumulator is the basis for waveform generation.
+ * FREQ is added to the lower 16 bits of the accumulator each cycle.
+ * The accumulator is set to zero when TEST is set, and starts counting
+ * when TEST is cleared.
+ * The noise waveform is taken from intermediate bits of a 23 bit shift register.
+ * This register is clocked by bit 19 of the accumulator.
  *
  * Java port of the reSID 1.0 waveformgenerator by Dag Lem.
  *
@@ -109,9 +113,9 @@ public:
 	void setWaveformModels(array<short>* models);
 
 	/**
-	 * Set nonlinearity parameter for imperfect analog DAC emulation.
-	 * 1.0 means perfect 8580-like linearity, values between 0.95 - 0.97
-	 * are probably realistic 6581 nonlinearity values.
+	 * Set the chip model.
+	 * This determines the type of the analog DAC emulation:
+	 * 8580 is perfectly linear while 6581 is nonlinear.
 	 *
 	 * @param chipModel
 	 */
@@ -123,7 +127,8 @@ public:
 	void clock();
 
 	/**
-	 * Synchronize oscillators. This must be done after all the oscillators have been clock()'ed,
+	 * Synchronize oscillators.
+	 * This must be done after all the oscillators have been clock()'ed,
 	 * so that they are in the same state.
 	 *
 	 * @param syncDest The oscillator I am syncing
@@ -173,7 +178,8 @@ public:
 	/**
 	 * Register functions.
 	 *
-	 * The original form was (acc >> 12) >= pw, where truth value is not affected by the contents of the low 12 bits. Therefore the lowest bits must be zero in the new formulation acc >= (pw << 12).
+	 * The original form was (acc >> 12) >= pw, where truth value is not affected by the contents of the low 12 bits.
+	 * Therefore the lowest bits must be zero in the new formulation acc >= (pw << 12).
 	 *
 	 * @param pw_lo low 8 bits of pulse width
 	 */

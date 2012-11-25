@@ -50,10 +50,6 @@ class WaveformCalculator {
 private:
 	std::map<const CombinedWaveformConfig*, array<short> > CACHE;
 
-	/*
-	 * the "bits wrong" figures below are not directly comparable. 0 bits are very easy to predict, and waveforms that are mostly zero have low scores. More comparable scores would be found by
-	 * dividing with the count of 1-bits, or something.
-	 */
 	static const CombinedWaveformConfig config[2][4];
 
 	/**
