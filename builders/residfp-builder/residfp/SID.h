@@ -86,6 +86,9 @@ private:
 	/** Paddle Y register support */
 	Potentiometer* potY;
 
+	/** SID voices */
+	Voice* voice[3];
+
 	/** Time to live for the last written value */
 	int busValueTtl;
 
@@ -134,10 +137,6 @@ private:
 	 * @param sync
 	 */
 	void voiceSync(const bool sync);
-
-public:
-	/** SID voices */
-	Voice* voice[3];
 
 public:
 	SID();
