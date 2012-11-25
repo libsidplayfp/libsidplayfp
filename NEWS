@@ -1,3 +1,9 @@
+0.3.8 2012-11-25
+* Bail out at configure time if stdint.h is not found
+* Fix a fixed point overflow introduced in r702, reported to break /MUSICIANS/S/Surgeon/Dual_Mind.sid (bug ID: 3588984)
+
+
+
 0.3.7 2012-08-28
 * Actually use the fastSampling parameter
 * Increase the waveform TTL even more to fix games/s-z/Scruples.sid#2
