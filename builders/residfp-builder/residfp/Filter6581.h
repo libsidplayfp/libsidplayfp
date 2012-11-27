@@ -110,9 +110,9 @@ public:
 
 	~Filter6581();
 
-	int clock(const int voice1, const int voice2, const int voice3);
+	int clock(int voice1, int voice2, int voice3);
 
-	void input(const int sample) { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
+	void input(int sample) { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
 
 	/**
 	 * Switch to new distortion curve.
@@ -135,7 +135,7 @@ public:
 	 *
 	 * @param curvePosition 0 .. 1, where 0 sets center frequency high ("light") and 1 sets it low ("dark")
 	 */
-	void setFilterCurve(const double curvePosition);
+	void setFilterCurve(double curvePosition);
 };
 
 } // namespace reSIDfp
@@ -148,7 +148,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Filter6581::clock(const int voice1, const int voice2, const int voice3) {
+int Filter6581::clock(int voice1, int voice2, int voice3) {
 
 	const int v1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
 	const int v2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;

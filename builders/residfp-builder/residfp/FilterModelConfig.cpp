@@ -211,7 +211,7 @@ FilterModelConfig::~FilterModelConfig() {
 	}
 }
 
-double FilterModelConfig::evaluateTransistor(const double Vw, const double vi, const double vx) {
+double FilterModelConfig::evaluateTransistor(double Vw, double vi, double vx) {
 	const double Vgst = Vdd - Vth - vx;
 	const double Vgdt = Vdd - Vth - vi;
 	const double n_snake = uCox_snake/2.*WL_snake;
@@ -235,7 +235,7 @@ double FilterModelConfig::evaluateTransistor(const double Vw, const double vi, c
 	return n_I_snake + n_I_vcr;
 }
 
-unsigned int* FilterModelConfig::getDAC(const double dac_zero) const {
+unsigned int* FilterModelConfig::getDAC(double dac_zero) const {
 	const double N16 = norm * ((1L << 16) - 1);
 	const int bits = DAC_SIZE;
 	unsigned int* f0_dac = new unsigned int[1 << bits];
@@ -258,7 +258,7 @@ Integrator* FilterModelConfig::buildIntegrator() {
 	return new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, Vddt, n_snake);
 }
 
-double FilterModelConfig::estimateFrequency(const double dac_zero, const int fc) {
+double FilterModelConfig::estimateFrequency(double dac_zero, int fc) {
 	/* Calculate input from DAC */
 	const int bits = DAC_SIZE;
 	double Vw = 0.;

@@ -41,8 +41,8 @@ private:
 	SincResampler* s2;
 
 public:
-	TwoPassSincResampler(const double clockFrequency, const double samplingFrequency,
-		const double highestAccurateFrequency) {
+	TwoPassSincResampler(double clockFrequency, double samplingFrequency,
+		double highestAccurateFrequency) {
 		/* Calculation according to Laurent Ganier. It evaluates to about 120 kHz at typical settings.
 		 * Some testing around the chosen value seems to confirm that this does work. */
 		const double intermediateFrequency = 2. * highestAccurateFrequency
@@ -57,7 +57,7 @@ public:
 		delete s2;
 	}
 
-	bool input(const int sample) {
+	bool input(int sample) {
 		return s1->input(sample) && s2->input(s1->output());
 	}
 

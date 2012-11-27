@@ -70,7 +70,7 @@ SID::~SID() {
 	delete resampler;
 }
 
-void SID::writeImmediate(const int offset, const unsigned char value) {
+void SID::writeImmediate(int offset, unsigned char value) {
 	switch (offset) {
 	case 0x00:
 		voice[0]->wave->writeFREQ_LO(value);
@@ -159,7 +159,7 @@ void SID::writeImmediate(const int offset, const unsigned char value) {
 	voiceSync(false);
 }
 
-void SID::ageBusValue(const int n) {
+void SID::ageBusValue(int n) {
 	if (busValueTtl != 0) {
 		busValueTtl -= n;
 		if (busValueTtl <= 0) {
@@ -169,7 +169,7 @@ void SID::ageBusValue(const int n) {
 	}
 }
 
-void SID::voiceSync(const bool sync) {
+void SID::voiceSync(bool sync) {
 	if (sync) {
 		/* Synchronize the 3 waveform generators. */
 		for (int i = 0; i < 3 ; i ++) {
@@ -194,7 +194,7 @@ void SID::voiceSync(const bool sync) {
 	}
 }
 
-void SID::setChipModel(const ChipModel model) {
+void SID::setChipModel(ChipModel model) {
 	this->model = model;
 
 	if (model == MOS6581) {
@@ -235,12 +235,12 @@ void SID::reset() {
 	voiceSync(false);
 }
 
-void SID::input(const int value) {
+void SID::input(int value) {
 	filter6581->input(value);
 	filter8580->input(value);
 }
 
-unsigned char SID::read(const int offset) {
+unsigned char SID::read(int offset) {
 	unsigned char value;
 
 	switch (offset) {
@@ -269,7 +269,7 @@ unsigned char SID::read(const int offset) {
 	return value;
 }
 
-void SID::write(const int offset, const unsigned char value) {
+void SID::write(int offset, unsigned char value) {
 	busValue = value;
 	busValueTtl = BUS_TTL;
 
@@ -281,7 +281,7 @@ void SID::write(const int offset, const unsigned char value) {
 	}
 }
 
-void SID::setSamplingParameters(const double clockFrequency, const SamplingMethod method, const double samplingFrequency, const double highestAccurateFrequency) {
+void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency) {
 	filter6581->setClockFrequency(clockFrequency);
 	filter8580->setClockFrequency(clockFrequency);
 	externalFilter->setClockFrequency(clockFrequency);

@@ -46,7 +46,7 @@ namespace reSIDfp
 class Dac {
 
 public:
-	static void kinkedDac(double* dac, const int dacLength, const double _2R_div_R, const bool term);
+	static void kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term);
 };
 
 } // namespace reSIDfp

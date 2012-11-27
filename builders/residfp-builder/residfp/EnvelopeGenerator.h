@@ -132,7 +132,7 @@ public:
 	 *
 	 * @param chipModel
 	 */
-	void setChipModel(const ChipModel chipModel);
+	void setChipModel(ChipModel chipModel);
 
 	/**
 	 * SID clocking - 1 cycle.
@@ -177,19 +177,19 @@ public:
 	 * @param control
 	 *            control register
 	 */
-	void writeCONTROL_REG(const unsigned char control);
+	void writeCONTROL_REG(unsigned char control);
 
 	/**
 	 * @param attack_decay
 	 *            attack/decay value
 	 */
-	void writeATTACK_DECAY(const unsigned char attack_decay);
+	void writeATTACK_DECAY(unsigned char attack_decay);
 
 	/**
 	 * @param sustain_release
 	 *            sustain/release value
 	 */
-	void writeSUSTAIN_RELEASE(const unsigned char sustain_release);
+	void writeSUSTAIN_RELEASE(unsigned char sustain_release);
 
 	/**
 	 * Return the envelope current value.

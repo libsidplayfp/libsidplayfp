@@ -43,7 +43,7 @@ std::map<std::string, array<short> > SincResampler::FIR_CACHE;
 
 const double SincResampler::I0E = 1e-6;
 
-double SincResampler::I0(const double x) {
+double SincResampler::I0(double x) {
 	double sum = 1., u = 1., n = 1.;
 	const double halfx = x / 2.;
 
@@ -57,7 +57,7 @@ double SincResampler::I0(const double x) {
 	return sum;
 }
 
-int SincResampler::convolve(const short* a, const short* b, const int bLength) {
+int SincResampler::convolve(const short* a, const short* b, int bLength) {
 #ifdef HAVE_MMINTRIN_H
 	__m64 acc = _mm_setzero_si64();
 
@@ -84,7 +84,7 @@ int SincResampler::convolve(const short* a, const short* b, const int bLength) {
 	return (out + (1 << 14)) >> 15;
 }
 
-int SincResampler::fir(const int subcycle) {
+int SincResampler::fir(int subcycle) {
 	/* find the first of the nearest fir tables close to the phase */
 	int firTableFirst = (subcycle * firRES >> 10);
 	const int firTableOffset = (subcycle * firRES) & 0x3ff;
@@ -109,7 +109,7 @@ int SincResampler::fir(const int subcycle) {
 	return v1 + (firTableOffset * (v2 - v1) >> 10);
 }
 
-SincResampler::SincResampler(const double clockFrequency, const double samplingFrequency, const double highestAccurateFrequency) :
+SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
 	sampleIndex(0),
 	cyclesPerSample((int) (clockFrequency / samplingFrequency * 1024.)),
 	sampleOffset(0),
@@ -194,7 +194,7 @@ SincResampler::SincResampler(const double clockFrequency, const double samplingF
 	}
 }
 
-bool SincResampler::input(const int input) {
+bool SincResampler::input(int input) {
 	bool ready = false;
 
 	sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = input;

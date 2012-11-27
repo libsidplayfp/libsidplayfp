@@ -46,7 +46,7 @@ private:
 	T* data;
 
 public:
-	array(const unsigned int x, const unsigned int y) :
+	array(unsigned int x, unsigned int y) :
 		count(new counter()),
 		x(x),
 		y(y),

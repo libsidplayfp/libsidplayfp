@@ -47,7 +47,7 @@ public:
 	 * @param sample input sample
 	 * @return true when a sample is ready
 	 */
-	virtual bool input(const int sample)=0;
+	virtual bool input(int sample)=0;
 
 	/**
 	 * Output a sample from resampler.

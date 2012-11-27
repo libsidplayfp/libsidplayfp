@@ -85,7 +85,7 @@ void EnvelopeGenerator::set_exponential_counter() {
 	}
 }
 
-void EnvelopeGenerator::setChipModel(const ChipModel chipModel) {
+void EnvelopeGenerator::setChipModel(ChipModel chipModel) {
 	const int dacBitsLength = 8;
 	double dacBits[dacBitsLength];
 	Dac::kinkedDac(dacBits, dacBitsLength, chipModel == MOS6581 ? 2.30 : 2.00, chipModel == MOS8580);
@@ -120,7 +120,7 @@ void EnvelopeGenerator::reset() {
 	hold_zero = true;
 }
 
-void EnvelopeGenerator::writeCONTROL_REG(const unsigned char control) {
+void EnvelopeGenerator::writeCONTROL_REG(unsigned char control) {
 	const bool gate_next = (control & 0x01) != 0;
 
 	// The rate counter is never reset, thus there will be a delay before the
@@ -147,7 +147,7 @@ void EnvelopeGenerator::writeCONTROL_REG(const unsigned char control) {
 	gate = gate_next;
 }
 
-void EnvelopeGenerator::writeATTACK_DECAY(const unsigned char attack_decay) {
+void EnvelopeGenerator::writeATTACK_DECAY(unsigned char attack_decay) {
 	attack = (attack_decay >> 4) & 0x0f;
 	decay = attack_decay & 0x0f;
 	if (state == ATTACK) {
@@ -157,7 +157,7 @@ void EnvelopeGenerator::writeATTACK_DECAY(const unsigned char attack_decay) {
 	}
 }
 
-void EnvelopeGenerator::writeSUSTAIN_RELEASE(const unsigned char sustain_release) {
+void EnvelopeGenerator::writeSUSTAIN_RELEASE(unsigned char sustain_release) {
 	sustain = (sustain_release >> 4) & 0x0f;
 	release = sustain_release & 0x0f;
 	if (state == RELEASE) {

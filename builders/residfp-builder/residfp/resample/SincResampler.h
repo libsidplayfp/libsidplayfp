@@ -104,7 +104,7 @@ private:
 	 * @param x evaluate I0 at x
 	 * @return value of I0 at x.
 	 */
-	static double I0(const double x);
+	static double I0(double x);
 
 	/**
 	 * Calculate convolution with sample and sinc.
@@ -114,9 +114,9 @@ private:
 	 * @param bLength length of the sinc buffer
 	 * @return convolved result
 	 */
-	static int convolve(const short* a, const short* b, const int bLength);
+	static int convolve(const short* a, const short* b, int bLength);
 
-	int fir(const int subcycle);
+	int fir(int subcycle);
 
 public:
 	/**
@@ -140,9 +140,9 @@ public:
 	 * @param samplingFrequency Desired output sampling rate
 	 * @return success
 	 */
-	SincResampler(const double clockFrequency, const double samplingFrequency, const double highestAccurateFrequency);
+	SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency);
 
-	bool input(const int input);
+	bool input(int input);
 
 	int output() const { return outputValue; }
 

@@ -27,7 +27,7 @@
 namespace reSIDfp
 {
 
-Spline::Spline(const double input[][2], const int inputLength) :
+Spline::Spline(const double input[][2], int inputLength) :
 	paramsLength(inputLength-1),
 	params(new double[paramsLength][6]) {
 
@@ -77,7 +77,7 @@ Spline::Spline(const double input[][2], const int inputLength) :
 	c = params[0];
 }
 
-void Spline::evaluate(const double x, double* out) {
+void Spline::evaluate(double x, double* out) {
 	if (x < c[0] || x > c[1]) {
 		for (int i = 0; i < paramsLength; i ++) {
 			if (params[i][1] < x) {

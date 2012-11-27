@@ -60,17 +60,17 @@ public:
 		w0(0.f),
 		_1_div_Q(0.f) {}
 
-	int clock(const int voice1, const int voice2, const int voice3);
+	int clock(int voice1, int voice2, int voice3);
 
 	void updatedCenterFrequency() { w0 = (float) (2.*M_PI*highFreq*fc/2047/1e6); }
 
 	void updatedResonance() { _1_div_Q = 1.f / (0.707f + res/15.f); }
 
-	void input(const int input) { ve = input << 4; }
+	void input(int input) { ve = input << 4; }
 
 	void updatedMixing() {}
 
-	void setFilterCurve(const double curvePosition) { highFreq = curvePosition; }
+	void setFilterCurve(double curvePosition) { highFreq = curvePosition; }
 };
 
 } // namespace reSIDfp
@@ -84,10 +84,10 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Filter8580::clock(const int v1, const int v2, const int v3) {
-	const int voice1 = v1 >> 7;
-	const int voice2 = v2 >> 7;
-	const int voice3 = v3 >> 7;
+int Filter8580::clock(int voice1, int voice2, int voice3) {
+	voice1 >>= 7;
+	voice2 >>= 7;
+	voice3 >>= 7;
 
 	int Vi = 0;
 	float Vo = 0.f;

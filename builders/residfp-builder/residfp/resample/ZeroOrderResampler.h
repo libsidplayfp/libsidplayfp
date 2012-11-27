@@ -42,13 +42,13 @@ private:
 	int outputValue;
 
 public:
-	ZeroOrderResampler(const double clockFrequency, const double samplingFrequency) :
+	ZeroOrderResampler(double clockFrequency, double samplingFrequency) :
 		cachedSample(0),
 		cyclesPerSample((int) (clockFrequency / samplingFrequency * 1024.f)),
 		sampleOffset(0),
 		outputValue(0) {}
 
-	bool input(const int sample) {
+	bool input(int sample) {
 		bool ready = false;
 
 		if (sampleOffset < 1024) {

@@ -49,7 +49,7 @@ private:
 
 public:
 	Integrator(const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
-		const int* opamp_rev, const int Vddt, const int n_snake) :
+		const int* opamp_rev, int Vddt, int n_snake) :
 		Vddt_Vw_2(0),
 		Vddt(Vddt),
 		n_snake(n_snake),
@@ -72,7 +72,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator::solve(const int vi) {
+int Integrator::solve(int vi) {
 	// "Snake" voltages for triode mode calculation.
 	const int Vgst = Vddt - x;
 	const int Vgdt = Vddt - vi;

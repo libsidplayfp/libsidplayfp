@@ -57,7 +57,7 @@ public:
 	 * @param opamplength length of the opamp array
 	 * @param Vddt transistor dt parameter (in volts)
 	 */
-	OpAmp(const double opamp[][2], const int opamplength, const double Vddt) :
+	OpAmp(const double opamp[][2], int opamplength, double Vddt) :
 		x(0.),
 		Vddt(Vddt),
 		vmin(opamp[0][0]),
@@ -77,7 +77,7 @@ public:
 	 * @param vi input
 	 * @return vo
 	 */
-	double solve(const double n, const double vi);
+	double solve(double n, double vi);
 };
 
 } // namespace reSIDfp

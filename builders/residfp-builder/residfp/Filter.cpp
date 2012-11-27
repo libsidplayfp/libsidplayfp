@@ -25,7 +25,7 @@
 namespace reSIDfp
 {
 
-void Filter::enable(const bool enable) {
+void Filter::enable(bool enable) {
 	enabled = enable;
 	if (enabled) {
 		writeRES_FILT(filt);
@@ -34,7 +34,7 @@ void Filter::enable(const bool enable) {
 	}
 }
 
-void Filter::setClockFrequency(const double clock) {
+void Filter::setClockFrequency(double clock) {
 	clockFrequency = clock;
 	updatedCenterFrequency();
 }
@@ -46,17 +46,17 @@ void Filter::reset() {
 	writeRES_FILT(0);
 }
 
-void Filter::writeFC_LO(const unsigned char fc_lo) {
+void Filter::writeFC_LO(unsigned char fc_lo) {
 	fc = (fc & 0x7f8) | (fc_lo & 0x007);
 	updatedCenterFrequency();
 }
 
-void Filter::writeFC_HI(const unsigned char fc_hi) {
+void Filter::writeFC_HI(unsigned char fc_hi) {
 	fc = (fc_hi << 3 & 0x7f8) | (fc & 0x007);
 	updatedCenterFrequency();
 }
 
-void Filter::writeRES_FILT(const unsigned char res_filt) {
+void Filter::writeRES_FILT(unsigned char res_filt) {
 	filt = res_filt;
 
 	res = res_filt >> 4 & 0x0f;
@@ -72,7 +72,7 @@ void Filter::writeRES_FILT(const unsigned char res_filt) {
 	updatedMixing();
 }
 
-void Filter::writeMODE_VOL(const unsigned char mode_vol) {
+void Filter::writeMODE_VOL(unsigned char mode_vol) {
 	vol = mode_vol & 0xf;
 	lp = (mode_vol & 0x10) != 0;
 	bp = (mode_vol & 0x20) != 0;

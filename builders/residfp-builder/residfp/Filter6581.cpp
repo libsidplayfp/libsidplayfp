@@ -80,7 +80,7 @@ void Filter6581::updatedMixing() {
 	currentMixer = mixer[no];
 }
 
-void Filter6581::setFilterCurve(const double curvePosition) {
+void Filter6581::setFilterCurve(double curvePosition) {
 	delete [] f0_dac;
 	f0_dac = FilterModelConfig::getInstance()->getDAC(FilterModelConfig::getInstance()->getDacZero(curvePosition));
 	updatedCenterFrequency();

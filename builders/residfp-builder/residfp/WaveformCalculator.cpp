@@ -50,7 +50,7 @@ const CombinedWaveformConfig WaveformCalculator::config[2][4] =  {
 	},
 };
 
-array<short>* WaveformCalculator::buildTable(const ChipModel model) {
+array<short>* WaveformCalculator::buildTable(ChipModel model) {
 	const CombinedWaveformConfig* cfgArray = config[model == MOS6581 ? 0 : 1];
 
 	std::map<const CombinedWaveformConfig*, array<short> >::iterator lb = CACHE.lower_bound(cfgArray);
@@ -76,7 +76,7 @@ array<short>* WaveformCalculator::buildTable(const ChipModel model) {
 	return &(CACHE.insert(lb, std::map<const CombinedWaveformConfig*, array<short> >::value_type(cfgArray, wftable))->second);
 }
 
-short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig config, const int waveform, const int accumulator) const {
+short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int accumulator) const {
 	float o[12];
 
 	/* S with strong top bit for 6581 */

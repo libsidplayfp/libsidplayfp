@@ -127,16 +127,16 @@ public:
 	 * @param v3 voice 3 in
 	 * @return filtered output
 	 */
-	virtual int clock(const int v1, const int v2, const int v3)=0;
+	virtual int clock(int v1, int v2, int v3)=0;
 
 	/**
 	 * Enable filter.
 	 *
 	 * @param enable
 	 */
-	void enable(const bool enable);
+	void enable(bool enable);
 
-	void setClockFrequency(const double clock);
+	void setClockFrequency(double clock);
 
 	/**
 	 * SID reset.
@@ -148,30 +148,30 @@ public:
 	 *
 	 * @param fc_lo Frequency Cutoff Low-Byte
 	 */
-	void writeFC_LO(const unsigned char fc_lo);
+	void writeFC_LO(unsigned char fc_lo);
 
 	/**
 	 * Register function.
 	 *
 	 * @param fc_hi Frequency Cutoff High-Byte
 	 */
-	void writeFC_HI(const unsigned char fc_hi);
+	void writeFC_HI(unsigned char fc_hi);
 
 	/**
 	 * Register function.
 	 *
 	 * @param res_filt Resonance/Filter
 	 */
-	void writeRES_FILT(const unsigned char res_filt);
+	void writeRES_FILT(unsigned char res_filt);
 
 	/**
 	 * Register function.
 	 *
 	 * @param mode_vol Filter Mode/Volume
 	 */
-	void writeMODE_VOL(const unsigned char mode_vol);
+	void writeMODE_VOL(unsigned char mode_vol);
 
-	virtual void input(const int input)=0;
+	virtual void input(int input)=0;
 };
 
 } // namespace reSIDfp

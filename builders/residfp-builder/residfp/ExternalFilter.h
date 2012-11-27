@@ -71,7 +71,7 @@ public:
 	 *
 	 * @param Vi
 	 */
-	int clock(const int Vi);
+	int clock(int Vi);
 
 	/**
 	 * Constructor.
@@ -83,7 +83,7 @@ public:
 	 * 
 	 * @param frequency
 	 */
-	void setClockFrequency(const double frequency);
+	void setClockFrequency(double frequency);
 
 	/**
 	 * SID reset.
@@ -99,7 +99,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int ExternalFilter::clock(const int Vi) {
+int ExternalFilter::clock(int Vi) {
 	const int dVlp = (w0lp_1_s7*((Vi << 11) - Vlp) >> 7);
 	const int dVhp = (w0hp_1_s17*(Vlp - Vhp) >> 17);
 	Vlp += dVlp;

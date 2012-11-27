@@ -25,7 +25,7 @@
 namespace reSIDfp
 {
 
-void Dac::kinkedDac(double* dac, const int dacLength, const double _2R_div_R, const bool term) {
+void Dac::kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term) {
 	const double R_INFINITY = 1e6;
 
 	// Calculate voltage contribution by each individual bit in the R-2R ladder.

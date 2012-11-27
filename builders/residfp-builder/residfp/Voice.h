@@ -86,7 +86,7 @@ public:
 	 *
 	 * @param control Control register value.
 	 */
-	void writeCONTROL_REG(const unsigned char control) {
+	void writeCONTROL_REG(unsigned char control) {
 		wave->writeCONTROL_REG(control);
 		envelope->writeCONTROL_REG(control);
 	}

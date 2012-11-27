@@ -86,7 +86,7 @@ void WaveformGenerator::setWaveformModels(array<short>* models) {
 	model_wave = models;
 }
 
-void WaveformGenerator::setChipModel(const ChipModel chipModel) {
+void WaveformGenerator::setChipModel(ChipModel chipModel) {
 	double dacBits[12];
 	Dac::kinkedDac(dacBits, 12, chipModel == MOS6581 ? 2.20 : 2.00, chipModel == MOS8580);
 
@@ -114,7 +114,7 @@ void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformG
 	}
 }
 
-void WaveformGenerator::writeCONTROL_REG(const unsigned char control) {
+void WaveformGenerator::writeCONTROL_REG(unsigned char control) {
 	const int waveform_prev = waveform;
 	const bool test_prev = test;
 	waveform = (control >> 4) & 0x0f;

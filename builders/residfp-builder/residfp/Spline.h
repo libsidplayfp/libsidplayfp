@@ -37,10 +37,10 @@ private:
 	Params params;
 
 public:
-	Spline(const double input[][2], const int inputLength);
+	Spline(const double input[][2], int inputLength);
 	~Spline() { delete [] params; }
 
-	void evaluate(const double x, double* out);
+	void evaluate(double x, double* out);
 };
 
 } // namespace reSIDfp

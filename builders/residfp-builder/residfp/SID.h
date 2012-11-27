@@ -128,9 +128,9 @@ private:
 	 * @param offset chip register to write
 	 * @param value value to write
 	 */
-	void writeImmediate(const int offset, const unsigned char value);
+	void writeImmediate(int offset, unsigned char value);
 
-	void ageBusValue(const int n);
+	void ageBusValue(int n);
 
 	/**
 	 * Get output sample
@@ -145,7 +145,7 @@ private:
 	 *
 	 * @param sync
 	 */
-	void voiceSync(const bool sync);
+	void voiceSync(bool sync);
 
 public:
 	SID();
@@ -156,7 +156,7 @@ public:
 	 *
 	 * @param model chip model to use
 	 */
-	void setChipModel(const ChipModel model);
+	void setChipModel(ChipModel model);
 
 	ChipModel getChipModel() const { return model; }
 
@@ -173,7 +173,7 @@ public:
 	 *
 	 * @param value input level to set
 	 */
-	void input(const int value);
+	void input(int value);
 
 	/**
 	 * Read registers.
@@ -195,7 +195,7 @@ public:
 	 * @param offset SID register to read
 	 * @return value read from chip
 	 */
-	unsigned char read(const int offset);
+	unsigned char read(int offset);
 
 	/**
 	 * Write registers.
@@ -203,7 +203,7 @@ public:
 	 * @param offset chip register to write
 	 * @param value value to write
 	 */
-	void write(const int offset, const unsigned char value);
+	void write(int offset, unsigned char value);
 
 	/**
 	 * SID voice muting.
@@ -211,7 +211,7 @@ public:
 	 * @param channel channel to modify
 	 * @param enable is muted?
 	 */
-	void mute(const int channel, const bool enable) { muted[channel] = enable; }
+	void mute(int channel, bool enable) { muted[channel] = enable; }
 
 	/**
 	 * Setting of SID sampling parameters.
@@ -237,7 +237,7 @@ public:
 	 * @param samplingFrequency Desired output sampling rate
 	 * @param highestAccurateFrequency
 	 */
-	void setSamplingParameters(const double clockFrequency, const SamplingMethod method, const double samplingFrequency, const double highestAccurateFrequency);
+	void setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency);
 
 	/**
 	 * Clock SID forward using chosen output sampling algorithm.

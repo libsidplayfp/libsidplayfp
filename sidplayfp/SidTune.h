@@ -73,7 +73,7 @@ class SID_EXTERN SidTune
     * Load a single-file sidtune from a memory buffer.
     * Currently supported: PSID format
     */
-    SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength);
+    SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtuneLength);
 
     virtual ~SidTune() {}
 

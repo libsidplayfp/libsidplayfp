@@ -74,7 +74,7 @@ private:
 	unsigned short vcr_n_Ids_term[1 << 16];
 	int opamp_rev[1 << 16];
 
-	double evaluateTransistor(const double Vw, const double vi, const double vx);
+	double evaluateTransistor(double Vw, double vi, double vx);
 
 	FilterModelConfig();
 	~FilterModelConfig();
@@ -82,7 +82,7 @@ private:
 public:
 	static FilterModelConfig* getInstance();
 
-	double getDacZero(const double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
+	double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
 
 	int getVO_T16() const { return (int) (norm * ((1L << 16) - 1) * vmin); }
 
@@ -104,7 +104,7 @@ public:
 	 * @param dac_zero
 	 * @return the DAC table
 	 */
-	unsigned int* getDAC(const double dac_zero) const;
+	unsigned int* getDAC(double dac_zero) const;
 
 	Integrator* buildIntegrator();
 
@@ -121,7 +121,7 @@ public:
 	 * @param fc
 	 * @return frequency in Hz
 	 */
-	double estimateFrequency(const double dac_zero, const int fc);
+	double estimateFrequency(double dac_zero, int fc);
 };
 
 } // namespace reSIDfp

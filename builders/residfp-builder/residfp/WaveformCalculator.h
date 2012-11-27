@@ -59,7 +59,7 @@ private:
 	 * @param waveform the waveform to emulate, 1 .. 7
 	 * @param accumulator the accumulator value
 	 */
-	short calculateCombinedWaveform(CombinedWaveformConfig config, const int waveform, const int accumulator) const;
+	short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int accumulator) const;
 
 	WaveformCalculator() {}
 
@@ -72,7 +72,7 @@ public:
 	 * @param model Chip model to use
 	 * @return Waveform table
 	 */
-	array<short>* buildTable(const ChipModel model);
+	array<short>* buildTable(ChipModel model);
 };
 
 } // namespace reSIDfp
