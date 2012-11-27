@@ -48,33 +48,12 @@ const char** SidTune::fileNameExtensions = defaultFileNameExt;
 SidTune::SidTune(const char* fileName, const char **fileNameExt, const bool separatorIsSlash)
 {
     setFileNameExtensions(fileNameExt);
-
-    try
-    {
-        tune.reset(SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash));
-        m_status = true;
-        m_statusString = MSG_NO_ERRORS;
-    }
-    catch (loadError& e)
-    {
-        m_status = false;
-        m_statusString = e.message();
-    }
+    load(fileName, separatorIsSlash);
 }
 
 SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, const uint_least32_t sidtuneLength)
 {
-    try
-    {
-        tune.reset(SidTuneBase::read(oneFileFormatSidtune, sidtuneLength));
-        m_status = true;
-        m_statusString = MSG_NO_ERRORS;
-    }
-    catch (loadError& e)
-    {
-        m_status = false;
-        m_statusString = e.message();
-    }
+    read(oneFileFormatSidtune, sidtuneLength);
 }
 
 void SidTune::setFileNameExtensions(const char **fileNameExt)
