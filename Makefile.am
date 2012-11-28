@@ -109,6 +109,8 @@ sidplayfp/c64/CPU/mos6510debug.h \
 sidplayfp/c64/CPU/opcodes.h \
 sidplayfp/c64/CIA/mos6526.cpp \
 sidplayfp/c64/CIA/mos6526.h \
+sidplayfp/c64/CIA/timer.cpp \
+sidplayfp/c64/CIA/timer.h \
 sidplayfp/sidtune/MUS.cpp \
 sidplayfp/sidtune/MUS.h \
 sidplayfp/sidtune/p00.cpp \
