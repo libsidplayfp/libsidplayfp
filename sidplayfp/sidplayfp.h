@@ -133,7 +133,7 @@ public:
     * @param voice the channel to mute/unmute.
     * @param enable true unmutes the channel, false mutes it.
     */
-    void mute(const unsigned int sidNum, const unsigned int voice, const bool enable);
+    void mute(unsigned int sidNum, unsigned int voice, bool enable);
 
     /**
     * Get the current playing time with respect to resolution returned by timebase.

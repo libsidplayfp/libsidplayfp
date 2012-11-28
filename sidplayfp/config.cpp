@@ -117,7 +117,7 @@ bool Player::config (const SidConfig &cfg)
 }
 
 // Clock speed changes due to loading a new song
-double Player::clockSpeed (const SidConfig::clock_t defaultClock, const bool forced)
+double Player::clockSpeed (SidConfig::clock_t defaultClock, bool forced)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -164,7 +164,7 @@ double Player::clockSpeed (const SidConfig::clock_t defaultClock, const bool for
     return cpuFreq;
 }
 
-SidConfig::model_t Player::getModel(const SidTuneInfo::model_t sidModel, const SidConfig::model_t defaultModel, const bool forced)
+SidConfig::model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig::model_t defaultModel, bool forced)
 {
     SidTuneInfo::model_t tuneModel = sidModel;
 
@@ -197,10 +197,10 @@ SidConfig::model_t Player::getModel(const SidTuneInfo::model_t sidModel, const S
     return newModel;
 }
 
-bool Player::sidCreate (sidbuilder *builder, const SidConfig::model_t defaultModel,
-                       const bool forced, const int channels,
-                       const double cpuFreq, const int frequency,
-                       const SidConfig::sampling_method_t sampling, const bool fastSampling)
+bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
+                       bool forced, int channels,
+                       double cpuFreq, int frequency,
+                       SidConfig::sampling_method_t sampling, bool fastSampling)
 {
     for (unsigned int i = 0; i < SidBank::MAX_SIDS; i++)
     {

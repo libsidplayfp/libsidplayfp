@@ -66,14 +66,14 @@ private:
     sidrandom     m_rand;
 
 private:
-    double    clockSpeed     (const SidConfig::clock_t defaultClock, const bool forced);
+    double    clockSpeed     (SidConfig::clock_t defaultClock, bool forced);
     bool      initialise     (void);
-    bool      sidCreate(sidbuilder *builder, const SidConfig::model_t defaultModel,
-                       const bool forced, const int channels,
-                       const double cpuFreq, const int frequency,
-                       const SidConfig::sampling_method_t sampling, const bool fastSampling);
+    bool      sidCreate(sidbuilder *builder, SidConfig::model_t defaultModel,
+                       bool forced, int channels,
+                       double cpuFreq, int frequency,
+                       SidConfig::sampling_method_t sampling, bool fastSampling);
 
-    static SidConfig::model_t getModel (const SidTuneInfo::model_t sidModel, const SidConfig::model_t defaultModel, const bool forced);
+    static SidConfig::model_t getModel (SidTuneInfo::model_t sidModel, SidConfig::model_t defaultModel, bool forced);
 
 #ifdef PC64_TESTSUITE
     void load (const char *file)
@@ -104,7 +104,7 @@ public:
     void           stop         (void);
     uint_least32_t time         (void) const { return (uint_least32_t)(m_c64.getEventScheduler().getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
     void           debug        (const bool enable, FILE *out) { m_c64.debug (enable, out); }
-    void           mute         (const unsigned int sidNum, const unsigned int voice, const bool enable);
+    void           mute         (unsigned int sidNum, unsigned int voice, bool enable);
 
     const char    *error        (void) const { return m_errorString; }
     bool           getStatus    () const { return m_status; }
