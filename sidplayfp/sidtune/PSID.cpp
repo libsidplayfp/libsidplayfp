@@ -285,7 +285,7 @@ const char *PSID::createMD5(char *md5)
 
     // Include C64 data.
     sidmd5 myMD5;
-    md5_byte_t tmp[2];
+    uint8_t tmp[2];
     myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
     // Include INIT and PLAY address.
     endian_little16 (tmp,info->m_initAddr);
