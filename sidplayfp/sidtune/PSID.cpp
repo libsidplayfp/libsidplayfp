@@ -311,7 +311,10 @@ const char *PSID::createMD5(char *md5)
     // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
     // PSID v2NG format is the same.
     if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
-        myMD5.append (&info->m_clockSpeed,sizeof(info->m_clockSpeed));
+    {
+        const uint_least8_t ntsc_val = 2;
+        myMD5.append (&ntsc_val,sizeof(ntsc_val));
+    }
     // NB! If the fingerprint is used as an index into a
     // song-lengths database or cache, modify above code to
     // allow for PSID v2NG files which have clock speed set to
