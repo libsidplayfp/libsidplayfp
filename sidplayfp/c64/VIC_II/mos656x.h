@@ -28,9 +28,9 @@
 
 typedef enum
 {
-    MOS6567R56A, /* OLD NTSC CHIP */
-    MOS6567R8,   /* NTSC */
-    MOS6569      /* PAL */
+    MOS6567R56A = 0, /* OLD NTSC CHIP */
+    MOS6567R8,       /* NTSC */
+    MOS6569          /* PAL */
 } mos656x_model_t;
 
 

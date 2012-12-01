@@ -31,14 +31,18 @@
 
 #include "sidplayfp/sidendian.h"
 
-#define MOS6567R56A_SCREEN_HEIGHT  262
-#define MOS6567R56A_SCREEN_WIDTH   64
+typedef struct
+{
+    unsigned int cyclesPerLine;
+    unsigned int rasterLines;
+} model_data_t;
 
-#define MOS6567R8_SCREEN_HEIGHT    263
-#define MOS6567R8_SCREEN_WIDTH     65
-
-#define MOS6569_SCREEN_HEIGHT      312
-#define MOS6569_SCREEN_WIDTH       63
+const model_data_t modelData[] =
+{
+    {262, 64}, // Old NTSC
+    {263, 65}, // NTSC
+    {312, 63}, // PAL
+};
 
 const char *MOS656X::credit =
 {   // Optional information
@@ -79,26 +83,8 @@ void MOS656X::reset ()
 
 void MOS656X::chip (mos656x_model_t model)
 {
-    switch (model)
-    {
-    // Seems to be an older NTSC chip
-    case MOS6567R56A:
-        maxRasters    = MOS6567R56A_SCREEN_HEIGHT;
-        cyclesPerLine = MOS6567R56A_SCREEN_WIDTH;
-    break;
-
-    // NTSC Chip
-    case MOS6567R8:
-        maxRasters    = MOS6567R8_SCREEN_HEIGHT;
-        cyclesPerLine = MOS6567R8_SCREEN_WIDTH;
-    break;
-
-    // PAL Chip
-    case MOS6569:
-        maxRasters    = MOS6569_SCREEN_HEIGHT;
-        cyclesPerLine = MOS6569_SCREEN_WIDTH;
-    break;
-    }
+    maxRasters    = modelData[model].cyclesPerLine;
+    cyclesPerLine = modelData[model].rasterLines;
 
     reset ();
 }
