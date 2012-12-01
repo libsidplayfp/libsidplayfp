@@ -174,6 +174,10 @@ public:
     void    write (uint_least8_t addr, uint8_t data);
 
     const   char *credits (void) const { return credit; }
+
+    uint_least16_t getCyclesPerLine() const { return cyclesPerLine; }
+
+    uint_least16_t getRasterLines() const { return maxRasters; }
 };
 
 #endif // MOS656X_H

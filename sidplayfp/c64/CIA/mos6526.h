@@ -259,7 +259,7 @@ public:
     *
     * @param clock
     */
-    void setDayOfTimeRate(double clock);
+    void setDayOfTimeRate(unsigned int clock);
 };
 
 #endif // MOS6526_H

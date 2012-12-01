@@ -67,10 +67,6 @@ public:
     static const double CLOCK_FREQ_PAL;
 
 private:
-    static const double VIC_FREQ_PAL;
-    static const double VIC_FREQ_NTSC;
-
-private:
     /** System clock frequency */
     double m_cpuFreq;
 

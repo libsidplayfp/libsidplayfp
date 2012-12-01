@@ -25,9 +25,6 @@
 const double c64::CLOCK_FREQ_NTSC = 1022727.14;
 const double c64::CLOCK_FREQ_PAL  = 985248.4;
 
-const double c64::VIC_FREQ_PAL    = 50.0;
-const double c64::VIC_FREQ_NTSC   = 60.0;
-
 c64::c64()
 :c64env  (&m_scheduler),
  m_cpuFreq(CLOCK_FREQ_PAL),
@@ -76,16 +73,14 @@ void c64::setMainCpuSpeed(double cpuFreq)
     m_cpuFreq = cpuFreq;
     if (m_cpuFreq == CLOCK_FREQ_PAL)
     {
-        const double clockPAL = m_cpuFreq / VIC_FREQ_PAL;
-        cia1.setDayOfTimeRate (clockPAL);
-        cia2.setDayOfTimeRate (clockPAL);
         vic.chip   (MOS6569);
     }
     else
     {
-        const double clockNTSC = m_cpuFreq / VIC_FREQ_NTSC;
-        cia1.setDayOfTimeRate (clockNTSC);
-        cia2.setDayOfTimeRate (clockNTSC);
         vic.chip   (MOS6567R8);
     }
+
+    const unsigned int rate = vic.getCyclesPerLine() * vic.getRasterLines();
+    cia1.setDayOfTimeRate (rate);
+    cia2.setDayOfTimeRate (rate);
 }
