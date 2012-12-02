@@ -68,6 +68,7 @@ private:
 private:
     double    clockSpeed     (SidConfig::clock_t defaultClock, bool forced);
     bool      initialise     (void);
+    void      sidRelease();
     bool      sidCreate(sidbuilder *builder, SidConfig::model_t defaultModel,
                        bool forced, int channels,
                        double cpuFreq, int frequency,

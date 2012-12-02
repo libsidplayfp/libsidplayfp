@@ -64,6 +64,7 @@ bool Player::config (const SidConfig &cfg)
 
         // SID emulation setup (must be performed before the
         // environment setup call)
+        sidRelease();
         if (!sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
             cfg.playback == SidConfig::STEREO ? 2 : 1, cpuFreq, cfg.frequency,
             cfg.samplingMethod, cfg.fastSampling))
@@ -197,23 +198,26 @@ SidConfig::model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig::mo
     return newModel;
 }
 
+void Player::sidRelease()
+{
+    for (unsigned int i = 0; i < SidBank::MAX_SIDS; i++)
+    {
+        if (sidemu *s = m_c64.getSid(i))
+        {
+            if (sidbuilder *b = s->builder())
+            {
+                b->unlock (s);
+            }
+            m_c64.setSid(i, 0);
+        }
+    }
+}
+
 bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
                        bool forced, int channels,
                        double cpuFreq, int frequency,
                        SidConfig::sampling_method_t sampling, bool fastSampling)
 {
-    for (unsigned int i = 0; i < SidBank::MAX_SIDS; i++)
-    {
-        sidemu *s = m_c64.getSid(i);
-        if (s)
-        {
-            sidbuilder *b = s->builder ();
-            if (b)
-                b->unlock (s);
-            m_c64.setSid(i, 0);
-        }
-    }
-
     if (builder)
     {   // Detect the Correct SID model
         // Determine model when unknown
