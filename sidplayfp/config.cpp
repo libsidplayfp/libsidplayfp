@@ -59,15 +59,11 @@ bool Player::config (const SidConfig &cfg)
     {
         tuneInfo = m_tune->getInfo();
 
-        // Determine clock speed
-        const double cpuFreq = clockSpeed (cfg.clockDefault, cfg.clockForced);
-
         // SID emulation setup (must be performed before the
         // environment setup call)
         sidRelease();
         if (!sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
-            cfg.playback == SidConfig::STEREO ? 2 : 1, cpuFreq, cfg.frequency,
-            cfg.samplingMethod, cfg.fastSampling))
+            cfg.playback == SidConfig::STEREO ? 2 : 1))
         {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = 0;
@@ -75,6 +71,11 @@ bool Player::config (const SidConfig &cfg)
                 config (m_cfg);
             return false;
         }
+
+        // Determine clock speed
+        const double cpuFreq = clockSpeed (cfg.clockDefault, cfg.clockForced);
+
+        sidParams(cpuFreq, cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
 
         m_c64.setMainCpuSpeed(cpuFreq);
 
@@ -214,9 +215,7 @@ void Player::sidRelease()
 }
 
 bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
-                       bool forced, int channels,
-                       double cpuFreq, int frequency,
-                       SidConfig::sampling_method_t sampling, bool fastSampling)
+                        bool forced, unsigned int channels)
 {
     if (builder)
     {   // Detect the Correct SID model
@@ -230,18 +229,30 @@ bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
         // model as the first SID.
         userModels[1] = getModel(tuneInfo->sidModel2(), userModels[0], forced);
 
-        for (int i = 0; i < channels; i++)
-        {   // Get first SID emulation
+        for (unsigned int i = 0; i < channels; i++)
+        {
             sidemu *s = builder->lock (m_c64.getEventScheduler(), userModels[i]);
+            // Get at least one SID emulation
             if ((i == 0) && !builder->getStatus())
                 return false;
-            if (s)
-                s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
             m_c64.setSid(i, s);
         }
     }
 
     return true;
+}
+
+void Player::sidParams (double cpuFreq, int frequency,
+                        SidConfig::sampling_method_t sampling, bool fastSampling)
+{
+    for (unsigned int i = 0; i < SidBank::MAX_SIDS; i++)
+    {
+        if (sidemu *s = m_c64.getSid(i))
+        {
+            s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
+        }
+    }
+
 }
 
 SIDPLAYFP_NAMESPACE_STOP
