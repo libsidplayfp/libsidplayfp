@@ -26,16 +26,17 @@
 #include "sidplayfp/component.h"
 #include "sidplayfp/EventScheduler.h"
 
-typedef enum
-{
-    MOS6567R56A = 0, /* OLD NTSC CHIP */
-    MOS6567R8,       /* NTSC */
-    MOS6569          /* PAL */
-} mos656x_model_t;
-
 
 class MOS656X: public component, private Event
 {
+public:
+    typedef enum
+    {
+        MOS6567R56A = 0, /* OLD NTSC CHIP */
+        MOS6567R8,       /* NTSC */
+        MOS6569          /* PAL */
+    } model_t;
+
 private:
     static const char *credit;
 
@@ -149,7 +150,7 @@ protected:
     virtual void setBA     (bool state) = 0;
 
 public:
-    void    chip  (mos656x_model_t model);
+    void    chip  (model_t model);
     void    lightpen ();
 
     // Component Standard Calls

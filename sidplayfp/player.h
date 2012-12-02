@@ -66,7 +66,7 @@ private:
     sidrandom     m_rand;
 
 private:
-    double    clockSpeed     (SidConfig::clock_t defaultClock, bool forced);
+    c64::model_t c64model(SidConfig::clock_t defaultClock, bool forced);
     bool      initialise     (void);
     void      sidRelease();
     bool      sidCreate(sidbuilder *builder, SidConfig::model_t defaultModel,

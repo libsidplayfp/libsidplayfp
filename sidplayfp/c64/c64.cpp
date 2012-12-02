@@ -22,12 +22,28 @@
 
 #include "c64.h"
 
-const double c64::CLOCK_FREQ_NTSC = 1022727.14;
-const double c64::CLOCK_FREQ_PAL  = 985248.4;
+typedef struct
+{
+    unsigned int crystalFreq;
+    unsigned int divider;
+    MOS656X::model_t vicModel;
+} model_data_t;
+
+const model_data_t modelData[] =
+{
+    {17734472u, 18u, MOS656X::MOS6569},     // PAL-B
+    {14318181u, 14u, MOS656X::MOS6567R8},   // NTSC-M
+    {14318181u, 14u, MOS656X::MOS6567R56A}, // Old NTSC-M
+};
+
+double c64::getCpuFreq(model_t model)
+{
+    return (double)modelData[model].crystalFreq/(double)modelData[model].divider;
+}
 
 c64::c64()
 :c64env  (&m_scheduler),
- m_cpuFreq(CLOCK_FREQ_PAL),
+ m_cpuFreq(getCpuFreq(PAL_B)),
  cpu     (this),
  cia1    (this),
  cia2    (this),
@@ -68,17 +84,10 @@ void c64::reset()
     oldBAState = true;
 }
 
-void c64::setMainCpuSpeed(double cpuFreq)
+void c64::setModel(model_t model)
 {
-    m_cpuFreq = cpuFreq;
-    if (m_cpuFreq == CLOCK_FREQ_PAL)
-    {
-        vic.chip   (MOS6569);
-    }
-    else
-    {
-        vic.chip   (MOS6567R8);
-    }
+    m_cpuFreq = getCpuFreq(model);
+    vic.chip(modelData[model].vicModel);
 
     const unsigned int rate = vic.getCyclesPerLine() * vic.getRasterLines();
     cia1.setDayOfTimeRate (rate);

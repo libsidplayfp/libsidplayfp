@@ -73,11 +73,11 @@ bool Player::config (const SidConfig &cfg)
         }
 
         // Determine clock speed
-        const double cpuFreq = clockSpeed (cfg.clockDefault, cfg.clockForced);
+        const c64::model_t model = c64model(cfg.clockDefault, cfg.clockForced);
 
-        sidParams(cpuFreq, cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
+        m_c64.setModel(model);
 
-        m_c64.setMainCpuSpeed(cpuFreq);
+        sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
 
         // Configure, setup and install C64 environment/events
         if (!initialise())
@@ -119,7 +119,7 @@ bool Player::config (const SidConfig &cfg)
 }
 
 // Clock speed changes due to loading a new song
-double Player::clockSpeed (SidConfig::clock_t defaultClock, bool forced)
+c64::model_t Player::c64model (SidConfig::clock_t defaultClock, bool forced)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -139,12 +139,12 @@ double Player::clockSpeed (SidConfig::clock_t defaultClock, bool forced)
         }
     }
 
-    double cpuFreq;
+    c64::model_t model;
 
     switch (clockSpeed)
     {
     case SidTuneInfo::CLOCK_PAL:
-        cpuFreq = c64::CLOCK_FREQ_PAL;
+        model = c64::PAL_B;
         if (tuneInfo->songSpeed() == SidTuneInfo::SPEED_CIA_1A)
             m_info.m_speedString = TXT_PAL_CIA;
         else if (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC)
@@ -153,7 +153,7 @@ double Player::clockSpeed (SidConfig::clock_t defaultClock, bool forced)
             m_info.m_speedString = TXT_PAL_VBI;
         break;
     case SidTuneInfo::CLOCK_NTSC:
-        cpuFreq = c64::CLOCK_FREQ_NTSC;
+        model = c64::NTSC_M;
         if (tuneInfo->songSpeed() == SidTuneInfo::SPEED_CIA_1A)
             m_info.m_speedString = TXT_NTSC_CIA;
         else if (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL)
@@ -163,7 +163,7 @@ double Player::clockSpeed (SidConfig::clock_t defaultClock, bool forced)
         break;
     }
 
-    return cpuFreq;
+    return model;
 }
 
 SidConfig::model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig::model_t defaultModel, bool forced)

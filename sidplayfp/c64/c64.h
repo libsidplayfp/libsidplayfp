@@ -63,8 +63,12 @@ public:
 class c64: private c64env
 {
 public:
-    static const double CLOCK_FREQ_NTSC;
-    static const double CLOCK_FREQ_PAL;
+    typedef enum
+    {
+        PAL_B = 0,    ///< PAL C64
+        NTSC_M,       ///< NTSC C64
+        OLD_NTSC_M,   ///< Old NTSC C64
+    } model_t;
 
 private:
     /** System clock frequency */
@@ -105,6 +109,9 @@ private:
 
     /** MMU chip */
     MMU     mmu;
+
+private:
+    static double getCpuFreq(model_t model);
 
 private:
     /**
@@ -189,7 +196,7 @@ public:
     void reset();
     void resetCpu() { cpu.reset(); }
 
-    void setMainCpuSpeed(double cpuFreq);
+    void setModel(model_t model);
     double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**

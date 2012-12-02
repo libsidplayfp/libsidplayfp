@@ -81,7 +81,7 @@ void MOS656X::reset ()
     event_context.schedule (*this, 0, EVENT_CLOCK_PHI1);
 }
 
-void MOS656X::chip (mos656x_model_t model)
+void MOS656X::chip (model_t model)
 {
     maxRasters    = modelData[model].cyclesPerLine;
     cyclesPerLine = modelData[model].rasterLines;
