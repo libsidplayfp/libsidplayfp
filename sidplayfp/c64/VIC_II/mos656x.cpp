@@ -40,8 +40,9 @@ typedef struct
 const model_data_t modelData[] =
 {
     {262, 64}, // Old NTSC
-    {263, 65}, // NTSC
-    {312, 63}, // PAL
+    {263, 65}, // NTSC-M
+    {312, 63}, // PAL-B
+    {312, 65}, // PAL-N
 };
 
 const char *MOS656X::credit =

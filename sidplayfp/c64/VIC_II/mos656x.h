@@ -33,8 +33,9 @@ public:
     typedef enum
     {
         MOS6567R56A = 0, /* OLD NTSC CHIP */
-        MOS6567R8,       /* NTSC */
-        MOS6569          /* PAL */
+        MOS6567R8,       /* NTSC-M */
+        MOS6569,         /* PAL-B */
+        MOS6572,         /* PAL-N */
     } model_t;
 
 private:
