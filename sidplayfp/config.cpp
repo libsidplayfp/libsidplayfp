@@ -232,7 +232,7 @@ bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
             if ((i == 0) && !builder->getStatus())
                 return false;
             if (s)
-                s->sampling((long)cpuFreq, frequency, sampling, fastSampling);
+                s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
             m_c64.setSid(i, s);
         }
     }
