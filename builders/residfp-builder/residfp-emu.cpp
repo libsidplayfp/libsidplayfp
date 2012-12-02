@@ -141,7 +141,10 @@ void ReSIDfp::sampling (float systemclock, float freq,
     {
         m_status = false;
         m_error = "Unable to set desired output frequency.";
+        return;
     }
+
+    m_status = true;
 }
 
 // Set execution environment and lock sid to it

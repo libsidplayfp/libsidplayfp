@@ -126,7 +126,10 @@ void ReSID::sampling (float systemclock, float freq,
     if (! m_sid.set_sampling_parameters (systemclock, sampleMethod, freq)) {
         m_status = false;
         m_error = "Unable to set desired output frequency.";
+        return;
     }
+
+    m_status = true;
 }
 
 void ReSID::voice (unsigned int num, bool mute)
