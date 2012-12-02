@@ -60,11 +60,6 @@ AS_IF([test "x${ac_cv_header_stdint_h}" != "xyes"],
 dnl Checks for library functions.
 AC_CHECK_FUNCS([strncasecmp strcasecmp])
 
-dnl Check ANSI C++ ios features
-MY_CHECK_IOS_BIN
-MY_CHECK_IOS_OPENMODE
-
-
 dnl libtool-style version-info number
 #
 # http://blog.flameeyes.eu/2009/04/22/shared-object-version

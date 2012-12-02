@@ -43,12 +43,6 @@
 #  include "config.h"
 #endif
 
-#ifdef HAVE_IOS_OPENMODE
-    typedef std::ios::openmode openmode;
-#else
-    typedef int openmode;
-#endif
-
 // Error and status message strings.
 const char ERR_EMPTY[]               = "SIDTUNE ERROR: No data to load";
 const char ERR_UNRECOGNIZED_FORMAT[] = "SIDTUNE ERROR: Could not determine file format";
@@ -175,27 +169,15 @@ bool SidTuneBase::placeSidTuneInC64mem(sidmemory* mem)
 
 void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
 {
-    // This sucks big time
-    openmode createAttr = std::ios::in;
-#ifdef HAVE_IOS_NOCREATE
-    createAttr |= std::ios::nocreate;
-#endif
-    // Open binary input file stream at end of file.
-#if defined(HAVE_IOS_BIN)
-    createAttr |= std::ios::bin;
-#else
-    createAttr |= std::ios::binary;
-#endif
+    std::ifstream inFile(fileName, std::ios::in|std::ios::binary);
 
-    std::fstream myIn(fileName, createAttr);
-
-    if ( !myIn.is_open() )
+    if ( !inFile.is_open() )
     {
         throw loadError(ERR_CANT_OPEN_FILE);
     }
 
-    myIn.seekg(0, std::ios::end);
-    const uint_least32_t fileLen = (uint_least32_t)myIn.tellg();
+    inFile.seekg(0, std::ios::end);
+    const uint_least32_t fileLen = (uint_least32_t)inFile.tellg();
 
     if ( fileLen == 0 )
     {
@@ -213,16 +195,16 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
 
-    myIn.seekg(0, std::ios::beg);
+    inFile.seekg(0, std::ios::beg);
 
-    myIn.read((char*)fileBuf.get(), fileLen);
+    inFile.read((char*)fileBuf.get(), fileLen);
 
-    if ( myIn.bad() )
+    if ( inFile.bad() )
     {
         throw loadError(ERR_CANT_LOAD_FILE);
     }
 
-    myIn.close();
+    inFile.close();
 
     bufferRef.assign(fileBuf.xferPtr(), fileBuf.xferLen());
 }
