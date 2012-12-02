@@ -34,16 +34,16 @@ c64::c64()
  vic     (this),
  mmu     (&m_scheduler, &ioBank)
 {
-    ioBank.setBank(0, &vic);
-    ioBank.setBank(1, &vic);
-    ioBank.setBank(2, &vic);
-    ioBank.setBank(3, &vic);
-    ioBank.setBank(4, &sidBank);
-    ioBank.setBank(5, &sidBank);
-    ioBank.setBank(6, &sidBank);
-    ioBank.setBank(7, &sidBank);
-    ioBank.setBank(8, &colorRAMBank);
-    ioBank.setBank(9, &colorRAMBank);
+    ioBank.setBank(0x0, &vic);
+    ioBank.setBank(0x1, &vic);
+    ioBank.setBank(0x2, &vic);
+    ioBank.setBank(0x3, &vic);
+    ioBank.setBank(0x4, &sidBank);
+    ioBank.setBank(0x5, &sidBank);
+    ioBank.setBank(0x6, &sidBank);
+    ioBank.setBank(0x7, &sidBank);
+    ioBank.setBank(0x8, &colorRAMBank);
+    ioBank.setBank(0x9, &colorRAMBank);
     ioBank.setBank(0xa, &colorRAMBank);
     ioBank.setBank(0xb, &colorRAMBank);
     ioBank.setBank(0xc, &cia1);
