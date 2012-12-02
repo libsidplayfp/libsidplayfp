@@ -164,13 +164,26 @@ void ReSID::unlock ()
 // Set the emulated SID model
 void ReSID::model (SidConfig::model_t model)
 {
-    if (model == SidConfig::MOS8580)
-        m_sid.set_chip_model (RESID_NS::MOS8580);
-    else
-        m_sid.set_chip_model (RESID_NS::MOS6581);
-/* MOS8580 + digi boost
-        m_sid.set_chip_model (RESID_NS::MOS8580);
-        m_sid.set_voice_mask(0x0f);
-        m_sid.input(-32768);
-*/
+    RESID_NS::chip_model chipModel;
+    switch (model)
+    {
+        case SidConfig::MOS6581:
+            chipModel = RESID_NS::MOS6581;
+            break;
+        case SidConfig::MOS8580:
+            chipModel = RESID_NS::MOS8580;
+            break;
+        /* MOS8580 + digi boost
+        *      m_sid.set_chip_model (RESID_NS::MOS8580);
+        *      m_sid.set_voice_mask(0x0f);
+        *      m_sid.input(-32768);
+        */
+        default:
+            m_status = false;
+            m_error = "Invalid chip model.";
+            return;
+    }
+    
+    m_sid.set_chip_model (chipModel);
+    m_status = true;
 }

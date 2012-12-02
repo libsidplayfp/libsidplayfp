@@ -169,8 +169,21 @@ void ReSIDfp::unlock ()
 // Set the emulated SID model
 void ReSIDfp::model (SidConfig::model_t model)
 {
-    if (model == SidConfig::MOS8580)
-        m_sid.setChipModel (reSIDfp::MOS8580);
-    else
-        m_sid.setChipModel (reSIDfp::MOS6581);
+    reSIDfp::ChipModel chipModel;
+    switch (model)
+    {
+        case SidConfig::MOS6581:
+            chipModel = reSIDfp::MOS6581;
+            break;
+        case SidConfig::MOS8580:
+            chipModel = reSIDfp::MOS8580;
+            break;
+        default:
+            m_status = false;
+            m_error = "Invalid chip model.";
+            return;
+    }
+
+    m_sid.setChipModel (chipModel);
+    m_status = true;
 }
