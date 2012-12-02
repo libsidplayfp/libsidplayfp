@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <sstream>
+#include <algorithm>
 
 #include "residfp/Filter6581.h"
 #include "residfp/Filter8580.h"
@@ -132,8 +133,9 @@ void ReSIDfp::sampling (float systemclock, float freq,
 
     try
     {
-      const int halfFreq = 5000*((int)freq/10000);
-      m_sid.setSamplingParameters (systemclock, sampleMethod, freq, halfFreq>20000?20000:halfFreq);
+        // Round half frequency to the nearest multiple of 5000
+        const int halfFreq = 5000*(((int)freq+5000)/10000);
+        m_sid.setSamplingParameters (systemclock, sampleMethod, freq, std::min(halfFreq, 20000));
     }
     catch (RESID_NAMESPACE::SIDError& e)
     {
