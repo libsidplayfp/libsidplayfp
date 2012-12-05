@@ -35,16 +35,13 @@ SIDPLAYFP_NAMESPACE_START
 
 const char  TXT_NA[]             = "NA";
 
-// Error Strings
-const char  ERR_MISSING_ROM[]    = "SIDPLAYER ERROR: Roms have not been loaded.";
-
 
 Player::Player (void)
 // Set default settings for system
 :m_mixer (m_c64.getEventScheduler()),
  m_tune (0),
- m_errorString(ERR_MISSING_ROM),
- m_status(false),
+ m_errorString(TXT_NA),
+ m_status(true),
  m_isPlaying(false),
  m_rand((int)::time(0))
 {
@@ -80,8 +77,6 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
     }
 
     m_c64.setRoms(kernal, basic, character);
-    m_errorString = TXT_NA;
-    m_status = true;
 }
 
 bool Player::fastForward (unsigned int percent)
