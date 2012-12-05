@@ -198,6 +198,12 @@ public:
     void resetCpu() { cpu.reset(); }
 
     void setModel(model_t model);
+
+    void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
+    {
+        mmu.setRoms(kernal, basic, character);
+    }
+
     double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**
@@ -235,7 +241,7 @@ public:
     const char* vicCredits () const { return vic.credits(); }
     //@}
 
-    MMU *getMmu() { return &mmu; } //FIXME
+    sidmemory *getMemInterface() { return &mmu; }
 
     uint_least16_t getCia1TimerA() const { return cia1.getTimerA(); }
 };

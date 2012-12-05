@@ -79,7 +79,7 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
         m_info.m_chargenDesc = c.info();
     }
 
-    m_c64.getMmu()->setRoms(kernal, basic, character);
+    m_c64.setRoms(kernal, basic, character);
     m_errorString = TXT_NA;
     m_status = true;
 }
@@ -123,7 +123,7 @@ bool Player::initialise ()
 
     psiddrv driver(m_tune->getInfo());
     driver.powerOnDelay(powerOnDelay);
-    if (!driver.drvReloc (m_c64.getMmu()))
+    if (!driver.drvReloc (m_c64.getMemInterface()))
     {
         m_errorString = driver.errorString();
         return false;
@@ -133,13 +133,13 @@ bool Player::initialise ()
     m_info.m_driverLength = driver.driverLength();
     m_info.m_powerOnDelay = powerOnDelay;
 
-    if (!m_tune->placeSidTuneInC64mem (m_c64.getMmu()))
+    if (!m_tune->placeSidTuneInC64mem (m_c64.getMemInterface()))
     {
         m_errorString = m_tune->statusString();
         return false;
     }
 
-    driver.install (m_c64.getMmu());
+    driver.install (m_c64.getMemInterface());
 
     m_c64.resetCpu();
 
