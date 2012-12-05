@@ -66,7 +66,7 @@ const char* SidDatabase::parseTime(const char* str, long &result) {
 }
 
 
-int SidDatabase::open (const char *filename)
+bool SidDatabase::open (const char *filename)
 {
     close ();
     m_parser = new iniParser();
@@ -74,10 +74,10 @@ int SidDatabase::open (const char *filename)
     if (!m_parser->open (filename))
     {
         errorString = ERR_UNABLE_TO_LOAD_DATABASE;
-        return -1;
+        return false;
     }
 
-    return 0;
+    return true;
 }
 
 void SidDatabase::close ()

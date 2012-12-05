@@ -52,9 +52,9 @@ public:
     * Open the songlength DataBase.
     *
     * @param filename songlengthDB file name with full path.
-    * @return -1 in case of errors, 0 otherwise.
+    * @return false in case of errors, true otherwise.
     */
-    int           open   (const char *filename);
+    bool           open   (const char *filename);
 
     /**
     * Close the songlength DataBase.
