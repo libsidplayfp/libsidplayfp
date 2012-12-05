@@ -22,12 +22,14 @@
 #ifndef ZERORAMBANK_H
 #define ZERORAMBANK_H
 
-#include <string.h>
-#include <stdint.h>
-
 #include "Bank.h"
 #include "sidplayfp/event.h"
 
+#include <stdint.h>
+
+/** @internal
+* Interface to PLA functions.
+*/
 class PLA
 {
 public:
@@ -45,6 +47,8 @@ public:
 *
 * However, that would slow down all accesses, which is suboptimal. Therefore
 * we install this little hook to the 4k 0 region to deal with this.
+*
+* Implementation based on VICE code.
 *
 * @author Antti Lankila
 */
@@ -69,18 +73,18 @@ private:
     //@}
 
     /**
-     * indicates if the unused bits of the data port are still
-     * valid or should be read as 0, 1 = unused bits valid,
-     * 0 = unused bits should be 0
+     * indicates if the unused bits of the data port are in the process of falling off
      */
     //@{
-    bool dataSetBit6;
-    bool dataSetBit7;
-    //@}
-
-    /** indicates if the unused bits are in the process of falling off. */
     bool dataFalloffBit6;
     bool dataFalloffBit7;
+    //@}
+
+    /** Value of the unused bit of the processor port.  */
+    //@{
+    uint8_t dataSetBit6;
+    uint8_t dataSetBit7;
+    //@}
 
     /** Value written to processor port.  */
     //@{
@@ -92,42 +96,49 @@ private:
     uint8_t dataRead;
 
     /** State of processor port pins.  */
-    uint8_t dataOut;
+    uint8_t procPortPins;
 
     /** Tape motor status.  */
-    uint8_t oldPortDataOut;
+    uint8_t tapeMotor;
 
     /** Tape write line status.  */
-    uint8_t oldPortWriteBit;
+    uint8_t tapeDataOutput;
 
 private:
     void updateCpuPort()
     {
-        dataOut = (dataOut & ~dir) | (data & dir);
-        dataRead = (data | ~dir) & (dataOut | 0x17);
-        pla->setCpuPort(dataRead);
+        // Update data pins for which direction is OUTPUT
+        procPortPins = (procPortPins & ~dir) | (data & dir);
+
+        dataRead = (data | ~dir) & (procPortPins | 0x17);
+
+        pla->setCpuPort((data | ~dir) & 0x07);
 
         if ((dir & 0x20) == 0)
         {
-            dataRead &= 0xdf;
+            dataRead &= ~0x20;
         }
-        if ((dir & 0x10) == 0 && tape_sense)
+        if (tape_sense && (dir & 0x10) == 0)
         {
-            dataRead &= 0xef;
-        }
-
-        if ((dir & data & 0x20) != oldPortDataOut)
-        {
-            oldPortDataOut = dir & data & 0x20;
-            //C64.this.setMotor(0 == oldPortDataOut);
+            dataRead &= ~0x10;
         }
 
-        if (((~dir | data) & 0x8) != oldPortWriteBit)
+        if (((dir & data) & 0x20) != tapeMotor)
         {
-            oldPortWriteBit = (~dir | data) & 0x8;
-            //C64.this.toggleWriteBit(((~dir | data) & 0x8) != 0);
+            tapeMotor = dir & data & 0x20;
+            //C64.setMotor(tapeMotor == 0);
+        }
+
+        if (((~dir | data) & 0x08) != tapeDataOutput)
+        {
+            tapeDataOutput = (~dir | data) & 0x08;
+            //C64.toggleWriteBit(tapeDataOutput != 0);
         }
     }
+
+private:    // prevent copying
+    ZeroRAMBank(const ZeroRAMBank&);
+    ZeroRAMBank& operator=(const ZeroRAMBank&);
 
 public:
     ZeroRAMBank(PLA* pla, Bank* ramBank) :
@@ -136,90 +147,134 @@ public:
 
     void reset()
     {
-        oldPortDataOut = 0xff;
-        oldPortWriteBit = 0xff;
-        data = 0x3f;
-        dataOut = 0x3f;
-        dataRead = 0x3f;
-        dir = 0;
-        dataSetBit6 = false;
-        dataSetBit7 = false;
         dataFalloffBit6 = false;
         dataFalloffBit7 = false;
+        dir = 0;
+        data = 0x3f;
+        dataRead = 0x3f;
+        procPortPins = 0x3f;
+        tapeMotor = 0xff;
+        tapeDataOutput = 0xff;
         updateCpuPort();
     }
 
+    /* $00/$01 unused bits emulation, as investigated by groepaz:
+    
+       it actually seems to work like this... somewhat unexpected indeed
+    
+       a) unused bits of $00 (DDR) are actually implemented and working. any value
+          written to them can be read back and also affects $01 (DATA) the same as
+          with the used bits.
+       b) unused bits of $01 are also implemented and working. when a bit is
+          programmed as output, any value written to it can be read back. when a bit
+          is programmed as input it will read back as 0, if 1 is written to it then
+          it will read back as 1 for some time and drop back to 0 (the already
+          emulated case of when bitfading occurs)
+    
+       educated guess on why this happens: on the CPU actually the full 8 bit of
+       the i/o port are implemented. what is missing for bit 6 and bit 7 are the
+       actual input/output driver stages only - which (imho) completely explains
+       the above described behavior :)
+    */
+
     uint8_t read(uint_least16_t address)
     {
-        if (address == 0)
+        switch (address)
         {
+        case 0:
             return dir;
-        }
-        else if (address == 1)
-        {
+        case 1:
             if (dataFalloffBit6 || dataFalloffBit7)
             {
                 const event_clock_t phi2time = pla->getPhi2Time();
 
-                if (dataSetClkBit6 < phi2time)
+                if (dataFalloffBit6 && dataSetClkBit6 < phi2time)
                 {
                     dataFalloffBit6 = false;
-                    dataSetBit6 = false;
+                    dataSetBit6 = 0;
                 }
 
-                if (dataSetClkBit7 < phi2time)
+                if (dataFalloffBit7 && dataSetClkBit7 < phi2time)
                 {
                     dataFalloffBit7 = false;
-                    dataSetBit7 = false;
+                    dataSetBit7 = 0;
                 }
             }
-            return dataRead & (0xff - (((!dataSetBit6?1:0)<<6) + ((!dataSetBit7?1:0)<<7)));
-        }
-        else
-        {
+
+            return (dataRead & 0x3f) | dataSetBit6 | dataSetBit7;
+        default:
             return ramBank->read(address);
         }
     }
 
     void write(uint_least16_t address, uint8_t value)
     {
-        if (address == 0)
+        switch (address)
         {
-            if (dataSetBit7 && (value & 0x80) == 0 && !dataFalloffBit7)
+        case 0:
+            // check if bit 6 has flipped
+            if ((dir ^ value) & 0x40)
             {
-                dataFalloffBit7 = true;
-                dataSetClkBit7 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                if (value & 0x40)
+                {
+                    /* output, update according to last write, cancel falloff */
+                    dataSetBit6 = data & 0x40;
+                    dataFalloffBit6 = false;
+                }
+                else
+                {
+                    /* input, start falloff if bit was set */
+                    dataFalloffBit6 = dataSetBit6 != 0;
+                    dataSetClkBit6 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                }
             }
-            if (dataSetBit6 && (value & 0x40) == 0 && !dataFalloffBit6)
+
+            // check if bit 7 has flipped
+            if ((dir ^ value) & 0x80)
             {
-                dataFalloffBit6 = true;
-                dataSetClkBit6 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                if (value & 0x80)
+                {
+                    /* output, update according to last write, cancel falloff */
+                    dataSetBit7 = data & 0x80;
+                    dataFalloffBit7 = false;
+                }
+                else
+                {
+                    /* input, start falloff if bit was set */
+                    dataFalloffBit7 = dataSetBit7 != 0;
+                    dataSetClkBit7 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                }
             }
-            if (dataSetBit7 && (value & 0x80) != 0 && dataFalloffBit7)
+
+            if (dir != value)
             {
-                dataFalloffBit7 = false;
+                dir = value;
+                updateCpuPort();
             }
-            if (dataSetBit6 && (value & 0x40) != 0 && dataFalloffBit6)
-            {
-                dataFalloffBit6 = false;
-            }
-            dir = value;
-            updateCpuPort();
             value = pla->getLastReadByte();
-        }
-        else if (address == 1)
-        {
-            if ((dir & 0x80) != 0 && (value & 0x80) != 0)
+            break;
+        case 1:
+             /* update value if output, otherwise don't touch */
+            if (dir & 0x40)
             {
-                dataSetBit7 = true;
+                dataSetBit6 = value & 0x40;
             }
-            if ((dir & 0x40) != 0 && (value & 0x40) != 0)
+
+             /* update value if output, otherwise don't touch */
+            if (dir & 0x80)
             {
-                dataSetBit6 = true;
+                dataSetBit7 = value & 0x80;
             }
-            data = value;
-            updateCpuPort();
+
+            if (data != value)
+            {
+                data = value;
+                updateCpuPort();
+            }
             value = pla->getLastReadByte();
+            break;
+        default:
+            break;
         }
 
         ramBank->write(address, value);
