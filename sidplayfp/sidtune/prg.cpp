@@ -35,7 +35,7 @@ const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 
 SidTuneBase* prg::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
-    const char *ext = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));
+    const char *ext = SidTuneTools::fileExtOfPath(fileName);
     if ( (MYSTRICMP(ext,".prg")!=0) &&
          (MYSTRICMP(ext,".c64")!=0) )
     {

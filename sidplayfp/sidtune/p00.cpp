@@ -76,7 +76,7 @@ const char P00_ID[]         = "C64File";
 
 SidTuneBase* p00::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& dataBuf)
 {
-    const char      *ext     = SidTuneTools::fileExtOfPath(const_cast<char *>(fileName));
+    const char      *ext     = SidTuneTools::fileExtOfPath(fileName);
     const char      *format  = 0;
     const X00Header *pHeader = reinterpret_cast<const X00Header*>(dataBuf.get());
     const uint_least32_t bufLen  = dataBuf.len ();

@@ -57,7 +57,7 @@ class SidTuneTools
     * Return pointer to file name extension in path.
     * Searching backwards until first dot is found.
     */
-    static char* fileExtOfPath(char* s);
+    static const char* fileExtOfPath(const char* s);
 };
 
 #endif  /* SIDTUNETOOLS_H */

@@ -66,7 +66,7 @@ size_t SidTuneTools::slashedFileNameWithoutPath(const char* s)
 
 // Return pointer to file name extension in path.
 // The backwards-version.
-char* SidTuneTools::fileExtOfPath(char* s)
+const char* SidTuneTools::fileExtOfPath(const char* s)
 {
     size_t last_dot_pos = strlen(s);  // assume no dot and append
     for ( size_t pos = last_dot_pos; pos > 0; pos-- )
