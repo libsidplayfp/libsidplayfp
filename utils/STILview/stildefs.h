@@ -26,10 +26,6 @@
 #ifndef STILDEFS_H
 #define STILDEFS_H
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 /* DLL building support on win32 hosts */
 #ifndef STIL_EXTERN
 #   ifdef DLL_EXPORT      /* defined by libtool (if required) */
@@ -84,32 +80,6 @@
 #  define SLASH '/'
 #else // WinDoze
 #  define SLASH '\\'
-#endif
-
-// Define which one of the following two is supported on your system.
-//#define HAVE_STRCASECMP 1
-// #define HAVE_STRICMP 1
-
-// Define which one of the following two is supported on your system.
-//#define HAVE_STRNCASECMP 1
-// #define HAVE_STRNICMP 1
-
-// Now let's do the actual definitions.
-
-#ifdef HAVE_STRCASECMP
-#  define MYSTRICMP strcasecmp
-#elif HAVE_STRICMP
-#  define MYSTRICMP stricmp
-#else
-#  error Neither strcasecmp nor stricmp is available.
-#endif
-
-#ifdef HAVE_STRNCASECMP
-#  define MYSTRNICMP strncasecmp
-#elif HAVE_STRNICMP
-#  define MYSTRNICMP strnicmp
-#else
-#  error Neither strncasecmp nor strnicmp is available.
 #endif
 
 // Maximum size of a single line in STIL - also accounts for some extra
