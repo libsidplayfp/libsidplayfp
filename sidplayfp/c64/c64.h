@@ -65,10 +65,10 @@ class c64: private c64env
 public:
     typedef enum
     {
-        PAL_B = 0,    ///< PAL C64
-        NTSC_M,       ///< NTSC C64
-        OLD_NTSC_M,   ///< Old NTSC C64
-        PAL_N,        ///< C64 Drean
+        PAL_B = 0     ///< PAL C64
+        ,NTSC_M       ///< NTSC C64
+        ,OLD_NTSC_M   ///< Old NTSC C64
+        ,PAL_N        ///< C64 Drean
     } model_t;
 
 private:
