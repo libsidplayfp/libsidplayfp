@@ -73,67 +73,67 @@ SID::~SID() {
 void SID::writeImmediate(int offset, unsigned char value) {
 	switch (offset) {
 	case 0x00:
-		voice[0]->wave->writeFREQ_LO(value);
+		voice[0]->wave()->writeFREQ_LO(value);
 		break;
 	case 0x01:
-		voice[0]->wave->writeFREQ_HI(value);
+		voice[0]->wave()->writeFREQ_HI(value);
 		break;
 	case 0x02:
-		voice[0]->wave->writePW_LO(value);
+		voice[0]->wave()->writePW_LO(value);
 		break;
 	case 0x03:
-		voice[0]->wave->writePW_HI(value);
+		voice[0]->wave()->writePW_HI(value);
 		break;
 	case 0x04:
 		voice[0]->writeCONTROL_REG(muted[0] ? 0 : value);
 		break;
 	case 0x05:
-		voice[0]->envelope->writeATTACK_DECAY(value);
+		voice[0]->envelope()->writeATTACK_DECAY(value);
 		break;
 	case 0x06:
-		voice[0]->envelope->writeSUSTAIN_RELEASE(value);
+		voice[0]->envelope()->writeSUSTAIN_RELEASE(value);
 		break;
 	case 0x07:
-		voice[1]->wave->writeFREQ_LO(value);
+		voice[1]->wave()->writeFREQ_LO(value);
 		break;
 	case 0x08:
-		voice[1]->wave->writeFREQ_HI(value);
+		voice[1]->wave()->writeFREQ_HI(value);
 		break;
 	case 0x09:
-		voice[1]->wave->writePW_LO(value);
+		voice[1]->wave()->writePW_LO(value);
 		break;
 	case 0x0a:
-		voice[1]->wave->writePW_HI(value);
+		voice[1]->wave()->writePW_HI(value);
 		break;
 	case 0x0b:
 		voice[1]->writeCONTROL_REG(muted[1] ? 0 : value);
 		break;
 	case 0x0c:
-		voice[1]->envelope->writeATTACK_DECAY(value);
+		voice[1]->envelope()->writeATTACK_DECAY(value);
 		break;
 	case 0x0d:
-		voice[1]->envelope->writeSUSTAIN_RELEASE(value);
+		voice[1]->envelope()->writeSUSTAIN_RELEASE(value);
 		break;
 	case 0x0e:
-		voice[2]->wave->writeFREQ_LO(value);
+		voice[2]->wave()->writeFREQ_LO(value);
 		break;
 	case 0x0f:
-		voice[2]->wave->writeFREQ_HI(value);
+		voice[2]->wave()->writeFREQ_HI(value);
 		break;
 	case 0x10:
-		voice[2]->wave->writePW_LO(value);
+		voice[2]->wave()->writePW_LO(value);
 		break;
 	case 0x11:
-		voice[2]->wave->writePW_HI(value);
+		voice[2]->wave()->writePW_HI(value);
 		break;
 	case 0x12:
 		voice[2]->writeCONTROL_REG(muted[2] ? 0 : value);
 		break;
 	case 0x13:
-		voice[2]->envelope->writeATTACK_DECAY(value);
+		voice[2]->envelope()->writeATTACK_DECAY(value);
 		break;
 	case 0x14:
-		voice[2]->envelope->writeSUSTAIN_RELEASE(value);
+		voice[2]->envelope()->writeSUSTAIN_RELEASE(value);
 		break;
 	case 0x15:
 		filter6581->writeFC_LO(value);
@@ -173,17 +173,17 @@ void SID::voiceSync(bool sync) {
 	if (sync) {
 		/* Synchronize the 3 waveform generators. */
 		for (int i = 0; i < 3 ; i ++) {
-			voice[i]->wave->synchronize(voice[(i+1) % 3]->wave, voice[(i+2) % 3]->wave);
+			voice[i]->wave()->synchronize(voice[(i+1) % 3]->wave(), voice[(i+2) % 3]->wave());
 		}
 	}
 
 	/* Calculate the time to next voice sync */
 	nextVoiceSync = std::numeric_limits<int>::max();
 	for (int i = 0; i < 3; i ++) {
-		const int accumulator = voice[i]->wave->readAccumulator();
-		const int freq = voice[i]->wave->readFreq();
+		const int accumulator = voice[i]->wave()->readAccumulator();
+		const int freq = voice[i]->wave()->readFreq();
 
-		if (voice[i]->wave->readTest() || freq == 0 || !voice[(i+1) % 3]->wave->readSync()) {
+		if (voice[i]->wave()->readTest() || freq == 0 || !voice[(i+1) % 3]->wave()->readSync()) {
 			continue;
 		}
 
@@ -210,9 +210,9 @@ void SID::setChipModel(ChipModel model) {
 
 	/* update voice offsets */
 	for (int i = 0; i < 3; i++) {
-		voice[i]->envelope->setChipModel(model);
-		voice[i]->wave->setChipModel(model);
-		voice[i]->wave->setWaveformModels(tables);
+		voice[i]->envelope()->setChipModel(model);
+		voice[i]->wave()->setChipModel(model);
+		voice[i]->wave()->setWaveformModels(tables);
 	}
 }
 
@@ -253,10 +253,10 @@ unsigned char SID::read(int offset) {
 		busValueTtl = BUS_TTL;
 		break;
 	case 0x1b:
-		value = voice[2]->wave->readOSC();
+		value = voice[2]->wave()->readOSC();
 		break;
 	case 0x1c:
-		value = voice[2]->envelope->readENV();
+		value = voice[2]->envelope()->readENV();
 		busValueTtl = BUS_TTL;
 		break;
 	default:
@@ -312,12 +312,12 @@ void SID::clockSilent(int cycles) {
 
 			for (int i = 0; i < delta_t; i ++) {
 				/* clock waveform generators (can affect OSC3) */
-				voice[0]->wave->clock();
-				voice[1]->wave->clock();
-				voice[2]->wave->clock();
+				voice[0]->wave()->clock();
+				voice[1]->wave()->clock();
+				voice[2]->wave()->clock();
 
 				/* clock ENV3 only */
-				voice[2]->envelope->clock();
+				voice[2]->envelope()->clock();
 			}
 
 			if (delayedOffset != -1) {

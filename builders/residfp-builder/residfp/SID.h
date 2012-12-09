@@ -292,9 +292,9 @@ RESID_INLINE
 int SID::output() const {
 	return externalFilter->clock(
 		filter->clock(
-			voice[0]->output(voice[2]->wave),
-			voice[1]->output(voice[0]->wave),
-			voice[2]->output(voice[1]->wave)
+			voice[0]->output(voice[2]->wave()),
+			voice[1]->output(voice[0]->wave()),
+			voice[2]->output(voice[1]->wave())
 		)
 	);
 }
@@ -317,14 +317,14 @@ int SID::clock(int cycles, short* buf) {
 				}
 
 				/* clock waveform generators */
-				voice[0]->wave->clock();
-				voice[1]->wave->clock();
-				voice[2]->wave->clock();
+				voice[0]->wave()->clock();
+				voice[1]->wave()->clock();
+				voice[2]->wave()->clock();
 
 				/* clock envelope generators */
-				voice[0]->envelope->clock();
-				voice[1]->envelope->clock();
-				voice[2]->envelope->clock();
+				voice[0]->envelope()->clock();
+				voice[1]->envelope()->clock();
+				voice[2]->envelope()->clock();
 			}
 
 			if (delayedOffset != -1) {

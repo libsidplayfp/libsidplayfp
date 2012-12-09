@@ -40,10 +40,10 @@ namespace reSIDfp
  */
 class Voice {
 
-public:
-	WaveformGenerator* wave;
+private:
+	WaveformGenerator* waveformGenerator;
 
-	EnvelopeGenerator* envelope;
+	EnvelopeGenerator* envelopeGenerator;
 
 public:
 	/**
@@ -62,20 +62,24 @@ public:
 	 */
 	RESID_INLINE
 	int output(const WaveformGenerator* ringModulator) const {
-		return wave->output(ringModulator) * envelope->output();
+		return waveformGenerator->output(ringModulator) * envelopeGenerator->output();
 	}
 
 	/**
 	 * Constructor.
 	 */
 	Voice() :
-		wave(new WaveformGenerator()),
-		envelope(new EnvelopeGenerator()) {}
+		waveformGenerator(new WaveformGenerator()),
+		envelopeGenerator(new EnvelopeGenerator()) {}
 
 	~Voice() {
-		delete wave;
-		delete envelope;
+		delete waveformGenerator;
+		delete envelopeGenerator;
 	}
+
+	WaveformGenerator* wave() const { return waveformGenerator; }
+
+	EnvelopeGenerator* envelope() const { return envelopeGenerator; }
 
 	// ----------------------------------------------------------------------------
 	// Register functions.
@@ -87,16 +91,16 @@ public:
 	 * @param control Control register value.
 	 */
 	void writeCONTROL_REG(unsigned char control) {
-		wave->writeCONTROL_REG(control);
-		envelope->writeCONTROL_REG(control);
+		waveformGenerator->writeCONTROL_REG(control);
+		envelopeGenerator->writeCONTROL_REG(control);
 	}
 
 	/**
 	 * SID reset.
 	 */
 	void reset() {
-		wave->reset();
-		envelope->reset();
+		waveformGenerator->reset();
+		envelopeGenerator->reset();
 	}
 };
 
