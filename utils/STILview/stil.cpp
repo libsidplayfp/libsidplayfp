@@ -318,7 +318,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         return NULL;
     }
 
-    if (STILVersion < 2.59) {
+    if (STILVersion < 2.59f) {
 
         // Older version of STIL is detected.
 
@@ -330,7 +330,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 
     if ((MYSTRNICMP(entrybuf, relPathToEntry, strlen(relPathToEntry)) != 0) ||
         ((( (size_t) (strchr(entrybuf, '\n')-entrybuf)) != strlen(relPathToEntry))
-            && (STILVersion > 2.59))) {
+            && (STILVersion > 2.59f))) {
 
         // The relative pathnames don't match or they're not the same length:
         // we don't have it in the buffer, so pull it in.
@@ -419,7 +419,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
 
     // Older version of STIL is detected.
 
-    if (STILVersion < 2.59) {
+    if (STILVersion < 2.59f) {
         tuneNo = 0;
     }
 
@@ -429,7 +429,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
 
     if ((MYSTRNICMP(bugbuf, relPathToEntry, strlen(relPathToEntry)) != 0) ||
         ((( (size_t) (strchr(bugbuf, '\n')-bugbuf)) != strlen(relPathToEntry)) &&
-            (STILVersion > 2.59))) {
+            (STILVersion > 2.59f))) {
 
         // The relative pathnames don't match or they're not the same length:
         // we don't have it in the buffer, so pull it in.
@@ -534,7 +534,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
     if ((MYSTRNICMP(globalbuf, dir.data(), pathLen) != 0) ||
         ((( (size_t) (strchr(globalbuf, '\n')-globalbuf)) != pathLen) &&
-            (STILVersion > 2.59))) {
+            (STILVersion > 2.59f))) {
 
         // The relative pathnames don't match or they're not the same length:
         // we don't have it in the buffer, so pull it in.
@@ -661,7 +661,7 @@ STIL::getDirs(ifstream& inFile, dirList &dirs, bool isSTILFile)
 
         // Try to extract STIL's version number if it's not done, yet.
 
-        if (isSTILFile && (STILVersion == 0.0)) {
+        if (isSTILFile && (STILVersion == 0.0f)) {
             if (strncmp(line, "#  STIL v", 9) == 0) {
 
                 // Get the version number
@@ -789,7 +789,7 @@ STIL::positionToEntry(const char *entryStr, ifstream& inFile, dirList &dirs)
 
             int temp;
 
-            if (globComm || (STILVersion > 2.59)) {
+            if (globComm || (STILVersion > 2.59f)) {
                 temp = MYSTRICMP(line, entryStr);
             }
             else {
