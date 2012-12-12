@@ -45,6 +45,7 @@
 class testEnv
 {
 public:
+    virtual ~testEnv() {}
     virtual void load(const char *) =0;
 };
 #endif
