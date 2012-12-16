@@ -135,10 +135,18 @@ void c64::setSecondSIDAddress(int sidChipBase2)
 {
     resetIoBank();
 
-    if (sidChipBase2 == 0)
+    // Check for valid address in the IO area range ($dxxx)
+    if (sidChipBase2 == 0 || (sidChipBase2 & 0xf000 != 0xd000))
         return;
 
     const int idx = (sidChipBase2 >> 8) & 0xf;
+    /*
+    * Only allow second SID chip in SID area ($d400-$d7ff)
+    * or IO Area ($de00-$dfff)
+    */
+    if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
+        return;
+    
     extraSidBank.resetSIDMapper(ioBank.getBank(idx));
     ioBank.setBank(idx, &extraSidBank);
     extraSidBank.setSIDMapping(sidChipBase2);
