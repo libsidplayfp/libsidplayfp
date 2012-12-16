@@ -90,7 +90,7 @@ bool Player::config (const SidConfig &cfg)
     
     if (m_tune && tuneInfo->sidChipBase2())
     {
-        // Assumed to be in d4xx-d7xx range
+        // Assumed to be in d420-d7ff or de00-dfff range
         m_c64.setSecondSIDAddress(tuneInfo->sidChipBase2());
         m_info.m_channels = 2;
     }
