@@ -66,9 +66,9 @@ public:
     bool                clockForced;
 
     /**
-    * Force an environment with two SID chips installed
+    * Install a second SID chip at this address
     */
-    bool                forceDualSids;
+    uint_least16_t      secondSidAddress;
 
     /// Sampling frequency
     uint_least32_t      frequency;

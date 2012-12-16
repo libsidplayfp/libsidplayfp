@@ -51,6 +51,12 @@ c64::c64()
  vic     (this),
  mmu     (&m_scheduler, &ioBank)
 {
+    resetIoBank();
+}
+
+
+void c64::resetIoBank()
+{
     ioBank.setBank(0x0, &vic);
     ioBank.setBank(0x1, &vic);
     ioBank.setBank(0x2, &vic);
@@ -93,4 +99,48 @@ void c64::setModel(model_t model)
     const unsigned int rate = vic.getCyclesPerLine() * vic.getRasterLines();
     cia1.setDayOfTimeRate (rate);
     cia2.setDayOfTimeRate (rate);
+}
+
+void c64::setSid(unsigned int i, sidemu *s)
+{
+    switch (i)
+    {
+    case 0:
+        sidBank.setSID(s);
+        break;
+    case 1:
+        extraSidBank.setSID(s);
+        break;
+    default:
+        break;
+    }
+}
+
+sidemu *c64::getSid(unsigned int i) const
+{
+    switch (i)
+    {
+    case 0:
+        return sidBank.getSID();
+        break;
+    case 1:
+        return extraSidBank.getSID();
+        break;
+    default:
+        return 0;
+    }
+}
+
+void c64::setSecondSIDAddress(int sidChipBase2)
+{
+    resetIoBank();
+
+    if (sidChipBase2 == 0)
+        return;
+
+    const int idx = (sidChipBase2 >> 8) & 0xf;
+    extraSidBank.resetSIDMapper(ioBank.getBank(idx));
+    ioBank.setBank(idx, &extraSidBank);
+    extraSidBank.setSIDMapping(sidChipBase2);
+    
 }

@@ -27,7 +27,7 @@
 SidConfig::SidConfig() :
     clockDefault(CLOCK_PAL),
     clockForced(false),
-    forceDualSids(false),
+    secondSidAddress(0),
     frequency(DEFAULT_SAMPLING_FREQ),
     playback(MONO),
     sidDefault(MOS6581),

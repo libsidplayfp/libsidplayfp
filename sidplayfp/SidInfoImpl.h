@@ -29,7 +29,7 @@
 
 #include "sidplayfp/SidInfo.h"
 
-#include "c64/Banks/SidBank.h"
+#include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -76,7 +76,7 @@ public:
     SidInfoImpl() :
         m_name(PACKAGE_NAME),
         m_version(PACKAGE_VERSION),
-        m_maxsids(SidBank::MAX_SIDS),
+        m_maxsids(c64::MAX_SIDS),
         m_channels(1),
         m_driverAddr(0),
         m_driverLength(0),

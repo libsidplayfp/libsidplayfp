@@ -95,6 +95,7 @@ sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
 sidplayfp/c64/Banks/ColorRAMBank.h \
 sidplayfp/c64/Banks/DisconnectedBusBank.h \
+sidplayfp/c64/Banks/ExtraSidBank.h \
 sidplayfp/c64/Banks/IOBank.h \
 sidplayfp/c64/Banks/SidBank.h \
 sidplayfp/c64/Banks/SystemRAMBank.h \

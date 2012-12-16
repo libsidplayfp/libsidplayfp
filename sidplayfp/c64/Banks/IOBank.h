@@ -43,6 +43,11 @@ public:
         map[num] = bank;
     }
 
+    Bank *getBank(int num) const
+    {
+        return map[num];
+    }
+
     uint8_t read(uint_least16_t addr)
     {
         return map[addr >> 8 & 0xf]->read(addr);

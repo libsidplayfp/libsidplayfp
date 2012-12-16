@@ -24,6 +24,7 @@
 
 #include "SidConfig.h"
 #include "sidbuilder.h"
+#include "c64/c64.h"
 
 SIDPLAYFP_NAMESPACE_START
 
@@ -86,23 +87,23 @@ bool Player::config (const SidConfig &cfg)
         }
     }
 
-    m_c64.resetSIDMapper();
+    
     if (m_tune && tuneInfo->sidChipBase2())
     {
         // Assumed to be in d4xx-d7xx range
         m_c64.setSecondSIDAddress(tuneInfo->sidChipBase2());
         m_info.m_channels = 2;
     }
-    else if (cfg.forceDualSids)
+    else if (cfg.secondSidAddress)
     {
         /* Tune didn't tell us where; let's put the second SID
-         * in every slot apart from 0xd400 - 0xd420. */
-        for (int i = 0xd420; i < 0xd7ff; i += 0x20)
-            m_c64.setSecondSIDAddress(i);
+         * at user selected address. */
+        m_c64.setSecondSIDAddress(cfg.secondSidAddress);
         m_info.m_channels = 2;
     }
     else
     {
+        m_c64.setSecondSIDAddress(0);
         m_info.m_channels = 1;
         // without stereo SID mode, we don't emulate the second chip!
         m_c64.setSid(1, 0);
@@ -201,7 +202,7 @@ SidConfig::model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig::mo
 
 void Player::sidRelease()
 {
-    for (unsigned int i = 0; i < SidBank::MAX_SIDS; i++)
+    for (unsigned int i = 0; i < c64::MAX_SIDS; i++)
     {
         if (sidemu *s = m_c64.getSid(i))
         {
@@ -220,7 +221,7 @@ bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
     if (builder)
     {   // Detect the Correct SID model
         // Determine model when unknown
-        SidConfig::model_t userModels[SidBank::MAX_SIDS];
+        SidConfig::model_t userModels[c64::MAX_SIDS];
 
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -245,7 +246,7 @@ bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
 void Player::sidParams (double cpuFreq, int frequency,
                         SidConfig::sampling_method_t sampling, bool fastSampling)
 {
-    for (unsigned int i = 0; i < SidBank::MAX_SIDS; i++)
+    for (unsigned int i = 0; i < c64::MAX_SIDS; i++)
     {
         if (sidemu *s = m_c64.getSid(i))
         {

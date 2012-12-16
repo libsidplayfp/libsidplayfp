@@ -27,95 +27,49 @@
 
 /** @internal
 * SID
-* located at $D400-$D7FF
+* located at $D400-$D7FF, mirrored each 32 bytes
 */
 class SidBank : public Bank
 {
-public:
-    /** Maximum number of supported SIDs (mono and stereo) */
-    static const unsigned int MAX_SIDS = 2;
-
 private:
-    /**
-    * Size of mapping table. Each 32 bytes another SID chip base address
-    * can be assigned to.
-    */
-    static const int MAPPER_SIZE = 32;
-
-private:
-    /** SID chips */
-    sidemu *sid[MAX_SIDS];
-
-    /**
-    * SID mapping table in d4xx-d7xx.
-    * Maps a SID chip base address to a SID
-    * chip number.
-    */
-    int sidmapper[32];
+    /** SID chip */
+    sidemu *sid;
 
 public:
     SidBank()
-    {
-        for (unsigned int i = 0; i < MAX_SIDS; i++)
-            sid[i] = 0;
-
-        resetSIDMapper();
-    }
+      : sid(0)
+    {}
 
     void reset()
     {
-        for (unsigned int i = 0; i < MAX_SIDS; i++)
-        {
-            if (sid[i])
-                sid[i]->reset(0xf);
-        }
-    }
-
-    void resetSIDMapper()
-    {
-        for (int i = 0; i < MAPPER_SIZE; i++)
-            sidmapper[i] = 0;
-    }
-
-    /**
-    * Put a SID at desired location.
-    *
-    * @param address the address
-    * @param chipNum the SID chip number [1-MAX_SIDS[
-    */
-    void setSIDMapping(int address, int chipNum)
-    {
-        sidmapper[address >> 5 & (MAPPER_SIZE - 1)] = chipNum;
+        if (sid)
+            sid->reset(0xf);
     }
 
     uint8_t read(uint_least16_t addr)
     {
-        const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
-        return sid[i] ? sid[i]->read(addr & 0x1f) : 0xff;
+        return sid ? sid->read(addr & 0x1f) : 0xff;
     }
 
     void write(uint_least16_t addr, uint8_t data)
     {
-        const int i = sidmapper[addr >> 5 & (MAPPER_SIZE - 1)];
-        if (sid[i])
-            sid[i]->write(addr & 0x1f, data);
+        if (sid)
+            sid->write(addr & 0x1f, data);
     }
 
     /**
     * Set SID emulation.
     *
-    * @param i the SID chip number
     * @param s the emulation
     */
-    void setSID(unsigned int i, sidemu *s) { sid[i] = s; }
+    void setSID(sidemu *s) { sid = s; }
 
     /**
     * Get SID emulation.
     *
-    * @param i the SID chip number
     * @ratuen the emulation
     */
-    sidemu *getSID(unsigned int i) const { return (i < MAX_SIDS)?sid[i]:0; }
+    sidemu *getSID() const { return sid; }
 };
 
 #endif

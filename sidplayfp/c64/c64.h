@@ -28,6 +28,7 @@
 #include "Banks/ColorRAMBank.h"
 #include "Banks/DisconnectedBusBank.h"
 #include "Banks/SidBank.h"
+#include "Banks/ExtraSidBank.h"
 
 #include "sidplayfp/c64/c64env.h"
 #include "sidplayfp/c64/c64cpu.h"
@@ -63,6 +64,10 @@ public:
 */
 class c64: private c64env
 {
+public:
+    /** Maximum number of supported SIDs (mono and stereo) */
+    static const unsigned int MAX_SIDS = 2;
+
 public:
     typedef enum
     {
@@ -102,6 +107,9 @@ private:
 
     /** SID */
     SidBank sidBank;
+
+    /** 2nd SID */
+    ExtraSidBank extraSidBank;
 
     /** I/O Area #1 and #2 */
     DisconnectedBusBank disconnectedBusBank;
@@ -172,6 +180,8 @@ private:
     }
 #endif
 
+    void resetIoBank();
+
 public:
     c64();
     ~c64() {}
@@ -213,7 +223,7 @@ public:
     * @param i sid number to set
     * @param sidemu the sid to set
     */
-    void setSid(unsigned int i, sidemu *s) { sidBank.setSID(i, s); }
+    void setSid(unsigned int i, sidemu *s);
 
     /**
     * Return the requested SID
@@ -221,9 +231,7 @@ public:
     * @param i sid number to get
     * @return the SID
     */
-    sidemu *getSid(unsigned int i) const { return sidBank.getSID(i); }
-
-    void resetSIDMapper() { sidBank.resetSIDMapper(); }
+    sidemu *getSid(unsigned int i) const;
 
     /**
     * Set the base address of a stereo SID chip
@@ -231,7 +239,7 @@ public:
     * @param secondSidChipBase
     *            base address (e.g. 0xd420)
     */
-    void setSecondSIDAddress(int sidChipBase2) { sidBank.setSIDMapping(sidChipBase2, 1); }
+    void setSecondSIDAddress(int sidChipBase2);
 
     /**
     * Get the components credits
