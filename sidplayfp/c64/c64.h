@@ -235,9 +235,12 @@ public:
 
     /**
     * Set the base address of a stereo SID chip
+    * Valid addresses includes the SID area ($d400-$d7ff)
+    * and the IO Area ($de00-$dfff)
     *
-    * @param secondSidChipBase
+    * @param sidChipBase2
     *            base address (e.g. 0xd420)
+    *            0 to remove second SID
     */
     void setSecondSIDAddress(int sidChipBase2);
 
