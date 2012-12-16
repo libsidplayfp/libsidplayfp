@@ -443,7 +443,7 @@ void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo
     //
     // This routine implements the PSIDv2NG compliant speed conversion.  All tunes
     // above 32 use the same song speed as tune 32
-    const unsigned int toDo = std::min(info->m_songs, MAX_SONGS);
+    const unsigned int toDo = std::min(info->m_songs, (unsigned int)MAX_SONGS);
     for (unsigned int s = 0; s < toDo; s++)
     {
         clockSpeed[s] = clock;
