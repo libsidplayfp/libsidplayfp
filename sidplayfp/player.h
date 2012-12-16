@@ -66,15 +66,15 @@ private:
     sidrandom     m_rand;
 
 private:
-    c64::model_t c64model(SidConfig::clock_t defaultClock, bool forced);
+    c64::model_t c64model(SidConfig::c64_model_t defaultModel, bool forced);
     bool      initialise     (void);
     void      sidRelease();
-    bool      sidCreate(sidbuilder *builder, SidConfig::model_t defaultModel,
+    bool      sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                         bool forced, unsigned int channels);
     void      sidParams(double cpuFreq, int frequency,
                             SidConfig::sampling_method_t sampling, bool fastSampling);
 
-    static SidConfig::model_t getModel (SidTuneInfo::model_t sidModel, SidConfig::model_t defaultModel, bool forced);
+    static SidConfig::sid_model_t getModel (SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced);
 
 #ifdef PC64_TESTSUITE
     void load (const char *file)

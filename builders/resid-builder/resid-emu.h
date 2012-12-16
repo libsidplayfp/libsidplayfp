@@ -88,7 +88,7 @@ public:
         SidConfig::sampling_method_t method, bool fast);
 
     void bias     (double dac_bias);
-    void model    (SidConfig::model_t model);
+    void model    (SidConfig::sid_model_t model);
 
     // Must lock the SID before using the standard functions.
     bool lock     (EventContext *env);

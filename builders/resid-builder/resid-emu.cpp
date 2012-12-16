@@ -162,7 +162,7 @@ void ReSID::unlock ()
 }
 
 // Set the emulated SID model
-void ReSID::model (SidConfig::model_t model)
+void ReSID::model (SidConfig::sid_model_t model)
 {
     RESID_NS::chip_model chipModel;
     switch (model)

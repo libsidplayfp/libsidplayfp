@@ -167,7 +167,7 @@ void ReSIDfp::unlock ()
 }
 
 // Set the emulated SID model
-void ReSIDfp::model (SidConfig::model_t model)
+void ReSIDfp::model (SidConfig::sid_model_t model)
 {
     reSIDfp::ChipModel chipModel;
     switch (model)

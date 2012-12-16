@@ -37,8 +37,8 @@ class SID_EXTERN SidConfig
 {
 public:  
     typedef enum {MONO = 1,  STEREO} playback_t;
-    typedef enum {MOS6581, MOS8580} model_t;
-    typedef enum {CLOCK_PAL, CLOCK_NTSC} clock_t;
+    typedef enum {MOS6581, MOS8580} sid_model_t;
+    typedef enum {PAL, NTSC, OLD_NTSC, DREAN} c64_model_t;
     typedef enum {INTERPOLATE, RESAMPLE_INTERPOLATE} sampling_method_t;
 
 public:
@@ -55,15 +55,17 @@ public:
 public:
     /**
     * Intended tune speed when unknown or forced
-    * - SID2_CLOCK_PAL
-    * - SID2_CLOCK_NTSC
+    * - PAL
+    * - NTSC
+    * - OLD_NTSC
+    * - DREAN
     */
-    clock_t             clockDefault;
+    c64_model_t defaultC64Model;
 
     /**
-    * Force the clock to clockDefault
+    * Force the model to defaultC64Model ignoring tune's clock setting
     */
-    bool                clockForced;
+    bool                forceC64Model;
 
     /**
     * Install a second SID chip at this address
@@ -75,22 +77,22 @@ public:
 
     /**
     * Playbak mode
-    * - sid2_mono
-    * - sid2_stereo
+    * - MONO
+    * - STEREO
     */
     playback_t          playback;
 
     /**
     * Intended sid model when unknown or forced
-    * - SID2_MOS6581
-    * - SID2_MOS8580
+    * - MOS6581
+    * - MOS8580
     */
-    model_t             sidDefault;
+    sid_model_t         defaultSidModel;
 
     /**
-    * Force the sid model to sidDefault
+    * Force the sid model to defaultSidModel
     */
-    bool                forceModel;
+    bool                forceSidModel;
 
     sidbuilder         *sidEmulation;
 
@@ -111,8 +113,8 @@ public:
 
     /**
     * Sampling method
-    * - SID2_INTERPOLATE
-    * - SID2_RESAMPLE_INTERPOLATE
+    * - INTERPOLATE
+    * - RESAMPLE_INTERPOLATE
     */
     sampling_method_t   samplingMethod;
 

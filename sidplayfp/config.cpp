@@ -63,7 +63,7 @@ bool Player::config (const SidConfig &cfg)
         // SID emulation setup (must be performed before the
         // environment setup call)
         sidRelease();
-        if (!sidCreate(cfg.sidEmulation, cfg.sidDefault, cfg.forceModel,
+        if (!sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel,
             cfg.playback == SidConfig::STEREO ? 2 : 1))
         {
             m_errorString = cfg.sidEmulation->error();
@@ -74,7 +74,7 @@ bool Player::config (const SidConfig &cfg)
         }
 
         // Determine clock speed
-        const c64::model_t model = c64model(cfg.clockDefault, cfg.clockForced);
+        const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
 
         m_c64.setModel(model);
 
@@ -120,32 +120,53 @@ bool Player::config (const SidConfig &cfg)
 }
 
 // Clock speed changes due to loading a new song
-c64::model_t Player::c64model (SidConfig::clock_t defaultClock, bool forced)
+c64::model_t Player::c64model (SidConfig::c64_model_t defaultModel, bool forced)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
     SidTuneInfo::clock_t clockSpeed = tuneInfo->clockSpeed();
 
+    c64::model_t model;
+
     // Use preferred speed if forced or if song speed is unknown
     if (forced || clockSpeed == SidTuneInfo::CLOCK_UNKNOWN || clockSpeed == SidTuneInfo::CLOCK_ANY)
     {
-        switch (defaultClock)
+        switch (defaultModel)
         {
-        case SidConfig::CLOCK_PAL:
+        case SidConfig::PAL:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
+            model = c64::PAL_B;
             break;
-        case SidConfig::CLOCK_NTSC:
+        case SidConfig::DREAN:
+            clockSpeed = SidTuneInfo::CLOCK_PAL;
+            model = c64::PAL_N;
+            break;
+        case SidConfig::NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
+            model = c64::NTSC_M;
+            break;
+        case SidConfig::OLD_NTSC:
+            clockSpeed = SidTuneInfo::CLOCK_NTSC;
+            model = c64::OLD_NTSC_M;
+            break;
+        }
+    }
+    else
+    {
+        switch (clockSpeed)
+        {
+        case SidTuneInfo::CLOCK_PAL:
+            model = c64::PAL_B;
+            break;
+        case SidTuneInfo::CLOCK_NTSC:
+            model = c64::NTSC_M;
             break;
         }
     }
 
-    c64::model_t model;
-
     switch (clockSpeed)
     {
     case SidTuneInfo::CLOCK_PAL:
-        model = c64::PAL_B;
         if (tuneInfo->songSpeed() == SidTuneInfo::SPEED_CIA_1A)
             m_info.m_speedString = TXT_PAL_CIA;
         else if (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC)
@@ -154,7 +175,6 @@ c64::model_t Player::c64model (SidConfig::clock_t defaultClock, bool forced)
             m_info.m_speedString = TXT_PAL_VBI;
         break;
     case SidTuneInfo::CLOCK_NTSC:
-        model = c64::NTSC_M;
         if (tuneInfo->songSpeed() == SidTuneInfo::SPEED_CIA_1A)
             m_info.m_speedString = TXT_NTSC_CIA;
         else if (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL)
@@ -167,7 +187,7 @@ c64::model_t Player::c64model (SidConfig::clock_t defaultClock, bool forced)
     return model;
 }
 
-SidConfig::model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig::model_t defaultModel, bool forced)
+SidConfig::sid_model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced)
 {
     SidTuneInfo::model_t tuneModel = sidModel;
 
@@ -185,7 +205,7 @@ SidConfig::model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig::mo
         }
     }
 
-    SidConfig::model_t newModel;
+    SidConfig::sid_model_t newModel;
 
     switch (tuneModel)
     {
@@ -215,13 +235,13 @@ void Player::sidRelease()
     }
 }
 
-bool Player::sidCreate (sidbuilder *builder, SidConfig::model_t defaultModel,
+bool Player::sidCreate (sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                         bool forced, unsigned int channels)
 {
     if (builder)
     {   // Detect the Correct SID model
         // Determine model when unknown
-        SidConfig::model_t userModels[c64::MAX_SIDS];
+        SidConfig::sid_model_t userModels[c64::MAX_SIDS];
 
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 

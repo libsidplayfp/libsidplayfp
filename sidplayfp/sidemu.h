@@ -60,7 +60,7 @@ public:
 
     // Standard SID functions
     virtual void    voice   (unsigned int num, bool mute) = 0;
-    virtual void    model    (SidConfig::model_t model) = 0;
+    virtual void    model    (SidConfig::sid_model_t model) = 0;
     sidbuilder     *builder (void) const { return m_builder; }
 
     virtual int bufferpos() const { return m_bufferpos; }

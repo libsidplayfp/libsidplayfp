@@ -25,13 +25,13 @@
 #include "mixer.h"
 
 SidConfig::SidConfig() :
-    clockDefault(CLOCK_PAL),
-    clockForced(false),
+    defaultC64Model(PAL),
+    forceC64Model(false),
     secondSidAddress(0),
     frequency(DEFAULT_SAMPLING_FREQ),
     playback(MONO),
-    sidDefault(MOS6581),
-    forceModel(false),
+    defaultSidModel(MOS6581),
+    forceSidModel(false),
     sidEmulation(0),
     leftVolume(Mixer::VOLUME_MAX),
     rightVolume(Mixer::VOLUME_MAX),
