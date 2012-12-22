@@ -59,7 +59,7 @@ HardSIDBuilder::HardSIDBuilder (const char * const name)
 }
 
 HardSIDBuilder::~HardSIDBuilder (void)
-{   // Remove all are SID emulations
+{   // Remove all SID emulations
     remove ();
 }
 
