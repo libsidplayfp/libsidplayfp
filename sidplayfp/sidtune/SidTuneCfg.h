@@ -3,7 +3,9 @@
 #ifndef SIDTUNECFG_H
 #define SIDTUNECFG_H
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 /* Minimum load address for real c64 only tunes */
 #define SIDTUNE_R64_MIN_LOAD_ADDR 0x07e8
