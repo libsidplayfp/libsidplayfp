@@ -43,10 +43,11 @@ namespace reSIDfp
 *
 * @return the analog value as modeled from the R-2R network.
 */
-class Dac {
+class Dac
+{
 
 public:
-	static void kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term);
+    static void kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term);
 };
 
 } // namespace reSIDfp

@@ -32,7 +32,8 @@
 namespace reSIDfp
 {
 
-typedef struct {
+typedef struct
+{
     float bias;
     float pulsestrength;
     float topbit;
@@ -45,34 +46,35 @@ typedef struct {
  *
  * @author Antti Lankila
  */
-class WaveformCalculator {
+class WaveformCalculator
+{
 
 private:
-	std::map<const CombinedWaveformConfig*, array<short> > CACHE;
+    std::map<const CombinedWaveformConfig*, array<short> > CACHE;
 
-	static const CombinedWaveformConfig config[2][4];
+    static const CombinedWaveformConfig config[2][4];
 
-	/**
-	 * Generate bitstate based on emulation of combined waves.
-	 *
-	 * @param config
-	 * @param waveform the waveform to emulate, 1 .. 7
-	 * @param accumulator the accumulator value
-	 */
-	short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int accumulator) const;
+    /**
+     * Generate bitstate based on emulation of combined waves.
+     *
+     * @param config
+     * @param waveform the waveform to emulate, 1 .. 7
+     * @param accumulator the accumulator value
+     */
+    short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int accumulator) const;
 
-	WaveformCalculator() {}
+    WaveformCalculator() {}
 
 public:
-	static WaveformCalculator* getInstance();
+    static WaveformCalculator* getInstance();
 
-	/**
-	 * Build waveform tables for use by WaveformGenerator.
-	 *
-	 * @param model Chip model to use
-	 * @return Waveform table
-	 */
-	array<short>* buildTable(ChipModel model);
+    /**
+     * Build waveform tables for use by WaveformGenerator.
+     *
+     * @param model Chip model to use
+     * @return Waveform table
+     */
+    array<short>* buildTable(ChipModel model);
 };
 
 } // namespace reSIDfp

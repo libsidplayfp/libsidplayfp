@@ -32,43 +32,48 @@ namespace reSIDfp
  *
  * @author Antti Lankila
  */
-class ZeroOrderResampler : public Resampler {
+class ZeroOrderResampler : public Resampler
+{
 
 private:
-	int cachedSample;
+    int cachedSample;
 
-	const int cyclesPerSample;
-	int sampleOffset;
-	int outputValue;
+    const int cyclesPerSample;
+    int sampleOffset;
+    int outputValue;
 
 public:
-	ZeroOrderResampler(double clockFrequency, double samplingFrequency) :
-		cachedSample(0),
-		cyclesPerSample((int) (clockFrequency / samplingFrequency * 1024.)),
-		sampleOffset(0),
-		outputValue(0) {}
+    ZeroOrderResampler(double clockFrequency, double samplingFrequency) :
+        cachedSample(0),
+        cyclesPerSample((int)(clockFrequency / samplingFrequency * 1024.)),
+        sampleOffset(0),
+        outputValue(0) {}
 
-	bool input(int sample) {
-		bool ready = false;
+    bool input(int sample)
+    {
+        bool ready = false;
 
-		if (sampleOffset < 1024) {
-			outputValue = cachedSample + (sampleOffset * (sample - cachedSample) >> 10);
-			ready = true;
-			sampleOffset += cyclesPerSample;
-		}
-		sampleOffset -= 1024;
+        if (sampleOffset < 1024)
+        {
+            outputValue = cachedSample + (sampleOffset * (sample - cachedSample) >> 10);
+            ready = true;
+            sampleOffset += cyclesPerSample;
+        }
 
-		cachedSample = sample;
+        sampleOffset -= 1024;
 
-		return ready;
-	}
+        cachedSample = sample;
 
-	int output() const { return outputValue; }
+        return ready;
+    }
 
-	void reset() {
-		sampleOffset = 0;
-		cachedSample = 0;
-	}
+    int output() const { return outputValue; }
+
+    void reset()
+    {
+        sampleOffset = 0;
+        cachedSample = 0;
+    }
 };
 
 } // namespace reSIDfp

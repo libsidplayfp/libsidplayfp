@@ -35,49 +35,51 @@ namespace reSIDfp
  *
  * @author alankila
  */
-class OpAmp {
+class OpAmp
+{
 
 private:
-	static const double EPSILON;
+    static const double EPSILON;
 
-	/** Current root position (cached as guess to speed up next iteration) */
-	double x;
+    /** Current root position (cached as guess to speed up next iteration) */
+    double x;
 
-	const double Vddt, vmin, vmax;
+    const double Vddt, vmin, vmax;
 
-	Spline* opamp;
+    Spline* opamp;
 
-	double out[2];
+    double out[2];
 
 public:
-	/**
-	 * Opamp input -> output voltage conversion
-	 *
-	 * @param opamp opamp mapping table as pairs of points (in -> out)
-	 * @param opamplength length of the opamp array
-	 * @param Vddt transistor dt parameter (in volts)
-	 */
-	OpAmp(const double opamp[][2], int opamplength, double Vddt) :
-		x(0.),
-		Vddt(Vddt),
-		vmin(opamp[0][0]),
-		vmax(opamp[opamplength - 1][0]),
-		opamp(new Spline(opamp, opamplength)) {}
+    /**
+     * Opamp input -> output voltage conversion
+     *
+     * @param opamp opamp mapping table as pairs of points (in -> out)
+     * @param opamplength length of the opamp array
+     * @param Vddt transistor dt parameter (in volts)
+     */
+    OpAmp(const double opamp[][2], int opamplength, double Vddt) :
+        x(0.),
+        Vddt(Vddt),
+        vmin(opamp[0][0]),
+        vmax(opamp[opamplength - 1][0]),
+        opamp(new Spline(opamp, opamplength)) {}
 
-	~OpAmp() { delete opamp; }
+    ~OpAmp() { delete opamp; }
 
-	void reset() {
-		x = vmin;
-	}
+    void reset()
+    {
+        x = vmin;
+    }
 
-	/**
-	 * Solve the opamp equation for input vi in loading context n
-	 * 
-	 * @param n the ratio of input/output loading
-	 * @param vi input
-	 * @return vo
-	 */
-	double solve(double n, double vi);
+    /**
+     * Solve the opamp equation for input vi in loading context n
+     *
+     * @param n the ratio of input/output loading
+     * @param vi input
+     * @return vo
+     */
+    double solve(double n, double vi);
 };
 
 } // namespace reSIDfp

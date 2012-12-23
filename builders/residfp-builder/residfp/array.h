@@ -23,48 +23,50 @@
 
 /** @internal
  */
-class counter {
+class counter
+{
 
 private:
-	unsigned int c;
+    unsigned int c;
 
 public:
-	counter() : c(1) {}
-	void increase() { ++c; }
-	unsigned int decrease() { return --c; }
+    counter() : c(1) {}
+    void increase() { ++c; }
+    unsigned int decrease() { return --c; }
 };
 
 /** @internal
  * Reference counted pointer to array wrapper, for use with standard containers.
  */
 template<typename T>
-class array {
+class array
+{
 
 private:
-	counter* count;
-	unsigned int x, y;
-	T* data;
+    counter* count;
+    unsigned int x, y;
+    T* data;
 
 public:
-	array(unsigned int x, unsigned int y) :
-		count(new counter()),
-		x(x),
-		y(y),
-		data(new T[x * y]) {}
+    array(unsigned int x, unsigned int y) :
+        count(new counter()),
+        x(x),
+        y(y),
+        data(new T[x* y]) {}
 
-	array(const array& p) :
-		count(p.count),
-		x(p.x),
-		y(p.y),
-		data(p.data) { count->increase(); }
+    array(const array& p) :
+        count(p.count),
+        x(p.x),
+        y(p.y),
+        data(p.data) { count->increase(); }
 
-	~array() { if (count->decrease() == 0) { delete count; delete [] data; } }
+    ~array() { if (count->decrease() == 0) { delete count; delete [] data; } }
 
-	unsigned int length() const { return x * y; }
+    unsigned int length() const { return x * y; }
 
-	T* operator[](unsigned int a) { return a<x ? &data[a * y] : 0; }
+    T* operator[](unsigned int a) { return a < x ? &data[a * y] : 0; }
 
-	T const* operator[](unsigned int a) const { return a<x ? &data[a * y] : 0; }
+    T const* operator[](unsigned int a) const { return a < x ? &data[a * y] : 0; }
 };
 
 #endif

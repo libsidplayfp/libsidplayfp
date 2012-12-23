@@ -38,37 +38,44 @@ int main(int argc, const char* argv[])
 
     std::map<double, double> results;
     clock_t start = clock();
-    for (double freq = 1000.; freq < RATE/2.; freq *= 1.01)
+
+    for (double freq = 1000.; freq < RATE / 2.; freq *= 1.01)
     {
         /* prefill resampler buffer */
         int k = 0;
         double omega = 2 * M_PI * freq / RATE;
+
         for (int j = 0; j < RINGSIZE; j ++)
         {
-            int signal = (int) (32768.0 * sin(k++ * omega) * sqrt(2));
+            int signal = (int)(32768.0 * sin(k++ * omega) * sqrt(2));
             r->input(signal);
         }
 
         int n = 0;
         float pwr = 0;
+
         /* Now, during measurement stage, put 100 cycles of waveform through filter. */
         for (int j = 0; j < 100000; j ++)
         {
-            int signal = (int) (32768.0 * sin(k++ * omega) * sqrt(2));
-            if (r->input(signal)) {
+            int signal = (int)(32768.0 * sin(k++ * omega) * sqrt(2));
+
+            if (r->input(signal))
+            {
                 float out = r->output();
                 pwr += out * out;
                 n += 1;
             }
         }
 
-        results.insert(std::make_pair(freq, 10 * log10(pwr/n)));
+        results.insert(std::make_pair(freq, 10 * log10(pwr / n)));
     }
+
     clock_t end = clock();
 
     for (std::map<double, double>::iterator it = results.begin(); it != results.end(); ++it)
     {
         std::cout << std::fixed << std::setprecision(0) << std::setw(6) << (*it).first  << " Hz " << (*it).second << " dB" << std::endl;
     }
-    std::cout << "Filtering time " << (end - start)*1000./CLOCKS_PER_SEC << " ms" << std::endl;
+
+    std::cout << "Filtering time " << (end - start) * 1000. / CLOCKS_PER_SEC << " ms" << std::endl;
 }

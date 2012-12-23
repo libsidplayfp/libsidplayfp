@@ -41,162 +41,164 @@ namespace reSIDfp
  * @author Dag Lem
  * @author Antti Lankila
  */
-class EnvelopeGenerator {
+class EnvelopeGenerator
+{
 
 private:
-	/**
-	 * The envelope state machine's distinct states. In addition to this,
-	 * envelope has a hold mode, which freezes envelope counter to zero.
-	 */
-	enum State {
-		ATTACK, DECAY_SUSTAIN, RELEASE
-	};
+    /**
+     * The envelope state machine's distinct states. In addition to this,
+     * envelope has a hold mode, which freezes envelope counter to zero.
+     */
+    enum State
+    {
+        ATTACK, DECAY_SUSTAIN, RELEASE
+    };
 
-	/**
-	 * XOR shift register for ADSR prescaling
-	 */
-	int lfsr;
+    /**
+     * XOR shift register for ADSR prescaling
+     */
+    int lfsr;
 
-	/**
-	 * Comparison value (period) of the rate counter before next event.
-	 */
-	int rate;
+    /**
+     * Comparison value (period) of the rate counter before next event.
+     */
+    int rate;
 
-	/**
-	 * During release mode, the SID arpproximates envelope decay via piecewise
-	 * linear decay rate.
-	 */
-	int exponential_counter;
+    /**
+     * During release mode, the SID arpproximates envelope decay via piecewise
+     * linear decay rate.
+     */
+    int exponential_counter;
 
-	/**
-	 * Comparison value (period) of the exponential decay counter before next
-	 * decrement.
-	 */
-	int exponential_counter_period;
+    /**
+     * Comparison value (period) of the exponential decay counter before next
+     * decrement.
+     */
+    int exponential_counter_period;
 
-	/** Attack register */
-	int attack;
+    /** Attack register */
+    int attack;
 
-	/** Decay register */
-	int decay;
+    /** Decay register */
+    int decay;
 
-	/** Sustain register */
-	int sustain;
+    /** Sustain register */
+    int sustain;
 
-	/** Release register */
-	int release;
+    /** Release register */
+    int release;
 
-	/** Current envelope state */
-	State state;
+    /** Current envelope state */
+    State state;
 
-	/**
-	 * Whether hold is enabled. Only switching to ATTACK can release envelope.
-	 */
-	bool hold_zero;
+    /**
+     * Whether hold is enabled. Only switching to ATTACK can release envelope.
+     */
+    bool hold_zero;
 
-	bool envelope_pipeline;
+    bool envelope_pipeline;
 
-	/** Gate bit */
-	bool gate;
+    /** Gate bit */
+    bool gate;
 
-	/** The current digital value of envelope output. */
-	unsigned char envelope_counter;
+    /** The current digital value of envelope output. */
+    unsigned char envelope_counter;
 
-	/**
-	 * Emulated nonlinearity of the envelope DAC.
-	 *
-	 * @See SID.kinked_dac
-	 */
-	short dac[256];
+    /**
+     * Emulated nonlinearity of the envelope DAC.
+     *
+     * @See SID.kinked_dac
+     */
+    short dac[256];
 
-	void set_exponential_counter();
+    void set_exponential_counter();
 
-	/**
-	 * Lookup table to convert from attack, decay, or release value to rate
-	 * counter period.
-	 * <P>
-	 * The rate counter is a 15 bit register which is left shifted each cycle.
-	 * When the counter reaches a specific comparison value,
-	 * the envelope counter is incremented (attack) or decremented
-	 * (decay/release) and the rate counter is resetted.
-	 *
-	 * see <a href="http://blog.kevtris.org/?p=13">kevtris.org</a>
-	 */
-	static const int adsrtable[16];
+    /**
+     * Lookup table to convert from attack, decay, or release value to rate
+     * counter period.
+     * <P>
+     * The rate counter is a 15 bit register which is left shifted each cycle.
+     * When the counter reaches a specific comparison value,
+     * the envelope counter is incremented (attack) or decremented
+     * (decay/release) and the rate counter is resetted.
+     *
+     * see <a href="http://blog.kevtris.org/?p=13">kevtris.org</a>
+     */
+    static const int adsrtable[16];
 
 public:
-	/**
-	 * Set chip model.
-	 * This determines the type of the analog DAC emulation:
-	 * 8580 is perfectly linear while 6581 is nonlinear.
-	 *
-	 * @param chipModel
-	 */
-	void setChipModel(ChipModel chipModel);
+    /**
+     * Set chip model.
+     * This determines the type of the analog DAC emulation:
+     * 8580 is perfectly linear while 6581 is nonlinear.
+     *
+     * @param chipModel
+     */
+    void setChipModel(ChipModel chipModel);
 
-	/**
-	 * SID clocking - 1 cycle.
-	 */
-	void clock();
+    /**
+     * SID clocking - 1 cycle.
+     */
+    void clock();
 
-        /**
-         * Get the Envelope Generator output.
-         * DAC imperfections are emulated by using envelope_counter as an index
-         * into a DAC lookup table. readENV() uses envelope_counter directly.
-         */
-	short output() const { return dac[envelope_counter]; }
+    /**
+     * Get the Envelope Generator output.
+     * DAC imperfections are emulated by using envelope_counter as an index
+     * into a DAC lookup table. readENV() uses envelope_counter directly.
+     */
+    short output() const { return dac[envelope_counter]; }
 
-	/**
-	 * Constructor.
-	 */
-	EnvelopeGenerator() :
-		lfsr(0),
-		rate(0),
-		exponential_counter(0),
-		exponential_counter_period(1),
-		attack(0),
-		decay(0),
-		sustain(0),
-		release(0),
-		state(RELEASE),
-		hold_zero(true),
-		envelope_pipeline(false),
-		gate(false),
-		envelope_counter(0) {}
+    /**
+     * Constructor.
+     */
+    EnvelopeGenerator() :
+        lfsr(0),
+        rate(0),
+        exponential_counter(0),
+        exponential_counter_period(1),
+        attack(0),
+        decay(0),
+        sustain(0),
+        release(0),
+        state(RELEASE),
+        hold_zero(true),
+        envelope_pipeline(false),
+        gate(false),
+        envelope_counter(0) {}
 
-	/**
-	 * SID reset.
-	 */
-	void reset();
+    /**
+     * SID reset.
+     */
+    void reset();
 
-	// ----------------------------------------------------------------------------
-	// Register functions.
-	// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Register functions.
+    // ----------------------------------------------------------------------------
 
-	/**
-	 * @param control
-	 *            control register
-	 */
-	void writeCONTROL_REG(unsigned char control);
+    /**
+     * @param control
+     *            control register
+     */
+    void writeCONTROL_REG(unsigned char control);
 
-	/**
-	 * @param attack_decay
-	 *            attack/decay value
-	 */
-	void writeATTACK_DECAY(unsigned char attack_decay);
+    /**
+     * @param attack_decay
+     *            attack/decay value
+     */
+    void writeATTACK_DECAY(unsigned char attack_decay);
 
-	/**
-	 * @param sustain_release
-	 *            sustain/release value
-	 */
-	void writeSUSTAIN_RELEASE(unsigned char sustain_release);
+    /**
+     * @param sustain_release
+     *            sustain/release value
+     */
+    void writeSUSTAIN_RELEASE(unsigned char sustain_release);
 
-	/**
-	 * Return the envelope current value.
-	 *
-	 * @return envelope counter
-	 */
-	unsigned char readENV() const { return envelope_counter; }
+    /**
+     * Return the envelope current value.
+     *
+     * @return envelope counter
+     */
+    unsigned char readENV() const { return envelope_counter; }
 };
 
 } // namespace reSIDfp
@@ -207,99 +209,118 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-void EnvelopeGenerator::clock() {
-	if (envelope_pipeline) {
-		-- envelope_counter;
-		envelope_pipeline = false;
-		// Check for change of exponential counter period.
-		set_exponential_counter();
-	}
+void EnvelopeGenerator::clock()
+{
+    if (envelope_pipeline)
+    {
+        -- envelope_counter;
+        envelope_pipeline = false;
+        // Check for change of exponential counter period.
+        set_exponential_counter();
+    }
 
-	// Check for ADSR delay bug.
-	// If the rate counter comparison value is set below the current value of the
-	// rate counter, the counter will continue counting up until it wraps around
-	// to zero at 2^15 = 0x8000, and then count rate_period - 1 before the
-	// envelope can constly be stepped.
-	// This has been verified by sampling ENV3.
-	//
-	// Envelope is now implemented like in the real machine with a shift register
-	// so the ADSR delay bug should be correcly modeled
+    // Check for ADSR delay bug.
+    // If the rate counter comparison value is set below the current value of the
+    // rate counter, the counter will continue counting up until it wraps around
+    // to zero at 2^15 = 0x8000, and then count rate_period - 1 before the
+    // envelope can constly be stepped.
+    // This has been verified by sampling ENV3.
+    //
+    // Envelope is now implemented like in the real machine with a shift register
+    // so the ADSR delay bug should be correcly modeled
 
-	// check to see if LFSR matches table value
-	if (lfsr != rate) {
-		// it wasn't a match, clock the LFSR once
-		// by performing XOR on last 2 bits
-		const int feedback = ((lfsr >> 14) ^ (lfsr >> 13)) & 0x01;
-		lfsr = ((lfsr << 1) & 0x7fff) | feedback;
-		return;
-	}
+    // check to see if LFSR matches table value
+    if (lfsr != rate)
+    {
+        // it wasn't a match, clock the LFSR once
+        // by performing XOR on last 2 bits
+        const int feedback = ((lfsr >> 14) ^ (lfsr >> 13)) & 0x01;
+        lfsr = ((lfsr << 1) & 0x7fff) | feedback;
+        return;
+    }
 
-	// reset LFSR
-	lfsr = 0x7fff;
+    // reset LFSR
+    lfsr = 0x7fff;
 
-	// The first envelope step in the attack state also resets the exponential
-	// counter. This has been verified by sampling ENV3.
-	//
-	if (state == ATTACK || ++exponential_counter == exponential_counter_period) {
-		// likely (~50%)
-		exponential_counter = 0;
+    // The first envelope step in the attack state also resets the exponential
+    // counter. This has been verified by sampling ENV3.
+    //
+    if (state == ATTACK || ++exponential_counter == exponential_counter_period)
+    {
+        // likely (~50%)
+        exponential_counter = 0;
 
-		// Check whether the envelope counter is frozen at zero.
-		if (hold_zero) {
-			return;
-		}
+        // Check whether the envelope counter is frozen at zero.
+        if (hold_zero)
+        {
+            return;
+        }
 
-		switch (state) {
-			case ATTACK:
-			// The envelope counter can flip from 0xff to 0x00 by changing state to
-			// release, then to attack. The envelope counter is then frozen at
-			// zero; to unlock this situation the state must be changed to release,
-			// then to attack. This has been verified by sampling ENV3.
-			//
-			++ envelope_counter;
-			if (envelope_counter == (unsigned char) 0xff) {
-				state = DECAY_SUSTAIN;
-				rate = adsrtable[decay];
-			}
-			break;
-		case DECAY_SUSTAIN:
-			// From the sustain levels it follows that both the low and high 4 bits
-			// of the envelope counter are compared to the 4-bit sustain value.
-			// This has been verified by sampling ENV3.
-			//
-			// For a detailed description see:
-			// http://ploguechipsounds.blogspot.it/2010/11/new-research-on-sid-adsr.html
-			if (envelope_counter == (unsigned char) (sustain << 4 | sustain)) {
-				return;
-			}
-			if (exponential_counter_period != 1) {
-				// unlikely (15%)
-				// The decrement is delayed one cycle.
-				envelope_pipeline = true;
-				return;
-			}
-			-- envelope_counter;
-			break;
-		case RELEASE:
-			// The envelope counter can flip from 0x00 to 0xff by changing state to
-			// attack, then to release. The envelope counter will then continue
-			// counting down in the release state.
-			// This has been verified by sampling ENV3.
-			// NB! The operation below requires two's complement integer.
-			//
-			if (exponential_counter_period != 1) {
-				// likely (~50%)
-				// The decrement is delayed one cycle.
-				envelope_pipeline = true;
-				return;
-			}
-			-- envelope_counter;
-			break;
-		}
+        switch (state)
+        {
+        case ATTACK:
+            // The envelope counter can flip from 0xff to 0x00 by changing state to
+            // release, then to attack. The envelope counter is then frozen at
+            // zero; to unlock this situation the state must be changed to release,
+            // then to attack. This has been verified by sampling ENV3.
+            //
+            ++ envelope_counter;
 
-		// Check for change of exponential counter period.
-		set_exponential_counter();
-	}
+            if (envelope_counter == (unsigned char) 0xff)
+            {
+                state = DECAY_SUSTAIN;
+                rate = adsrtable[decay];
+            }
+
+            break;
+
+        case DECAY_SUSTAIN:
+
+            // From the sustain levels it follows that both the low and high 4 bits
+            // of the envelope counter are compared to the 4-bit sustain value.
+            // This has been verified by sampling ENV3.
+            //
+            // For a detailed description see:
+            // http://ploguechipsounds.blogspot.it/2010/11/new-research-on-sid-adsr.html
+            if (envelope_counter == (unsigned char)(sustain << 4 | sustain))
+            {
+                return;
+            }
+
+            if (exponential_counter_period != 1)
+            {
+                // unlikely (15%)
+                // The decrement is delayed one cycle.
+                envelope_pipeline = true;
+                return;
+            }
+
+            -- envelope_counter;
+            break;
+
+        case RELEASE:
+
+            // The envelope counter can flip from 0x00 to 0xff by changing state to
+            // attack, then to release. The envelope counter will then continue
+            // counting down in the release state.
+            // This has been verified by sampling ENV3.
+            // NB! The operation below requires two's complement integer.
+            //
+            if (exponential_counter_period != 1)
+            {
+                // likely (~50%)
+                // The decrement is delayed one cycle.
+                envelope_pipeline = true;
+                return;
+            }
+
+            -- envelope_counter;
+            break;
+        }
+
+        // Check for change of exponential counter period.
+        set_exponential_counter();
+    }
 }
 
 } // namespace reSIDfp

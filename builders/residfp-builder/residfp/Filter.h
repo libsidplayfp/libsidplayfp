@@ -34,144 +34,145 @@ namespace reSIDfp
  * @author Antti Lankila
  * @author Leandro Nini
  */
-class Filter {
+class Filter
+{
 
 private:
-	/**
-	 * Filter enabled.
-	 */
-	bool enabled;
+    /**
+     * Filter enabled.
+     */
+    bool enabled;
 
-	/**
-	 * Selects which inputs to route through filter.
-	 */
-	char filt;
-
-protected:
-
-	/**
-	 * Current clock frequency.
-	 */
-	double clockFrequency;
-
-	/**
-	 * Filter cutoff frequency.
-	 */
-	int fc;
-
-	/**
-	 * Filter resonance.
-	 */
-	int res;
-
-	/**
-	 * Current volume.
-	 */
-	int vol;
-
-	/**
-	 * Routing to filter or outside filter
-	 */
-	bool filt1, filt2, filt3, filtE;
-
-	/**
-	 * Switch voice 3 off.
-	 */
-	bool voice3off;
-
-	/**
-	 * Highpass, bandpass, and lowpass filter modes.
-	 */
-	bool hp, bp, lp;
+    /**
+     * Selects which inputs to route through filter.
+     */
+    char filt;
 
 protected:
-	/**
-	 * Set filter cutoff frequency.
-	 */
-	virtual void updatedCenterFrequency()=0;
 
-	/**
-	 * Set filter resonance.
-	 */
-	virtual void updatedResonance()=0;
+    /**
+     * Current clock frequency.
+     */
+    double clockFrequency;
 
-	/**
-	 * Mixing configuration modified (offsets change)
-	 */
-	virtual void updatedMixing()=0;
+    /**
+     * Filter cutoff frequency.
+     */
+    int fc;
+
+    /**
+     * Filter resonance.
+     */
+    int res;
+
+    /**
+     * Current volume.
+     */
+    int vol;
+
+    /**
+     * Routing to filter or outside filter
+     */
+    bool filt1, filt2, filt3, filtE;
+
+    /**
+     * Switch voice 3 off.
+     */
+    bool voice3off;
+
+    /**
+     * Highpass, bandpass, and lowpass filter modes.
+     */
+    bool hp, bp, lp;
+
+protected:
+    /**
+     * Set filter cutoff frequency.
+     */
+    virtual void updatedCenterFrequency() = 0;
+
+    /**
+     * Set filter resonance.
+     */
+    virtual void updatedResonance() = 0;
+
+    /**
+     * Mixing configuration modified (offsets change)
+     */
+    virtual void updatedMixing() = 0;
 
 public:
-	Filter() :
-		enabled(true),
-		filt(0),
-		clockFrequency(0.),
-		fc(0),
-		res(0),
-		vol(0),
-		filt1(false),
-		filt2(false),
-		filt3(false),
-		filtE(false),
-		voice3off(false),
-		hp(false),
-		bp(false),
-		lp(false) {}
+    Filter() :
+        enabled(true),
+        filt(0),
+        clockFrequency(0.),
+        fc(0),
+        res(0),
+        vol(0),
+        filt1(false),
+        filt2(false),
+        filt3(false),
+        filtE(false),
+        voice3off(false),
+        hp(false),
+        bp(false),
+        lp(false) {}
 
-	virtual ~Filter() {}
+    virtual ~Filter() {}
 
-	/**
-	 * SID clocking - 1 cycle
-	 *
-	 * @param v1 voice 1 in
-	 * @param v2 voice 2 in
-	 * @param v3 voice 3 in
-	 * @return filtered output
-	 */
-	virtual int clock(int v1, int v2, int v3)=0;
+    /**
+     * SID clocking - 1 cycle
+     *
+     * @param v1 voice 1 in
+     * @param v2 voice 2 in
+     * @param v3 voice 3 in
+     * @return filtered output
+     */
+    virtual int clock(int v1, int v2, int v3) = 0;
 
-	/**
-	 * Enable filter.
-	 *
-	 * @param enable
-	 */
-	void enable(bool enable);
+    /**
+     * Enable filter.
+     *
+     * @param enable
+     */
+    void enable(bool enable);
 
-	void setClockFrequency(double clock);
+    void setClockFrequency(double clock);
 
-	/**
-	 * SID reset.
-	 */
-	void reset();
+    /**
+     * SID reset.
+     */
+    void reset();
 
-	/**
-	 * Register function.
-	 *
-	 * @param fc_lo Frequency Cutoff Low-Byte
-	 */
-	void writeFC_LO(unsigned char fc_lo);
+    /**
+     * Register function.
+     *
+     * @param fc_lo Frequency Cutoff Low-Byte
+     */
+    void writeFC_LO(unsigned char fc_lo);
 
-	/**
-	 * Register function.
-	 *
-	 * @param fc_hi Frequency Cutoff High-Byte
-	 */
-	void writeFC_HI(unsigned char fc_hi);
+    /**
+     * Register function.
+     *
+     * @param fc_hi Frequency Cutoff High-Byte
+     */
+    void writeFC_HI(unsigned char fc_hi);
 
-	/**
-	 * Register function.
-	 *
-	 * @param res_filt Resonance/Filter
-	 */
-	void writeRES_FILT(unsigned char res_filt);
+    /**
+     * Register function.
+     *
+     * @param res_filt Resonance/Filter
+     */
+    void writeRES_FILT(unsigned char res_filt);
 
-	/**
-	 * Register function.
-	 *
-	 * @param mode_vol Filter Mode/Volume
-	 */
-	void writeMODE_VOL(unsigned char mode_vol);
+    /**
+     * Register function.
+     *
+     * @param mode_vol Filter Mode/Volume
+     */
+    void writeMODE_VOL(unsigned char mode_vol);
 
-	virtual void input(int input)=0;
+    virtual void input(int input) = 0;
 };
 
 } // namespace reSIDfp

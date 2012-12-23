@@ -43,34 +43,35 @@ namespace reSIDfp
  * @author Antti Lankila
  * @author Leandro Nini
  */
-class Filter8580 : public Filter {
+class Filter8580 : public Filter
+{
 
 private:
-	double highFreq;
-	float Vlp, Vbp, Vhp;
-	float ve, w0, _1_div_Q;
+    double highFreq;
+    float Vlp, Vbp, Vhp;
+    float ve, w0, _1_div_Q;
 
 public:
-	Filter8580() :
-		highFreq(12500.),
-		Vlp(0.f),
-		Vbp(0.f),
-		Vhp(0.f),
-		ve(0.f),
-		w0(0.f),
-		_1_div_Q(0.f) {}
+    Filter8580() :
+        highFreq(12500.),
+        Vlp(0.f),
+        Vbp(0.f),
+        Vhp(0.f),
+        ve(0.f),
+        w0(0.f),
+        _1_div_Q(0.f) {}
 
-	int clock(int voice1, int voice2, int voice3);
+    int clock(int voice1, int voice2, int voice3);
 
-	void updatedCenterFrequency() { w0 = (float) (2.*M_PI*highFreq*fc/2047/1e6); }
+    void updatedCenterFrequency() { w0 = (float)(2.*M_PI * highFreq * fc / 2047 / 1e6); }
 
-	void updatedResonance() { _1_div_Q = 1.f / (0.707f + res/15.f); }
+    void updatedResonance() { _1_div_Q = 1.f / (0.707f + res / 15.f); }
 
-	void input(int input) { ve = input << 4; }
+    void input(int input) { ve = input << 4; }
 
-	void updatedMixing() {}
+    void updatedMixing() {}
 
-	void setFilterCurve(double curvePosition) { highFreq = curvePosition; }
+    void setFilterCurve(double curvePosition) { highFreq = curvePosition; }
 };
 
 } // namespace reSIDfp
@@ -84,53 +85,75 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Filter8580::clock(int voice1, int voice2, int voice3) {
-	voice1 >>= 7;
-	voice2 >>= 7;
-	voice3 >>= 7;
+int Filter8580::clock(int voice1, int voice2, int voice3)
+{
+    voice1 >>= 7;
+    voice2 >>= 7;
+    voice3 >>= 7;
 
-	int Vi = 0;
-	float Vo = 0.f;
-	if (filt1) {
-		Vi += voice1;
-	} else {
-		Vo += voice1;
-	}
-	if (filt2) {
-		Vi += voice2;
-	} else {
-		Vo += voice2;
-	}
-	// NB! Voice 3 is not silenced by voice3off if it is routed
-	// through the filter.
-	if (filt3) {
-		Vi += voice3;
-	} else if (!voice3off) {
-		Vo += voice3;
-	}
-	if (filtE) {
-		Vi += (int)ve;
-	} else {
-		Vo += ve;
-	}
+    int Vi = 0;
+    float Vo = 0.f;
 
-	const float dVbp = w0 * Vhp;
-	const float dVlp = w0 * Vbp;
-	Vbp -= dVbp;
-	Vlp -= dVlp;
-	Vhp = (Vbp*_1_div_Q) - Vlp - Vi + float(rand())/float(RAND_MAX);
+    if (filt1)
+    {
+        Vi += voice1;
+    }
+    else
+    {
+        Vo += voice1;
+    }
 
-	if (lp) {
-		Vo += Vlp;
-	}
-	if (bp) {
-		Vo += Vbp;
-	}
-	if (hp) {
-		Vo += Vhp;
-	}
+    if (filt2)
+    {
+        Vi += voice2;
+    }
+    else
+    {
+        Vo += voice2;
+    }
 
-	return (int) Vo * vol >> 4;
+    // NB! Voice 3 is not silenced by voice3off if it is routed
+    // through the filter.
+    if (filt3)
+    {
+        Vi += voice3;
+    }
+    else if (!voice3off)
+    {
+        Vo += voice3;
+    }
+
+    if (filtE)
+    {
+        Vi += (int)ve;
+    }
+    else
+    {
+        Vo += ve;
+    }
+
+    const float dVbp = w0 * Vhp;
+    const float dVlp = w0 * Vbp;
+    Vbp -= dVbp;
+    Vlp -= dVlp;
+    Vhp = (Vbp * _1_div_Q) - Vlp - Vi + float(rand()) / float(RAND_MAX);
+
+    if (lp)
+    {
+        Vo += Vlp;
+    }
+
+    if (bp)
+    {
+        Vo += Vbp;
+    }
+
+    if (hp)
+    {
+        Vo += Vhp;
+    }
+
+    return (int) Vo * vol >> 4;
 }
 
 } // namespace reSIDfp

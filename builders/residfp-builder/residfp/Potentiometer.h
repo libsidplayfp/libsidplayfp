@@ -34,15 +34,16 @@ namespace reSIDfp
  * @author Ken Händel
  * @author Dag Lem
  */
-class Potentiometer {
+class Potentiometer
+{
 
 public:
-	/**
-	 * Read paddle value. Not modeled.
-	 *
-	 * @return paddle value (always 0xff)
-	 */
-	unsigned char readPOT() const { return (unsigned char) 0xff; }
+    /**
+     * Read paddle value. Not modeled.
+     *
+     * @return paddle value (always 0xff)
+     */
+    unsigned char readPOT() const { return (unsigned char) 0xff; }
 };
 
 } // namespace reSIDfp

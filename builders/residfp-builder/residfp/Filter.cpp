@@ -25,61 +25,73 @@
 namespace reSIDfp
 {
 
-void Filter::enable(bool enable) {
-	enabled = enable;
-	if (enabled) {
-		writeRES_FILT(filt);
-	} else {
-		filt1 = filt2 = filt3 = filtE = false;
-	}
+void Filter::enable(bool enable)
+{
+    enabled = enable;
+
+    if (enabled)
+    {
+        writeRES_FILT(filt);
+    }
+    else
+    {
+        filt1 = filt2 = filt3 = filtE = false;
+    }
 }
 
-void Filter::setClockFrequency(double clock) {
-	clockFrequency = clock;
-	updatedCenterFrequency();
+void Filter::setClockFrequency(double clock)
+{
+    clockFrequency = clock;
+    updatedCenterFrequency();
 }
 
-void Filter::reset() {
-	writeFC_LO(0);
-	writeFC_HI(0);
-	writeMODE_VOL(0);
-	writeRES_FILT(0);
+void Filter::reset()
+{
+    writeFC_LO(0);
+    writeFC_HI(0);
+    writeMODE_VOL(0);
+    writeRES_FILT(0);
 }
 
-void Filter::writeFC_LO(unsigned char fc_lo) {
-	fc = (fc & 0x7f8) | (fc_lo & 0x007);
-	updatedCenterFrequency();
+void Filter::writeFC_LO(unsigned char fc_lo)
+{
+    fc = (fc & 0x7f8) | (fc_lo & 0x007);
+    updatedCenterFrequency();
 }
 
-void Filter::writeFC_HI(unsigned char fc_hi) {
-	fc = (fc_hi << 3 & 0x7f8) | (fc & 0x007);
-	updatedCenterFrequency();
+void Filter::writeFC_HI(unsigned char fc_hi)
+{
+    fc = (fc_hi << 3 & 0x7f8) | (fc & 0x007);
+    updatedCenterFrequency();
 }
 
-void Filter::writeRES_FILT(unsigned char res_filt) {
-	filt = res_filt;
+void Filter::writeRES_FILT(unsigned char res_filt)
+{
+    filt = res_filt;
 
-	res = res_filt >> 4 & 0x0f;
-	updatedResonance();
+    res = res_filt >> 4 & 0x0f;
+    updatedResonance();
 
-	if (enabled) {
-		filt1 = (filt & 1) != 0;
-		filt2 = (filt & 2) != 0;
-		filt3 = (filt & 4) != 0;
-		filtE = (filt & 8) != 0;
-	}
+    if (enabled)
+    {
+        filt1 = (filt & 1) != 0;
+        filt2 = (filt & 2) != 0;
+        filt3 = (filt & 4) != 0;
+        filtE = (filt & 8) != 0;
+    }
 
-	updatedMixing();
+    updatedMixing();
 }
 
-void Filter::writeMODE_VOL(unsigned char mode_vol) {
-	vol = mode_vol & 0xf;
-	lp = (mode_vol & 0x10) != 0;
-	bp = (mode_vol & 0x20) != 0;
-	hp = (mode_vol & 0x40) != 0;
-	voice3off = (mode_vol & 0x80) != 0;
+void Filter::writeMODE_VOL(unsigned char mode_vol)
+{
+    vol = mode_vol & 0xf;
+    lp = (mode_vol & 0x10) != 0;
+    bp = (mode_vol & 0x20) != 0;
+    hp = (mode_vol & 0x40) != 0;
+    voice3off = (mode_vol & 0x80) != 0;
 
-	updatedMixing();
+    updatedMixing();
 }
 
 } // namespace reSIDfp

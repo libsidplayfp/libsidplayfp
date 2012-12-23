@@ -38,70 +38,75 @@ namespace reSIDfp
  * @author Antti Lankila
  * @author Leandro Nini
  */
-class Voice {
+class Voice
+{
 
 private:
-	WaveformGenerator* waveformGenerator;
+    WaveformGenerator* waveformGenerator;
 
-	EnvelopeGenerator* envelopeGenerator;
+    EnvelopeGenerator* envelopeGenerator;
 
 public:
-	/**
-	 * Amplitude modulated waveform output.
-	 *
-	 * The waveform DAC generates a voltage between 5 and 12 V corresponding
-	 * to oscillator state 0 .. 4095.
-	 *
-	 * The envelope DAC generates a voltage between waveform gen output and
-	 * the 5V level, corresponding to envelope state 0 .. 255.
-	 *
-	 * Ideal range [-2048*255, 2047*255].
-	 *
-	 * @param ringModulator Ring-modulator for waveform
-	 * @return waveformgenerator output
-	 */
-	RESID_INLINE
-	int output(const WaveformGenerator* ringModulator) const {
-		return waveformGenerator->output(ringModulator) * envelopeGenerator->output();
-	}
+    /**
+     * Amplitude modulated waveform output.
+     *
+     * The waveform DAC generates a voltage between 5 and 12 V corresponding
+     * to oscillator state 0 .. 4095.
+     *
+     * The envelope DAC generates a voltage between waveform gen output and
+     * the 5V level, corresponding to envelope state 0 .. 255.
+     *
+     * Ideal range [-2048*255, 2047*255].
+     *
+     * @param ringModulator Ring-modulator for waveform
+     * @return waveformgenerator output
+     */
+    RESID_INLINE
+    int output(const WaveformGenerator* ringModulator) const
+    {
+        return waveformGenerator->output(ringModulator) * envelopeGenerator->output();
+    }
 
-	/**
-	 * Constructor.
-	 */
-	Voice() :
-		waveformGenerator(new WaveformGenerator()),
-		envelopeGenerator(new EnvelopeGenerator()) {}
+    /**
+     * Constructor.
+     */
+    Voice() :
+        waveformGenerator(new WaveformGenerator()),
+        envelopeGenerator(new EnvelopeGenerator()) {}
 
-	~Voice() {
-		delete waveformGenerator;
-		delete envelopeGenerator;
-	}
+    ~Voice()
+    {
+        delete waveformGenerator;
+        delete envelopeGenerator;
+    }
 
-	WaveformGenerator* wave() const { return waveformGenerator; }
+    WaveformGenerator* wave() const { return waveformGenerator; }
 
-	EnvelopeGenerator* envelope() const { return envelopeGenerator; }
+    EnvelopeGenerator* envelope() const { return envelopeGenerator; }
 
-	// ----------------------------------------------------------------------------
-	// Register functions.
-	// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    // Register functions.
+    // ----------------------------------------------------------------------------
 
-	/**
-	 * Register functions.
-	 *
-	 * @param control Control register value.
-	 */
-	void writeCONTROL_REG(unsigned char control) {
-		waveformGenerator->writeCONTROL_REG(control);
-		envelopeGenerator->writeCONTROL_REG(control);
-	}
+    /**
+     * Register functions.
+     *
+     * @param control Control register value.
+     */
+    void writeCONTROL_REG(unsigned char control)
+    {
+        waveformGenerator->writeCONTROL_REG(control);
+        envelopeGenerator->writeCONTROL_REG(control);
+    }
 
-	/**
-	 * SID reset.
-	 */
-	void reset() {
-		waveformGenerator->reset();
-		envelopeGenerator->reset();
-	}
+    /**
+     * SID reset.
+     */
+    void reset()
+    {
+        waveformGenerator->reset();
+        envelopeGenerator->reset();
+    }
 };
 
 } // namespace reSIDfp

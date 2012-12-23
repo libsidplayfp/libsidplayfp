@@ -48,47 +48,48 @@ namespace reSIDfp
  * @author Antti Lankila
  * @author Leandro Nini
  */
-class ExternalFilter {
+class ExternalFilter
+{
 
 private:
-	/**
-	 * lowpass
-	 */
-	int Vlp;
+    /**
+     * lowpass
+     */
+    int Vlp;
 
-	/**
-	 * highpass
-	 */
-	int Vhp;
+    /**
+     * highpass
+     */
+    int Vhp;
 
-	int w0lp_1_s7;
+    int w0lp_1_s7;
 
-	int w0hp_1_s17;
+    int w0hp_1_s17;
 
 public:
-	/**
-	 * SID clocking - 1 cycle.
-	 *
-	 * @param Vi
-	 */
-	int clock(int Vi);
+    /**
+     * SID clocking - 1 cycle.
+     *
+     * @param Vi
+     */
+    int clock(int Vi);
 
-	/**
-	 * Constructor.
-	 */
-	ExternalFilter();
+    /**
+     * Constructor.
+     */
+    ExternalFilter();
 
-	/**
-	 * Setup of the external filter sampling parameters.
-	 * 
-	 * @param frequency
-	 */
-	void setClockFrequency(double frequency);
+    /**
+     * Setup of the external filter sampling parameters.
+     *
+     * @param frequency
+     */
+    void setClockFrequency(double frequency);
 
-	/**
-	 * SID reset.
-	 */
-	void reset();
+    /**
+     * SID reset.
+     */
+    void reset();
 };
 
 } // namespace reSIDfp
@@ -99,12 +100,13 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int ExternalFilter::clock(int Vi) {
-	const int dVlp = (w0lp_1_s7*((Vi << 11) - Vlp) >> 7);
-	const int dVhp = (w0hp_1_s17*(Vlp - Vhp) >> 17);
-	Vlp += dVlp;
-	Vhp += dVhp;
-	return (Vlp - Vhp) >> 11;
+int ExternalFilter::clock(int Vi)
+{
+    const int dVlp = (w0lp_1_s7 * ((Vi << 11) - Vlp) >> 7);
+    const int dVhp = (w0hp_1_s17 * (Vlp - Vhp) >> 17);
+    Vlp += dVlp;
+    Vhp += dVhp;
+    return (Vlp - Vhp) >> 11;
 }
 
 } // namespace reSIDfp
