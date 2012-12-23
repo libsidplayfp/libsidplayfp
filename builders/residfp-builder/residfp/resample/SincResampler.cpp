@@ -143,9 +143,6 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
 		firN |= 1;
 
 		// Check whether the sample ring buffer would overflow.
-		/*if (firN > RINGSIZE - 1) {
-			throw RuntimeException(String.format("Resampling quality exceeds the available buffer: %d required, but only has %d", firN, RINGSIZE));
-		}*/
 		assert(firN < RINGSIZE);
 
 		/* Error is bounded by err < 1.234 / L^2, so L = sqrt(1.234 / (2^-16)) = sqrt(1.234 * 2^16). */
