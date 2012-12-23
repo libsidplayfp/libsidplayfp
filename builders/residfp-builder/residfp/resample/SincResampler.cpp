@@ -211,44 +211,5 @@ void SincResampler::reset() {
 	memset(sample, 0, RINGSIZE * 2 * sizeof(sample[0]));
 	sampleOffset = 0;
 }
-#if 0
-void SincResampler::main(String[] args) {
-	double RATE = 985248.4;
-	Resampler r = new TwoPassSincResampler(RATE, 48000.0, 20000.0);
-
-	Map<Double, Double> results = new TreeMap<Double, Double>();
-	long start = System.currentTimeMillis();
-	for (double freq = 1000; freq < RATE/2; freq *= 1.01) {
-		/* prefill resampler buffer */
-		int k = 0;
-		double omega = 2 * Math.PI * freq / RATE;
-		for (int j = 0; j < RINGSIZE; j ++) {
-			int signal = (int) (32768.0 * Math.sin(k++ * omega) * Math.sqrt(2));
-			r.input(signal);
-		}
-
-		int n = 0;
-		float pwr = 0;
-		/* Now, during measurement stage, put 100 cycles of waveform through filter. */
-		for (int j = 0; j < 100000; j ++) {
-			int signal = (int) (32768.0 * Math.sin(k++ * omega) * Math.sqrt(2));
-			if (r.input(signal)) {
-				float out = r.output();
-				pwr += out * out;
-				n += 1;
-			}
-		}
-
-		results.put(freq, 10 * Math.log10(pwr/n));
-	}
-	long end = System.currentTimeMillis();
-
-	for (Entry<Double, Double> freq : results.entrySet()) {
-		System.out.println(String.format("%6.0f Hz %f dB", freq.getKey(), freq.getValue()));
-	}
-	System.out.println("Filtering time " + (end - start) + " ms");
-}
-
-#endif
 
 } // namespace reSIDfp
