@@ -37,16 +37,17 @@ class iniParser;
 class SID_EXTERN SidDatabase
 {
 private:
+    class parseError {};
+
+    static const char *parseTime(const char *str, long &result);
+
+private:
     iniParser  *m_parser;
     const char *errorString;
 
-    class parseError {};
-
-    static const char* parseTime(const char* str, long &result);
-
 public:
-    SidDatabase  ();
-    ~SidDatabase ();
+    SidDatabase();
+    ~SidDatabase();
 
     /**
     * Open the songlength DataBase.
@@ -54,12 +55,12 @@ public:
     * @param filename songlengthDB file name with full path.
     * @return false in case of errors, true otherwise.
     */
-    bool           open   (const char *filename);
+    bool open(const char *filename);
 
     /**
     * Close the songlength DataBase.
     */
-    void          close  ();
+    void close();
 
     /**
     * Get the length of the current subtune.
@@ -67,7 +68,7 @@ public:
     * @param tune
     * @return tune length in seconds, -1 in case of errors.
     */
-    int_least32_t length (SidTune &tune);
+    int_least32_t length(SidTune &tune);
 
     /**
     * Get the length of the selected subtune.
@@ -76,10 +77,10 @@ public:
     * @param song the subtune.
     * @return tune length in seconds, -1 in case of errors.
     */
-    int_least32_t length (const char *md5, unsigned int song);
+    int_least32_t length(const char *md5, unsigned int song);
 
     /// Get descriptive error message.
-    const char *  error  (void) const { return errorString; }
+    const char *error(void) const { return errorString; }
 };
 
 #endif // SIDDATABASE_H

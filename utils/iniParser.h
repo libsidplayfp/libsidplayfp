@@ -26,28 +26,30 @@
 
 class iniParser
 {
-
 private:
     typedef std::map<std::string, std::string> keys_t;
 
-    std::map<std::string, keys_t> sections;
-
     class emptyPair {};
 
-    std::string parseSection(const char* buffer);
-    std::pair<std::string, std::string> parseKey(const char* buffer);
+private:
+    std::map<std::string, keys_t> sections;
 
     std::map<std::string, keys_t>::const_iterator curSection;
+
+private:
+    std::string parseSection(const char *buffer);
+
+    std::pair<std::string, std::string> parseKey(const char *buffer);
 
 public:
     iniParser() {};
     ~iniParser() {};
 
-    bool open(const char* fName);
+    bool open(const char *fName);
     void close();
 
-    bool setSection(const char* section);
-    const char* getValue(const char* key);
+    bool setSection(const char *section);
+    const char *getValue(const char *key);
 };
 
 #endif // INIPARSER_H

@@ -20,7 +20,7 @@
 
 #include <stdlib.h>
 
-std::string iniParser::parseSection(const char* buffer)
+std::string iniParser::parseSection(const char *buffer)
 {
     std::string section(buffer);
     section.erase(0, 1);
@@ -28,13 +28,15 @@ std::string iniParser::parseSection(const char* buffer)
     return section;
 }
 
-std::pair<std::string, std::string> iniParser::parseKey(const char* buffer)
+std::pair<std::string, std::string> iniParser::parseKey(const char *buffer)
 {
     std::string section(buffer);
     size_t pos = section.find('=');
 
     if (pos == std::string::npos)
+    {
         throw emptyPair();
+    }
 
     std::string key = section.substr(0, pos);
     std::string value = section.substr(pos + 1);
@@ -45,12 +47,14 @@ std::pair<std::string, std::string> iniParser::parseKey(const char* buffer)
 
 #define BUFSIZE 2048
 
-bool iniParser::open(const char* fName)
+bool iniParser::open(const char *fName)
 {
     std::ifstream iniFile(fName);
 
     if (iniFile.fail())
+    {
         return false;
+    }
 
     std::map<std::string, keys_t>::iterator mIt;
 
@@ -80,7 +84,7 @@ bool iniParser::open(const char* fName)
             {
                 (*mIt).second.insert(parseKey(buffer));
             }
-            catch (emptyPair& e) {};
+            catch (emptyPair &e) {};
 
             break;
         }
@@ -94,13 +98,13 @@ void iniParser::close()
     sections.clear();
 }
 
-bool iniParser::setSection(const char* section)
+bool iniParser::setSection(const char *section)
 {
     curSection = sections.find(std::string(section));
     return (curSection != sections.end());
 }
 
-const char* iniParser::getValue(const char* key)
+const char *iniParser::getValue(const char *key)
 {
     std::map<std::string, std::string>::const_iterator keyIt = (*curSection).second.find(std::string(key));
     return (keyIt != (*curSection).second.end()) ? keyIt->second.c_str() : 0;

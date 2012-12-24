@@ -36,39 +36,44 @@ const char ERR_NO_SELECTED_SONG[]        = "SID DATABASE ERROR: No song selected
 const char ERR_MEM_ALLOC[]               = "SID DATABASE ERROR: Memory Allocation Failure.";
 const char ERR_UNABLE_TO_LOAD_DATABASE[] = "SID DATABASE ERROR: Unable to load the songlegnth database.";
 
-SidDatabase::SidDatabase () :
-m_parser(0),
-errorString(ERR_NO_DATABASE_LOADED)
+SidDatabase::SidDatabase() :
+    m_parser(0),
+    errorString(ERR_NO_DATABASE_LOADED)
 {}
 
-SidDatabase::~SidDatabase ()
+SidDatabase::~SidDatabase()
 {
-    close ();
+    close();
 }
 
-const char* SidDatabase::parseTime(const char* str, long &result) {
-
+const char *SidDatabase::parseTime(const char *str, long &result)
+{
     char *end;
-    const long minutes = strtol (str, &end, 10);
-    if (*end != ':')
-        throw parseError();
+    const long minutes = strtol(str, &end, 10);
 
-    const long seconds = strtol (++end, &end, 10);
+    if (*end != ':')
+    {
+        throw parseError();
+    }
+
+    const long seconds = strtol(++end, &end, 10);
     result = (minutes * 60) + seconds;
 
-    while (!isspace (*end))
+    while (!isspace(*end))
+    {
         end++;
+    }
 
     return end;
 }
 
 
-bool SidDatabase::open (const char *filename)
+bool SidDatabase::open(const char *filename)
 {
-    close ();
+    close();
     m_parser = new iniParser();
 
-    if (!m_parser->open (filename))
+    if (!m_parser->open(filename))
     {
         errorString = ERR_UNABLE_TO_LOAD_DATABASE;
         return false;
@@ -77,27 +82,28 @@ bool SidDatabase::open (const char *filename)
     return true;
 }
 
-void SidDatabase::close ()
+void SidDatabase::close()
 {
     delete m_parser;
     m_parser = 0;
 }
 
-int_least32_t SidDatabase::length (SidTune &tune)
+int_least32_t SidDatabase::length(SidTune &tune)
 {
     const unsigned int song = tune.getInfo()->currentSong();
+
     if (!song)
     {
         errorString = ERR_NO_SELECTED_SONG;
         return -1;
     }
 
-    char md5[SidTune::MD5_LENGTH+1];
-    tune.createMD5 (md5);
-    return length  (md5, song);
+    char md5[SidTune::MD5_LENGTH + 1];
+    tune.createMD5(md5);
+    return length(md5, song);
 }
 
-int_least32_t SidDatabase::length (const char *md5, unsigned int song)
+int_least32_t SidDatabase::length(const char *md5, unsigned int song)
 {
     if (!m_parser)
     {
@@ -106,13 +112,14 @@ int_least32_t SidDatabase::length (const char *md5, unsigned int song)
     }
 
     // Read Time (and check times before hand)
-    if (!m_parser->setSection ("Database"))
+    if (!m_parser->setSection("Database"))
     {
         errorString = ERR_DATABASE_CORRUPT;
         return -1;
     }
 
-    const char* timeStamp = m_parser->getValue  (md5);
+    const char *timeStamp = m_parser->getValue(md5);
+
     // If return is null then no entry found in database
     if (!timeStamp)
     {
@@ -120,15 +127,18 @@ int_least32_t SidDatabase::length (const char *md5, unsigned int song)
         return -1;
     }
 
-    const char* str = timeStamp;
+    const char *str = timeStamp;
     long  time = 0;
 
     for (unsigned int i = 0; i < song; i++)
     {
         // Validate Time
-        try {
+        try
+        {
             str = parseTime(str, time);
-        } catch (parseError& e) {
+        }
+        catch (parseError &e)
+        {
             errorString = ERR_DATABASE_CORRUPT;
             return -1;
         }
