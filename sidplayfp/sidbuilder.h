@@ -37,11 +37,11 @@ private:
     const char * const m_name;
 
 protected:
-    bool m_status;
-
     std::string m_errorBuffer;
 
     std::set<sidemu *> sidobjs;
+
+    bool m_status;
 
 protected:
     template<class Temu, typename Tparam>
@@ -61,8 +61,8 @@ protected:
 public:
     sidbuilder(const char * const name)
       : m_name(name),
-        m_status (true),
-        m_errorBuffer("N/A") {}
+        m_errorBuffer("N/A"),
+        m_status (true) {}
     virtual ~sidbuilder() {}
 
     /**

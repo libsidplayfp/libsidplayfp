@@ -39,8 +39,8 @@ private:
     sidbuilder *m_builder;
 
 protected:
-    int         m_bufferpos;
     short      *m_buffer;
+    int         m_bufferpos;
 
 public:
     sidemu (sidbuilder *builder)

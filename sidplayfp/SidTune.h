@@ -42,15 +42,16 @@ class SID_EXTERN SidTune
  public:
     static const int MD5_LENGTH = 32;
 
+ private:
+    /// Filename extensions to append for various file types.
+    static const char** fileNameExtensions;
+
  private:  // -------------------------------------------------------------
     std::auto_ptr<SidTuneBase> tune;
 
-    bool m_status;
-
     const char* m_statusString;
 
-    /// Filename extensions to append for various file types.
-    static const char** fileNameExtensions;
+    bool m_status;
 
  public:  // ----------------------------------------------------------------
 

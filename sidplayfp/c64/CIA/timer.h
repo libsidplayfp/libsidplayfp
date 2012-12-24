@@ -55,6 +55,8 @@ protected:
     static const int_least32_t CIAT_OUT        = 0x80000000;
 
 private:
+    EventCallback<Timer> m_cycleSkippingEvent;
+
     /**
     * Event context.
     */
@@ -89,8 +91,6 @@ private:
     * Copy of regs[CRA/B]
     */
     uint8_t lastControlValue;
-
-    EventCallback<Timer> m_cycleSkippingEvent;
 
 protected:
     /**
@@ -146,12 +146,12 @@ protected:
     */
     Timer(const char* name, EventContext *context, MOS6526* parent)
     :Event(name),
+     m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
      event_context(*context),
      timer(0),
      latch(0),
      pbToggle(false),
      lastControlValue(0),
-     m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
      parent(parent),
      state(0) {}
 

@@ -80,11 +80,11 @@ protected:
     /** Current instruction and subcycle within instruction */
     int cycleCount;
 
-    /** IRQ asserted on CPU */
-    bool irqAssertedOnPin;
-
      /** When IRQ was triggered. -MAX means "during some previous instruction", MAX means "no IRQ" */
     int interruptCycle;
+
+    /** IRQ asserted on CPU */
+    bool irqAssertedOnPin;
 
     /** NMI requested? */
     bool nmiFlag;

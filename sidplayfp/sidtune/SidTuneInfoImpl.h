@@ -43,7 +43,12 @@ public:
 
     int m_songSpeed;
 
-    bool m_fixLoad;
+    clock_t m_clockSpeed;
+    
+    model_t m_sidModel1;
+    model_t m_sidModel2;
+    
+    compatibility_t m_compatibility;
 
     uint_least32_t m_dataFileLen;
 
@@ -55,13 +60,6 @@ public:
 
     uint_least16_t m_sidChipBase1;
     uint_least16_t m_sidChipBase2;
-
-    clock_t m_clockSpeed;
-
-    model_t m_sidModel1;
-    model_t m_sidModel2;
-
-    compatibility_t m_compatibility;
 
     uint_least8_t m_relocStartPage;
 
@@ -77,6 +75,8 @@ public:
 
     std::vector<std::string> m_commentString;
 
+    bool m_fixLoad;
+
 private:    // prevent copying
     SidTuneInfoImpl(const SidTuneInfoImpl&);
     SidTuneInfoImpl& operator=(SidTuneInfoImpl&);
@@ -88,7 +88,10 @@ public:
         m_startSong(0),
         m_currentSong(0),
         m_songSpeed(SPEED_VBI),
-        m_fixLoad(false),
+        m_clockSpeed(CLOCK_UNKNOWN),
+        m_sidModel1(SIDMODEL_UNKNOWN),
+        m_sidModel2(SIDMODEL_UNKNOWN),
+        m_compatibility(COMPATIBILITY_C64),
         m_dataFileLen(0),
         m_c64dataLen(0),
         m_loadAddr(0),
@@ -96,12 +99,9 @@ public:
         m_playAddr(0),
         m_sidChipBase1(0xd400),
         m_sidChipBase2(0),
-        m_clockSpeed(CLOCK_UNKNOWN),
-        m_sidModel1(SIDMODEL_UNKNOWN),
-        m_sidModel2(SIDMODEL_UNKNOWN),
-        m_compatibility(COMPATIBILITY_C64),
         m_relocStartPage(0),
-        m_relocPages(0) {}
+        m_relocPages(0),
+        m_fixLoad(false) {}
 
     uint_least16_t loadAddr() const { return m_loadAddr; }
 
