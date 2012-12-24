@@ -32,6 +32,9 @@ class sidbuilder;
 
 /**
 * SidConfig
+*
+* An instance of this class is used to transport emulator settings
+* to and from the interface class.
 */
 class SID_EXTERN SidConfig
 {
@@ -43,8 +46,8 @@ public:
 
 public:
     /**
-    * Maximum power on delay
-    * Delays <= MAX produce constant results.
+    * Maximum power on delay<br>
+    * Delays <= MAX produce constant results<br>
     * Delays >  MAX produce random results
     */
     static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
@@ -54,7 +57,7 @@ public:
 
 public:
     /**
-    * Intended tune speed when unknown or forced
+    * Intended c64 model when unknown or forced
     * - PAL
     * - NTSC
     * - OLD_NTSC
@@ -63,66 +66,72 @@ public:
     c64_model_t defaultC64Model;
 
     /**
-    * Force the model to defaultC64Model ignoring tune's clock setting
+    * Force the model to #defaultC64Model ignoring tune's clock setting
     */
-    bool                forceC64Model;
+    bool forceC64Model;
+
+    /**
+     * Intended sid model when unknown or forced
+     * - MOS6581
+     * - MOS8580
+     */
+    sid_model_t defaultSidModel;
+    
+    /**
+     * Force the sid model to #defaultSidModel
+     */
+    bool forceSidModel;
+
+    /**
+     * Playbak mode
+     * - MONO
+     * - STEREO
+     */
+    playback_t playback;
+
+    /**
+     * Sampling frequency
+     */
+    uint_least32_t frequency;
 
     /**
     * Install a second SID chip at this address
     */
-    uint_least16_t      secondSidAddress;
-
-    /// Sampling frequency
-    uint_least32_t      frequency;
+    uint_least16_t secondSidAddress;
 
     /**
-    * Playbak mode
-    * - MONO
-    * - STEREO
+    * Pointer to selected emulation,
+    * reSIDfp, reSID or hardSID
     */
-    playback_t          playback;
-
-    /**
-    * Intended sid model when unknown or forced
-    * - MOS6581
-    * - MOS8580
-    */
-    sid_model_t         defaultSidModel;
-
-    /**
-    * Force the sid model to defaultSidModel
-    */
-    bool                forceSidModel;
-
-    sidbuilder         *sidEmulation;
+    sidbuilder *sidEmulation;
 
     /**
     * Left channel volume
     */
-    uint_least32_t      leftVolume;
+    uint_least32_t leftVolume;
 
     /**
     * Right channel volume
     */
-    uint_least32_t      rightVolume;
+    uint_least32_t rightVolume;
 
     /**
     * Power on delay cycles
     */
-    uint_least16_t      powerOnDelay;
+    uint_least16_t powerOnDelay;
 
     /**
     * Sampling method
     * - INTERPOLATE
     * - RESAMPLE_INTERPOLATE
     */
-    sampling_method_t   samplingMethod;
+    sampling_method_t samplingMethod;
 
     /**
-    * Faster low-quality emulation
+    * Faster low-quality emulation,
     * available only for reSID
     */
-    bool                fastSampling;
+    bool fastSampling;
 
 public:
     SidConfig();

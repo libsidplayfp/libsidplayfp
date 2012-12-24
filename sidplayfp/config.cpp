@@ -41,9 +41,6 @@ const char  TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 const char  ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 const char  ERR_UNSUPPORTED_PRECISION[] = "SIDPLAYER ERROR: Unsupported sample precision.";
 
-// An instance of this structure is used to transport emulator settings
-// to and from the interface class.
-
 bool Player::config (const SidConfig &cfg)
 {
     const SidTuneInfo* tuneInfo = 0;
