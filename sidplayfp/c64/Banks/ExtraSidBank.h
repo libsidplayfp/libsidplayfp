@@ -55,8 +55,6 @@ private:
     static const int MAPPER_SIZE = 8;
 
 private:
-    Bank *bank;
-
     /**
     * SID mapping table.
     * Maps a SID chip base address to a SID
