@@ -46,7 +46,7 @@ bool Player::config (const SidConfig &cfg)
     const SidTuneInfo* tuneInfo = 0;
 
     // Check for base sampling frequency
-    if (cfg.frequency < 4000)
+    if (cfg.frequency < 8000)
     {
         m_errorString = ERR_UNSUPPORTED_FREQ;
         return false;
