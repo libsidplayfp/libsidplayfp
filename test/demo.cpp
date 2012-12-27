@@ -99,13 +99,11 @@ int main(int argc, char* argv[])
 
     // Configure the engine
     SidConfig cfg;
-    cfg.clockForced = false;
     cfg.frequency = SAMPLERATE;
     cfg.samplingMethod = SidConfig::INTERPOLATE;
     cfg.fastSampling = false;
     cfg.playback = SidConfig::MONO;
     cfg.sidEmulation = rs.get();
-    cfg.sidDefault = SidConfig::MOS6581;
     m_engine.config(cfg);
 
     // Load tune into engine

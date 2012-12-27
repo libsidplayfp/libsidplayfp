@@ -49,7 +49,7 @@ public:
     void    clock() {}
     const   char *credits (void) const { return ""; }
     void    voice (const unsigned int num, const bool mute) {}
-    void    model    (SidConfig::model_t model)  {}
+    void    model    (SidConfig::sid_model_t model)  {}
     const   char *error   (void) const { return ""; }
     bool    lock     (EventContext *env) { return true; }
     void    unlock   () {}
@@ -112,13 +112,10 @@ int main(int argc, char* argv[])
     }
 
     SidConfig cfg;
-    cfg.clockForced = false;
     cfg.frequency = 48000;
     cfg.samplingMethod = SidConfig::INTERPOLATE;
-    cfg.fastSampling = false;
     cfg.playback = SidConfig::MONO;
     cfg.sidEmulation = rs.get();
-    cfg.sidDefault = SidConfig::MOS6581;
     m_engine.config(cfg);
 
     tune->selectSong(0);
