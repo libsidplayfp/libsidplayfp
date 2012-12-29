@@ -78,22 +78,16 @@ int SincResampler::convolve(const short* a, const short* b, int bLength)
     int out = _mm_cvtsi64_si32(acc) + _mm_cvtsi64_si32(_mm_srli_si64(acc, 32));
     _mm_empty();
 
-    const int m = bLength & 3;
-
-    for (int i = 0; i < m; i++)
-    {
-        out += *a++ * *b++;
-    }
-
+    bLength &= 3;
 #else
     int out = 0;
+#endif
 
     for (int i = 0; i < bLength; i++)
     {
         out += *a++ * *b++;
     }
 
-#endif
     return (out + (1 << 14)) >> 15;
 }
 

@@ -108,15 +108,25 @@ AS_IF([test x"$enable_inline" != "xno"],
   [RESID_INLINE=""; RESID_INLINING=0]
 )
 
+AC_ARG_ENABLE([mmx],
+  [AS_HELP_STRING([--enable-mmx],
+    [enable MMX optimization [default=no]])]
+)
 
-# hack to avoid warnings
-saveCPPFLAGS=$CPPFLAGS
-CPPFLAGS="$CPPFLAGS $CXXFLAGS"
+AS_IF([test x"$enable_mmx" = xyes],
+# Testing for mmintrin.h requires compiler support
+# for mmx support activated by specific flags
+# these are most probably defined in CXXFLAGS
+# but AC_CHECK_HEADERS uses only CPPFLAGS
+# so we need a workaround
+  [saveCPPFLAGS=$CPPFLAGS
+   CPPFLAGS="$CPPFLAGS $CXXFLAGS"
 
-AC_CHECK_HEADERS([mmintrin.h])
+   AC_CHECK_HEADERS([mmintrin.h])
 
-CPPFLAGS=$saveCPPFLAGS
-
+   CPPFLAGS=$saveCPPFLAGS]
+)
+ 
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 [AC_COMPILE_IFELSE(
   [AC_LANG_PROGRAM([],
