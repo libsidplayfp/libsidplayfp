@@ -136,7 +136,7 @@ void c64::setSecondSIDAddress(int sidChipBase2)
     resetIoBank();
 
     // Check for valid address in the IO area range ($dxxx)
-    if (sidChipBase2 == 0 || (sidChipBase2 & 0xf000 != 0xd000))
+    if (sidChipBase2 == 0 || ((sidChipBase2 & 0xf000) != 0xd000))
         return;
 
     const int idx = (sidChipBase2 >> 8) & 0xf;
