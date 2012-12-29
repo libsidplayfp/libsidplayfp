@@ -50,7 +50,6 @@ class ReSID: public sidemu
 {
 private:
     EventContext *m_context;
-    event_phase_t m_phase;
     RESID_NS::SID &m_sid;
     event_clock_t m_accessClk;
     const  char  *m_error;
