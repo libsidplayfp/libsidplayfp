@@ -237,20 +237,21 @@ void SID::voiceSync(bool sync)
 
 void SID::setChipModel(ChipModel model)
 {
-    this->model = model;
-
-    if (model == MOS6581)
+    switch (model)
     {
+    case MOS6581:
         filter = filter6581;
-    }
-    else if (model == MOS8580)
-    {
+        break;
+
+    case MOS8580:
         filter = filter8580;
-    }
-    else
-    {
+        break;
+
+    default:
         throw SIDError("Unknown chip type\n");
     }
+
+    this->model = model;
 
     /* calculate waveform-related tables, feed them to the generator */
     array<short>* tables = WaveformCalculator::getInstance()->buildTable(model);
