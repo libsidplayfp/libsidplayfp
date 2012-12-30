@@ -29,6 +29,7 @@
 #include "sidplayfp/event.h"
 #include "sidplayfp/sidemu.h"
 #include "sidplayfp/EventScheduler.h"
+#include "sidplayfp/siddefs.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -141,7 +142,7 @@ public:
 
     // Standard SID functions
     void          filter  (bool enable);
-    void          model   (SidConfig::sid_model_t model) {;}
+    void          model   (SidConfig::sid_model_t model SID_UNUSED) {;}
     void          voice   (unsigned int num, bool mute);
     // HardSID specific
     void          flush   (void);

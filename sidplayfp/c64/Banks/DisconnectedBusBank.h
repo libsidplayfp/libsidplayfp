@@ -35,10 +35,10 @@ class DisconnectedBusBank : public Bank
     /**
     * No device is connected so this is a no-op.
     */
-    void write(uint_least16_t addr, uint8_t data) {}
+    void write(uint_least16_t addr SID_UNUSED, uint8_t data SID_UNUSED) {}
 
     // FIXME this should actually return last byte read from VIC
-    uint8_t read(uint_least16_t addr) { return 0; }
+    uint8_t read(uint_least16_t addr SID_UNUSED) { return 0; }
 };
 
 #endif

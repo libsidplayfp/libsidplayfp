@@ -25,6 +25,7 @@
 
 #include "SidConfig.h"
 #include "component.h"
+#include "sidplayfp/siddefs.h"
 
 
 class sidbuilder;
@@ -67,8 +68,8 @@ public:
     virtual void bufferpos(int pos) { m_bufferpos = pos; }
     virtual short *buffer() const { return m_buffer; }
 
-    virtual void sampling(float systemfreq, float outputfreq,
-        SidConfig::sampling_method_t method, bool fast) { return; }
+    virtual void sampling(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED,
+        SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) { return; }
 };
 
 #endif // SIDEMU_H

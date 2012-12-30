@@ -49,6 +49,12 @@
 #  define SID_DEPRECATED
 #endif
 
+/* Unused attributes */
+#if defined(__GNUC__)
+#  define SID_UNUSED __attribute__ ((unused))
+#else
+#  define SID_UNUSED
+#endif
 
 /* Namespace support */
 #define SIDPLAYFP_NAMESPACE __sidplayfp__

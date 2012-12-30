@@ -30,6 +30,8 @@
 
 #include <string.h>
 
+#include "sidplayfp/siddefs.h"
+
 /* 16 bit header */
 const int BUF = (9 * 2 + 8);
 
@@ -104,10 +106,10 @@ bool reloc65::reloc(unsigned char **buf, int *fsize)
   const int dlen  = tmpBuf[15] * 256 + tmpBuf[14];
   m_ddiff = m_dflag ? m_dbase - dbase : 0;
   const int bbase = tmpBuf[17] * 256 + tmpBuf[16];
-  const int blen  = tmpBuf[19] * 256 + tmpBuf[18];
+  const int blen SID_UNUSED = tmpBuf[19] * 256 + tmpBuf[18];
   m_bdiff = m_bflag ? m_bbase - bbase : 0;
   const int zbase = tmpBuf[21] * 256 + tmpBuf[20];
-  const int zlen  = tmpBuf[23] * 256 + tmpBuf[21];
+  const int zlen SID_UNUSED = tmpBuf[23] * 256 + tmpBuf[21];
   m_zdiff = m_zflag ? m_zbase - zbase : 0;
 
   unsigned char *segt  = tmpBuf + hlen;
@@ -245,6 +247,11 @@ unsigned char *reloc65::reloc_seg(unsigned char *buf, int len, unsigned char *rt
       {
         rtab += 2;
       }
+    }
+
+    if(adr > len)
+    {
+        // Warning: relocation table entries past segment end!
     }
   }
   return ++rtab;

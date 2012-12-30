@@ -30,6 +30,7 @@
 #include "residfp/Filter6581.h"
 #include "residfp/Filter8580.h"
 #include "residfp/siddefs-fp.h"
+#include "sidplayfp/siddefs.h"
 
 std::string ReSIDfp::m_credit;
 
@@ -114,7 +115,7 @@ void ReSIDfp::filter (bool enable)
 }
 
 void ReSIDfp::sampling (float systemclock, float freq,
-        SidConfig::sampling_method_t method, bool fast)
+        SidConfig::sampling_method_t method, bool fast SID_UNUSED)
 {
     reSIDfp::SamplingMethod sampleMethod;
     switch (method)

@@ -24,6 +24,8 @@
 
 #include <stdint.h>
 
+#include "sidplayfp/siddefs.h"
+
 /** @internal
 * Base interface for memory and I/O banks.
 */
