@@ -26,8 +26,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "siddefs.h"
-#include "sidversion.h"
+#include "sidplayfp/siddefs.h"
+#include "sidplayfp/sidversion.h"
 
 class  SidConfig;
 class  SidTune;

@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include "siddefs.h"
+#include "sidplayfp/siddefs.h"
 
 
 class sidbuilder;

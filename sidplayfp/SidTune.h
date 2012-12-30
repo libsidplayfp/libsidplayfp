@@ -27,7 +27,7 @@
 #include <fstream>
 #include <memory>
 
-#include "siddefs.h"
+#include "sidplayfp/siddefs.h"
 
 class SidTuneInfo;
 class SidTuneInfoImpl;

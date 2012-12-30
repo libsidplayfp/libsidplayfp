@@ -26,7 +26,7 @@
 #include <set>
 #include <string>
 
-#include "SidConfig.h"
+#include "sidplayfp/SidConfig.h"
 
 class sidemu;
 class EventContext;
