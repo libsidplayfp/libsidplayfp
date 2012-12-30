@@ -85,6 +85,11 @@ private:
      */
     ExternalFilter* externalFilter;
 
+    /**
+     * Resampler used by audio generation code.
+     */
+    Resampler* resampler;
+
     /** Paddle X register support */
     Potentiometer* potX;
 
@@ -101,11 +106,6 @@ private:
      * Time until synchronize() must be run.
      */
     int nextVoiceSync;
-
-    /**
-     * Resampler used by audio generation code.
-     */
-    Resampler* resampler;
 
     /** Delayed MOS8580 write register */
     int delayedOffset;
