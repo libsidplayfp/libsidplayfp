@@ -44,9 +44,9 @@ SID::SID() :
     filter6581(new Filter6581()),
     filter8580(new Filter8580()),
     externalFilter(new ExternalFilter()),
+    resampler(0),
     potX(new Potentiometer()),
-    potY(new Potentiometer()),
-    resampler(0)
+    potY(new Potentiometer())
 {
 
     voice[0] = new Voice();
