@@ -43,7 +43,7 @@ public:
 };
 
 /** @internal
-* Extra SID
+* Extra SID bank
 */
 class ExtraSidBank : public Bank
 {
@@ -58,7 +58,7 @@ private:
     /**
     * SID mapping table.
     * Maps a SID chip base address to a SID
-    * chip number.
+    * or to the underlying bank.
     */
     Bank *mapper[MAPPER_SIZE];
 
@@ -109,7 +109,7 @@ public:
     /**
     * Get SID emulation.
     *
-    * @ratuen the emulation
+    * @return the emulation
     */
     sidemu *getSID() const { return sid.getSID(); }
 };
