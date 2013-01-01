@@ -44,25 +44,6 @@ private:
     uint8_t lp;
 
 protected:
-    void write(uint_least16_t address, uint8_t value)
-    {
-        // Save the value written to Timer A
-        if (address == 0xDC04)
-        {
-            endian_16lo8(t1a, value);
-        }
-        else if (address == 0xDC05)
-        {
-            endian_16hi8 (t1a, value);
-        }
-        MOS6526::write(endian_16lo8(address), value);
-    }
-
-    uint8_t read(uint_least16_t address)
-    {
-        return MOS6526::read(endian_16lo8(address));
-    }
-
     void interrupt (bool state)
     {
         m_env.interruptIRQ (state);
@@ -82,6 +63,25 @@ public:
     c64cia1 (c64env *env)
     :MOS6526(&(env->context ())),
      m_env(*env) {}
+
+    void poke(uint_least16_t address, uint8_t value)
+    {
+        // Save the value written to Timer A
+        if (address == 0xDC04)
+        {
+            endian_16lo8(t1a, value);
+        }
+        else if (address == 0xDC05)
+        {
+            endian_16hi8 (t1a, value);
+        }
+        write(endian_16lo8(address), value);
+    }
+
+    uint8_t peek(uint_least16_t address)
+    {
+        return read(endian_16lo8(address));
+    }
 
     const char *error (void) const {return "";}
 
@@ -105,16 +105,6 @@ private:
     c64env &m_env;
 
 protected:
-    void write(uint_least16_t address, uint8_t value)
-    {
-        MOS6526::write(address, value);
-    }
-
-    uint8_t read(uint_least16_t address)
-    {
-        return MOS6526::read(address);
-    }
-
     void interrupt (bool state)
     {
         if (state)
@@ -125,6 +115,16 @@ public:
     c64cia2 (c64env *env)
     :MOS6526(&(env->context ())),
      m_env(*env) {}
+
+    void poke(uint_least16_t address, uint8_t value)
+    {
+        write(address, value);
+    }
+
+    uint8_t peek(uint_least16_t address)
+    {
+        return read(address);
+    }
 
     const char *error (void) const {return "";}
 };

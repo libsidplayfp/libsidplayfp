@@ -48,14 +48,14 @@ public:
         return map[num];
     }
 
-    uint8_t read(uint_least16_t addr)
+    uint8_t peek(uint_least16_t addr)
     {
-        return map[addr >> 8 & 0xf]->read(addr);
+        return map[addr >> 8 & 0xf]->peek(addr);
     }
 
-    void write(uint_least16_t addr, uint8_t data)
+    void poke(uint_least16_t addr, uint8_t data)
     {
-        map[addr >> 8 & 0xf]->write(addr, data);
+        map[addr >> 8 & 0xf]->poke(addr, data);
     }
 };
 

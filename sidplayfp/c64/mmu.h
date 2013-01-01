@@ -89,10 +89,10 @@ public:
     }
 
     // RAM access methods
-    uint8_t readMemByte(uint_least16_t addr) { return ramBank.read(addr); }
+    uint8_t readMemByte(uint_least16_t addr) { return ramBank.peek(addr); }
     uint_least16_t readMemWord(uint_least16_t addr) { return endian_little16(ramBank.array()+addr); }
 
-    void writeMemByte(uint_least16_t addr, uint8_t value) { ramBank.write(addr, value); }
+    void writeMemByte(uint_least16_t addr, uint8_t value) { ramBank.poke(addr, value); }
     void writeMemWord(uint_least16_t addr, uint_least16_t value) { endian_little16(ramBank.array()+addr, value); }
 
     void fillRam(uint_least16_t start, uint8_t value, unsigned int size)
@@ -117,7 +117,7 @@ public:
      * @param address
      * @return value at address
      */
-    uint8_t cpuRead(uint_least16_t addr) const { return cpuReadMap[addr >> 12]->read(addr); }
+    uint8_t cpuRead(uint_least16_t addr) const { return cpuReadMap[addr >> 12]->peek(addr); }
 
     /**
      * Access memory as seen by CPU.
@@ -125,7 +125,7 @@ public:
      * @param address
      * @param value
      */
-    void cpuWrite(uint_least16_t addr, uint8_t data) { cpuWriteMap[addr >> 12]->write(addr, data); }
+    void cpuWrite(uint_least16_t addr, uint8_t data) { cpuWriteMap[addr >> 12]->poke(addr, data); }
 };
 
 #endif

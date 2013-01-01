@@ -42,7 +42,7 @@ public:
      * @param address address to write to
      * @param value value to write
      */
-    virtual void write(uint_least16_t address, uint8_t value) =0;
+    virtual void poke(uint_least16_t address, uint8_t value) =0;
 
     /**
      * Bank read. You probably
@@ -52,7 +52,10 @@ public:
      * @param address value to read from
      * @return value at address
      */
-    virtual uint8_t read(uint_least16_t address) =0;
+    virtual uint8_t peek(uint_least16_t address) =0;
+
+protected:
+    ~Bank() {}
 };
 
 #endif

@@ -70,7 +70,6 @@ public:
     */
     Event(const char * const name)
         : m_name(name) {}
-    ~Event() {}
 
     /**
     * Event code to be executed. Events are allowed to safely
@@ -78,6 +77,9 @@ public:
     * invocations.
     */
     virtual void event (void) = 0;
+
+protected:
+    ~Event() {}
 };
 
 /**
@@ -150,6 +152,9 @@ public:
     * @return The current phase
     */
     virtual event_phase_t phase () const = 0;
+
+protected:
+    ~EventContext() {}
 };
 
 #endif // EVENT_H

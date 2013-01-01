@@ -98,6 +98,9 @@ public:
     * @param tune the tune number
     */
     virtual void setBasicSubtune(uint8_t tune) =0;
+
+protected:
+    ~sidmemory() {}
 };
 
 #endif

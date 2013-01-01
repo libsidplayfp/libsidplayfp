@@ -154,6 +154,7 @@ protected:
     * @param ctx the event context
     */
     MOS6526(EventContext *context);
+    ~MOS6526() {}
 
     /**
     * This event exists solely to break the ambiguity of what scheduling on
@@ -218,17 +219,6 @@ protected:
     virtual void portA() {}
     virtual void portB() {}
 
-private:
-    // TOD implementation taken from Vice
-    static uint8_t byte2bcd(uint8_t byte) { return (((byte / 10) << 4) + (byte % 10)) & 0xff; }
-    static uint8_t bcd2byte(uint8_t bcd) { return ((10*((bcd & 0xf0) >> 4)) + (bcd & 0xf)) & 0xff; }
-
-public:
-    /**
-    * Reset CIA.
-    */
-    virtual void reset(void);
-
     /**
     * Read CIA register.
     *
@@ -246,6 +236,17 @@ public:
     *            value to write
     */
     void write(uint_least8_t addr, uint8_t data);
+
+private:
+    // TOD implementation taken from Vice
+    static uint8_t byte2bcd(uint8_t byte) { return (((byte / 10) << 4) + (byte % 10)) & 0xff; }
+    static uint8_t bcd2byte(uint8_t bcd) { return ((10*((bcd & 0xf0) >> 4)) + (bcd & 0xf)) & 0xff; }
+
+public:
+    /**
+    * Reset CIA.
+    */
+    virtual void reset(void);
 
     /**
     * Get the credits.

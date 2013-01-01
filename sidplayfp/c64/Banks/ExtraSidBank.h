@@ -25,24 +25,6 @@
 #include "sidplayfp/sidemu.h"
 
 /** @internal
-* SID emu wrapper
-*/
-class sidwrapper : public Bank
-{
-private:
-    sidemu *sid;
-
-public:
-    void setSID(sidemu *s) { sid = s; }
-    sidemu *getSID() const { return sid; }
-
-    void reset() { if (sid) sid->reset(); }
-
-    void write(uint_least16_t address, uint8_t value) { if (sid) sid->write(address & 0x1f, value); }
-    uint8_t read(uint_least16_t address) { return sid ? sid->read(address & 0x1f) : 0xff; }
-};
-
-/** @internal
 * Extra SID bank
 */
 class ExtraSidBank : public Bank
@@ -62,7 +44,7 @@ private:
     */
     Bank *mapper[MAPPER_SIZE];
 
-    sidwrapper sid;
+    sidemu *sid;
 
 private:
     static unsigned int mapperIndex(int address) { return address >> 5 & (MAPPER_SIZE - 1); }
@@ -70,7 +52,8 @@ private:
 public:
     void reset()
     {
-        sid.reset();
+        if (sid)
+            sid->reset(0xf);
     }
 
     void resetSIDMapper(Bank *bank)
@@ -86,17 +69,17 @@ public:
     */
     void setSIDMapping(int address)
     {
-        mapper[mapperIndex(address)] = &sid;
+        mapper[mapperIndex(address)] = sid;
     }
 
-    uint8_t read(uint_least16_t addr)
+    uint8_t peek(uint_least16_t addr)
     {
-        return mapper[mapperIndex(addr)]->read(addr);
+        return mapper[mapperIndex(addr)]->peek(addr);
     }
 
-    void write(uint_least16_t addr, uint8_t data)
+    void poke(uint_least16_t addr, uint8_t data)
     {
-        mapper[mapperIndex(addr)]->write(addr, data);
+        mapper[mapperIndex(addr)]->poke(addr, data);
     }
 
     /**
@@ -104,14 +87,14 @@ public:
     *
     * @param s the emulation
     */
-    void setSID(sidemu *s) { sid.setSID(s); }
+    void setSID(sidemu *s) { sid = s; }
 
     /**
     * Get SID emulation.
     *
     * @return the emulation
     */
-    sidemu *getSID() const { return sid.getSID(); }
+    sidemu *getSID() const { return sid; }
 };
 
 #endif

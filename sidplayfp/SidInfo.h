@@ -57,6 +57,9 @@ public:
     virtual const char *basicDesc() const =0;
     virtual const char *chargenDesc() const =0;
     //@}
+
+protected:
+    ~SidInfo() {}
 };
 
 #endif  /* SIDINFO_H */

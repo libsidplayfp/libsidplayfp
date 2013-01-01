@@ -195,6 +195,9 @@ public:
     * Returns 0 if none.
     */
     virtual const char* infoFileName() const =0;
+
+protected:
+    ~SidTuneInfo() {}
 };
 
 #endif  /* SIDTUNEINFO_H */

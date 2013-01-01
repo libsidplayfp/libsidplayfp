@@ -25,8 +25,8 @@
 
 #include "SidConfig.h"
 #include "component.h"
+#include "sidplayfp/c64/Banks/Bank.h"
 #include "sidplayfp/siddefs.h"
-
 
 class sidbuilder;
 class EventContext;
@@ -34,7 +34,7 @@ class EventContext;
 /** @internal
 * Inherit this class to create a new SID emulation.
 */
-class sidemu: public component
+class sidemu: public component, public Bank
 {
 private:
     sidbuilder *m_builder;
@@ -45,16 +45,14 @@ protected:
 
 public:
     sidemu (sidbuilder *builder)
-        : m_builder (builder), m_buffer(0) {;}
-    virtual ~sidemu () {;}
+        : m_builder (builder), m_buffer(0) {}
+    virtual ~sidemu () {}
 
     // Standard component functions
     void            reset () { reset (0); }
+
     virtual void    reset (uint8_t volume) = 0;
-    virtual uint8_t read  (uint_least8_t addr) = 0;
-    virtual void    write (uint_least8_t addr, uint8_t data) = 0;
     virtual void    clock () = 0;
-    virtual const   char *credits (void) const = 0;
 
     virtual bool lock     (EventContext *env) = 0;
     virtual void unlock   () = 0;
@@ -62,14 +60,18 @@ public:
     // Standard SID functions
     virtual void    voice   (unsigned int num, bool mute) = 0;
     virtual void    model    (SidConfig::sid_model_t model) = 0;
+
     sidbuilder     *builder (void) const { return m_builder; }
 
-    virtual int bufferpos() const { return m_bufferpos; }
-    virtual void bufferpos(int pos) { m_bufferpos = pos; }
-    virtual short *buffer() const { return m_buffer; }
-
     virtual void sampling(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED,
-        SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) { return; }
+        SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) {}
+
+    int bufferpos() const { return m_bufferpos; }
+    void bufferpos(int pos) { m_bufferpos = pos; }
+    short *buffer() const { return m_buffer; }
+
+    void poke(uint_least16_t address, uint8_t value) { write(address & 0x1f, value); }
+    uint8_t peek(uint_least16_t address) { return read(address & 0x1f); }
 };
 
 #endif // SIDEMU_H

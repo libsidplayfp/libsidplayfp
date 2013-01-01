@@ -27,12 +27,17 @@
 
 class component
 {
-public:
-    virtual void    reset (void) = 0;
+protected:
     virtual uint8_t read  (uint_least8_t addr) = 0;
     virtual void    write (uint_least8_t addr, uint8_t data) = 0;
+
+public:
+    virtual void    reset (void) = 0;
     virtual const   char *credits (void) const = 0;
     virtual const   char *error   (void) const = 0;
+
+protected:
+    ~component() {}
 };
 
 #endif // COMPONENT_H

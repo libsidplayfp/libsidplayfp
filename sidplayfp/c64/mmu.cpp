@@ -117,13 +117,13 @@ void MMU::reset()
             {
                 const uint8_t data = POWERON[i++];
                 while (count-- > 0)
-                    ramBank.write(addr++, data);
+                    ramBank.poke(addr++, data);
             }
             // Extract uncompressed data
             else
             {
                 while (count-- > 0)
-                    ramBank.write(addr++, POWERON[i++]);
+                    ramBank.poke(addr++, POWERON[i++]);
             }
         }
     }

@@ -51,7 +51,7 @@ private:
 
 public:
     sidplayfp ();
-    virtual ~sidplayfp ();
+    ~sidplayfp ();
 
     /**
     * Get the current engine configuration.

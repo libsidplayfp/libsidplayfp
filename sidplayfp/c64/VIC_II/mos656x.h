@@ -113,7 +113,9 @@ private:
     void handleIrqState();
 
 protected:
-    MOS656X (EventContext *context);
+    MOS656X(EventContext *context);
+    ~MOS656X() {}
+
     void    event       (void);
 
     EventCallback<MOS656X> badLineStateChangeEvent;
@@ -150,13 +152,6 @@ protected:
     virtual void interrupt (bool state) = 0;
     virtual void setBA     (bool state) = 0;
 
-public:
-    void    chip  (model_t model);
-    void    lightpen ();
-
-    // Component Standard Calls
-    void    reset (void);
-
     /**
     * Read VIC register.
     *
@@ -174,6 +169,13 @@ public:
     *            Data byte to write.
     */
     void    write (uint_least8_t addr, uint8_t data);
+
+public:
+    void    chip  (model_t model);
+    void    lightpen ();
+
+    // Component Standard Calls
+    void    reset (void);
 
     const   char *credits (void) const { return credit; }
 

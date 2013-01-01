@@ -129,6 +129,9 @@ protected:
     struct ProcessorCycle  instrTable[0x101 << 3];
 
 protected:
+    MOS6510(EventContext *context);
+    ~MOS6510() {}
+
     /** Represents an instruction subcycle that writes */
     EventCallback<MOS6510> m_nosteal;
 
@@ -268,6 +271,7 @@ protected:
 
     inline void doJSR   (void);
 
+public:
     /**
     * Get data from system environment
     *
@@ -288,9 +292,6 @@ protected:
     virtual void   loadFile (const char *file) =0;
 #endif
 
-public:
-    MOS6510 (EventContext *context);
-    virtual ~MOS6510 () {}
     virtual void reset     (void);
     const char  *credits(void) const { return credit; }
     void         debug     (bool enable, FILE *out);

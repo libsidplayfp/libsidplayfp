@@ -58,6 +58,9 @@ public:
 
     virtual void setBA        (bool state) = 0;
     virtual void lightpen     () = 0;
+
+protected:
+    ~c64env() {}
 };
 
 #endif // C64ENV_H

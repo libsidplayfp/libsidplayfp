@@ -41,16 +41,6 @@ private:
     c64env &m_env;
 
 protected:
-    void write(uint_least16_t address, uint8_t value)
-    {
-        MOS656X::write(endian_16lo8(address), value);
-    }
-
-    uint8_t read(uint_least16_t address)
-    {
-        return MOS656X::read(endian_16lo8(address));
-    }
-
     void interrupt (bool state)
     {
         m_env.interruptIRQ (state);
@@ -65,6 +55,16 @@ public:
     c64vic (c64env *env)
     :MOS656X(&(env->context ())),
      m_env(*env) {}
+
+    void poke(uint_least16_t address, uint8_t value)
+    {
+        write(endian_16lo8(address), value);
+    }
+
+    uint8_t peek(uint_least16_t address)
+    {
+        return read(endian_16lo8(address));
+    }
 
     const char *error (void) const {return "";}
 };

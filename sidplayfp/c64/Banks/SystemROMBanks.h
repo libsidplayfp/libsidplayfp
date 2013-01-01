@@ -54,9 +54,9 @@ public:
     void set(const uint8_t* source) { if (source) memcpy(rom, source, N); }
 
     /// Writing to ROM is a no-op
-    void write(uint_least16_t address SID_UNUSED, uint8_t value SID_UNUSED) {}
+    void poke(uint_least16_t address SID_UNUSED, uint8_t value SID_UNUSED) {}
 
-    uint8_t read(uint_least16_t address) { return rom[address & (N-1)]; }
+    uint8_t peek(uint_least16_t address) { return rom[address & (N-1)]; }
 };
 
 /** @internal

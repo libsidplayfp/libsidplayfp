@@ -177,7 +177,7 @@ public:
        the above described behavior :)
     */
 
-    uint8_t read(uint_least16_t address)
+    uint8_t peek(uint_least16_t address)
     {
         switch (address)
         {
@@ -203,11 +203,11 @@ public:
 
             return (dataRead & 0x3f) | dataSetBit6 | dataSetBit7;
         default:
-            return ramBank->read(address);
+            return ramBank->peek(address);
         }
     }
 
-    void write(uint_least16_t address, uint8_t value)
+    void poke(uint_least16_t address, uint8_t value)
     {
         switch (address)
         {
@@ -277,7 +277,7 @@ public:
             break;
         }
 
-        ramBank->write(address, value);
+        ramBank->poke(address, value);
     }
 };
 

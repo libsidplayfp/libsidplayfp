@@ -46,15 +46,15 @@ public:
             sid->reset(0xf);
     }
 
-    uint8_t read(uint_least16_t addr)
+    uint8_t peek(uint_least16_t addr)
     {
-        return sid ? sid->read(addr & 0x1f) : 0xff;
+        return sid ? sid->peek(addr) : 0xff;
     }
 
-    void write(uint_least16_t addr, uint8_t data)
+    void poke(uint_least16_t addr, uint8_t data)
     {
         if (sid)
-            sid->write(addr & 0x1f, data);
+            sid->poke(addr, data);
     }
 
     /**
