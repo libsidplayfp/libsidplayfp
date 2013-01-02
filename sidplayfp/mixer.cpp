@@ -34,7 +34,7 @@ void Mixer::event()
     if (m_sampleBuffer)
     {
         short *buf = m_sampleBuffer + m_sampleIndex;
-            /* extract buffer info now that the SID is updated.
+        /* extract buffer info now that the SID is updated.
         * clock() may update bufferpos. */
         short *buf1 = m_chip1->buffer();
         short *buf2 = m_chip2 ? m_chip2->buffer() : 0;

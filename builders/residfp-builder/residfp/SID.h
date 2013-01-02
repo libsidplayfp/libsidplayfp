@@ -103,7 +103,7 @@ private:
     int busValueTtl;
 
     /**
-     * Time until synchronize() must be run.
+     * Time until #voiceSync must be run.
      */
     int nextVoiceSync;
 
@@ -132,6 +132,11 @@ private:
      */
     void writeImmediate(int offset, unsigned char value);
 
+    /**
+     * Age the bus value and zero it if it's TTL has expired
+     *
+     * @param n the number of cycles
+     */
     void ageBusValue(int n);
 
     /**
@@ -142,10 +147,10 @@ private:
     int output() const;
 
     /**
-     * Return the numebr of cycles according to current parameters
+     * Calculate the numebr of cycles according to current parameters
      * that it takes to reach sync.
      *
-     * @param sync
+     * @param sync whether to do the actual voice synchronization
      */
     void voiceSync(bool sync);
 
