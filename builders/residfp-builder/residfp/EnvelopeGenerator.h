@@ -28,7 +28,7 @@
 namespace reSIDfp
 {
 
-/** @internal
+/**
  * A 15 bit LFSR is used to implement the envelope rates, in effect dividing
  * the clock to the envelope counter by the currently selected rate period.
  * <P>

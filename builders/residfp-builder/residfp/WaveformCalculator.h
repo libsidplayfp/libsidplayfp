@@ -41,7 +41,7 @@ typedef struct
     float stmix;
 } CombinedWaveformConfig;
 
-/** @internal
+/**
  * Combined waveform calculator for WaveformGenerator.
  *
  * @author Antti Lankila

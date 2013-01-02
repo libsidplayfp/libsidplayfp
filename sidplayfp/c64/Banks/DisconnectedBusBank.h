@@ -24,7 +24,7 @@
 
 #include "Bank.h"
 
-/** @internal
+/**
 * IO1/IO2
 * memory mapped registers or machine code routines of optional external devices 
 * I/O Area #1 located at $DE00-$DEFF

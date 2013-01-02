@@ -28,7 +28,7 @@
 
 #include "sidplayfp/sidmd5.h"
 
-/** @internal
+/**
 */
 class romCheck
 {
@@ -96,7 +96,7 @@ public:
     }
 };
 
-/** @internal
+/**
 * romCheck implementation specific for kernal ROM.
 */
 class kernalCheck : public romCheck
@@ -115,7 +115,7 @@ public:
     }
 };
 
-/** @internal
+/**
 * romCheck implementation specific for basic ROM.
 */
 class basicCheck : public romCheck
@@ -128,7 +128,7 @@ public:
     }
 };
 
-/** @internal
+/**
 * romCheck implementation specific for character generator ROM.
 */
 class chargenCheck : public romCheck

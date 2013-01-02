@@ -27,7 +27,7 @@
 
 #include "Bank.h"
 
-/** @internal
+/**
  * Area backed by RAM
  *
  * @author Antti Lankila

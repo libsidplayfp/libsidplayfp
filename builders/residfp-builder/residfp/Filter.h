@@ -26,7 +26,7 @@
 namespace reSIDfp
 {
 
-/** @internal
+/**
  * SID filter base class
  *
  * @author Ken Händel

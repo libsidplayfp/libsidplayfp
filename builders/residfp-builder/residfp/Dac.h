@@ -26,7 +26,7 @@
 namespace reSIDfp
 {
 
-/** @internal
+/**
 * Estimate DAC nonlinearity. The SID contains R-2R ladder, and some likely errors
 * in the resistor lengths which result in errors depending on the bits chosen.
 *

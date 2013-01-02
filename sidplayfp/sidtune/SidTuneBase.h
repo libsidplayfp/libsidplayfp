@@ -37,7 +37,7 @@ template class Buffer_sidtt<const uint_least8_t>;
 
 class SidTuneInfoImpl;
 
-/** @internal
+/**
 * loadError
 */
 class loadError {
@@ -48,7 +48,7 @@ public:
     const char* message() const { return m_msg; }
 };
 
-/** @internal
+/**
 * SidTuneBaseBase
 */
 class SidTuneBase

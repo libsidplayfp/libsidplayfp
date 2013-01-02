@@ -51,7 +51,7 @@ public:
 };
 #endif
 
-/** @internal
+/**
 * Commodore 64 emulation core.
 *
 * It consists of the following chips: PLA, MOS6510, MOS6526(a), VIC

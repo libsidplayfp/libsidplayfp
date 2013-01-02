@@ -43,7 +43,7 @@
 #   define PACKAGE_VERSION VERSION
 #endif
 
-/** @internal
+/**
 * The implementation of the SidInfo interface.
 */
 class SidInfoImpl : public SidInfo

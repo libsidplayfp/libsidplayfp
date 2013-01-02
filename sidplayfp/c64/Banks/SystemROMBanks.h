@@ -28,7 +28,7 @@
 #include "Bank.h"
 #include "sidplayfp/c64/CPU/opcodes.h"
 
-/** @internal
+/**
  * ROM bank base class
  * N must be a power of two
  */
@@ -59,7 +59,7 @@ public:
     uint8_t peek(uint_least16_t address) { return rom[address & (N-1)]; }
 };
 
-/** @internal
+/**
  * Kernal ROM
  */
 class KernalRomBank : public romBank<0x2000>
@@ -167,7 +167,7 @@ public:
     }
 };
 
-/** @internal
+/**
  * BASIC ROM
  */
 class BasicRomBank : public romBank<0x2000>
@@ -223,7 +223,7 @@ public:
     }
 };
 
-/** @internal
+/**
  * Character ROM
  */
 class CharacterRomBank : public romBank<0x1000> {};

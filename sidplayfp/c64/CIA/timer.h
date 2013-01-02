@@ -29,7 +29,7 @@
 
 class MOS6526;
 
-/** @internal
+/**
 * This is the base class for the MOS6526 timers.
 *
 * @author Ken Händel

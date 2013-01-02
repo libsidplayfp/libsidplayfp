@@ -31,7 +31,7 @@
 class sidbuilder;
 class EventContext;
 
-/** @internal
+/**
 * Inherit this class to create a new SID emulation.
 */
 class sidemu: public component, public Bank

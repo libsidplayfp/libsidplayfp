@@ -24,7 +24,7 @@
 #include "Bank.h"
 #include "sidplayfp/sidemu.h"
 
-/** @internal
+/**
 * Extra SID bank
 */
 class ExtraSidBank : public Bank

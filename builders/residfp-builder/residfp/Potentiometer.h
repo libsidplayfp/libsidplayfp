@@ -26,7 +26,7 @@
 namespace reSIDfp
 {
 
-/** @internal
+/**
  * Potentiometer representation.
  *
  * This class will probably never be implemented in any real way.

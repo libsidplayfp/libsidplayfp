@@ -27,7 +27,7 @@
 
 #include <stdint.h>
 
-/** @internal
+/**
 * Interface to PLA functions.
 */
 class PLA
@@ -38,7 +38,7 @@ public:
     virtual event_clock_t getPhi2Time() const =0;
 };
 
-/** @internal
+/**
 * Area backed by RAM, including cpu port addresses 0 and 1.
 *
 * This is bit of a fake. We know that the CPU port is an internal

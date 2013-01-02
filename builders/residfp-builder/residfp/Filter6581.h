@@ -33,7 +33,7 @@ namespace reSIDfp
 
 class Integrator;
 
-/** @internal
+/**
  * Filter based on Dag Lem's 6581 filter from reSID 1.0 prerelease. See original
  * source for discussion about theory of operation.
  *

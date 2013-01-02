@@ -31,7 +31,7 @@
 #include "sidplayfp/sidendian.h"
 #include "CIA/mos6526.h"
 
-/** @internal
+/**
 * CIA 1
 * Generates IRQs
 * located at $DC00-$DCFF
@@ -94,7 +94,7 @@ public:
     uint_least16_t getTimerA() const { return t1a; }
 };
 
-/** @internal
+/**
 * CIA 2
 * Generates NMIs
 * located at $DD00-$DDFF

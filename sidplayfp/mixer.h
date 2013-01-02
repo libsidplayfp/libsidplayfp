@@ -29,7 +29,7 @@
 #include "event.h"
 #include "sidbuilder.h"
 
-/** @internal
+/**
 * This class implements the mixer.
 */
 class Mixer : private Event {

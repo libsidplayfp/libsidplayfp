@@ -30,7 +30,7 @@
 namespace reSIDfp
 {
 
-/** @internal
+/**
  * Filter for 8580 chip based on simple linear approximation
  * of the FC control.
  *

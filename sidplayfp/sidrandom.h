@@ -21,7 +21,7 @@
 #ifndef SIDRANDOM_H
 #define SIDRANDOM_H
 
-/** @internal
+/**
  * Simple thread-safe PRNG.
  */
 class sidrandom

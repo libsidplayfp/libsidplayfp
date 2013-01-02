@@ -27,7 +27,7 @@
 
 #include "utils/MD5/MD5.h"
 
-/** @internal
+/**
 * A wrapper around the md5 implementation that provides
 * an hex formatted digest
 */

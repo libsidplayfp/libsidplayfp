@@ -36,7 +36,7 @@ class Potentiometer;
 class Voice;
 class Resampler;
 
-/** @internal
+/**
  * SID error exception.
  */
 class SIDError
@@ -50,7 +50,7 @@ public:
     const char* getMessage() { return message; }
 };
 
-/** @internal
+/**
  * MOS6581/MOS8580 emulation.
  * Based on reSID 0.16 by Dag Lem,
  * and then hacked on by Antti S. Lankila.

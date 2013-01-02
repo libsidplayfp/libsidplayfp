@@ -28,7 +28,7 @@
 #include "timer.h"
 #include "sidplayfp/component.h"
 
-/** @internal
+/**
 * This is the timer A of this CIA.
 *
 * @author Ken Händel
@@ -52,7 +52,7 @@ public:
         Timer("CIA Timer A", context, parent) {}
 };
 
-/** @internal
+/**
 * This is the timer B of this CIA.
 *
 * @author Ken Händel
@@ -89,7 +89,7 @@ public:
     bool started() const { return (state & CIAT_CR_START) != 0; }
 };
 
-/** @internal
+/**
  * This class is heavily based on the ciacore/ciatimer source code from VICE.
  * The CIA state machine is lifted as-is. Big thanks to VICE project!
  *

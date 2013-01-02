@@ -30,7 +30,7 @@
 namespace reSIDfp
 {
 
-/** @internal
+/**
  * Representation of SID voice block.
  *
  * @author Ken Händel

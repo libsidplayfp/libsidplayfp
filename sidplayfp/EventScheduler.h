@@ -44,7 +44,7 @@ public:
 };
 
 
-/** @internal
+/**
 * Fast EventScheduler implementation
 *
 * @author Antti S. Lankila

@@ -25,7 +25,7 @@
 #include "Bank.h"
 #include "sidplayfp/sidemu.h"
 
-/** @internal
+/**
 * SID
 * located at $D400-$D7FF, mirrored each 32 bytes
 */

@@ -34,7 +34,7 @@
 #  include "config.h"
 #endif
 
-/** @internal
+/**
 * Cycle-exact 6502/6510 emulation core.
 *
 * Code is based on work by Simon A. White <sidplay2@yahoo.com>.

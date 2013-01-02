@@ -27,7 +27,7 @@ namespace reSIDfp
 
 typedef double(*Params)[6];
 
-/** @internal
+/**
 */
 class Spline
 {

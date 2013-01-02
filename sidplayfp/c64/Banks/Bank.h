@@ -26,7 +26,7 @@
 
 #include "sidplayfp/siddefs.h"
 
-/** @internal
+/**
 * Base interface for memory and I/O banks.
 */
 class Bank

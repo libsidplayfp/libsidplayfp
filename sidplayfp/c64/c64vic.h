@@ -31,7 +31,7 @@
 #include "sidplayfp/sidendian.h"
 #include "VIC_II/mos656x.h"
 
-/** @internal
+/**
 * VIC-II
 * located at $D000-$D3FF
 */

@@ -29,7 +29,7 @@
 
 #include "sidplayfp/SidTuneInfo.h"
 
-/** @internal
+/**
 * The implementation of the SidTuneInfo interface.
 */
 class SidTuneInfoImpl : public SidTuneInfo

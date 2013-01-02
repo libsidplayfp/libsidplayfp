@@ -28,7 +28,7 @@
 namespace reSIDfp
 {
 
-/** @internal
+/**
  *
  * The audio output stage in a Commodore 64 consists of two STC networks, a
  * low-pass filter with 3-dB frequency 16kHz followed by a high-pass filter with

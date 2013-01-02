@@ -21,7 +21,7 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
-/** @internal
+/**
  */
 class counter
 {
@@ -35,7 +35,7 @@ public:
     unsigned int decrease() { return --c; }
 };
 
-/** @internal
+/**
  * Reference counted pointer to array wrapper, for use with standard containers.
  */
 template<typename T>

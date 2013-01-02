@@ -35,7 +35,7 @@
 
 #include <string.h>
 
-/** @internal
+/**
  * The C64 MMU chip.
 */
 class MMU : public PLA, public sidmemory
