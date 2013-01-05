@@ -1,3 +1,13 @@
+1.0.0 2013-xx-xx
+* Dropped support for ancient formats
+* Removed unused functionalities
+* Improved emulation
+* Reworked and cleaned up codebase
+* Merged builders in the main library
+* Added libstilview
+
+
+
 0.3.8 2012-11-25
 * Bail out at configure time if stdint.h is not found
 * Fix a fixed point overflow introduced in r702, reported to break /MUSICIANS/S/Surgeon/Dual_Mind.sid (bug ID: 3588984)
