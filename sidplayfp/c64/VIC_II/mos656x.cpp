@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2012 Leando Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -50,7 +50,7 @@ const char *MOS656X::credit =
     "MOS656X (VICII) Emulation:\n"
     "\tCopyright (C) 2001 Simon White\n"
     "\tCopyright (C) 2007-2010 Antti Lankila\n"
-    "\tCopyright (C) 2011-2012 Leando Nini\n"
+    "\tCopyright (C) 2011-2013 Leandro Nini\n"
 };
 
 
