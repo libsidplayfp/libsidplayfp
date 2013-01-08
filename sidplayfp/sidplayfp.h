@@ -69,9 +69,10 @@ public:
 
     /**
     * Configure the engine.
+    * Check #error for detailed message if something goes wrong.
     *
     * @param cfg the new configuration
-    * @return true on sucess, false otherwise.
+    * @return true on success, false otherwise.
     */
     bool config(const SidConfig &cfg);
 
@@ -83,7 +84,7 @@ public:
     const char *error(void) const;
 
     /**
-    * 
+    * Set the fast-forward factor.
     *
     * @param percent
     */
@@ -91,6 +92,7 @@ public:
 
     /**
     * Load a tune.
+    * Check #error for detailed message if something goes wrong.
     *
     * @param tune the SidTune to load, 0 unloads current tune.
     * @return true on sucess, false otherwise.
@@ -114,12 +116,14 @@ public:
     bool isPlaying(void) const;
 
     /**
-    * Stop engine
+    * Stop the engine.
     */
     void stop(void);
 
     /**
     * Control debugging.
+    * Only has effect if library have been compiled
+    * with the --enable-debug option.
     *
     * @param enable enable/disable debugging.
     * @param out the file where to redirect the debug info.
@@ -143,13 +147,12 @@ public:
     uint_least32_t time(void) const;
 
     /**
-    * Set ROMs
-    * The ROMs are validate against konwn ones.
-    * The Kernal ROM is the only one mandatory.
+    * Set ROMs.
+    * The ROMs are validate against known ones.
     *
     * @param kernal pointer to Kernal ROM.
-    * @param basic pointer to Basic ROM, optional, generally needed only for BASIC tunes.
-    * @param character pointer to character generator ROM, optional.
+    * @param basic pointer to Basic ROM, generally needed only for BASIC tunes.
+    * @param character pointer to character generator ROM.
     */
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
 
