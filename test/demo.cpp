@@ -32,7 +32,6 @@
 #include "sidplayfp/SidTune.h"
 #include <sidplayfp/SidInfo.h>
 #include "sidplayfp/builders/residfp.h"
-#include "sidplayfp/sidemu.h"
 
 
 /*
@@ -104,7 +103,11 @@ int main(int argc, char* argv[])
     cfg.fastSampling = false;
     cfg.playback = SidConfig::MONO;
     cfg.sidEmulation = rs.get();
-    m_engine.config(cfg);
+    if (!m_engine.config(cfg))
+    {
+        std::cerr <<  m_engine.error() << std::endl;
+        return -1;
+    }
 
     // Load tune into engine
     if (!m_engine.load(tune.get()))
