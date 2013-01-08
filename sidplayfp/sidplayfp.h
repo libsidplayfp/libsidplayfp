@@ -161,13 +161,6 @@ public:
     EventContext *getEventContext();
 
     /**
-    * Check the status of the engine.
-    *
-    * @return true if the engine is correctly initialized.
-    */
-    bool getStatus() const;
-
-    /**
     * Get the CIA 1 Timer A programmed value
     */
     uint_least16_t getCia1TimerA() const;
