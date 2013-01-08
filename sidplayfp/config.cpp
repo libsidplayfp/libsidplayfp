@@ -61,7 +61,7 @@ bool Player::config (const SidConfig &cfg)
         // environment setup call)
         sidRelease();
         if (!sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel,
-            cfg.playback == SidConfig::STEREO ? 2 : 1))
+            tuneInfo->isStereo() ? 2 : 1))
         {
             m_errorString = cfg.sidEmulation->error();
             m_cfg.sidEmulation = 0;
@@ -84,7 +84,6 @@ bool Player::config (const SidConfig &cfg)
         }
     }
 
-    
     if (m_tune && tuneInfo->sidChipBase2())
     {
         // Assumed to be in d420-d7ff or de00-dfff range
