@@ -42,9 +42,11 @@ void Mixer::event()
         /* NB: if chip2 exists, its bufferpos is identical to chip1's. */
 
         int i = 0;
-        while (i < samples) {
+        while (i < samples)
+        {
             /* Handle whatever output the sid has generated so far */
-            if (m_sampleIndex >= m_sampleCount) {
+            if (m_sampleIndex >= m_sampleCount)
+            {
                 break;
             }
             /* Are there enough samples to generate the next one? */
@@ -56,7 +58,8 @@ void Mixer::event()
             int sample1 = 0;
             int sample2 = 0;
             int j;
-            for (j = 0; j < m_fastForwardFactor; j++) {
+            for (j = 0; j < m_fastForwardFactor; j++)
+            {
                 sample1 += buf1[i + j];
                 if (buf2)
                     sample2 += buf2[i + j];
@@ -79,7 +82,8 @@ void Mixer::event()
 
             *buf++ = (short int)sample1;
             m_sampleIndex ++;
-            if (m_stereo) {
+            if (m_stereo)
+            {
                 *buf++ = (short int)sample2;
                 m_sampleIndex ++;
             }
@@ -87,7 +91,8 @@ void Mixer::event()
 
         /* move the unhandled data to start of buffer, if any. */
         int j = 0;
-        for (j = 0; j < samples - i; j++) {
+        for (j = 0; j < samples - i; j++)
+        {
             buf1[j] = buf1[i + j];
             if (buf2)
                 buf2[j] = buf2[i + j];

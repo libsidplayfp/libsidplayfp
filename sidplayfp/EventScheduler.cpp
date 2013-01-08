@@ -33,8 +33,10 @@ void EventScheduler::cancel (Event &event)
 {
     Event *scan = firstEvent;
     Event *prev = 0;
-    while (scan) {
-        if (&event == scan) {
+    while (scan)
+    {
+        if (&event == scan)
+        {
             if (prev)
                 prev->next = scan->next;
             else
@@ -49,8 +51,10 @@ void EventScheduler::cancel (Event &event)
 bool EventScheduler::isPending(Event &event) const
 {
     Event *scan = firstEvent;
-    while (scan) {
-        if (&event == scan) {
+    while (scan)
+    {
+        if (&event == scan)
+        {
             return true;
         }
         scan = scan->next;

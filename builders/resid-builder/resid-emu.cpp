@@ -123,7 +123,8 @@ void ReSID::sampling (float systemclock, float freq,
         return;
     }
 
-    if (! m_sid.set_sampling_parameters (systemclock, sampleMethod, freq)) {
+    if (! m_sid.set_sampling_parameters (systemclock, sampleMethod, freq))
+    {
         m_status = false;
         m_error = "Unable to set desired output frequency.";
         return;

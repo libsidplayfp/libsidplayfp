@@ -143,7 +143,8 @@ void HardSID::clock()
     event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
-    while (cycles > 0xffff) {
+    while (cycles > 0xffff)
+    {
         ioctl(m_handle, HSID_IOCTL_DELAY, 0xffff);
         cycles -= 0xffff;
     }
