@@ -310,12 +310,18 @@ endif
 #=========================================================
 # test
 if TESTSUITE
-noinst_PROGRAMS = test/test
+noinst_PROGRAMS = \
+test/test \
+builders/residfp-builder/residfp/resample/test
 
-test_test_SOURCES = test/test.cpp
+test_test_SOURCES = test/test.cpp 
 
 test_test_LDADD = sidplayfp/libsidplayfp.la \
 builders/residfp-builder/libsidplayfp-residfp.la
+
+builders_residfp_builder_residfp_resample_test_SOURCES = builders/residfp-builder/residfp/resample/test.cpp
+
+builders_residfp_builder_residfp_resample_test_LDADD = builders/residfp-builder/residfp/resample/SincResampler.lo
 endif
 
 #=========================================================
