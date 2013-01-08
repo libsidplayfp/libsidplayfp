@@ -83,7 +83,7 @@ EventContext *sidplayfp::getEventContext()
 {   return sidplayer.getEventScheduler(); }
 
 bool sidplayfp::getStatus() const
-{ return sidplayer.getStatus(); }
+{ return true; }
 
 uint_least16_t sidplayfp::getCia1TimerA() const
 { return sidplayer.getCia1TimerA(); }

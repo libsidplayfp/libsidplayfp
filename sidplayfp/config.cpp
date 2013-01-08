@@ -57,29 +57,30 @@ bool Player::config (const SidConfig &cfg)
     {
         tuneInfo = m_tune->getInfo();
 
-        // SID emulation setup (must be performed before the
-        // environment setup call)
-        sidRelease();
-        if (!sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel,
-            tuneInfo->isStereo() ? 2 : 1))
+        try
         {
-            m_errorString = cfg.sidEmulation->error();
+            // SID emulation setup (must be performed before the
+            // environment setup call)
+            sidRelease();
+            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel,
+                tuneInfo->isStereo() ? 2 : 1);
+
+            // Determine clock speed
+            const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
+
+            m_c64.setModel(model);
+
+            sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
+
+            // Configure, setup and install C64 environment/events
+            initialise();
+        }
+        catch (configError &e)
+        {
+            m_errorString = e.message();
             m_cfg.sidEmulation = 0;
             if (&m_cfg != &cfg)
                 config (m_cfg);
-            return false;
-        }
-
-        // Determine clock speed
-        const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
-
-        m_c64.setModel(model);
-
-        sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
-
-        // Configure, setup and install C64 environment/events
-        if (!initialise())
-        {
             return false;
         }
     }
@@ -231,7 +232,7 @@ void Player::sidRelease()
     }
 }
 
-bool Player::sidCreate (sidbuilder *builder, SidConfig::sid_model_t defaultModel,
+void Player::sidCreate (sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                         bool forced, unsigned int channels)
 {
     if (builder)
@@ -251,12 +252,10 @@ bool Player::sidCreate (sidbuilder *builder, SidConfig::sid_model_t defaultModel
             sidemu *s = builder->lock (m_c64.getEventScheduler(), userModels[i]);
             // Get at least one SID emulation
             if ((i == 0) && !builder->getStatus())
-                return false;
+                throw new configError(builder->error());
             m_c64.setSid(i, s);
         }
     }
-
-    return true;
 }
 
 void Player::sidParams (double cpuFreq, int frequency,

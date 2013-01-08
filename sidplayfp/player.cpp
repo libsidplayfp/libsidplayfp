@@ -41,7 +41,6 @@ Player::Player (void)
 :m_mixer (m_c64.getEventScheduler()),
  m_tune (0),
  m_errorString(TXT_NA),
- m_status(true),
  m_isPlaying(false),
  m_rand((int)::time(0))
 {
@@ -89,11 +88,8 @@ bool Player::fastForward (unsigned int percent)
     return true;
 }
 
-bool Player::initialise ()
+void Player::initialise ()
 {
-    if (!m_status)
-        return false;
-
     m_isPlaying  = false;
 
     m_c64.reset ();
@@ -104,8 +100,7 @@ bool Player::initialise ()
         const uint_least32_t size = (uint_least32_t) tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
         if (size > 0xffff)
         {
-            m_errorString = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
-            return false;
+            throw new configError("SIDPLAYER ERROR: Size of music data exceeds C64 memory.");
         }
     }
 
@@ -120,8 +115,7 @@ bool Player::initialise ()
     driver.powerOnDelay(powerOnDelay);
     if (!driver.drvReloc (m_c64.getMemInterface()))
     {
-        m_errorString = driver.errorString();
-        return false;
+        throw new configError(driver.errorString());
     }
 
     m_info.m_driverAddr = driver.driverAddr();
@@ -130,8 +124,7 @@ bool Player::initialise ()
 
     if (!m_tune->placeSidTuneInC64mem (m_c64.getMemInterface()))
     {
-        m_errorString = m_tune->statusString();
-        return false;
+        throw new configError(m_tune->statusString());
     }
 
     driver.install (m_c64.getMemInterface());
@@ -139,8 +132,6 @@ bool Player::initialise ()
     m_c64.resetCpu();
 
     m_mixer.reset ();
-
-    return true;
 }
 
 bool Player::load (SidTune *tune)
@@ -170,7 +161,7 @@ void Player::mute(unsigned int sidNum, unsigned int voice, bool enable) {
 
 uint_least32_t Player::play (short *buffer, uint_least32_t count)
 {
-    // Make sure a _tune is loaded
+    // Make sure a tune is loaded
     if (!m_tune)
         return 0;
 
@@ -183,7 +174,13 @@ uint_least32_t Player::play (short *buffer, uint_least32_t count)
         m_c64.getEventScheduler()->clock();
 
     if (!m_isPlaying)
-        initialise ();
+    {
+        try
+        {
+            initialise ();
+        }
+        catch (configError &e) {}
+    }
 
     return m_mixer.samplesGenerated();
 }

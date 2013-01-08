@@ -49,6 +49,16 @@ class Player
 #endif
 {
 private:
+    class configError {
+    private:
+        const char* m_msg;
+
+    public:
+        configError(const char* msg) : m_msg(msg) {}
+        const char* message() const { return m_msg; }
+    };
+
+private:
     c64     m_c64;
 
     Mixer   m_mixer;
@@ -60,16 +70,15 @@ private:
 
     const char   *m_errorString;
 
-    bool          m_status;
     volatile bool m_isPlaying;
 
     sidrandom     m_rand;
 
 private:
     c64::model_t c64model(SidConfig::c64_model_t defaultModel, bool forced);
-    bool      initialise     (void);
+    void      initialise();
     void      sidRelease();
-    bool      sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
+    void      sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                         bool forced, unsigned int channels);
     void      sidParams(double cpuFreq, int frequency,
                             SidConfig::sampling_method_t sampling, bool fastSampling);
@@ -108,7 +117,6 @@ public:
     void           mute         (unsigned int sidNum, unsigned int voice, bool enable);
 
     const char    *error        (void) const { return m_errorString; }
-    bool           getStatus    () const { return m_status; }
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
 
