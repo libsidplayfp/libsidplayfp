@@ -60,11 +60,11 @@ class SID_EXTERN SidTune
     *
     * To retrieve data from standard input pass in filename "-".
     * If you want to override the default filename extensions use this
-    * contructor. Please note, that if the specified ``sidTuneFileName''
+    * contructor. Please note, that if the specified "fileName"
     * does exist and the loader is able to determine its file format,
     * this function does not try to append any file name extension.
-    * See ``sidtune.cpp'' for the default list of file name extensions.
-    * You can specific ``sidTuneFileName = 0'', if you do not want to
+    * See "SidTune.cpp" for the default list of file name extensions.
+    * You can specify "fileName = 0", if you do not want to
     * load a sidtune. You can later load one with open().
     */
     SidTune(const char* fileName, const char **fileNameExt = 0,
@@ -79,10 +79,9 @@ class SID_EXTERN SidTune
     virtual ~SidTune() {}
 
     /**
-    * The sidTune class does not copy the list of file name extensions,
+    * The SidTune class does not copy the list of file name extensions,
     * so make sure you keep it. If the provided pointer is 0, the
     * default list will be activated. This is a static list which
-    *
     * is used by all SidTune objects.
     */
     void setFileNameExtensions(const char **fileNameExt);
@@ -106,20 +105,23 @@ class SID_EXTERN SidTune
     unsigned int selectSong(unsigned int songNum);
 
     /**
-    * Retrieve sub-song specific information.
+    * Retrieve active sub-song specific information.
     */
     const SidTuneInfo* getInfo() const;
 
     /**
-    * Select sub-song (0 = default starting song)
-    * and retrieve active song information.
+    * Select sub-song and retrieve information.
+    *
+    * @param songNum the selected song (0 = default starting song)
     */
     const SidTuneInfo* getInfo(unsigned int songNum);
 
     /**
-    * Determine current state of object (true = okay, false = error).
-    * Upon error condition use ``getInfo'' to get a descriptive
-    * text string in ``SidTuneInfo.statusString''.
+    * Determine current state of object.
+    * Upon error condition use #statusString to get a descriptive
+    * text string.
+    *
+    * @return current state (true = okay, false = error)
     */
     bool getStatus() const;
 
@@ -137,6 +139,7 @@ class SID_EXTERN SidTune
     * Calculates the MD5 hash of the tune.
     * Not providing an md5 buffer will cause the internal one to be used.
     * If provided, buffer must be MD5_LENGTH + 1
+    *
     * @return a pointer to the buffer containing the md5 string.
     */
     const char *createMD5(char *md5 = 0);
