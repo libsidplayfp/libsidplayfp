@@ -47,7 +47,9 @@ Player::Player (void)
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
 #endif
-    config (m_cfg);
+
+    m_c64.setRoms(0, 0, 0);
+    config(m_cfg);
 
     // Get component credits
     m_info.m_credits.push_back(m_c64.cpuCredits());
