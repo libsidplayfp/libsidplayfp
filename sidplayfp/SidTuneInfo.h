@@ -58,11 +58,6 @@ public:
     } compatibility_t;
 
 public:
-    static const int MAX_CREDIT_STRINGS = 10;
-
-    /// 80 characters plus terminating zero.
-    static const uint_least16_t MAX_CREDIT_STRLEN = 80+1;
-
     /// Vertical-Blanking-Interrupt
     static const int SPEED_VBI = 0;
 
