@@ -93,17 +93,17 @@ void SidTune::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
 
 unsigned int SidTune::selectSong(unsigned int songNum)
 {
-    return tune->selectSong(songNum);
+    return tune.get()?tune->selectSong(songNum):0;
 }
 
 const SidTuneInfo* SidTune::getInfo() const
 {
-    return tune->getInfo();
+    return tune.get()?tune->getInfo():0;
 }
 
 const SidTuneInfo* SidTune::getInfo(unsigned int songNum)
 {
-    return tune->getInfo(songNum);
+    return tune.get()?tune->getInfo(songNum):0;
 }
 
 bool SidTune::getStatus() const { return m_status; }
@@ -112,10 +112,10 @@ const char* SidTune::statusString() const { return m_statusString; }
 
 bool SidTune::placeSidTuneInC64mem(sidmemory* mem)
 {
-    return tune->placeSidTuneInC64mem(mem);
+    return tune.get()?tune->placeSidTuneInC64mem(mem):false;
 }
 
 const char* SidTune::createMD5(char *md5)
 {
-    return tune->createMD5(md5);
+    return tune.get()?tune->createMD5(md5):0;
 }
