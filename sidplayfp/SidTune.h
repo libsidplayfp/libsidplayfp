@@ -72,7 +72,10 @@ class SID_EXTERN SidTune
 
     /**
     * Load a single-file sidtune from a memory buffer.
-    * Currently supported: PSID format
+    * Currently supported: PSID format.
+    *
+    * @param oneFileFormatSidtune the buffer that contains song data
+    * @param sidtuneLength length of the buffer
     */
     SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtuneLength);
 
@@ -93,6 +96,9 @@ class SID_EXTERN SidTune
 
     /**
     * Load a sidtune into an existing object from a buffer.
+    *
+    * @param sourceBuffer the buffer that contains song data
+    * @param bufferLen length of the buffer
     */
     void read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen);
 
@@ -100,12 +106,14 @@ class SID_EXTERN SidTune
     * Select sub-song.
     *
     * @param songNum the selected song (0 = default starting song)
-    * @return active song number
+    * @return active song number, 0 if no tune is loaded.
     */
     unsigned int selectSong(unsigned int songNum);
 
     /**
-    * Retrieve active sub-song specific information.
+    * Retrieve current active sub-song specific information.
+    *
+    * @return a pointer to #SidTuneInfo, 0 if no tune is loaded. The pointer must not be deleted.
     */
     const SidTuneInfo* getInfo() const;
 
@@ -113,6 +121,7 @@ class SID_EXTERN SidTune
     * Select sub-song and retrieve information.
     *
     * @param songNum the selected song (0 = default starting song)
+    * @return a pointer to #SidTuneInfo, 0 if no tune is loaded. The pointer must not be deleted.
     */
     const SidTuneInfo* getInfo(unsigned int songNum);
 
@@ -140,7 +149,7 @@ class SID_EXTERN SidTune
     * Not providing an md5 buffer will cause the internal one to be used.
     * If provided, buffer must be MD5_LENGTH + 1
     *
-    * @return a pointer to the buffer containing the md5 string.
+    * @return a pointer to the buffer containing the md5 string, 0 if no tune is loaded.
     */
     const char *createMD5(char *md5 = 0);
 
