@@ -31,11 +31,17 @@
 class SidInfo
 {
 public:
+    /// Library name
     virtual const char *name() const =0;
+
+    /// Library version
     virtual const char *version() const =0;
 
+    /// Library credits
+    //@{
     virtual unsigned int numberOfCredits() const =0;
     virtual const char *credits(unsigned int i) const =0;
+    //@}
 
     /// Number of SIDs supported by this library
     virtual unsigned int maxsids() const =0;
@@ -43,15 +49,19 @@ public:
     /// Number of output channels (1-mono, 2-stereo)
     virtual unsigned int channels() const =0;
 
+    /// Address of the driver
     virtual uint_least16_t driverAddr() const =0;
+
+    /// Size of the driver in bytes
     virtual uint_least16_t driverLength() const =0;
 
+    /// Power on delay
     virtual uint_least16_t powerOnDelay() const =0;
 
     /// Describes the speed current song is running at
     virtual const char *speedString() const =0;
 
-    /// Get description of the laoded ROM images
+    /// Description of the laoded ROM images
     //@{
     virtual const char *kernalDesc() const =0;
     virtual const char *basicDesc() const =0;

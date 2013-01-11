@@ -68,15 +68,15 @@ public:
     *
     * @param name Descriptive string of the event.
     */
-    Event(const char * const name)
-        : m_name(name) {}
+    Event(const char * const name) :
+        m_name(name) {}
 
     /**
     * Event code to be executed. Events are allowed to safely
     * reschedule themselves with the EventScheduler during
     * invocations.
     */
-    virtual void event (void) = 0;
+    virtual void event(void) = 0;
 
 protected:
     ~Event() {}
@@ -101,13 +101,15 @@ protected:
 class EventContext
 {
 public:
-    /** Cancel the specified event.
+    /**
+    * Cancel the specified event.
     *
     * @param event the event to cancel
     */
-    virtual void cancel   (Event &event) = 0;
+    virtual void cancel(Event &event) = 0;
 
-    /** Add event to pending queue.
+    /**
+    * Add event to pending queue.
     *
     * At PHI2, specify cycles=0 and Phase=PHI1 to fire on the very next PHI1.
     *
@@ -115,43 +117,48 @@ public:
     * @param cycles how many cycles from now to fire
     * @param phase the phase when to fire the event
     */
-    virtual void schedule (Event &event, event_clock_t cycles,
-                           event_phase_t phase) = 0;
+    virtual void schedule(Event &event, event_clock_t cycles,
+                          event_phase_t phase) = 0;
 
-    /** Add event to pending queue in the same phase as current event.
+    /**
+    * Add event to pending queue in the same phase as current event.
     *
     * @param event the event to add
     * @param cycles how many cycles from now to fire
     */
-    virtual void schedule (Event &event, event_clock_t cycles) = 0;
+    virtual void schedule(Event &event, event_clock_t cycles) = 0;
 
-    /** Is the event pending in this scheduler?
-    *
-    *  @param event the event
-    *   @return true when pending
+    /**
+    * Is the event pending in this scheduler?
+    * 
+    * @param event the event
+    * @return true when pending
     */
     virtual bool isPending(Event &event) const = 0;
 
-    /** Get time with respect to a specific clock phase
+    /**
+    * Get time with respect to a specific clock phase
     *
     * @param phase the phase
     * @return the time according to specified phase.
     */
-    virtual event_clock_t getTime (event_phase_t phase) const = 0;
+    virtual event_clock_t getTime(event_phase_t phase) const = 0;
 
-    /** Get clocks since specified clock in given phase.
+    /**
+    * Get clocks since specified clock in given phase.
     *
     * @param clock the time to compare to
     * @param phase the phase to comapre to
     * @return the time between specified clock and now
     */
-    virtual event_clock_t getTime (event_clock_t clock, event_phase_t phase) const = 0;
+    virtual event_clock_t getTime(event_clock_t clock, event_phase_t phase) const = 0;
 
-    /** Return current clock phase
+    /**
+    * Return current clock phase
     *
     * @return The current phase
     */
-    virtual event_phase_t phase () const = 0;
+    virtual event_phase_t phase() const = 0;
 
 protected:
     ~EventContext() {}

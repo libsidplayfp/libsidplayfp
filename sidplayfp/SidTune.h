@@ -66,6 +66,10 @@ class SID_EXTERN SidTune
     * See "SidTune.cpp" for the default list of file name extensions.
     * You can specify "fileName = 0", if you do not want to
     * load a sidtune. You can later load one with open().
+    *
+    * @param fileName
+    * @param fileNameExt
+    * @param separatorIsSlash
     */
     SidTune(const char* fileName, const char **fileNameExt = 0,
             bool separatorIsSlash = false);
@@ -86,11 +90,16 @@ class SID_EXTERN SidTune
     * so make sure you keep it. If the provided pointer is 0, the
     * default list will be activated. This is a static list which
     * is used by all SidTune objects.
+    *
+    * @param fileNameExt
     */
     void setFileNameExtensions(const char **fileNameExt);
 
     /**
     * Load a sidtune into an existing object from a file.
+    *
+    * @param fileName
+    * @param separatorIsSlash
     */
     void load(const char* fileName, bool separatorIsSlash = false);
 

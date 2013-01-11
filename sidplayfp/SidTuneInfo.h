@@ -70,10 +70,13 @@ public:
     static const int SPEED_CIA_1A = 60;
 
 public:
+    /// Load Address
     virtual uint_least16_t loadAddr() const =0;
 
+    /// Init Address
     virtual uint_least16_t initAddr() const =0;
 
+    /// Play Address
     virtual uint_least16_t playAddr() const =0;
 
     /**

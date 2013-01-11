@@ -32,30 +32,32 @@
 class SID_EXTERN ReSIDBuilder: public sidbuilder
 {
 public:
-    ReSIDBuilder  (const char * const name)
-      : sidbuilder (name) {}
-    ~ReSIDBuilder (void);
+    ReSIDBuilder(const char * const name)
+      : sidbuilder(name) {}
+    ~ReSIDBuilder();
 
-    /** All available sids.
-    *    return values: 0 endless, positive is available sids.
+    /**
+    * Available sids.
+    *
+    * @return the number of available sids, 0 = endless.
     */
-    unsigned int        availDevices () const { return 0; }
+    unsigned int availDevices() const { return 0; }
 
-    unsigned int        create  (unsigned int sids);
+    unsigned int create(unsigned int sids);
 
-    const char *credits (void) const;
+    const char *credits(void) const;
 
     /// @name global settings
     /// Settings that affect all SIDs
     //@{
     /// enable/disable filter
-    void filter (bool enable);
+    void filter(bool enable);
 
     /**
     * The bias is given in millivolts, and a maximum reasonable
     * control range is approximately -500 to 500.
     */
-    void bias (double dac_bias);
+    void bias(double dac_bias);
     //@}
 };
 

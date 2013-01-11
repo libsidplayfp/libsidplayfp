@@ -41,19 +41,29 @@ private:
     int init (void);
 
 public:
-    HardSIDBuilder  (const char * const name);
-    ~HardSIDBuilder (void);
+    HardSIDBuilder(const char * const name);
+    ~HardSIDBuilder();
 
-    /** All available sids.
-    *    return values: 0 endless, positive is available sids.
+    /**
+    * Available sids.
+    *
+    * @return the number of available sids, 0 = endless.
     */
-    unsigned int        availDevices ();
+    unsigned int availDevices ();
 
-    const char *credits (void) const;
-    void        flush   (void);
-    void        filter  (bool enable);
+    const char *credits() const;
 
-    unsigned int        create  (unsigned int sids);
+    void flush();
+
+    /// enable/disable filter.
+    void filter(bool enable);
+
+    /**
+    * Create the sid emu.
+    *
+    * @param sids the number of required sid emu
+    */
+    unsigned int create(unsigned int sids);
 };
 
 #endif // HARDSID_H

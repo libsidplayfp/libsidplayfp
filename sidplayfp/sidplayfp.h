@@ -50,22 +50,22 @@ private:
     SIDPLAYFP_NAMESPACE::Player &sidplayer;
 
 public:
-    sidplayfp ();
-    ~sidplayfp ();
+    sidplayfp();
+    ~sidplayfp();
 
     /**
     * Get the current engine configuration.
     *
     * @return a const reference to the current configuration.
     */
-    const SidConfig &config(void) const;
+    const SidConfig &config() const;
 
     /**
     * Get the current player informations.
     *
     * @return a const reference to the current info.
     */
-    const SidInfo &info(void) const;
+    const SidInfo &info() const;
 
     /**
     * Configure the engine.
@@ -81,7 +81,7 @@ public:
     *
     * @return string error message.
     */
-    const char *error(void) const;
+    const char *error() const;
 
     /**
     * Set the fast-forward factor.
@@ -113,12 +113,12 @@ public:
     *
     * @return true if playing, false otherwise.
     */
-    bool isPlaying(void) const;
+    bool isPlaying() const;
 
     /**
     * Stop the engine.
     */
-    void stop(void);
+    void stop();
 
     /**
     * Control debugging.
@@ -144,7 +144,7 @@ public:
     *
     * @return the current playing time.
     */
-    uint_least32_t time(void) const;
+    uint_least32_t time() const;
 
     /**
     * Set ROMs.
@@ -159,12 +159,12 @@ public:
     /**
     * Get the event scheduler.
     *
-    * @return the scheduler.
+    * @return pointer to the scheduler.
     */
     EventContext *getEventContext();
 
     /**
-    * Get the CIA 1 Timer A programmed value
+    * Get the CIA 1 Timer A programmed value.
     */
     uint_least16_t getCia1TimerA() const;
 };
