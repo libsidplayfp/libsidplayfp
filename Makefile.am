@@ -21,6 +21,7 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 
 #=========================================================
 EXTRA_DIST = \
+docs/mainpage.dox \
 sidplayfp/psiddrv.bin \
 sidplayfp/c64/poweron.bin \
 builders/residfp-builder/residfp/AUTHORS \
