@@ -49,7 +49,7 @@ public:
     *
     * @return the number of available sids, 0 = endless.
     */
-    unsigned int availDevices ();
+    unsigned int availDevices () const;
 
     const char *credits() const;
 

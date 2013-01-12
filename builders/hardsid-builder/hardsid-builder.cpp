@@ -70,9 +70,13 @@ unsigned int HardSIDBuilder::create (unsigned int sids)
 
     // Check available devices
     unsigned int count = availDevices ();
-    if (!m_status)
+    if (count == 0)
+    {
+        m_errorBuffer = "HARDSID ERROR: No devices found (run HardSIDConfig)";
         goto HardSIDBuilder_create_error;
-    if (count && (count < sids))
+    }
+        
+    if (count < sids)
         sids = count;
 
     for (count = 0; count < sids; count++)
@@ -105,24 +109,12 @@ HardSIDBuilder_create_error:
     return count;
 }
 
-unsigned int HardSIDBuilder::availDevices ()
+unsigned int HardSIDBuilder::availDevices () const
 {
-    m_status = true;
-
     // Available devices
     // @FIXME@ not yet supported on Linux
 #ifdef _WIN32
-    if (hsid2.Instance)
-    {
-        unsigned int count = hsid2.Devices ();
-        if (count == 0)
-        {
-            m_errorBuffer = "HARDSID ERROR: No devices found (run HardSIDConfig)";
-            m_status = false;
-        }
-        return count;
-    }
-    return 0;
+    return hsid2.Instance ? hsid2.Devices() : 0;
 #else
     return m_count;
 #endif

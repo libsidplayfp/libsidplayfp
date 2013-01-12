@@ -79,6 +79,20 @@ public:
     unsigned int usedDevices() const { return sidobjs.size (); }
 
     /**
+    * Available devices.
+    *
+    * @return the number of available sids, 0 = endless.
+    */
+    virtual unsigned int availDevices() const = 0;
+
+    /**
+    * Create the sid emu.
+    *
+    * @param sids the number of required sid emu
+    */
+    virtual unsigned int create(unsigned int sids) = 0;
+
+    /**
     * Find a free SID of the required specs
     *
     * @param env the event context
