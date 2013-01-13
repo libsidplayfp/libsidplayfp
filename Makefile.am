@@ -305,7 +305,7 @@ doc:
 	$(DOXYGEN) Doxyfile
 
 clean-local:
-	rm -fr $(builddir)/docs
+	rm -fr $(builddir)/docs/html
 endif
 
 #=========================================================
