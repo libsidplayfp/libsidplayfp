@@ -67,6 +67,8 @@ public:
 
     const char *credits (void) const { return ""; }
     void        filter (const bool enable) {}
+    unsigned int availDevices() const { return 0; }
+    unsigned int create(unsigned int) { return 1; }
 };
 
 void loadRom(const char* path, char* buffer)
