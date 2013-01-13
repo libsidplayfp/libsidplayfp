@@ -2,7 +2,6 @@
 * add SIDid support
 
 * improve documentation
-* fix Visual Studio build files (or purge them)
 
 * remove the fastForward support (?)
 * move mixer into resid specific class (?)
