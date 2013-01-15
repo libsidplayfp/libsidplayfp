@@ -55,8 +55,30 @@ public:
 class ZeroRAMBank : public Bank
 {
 private:
-    /** $01 bits 6 and 7 fall-off cycles (1->0), average is about 350 msec */
-    static const event_clock_t C64_CPU_DATA_PORT_FALL_OFF_CYCLES = 350000;
+/*
+    NOTE: fall-off cycles are heavily chip- and temperature dependant. as a
+          consequence it is very hard to find suitable realistic values that
+          always work and we can only tweak them based on testcases. (unless we
+          want to make it configureable or emulate temperature over time =))
+
+          it probably makes sense to tweak the values for a warmed up CPU, since
+          this is likely how (old) programs were coded and tested :)
+*/
+
+/* $01 bits 6 and 7 fall-off cycles (1->0), average is about 350 msec for a 6510
+   and about 1500 msec for a 8500 */
+/* NOTE: the unused bits of the 6510 seem to be much more temperature dependant
+         and the fall-off time decreases quicker and more drastically than on a
+         8500
+*/
+    static const event_clock_t C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES = 350000;
+    //static const event_clock_t C64_CPU8500_DATA_PORT_FALL_OFF_CYCLES = 1500000;
+/*
+   cpuports.prg from the lorenz testsuite will fail when the falloff takes more
+   than 1373 cycles. this suggests that he tested on a well warmed up c64 :)
+   he explicitly delays by ~1280 cycles and mentions capacitance, so he probably 
+   even was aware of what happens.
+*/
 
     static const bool tape_sense = false;
 
@@ -158,24 +180,21 @@ public:
         updateCpuPort();
     }
 
-    /* $00/$01 unused bits emulation, as investigated by groepaz:
-    
-       it actually seems to work like this... somewhat unexpected indeed
-    
-       a) unused bits of $00 (DDR) are actually implemented and working. any value
-          written to them can be read back and also affects $01 (DATA) the same as
-          with the used bits.
-       b) unused bits of $01 are also implemented and working. when a bit is
-          programmed as output, any value written to it can be read back. when a bit
-          is programmed as input it will read back as 0, if 1 is written to it then
-          it will read back as 1 for some time and drop back to 0 (the already
-          emulated case of when bitfading occurs)
-    
-       educated guess on why this happens: on the CPU actually the full 8 bit of
-       the i/o port are implemented. what is missing for bit 6 and bit 7 are the
-       actual input/output driver stages only - which (imho) completely explains
-       the above described behavior :)
-    */
+/*
+    $00/$01 unused bits emulation, as investigated by groepaz:
+
+    - There are 2 different unused bits, 1) the output bits, 2) the input bits
+    - The output bits can be (re)set when the data-direction is set to output
+      for those bits and the output bits will not drop-off to 0.
+    - When the data-direction for the unused bits is set to output then the
+      unused input bits can be (re)set by writing to them, when set to 1 the
+      drop-off timer will start which will cause the unused input bits to drop
+      down to 0 in a certain amount of time.
+    - When an unused input bit already had the drop-off timer running, and is
+      set to 1 again, the drop-off timer will restart.
+    - when a an unused bit changes from output to input, and the current output
+      bit is 1, the drop-off timer will restart again
+*/
 
     uint8_t peek(uint_least16_t address)
     {
@@ -184,16 +203,20 @@ public:
         case 0:
             return dir;
         case 1:
+        {
+            /* discharge the "capacitor" */
             if (dataFalloffBit6 || dataFalloffBit7)
             {
                 const event_clock_t phi2time = pla->getPhi2Time();
 
+                /* set real value of read bit 6 */
                 if (dataFalloffBit6 && dataSetClkBit6 < phi2time)
                 {
                     dataFalloffBit6 = false;
                     dataSetBit6 = 0;
                 }
 
+                /* set real value of read bit 7 */
                 if (dataFalloffBit7 && dataSetClkBit7 < phi2time)
                 {
                     dataFalloffBit7 = false;
@@ -201,7 +224,26 @@ public:
                 }
             }
 
-            return (dataRead & 0x3f) | dataSetBit6 | dataSetBit7;
+            uint8_t retval = dataRead;
+
+            /* for unused bits in input mode, the value comes from the "capacitor" */
+
+            /* set real value of bit 6 */
+            if (!(dir & 0x40))
+            {
+                retval &= ~0x40;
+                retval |= dataSetBit6;
+            }
+
+            /* set real value of bit 7 */
+            if (!(dir & 0x80))
+            {
+                retval &= ~0x80;
+                retval |= dataSetBit7;
+            }
+
+            return retval;
+        }
         default:
             return ramBank->peek(address);
         }
@@ -212,37 +254,29 @@ public:
         switch (address)
         {
         case 0:
-            // check if bit 6 has flipped
-            if ((dir ^ value) & 0x40)
+            /* when switching an unused bit from output (where it contained a
+             * stable value) to input mode (where the input is floating), some
+             * of the charge is transferred to the floating input */
+
+            /* check if bit 6 has flipped */
+            if (dir & 0x40)
             {
-                if (value & 0x40)
+                if ((dir ^ value) & 0x40)
                 {
-                    /* output, update according to last write, cancel falloff */
+                    dataSetClkBit6 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
                     dataSetBit6 = data & 0x40;
-                    dataFalloffBit6 = false;
-                }
-                else
-                {
-                    /* input, start falloff if bit was set */
-                    dataFalloffBit6 = dataSetBit6 != 0;
-                    dataSetClkBit6 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                    dataFalloffBit6 = true;
                 }
             }
 
-            // check if bit 7 has flipped
-            if ((dir ^ value) & 0x80)
+            /* check if bit 7 has flipped */
+            if (dir & 0x80)
             {
-                if (value & 0x80)
+                if ((dir ^ value) & 0x80)
                 {
-                    /* output, update according to last write, cancel falloff */
+                    dataSetClkBit7 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
                     dataSetBit7 = data & 0x80;
-                    dataFalloffBit7 = false;
-                }
-                else
-                {
-                    /* input, start falloff if bit was set */
-                    dataFalloffBit7 = dataSetBit7 != 0;
-                    dataSetClkBit7 = pla->getPhi2Time() + C64_CPU_DATA_PORT_FALL_OFF_CYCLES;
+                    dataFalloffBit7 = true;
                 }
             }
 
@@ -254,16 +288,21 @@ public:
             value = pla->getLastReadByte();
             break;
         case 1:
-             /* update value if output, otherwise don't touch */
+            /* when writing to an unused bit that is output, charge the "capacitor",
+             * otherwise don't touch it */
             if (dir & 0x40)
             {
                 dataSetBit6 = value & 0x40;
+                dataSetClkBit6 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataFalloffBit6 = true;
             }
 
-             /* update value if output, otherwise don't touch */
+             /* update value if input, otherwise don't touch */
             if (dir & 0x80)
             {
                 dataSetBit7 = value & 0x80;
+                dataSetClkBit7 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataFalloffBit7 = true;
             }
 
             if (data != value)
