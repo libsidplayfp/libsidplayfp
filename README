@@ -58,3 +58,8 @@ add support for running Lorenz testsuite (in prg format). The testsuite is avail
 in the svn repository. Intended only for regression tests since it may break normal
 code execution. The path to testsuite must include terminal path separator
 disabled by default
+
+
+
+If doxygen is installed and detected by the configure script the documentation
+can be built by invoking "make doc".
