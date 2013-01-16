@@ -10,14 +10,16 @@ supplied contributions or code was derived from their work:
 
     Dag Lem           - reSID library
     Michael Schwendt  - initial implementation of SidTune library,
-                        Sid2Wav support, OSS/Free and SPARC audio
-                        drivers
                         SidTune Wrapper, MD5 (based on work by L. Peter Deutsch)
     Simon White       - Majority of LIBSIDPLAY2 Code
-    Antti Lankila     - SID distortion simulation (reSID-fp)
+    Antti Lankila     - SID distortion simulation (reSID-fp),
                         emulation improvements
-    Leandro Nini      - build system rewrite and packaging
+    Leandro Nini      - build system rewrite, code refactoring,
+                        backporting from jsidplay2
     LaLa              - stilview
+    André Fachat      - reloc65
+
+CIA and cpu-port emulation is based on VICE code.
 
 Credit where credit is due, so if I missed anyone please let me know.
 
