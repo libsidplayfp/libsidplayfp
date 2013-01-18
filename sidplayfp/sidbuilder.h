@@ -125,7 +125,7 @@ public:
     *
     * @return string error message.
     */ 
-    const char *error(void) const { return m_errorBuffer.c_str(); }
+    const char *error() const { return m_errorBuffer.c_str(); }
 
     /**
     * Determine current state of object.
@@ -139,7 +139,7 @@ public:
     *
     * @return credits
     */
-    virtual const char *credits(void) const = 0;
+    virtual const char *credits() const = 0;
 
     /**
     * Toggle sid filter emulation.

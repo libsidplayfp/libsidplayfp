@@ -82,7 +82,7 @@ private:
     double m_cpuFreq;
 
     /** Number of sources asserting IRQ */
-    int   irqCount;
+    int irqCount;
 
     /** BA state */
     bool oldBAState;
@@ -91,7 +91,7 @@ private:
     EventScheduler m_scheduler;
 
     /** CPU */
-    c64cpu  cpu;
+    c64cpu cpu;
 
     /** CIA1 */
     c64cia1 cia1;
@@ -100,7 +100,7 @@ private:
     c64cia2 cia2;
 
     /** VIC */
-    c64vic  vic;
+    c64vic vic;
 
     /** Color RAM */
     ColorRAMBank colorRAMBank;
@@ -118,7 +118,7 @@ private:
     IOBank ioBank;
 
     /** MMU chip */
-    MMU     mmu;
+    MMU mmu;
 
 private:
     static double getCpuFreq(model_t model);
@@ -130,7 +130,7 @@ private:
     * @param address
     * @return value at address
     */
-    uint8_t cpuRead (uint_least16_t addr) { return mmu.cpuRead(addr); }
+    uint8_t cpuRead(uint_least16_t addr) { return mmu.cpuRead(addr); }
 
     /**
     * Access memory as seen by CPU.
@@ -138,7 +138,7 @@ private:
     * @param address
     * @param value
     */
-    void cpuWrite (uint_least16_t addr, uint8_t data) { mmu.cpuWrite(addr, data); }
+    void cpuWrite(uint_least16_t addr, uint8_t data) { mmu.cpuWrite(addr, data); }
 
     /**
     * IRQ trigger signal.
@@ -147,7 +147,7 @@ private:
     *
     * @param state
     */
-    inline void interruptIRQ (bool state);
+    inline void interruptIRQ(bool state);
 
     /**
     * NMI trigger signal.
@@ -156,9 +156,9 @@ private:
     *
     * @param state
     */
-    inline void interruptNMI (void) { cpu.triggerNMI (); }
+    inline void interruptNMI(void) { cpu.triggerNMI (); }
 
-    inline void interruptRST (void) { cpu.triggerRST (); }
+    inline void interruptRST(void) { cpu.triggerRST (); }
 
     /**
     * BA signal.
@@ -167,9 +167,9 @@ private:
     *
     * @param state
     */
-    inline void setBA (bool state);
+    inline void setBA(bool state);
 
-    inline void lightpen () { vic.lightpen (); }
+    inline void lightpen() { vic.lightpen (); }
 
 #ifdef PC64_TESTSUITE
     testEnv *m_env;

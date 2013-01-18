@@ -32,8 +32,8 @@
 /**
 * This class implements the mixer.
 */
-class Mixer : private Event {
-
+class Mixer : private Event
+{
 private:
     /**
     * Scheduling time for next sample mixing event. 5000 is roughly 5 ms

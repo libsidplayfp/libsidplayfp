@@ -44,12 +44,12 @@ private:
     uint8_t lp;
 
 protected:
-    void interrupt (bool state)
+    void interrupt(bool state)
     {
         m_env.interruptIRQ (state);
     }
 
-    void portB ()
+    void portB()
     {
         const uint8_t lp = (prb | ~ddrb) & 0x10;
         if (lp != this->lp)
@@ -60,9 +60,9 @@ protected:
     }
 
 public:
-    c64cia1 (c64env *env)
-    :MOS6526(&(env->context ())),
-     m_env(*env) {}
+    c64cia1(c64env *env) :
+        MOS6526(&(env->context ())),
+        m_env(*env) {}
 
     void poke(uint_least16_t address, uint8_t value)
     {
@@ -83,9 +83,9 @@ public:
         return read(endian_16lo8(address));
     }
 
-    const char *error (void) const {return "";}
+    const char *error() const { return ""; }
 
-    void reset ()
+    void reset()
     {
         lp = 0x10;
         MOS6526::reset ();
@@ -105,16 +105,16 @@ private:
     c64env &m_env;
 
 protected:
-    void interrupt (bool state)
+    void interrupt(bool state)
     {
         if (state)
             m_env.interruptNMI ();
     }
 
 public:
-    c64cia2 (c64env *env)
-    :MOS6526(&(env->context ())),
-     m_env(*env) {}
+    c64cia2(c64env *env) :
+        MOS6526(&(env->context ())),
+        m_env(*env) {}
 
     void poke(uint_least16_t address, uint8_t value)
     {
@@ -126,7 +126,7 @@ public:
         return read(address);
     }
 
-    const char *error (void) const {return "";}
+    const char *error() const { return ""; }
 };
 
 #endif // C64CIA_H

@@ -23,13 +23,13 @@
 #include "EventScheduler.h"
 
 
-void EventScheduler::reset (void)
+void EventScheduler::reset(void)
 {
     currentTime = 0;
     firstEvent = 0;
 }
 
-void EventScheduler::cancel (Event &event)
+void EventScheduler::cancel(Event &event)
 {
     Event *scan = firstEvent;
     Event *prev = 0;

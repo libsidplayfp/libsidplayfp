@@ -45,11 +45,12 @@ SIDPLAYFP_NAMESPACE_START
 
 class Player
 #ifdef PC64_TESTSUITE
-: public testEnv
+  : public testEnv
 #endif
 {
 private:
-    class configError {
+    class configError
+    {
     private:
         const char* m_msg;
 
@@ -59,34 +60,35 @@ private:
     };
 
 private:
-    c64     m_c64;
+    c64 m_c64;
 
-    Mixer   m_mixer;
+    Mixer m_mixer;
+
+    SidTune *m_tune;
+    SidInfoImpl m_info;
 
     // User Configuration Settings
-    SidTune      *m_tune;
-    SidInfoImpl   m_info;
-    SidConfig     m_cfg;
+    SidConfig m_cfg;
 
-    const char   *m_errorString;
+    const char *m_errorString;
 
     volatile bool m_isPlaying;
 
-    sidrandom     m_rand;
+    sidrandom m_rand;
 
 private:
     c64::model_t c64model(SidConfig::c64_model_t defaultModel, bool forced);
-    void      initialise();
-    void      sidRelease();
-    void      sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
-                        bool forced, unsigned int channels);
-    void      sidParams(double cpuFreq, int frequency,
+    void initialise();
+    void sidRelease();
+    void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
+                   bool forced, unsigned int channels);
+    void sidParams(double cpuFreq, int frequency,
                             SidConfig::sampling_method_t sampling, bool fastSampling);
 
     static SidConfig::sid_model_t getModel (SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced);
 
 #ifdef PC64_TESTSUITE
-    void load (const char *file)
+    void load(const char *file)
     {
         char name[0x100] = PC64_TESTSUITE;
         strcat (name, file);
@@ -99,24 +101,34 @@ private:
 #endif
 
 public:
-    Player ();
-    ~Player () {}
+    Player();
+    ~Player() {}
 
-    const SidConfig &config (void) const { return m_cfg; }
-    const SidInfo   &info   (void) const { return m_info; }
+    const SidConfig &config() const { return m_cfg; }
 
-    bool           config       (const SidConfig &cfg);
-    bool           fastForward  (unsigned int percent);
-    bool           load         (SidTune *tune);
-    double         cpuFreq      (void) const { return m_c64.getMainCpuSpeed(); }
-    uint_least32_t play         (short *buffer, uint_least32_t samples);
-    bool           isPlaying    (void) const { return m_isPlaying; }
-    void           stop         (void);
-    uint_least32_t time         (void) const { return (uint_least32_t)(m_c64.getEventScheduler().getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
-    void           debug        (const bool enable, FILE *out) { m_c64.debug (enable, out); }
-    void           mute         (unsigned int sidNum, unsigned int voice, bool enable);
+    const SidInfo &info() const { return m_info; }
 
-    const char    *error        (void) const { return m_errorString; }
+    bool config(const SidConfig &cfg);
+
+    bool fastForward(unsigned int percent);
+
+    bool load(SidTune *tune);
+
+    double cpuFreq() const { return m_c64.getMainCpuSpeed(); }
+
+    uint_least32_t play(short *buffer, uint_least32_t samples);
+
+    bool isPlaying(void) const { return m_isPlaying; }
+
+    void stop();
+
+    uint_least32_t time() const { return (uint_least32_t)(m_c64.getEventScheduler().getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
+
+    void debug(const bool enable, FILE *out) { m_c64.debug (enable, out); }
+
+    void mute(unsigned int sidNum, unsigned int voice, bool enable);
+
+    const char *error() const { return m_errorString; }
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
 

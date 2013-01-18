@@ -51,8 +51,8 @@ private:
 
 public:
     psiddrv(const SidTuneInfo *tuneInfo) :
-      m_tuneInfo(tuneInfo),
-      m_powerOnDelay(0) {}
+        m_tuneInfo(tuneInfo),
+        m_powerOnDelay(0) {}
 
     /**
     * Set the power on delay cycles

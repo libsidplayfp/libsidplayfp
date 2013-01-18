@@ -36,13 +36,13 @@ SIDPLAYFP_NAMESPACE_START
 const char  TXT_NA[]             = "NA";
 
 
-Player::Player (void)
-// Set default settings for system
-:m_mixer (m_c64.getEventScheduler()),
- m_tune (0),
- m_errorString(TXT_NA),
- m_isPlaying(false),
- m_rand((int)::time(0))
+Player::Player (void) :
+    // Set default settings for system
+    m_mixer(m_c64.getEventScheduler()),
+    m_tune(0),
+    m_errorString(TXT_NA),
+    m_isPlaying(false),
+    m_rand((int)::time(0))
 {
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
@@ -80,7 +80,7 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
     m_c64.setRoms(kernal, basic, character);
 }
 
-bool Player::fastForward (unsigned int percent)
+bool Player::fastForward(unsigned int percent)
 {
     if (!m_mixer.setFastForward(percent / 100))
     {
@@ -91,7 +91,7 @@ bool Player::fastForward (unsigned int percent)
     return true;
 }
 
-void Player::initialise ()
+void Player::initialise()
 {
     m_isPlaying  = false;
 
@@ -137,7 +137,7 @@ void Player::initialise ()
     m_mixer.reset ();
 }
 
-bool Player::load (SidTune *tune)
+bool Player::load(SidTune *tune)
 {
     m_tune = tune;
     if (!tune)
@@ -163,7 +163,7 @@ void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
         s->voice(voice, enable);
 }
 
-uint_least32_t Player::play (short *buffer, uint_least32_t count)
+uint_least32_t Player::play(short *buffer, uint_least32_t count)
 {
     // Make sure a tune is loaded
     if (!m_tune)
@@ -189,7 +189,7 @@ uint_least32_t Player::play (short *buffer, uint_least32_t count)
     return m_mixer.samplesGenerated();
 }
 
-void Player::stop (void)
+void Player::stop(void)
 {   // Re-start song
     if (m_tune && m_isPlaying)
     {

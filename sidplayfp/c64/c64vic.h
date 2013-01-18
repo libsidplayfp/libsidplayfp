@@ -41,20 +41,20 @@ private:
     c64env &m_env;
 
 protected:
-    void interrupt (bool state)
+    void interrupt(bool state)
     {
         m_env.interruptIRQ (state);
     }
 
-    void setBA (bool state)
+    void setBA(bool state)
     {
         m_env.setBA (state);
     }
 
 public:
-    c64vic (c64env *env)
-    :MOS656X(&(env->context ())),
-     m_env(*env) {}
+    c64vic(c64env *env) :
+        MOS656X(&(env->context ())),
+        m_env(*env) {}
 
     void poke(uint_least16_t address, uint8_t value)
     {
@@ -66,7 +66,7 @@ public:
         return read(endian_16lo8(address));
     }
 
-    const char *error (void) const {return "";}
+    const char *error() const { return ""; }
 };
 
 #endif // C64VIC_H

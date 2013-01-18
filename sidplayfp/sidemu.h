@@ -40,28 +40,29 @@ private:
     sidbuilder *m_builder;
 
 protected:
-    short      *m_buffer;
-    int         m_bufferpos;
+    short *m_buffer;
+    int  m_bufferpos;
 
 public:
-    sidemu (sidbuilder *builder)
-        : m_builder (builder), m_buffer(0) {}
-    virtual ~sidemu () {}
+    sidemu(sidbuilder *builder) :
+        m_builder (builder), m_buffer(0) {}
+    virtual ~sidemu() {}
 
     // Standard component functions
-    void            reset () { reset (0); }
+    void reset() { reset (0); }
 
-    virtual void    reset (uint8_t volume) = 0;
-    virtual void    clock () = 0;
+    virtual void reset(uint8_t volume) = 0;
 
-    virtual bool lock     (EventContext *env) = 0;
-    virtual void unlock   () = 0;
+    virtual void clock() = 0;
+
+    virtual bool lock (EventContext *env) = 0;
+    virtual void unlock() = 0;
 
     // Standard SID functions
-    virtual void    voice   (unsigned int num, bool mute) = 0;
-    virtual void    model    (SidConfig::sid_model_t model) = 0;
+    virtual void voice(unsigned int num, bool mute) = 0;
+    virtual void model(SidConfig::sid_model_t model) = 0;
 
-    sidbuilder     *builder (void) const { return m_builder; }
+    sidbuilder *builder(void) const { return m_builder; }
 
     virtual void sampling(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED,
         SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) {}
