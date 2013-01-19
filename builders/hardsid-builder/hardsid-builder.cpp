@@ -259,9 +259,8 @@ int HardSIDBuilder::init()
         return -1;
 
     m_count = 0;
-    dirent *entry;
 
-    while (entry=readdir(dir))
+    while (dirent *entry=readdir(dir))
     {
         // SID device
         if (strncmp ("sid", entry->d_name, 3))
