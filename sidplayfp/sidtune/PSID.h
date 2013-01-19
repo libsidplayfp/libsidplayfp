@@ -43,6 +43,10 @@ public:
     static SidTuneBase* load(Buffer_sidtt<const uint_least8_t>& dataBuf);
 
     virtual const char *createMD5(char *md5);
+
+private:    // prevent copying
+    PSID(const PSID&);
+    PSID& operator=(PSID&);
 };
 
 #endif // PSID_H
