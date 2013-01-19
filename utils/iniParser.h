@@ -42,8 +42,8 @@ private:
     std::pair<std::string, std::string> parseKey(const char *buffer);
 
 public:
-    iniParser() {};
-    ~iniParser() {};
+    iniParser() {}
+    ~iniParser() {}
 
     bool open(const char *fName);
     void close();

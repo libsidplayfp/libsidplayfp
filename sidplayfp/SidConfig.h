@@ -46,9 +46,9 @@ public:
 
 public:
     /**
-    * Maximum power on delay<br>
-    * Delays <= MAX produce constant results<br>
-    * Delays >  MAX produce random results
+    * Maximum power on delay
+    * - Delays <= MAX produce constant results
+    * - Delays >  MAX produce random results
     */
     static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
     static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
@@ -71,27 +71,27 @@ public:
     bool forceC64Model;
 
     /**
-     * Intended sid model when unknown or forced
-     * - MOS6581
-     * - MOS8580
-     */
+    * Intended sid model when unknown or forced
+    * - MOS6581
+    * - MOS8580
+    */
     sid_model_t defaultSidModel;
-    
+
     /**
-     * Force the sid model to #defaultSidModel
-     */
+    * Force the sid model to #defaultSidModel
+    */
     bool forceSidModel;
 
     /**
-     * Playbak mode
-     * - MONO
-     * - STEREO
-     */
+    * Playbak mode
+    * - MONO
+    * - STEREO
+    */
     playback_t playback;
 
     /**
-     * Sampling frequency
-     */
+    * Sampling frequency
+    */
     uint_least32_t frequency;
 
     /**

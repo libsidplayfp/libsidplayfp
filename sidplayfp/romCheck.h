@@ -29,6 +29,7 @@
 #include "sidplayfp/sidmd5.h"
 
 /**
+* Utility class to identify known ROMs through their md5 checksum.
 */
 class romCheck
 {
@@ -103,7 +104,7 @@ class kernalCheck : public romCheck
 {
 public:
     kernalCheck(const uint8_t* kernal) :
-      romCheck(kernal, 0x2000)
+        romCheck(kernal, 0x2000)
     {
         add("1ae0ea224f2b291dafa2c20b990bb7d4", "C64 KERNAL first revision");
         add("7360b296d64e18b88f6cf52289fd99a1", "C64 KERNAL second revision");
@@ -141,7 +142,7 @@ class basicCheck : public romCheck
 {
 public:
     basicCheck(const uint8_t* basic) :
-      romCheck(basic, 0x2000)
+        romCheck(basic, 0x2000)
     {
         add("57af4ae21d4b705c2991d98ed5c1f7b8", "C64 BASIC V2");
     }
@@ -154,7 +155,7 @@ class chargenCheck : public romCheck
 {
 public:
     chargenCheck(const uint8_t* chargen) :
-      romCheck(chargen, 0x1000)
+        romCheck(chargen, 0x1000)
     {
         add("12a4202f5331d45af846af6c58fba946", "C64 character generator");
         add("cf32a93c0a693ed359a4f483ef6db53d", "C64 character generator (Japanese)");

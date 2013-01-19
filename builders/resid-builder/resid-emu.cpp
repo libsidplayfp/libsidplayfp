@@ -47,13 +47,13 @@ const char* ReSID::getCredits()
     return m_credit.c_str();
 }
 
-ReSID::ReSID (sidbuilder *builder)
-:sidemu(builder),
- m_context(0),
- m_sid(*(new RESID_NS::SID)),
- m_status(true),
- m_locked(false),
- m_voiceMask(0x07)
+ReSID::ReSID (sidbuilder *builder) :
+    sidemu(builder),
+    m_context(0),
+    m_sid(*(new RESID_NS::SID)),
+    m_status(true),
+    m_locked(false),
+    m_voiceMask(0x07)
 {
     m_error = "N/A";
 
@@ -62,35 +62,35 @@ ReSID::ReSID (sidbuilder *builder)
     reset (0);
 }
 
-ReSID::~ReSID ()
+ReSID::~ReSID()
 {
     delete &m_sid;
     delete[] m_buffer;
 }
 
-void ReSID::bias (double dac_bias)
+void ReSID::bias(double dac_bias)
 {
     m_sid.adjust_filter_bias(dac_bias);
 }
 
 // Standard component options
-void ReSID::reset (uint8_t volume)
+void ReSID::reset(uint8_t volume)
 {
     m_accessClk = 0;
-    m_sid.reset ();
-    m_sid.write (0x18, volume);
+    m_sid.reset();
+    m_sid.write(0x18, volume);
 }
 
-uint8_t ReSID::read (uint_least8_t addr)
+uint8_t ReSID::read(uint_least8_t addr)
 {
     clock();
-    return m_sid.read (addr);
+    return m_sid.read(addr);
 }
 
-void ReSID::write (uint_least8_t addr, uint8_t data)
+void ReSID::write(uint_least8_t addr, uint8_t data)
 {
     clock();
-    m_sid.write (addr, data);
+    m_sid.write(addr, data);
 }
 
 void ReSID::clock()
@@ -100,12 +100,12 @@ void ReSID::clock()
     m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
 }
 
-void ReSID::filter (bool enable)
+void ReSID::filter(bool enable)
 {
-    m_sid.enable_filter (enable);
+    m_sid.enable_filter(enable);
 }
 
-void ReSID::sampling (float systemclock, float freq,
+void ReSID::sampling(float systemclock, float freq,
         SidConfig::sampling_method_t method, bool fast)
 {
     RESID_NS::sampling_method sampleMethod;
@@ -123,7 +123,7 @@ void ReSID::sampling (float systemclock, float freq,
         return;
     }
 
-    if (! m_sid.set_sampling_parameters (systemclock, sampleMethod, freq))
+    if (! m_sid.set_sampling_parameters(systemclock, sampleMethod, freq))
     {
         m_status = false;
         m_error = "Unable to set desired output frequency.";
@@ -144,7 +144,7 @@ void ReSID::voice (unsigned int num, bool mute)
 }
 
 // Set execution environment and lock sid to it
-bool ReSID::lock (EventContext *env)
+bool ReSID::lock(EventContext *env)
 {
     if (m_locked)
         return false;
@@ -156,14 +156,14 @@ bool ReSID::lock (EventContext *env)
 }
 
 // Unlock sid
-void ReSID::unlock ()
+void ReSID::unlock()
 {
     m_locked  = false;
     m_context = 0;
 }
 
 // Set the emulated SID model
-void ReSID::model (SidConfig::sid_model_t model)
+void ReSID::model(SidConfig::sid_model_t model)
 {
     RESID_NS::chip_model chipModel;
     switch (model)
@@ -175,7 +175,7 @@ void ReSID::model (SidConfig::sid_model_t model)
             chipModel = RESID_NS::MOS8580;
             break;
         /* MOS8580 + digi boost
-        *      m_sid.set_chip_model (RESID_NS::MOS8580);
+        *      chipModel = (RESID_NS::MOS8580);
         *      m_sid.set_voice_mask(0x0f);
         *      m_sid.input(-32768);
         */

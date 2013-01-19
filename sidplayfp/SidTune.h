@@ -39,21 +39,21 @@ class sidmemory;
 */
 class SID_EXTERN SidTune
 {
- public:
+public:
     static const int MD5_LENGTH = 32;
 
- private:
+private:
     /// Filename extensions to append for various file types.
     static const char** fileNameExtensions;
 
- private:  // -------------------------------------------------------------
+private:  // -------------------------------------------------------------
     std::auto_ptr<SidTuneBase> tune;
 
     const char* m_statusString;
 
     bool m_status;
 
- public:  // ----------------------------------------------------------------
+public:  // ----------------------------------------------------------------
 
     /**
     * Load a sidtune from a file.
@@ -162,7 +162,7 @@ class SID_EXTERN SidTune
     */
     const char *createMD5(char *md5 = 0);
 
- private:    // prevent copying
+private:    // prevent copying
     SidTune(const SidTune&);
     SidTune& operator=(SidTune&);
 };

@@ -37,7 +37,6 @@ namespace reSIDfp
  */
 class OpAmp
 {
-
 private:
     static const double EPSILON;
 

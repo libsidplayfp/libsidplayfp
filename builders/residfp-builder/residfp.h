@@ -32,8 +32,8 @@
 class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 {
 public:
-    ReSIDfpBuilder(const char * const name)
-      : sidbuilder(name) {}
+    ReSIDfpBuilder(const char * const name) :
+        sidbuilder(name) {}
     ~ReSIDfpBuilder();
 
     /**
@@ -50,7 +50,7 @@ public:
     */
     unsigned int create(unsigned int sids);
 
-    const char *credits () const;
+    const char *credits() const;
 
     /// @name global settings
     /// Settings that affect all SIDs.

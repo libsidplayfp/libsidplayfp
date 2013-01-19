@@ -32,55 +32,55 @@
 class reloc65
 {
 public:
-  typedef enum
-  {
-    WHOLE,
-    TEXT,
-    DATA,
-    BSS,
-    ZEROPAGE
-  } segment_t;
+    typedef enum
+    {
+        WHOLE,
+        TEXT,
+        DATA,
+        BSS,
+        ZEROPAGE
+    } segment_t;
 
 private:
-  bool m_tflag, m_dflag, m_bflag, m_zflag;
-  int m_tbase, m_dbase, m_bbase, m_zbase;
-  int m_tdiff, m_ddiff, m_bdiff, m_zdiff;
+    bool m_tflag, m_dflag, m_bflag, m_zflag;
+    int m_tbase, m_dbase, m_bbase, m_zbase;
+    int m_tdiff, m_ddiff, m_bdiff, m_zdiff;
 
-  segment_t m_extract;
+    segment_t m_extract;
 
 private:
-  static int read_options(unsigned char *buf);
-  static int read_undef(unsigned char *buf);
+    static int read_options(unsigned char *buf);
+    static int read_undef(unsigned char *buf);
 
-  int reldiff(unsigned char s);
-  unsigned char *reloc_seg(unsigned char *buf, int len, unsigned char *rtab);
-  unsigned char *reloc_globals(unsigned char *buf);
+    int reldiff(unsigned char s);
+    unsigned char *reloc_seg(unsigned char *buf, int len, unsigned char *rtab);
+    unsigned char *reloc_globals(unsigned char *buf);
 
 public:
-  reloc65();
+    reloc65();
 
-  /**
-  * Select segment to relocate
-  * 
-  * @param type the segment to relocate
-  * @param addr new address
-  */
-  void setReloc(segment_t type, int addr);
+    /**
+    * Select segment to relocate.
+    * 
+    * @param type the segment to relocate
+    * @param addr new address
+    */
+    void setReloc(segment_t type, int addr);
 
-  /**
-  * Select segment to extract
-  * 
-  * @param type the segment to extract
-  */
-  void setExtract(segment_t type);
+    /**
+    * Select segment to extract.
+    * 
+    * @param type the segment to extract
+    */
+    void setExtract(segment_t type);
 
-  /**
-  * Do the relocation
-  *
-  * @param buf
-  * @param fsize
-  */
-  bool reloc(unsigned char **buf, int *fsize);
+    /**
+    * Do the relocation.
+    *
+    * @param buf
+    * @param fsize
+    */
+    bool reloc(unsigned char **buf, int *fsize);
 };
 
 #endif

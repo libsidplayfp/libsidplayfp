@@ -34,14 +34,14 @@ class EventContext;
 /**
 * Inherit this class to create a new SID emulation.
 */
-class sidemu: public component, public Bank
+class sidemu : public component, public Bank
 {
 private:
     sidbuilder *m_builder;
 
 protected:
     short *m_buffer;
-    int  m_bufferpos;
+    int m_bufferpos;
 
 public:
     sidemu(sidbuilder *builder) :

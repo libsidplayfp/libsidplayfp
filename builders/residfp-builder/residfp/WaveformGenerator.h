@@ -45,7 +45,6 @@ namespace reSIDfp
  */
 class WaveformGenerator
 {
-
 private:
     array<short>* model_wave;
 

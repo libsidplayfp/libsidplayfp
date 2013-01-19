@@ -94,7 +94,7 @@ struct HsidDLL2
 /***************************************************************************
  * HardSID SID Specialisation
  ***************************************************************************/
-class HardSID: public sidemu, private Event
+class HardSID : public sidemu, private Event
 {
 private:
     friend class HardSIDBuilder;
@@ -105,20 +105,20 @@ private:
     int            m_handle;
 #endif
 
-    static const   unsigned int voices;
-    static         unsigned int sid;
+    static const unsigned int voices;
+    static       unsigned int sid;
 
-    static std::string    m_credit;
+    static std::string m_credit;
 
 
     // Generic variables
-    EventContext  *m_eventContext;
-    event_clock_t  m_accessClk;
-    std::string    m_errorBuffer;
+    EventContext *m_eventContext;
+    event_clock_t m_accessClk;
+    std::string   m_errorBuffer;
 
     // Must stay in this order
     bool           muted[HARDSID_VOICES];
-    unsigned int           m_instance;
+    unsigned int   m_instance;
     bool           m_status;
     bool           m_locked;
 
@@ -126,36 +126,38 @@ public:
     static const char* getCredits();
 
 public:
-    HardSID  (sidbuilder *builder);
-    ~HardSID ();
+    HardSID(sidbuilder *builder);
+    ~HardSID();
 
     // Standard component functions
-    const char   *credits () const { return getCredits(); }
+    const char *credits () const { return getCredits(); }
 
-    void          reset   () { sidemu::reset (); }
-    void          reset   (uint8_t volume);
-    uint8_t       read    (uint_least8_t addr);
-    void          write   (uint_least8_t addr, uint8_t data);
-    void          clock   ();
-    const char   *error   () const {return m_errorBuffer.c_str();}
-    bool          getStatus() const { return m_status; }
+    void reset() { sidemu::reset (); }
+    void reset(uint8_t volume);
+
+    uint8_t read(uint_least8_t addr);
+    void write(uint_least8_t addr, uint8_t data);
+
+    void clock();
+    const char *error() const {return m_errorBuffer.c_str();}
+    bool getStatus() const { return m_status; }
 
     // Standard SID functions
-    void          filter  (bool enable);
-    void          model   (SidConfig::sid_model_t model SID_UNUSED) {;}
-    void          voice   (unsigned int num, bool mute);
+    void filter(bool enable);
+    void model(SidConfig::sid_model_t model SID_UNUSED) {;}
+    void voice(unsigned int num, bool mute);
     // HardSID specific
-    void          flush   ();
+    void flush();
 
     // Must lock the SID before using the standard functions.
-    bool          lock    (EventContext *env);
-    void          unlock  ();
+    bool lock(EventContext *env);
+    void unlock();
 
 private:
     // Fixed interval timer delay to prevent sidplay2
     // shoot to 100% CPU usage when song nolonger
     // writes to SID.
-    void event ();
+    void event();
 };
 
 #endif // HARDSID_EMU_H

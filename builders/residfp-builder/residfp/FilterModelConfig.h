@@ -36,7 +36,6 @@ class Integrator;
 */
 class FilterModelConfig
 {
-
 private:
     static std::auto_ptr<FilterModelConfig> instance;
     // This allows access to the private constructor

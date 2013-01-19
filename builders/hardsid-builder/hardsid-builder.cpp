@@ -47,29 +47,29 @@ bool HardSIDBuilder::m_initialised = false;
 unsigned int HardSIDBuilder::m_count = 0;
 #endif
 
-HardSIDBuilder::HardSIDBuilder (const char * const name)
-:sidbuilder (name)
+HardSIDBuilder::HardSIDBuilder (const char * const name) :
+    sidbuilder (name)
 {
     if (!m_initialised)
     {
-        if (init () < 0)
+        if (init() < 0)
             return;
         m_initialised = true;
     }
 }
 
-HardSIDBuilder::~HardSIDBuilder ()
+HardSIDBuilder::~HardSIDBuilder()
 {   // Remove all SID emulations
-    remove ();
+    remove();
 }
 
 // Create a new sid emulation.
-unsigned int HardSIDBuilder::create (unsigned int sids)
+unsigned int HardSIDBuilder::create(unsigned int sids)
 {
     m_status = true;
 
     // Check available devices
-    unsigned int count = availDevices ();
+    unsigned int count = availDevices();
     if (count == 0)
     {
         m_errorBuffer = "HARDSID ERROR: No devices found (run HardSIDConfig)";
@@ -88,15 +88,15 @@ unsigned int HardSIDBuilder::create (unsigned int sids)
             // SID init failed?
             if (!sid->getStatus())
             {
-                m_errorBuffer = sid->error ();
+                m_errorBuffer = sid->error();
                 goto HardSIDBuilder_create_error;
             }
-            sidobjs.insert (sid.release());
+            sidobjs.insert(sid.release());
         }
         // Memory alloc failed?
         catch (std::bad_alloc&)
         {
-            m_errorBuffer.assign(name ()).append(" ERROR: Unable to create HardSID object");
+            m_errorBuffer.assign(name()).append(" ERROR: Unable to create HardSID object");
             goto HardSIDBuilder_create_error;
         }
 
@@ -109,7 +109,7 @@ HardSIDBuilder_create_error:
     return count;
 }
 
-unsigned int HardSIDBuilder::availDevices () const
+unsigned int HardSIDBuilder::availDevices() const
 {
     // Available devices
     // @FIXME@ not yet supported on Linux
@@ -120,7 +120,7 @@ unsigned int HardSIDBuilder::availDevices () const
 #endif
 }
 
-const char *HardSIDBuilder::credits () const
+const char *HardSIDBuilder::credits() const
 {
     return HardSID::getCredits();
 }
@@ -131,7 +131,7 @@ void HardSIDBuilder::flush()
         static_cast<HardSID*>(*it)->flush();
 }
 
-void HardSIDBuilder::filter (bool enable)
+void HardSIDBuilder::filter(bool enable)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<HardSID, bool>(&HardSID::filter, enable));
 }
@@ -139,7 +139,7 @@ void HardSIDBuilder::filter (bool enable)
 #ifdef _WIN32
 
 // Load the library and initialise the hardsid
-int HardSIDBuilder::init ()
+int HardSIDBuilder::init()
 {
     HINSTANCE dll;
 
@@ -252,16 +252,16 @@ HardSID_init_error:
 // Find the number of sid devices.  We do not care about
 // stuppid device numbering or drivers not loaded for the
 // available nodes.
-int HardSIDBuilder::init ()
+int HardSIDBuilder::init()
 {
-    DIR    *dir = opendir("/dev");
+    DIR *dir = opendir("/dev");
     if (!dir)
         return -1;
 
     m_count = 0;
     dirent *entry;
 
-    while ( (entry=readdir(dir)) )
+    while (entry=readdir(dir))
     {
         // SID device
         if (strncmp ("sid", entry->d_name, 3))
@@ -273,7 +273,7 @@ int HardSIDBuilder::init ()
         unsigned int index = 0;
         while (*p)
         {
-            if (!isdigit (*p))
+            if (!isdigit(*p))
                 continue;
             index = index * 10 + (*p++ - '0');
         }
@@ -281,7 +281,8 @@ int HardSIDBuilder::init ()
         if (m_count < index)
             m_count = index;
     }
-    closedir (dir);
+
+    closedir(dir);
     return 0;
 }
 

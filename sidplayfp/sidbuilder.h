@@ -32,7 +32,7 @@ class sidemu;
 class EventContext;
 
 /**
-* base class for sid builders.
+* Base class for sid builders.
 */ 
 class sidbuilder
 {

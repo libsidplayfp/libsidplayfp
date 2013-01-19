@@ -25,19 +25,19 @@
 
 class PSID : public SidTuneBase
 {
- private:
+private:
     char m_md5[SidTune::MD5_LENGTH+1];
 
- private:
+private:
     bool resolveAddrs(const uint_least8_t *c64data);
     bool checkRelocInfo();
 
     void tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf);
 
- protected:
+protected:
     PSID() {}
 
- public:
+public:
     virtual ~PSID() {}
 
     static SidTuneBase* load(Buffer_sidtt<const uint_least8_t>& dataBuf);

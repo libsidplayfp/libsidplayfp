@@ -36,7 +36,6 @@ namespace reSIDfp
  */
 class Potentiometer
 {
-
 public:
     /**
      * Read paddle value. Not modeled.

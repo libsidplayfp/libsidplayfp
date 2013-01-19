@@ -43,7 +43,6 @@ namespace reSIDfp
  */
 class EnvelopeGenerator
 {
-
 private:
     /**
      * The envelope state machine's distinct states. In addition to this,

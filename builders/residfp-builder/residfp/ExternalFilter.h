@@ -50,7 +50,6 @@ namespace reSIDfp
  */
 class ExternalFilter
 {
-
 private:
     /**
      * lowpass

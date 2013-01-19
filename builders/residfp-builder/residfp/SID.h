@@ -41,12 +41,12 @@ class Resampler;
  */
 class SIDError
 {
-
 private:
     const char* message;
 
 public:
-    SIDError(const char* msg) : message(msg) {}
+    SIDError(const char* msg) :
+        message(msg) {}
     const char* getMessage() { return message; }
 };
 
@@ -63,7 +63,6 @@ public:
  */
 class SID
 {
-
 private:
     /**
      * Bus value stays alive for some time after each operation.
@@ -140,7 +139,7 @@ private:
     void ageBusValue(int n);
 
     /**
-     * Get output sample
+     * Get output sample.
      *
      * @return the output sample
      */

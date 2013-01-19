@@ -40,7 +40,8 @@ class SidTuneInfoImpl;
 /**
 * loadError
 */
-class loadError {
+class loadError
+{
 private:
     const char* m_msg;
 public:
@@ -53,17 +54,17 @@ public:
 */
 class SidTuneBase
 {
- protected:
+protected:
     /// Also PSID file format limit.
     static const unsigned int MAX_SONGS = 256;
 
- private:
+private:
     /// C64KB+LOAD+PSID
     static const uint_least32_t MAX_FILELEN = 65536+2+0x7C;
 
     static const uint_least32_t MAX_MEMORY = 65536;
 
- public:  // ----------------------------------------------------------------
+public:  // ----------------------------------------------------------------
     virtual ~SidTuneBase() {}
 
     /**
@@ -71,10 +72,10 @@ class SidTuneBase
     *
     * To retrieve data from standard input pass in filename "-".
     * If you want to override the default filename extensions use this
-    * contructor. Please note, that if the specified ``sidTuneFileName''
+    * contructor. Please note, that if the specified "sidTuneFileName"
     * does exist and the loader is able to determine its file format,
     * this function does not try to append any file name extension.
-    * See ``sidtune.cpp'' for the default list of file name extensions.
+    * See "sidtune.cpp" for the default list of file name extensions.
     */
     static SidTuneBase* load(const char* fileName, const char **fileNameExt, bool separatorIsSlash);
 
@@ -114,7 +115,7 @@ class SidTuneBase
     */
     virtual const char *createMD5(char *md5 SID_UNUSED) { return 0; }
 
- protected:  // -------------------------------------------------------------
+protected:  // -------------------------------------------------------------
 
     std::auto_ptr<SidTuneInfoImpl> info;
 
@@ -126,7 +127,7 @@ class SidTuneBase
 
     Buffer_sidtt<const uint_least8_t> cache;
 
- protected:
+protected:
     SidTuneBase();
 
     /**
@@ -141,6 +142,7 @@ class SidTuneBase
 
     /// Check compatibility details are sensible
     bool checkCompatibility();
+
     /// Check for valid relocation information
     bool checkRelocInfo();
 
@@ -168,13 +170,13 @@ class SidTuneBase
 
     class PetsciiToAscii
     {
-     private:
+    private:
         std::string buffer;
-     public:
+    public:
         const char* convert(SmartPtr_sidtt<const uint_least8_t>& spPet);
     };
 
- private:  // ---------------------------------------------------------------
+private:  // ---------------------------------------------------------------
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     static SidTuneBase* getFromStdIn();
@@ -187,7 +189,7 @@ class SidTuneBase
     static void createNewFileName(std::string& destString,
                            const char* sourceName, const char* sourceExt);
 
- private:    // prevent copying
+private:    // prevent copying
     SidTuneBase(const SidTuneBase&);
     SidTuneBase& operator=(SidTuneBase&);
 };

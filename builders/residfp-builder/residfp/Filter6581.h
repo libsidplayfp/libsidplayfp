@@ -46,7 +46,6 @@ class Integrator;
  */
 class Filter6581 : public Filter
 {
-
 private:
     /** Filter highpass state. */
     int Vhp;

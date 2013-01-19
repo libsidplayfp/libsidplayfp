@@ -45,7 +45,6 @@ namespace reSIDfp
  */
 class Filter8580 : public Filter
 {
-
 private:
     double highFreq;
     float Vlp, Vbp, Vhp;

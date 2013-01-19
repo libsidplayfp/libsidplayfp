@@ -31,7 +31,6 @@ typedef double(*Params)[6];
 */
 class Spline
 {
-
 private:
     double* c;
     const int paramsLength;

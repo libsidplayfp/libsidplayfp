@@ -55,14 +55,14 @@ public:
         m_powerOnDelay(0) {}
 
     /**
-    * Set the power on delay cycles
+    * Set the power on delay cycles.
     *
     * @param delay the delay
     */
     void powerOnDelay(uint_least16_t delay) { m_powerOnDelay = delay; }
 
     /**
-    * Relocate the driver
+    * Relocate the driver.
     *
     * @param mem the c64 memory interface
     */
@@ -77,7 +77,7 @@ public:
     void install(sidmemory *mem);
 
     /**
-    * Get a detailed error message
+    * Get a detailed error message.
     *
     * @return a pointer to the string
     */

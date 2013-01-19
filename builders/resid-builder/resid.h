@@ -29,11 +29,11 @@
 /**
 * ReSID Builder Class
 */
-class SID_EXTERN ReSIDBuilder: public sidbuilder
+class SID_EXTERN ReSIDBuilder : public sidbuilder
 {
 public:
-    ReSIDBuilder(const char * const name)
-      : sidbuilder(name) {}
+    ReSIDBuilder(const char * const name) :
+        sidbuilder(name) {}
     ~ReSIDBuilder();
 
     /**

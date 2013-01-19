@@ -51,12 +51,12 @@ const char* ReSIDfp::getCredits()
     return m_credit.c_str();
 }
 
-ReSIDfp::ReSIDfp (sidbuilder *builder)
-:sidemu(builder),
- m_context(0),
- m_sid(*(new RESID_NAMESPACE::SID)),
- m_status(true),
- m_locked(false)
+ReSIDfp::ReSIDfp(sidbuilder *builder) :
+    sidemu(builder),
+    m_context(0),
+    m_sid(*(new RESID_NAMESPACE::SID)),
+    m_status(true),
+    m_locked(false)
 {
     m_error = "N/A";
 
@@ -65,40 +65,40 @@ ReSIDfp::ReSIDfp (sidbuilder *builder)
     reset (0);
 }
 
-ReSIDfp::~ReSIDfp ()
+ReSIDfp::~ReSIDfp()
 {
     delete &m_sid;
     delete[] m_buffer;
 }
 
-void ReSIDfp::filter6581Curve (double filterCurve)
+void ReSIDfp::filter6581Curve(double filterCurve)
 {
    m_sid.getFilter6581()->setFilterCurve(filterCurve);
 }
 
-void ReSIDfp::filter8580Curve (double filterCurve)
+void ReSIDfp::filter8580Curve(double filterCurve)
 {
    m_sid.getFilter8580()->setFilterCurve(filterCurve);
 }
 
 // Standard component options
-void ReSIDfp::reset (uint8_t volume)
+void ReSIDfp::reset(uint8_t volume)
 {
     m_accessClk = 0;
-    m_sid.reset ();
-    m_sid.write (0x18, volume);
+    m_sid.reset();
+    m_sid.write(0x18, volume);
 }
 
-uint8_t ReSIDfp::read (uint_least8_t addr)
+uint8_t ReSIDfp::read(uint_least8_t addr)
 {
     clock();
-    return m_sid.read (addr);
+    return m_sid.read(addr);
 }
 
-void ReSIDfp::write (uint_least8_t addr, uint8_t data)
+void ReSIDfp::write(uint_least8_t addr, uint8_t data)
 {
     clock();
-    m_sid.write (addr, data);
+    m_sid.write(addr, data);
 }
 
 void ReSIDfp::clock()
@@ -108,13 +108,13 @@ void ReSIDfp::clock()
     m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
 }
 
-void ReSIDfp::filter (bool enable)
+void ReSIDfp::filter(bool enable)
 {
       m_sid.getFilter6581()->enable(enable);
       m_sid.getFilter8580()->enable(enable);
 }
 
-void ReSIDfp::sampling (float systemclock, float freq,
+void ReSIDfp::sampling(float systemclock, float freq,
         SidConfig::sampling_method_t method, bool fast SID_UNUSED)
 {
     reSIDfp::SamplingMethod sampleMethod;
@@ -149,7 +149,7 @@ void ReSIDfp::sampling (float systemclock, float freq,
 }
 
 // Set execution environment and lock sid to it
-bool ReSIDfp::lock (EventContext *env)
+bool ReSIDfp::lock(EventContext *env)
 {
     if (m_locked)
         return false;
@@ -161,14 +161,14 @@ bool ReSIDfp::lock (EventContext *env)
 }
 
 // Unlock sid
-void ReSIDfp::unlock ()
+void ReSIDfp::unlock()
 {
     m_locked  = false;
     m_context = 0;
 }
 
 // Set the emulated SID model
-void ReSIDfp::model (SidConfig::sid_model_t model)
+void ReSIDfp::model(SidConfig::sid_model_t model)
 {
     reSIDfp::ChipModel chipModel;
     switch (model)

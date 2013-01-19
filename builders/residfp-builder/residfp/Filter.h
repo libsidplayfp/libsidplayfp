@@ -36,7 +36,6 @@ namespace reSIDfp
  */
 class Filter
 {
-
 private:
     /**
      * Filter enabled.

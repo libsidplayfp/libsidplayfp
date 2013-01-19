@@ -48,7 +48,6 @@ typedef struct
  */
 class WaveformCalculator
 {
-
 private:
     std::map<const CombinedWaveformConfig*, array<short> > CACHE;
 

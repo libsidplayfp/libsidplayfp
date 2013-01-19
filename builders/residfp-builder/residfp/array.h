@@ -25,7 +25,6 @@
  */
 class counter
 {
-
 private:
     unsigned int c;
 
@@ -41,7 +40,6 @@ public:
 template<typename T>
 class array
 {
-
 private:
     counter* count;
     unsigned int x, y;

@@ -27,18 +27,18 @@
 
 #include "residfp-emu.h"
 
-ReSIDfpBuilder::~ReSIDfpBuilder ()
+ReSIDfpBuilder::~ReSIDfpBuilder()
 {   // Remove all SID emulations
-    remove ();
+    remove();
 }
 
 // Create a new sid emulation.
-unsigned int ReSIDfpBuilder::create (unsigned int sids)
+unsigned int ReSIDfpBuilder::create(unsigned int sids)
 {
     m_status = true;
 
     // Check available devices
-    unsigned int count = availDevices ();
+    unsigned int count = availDevices();
 
     if (count && (count < sids))
         sids = count;
@@ -47,12 +47,12 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
     {
         try
         {
-            sidobjs.insert (new ReSIDfp(this));
+            sidobjs.insert(new ReSIDfp(this));
         }
         // Memory alloc failed?
         catch (std::bad_alloc&)
         {
-            m_errorBuffer.assign(name ()).append(" ERROR: Unable to create ReSIDfp object");
+            m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfp object");
             m_status = false;
             break;
         }
@@ -61,22 +61,22 @@ unsigned int ReSIDfpBuilder::create (unsigned int sids)
 
 }
 
-const char *ReSIDfpBuilder::credits () const
+const char *ReSIDfpBuilder::credits() const
 {
-    return ReSIDfp::getCredits ();
+    return ReSIDfp::getCredits();
 }
 
-void ReSIDfpBuilder::filter (bool enable)
+void ReSIDfpBuilder::filter(bool enable)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, bool>(&ReSIDfp::filter, enable));
 }
 
-void ReSIDfpBuilder::filter6581Curve (double filterCurve)
+void ReSIDfpBuilder::filter6581Curve(double filterCurve)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter6581Curve, filterCurve));
 }
 
-void ReSIDfpBuilder::filter8580Curve (double filterCurve)
+void ReSIDfpBuilder::filter8580Curve(double filterCurve)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter8580Curve, filterCurve));
 }

@@ -40,7 +40,6 @@ namespace reSIDfp
  */
 class Voice
 {
-
 private:
     WaveformGenerator* waveformGenerator;
 

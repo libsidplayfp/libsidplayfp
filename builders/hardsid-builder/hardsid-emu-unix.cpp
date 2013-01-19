@@ -44,11 +44,11 @@
 #define HSID_IOCTL_DELAY     _IOW('S', 8, int)
 #define HSID_IOCTL_READ      _IOWR('S', 9, int*)
 
-bool       HardSID::m_sidFree[16] = {0};
+bool HardSID::m_sidFree[16] = {0};
 const unsigned int HardSID::voices = HARDSID_VOICES;
-unsigned int       HardSID::sid = 0;
+unsigned int HardSID::sid = 0;
 
-std::string       HardSID::m_credit;
+std::string HardSID::m_credit;
 
 const char* HardSID::getCredits()
 {
@@ -64,14 +64,14 @@ const char* HardSID::getCredits()
     return m_credit.c_str();
 }
 
-HardSID::HardSID (sidbuilder *builder)
-:sidemu(builder),
- Event("HardSID Delay"),
- m_handle(0),
- m_eventContext(0),
- m_instance(sid++),
- m_status(false),
- m_locked(false)
+HardSID::HardSID (sidbuilder *builder) :
+    sidemu(builder),
+    Event("HardSID Delay"),
+    m_handle(0),
+    m_eventContext(0),
+    m_instance(sid++),
+    m_status(false),
+    m_locked(false)
 {
     unsigned int num = 16;
     for ( unsigned int i = 0; i < 16; i++ )
@@ -85,7 +85,7 @@ HardSID::HardSID (sidbuilder *builder)
     }
 
     // All sids in use?!?
-    if ( num == 16 )
+    if (num == 16)
         return;
 
     m_instance = num;
@@ -125,14 +125,14 @@ HardSID::~HardSID()
         close (m_handle);
 }
 
-void HardSID::reset (uint8_t volume)
+void HardSID::reset(uint8_t volume)
 {
     for (unsigned int i= 0; i < voices; i++)
         muted[i] = false;
     ioctl(m_handle, HSID_IOCTL_RESET, volume);
     m_accessClk = 0;
     if (m_eventContext != 0)
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+        m_eventContext->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 
 void HardSID::clock()
@@ -140,7 +140,7 @@ void HardSID::clock()
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_eventContext->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while (cycles > 0xffff)
@@ -152,12 +152,12 @@ void HardSID::clock()
         ioctl(m_handle, HSID_IOCTL_DELAY, cycles);
 }
 
-uint8_t HardSID::read (uint_least8_t addr)
+uint8_t HardSID::read(uint_least8_t addr)
 {
     if (!m_handle)
         return 0;
 
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_eventContext->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while ( cycles > 0xffff )
@@ -174,7 +174,7 @@ uint8_t HardSID::read (uint_least8_t addr)
     return (uint8_t) (packet & 0xff);
 }
 
-void HardSID::write (uint_least8_t addr, uint8_t data)
+void HardSID::write(uint_least8_t addr, uint8_t data)
 {
     if (!m_handle)
         return;
@@ -195,7 +195,7 @@ void HardSID::write (uint_least8_t addr, uint8_t data)
     ::write (m_handle, &packet, sizeof (packet));
 }
 
-void HardSID::voice (unsigned int num, bool mute)
+void HardSID::voice(unsigned int num, bool mute)
 {
     // Only have 3 voices!
     if (num >= voices)
@@ -205,15 +205,15 @@ void HardSID::voice (unsigned int num, bool mute)
     int cmute = 0;
     for ( unsigned int i = 0; i < voices; i++ )
         cmute |= (muted[i] << i);
-    ioctl (m_handle, HSID_IOCTL_MUTE, cmute);
+    ioctl(m_handle, HSID_IOCTL_MUTE, cmute);
 }
 
-void HardSID::event ()
+void HardSID::event()
 {
     event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     if (cycles < HARDSID_DELAY_CYCLES)
     {
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES - cycles,
+        m_eventContext->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
                   EVENT_CLOCK_PHI1);
     }
     else
@@ -226,7 +226,7 @@ void HardSID::event ()
 
 void HardSID::filter(bool enable)
 {
-    ioctl (m_handle, HSID_IOCTL_NOFILTER, !enable);
+    ioctl(m_handle, HSID_IOCTL_NOFILTER, !enable);
 }
 
 void HardSID::flush()
@@ -241,14 +241,14 @@ bool HardSID::lock(EventContext* env)
 
     m_locked = true;
     m_eventContext = env;
-    m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+    m_eventContext->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 
     return true;
 }
 
 void HardSID::unlock()
 {
-    m_eventContext->cancel (*this);
+    m_eventContext->cancel(*this);
     m_locked = false;
     m_eventContext = 0;
 }

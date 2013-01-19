@@ -39,7 +39,6 @@ namespace reSIDfp
  */
 class Integrator
 {
-
 private:
     unsigned int Vddt_Vw_2;
     int Vddt, n_snake, x;

@@ -25,11 +25,11 @@
 
 class MUS : public SidTuneBase
 {
- private:
+private:
     /// Needed for MUS/STR player installation.
     uint_least16_t musDataLen;
 
- private:
+private:
     bool resolveAddrs(const uint_least8_t *c64data);
     bool checkRelocInfo();
 
@@ -45,7 +45,7 @@ class MUS : public SidTuneBase
                                        uint_least32_t voice3Index,
                                        bool init);
 
- protected:
+protected:
     MUS() {}
 
     void installPlayer(sidmemory *mem);
@@ -55,7 +55,7 @@ class MUS : public SidTuneBase
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
                        Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName);
 
- public:
+public:
     virtual ~MUS() {}
 
     static SidTuneBase* load(Buffer_sidtt<const uint_least8_t>& dataBuf, bool init = false);

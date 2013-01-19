@@ -29,7 +29,7 @@
 /**
 * HardSID Builder Class
 */
-class SID_EXTERN HardSIDBuilder: public sidbuilder
+class SID_EXTERN HardSIDBuilder : public sidbuilder
 {
 private:
     static bool m_initialised;
@@ -49,7 +49,7 @@ public:
     *
     * @return the number of available sids, 0 = endless.
     */
-    unsigned int availDevices () const;
+    unsigned int availDevices() const;
 
     const char *credits() const;
 

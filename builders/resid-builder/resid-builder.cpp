@@ -26,18 +26,18 @@
 
 #include "resid-emu.h"
 
-ReSIDBuilder::~ReSIDBuilder ()
+ReSIDBuilder::~ReSIDBuilder()
 {   // Remove all SID emulations
-    remove ();
+    remove();
 }
 
 // Create a new sid emulation.
-unsigned int ReSIDBuilder::create (unsigned int sids)
+unsigned int ReSIDBuilder::create(unsigned int sids)
 {
     m_status = true;
 
     // Check available devices
-    unsigned int count = availDevices ();
+    unsigned int count = availDevices();
 
     if (count && (count < sids))
         sids = count;
@@ -46,12 +46,12 @@ unsigned int ReSIDBuilder::create (unsigned int sids)
     {
         try
         {
-            sidobjs.insert (new ReSID(this));
+            sidobjs.insert(new ReSID(this));
         }
         // Memory alloc failed?
         catch (std::bad_alloc&)
         {
-            m_errorBuffer.assign(name ()).append(" ERROR: Unable to create ReSID object");
+            m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSID object");
             m_status = false;
             break;
         }
@@ -59,17 +59,17 @@ unsigned int ReSIDBuilder::create (unsigned int sids)
     return count;
 }
 
-const char *ReSIDBuilder::credits () const
+const char *ReSIDBuilder::credits() const
 {
-    return ReSID::getCredits ();
+    return ReSID::getCredits();
 }
 
-void ReSIDBuilder::filter (bool enable)
+void ReSIDBuilder::filter(bool enable)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, bool>(&ReSID::filter, enable));
 }
 
-void ReSIDBuilder::bias (double dac_bias)
+void ReSIDBuilder::bias(double dac_bias)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, double>(&ReSID::bias, dac_bias));
 }
