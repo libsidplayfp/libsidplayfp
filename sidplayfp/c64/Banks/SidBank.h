@@ -67,7 +67,7 @@ public:
     /**
     * Get SID emulation.
     *
-    * @ratuen the emulation
+    * @return the emulation
     */
     sidemu *getSID() const { return sid; }
 };

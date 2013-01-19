@@ -151,6 +151,7 @@ protected:
 protected:
     /**
     * Create a new CIA.
+    *
     * @param ctx the event context
     */
     MOS6526(EventContext *context);
@@ -161,13 +162,12 @@ protected:
     * top of PHI1 causes, because there is no ordering between events on
     * same phase. Thus it is scheduled in PHI2 to ensure the b.event() is
     * run once before the value changes.
-    * <UL>
-    * <LI>PHI1 a.event() (which calls underFlow())
-    * <LI>PHI1 b.event()
-    * <LI>PHI2 bTick.event()
-    * <LI>PHI1 a.event()
-    * <LI>PHI1 b.event()
-    * </UL>
+    *
+    * - PHI1 a.event() (which calls underFlow())
+    * - PHI1 b.event()
+    * - PHI2 bTick.event()
+    * - PHI1 a.event()
+    * - PHI1 b.event()
     */
     void bTick(void);
 

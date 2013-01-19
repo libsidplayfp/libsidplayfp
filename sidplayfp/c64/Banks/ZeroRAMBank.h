@@ -56,10 +56,10 @@ class ZeroRAMBank : public Bank
 {
 private:
 /*
-    NOTE: fall-off cycles are heavily chip- and temperature dependant. as a
+    NOTE: fall-off cycles are heavily chip- and temperature dependent. as a
           consequence it is very hard to find suitable realistic values that
           always work and we can only tweak them based on testcases. (unless we
-          want to make it configureable or emulate temperature over time =))
+          want to make it configurable or emulate temperature over time =))
 
           it probably makes sense to tweak the values for a warmed up CPU, since
           this is likely how (old) programs were coded and tested :)
@@ -264,6 +264,7 @@ public:
         case 1:
             /* when writing to an unused bit that is output, charge the "capacitor",
              * otherwise don't touch it */
+
             if (dir & 0x40)
             {
                 dataSetBit6 = value & 0x40;
@@ -271,7 +272,6 @@ public:
                 dataFalloffBit6 = true;
             }
 
-             /* update value if input, otherwise don't touch */
             if (dir & 0x80)
             {
                 dataSetBit7 = value & 0x80;

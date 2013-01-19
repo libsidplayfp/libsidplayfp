@@ -65,10 +65,10 @@ private:
     /**
     * This is a tri-state:
     *
-    * when -1: cia is completely stopped
-    * when 0: cia 1-clock events are ticking.
-    * otherwise: cycleskipevent is ticking, and the value is the first
-    * phi1 clock of skipping.
+    * - when -1: cia is completely stopped
+    * - when 0: cia 1-clock events are ticking.
+    * - otherwise: cycleskipevent is ticking, and the value is the first
+    *   phi1 clock of skipping.
     */
     event_clock_t ciaEventPauseTime;
 

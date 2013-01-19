@@ -155,7 +155,7 @@ protected:
     /**
     * Read VIC register.
     *
-    * @param register
+    * @param addr
     *            Register to read.
     */
     uint8_t read  (uint_least8_t addr);
@@ -163,7 +163,7 @@ protected:
     /**
     * Write to VIC register.
     *
-    * @param register
+    * @param addr
     *            Register to write to.
     * @param data
     *            Data byte to write.

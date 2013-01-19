@@ -127,7 +127,7 @@ private:
     /**
     * Access memory as seen by CPU.
     *
-    * @param address
+    * @param addr the address where to read from
     * @return value at address
     */
     uint8_t cpuRead(uint_least16_t addr) { return mmu.cpuRead(addr); }
@@ -135,8 +135,8 @@ private:
     /**
     * Access memory as seen by CPU.
     *
-    * @param address
-    * @param value
+    * @param addr the address where to write to
+    * @param data the value to write
     */
     void cpuWrite(uint_least16_t addr, uint8_t data) { mmu.cpuWrite(addr, data); }
 
@@ -153,11 +153,12 @@ private:
     * NMI trigger signal.
     *
     * Calls permitted any time, but normally originated by chips at PHI1.
-    *
-    * @param state
     */
     inline void interruptNMI(void) { cpu.triggerNMI (); }
 
+    /**
+    * Reset signal.
+    */
     inline void interruptRST(void) { cpu.triggerRST (); }
 
     /**
@@ -208,6 +209,9 @@ public:
     void reset();
     void resetCpu() { cpu.reset(); }
 
+    /**
+    * Set the c64 model.
+    */
     void setModel(model_t model);
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
@@ -215,13 +219,18 @@ public:
         mmu.setRoms(kernal, basic, character);
     }
 
+    /**
+    * Get the CPU clock speed.
+    *
+    * @return the speed in Hertz
+    */
     double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**
     * Set the requested SID
     *
     * @param i sid number to set
-    * @param sidemu the sid to set
+    * @param s the sid emu to set
     */
     void setSid(unsigned int i, sidemu *s);
 
@@ -229,14 +238,14 @@ public:
     * Return the requested SID
     *
     * @param i sid number to get
-    * @return the SID
+    * @return the SID emu
     */
     sidemu *getSid(unsigned int i) const;
 
     /**
-    * Set the base address of a stereo SID chip
+    * Set the base address of a stereo SID chip.<br/>
     * Valid addresses includes the SID area ($d400-$d7ff)
-    * and the IO Area ($de00-$dfff)
+    * and the IO Area ($de00-$dfff).
     *
     * @param sidChipBase2
     *            base address (e.g. 0xd420)

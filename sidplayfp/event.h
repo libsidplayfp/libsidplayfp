@@ -137,7 +137,7 @@ public:
     virtual bool isPending(Event &event) const = 0;
 
     /**
-    * Get time with respect to a specific clock phase
+    * Get time with respect to a specific clock phase.
     *
     * @param phase the phase
     * @return the time according to specified phase.
@@ -154,7 +154,7 @@ public:
     virtual event_clock_t getTime(event_clock_t clock, event_phase_t phase) const = 0;
 
     /**
-    * Return current clock phase
+    * Return current clock phase.
     *
     * @return The current phase
     */

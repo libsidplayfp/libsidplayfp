@@ -110,7 +110,7 @@ public:
     /** Cancel all pending events and reset time. */
     void reset(void);
 
-    /** Fire next event, advance system time to that event */
+    /** Fire next event, advance system time to that event. */
     void clock(void)
     {
         Event &event = *firstEvent;
