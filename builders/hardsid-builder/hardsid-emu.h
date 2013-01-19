@@ -46,7 +46,7 @@
 //**************************************************************************
 // Version 2 Interface
 typedef void (CALLBACK* HsidDLL2_Delay_t)   (BYTE deviceID, WORD cycles);
-typedef BYTE (CALLBACK* HsidDLL2_Devices_t) (void);
+typedef BYTE (CALLBACK* HsidDLL2_Devices_t) ();
 typedef void (CALLBACK* HsidDLL2_Filter_t)  (BYTE deviceID, BOOL filter);
 typedef void (CALLBACK* HsidDLL2_Flush_t)   (BYTE deviceID);
 typedef void (CALLBACK* HsidDLL2_Mute_t)    (BYTE deviceID, BYTE channel, BOOL mute);
@@ -55,7 +55,7 @@ typedef void (CALLBACK* HsidDLL2_Reset_t)   (BYTE deviceID);
 typedef BYTE (CALLBACK* HsidDLL2_Read_t)    (BYTE deviceID, WORD cycles, BYTE SID_reg);
 typedef void (CALLBACK* HsidDLL2_Sync_t)    (BYTE deviceID);
 typedef void (CALLBACK* HsidDLL2_Write_t)   (BYTE deviceID, WORD cycles, BYTE SID_reg, BYTE data);
-typedef WORD (CALLBACK* HsidDLL2_Version_t) (void);
+typedef WORD (CALLBACK* HsidDLL2_Version_t) ();
 
 // Version 2.04 Extensions
 typedef BOOL (CALLBACK* HsidDLL2_Lock_t)    (BYTE deviceID);
@@ -130,14 +130,14 @@ public:
     ~HardSID ();
 
     // Standard component functions
-    const char   *credits (void) const { return getCredits(); }
+    const char   *credits () const { return getCredits(); }
 
     void          reset   () { sidemu::reset (); }
     void          reset   (uint8_t volume);
     uint8_t       read    (uint_least8_t addr);
     void          write   (uint_least8_t addr, uint8_t data);
     void          clock   ();
-    const char   *error   (void) const {return m_errorBuffer.c_str();}
+    const char   *error   () const {return m_errorBuffer.c_str();}
     bool          getStatus() const { return m_status; }
 
     // Standard SID functions
@@ -145,7 +145,7 @@ public:
     void          model   (SidConfig::sid_model_t model SID_UNUSED) {;}
     void          voice   (unsigned int num, bool mute);
     // HardSID specific
-    void          flush   (void);
+    void          flush   ();
 
     // Must lock the SID before using the standard functions.
     bool          lock    (EventContext *env);
@@ -155,7 +155,7 @@ private:
     // Fixed interval timer delay to prevent sidplay2
     // shoot to 100% CPU usage when song nolonger
     // writes to SID.
-    void event (void);
+    void event ();
 };
 
 #endif // HARDSID_EMU_H

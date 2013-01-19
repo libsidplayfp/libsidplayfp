@@ -27,13 +27,13 @@ static const uint8_t POWERON[] =
 #include "poweron.bin"
 };
 
-MMU::MMU(EventContext *context, Bank* ioBank)
-:context(*context),
- loram(false),
- hiram(false),
- charen(false),
- ioBank(ioBank),
- zeroRAMBank(this, &ramBank)
+MMU::MMU(EventContext *context, Bank* ioBank) :
+    context(*context),
+    loram(false),
+    hiram(false),
+    charen(false),
+    ioBank(ioBank),
+    zeroRAMBank(this, &ramBank)
 {
     cpuReadMap[0] = &zeroRAMBank;
     cpuWriteMap[0] = &zeroRAMBank;

@@ -121,7 +121,7 @@ void MOS6526::serialPort()
     }
 }
 
-void MOS6526::clear(void)
+void MOS6526::clear()
 {
     if (idr & INTERRUPT_REQUEST)
         interrupt(false);
@@ -134,7 +134,7 @@ void MOS6526::setDayOfTimeRate(unsigned int clock)
     m_todPeriod = (event_clock_t) clock * (1 << 7);
 }
 
-void MOS6526::reset(void)
+void MOS6526::reset()
 {
     sdr_out = 0;
     sdr_count = 0;
@@ -337,7 +337,7 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
     timerB.wakeUpAfterSyncWithCpu();
 }
 
-void MOS6526::trigger(void)
+void MOS6526::trigger()
 {
     idr |= INTERRUPT_REQUEST;
     interrupt(true);
@@ -358,12 +358,12 @@ void MOS6526::trigger(uint8_t interruptMask)
     }
 }
 
-void MOS6526::bTick(void)
+void MOS6526::bTick()
 {
     timerB.cascade();
 }
 
-void MOS6526::underflowA(void)
+void MOS6526::underflowA()
 {
     trigger(INTERRUPT_UNDERFLOW_A);
     if ((regs[CRB] & 0x41) == 0x41)
@@ -375,12 +375,12 @@ void MOS6526::underflowA(void)
     }
 }
 
-void MOS6526::underflowB(void)
+void MOS6526::underflowB()
 {
     trigger(INTERRUPT_UNDERFLOW_B);
 }
 
-void MOS6526::tod(void)
+void MOS6526::tod()
 {
     // Reload divider according to 50/60 Hz flag
     // Only performed on expiry according to Frodo

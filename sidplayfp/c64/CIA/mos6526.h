@@ -169,27 +169,27 @@ protected:
     * - PHI1 a.event()
     * - PHI1 b.event()
     */
-    void bTick(void);
+    void bTick();
 
     /**
     * TOD event.
     */
-    void tod(void);
+    void tod();
 
     /**
     * Signal interrupt to CPU.
     */
-    void trigger(void);
+    void trigger();
 
     /**
     * Timer A underflow
     */
-    void underflowA(void);
+    void underflowA();
 
     /**
     * Timer B underflow.
     */
-    void underflowB(void);
+    void underflowB();
 
     /**
     * Trigger an interrupt.
@@ -201,7 +201,7 @@ protected:
     /**
     * Clear interrupt state.
     */
-    void clear(void);
+    void clear();
 
     /**
     * Handle the serial port.
@@ -246,14 +246,14 @@ public:
     /**
     * Reset CIA.
     */
-    virtual void reset(void);
+    virtual void reset();
 
     /**
     * Get the credits.
     *
     * @return the credits
     */
-    const char *credits(void) const { return credit; }
+    const char *credits() const { return credit; }
 
     /**
     * Set day-of-time event occurence of rate.

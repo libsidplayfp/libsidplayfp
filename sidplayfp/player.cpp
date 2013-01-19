@@ -36,7 +36,7 @@ SIDPLAYFP_NAMESPACE_START
 const char  TXT_NA[]             = "NA";
 
 
-Player::Player (void) :
+Player::Player () :
     // Set default settings for system
     m_mixer(m_c64.getEventScheduler()),
     m_tune(0),
@@ -189,7 +189,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     return m_mixer.samplesGenerated();
 }
 
-void Player::stop(void)
+void Player::stop()
 {   // Re-start song
     if (m_tune && m_isPlaying)
     {

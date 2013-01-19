@@ -23,7 +23,7 @@
 #include "EventScheduler.h"
 
 
-void EventScheduler::reset(void)
+void EventScheduler::reset()
 {
     currentTime = 0;
     firstEvent = 0;

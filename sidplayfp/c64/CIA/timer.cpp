@@ -66,7 +66,7 @@ void Timer::event()
     reschedule();
 }
 
-void Timer::cycleSkippingEvent(void)
+void Timer::cycleSkippingEvent()
 {
     const event_clock_t elapsed = event_context.getTime(EVENT_CLOCK_PHI1) - ciaEventPauseTime;
     ciaEventPauseTime = 0;

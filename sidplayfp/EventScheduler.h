@@ -108,10 +108,10 @@ public:
           firstEvent(0) {}
 
     /** Cancel all pending events and reset time. */
-    void reset(void);
+    void reset();
 
     /** Fire next event, advance system time to that event. */
-    void clock(void)
+    void clock()
     {
         Event &event = *firstEvent;
         firstEvent = firstEvent->next;

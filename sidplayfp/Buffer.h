@@ -27,7 +27,7 @@
 template <class T> class Buffer_sidtt
 {
  public:
-	Buffer_sidtt(void) : dummy(0)
+	Buffer_sidtt() : dummy(0)
 	{
 		kill();
 	}
@@ -50,17 +50,17 @@ template <class T> class Buffer_sidtt
 		return (buf!=0);
 	}
 
-	T* get(void) const  { return buf; }
-	uint_least32_t len(void) const  { return bufLen; }
+	T* get() const  { return buf; }
+	uint_least32_t len() const  { return bufLen; }
 
-	T* xferPtr(void)
+	T* xferPtr()
 	{
 		T* tmpBuf = buf;
 		buf = 0;
 		return tmpBuf;
 	}
 
-	uint_least32_t xferLen(void)
+	uint_least32_t xferLen()
 	{
 		const uint_least32_t tmpBufLen = bufLen;
 		bufLen = 0;
@@ -72,9 +72,9 @@ template <class T> class Buffer_sidtt
 		return (index < bufLen) ? buf[index] : dummy;
 	}
 
-	bool isEmpty(void) const  { return (buf==0); }
+	bool isEmpty() const  { return (buf==0); }
 
-	void erase(void)
+	void erase()
 	{
 		if (buf!=0 && bufLen!=0)
 		{
@@ -87,7 +87,7 @@ template <class T> class Buffer_sidtt
 		kill();
 	}
 
-	~Buffer_sidtt(void)
+	~Buffer_sidtt()
 	{
 		erase();
 	}
@@ -97,7 +97,7 @@ template <class T> class Buffer_sidtt
 	uint_least32_t bufLen;
 	T dummy;
 
-	void kill(void)
+	void kill()
 	{
 		buf = 0;
 		bufLen = 0;

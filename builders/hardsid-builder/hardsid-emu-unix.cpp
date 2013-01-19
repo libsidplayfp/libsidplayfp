@@ -208,7 +208,7 @@ void HardSID::voice (unsigned int num, bool mute)
     ioctl (m_handle, HSID_IOCTL_MUTE, cmute);
 }
 
-void HardSID::event (void)
+void HardSID::event ()
 {
     event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     if (cycles < HARDSID_DELAY_CYCLES)
@@ -229,7 +229,7 @@ void HardSID::filter(bool enable)
     ioctl (m_handle, HSID_IOCTL_NOFILTER, !enable);
 }
 
-void HardSID::flush(void)
+void HardSID::flush()
 {
     ioctl(m_handle, HSID_IOCTL_FLUSH);
 }

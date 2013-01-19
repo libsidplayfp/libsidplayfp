@@ -26,7 +26,7 @@
 
 #include "resid-emu.h"
 
-ReSIDBuilder::~ReSIDBuilder (void)
+ReSIDBuilder::~ReSIDBuilder ()
 {   // Remove all SID emulations
     remove ();
 }

@@ -31,7 +31,7 @@ class MUS : public SidTuneBase
 
  private:
     bool resolveAddrs(const uint_least8_t *c64data);
-    bool checkRelocInfo(void);
+    bool checkRelocInfo();
 
     static bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index);

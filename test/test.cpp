@@ -47,10 +47,10 @@ public:
     uint8_t read  (uint_least8_t) { return 0; }
     void    write (uint_least8_t, uint8_t) {}
     void    clock() {}
-    const   char *credits (void) const { return ""; }
+    const   char *credits () const { return ""; }
     void    voice (const unsigned int num, const bool mute) {}
     void    model    (SidConfig::sid_model_t model)  {}
-    const   char *error   (void) const { return ""; }
+    const   char *error   () const { return ""; }
     bool    lock     (EventContext *env) { return true; }
     void    unlock   () {}
 };
@@ -63,9 +63,9 @@ private:
 public:
     FakeBuilder  (const char * const name)
       : sidbuilder(name) { sidobjs.insert (new NullSID()); }
-    ~FakeBuilder (void) {}
+    ~FakeBuilder () {}
 
-    const char *credits (void) const { return ""; }
+    const char *credits () const { return ""; }
     void        filter (const bool enable) {}
     unsigned int availDevices() const { return 0; }
     unsigned int create(unsigned int) { return 1; }

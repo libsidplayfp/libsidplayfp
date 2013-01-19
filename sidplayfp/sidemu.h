@@ -62,7 +62,7 @@ public:
     virtual void voice(unsigned int num, bool mute) = 0;
     virtual void model(SidConfig::sid_model_t model) = 0;
 
-    sidbuilder *builder(void) const { return m_builder; }
+    sidbuilder *builder() const { return m_builder; }
 
     virtual void sampling(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED,
         SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) {}

@@ -45,7 +45,7 @@ public:
 
     unsigned int create(unsigned int sids);
 
-    const char *credits(void) const;
+    const char *credits() const;
 
     /// @name global settings
     /// Settings that affect all SIDs

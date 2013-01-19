@@ -154,12 +154,12 @@ private:
     *
     * Calls permitted any time, but normally originated by chips at PHI1.
     */
-    inline void interruptNMI(void) { cpu.triggerNMI (); }
+    inline void interruptNMI() { cpu.triggerNMI (); }
 
     /**
     * Reset signal.
     */
-    inline void interruptRST(void) { cpu.triggerRST (); }
+    inline void interruptRST() { cpu.triggerRST (); }
 
     /**
     * BA signal.

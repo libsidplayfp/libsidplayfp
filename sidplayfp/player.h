@@ -118,7 +118,7 @@ public:
 
     uint_least32_t play(short *buffer, uint_least32_t samples);
 
-    bool isPlaying(void) const { return m_isPlaying; }
+    bool isPlaying() const { return m_isPlaying; }
 
     void stop();
 

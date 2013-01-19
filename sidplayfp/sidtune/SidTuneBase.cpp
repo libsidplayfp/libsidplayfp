@@ -456,7 +456,7 @@ void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo
     }
 }
 
-bool SidTuneBase::checkRelocInfo (void)
+bool SidTuneBase::checkRelocInfo ()
 {
     // Fix relocation information
     if (info->m_relocStartPage == 0xFF)
@@ -533,7 +533,7 @@ void SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
         info->m_initAddr = info->m_loadAddr;
 }
 
-bool SidTuneBase::checkCompatibility (void)
+bool SidTuneBase::checkCompatibility ()
 {
     switch ( info->m_compatibility )
     {

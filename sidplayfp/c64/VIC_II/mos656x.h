@@ -107,7 +107,7 @@ protected:
     uint8_t regs[0x40];
 
 private:
-    event_clock_t  clock   (void);
+    event_clock_t  clock();
 
     /** Signal CPU interrupt if requested by VIC. */
     void handleIrqState();
@@ -116,7 +116,7 @@ protected:
     MOS656X(EventContext *context);
     ~MOS656X() {}
 
-    void    event       (void);
+    void event();
 
     EventCallback<MOS656X> badLineStateChangeEvent;
 
@@ -158,7 +158,7 @@ protected:
     * @param addr
     *            Register to read.
     */
-    uint8_t read  (uint_least8_t addr);
+    uint8_t read(uint_least8_t addr);
 
     /**
     * Write to VIC register.
@@ -168,16 +168,16 @@ protected:
     * @param data
     *            Data byte to write.
     */
-    void    write (uint_least8_t addr, uint8_t data);
+    void write(uint_least8_t addr, uint8_t data);
 
 public:
-    void    chip  (model_t model);
-    void    lightpen ();
+    void chip(model_t model);
+    void lightpen();
 
     // Component Standard Calls
-    void    reset (void);
+    void reset();
 
-    const   char *credits (void) const { return credit; }
+    const char *credits() const { return credit; }
 
     uint_least16_t getCyclesPerLine() const { return cyclesPerLine; }
 

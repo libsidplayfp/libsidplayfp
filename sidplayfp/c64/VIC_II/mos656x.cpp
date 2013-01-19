@@ -54,12 +54,12 @@ const char *MOS656X::credit =
 };
 
 
-MOS656X::MOS656X (EventContext *context)
-:Event("VIC Raster"),
- event_context(*context),
- sprite_enable(regs[0x15]),
- sprite_y_expansion(regs[0x17]),
- badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange)
+MOS656X::MOS656X (EventContext *context) :
+    Event("VIC Raster"),
+    event_context(*context),
+    sprite_enable(regs[0x15]),
+    sprite_y_expansion(regs[0x17]),
+    badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange)
 {
     chip (MOS6569);
 }
@@ -200,13 +200,13 @@ void MOS656X::handleIrqState()
     }
 }
 
-void MOS656X::event (void)
+void MOS656X::event ()
 {
     const event_clock_t delay = clock();
     event_context.schedule (*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
 }
 
-event_clock_t MOS656X::clock (void)
+event_clock_t MOS656X::clock ()
 {
     event_clock_t delay = 1;
 

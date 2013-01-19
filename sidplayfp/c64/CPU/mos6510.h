@@ -67,10 +67,11 @@ public:
 protected:
     struct ProcessorCycle
     {
-        void (MOS6510::*func)(void);
+        void (MOS6510::*func)();
         bool nosteal;
-        ProcessorCycle ()
-            :func(0), nosteal(false) {}
+        ProcessorCycle () :
+            func(0),
+            nosteal(false) {}
     };
 
 protected:
@@ -138,138 +139,139 @@ protected:
     /** Represents an instruction subcycle that reads */
     EventCallback<MOS6510> m_steal;
 
-    void eventWithoutSteals  (void);
-    void eventWithSteals     (void);
+    void eventWithoutSteals();
+    void eventWithSteals();
 
-    void Initialise          (void);
+    void Initialise();
 
     // Flag utility functions
     inline void setFlagsNZ(uint8_t value);
-    inline uint8_t getStatusRegister(void);
+    inline uint8_t getStatusRegister();
     inline void setStatusRegister(uint8_t sr);
 
     // Declare Interrupt Routines
-    inline void IRQLoRequest     (void);
-    inline void IRQHiRequest     (void);
-    inline void interruptsAndNextOpcode (void);
+    inline void IRQLoRequest();
+    inline void IRQHiRequest();
+    inline void interruptsAndNextOpcode();
     inline void calculateInterruptTriggerCycle();
 
     // Declare Instruction Routines
-    inline void fetchNextOpcode      (void);
-    inline void throwAwayFetch       (void);
-    inline void throwAwayRead        (void);
-    inline void FetchDataByte        (void);
-    inline void FetchLowAddr         (void);
-    inline void FetchLowAddrX        (void);
-    inline void FetchLowAddrY        (void);
-    inline void FetchHighAddr        (void);
-    inline void FetchHighAddrX       (void);
-    inline void FetchHighAddrX2      (void);
-    inline void FetchHighAddrY       (void);
-    inline void FetchHighAddrY2      (void);
-    inline void FetchLowEffAddr      (void);
-    inline void FetchHighEffAddr     (void);
-    inline void FetchHighEffAddrY    (void);
-    inline void FetchHighEffAddrY2   (void);
-    inline void FetchLowPointer      (void);
-    inline void FetchLowPointerX     (void);
-    inline void FetchHighPointer     (void);
-    inline void FetchEffAddrDataByte (void);
-    inline void PutEffAddrDataByte   (void);
-    inline void PushLowPC            (void);
-    inline void PushHighPC           (void);
-    inline void PushSR               (void);
-    inline void PopLowPC             (void);
-    inline void PopHighPC            (void);
-    inline void PopSR                (void);
-    inline void brkPushLowPC         (void);
-    inline void WasteCycle           (void);
+    inline void fetchNextOpcode();
+    inline void throwAwayFetch();
+    inline void throwAwayRead();
+    inline void FetchDataByte();
+    inline void FetchLowAddr();
+    inline void FetchLowAddrX();
+    inline void FetchLowAddrY();
+    inline void FetchHighAddr();
+    inline void FetchHighAddrX();
+    inline void FetchHighAddrX2();
+    inline void FetchHighAddrY();
+    inline void FetchHighAddrY2();
+    inline void FetchLowEffAddr();
+    inline void FetchHighEffAddr();
+    inline void FetchHighEffAddrY();
+    inline void FetchHighEffAddrY2();
+    inline void FetchLowPointer();
+    inline void FetchLowPointerX();
+    inline void FetchHighPointer();
+    inline void FetchEffAddrDataByte ();
+    inline void PutEffAddrDataByte();
+    inline void PushLowPC();
+    inline void PushHighPC();
+    inline void PushSR();
+    inline void PopLowPC();
+    inline void PopHighPC();
+    inline void PopSR();
+    inline void brkPushLowPC();
+    inline void WasteCycle();
 
     // Delcare Instruction Operation Routines
-    inline void adc_instr     (void);
-    inline void alr_instr     (void);
-    inline void anc_instr     (void);
-    inline void and_instr     (void);
-    inline void ane_instr     (void);
-    inline void arr_instr     (void);
-    inline void asl_instr     (void);
-    inline void asla_instr    (void);
-    inline void aso_instr     (void);
-    inline void axa_instr     (void);
-    inline void axs_instr     (void);
-    inline void bcc_instr     (void);
-    inline void bcs_instr     (void);
-    inline void beq_instr     (void);
-    inline void bit_instr     (void);
-    inline void bmi_instr     (void);
-    inline void bne_instr     (void);
-    inline void branch_instr  (bool condition);
-    inline void bpl_instr     (void);
-    inline void brk_instr     (void);
-    inline void bvc_instr     (void);
-    inline void bvs_instr     (void);
-    inline void clc_instr     (void);
-    inline void cld_instr     (void);
-    inline void cli_instr     (void);
-    inline void clv_instr     (void);
-    inline void cmp_instr     (void);
-    inline void cpx_instr     (void);
-    inline void cpy_instr     (void);
-    inline void dcm_instr     (void);
-    inline void dec_instr     (void);
-    inline void dex_instr     (void);
-    inline void dey_instr     (void);
-    inline void eor_instr     (void);
-    inline void inc_instr     (void);
-    inline void ins_instr     (void);
-    inline void inx_instr     (void);
-    inline void iny_instr     (void);
-    inline void jmp_instr     (void);
-    inline void las_instr     (void);
-    inline void lax_instr     (void);
-    inline void lda_instr     (void);
-    inline void ldx_instr     (void);
-    inline void ldy_instr     (void);
-    inline void lse_instr     (void);
-    inline void lsr_instr     (void);
-    inline void lsra_instr    (void);
-    inline void oal_instr     (void);
-    inline void ora_instr     (void);
-    inline void pha_instr     (void);
-    inline void pla_instr     (void);
-    inline void plp_instr     (void);
-    inline void rla_instr     (void);
-    inline void rol_instr     (void);
-    inline void rola_instr    (void);
-    inline void ror_instr     (void);
-    inline void rora_instr    (void);
-    inline void rra_instr     (void);
-    inline void rti_instr     (void);
-    inline void rts_instr     (void);
-    inline void sbx_instr     (void);
-    inline void say_instr     (void);
-    inline void sbc_instr     (void);
-    inline void sec_instr     (void);
-    inline void sed_instr     (void);
-    inline void sei_instr     (void);
-    inline void shs_instr     (void);
-    inline void sta_instr     (void);
-    inline void stx_instr     (void);
-    inline void sty_instr     (void);
-    inline void tax_instr     (void);
-    inline void tay_instr     (void);
-    inline void tsx_instr     (void);
-    inline void txa_instr     (void);
-    inline void txs_instr     (void);
-    inline void tya_instr     (void);
-    inline void xas_instr     (void);
-    void        illegal_instr (void);
+    inline void adc_instr();
+    inline void alr_instr();
+    inline void anc_instr();
+    inline void and_instr();
+    inline void ane_instr();
+    inline void arr_instr();
+    inline void asl_instr();
+    inline void asla_instr();
+    inline void aso_instr();
+    inline void axa_instr();
+    inline void axs_instr();
+    inline void bcc_instr();
+    inline void bcs_instr();
+    inline void beq_instr();
+    inline void bit_instr();
+    inline void bmi_instr();
+    inline void bne_instr();
+    inline void branch_instr(bool condition);
+    inline void bpl_instr();
+    inline void brk_instr();
+    inline void bvc_instr();
+    inline void bvs_instr();
+    inline void clc_instr();
+    inline void cld_instr();
+    inline void cli_instr();
+    inline void clv_instr();
+    inline void cmp_instr();
+    inline void cpx_instr();
+    inline void cpy_instr();
+    inline void dcm_instr();
+    inline void dec_instr();
+    inline void dex_instr();
+    inline void dey_instr();
+    inline void eor_instr();
+    inline void inc_instr();
+    inline void ins_instr();
+    inline void inx_instr();
+    inline void iny_instr();
+    inline void jmp_instr();
+    inline void las_instr();
+    inline void lax_instr();
+    inline void lda_instr();
+    inline void ldx_instr();
+    inline void ldy_instr();
+    inline void lse_instr();
+    inline void lsr_instr();
+    inline void lsra_instr();
+    inline void oal_instr();
+    inline void ora_instr();
+    inline void pha_instr();
+    inline void pla_instr();
+    inline void plp_instr();
+    inline void rla_instr();
+    inline void rol_instr();
+    inline void rola_instr();
+    inline void ror_instr();
+    inline void rora_instr();
+    inline void rra_instr();
+    inline void rti_instr();
+    inline void rts_instr();
+    inline void sbx_instr();
+    inline void say_instr();
+    inline void sbc_instr();
+    inline void sec_instr();
+    inline void sed_instr();
+    inline void sei_instr();
+    inline void shs_instr();
+    inline void sta_instr();
+    inline void stx_instr();
+    inline void sty_instr();
+    inline void tax_instr();
+    inline void tay_instr();
+    inline void tsx_instr();
+    inline void txa_instr();
+    inline void txs_instr();
+    inline void tya_instr();
+    inline void xas_instr();
+
+    void  illegal_instr();
 
     // Declare Arithmetic Operations
-    inline void doADC   (void);
-    inline void doSBC   (void);
+    inline void doADC();
+    inline void doSBC();
 
-    inline void doJSR   (void);
+    inline void doJSR();
 
 public:
     /**
@@ -292,16 +294,18 @@ public:
     virtual void   loadFile (const char *file) =0;
 #endif
 
-    virtual void reset     (void);
-    const char  *credits(void) const { return credit; }
-    void         debug     (bool enable, FILE *out);
-    void         setRDY    (bool newRDY);
+    virtual void reset();
+
+    const char  *credits() const { return credit; }
+
+    void debug(bool enable, FILE *out);
+    void setRDY(bool newRDY);
 
     // Non-standard functions
-    void triggerRST (void);
-    void triggerNMI (void);
-    void triggerIRQ (void);
-    void clearIRQ   (void);
+    void triggerRST();
+    void triggerNMI();
+    void triggerIRQ();
+    void clearIRQ();
 };
 
 #endif // MOS6510_H

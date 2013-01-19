@@ -169,7 +169,7 @@ void HardSID::unlock ()
     m_eventContext = 0;
 }
 
-void HardSID::event (void)
+void HardSID::event ()
 {
     event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     if (cycles < HARDSID_DELAY_CYCLES)
@@ -192,7 +192,7 @@ void HardSID::filter (bool enable)
     hsid2.Filter ((BYTE) m_instance, (BOOL) enable);
 }
 
-void HardSID::flush(void)
+void HardSID::flush()
 {
     hsid2.Flush ((BYTE) m_instance);
 }

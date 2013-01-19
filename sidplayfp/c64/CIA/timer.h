@@ -107,7 +107,7 @@ private:
     /**
     * Perform scheduled cycle skipping, and resume.
     */
-    void cycleSkippingEvent(void);
+    void cycleSkippingEvent();
 
     /**
     * Execute one CIA state transition.
@@ -144,16 +144,16 @@ protected:
     * @param context event context
     * @param parent the MOS6526 which this Timer belongs to
     */
-    Timer(const char* name, EventContext *context, MOS6526* parent)
-    :Event(name),
-     m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
-     event_context(*context),
-     timer(0),
-     latch(0),
-     pbToggle(false),
-     lastControlValue(0),
-     parent(parent),
-     state(0) {}
+    Timer(const char* name, EventContext *context, MOS6526* parent) :
+        Event(name),
+        m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
+        event_context(*context),
+        timer(0),
+        latch(0),
+        pbToggle(false),
+        lastControlValue(0),
+        parent(parent),
+        state(0) {}
 
 public:
     /**

@@ -30,7 +30,7 @@ class PSID : public SidTuneBase
 
  private:
     bool resolveAddrs(const uint_least8_t *c64data);
-    bool checkRelocInfo(void);
+    bool checkRelocInfo();
 
     void tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf);
 

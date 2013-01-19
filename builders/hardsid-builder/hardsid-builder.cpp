@@ -37,7 +37,7 @@
 #ifdef _WIN32
 //**************************************************************************
 // Version 1 Interface
-typedef BYTE (CALLBACK* HsidDLL1_InitMapper_t) (void);
+typedef BYTE (CALLBACK* HsidDLL1_InitMapper_t) ();
 
 HsidDLL2 hsid2 = {0};
 #endif
@@ -58,7 +58,7 @@ HardSIDBuilder::HardSIDBuilder (const char * const name)
     }
 }
 
-HardSIDBuilder::~HardSIDBuilder (void)
+HardSIDBuilder::~HardSIDBuilder ()
 {   // Remove all SID emulations
     remove ();
 }
@@ -125,7 +125,7 @@ const char *HardSIDBuilder::credits () const
     return HardSID::getCredits();
 }
 
-void HardSIDBuilder::flush(void)
+void HardSIDBuilder::flush()
 {
     for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
         static_cast<HardSID*>(*it)->flush();

@@ -27,7 +27,7 @@
 
 #include "residfp-emu.h"
 
-ReSIDfpBuilder::~ReSIDfpBuilder (void)
+ReSIDfpBuilder::~ReSIDfpBuilder ()
 {   // Remove all SID emulations
     remove ();
 }

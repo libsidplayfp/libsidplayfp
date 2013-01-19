@@ -140,9 +140,9 @@ class SidTuneBase
          SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_PAL);
 
     /// Check compatibility details are sensible
-    bool checkCompatibility(void);
+    bool checkCompatibility();
     /// Check for valid relocation information
-    bool checkRelocInfo(void);
+    bool checkRelocInfo();
 
     /// Common address resolution procedure
     void resolveAddrs(const uint_least8_t* c64data);
