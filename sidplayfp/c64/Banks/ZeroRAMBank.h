@@ -238,26 +238,20 @@ public:
              * stable value) to input mode (where the input is floating), some
              * of the charge is transferred to the floating input */
 
-            /* check if bit 6 has flipped */
-            if (dir & 0x40)
+            /* check if bit 6 has flipped from 1 to 0 */
+            if ((dir & 0x40) && !(value & 0x40))
             {
-                if ((dir ^ value) & 0x40)
-                {
-                    dataSetClkBit6 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
-                    dataSetBit6 = data & 0x40;
-                    dataFalloffBit6 = true;
-                }
+                dataSetClkBit6 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataSetBit6 = data & 0x40;
+                dataFalloffBit6 = true;
             }
 
-            /* check if bit 7 has flipped */
-            if (dir & 0x80)
+            /* check if bit 7 has flipped from 1 to 0 */
+            if ((dir & 0x80) && !(value & 0x80))
             {
-                if ((dir ^ value) & 0x80)
-                {
-                    dataSetClkBit7 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
-                    dataSetBit7 = data & 0x80;
-                    dataFalloffBit7 = true;
-                }
+                dataSetClkBit7 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataSetBit7 = data & 0x80;
+                dataFalloffBit7 = true;
             }
 
             if (dir != value)
