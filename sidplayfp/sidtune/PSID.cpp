@@ -117,7 +117,7 @@ SidTuneBase* PSID::load(Buffer_sidtt<const uint_least8_t>& dataBuf)
     if (dataBuf.len()<6)
         return 0;
 
-    const psidHeader* pHeader = (const psidHeader*)dataBuf.get();
+    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(dataBuf.get());
     if ( (endian_big32((const uint_least8_t*)pHeader->id)!=PSID_ID) &&
          (endian_big32((const uint_least8_t*)pHeader->id)!=RSID_ID) )
          return 0;
@@ -135,7 +135,7 @@ void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
 
     // Require minimum size to allow access to the first few bytes.
     // Require a valid ID and version number.
-    const psidHeader* pHeader = (const psidHeader*)dataBuf.get();
+    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(dataBuf.get());
 
     if (endian_big32((const uint_least8_t*)pHeader->id)==PSID_ID)
     {
