@@ -120,12 +120,6 @@ private:
     /** State of processor port pins.  */
     uint8_t procPortPins;
 
-    /** Tape motor status.  */
-    uint8_t tapeMotor;
-
-    /** Tape write line status.  */
-    uint8_t tapeDataOutput;
-
 private:
     void updateCpuPort()
     {
@@ -143,18 +137,6 @@ private:
         if (tape_sense && (dir & 0x10) == 0)
         {
             dataRead &= ~0x10;
-        }
-
-        if (((dir & data) & 0x20) != tapeMotor)
-        {
-            tapeMotor = dir & data & 0x20;
-            //C64.setMotor(tapeMotor == 0);
-        }
-
-        if (((~dir | data) & 0x08) != tapeDataOutput)
-        {
-            tapeDataOutput = (~dir | data) & 0x08;
-            //C64.toggleWriteBit(tapeDataOutput != 0);
         }
     }
 
@@ -175,8 +157,6 @@ public:
         data = 0x3f;
         dataRead = 0x3f;
         procPortPins = 0x3f;
-        tapeMotor = 0xff;
-        tapeDataOutput = 0xff;
         updateCpuPort();
     }
 
