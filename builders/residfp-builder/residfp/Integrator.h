@@ -23,6 +23,8 @@
 #ifndef INTEGRATOR_H
 #define INTEGRATOR_H
 
+#include <stdint.h>
+
 #include "siddefs-fp.h"
 
 namespace reSIDfp
@@ -77,8 +79,9 @@ int Integrator::solve(int vi)
     // "Snake" voltages for triode mode calculation.
     const int Vgst = Vddt - x;
     const int Vgdt = Vddt - vi;
-    const unsigned int Vgst_2 = Vgst * Vgst;
-    const unsigned int Vgdt_2 = Vgdt * Vgdt;
+
+    const uint64_t Vgst_2 = (int64_t)Vgst * (int64_t)Vgst;
+    const uint64_t Vgdt_2 = (int64_t)Vgdt * (int64_t)Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
     const int n_I_snake = n_snake * ((Vgst_2 >> 15) - (Vgdt_2 >> 15));

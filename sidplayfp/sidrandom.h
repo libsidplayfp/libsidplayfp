@@ -27,7 +27,7 @@
 class sidrandom
 {
 private:
-    int m_seed;
+    unsigned int m_seed;
 
 public:
     /**
@@ -35,13 +35,13 @@ public:
     *
     * @param seed 
     */ 
-    sidrandom(int seed) :
+    sidrandom(unsigned int seed) :
       m_seed(seed * 1103515245 + 12345) {}
 
     /**
     * Generate new pseudo-random number
     */ 
-    int next()
+    unsigned int next()
     {
         m_seed = m_seed * 13 + 1;
         return m_seed;

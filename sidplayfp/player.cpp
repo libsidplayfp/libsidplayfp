@@ -42,7 +42,7 @@ Player::Player () :
     m_tune(0),
     m_errorString(TXT_NA),
     m_isPlaying(false),
-    m_rand((int)::time(0))
+    m_rand((unsigned int)::time(0))
 {
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
