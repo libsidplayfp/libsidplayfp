@@ -33,7 +33,7 @@
 SIDPLAYFP_NAMESPACE_START
 
 
-const char  TXT_NA[]             = "NA";
+const char TXT_NA[]             = "NA";
 
 
 Player::Player () :
@@ -93,9 +93,9 @@ bool Player::fastForward(unsigned int percent)
 
 void Player::initialise()
 {
-    m_isPlaying  = false;
+    m_isPlaying = false;
 
-    m_c64.reset ();
+    m_c64.reset();
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -116,7 +116,7 @@ void Player::initialise()
 
     psiddrv driver(m_tune->getInfo());
     driver.powerOnDelay(powerOnDelay);
-    if (!driver.drvReloc (m_c64.getMemInterface()))
+    if (!driver.drvReloc(m_c64.getMemInterface()))
     {
         throw new configError(driver.errorString());
     }
@@ -125,7 +125,7 @@ void Player::initialise()
     m_info.m_driverLength = driver.driverLength();
     m_info.m_powerOnDelay = powerOnDelay;
 
-    if (!m_tune->placeSidTuneInC64mem (m_c64.getMemInterface()))
+    if (!m_tune->placeSidTuneInC64mem(m_c64.getMemInterface()))
     {
         throw new configError(m_tune->statusString());
     }
@@ -134,7 +134,7 @@ void Player::initialise()
 
     m_c64.resetCpu();
 
-    m_mixer.reset ();
+    m_mixer.reset();
 }
 
 bool Player::load(SidTune *tune)
@@ -146,7 +146,7 @@ bool Player::load(SidTune *tune)
     }
 
     {   // Must re-configure on fly for stereo support!
-        if (!config (m_cfg))
+        if (!config(m_cfg))
         {
             // Failed configuration with new tune, reject it
             m_tune = 0;
@@ -181,7 +181,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     {
         try
         {
-            initialise ();
+            initialise();
         }
         catch (configError &e) {}
     }

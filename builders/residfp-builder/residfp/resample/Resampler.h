@@ -33,7 +33,6 @@ namespace reSIDfp
  */
 class Resampler
 {
-
 protected:
     virtual int output() const = 0;
 

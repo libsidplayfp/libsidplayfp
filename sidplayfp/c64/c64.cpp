@@ -80,9 +80,9 @@ void c64::reset()
     m_scheduler.reset();
 
     //cpu.reset  ();
-    cia1.reset ();
-    cia2.reset ();
-    vic.reset  ();
+    cia1.reset();
+    cia2.reset();
+    vic.reset();
     sidBank.reset();
     colorRAMBank.reset();
     mmu.reset();
@@ -97,8 +97,8 @@ void c64::setModel(model_t model)
     vic.chip(modelData[model].vicModel);
 
     const unsigned int rate = vic.getCyclesPerLine() * vic.getRasterLines();
-    cia1.setDayOfTimeRate (rate);
-    cia2.setDayOfTimeRate (rate);
+    cia1.setDayOfTimeRate(rate);
+    cia2.setDayOfTimeRate(rate);
 }
 
 void c64::setSid(unsigned int i, sidemu *s)

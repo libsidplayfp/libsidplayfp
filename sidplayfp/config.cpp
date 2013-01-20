@@ -28,19 +28,19 @@
 
 SIDPLAYFP_NAMESPACE_START
 
-const char  TXT_PAL_VBI[]        = "50 Hz VBI (PAL)";
-const char  TXT_PAL_VBI_FIXED[]  = "60 Hz VBI (PAL FIXED)";
-const char  TXT_PAL_CIA[]        = "CIA (PAL)";
-const char  TXT_PAL_UNKNOWN[]    = "UNKNOWN (PAL)";
-const char  TXT_NTSC_VBI[]       = "60 Hz VBI (NTSC)";
-const char  TXT_NTSC_VBI_FIXED[] = "50 Hz VBI (NTSC FIXED)";
-const char  TXT_NTSC_CIA[]       = "CIA (NTSC)";
-const char  TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
+const char TXT_PAL_VBI[]        = "50 Hz VBI (PAL)";
+const char TXT_PAL_VBI_FIXED[]  = "60 Hz VBI (PAL FIXED)";
+const char TXT_PAL_CIA[]        = "CIA (PAL)";
+const char TXT_PAL_UNKNOWN[]    = "UNKNOWN (PAL)";
+const char TXT_NTSC_VBI[]       = "60 Hz VBI (NTSC)";
+const char TXT_NTSC_VBI_FIXED[] = "50 Hz VBI (NTSC FIXED)";
+const char TXT_NTSC_CIA[]       = "CIA (NTSC)";
+const char TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 
 // Error Strings
-const char  ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
+const char ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 
-bool Player::config (const SidConfig &cfg)
+bool Player::config(const SidConfig &cfg)
 {
     const SidTuneInfo* tuneInfo = 0;
 
@@ -116,7 +116,7 @@ bool Player::config (const SidConfig &cfg)
 }
 
 // Clock speed changes due to loading a new song
-c64::model_t Player::c64model (SidConfig::c64_model_t defaultModel, bool forced)
+c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
 {
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -231,7 +231,7 @@ void Player::sidRelease()
     }
 }
 
-void Player::sidCreate (sidbuilder *builder, SidConfig::sid_model_t defaultModel,
+void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                         bool forced, unsigned int channels)
 {
     if (builder)
@@ -248,7 +248,7 @@ void Player::sidCreate (sidbuilder *builder, SidConfig::sid_model_t defaultModel
 
         for (unsigned int i = 0; i < channels; i++)
         {
-            sidemu *s = builder->lock (m_c64.getEventScheduler(), userModels[i]);
+            sidemu *s = builder->lock(m_c64.getEventScheduler(), userModels[i]);
             // Get at least one SID emulation
             if ((i == 0) && !builder->getStatus())
                 throw new configError(builder->error());
@@ -257,7 +257,7 @@ void Player::sidCreate (sidbuilder *builder, SidConfig::sid_model_t defaultModel
     }
 }
 
-void Player::sidParams (double cpuFreq, int frequency,
+void Player::sidParams(double cpuFreq, int frequency,
                         SidConfig::sampling_method_t sampling, bool fastSampling)
 {
     for (unsigned int i = 0; i < c64::MAX_SIDS; i++)

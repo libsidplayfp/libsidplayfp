@@ -69,7 +69,6 @@ namespace reSIDfp
  */
 class SincResampler : public Resampler
 {
-
 private:
     static const int RINGSIZE = 2048;
 
@@ -137,8 +136,8 @@ public:
      * to slightly below 20kHz. This constraint ensures that the FIR table is not overfilled.
      *
      * @param clockFrequency System clock frequency at Hz
-     * @param method sampling method to use
      * @param samplingFrequency Desired output sampling rate
+     * @param highestAccurateFrequency
      * @return success
      */
     SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency);
@@ -148,15 +147,6 @@ public:
     int output() const { return outputValue; }
 
     void reset();
-#if 0
-    /**
-     * Simple sin waveform in, power output measurement function.
-     * It would be far better to use FFT.
-     *
-     * @param args
-     */
-    static void main(String[] args);
-#endif
 };
 
 } // namespace reSIDfp

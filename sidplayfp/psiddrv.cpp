@@ -44,7 +44,7 @@ uint8_t psiddrv::psid_driver[] = {
 };
 
 
-uint8_t psiddrv::iomap (uint_least16_t addr)
+uint8_t psiddrv::iomap(uint_least16_t addr)
 {
     // Force Real C64 Compatibility
     switch (m_tuneInfo->compatibility())
@@ -66,7 +66,7 @@ uint8_t psiddrv::iomap (uint_least16_t addr)
     return 0x34;  // RAM only (special I/O in PlaySID mode)
 }
 
-bool psiddrv::drvReloc (sidmemory *mem)
+bool psiddrv::drvReloc(sidmemory *mem)
 {
     const int startlp = m_tuneInfo->loadAddr() >> 8;
     const int endlp   = (m_tuneInfo->loadAddr() + (m_tuneInfo->c64dataLen() - 1)) >> 8;
@@ -132,7 +132,7 @@ bool psiddrv::drvReloc (sidmemory *mem)
     // Adjust size to not included initialisation data.
     reloc_size -= 10;
     m_driverAddr   = relocAddr;
-    m_driverLength = (uint_least16_t) reloc_size;
+    m_driverLength = (uint_least16_t)reloc_size;
     // Round length to end of page
     m_driverLength += 0xff;
     m_driverLength &= 0xff00;
@@ -159,7 +159,7 @@ bool psiddrv::drvReloc (sidmemory *mem)
     return true;
 }
 
-void psiddrv::install (sidmemory *mem)
+void psiddrv::install(sidmemory *mem)
 {
     int pos = m_driverAddr;
 
@@ -179,9 +179,9 @@ void psiddrv::install (sidmemory *mem)
     mem->writeMemWord(pos, m_powerOnDelay);
     pos += 2;
     
-    mem->writeMemByte(pos, iomap (m_tuneInfo->initAddr()));
+    mem->writeMemByte(pos, iomap(m_tuneInfo->initAddr()));
     pos++;
-    mem->writeMemByte(pos, iomap (m_tuneInfo->playAddr()));
+    mem->writeMemByte(pos, iomap(m_tuneInfo->playAddr()));
     pos++;
     const uint8_t flag = mem->readMemByte(0x02a6); // PAL/NTSC flag
     mem->writeMemByte(pos, flag);

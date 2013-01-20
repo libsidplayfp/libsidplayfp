@@ -82,20 +82,19 @@ const char *MOS6526::credit =
     "\tCopyright (C) 2011-2012 Leandro Nini\n"
 };
 
-
-MOS6526::MOS6526(EventContext *context)
-:pra(regs[PRA]),
- prb(regs[PRB]),
- ddra(regs[DDRA]),
- ddrb(regs[DDRB]),
- timerA(context, this),
- timerB(context, this),
- idr(0),
- event_context(*context),
- m_todPeriod(~0), // Dummy
- bTickEvent("CIA B counts A", *this, &MOS6526::bTick),
- todEvent("CIA Time of Day", *this, &MOS6526::tod),
- triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger)
+MOS6526::MOS6526(EventContext *context) :
+    pra(regs[PRA]),
+    prb(regs[PRB]),
+    ddra(regs[DDRA]),
+    ddrb(regs[DDRB]),
+    timerA(context, this),
+    timerB(context, this),
+    idr(0),
+    event_context(*context),
+    m_todPeriod(~0), // Dummy
+    bTickEvent("CIA B counts A", *this, &MOS6526::bTick),
+    todEvent("CIA Time of Day", *this, &MOS6526::tod),
+    triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger)
 {
     reset();
 }
@@ -194,13 +193,13 @@ uint8_t MOS6526::read(uint_least8_t addr)
         }
         return data;}
     case TAL:
-        return endian_16lo8 (timerA.getTimer());
+        return endian_16lo8(timerA.getTimer());
     case TAH:
-        return endian_16hi8 (timerA.getTimer());
+        return endian_16hi8(timerA.getTimer());
     case TBL:
-        return endian_16lo8 (timerB.getTimer());
+        return endian_16lo8(timerB.getTimer());
     case TBH:
-        return endian_16hi8 (timerB.getTimer());
+        return endian_16hi8(timerB.getTimer());
 
     // TOD implementation taken from Vice
     // TOD clock is latched by reading Hours, and released

@@ -99,15 +99,17 @@ protected:
     uint8_t lpx, lpy;
 
     /** the 8 sprites data*/
+    //@{
     uint8_t &sprite_enable, &sprite_y_expansion;
     uint8_t sprite_dma, sprite_expand_y;
     uint8_t sprite_mc_base[8];
+    //@}
 
     /** memory for chip registers */
     uint8_t regs[0x40];
 
 private:
-    event_clock_t  clock();
+    event_clock_t clock();
 
     /** Signal CPU interrupt if requested by VIC. */
     void handleIrqState();

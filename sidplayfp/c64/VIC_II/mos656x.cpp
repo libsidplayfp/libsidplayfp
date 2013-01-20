@@ -71,17 +71,18 @@ void MOS656X::reset ()
     raster_irq   = 0;
     yscroll      = 0;
     rasterY      = maxRasters - 1;
-    lineCycle     = 0;
+    lineCycle    = 0;
     areBadLinesEnabled = false;
     m_rasterClk  = 0;
     vblanking    = lp_triggered = false;
-    lpx          = lpy = 0;
+    lpx          = 0;
+    lpy          = 0;
     sprite_dma   = 0;
     sprite_expand_y = 0xff;
-    memset (regs, 0, sizeof (regs));
-    memset (sprite_mc_base, 0, sizeof (sprite_mc_base));
+    memset(regs, 0, sizeof (regs));
+    memset(sprite_mc_base, 0, sizeof (sprite_mc_base));
     event_context.cancel(*this);
-    event_context.schedule (*this, 0, EVENT_CLOCK_PHI1);
+    event_context.schedule(*this, 0, EVENT_CLOCK_PHI1);
 }
 
 void MOS656X::chip (model_t model)
@@ -141,7 +142,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
     {
     case 0x11: // Control register 1
     {
-        endian_16hi8 (raster_irq, data >> 7);
+        endian_16hi8(raster_irq, data >> 7);
         yscroll = data & 7;
 
         if (lineCycle < 11)
@@ -161,7 +162,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
     }
 
     case 0x12: // Raster counter
-        endian_16lo8 (raster_irq, data);
+        endian_16lo8(raster_irq, data);
         break;
 
     case 0x17:
@@ -203,14 +204,14 @@ void MOS656X::handleIrqState()
 void MOS656X::event ()
 {
     const event_clock_t delay = clock();
-    event_context.schedule (*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
+    event_context.schedule(*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
 }
 
 event_clock_t MOS656X::clock ()
 {
     event_clock_t delay = 1;
 
-    const event_clock_t cycles = event_context.getTime (m_rasterClk, event_context.phase());
+    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
 
     // Cycle already executed check
     if (!cycles)
@@ -258,37 +259,37 @@ event_clock_t MOS656X::clock ()
 
     case 2:
         if (sprite_dma & 0x02)
-            setBA (false);
+            setBA(false);
         break;
 
     case 3:
         if (!(sprite_dma & 0x03))
-            setBA (true);
+            setBA(true);
         break;
 
     case 4:
         if (sprite_dma & 0x04)
-            setBA (false);
+            setBA(false);
         break;
 
     case 5:
         if (!(sprite_dma & 0x06))
-            setBA (true);
+            setBA(true);
         break;
 
     case 6:
         if (sprite_dma & 0x08)
-            setBA (false);
+            setBA(false);
         break;
 
     case 7:
         if (!(sprite_dma & 0x0c))
-            setBA (true);
+            setBA(true);
         break;
 
     case 8:
         if (sprite_dma & 0x10)
-            setBA (false);
+            setBA(false);
         break;
 
     case 9:  // IRQ occurred (xraster != 0)
@@ -302,7 +303,7 @@ event_clock_t MOS656X::clock ()
                 activateIRQFlag(IRQ_RASTER);
         }
         if (!(sprite_dma & 0x18))
-            setBA (true);
+            setBA(true);
         break;
 
     case 10:  // Vertical blank (line 0)
@@ -315,7 +316,7 @@ event_clock_t MOS656X::clock ()
                 activateIRQFlag(IRQ_RASTER);
         }
         if (sprite_dma & 0x20)
-            setBA (false);
+            setBA(false);
         // No sprites before next compulsory cycle
         else if (!(sprite_dma & 0xf8))
            delay = 10;
@@ -323,28 +324,28 @@ event_clock_t MOS656X::clock ()
 
     case 11:
         if (!(sprite_dma & 0x30))
-            setBA (true);
+            setBA(true);
         break;
 
     case 12:
         if (sprite_dma & 0x40)
-            setBA (false);
+            setBA(false);
         break;
 
     case 13:
         if (!(sprite_dma & 0x60))
-            setBA (true);
+            setBA(true);
         break;
 
     case 14:
         if (sprite_dma & 0x80)
-            setBA (false);
+            setBA(false);
         break;
 
     case 15:
         if (!(sprite_dma & 0xc0))
         {
-            setBA (true);
+            setBA(true);
             delay = 5;
         } else
             delay = 2;
@@ -356,7 +357,7 @@ event_clock_t MOS656X::clock ()
     case 17:
         if (!(sprite_dma & 0x80))
         {
-            setBA (true);
+            setBA(true);
             delay = 3;
         } else
             delay = 2;
@@ -366,7 +367,7 @@ event_clock_t MOS656X::clock ()
         break;
 
     case 19:
-        setBA (true);
+        setBA(true);
         break;
 
     case 20: // Start bad line
@@ -379,7 +380,7 @@ event_clock_t MOS656X::clock ()
 
         if (isBadLine)
         {   // DMA starts on cycle 23
-            setBA (false);
+            setBA(false);
         }
         delay = 3;
         break;
@@ -410,7 +411,7 @@ event_clock_t MOS656X::clock ()
     }
 
     case 63: // End DMA - Only get here for non PAL
-        setBA (true);
+        setBA(true);
         delay = cyclesPerLine - cycle;
         break;
 
@@ -434,7 +435,7 @@ void MOS656X::lightpen ()
     if (!lp_triggered)
     {   // Latch current coordinates
         lpx = lineCycle << 2;
-        lpy = (uint8_t) rasterY & 0xff;
+        lpy = (uint8_t)rasterY & 0xff;
         activateIRQFlag(IRQ_LIGHTPEN);
     }
 }
