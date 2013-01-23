@@ -44,7 +44,7 @@ uint8_t psiddrv::psid_driver[] = {
 };
 
 
-uint8_t psiddrv::iomap(uint_least16_t addr)
+uint8_t psiddrv::iomap(uint_least16_t addr) const
 {
     // Force Real C64 Compatibility
     switch (m_tuneInfo->compatibility())
@@ -159,7 +159,7 @@ bool psiddrv::drvReloc(sidmemory *mem)
     return true;
 }
 
-void psiddrv::install(sidmemory *mem)
+void psiddrv::install(sidmemory *mem) const
 {
     int pos = m_driverAddr;
 
@@ -178,7 +178,7 @@ void psiddrv::install(sidmemory *mem)
     pos += 2;
     mem->writeMemWord(pos, m_powerOnDelay);
     pos += 2;
-    
+
     mem->writeMemByte(pos, iomap(m_tuneInfo->initAddr()));
     pos++;
     mem->writeMemByte(pos, iomap(m_tuneInfo->playAddr()));

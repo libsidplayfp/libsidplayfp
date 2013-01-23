@@ -47,7 +47,7 @@ private:
     * @param addr a 16-bit effective address
     * @return a default bank-select value for $01
     */
-    uint8_t iomap(uint_least16_t addr);
+    uint8_t iomap(uint_least16_t addr) const;
 
 public:
     psiddrv(const SidTuneInfo *tuneInfo) :
@@ -74,7 +74,7 @@ public:
      *
      * @param mem the c64 memory interface
      */
-    void install(sidmemory *mem);
+    void install(sidmemory *mem) const;
 
     /**
     * Get a detailed error message.
