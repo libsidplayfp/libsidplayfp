@@ -105,7 +105,6 @@ public:
         summer(FilterModelConfig::getInstance()->getSummer()),
         gain(FilterModelConfig::getInstance()->getGain())
     {
-
         input(0);
     }
 

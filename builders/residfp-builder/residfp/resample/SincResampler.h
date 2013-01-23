@@ -138,7 +138,6 @@ public:
      * @param clockFrequency System clock frequency at Hz
      * @param samplingFrequency Desired output sampling rate
      * @param highestAccurateFrequency
-     * @return success
      */
     SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency);
 

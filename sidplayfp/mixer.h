@@ -94,6 +94,7 @@ public:
     void reset() { event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI2); }
 
     void begin(short *buffer, uint_least32_t count);
+
     void setSids(sidemu *chip1, sidemu *chip2);
     bool setFastForward(int ff);
     void setVolume(int_least32_t left, int_least32_t right);

@@ -229,7 +229,7 @@ public:
      * For resampling, the ratio between the clock frequency and the sample frequency
      * is limited as follows: 125*clock_freq/sample_freq < 16384
      * E.g. provided a clock frequency of ~ 1MHz, the sample frequency can not be set
-     * lower than ~ 8kHz.A lower sample frequency would make the resampling code
+     * lower than ~ 8kHz. A lower sample frequency would make the resampling code
      * overfill its 16k sample ring buffer.
      * <P>
      * The end of passband frequency is also limited: pass_freq <= 0.9*sample_freq/2
@@ -250,7 +250,7 @@ public:
      *
      * @param cycles c64 clocks to clock
      * @param buf audio output buffer
-     * @return
+     * @return number of samples produced
      */
     int clock(int cycles, short* buf);
 

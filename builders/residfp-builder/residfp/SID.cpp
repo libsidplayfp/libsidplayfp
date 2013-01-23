@@ -48,7 +48,6 @@ SID::SID() :
     potX(new Potentiometer()),
     potY(new Potentiometer())
 {
-
     voice[0] = new Voice();
     voice[1] = new Voice();
     voice[2] = new Voice();

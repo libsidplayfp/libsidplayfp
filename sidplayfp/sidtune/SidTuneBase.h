@@ -166,7 +166,7 @@ protected:
     * separator is the forward slash.
     */
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
-                       Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName);
+                        Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName);
 
     class PetsciiToAscii
     {

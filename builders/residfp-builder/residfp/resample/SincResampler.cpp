@@ -125,7 +125,6 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     sampleOffset(0),
     outputValue(0)
 {
-
     // 16 bits -> -96dB stopband attenuation.
     const double A = -20. * log10(1.0 / (1 << BITS));
     // A fraction of the bandwidth is allocated to the transition band, which we double

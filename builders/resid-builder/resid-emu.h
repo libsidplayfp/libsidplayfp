@@ -75,7 +75,7 @@ public:
     uint8_t read(uint_least8_t addr);
     void write(uint_least8_t addr, uint8_t data);
 
-    const char *error() const {return m_error;}
+    const char *error() const { return m_error; }
 
     // Standard SID functions
     void clock();

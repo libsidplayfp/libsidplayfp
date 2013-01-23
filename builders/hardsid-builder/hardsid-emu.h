@@ -139,7 +139,7 @@ public:
     void write(uint_least8_t addr, uint8_t data);
 
     void clock();
-    const char *error() const {return m_errorBuffer.c_str();}
+    const char *error() const { return m_errorBuffer.c_str(); }
     bool getStatus() const { return m_status; }
 
     // Standard SID functions

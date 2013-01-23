@@ -67,7 +67,7 @@ public:
     * @param mem the c64 memory interface
     */
     bool drvReloc(sidmemory *mem);
-    
+
     /**
      * Install the driver.
      * Must be called after the tune has been placed in memory.

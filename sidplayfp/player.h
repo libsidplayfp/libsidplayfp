@@ -81,9 +81,9 @@ private:
     void initialise();
     void sidRelease();
     void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
-                   bool forced, unsigned int channels);
+                    bool forced, unsigned int channels);
     void sidParams(double cpuFreq, int frequency,
-                            SidConfig::sampling_method_t sampling, bool fastSampling);
+                    SidConfig::sampling_method_t sampling, bool fastSampling);
 
     static SidConfig::sid_model_t getModel (SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced);
 

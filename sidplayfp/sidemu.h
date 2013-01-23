@@ -55,7 +55,7 @@ public:
 
     virtual void clock() = 0;
 
-    virtual bool lock (EventContext *env) = 0;
+    virtual bool lock(EventContext *env) = 0;
     virtual void unlock() = 0;
 
     // Standard SID functions
