@@ -103,7 +103,7 @@ public:
     * Produce samples to play.
     *
     * @param buffer pointer to the buffer to fill with samples.
-    * @param count the size of the buffer.
+    * @param count the size of the buffer measured in 16 bit samples.
     * @return the number of produced samples.
     */
     uint_least32_t play(short *buffer, uint_least32_t count);
