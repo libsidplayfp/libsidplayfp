@@ -71,7 +71,7 @@ private:
 public:
     void set(const uint8_t* kernal)
     {
-        romBank::set(kernal);
+        romBank<0x2000>::set(kernal);
 
         if (kernal)
         {
@@ -179,7 +179,7 @@ private:
 public:
     void set(const uint8_t* basic)
     {
-        romBank::set(basic);
+        romBank<0x2000>::set(basic);
 
         // Backup BASIC Warm Start
         memcpy(trap, getPtr(0xa7ae), 3);
