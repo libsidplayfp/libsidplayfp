@@ -193,7 +193,18 @@ void Player::stop()
 {   // Re-start song
     if (m_tune && m_isPlaying)
     {
-        m_isPlaying = false;
+        if (m_mixer.notFinished())
+        {
+            m_isPlaying = false;
+        }
+        else
+        {
+            try
+            {
+                initialise();
+            }
+            catch (configError &e) {}
+        }
     }
 }
 
