@@ -1,3 +1,9 @@
+1.0.1 2013-03-xx
+* Fix compiling on debian/stable
+* Make sure that song is reinitialized after stop
+
+
+
 1.0.0 2013-01-27
 * Dropped support for ancient formats
 * Removed unused functionalities
