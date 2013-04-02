@@ -233,8 +233,8 @@ void EnvelopeGenerator::clock()
     {
         // it wasn't a match, clock the LFSR once
         // by performing XOR on last 2 bits
-        const int feedback = ((lfsr >> 14) ^ (lfsr >> 13)) & 0x01;
-        lfsr = ((lfsr << 1) & 0x7fff) | feedback;
+        const int feedback = ((lfsr << 14) ^ (lfsr << 13)) & 0x4000;
+        lfsr = (lfsr >> 1) | feedback;
         return;
     }
 
