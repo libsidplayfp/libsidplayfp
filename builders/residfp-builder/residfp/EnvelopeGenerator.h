@@ -286,16 +286,7 @@ void EnvelopeGenerator::clock()
                 return;
             }
 
-            if (exponential_counter_period != 1)
-            {
-                // unlikely (15%)
-                // The decrement is delayed one cycle.
-                envelope_pipeline = true;
-                return;
-            }
-
-            -- envelope_counter;
-            break;
+            // fall-through
 
         case RELEASE:
 
@@ -307,7 +298,6 @@ void EnvelopeGenerator::clock()
             //
             if (exponential_counter_period != 1)
             {
-                // likely (~50%)
                 // The decrement is delayed one cycle.
                 envelope_pipeline = true;
                 return;
