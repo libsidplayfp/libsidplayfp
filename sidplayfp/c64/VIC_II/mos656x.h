@@ -123,7 +123,7 @@ protected:
     EventCallback<MOS656X> badLineStateChangeEvent;
 
     /** AEC state was updated. */
-    void badLineStateChange() { setBA(false); }
+    void badLineStateChange() { setBA(!isBadLine); }
 
     /**
     * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.

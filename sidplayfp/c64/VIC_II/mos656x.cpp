@@ -152,11 +152,13 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
         if (rasterY == FIRST_DMA_LINE)
             areBadLinesEnabled |= readDEN();
 
+        const bool oldBadLine = isBadLine;
+
         /* Re-evaluate badline condition */
         isBadLine = evaluateIsBadLine();
 
         // Start bad dma line now
-        if (isBadLine && (lineCycle < 53))
+        if ((isBadLine != oldBadLine) && (lineCycle < 53))
             event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
         break;
     }
@@ -166,7 +168,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
         break;
 
     case 0x17:
-        sprite_expand_y |= ~data; // 3.8.1-1
+        sprite_expand_y |= ~data;
         break;
 
     case 0x19:
@@ -219,80 +221,13 @@ event_clock_t MOS656X::clock ()
 
     // Update x raster
     m_rasterClk += cycles;
-    lineCycle    += cycles;
-    const uint_least16_t cycle = (lineCycle + 9) % cyclesPerLine;
-    lineCycle    %= cyclesPerLine;
+    lineCycle   += cycles;
+    lineCycle   %= cyclesPerLine;
 
-    switch (cycle)
+    switch (lineCycle)
     {
     case 0:
-    {   // Calculate sprite DMA
-        const uint8_t y = rasterY & 0xff;
-        sprite_expand_y ^= sprite_y_expansion; // 3.8.1-2
-        uint8_t mask = 1;
-        for (unsigned int i=1; i<0x10; i+=2, mask<<=1)
-        {   // 3.8.1-3
-            if ((sprite_enable & mask) && (y == regs[i]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i >> 1] = 0;
-                sprite_expand_y &= ~(sprite_y_expansion & mask);
-            }
-        }
-
-        if (sprite_dma & 0x01)
-        {
-            setBA (false);
-            delay = 2;
-        }
-        else
-        {
-            setBA (true);
-            // No sprites before next compulsory cycle
-            delay = (sprite_dma & 0x1f) ? 2 : 9;
-        }
-        break;
-    }
-
-    case 1:
-        break;
-
-    case 2:
-        if (sprite_dma & 0x02)
-            setBA(false);
-        break;
-
-    case 3:
-        if (!(sprite_dma & 0x03))
-            setBA(true);
-        break;
-
-    case 4:
-        if (sprite_dma & 0x04)
-            setBA(false);
-        break;
-
-    case 5:
-        if (!(sprite_dma & 0x06))
-            setBA(true);
-        break;
-
-    case 6:
-        if (sprite_dma & 0x08)
-            setBA(false);
-        break;
-
-    case 7:
-        if (!(sprite_dma & 0x0c))
-            setBA(true);
-        break;
-
-    case 8:
-        if (sprite_dma & 0x10)
-            setBA(false);
-        break;
-
-    case 9:  // IRQ occurred (xraster != 0)
+        // IRQ occurred (xraster != 0)
         if (rasterY == (maxRasters - 1))
             vblanking = true;
         else
@@ -302,11 +237,21 @@ event_clock_t MOS656X::clock ()
             if (rasterY == raster_irq)
                 activateIRQFlag(IRQ_RASTER);
         }
+
+        // In line $30, the DEN bit controls if Bad Lines can occur
+        if (rasterY == FIRST_DMA_LINE)
+            areBadLinesEnabled = readDEN();
+
+        // Test for bad line condition
+        isBadLine = evaluateIsBadLine();
+
+        // End DMA for sprite 2
         if (!(sprite_dma & 0x18))
             setBA(true);
         break;
 
-    case 10:  // Vertical blank (line 0)
+    case 1:
+        // Vertical blank (line 0)
         if (vblanking)
         {
             vblanking = lp_triggered = false;
@@ -315,6 +260,8 @@ event_clock_t MOS656X::clock ()
             if (raster_irq == 0)
                 activateIRQFlag(IRQ_RASTER);
         }
+
+        // Start DMA for sprite 5
         if (sprite_dma & 0x20)
             setBA(false);
         // No sprites before next compulsory cycle
@@ -322,27 +269,32 @@ event_clock_t MOS656X::clock ()
            delay = 10;
         break;
 
-    case 11:
+    case 2:
+        // End DMA for sprite 3
         if (!(sprite_dma & 0x30))
             setBA(true);
         break;
 
-    case 12:
+    case 3:
+        // Start DMA for sprite 6
         if (sprite_dma & 0x40)
             setBA(false);
         break;
 
-    case 13:
-        if (!(sprite_dma & 0x60))
+    case 4:
+        // End DMA for sprite 4
+         if (!(sprite_dma & 0x60))
             setBA(true);
         break;
 
-    case 14:
+    case 5:
+        // Start DMA for sprite 7
         if (sprite_dma & 0x80)
             setBA(false);
         break;
 
-    case 15:
+    case 6:
+        // End DMA for sprite 5
         if (!(sprite_dma & 0xc0))
         {
             setBA(true);
@@ -351,10 +303,11 @@ event_clock_t MOS656X::clock ()
             delay = 2;
         break;
 
-    case 16:
+    case 7:
         break;
 
-    case 17:
+    case 8:
+        // End DMA for sprite 6
         if (!(sprite_dma & 0x80))
         {
             setBA(true);
@@ -363,65 +316,144 @@ event_clock_t MOS656X::clock ()
             delay = 2;
         break;
 
-    case 18:
+    case 9:
         break;
 
-    case 19:
+    case 10:
+        // End DMA for sprite 7
         setBA(true);
         break;
 
-    case 20: // Start bad line
-    {   // In line $30, the DEN bit controls if Bad Lines can occur
-        if (rasterY == FIRST_DMA_LINE)
-            areBadLinesEnabled = readDEN();
-
-        // Test for bad line condition
-        isBadLine = evaluateIsBadLine();
-
+    case 11:
+        // Start bad line
         if (isBadLine)
-        {   // DMA starts on cycle 23
+        {   // DMA starts on cycle 15
             setBA(false);
         }
+
         delay = 3;
         break;
-    }
 
-    case 23:
-    {   // 3.8.1-7
+    case 12:
+        break;
+
+    case 13:
+        break;
+
+    case 14:
+    {
         for (unsigned int i=0; i<8; i++)
         {
             if (sprite_expand_y & (1 << i))
                 sprite_mc_base[i] += 2;
         }
-        break;
     }
+        break;
 
-    case 24:
+    case 15:
     {
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
-        {   // 3.8.1-8
+        {
             if (sprite_expand_y & mask)
                 sprite_mc_base[i]++;
             if ((sprite_mc_base[i] & 0x3f) == 0x3f)
                 sprite_dma &= ~mask;
         }
+    }
         delay = 39;
         break;
+
+    case 54:
+    {   // Calculate sprite DMA
+        const uint8_t y = rasterY & 0xff;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<0x10; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+            }
+        }
     }
 
-    case 63: // End DMA - Only get here for non PAL
-        setBA(true);
-        delay = cyclesPerLine - cycle;
+        // Start DMA for sprite 0
+        setBA (!(sprite_dma & 0x01));
+        break;
+
+    case 55:
+    {   // Calculate sprite DMA and sprite expansion
+        const uint8_t y = rasterY & 0xff;
+        sprite_expand_y ^= sprite_y_expansion;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<0x10; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+                sprite_expand_y &= ~(sprite_y_expansion & mask);
+            }
+        }
+    }
+
+        // Start DMA for sprite 0
+        if (sprite_dma & 0x01)
+        {
+            setBA (false);
+        }
+        else
+        {
+            setBA (true);
+            // No sprites before next compulsory cycle
+            if (!(sprite_dma & 0x1f))
+                delay = 8;
+        }
+        break;
+
+    case 56:
+        // Start DMA for sprite 1
+        if (sprite_dma & 0x02)
+            setBA(false);
+        delay = 2;
+        break;
+
+    case 57:
+        break;
+
+    case 58:
+        // Start DMA for sprite 2
+        if (sprite_dma & 0x04)
+            setBA(false);
+        break;
+
+    case 59:
+        // End DMA for sprite 0
+        if (!(sprite_dma & 0x06))
+            setBA(true);
+        break;
+
+    case 60:
+        // Start DMA for sprite 3
+        if (sprite_dma & 0x08)
+            setBA(false);
+        break;
+
+    case 61:
+        // End DMA for sprite 1
+        if (!(sprite_dma & 0x0c))
+            setBA(true);
+        break;
+
+    case 62:
+        // Start DMA for sprite 4
+        if (sprite_dma & 0x10)
+            setBA(false);
         break;
 
     default:
-        if (cycle < 23)
-            delay = 23 - cycle;
-        else if (cycle < 63)
-            delay = 63 - cycle;
-        else
-            delay = cyclesPerLine - cycle;
+        delay = 54 - lineCycle;
     }
 
     return delay;
