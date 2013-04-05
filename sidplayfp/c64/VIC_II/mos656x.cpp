@@ -78,9 +78,9 @@ void MOS656X::reset ()
     lpx          = 0;
     lpy          = 0;
     sprite_dma   = 0;
-    sprite_expand_y = 0xff;
     memset(regs, 0, sizeof (regs));
     memset(sprite_mc_base, 0, sizeof (sprite_mc_base));
+    memset(sprite_mc, 0, sizeof (sprite_mc));
     event_context.cancel(*this);
     event_context.schedule(*this, 0, EVENT_CLOCK_PHI1);
 }
@@ -168,7 +168,20 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
         break;
 
     case 0x17:
-        sprite_expand_y |= ~data;
+    {
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && !(sprite_y_expansion & mask))
+            {
+                if (lineCycle == 14)
+                {
+                    sprite_mc[i] = (0x2a & (sprite_mc_base[i] & sprite_mc[i])) | (0x15 & (sprite_mc_base[i] | sprite_mc[i]));
+                }
+                sprite_y_expansion |= mask;
+            }
+        }
+    }
         break;
 
     case 0x19:
@@ -320,6 +333,17 @@ event_clock_t MOS656X::clock ()
         break;
 
     case 10:
+    {
+        // Update mc values in one pass
+        // after the dma has been processed
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if (sprite_enable & mask)
+                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
+        }
+    }
+
         // End DMA for sprite 7
         setBA(true);
         break;
@@ -341,13 +365,6 @@ event_clock_t MOS656X::clock ()
         break;
 
     case 14:
-    {
-        for (unsigned int i=0; i<8; i++)
-        {
-            if (sprite_expand_y & (1 << i))
-                sprite_mc_base[i] += 2;
-        }
-    }
         break;
 
     case 15:
@@ -355,9 +372,9 @@ event_clock_t MOS656X::clock ()
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if (sprite_expand_y & mask)
-                sprite_mc_base[i]++;
-            if ((sprite_mc_base[i] & 0x3f) == 0x3f)
+            if (sprite_y_expansion & mask)
+                sprite_mc_base[i] = sprite_mc[i];
+            if (sprite_mc_base[i] == 0x3f)
                 sprite_dma &= ~mask;
         }
     }
@@ -385,7 +402,6 @@ event_clock_t MOS656X::clock ()
     case 55:
     {   // Calculate sprite DMA and sprite expansion
         const uint8_t y = rasterY & 0xff;
-        sprite_expand_y ^= sprite_y_expansion;
         uint8_t mask = 1;
         for (unsigned int i=1; i<0x10; i++, mask<<=1)
         {
@@ -393,7 +409,7 @@ event_clock_t MOS656X::clock ()
             {
                 sprite_dma |= mask;
                 sprite_mc_base[i] = 0;
-                sprite_expand_y &= ~(sprite_y_expansion & mask);
+                sprite_y_expansion |= mask;
             }
         }
     }
@@ -420,6 +436,10 @@ event_clock_t MOS656X::clock ()
         break;
 
     case 57:
+        for (unsigned int i=1; i<0x10; i++)
+        {
+            sprite_mc[i] = sprite_mc_base[i];
+        }
         break;
 
     case 58:

@@ -101,8 +101,9 @@ protected:
     /** the 8 sprites data*/
     //@{
     uint8_t &sprite_enable, &sprite_y_expansion;
-    uint8_t sprite_dma, sprite_expand_y;
+    uint8_t sprite_dma;
     uint8_t sprite_mc_base[8];
+    uint8_t sprite_mc[8];
     //@}
 
     /** memory for chip registers */
