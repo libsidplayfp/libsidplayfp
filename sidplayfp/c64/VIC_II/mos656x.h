@@ -56,6 +56,8 @@ protected:
     static const int LAST_DMA_LINE = 0xf7;
 
 protected:
+    event_clock_t (MOS656X::*clock)();
+
     event_clock_t m_rasterClk;
 
     /** CPU's event context. */
@@ -110,7 +112,9 @@ protected:
     uint8_t regs[0x40];
 
 private:
-    event_clock_t clock();
+    event_clock_t clockPAL();
+    event_clock_t clockNTSC();
+    event_clock_t clockOldNTSC();
 
     /** Signal CPU interrupt if requested by VIC. */
     void handleIrqState();

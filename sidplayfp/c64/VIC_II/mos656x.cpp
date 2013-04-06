@@ -47,7 +47,7 @@ const model_data_t modelData[] =
 
 const char *MOS656X::credit =
 {   // Optional information
-    "MOS656X (VICII) Emulation:\n"
+    "MOS6567/6569/6572 (VICII) Emulation:\n"
     "\tCopyright (C) 2001 Simon White\n"
     "\tCopyright (C) 2007-2010 Antti Lankila\n"
     "\tCopyright (C) 2011-2013 Leandro Nini\n"
@@ -89,6 +89,20 @@ void MOS656X::chip (model_t model)
 {
     maxRasters    = modelData[model].cyclesPerLine;
     cyclesPerLine = modelData[model].rasterLines;
+
+    switch (model)
+    {
+    case MOS6567R56A:
+        clock = &MOS656X::clockOldNTSC;
+        break;
+    case MOS6567R8:
+    case MOS6572:
+        clock = &MOS656X::clockNTSC;
+        break;
+    case MOS6569:
+        clock = &MOS656X::clockPAL;
+        break;
+    }
 
     reset ();
 }
@@ -218,11 +232,11 @@ void MOS656X::handleIrqState()
 
 void MOS656X::event ()
 {
-    const event_clock_t delay = clock();
+    const event_clock_t delay = (this->*clock)();
     event_context.schedule(*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
 }
 
-event_clock_t MOS656X::clock ()
+event_clock_t MOS656X::clockPAL()
 {
     event_clock_t delay = 1;
 
@@ -473,6 +487,533 @@ event_clock_t MOS656X::clock ()
 
     default:
         delay = 54 - lineCycle;
+    }
+
+    return delay;
+}
+
+event_clock_t MOS656X::clockNTSC()
+{
+    event_clock_t delay = 1;
+
+    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
+
+    // Cycle already executed check
+    if (!cycles)
+        return delay;
+
+    // Update x raster
+    m_rasterClk += cycles;
+    lineCycle   += cycles;
+    lineCycle   %= cyclesPerLine;
+
+    switch (lineCycle)
+    {
+    case 0:
+        // IRQ occurred (xraster != 0)
+        if (rasterY == (maxRasters - 1))
+            vblanking = true;
+        else
+        {
+            rasterY++;
+            // Trigger raster IRQ if IRQ line reached
+            if (rasterY == raster_irq)
+                activateIRQFlag(IRQ_RASTER);
+        }
+
+        // In line $30, the DEN bit controls if Bad Lines can occur
+        if (rasterY == FIRST_DMA_LINE)
+            areBadLinesEnabled = readDEN();
+
+        // Test for bad line condition
+        isBadLine = evaluateIsBadLine();
+
+        // Start DMA for sprite 5
+        if (sprite_dma & 0x20)
+            setBA(false);
+        break;
+
+    case 1:
+        // Vertical blank (line 0)
+        if (vblanking)
+        {
+            vblanking = lp_triggered = false;
+            rasterY = 0;
+            // Trigger raster IRQ if IRQ in line 0
+            if (raster_irq == 0)
+                activateIRQFlag(IRQ_RASTER);
+        }
+
+        // End DMA for sprite 3
+        if (!(sprite_dma & 0x30))
+        {
+            setBA(true);
+            // No sprites before next compulsory cycle
+            if (!(sprite_dma & 0xf8))
+                delay = 10;
+        }
+        break;
+
+    case 2:
+        // Start DMA for sprite 6
+        if (sprite_dma & 0x40)
+            setBA(false);
+        break;
+
+    case 3:
+        // End DMA for sprite 4
+         if (!(sprite_dma & 0x60))
+            setBA(true);
+        break;
+
+    case 4:
+        // Start DMA for sprite 7
+        if (sprite_dma & 0x80)
+            setBA(false);
+        break;
+
+    case 5:
+        // End DMA for sprite 5
+        if (!(sprite_dma & 0xc0))
+        {
+            setBA(true);
+            delay = 5;
+        } else
+            delay = 2;
+        break;
+
+    case 6:
+        break;
+
+    case 7:
+        // End DMA for sprite 6
+        if (!(sprite_dma & 0x80))
+        {
+            setBA(true);
+            delay = 3;
+        } else
+            delay = 2;
+        break;
+
+    case 8:
+        break;
+
+    case 9:
+    {
+        // Update mc values in one pass
+        // after the dma has been processed
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if (sprite_enable & mask)
+                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
+        }
+    }
+
+        // End DMA for sprite 7
+        setBA(true);
+
+        delay = 2;
+        break;
+
+    case 10:
+        break;
+
+    case 11:
+        // Start bad line
+        if (isBadLine)
+        {   // DMA starts on cycle 15
+            setBA(false);
+        }
+
+        delay = 4;
+        break;
+
+    case 12:
+        break;
+
+    case 13:
+        break;
+
+    case 14:
+        break;
+
+    case 15:
+    {
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if (sprite_y_expansion & mask)
+                sprite_mc_base[i] = sprite_mc[i];
+            if (sprite_mc_base[i] == 0x3f)
+                sprite_dma &= ~mask;
+        }
+    }
+
+        delay = 40;
+        break;
+
+    case 55:
+    {   // Calculate sprite DMA and sprite expansion
+        const uint8_t y = rasterY & 0xff;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<0x10; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+                sprite_y_expansion |= mask;
+            }
+        }
+    }
+
+        // Start DMA for sprite 0
+        setBA (!(sprite_dma & 0x01));
+        break;
+
+    case 56:
+    {   // Calculate sprite DMA
+        const uint8_t y = rasterY & 0xff;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<0x10; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+            }
+        }
+    }
+
+        // Start DMA for sprite 0
+        if (sprite_dma & 0x01)
+        {
+            setBA (false);
+        }
+        else
+        {
+            setBA (true);
+            // No sprites before next compulsory cycle
+            if (!(sprite_dma & 0x1f))
+                delay = 8;
+        }
+        break;
+
+    case 57:
+        // Start DMA for sprite 1
+        if (sprite_dma & 0x02)
+            setBA(false);
+        break;
+
+    case 58:
+        for (unsigned int i=1; i<0x10; i++)
+        {
+            sprite_mc[i] = sprite_mc_base[i];
+        }
+        break;
+
+    case 59:
+        // Start DMA for sprite 2
+        if (sprite_dma & 0x04)
+            setBA(false);
+        break;
+
+    case 60:
+        // End DMA for sprite 0
+        if (!(sprite_dma & 0x06))
+            setBA(true);
+        break;
+
+    case 61:
+        // Start DMA for sprite 3
+        if (sprite_dma & 0x08)
+            setBA(false);
+        break;
+
+    case 62:
+        // End DMA for sprite 1
+        if (!(sprite_dma & 0x0c))
+            setBA(true);
+        break;
+
+    case 63:
+        // Start DMA for sprite 4
+        if (sprite_dma & 0x10)
+            setBA(false);
+        break;
+
+    case 64:
+        // End DMA for sprite 2
+        if (!(sprite_dma & 0x18))
+            setBA(true);
+        break;
+
+    default:
+        delay = 55 - lineCycle;
+    }
+
+    return delay;
+}
+
+
+
+
+
+event_clock_t MOS656X::clockOldNTSC()
+{
+    event_clock_t delay = 1;
+
+    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
+
+    // Cycle already executed check
+    if (!cycles)
+        return delay;
+
+    // Update x raster
+    m_rasterClk += cycles;
+    lineCycle   += cycles;
+    lineCycle   %= cyclesPerLine;
+
+    switch (lineCycle)
+    {
+    case 0:
+        // IRQ occurred (xraster != 0)
+        if (rasterY == (maxRasters - 1))
+            vblanking = true;
+        else
+        {
+            rasterY++;
+            // Trigger raster IRQ if IRQ line reached
+            if (rasterY == raster_irq)
+                activateIRQFlag(IRQ_RASTER);
+        }
+
+        // In line $30, the DEN bit controls if Bad Lines can occur
+        if (rasterY == FIRST_DMA_LINE)
+            areBadLinesEnabled = readDEN();
+
+        // Test for bad line condition
+        isBadLine = evaluateIsBadLine();
+
+        // End DMA for sprite 2
+        if (!(sprite_dma & 0x18))
+            setBA(true);
+        break;
+
+    case 1:
+        // Vertical blank (line 0)
+        if (vblanking)
+        {
+            vblanking = lp_triggered = false;
+            rasterY = 0;
+            // Trigger raster IRQ if IRQ in line 0
+            if (raster_irq == 0)
+                activateIRQFlag(IRQ_RASTER);
+        }
+
+        // Start DMA for sprite 5
+        if (sprite_dma & 0x20)
+            setBA(false);
+        // No sprites before next compulsory cycle
+        else if (!(sprite_dma & 0xf8))
+           delay = 10;
+        break;
+
+    case 2:
+        // End DMA for sprite 3
+        if (!(sprite_dma & 0x30))
+            setBA(true);
+        break;
+
+    case 3:
+        // Start DMA for sprite 6
+        if (sprite_dma & 0x40)
+            setBA(false);
+        break;
+
+    case 4:
+        // End DMA for sprite 4
+         if (!(sprite_dma & 0x60))
+            setBA(true);
+        break;
+
+    case 5:
+        // Start DMA for sprite 7
+        if (sprite_dma & 0x80)
+            setBA(false);
+        break;
+
+    case 6:
+        // End DMA for sprite 5
+        if (!(sprite_dma & 0xc0))
+        {
+            setBA(true);
+            delay = 5;
+        } else
+            delay = 2;
+        break;
+
+    case 7:
+        break;
+
+    case 8:
+        // End DMA for sprite 6
+        if (!(sprite_dma & 0x80))
+        {
+            setBA(true);
+            delay = 3;
+        } else
+            delay = 2;
+        break;
+
+    case 9:
+        break;
+
+    case 10:
+    {
+        // Update mc values in one pass
+        // after the dma has been processed
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if (sprite_enable & mask)
+                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
+        }
+    }
+
+        // End DMA for sprite 7
+        setBA(true);
+        break;
+
+    case 11:
+        // Start bad line
+        if (isBadLine)
+        {   // DMA starts on cycle 15
+            setBA(false);
+        }
+
+        delay = 4;
+        break;
+
+    case 12:
+        break;
+
+    case 13:
+        break;
+
+    case 14:
+        break;
+
+    case 15:
+    {
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if (sprite_y_expansion & mask)
+                sprite_mc_base[i] = sprite_mc[i];
+            if (sprite_mc_base[i] == 0x3f)
+                sprite_dma &= ~mask;
+        }
+    }
+        delay = 40;
+        break;
+
+    case 55:
+    {   // Calculate sprite DMA and sprite expansion
+        const uint8_t y = rasterY & 0xff;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<0x10; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+                sprite_y_expansion |= mask;
+            }
+        }
+    }
+
+        // Start DMA for sprite 0
+        setBA (!(sprite_dma & 0x01));
+        break;
+
+    case 56:
+    {   // Calculate sprite DMA
+        const uint8_t y = rasterY & 0xff;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<0x10; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+            }
+        }
+    }
+
+        // Start DMA for sprite 0
+        if (sprite_dma & 0x01)
+        {
+            setBA (false);
+        }
+        else
+        {
+            setBA (true);
+            // No sprites before next compulsory cycle
+            if (!(sprite_dma & 0x1f))
+                delay = 8;
+        }
+        break;
+
+    case 57:
+        for (unsigned int i=1; i<0x10; i++)
+        {
+            sprite_mc[i] = sprite_mc_base[i];
+        }
+
+        // Start DMA for sprite 1
+        if (sprite_dma & 0x02)
+            setBA(false);
+
+            delay = 2;
+        break;
+
+    case 58:
+        break;
+
+    case 59:
+        // Start DMA for sprite 2
+        if (sprite_dma & 0x04)
+            setBA(false);
+        break;
+
+    case 60:
+        // End DMA for sprite 0
+        if (!(sprite_dma & 0x06))
+            setBA(true);
+        break;
+
+    case 61:
+        // Start DMA for sprite 3
+        if (sprite_dma & 0x08)
+            setBA(false);
+        break;
+
+    case 62:
+        // End DMA for sprite 1
+        if (!(sprite_dma & 0x0c))
+            setBA(true);
+        break;
+
+    case 63:
+        // Start DMA for sprite 4
+        if (sprite_dma & 0x10)
+            setBA(false);
+        break;
+
+    default:
+        delay = 55 - lineCycle;
     }
 
     return delay;
