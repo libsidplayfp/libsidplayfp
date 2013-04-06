@@ -73,7 +73,7 @@ void MOS656X::reset ()
     rasterY      = maxRasters - 1;
     lineCycle    = 0;
     areBadLinesEnabled = false;
-    m_rasterClk  = 0;
+    rasterClk    = 0;
     vblanking    = lp_triggered = false;
     lpx          = 0;
     lpy          = 0;
@@ -232,16 +232,16 @@ void MOS656X::handleIrqState()
 
 void MOS656X::event ()
 {
-    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
+    const event_clock_t cycles = event_context.getTime(rasterClk, event_context.phase());
 
     event_clock_t delay;
 
     if (cycles)
     {
         // Update x raster
-        m_rasterClk += cycles;
-        lineCycle   += cycles;
-        lineCycle   %= cyclesPerLine;
+        rasterClk += cycles;
+        lineCycle += cycles;
+        lineCycle %= cyclesPerLine;
 
         delay = (this->*clock)();
     }

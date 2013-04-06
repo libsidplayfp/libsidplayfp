@@ -58,7 +58,7 @@ protected:
 protected:
     event_clock_t (MOS656X::*clock)();
 
-    event_clock_t m_rasterClk;
+    event_clock_t rasterClk;
 
     /** CPU's event context. */
     EventContext &event_context;
@@ -118,6 +118,36 @@ private:
 
     /** Signal CPU interrupt if requested by VIC. */
     void handleIrqState();
+
+    EventCallback<MOS656X> badLineStateChangeEvent;
+
+    /** AEC state was updated. */
+    void badLineStateChange() { setBA(!isBadLine); }
+
+    /**
+    * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
+    * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
+    */
+    void activateIRQFlag(int flag)
+    {
+        irqFlags |= flag;
+        handleIrqState();
+    }
+
+    /**
+    * Read the DEN flag which tells whether the display is enabled
+    *
+    * @return true if DEN is set, otherwise false
+    */
+    bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
+
+    bool evaluateIsBadLine() const
+    {
+        return areBadLinesEnabled
+            && rasterY >= FIRST_DMA_LINE
+            && rasterY <= LAST_DMA_LINE
+            && (rasterY & 7) == yscroll;
+    }
 
     inline void sync()
     {
@@ -226,38 +256,6 @@ protected:
     MOS656X(EventContext *context);
     ~MOS656X() {}
 
-    void event();
-
-    EventCallback<MOS656X> badLineStateChangeEvent;
-
-    /** AEC state was updated. */
-    void badLineStateChange() { setBA(!isBadLine); }
-
-    /**
-    * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
-    * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
-    */
-    void activateIRQFlag(int flag)
-    {
-        irqFlags |= flag;
-        handleIrqState();
-    }
-
-    /**
-    * Read the DEN flag which tells whether the display is enabled
-    *
-    * @return true if DEN is set, otherwise false
-    */
-    bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
-
-    bool evaluateIsBadLine() const
-    {
-        return areBadLinesEnabled
-            && rasterY >= FIRST_DMA_LINE
-            && rasterY <= LAST_DMA_LINE
-            && (rasterY & 7) == yscroll;
-    }
-
     // Environment Interface
     virtual void interrupt (bool state) = 0;
     virtual void setBA     (bool state) = 0;
@@ -281,6 +279,8 @@ protected:
     void write(uint_least8_t addr, uint8_t data);
 
 public:
+    void event();
+
     void chip(model_t model);
     void lightpen();
 
