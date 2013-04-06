@@ -232,7 +232,22 @@ void MOS656X::handleIrqState()
 
 void MOS656X::event ()
 {
-    const event_clock_t delay = (this->*clock)();
+    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
+
+    event_clock_t delay;
+
+    if (cycles)
+    {
+        // Update x raster
+        m_rasterClk += cycles;
+        lineCycle   += cycles;
+        lineCycle   %= cyclesPerLine;
+
+        delay = (this->*clock)();
+    }
+    else
+        delay = 1;
+
     event_context.schedule(*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
 }
 
@@ -240,37 +255,10 @@ event_clock_t MOS656X::clockPAL()
 {
     event_clock_t delay = 1;
 
-    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
-
-    // Cycle already executed check
-    if (!cycles)
-        return delay;
-
-    // Update x raster
-    m_rasterClk += cycles;
-    lineCycle   += cycles;
-    lineCycle   %= cyclesPerLine;
-
     switch (lineCycle)
     {
     case 0:
-        // IRQ occurred (xraster != 0)
-        if (rasterY == (maxRasters - 1))
-            vblanking = true;
-        else
-        {
-            rasterY++;
-            // Trigger raster IRQ if IRQ line reached
-            if (rasterY == raster_irq)
-                activateIRQFlag(IRQ_RASTER);
-        }
-
-        // In line $30, the DEN bit controls if Bad Lines can occur
-        if (rasterY == FIRST_DMA_LINE)
-            areBadLinesEnabled = readDEN();
-
-        // Test for bad line condition
-        isBadLine = evaluateIsBadLine();
+        checkVblank();
 
         // End DMA for sprite 2
         if (!(sprite_dma & 0x18))
@@ -278,15 +266,7 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 1:
-        // Vertical blank (line 0)
-        if (vblanking)
-        {
-            vblanking = lp_triggered = false;
-            rasterY = 0;
-            // Trigger raster IRQ if IRQ in line 0
-            if (raster_irq == 0)
-                activateIRQFlag(IRQ_RASTER);
-        }
+        vblank();
 
         // Start DMA for sprite 5
         if (sprite_dma & 0x20)
@@ -347,16 +327,7 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 10:
-    {
-        // Update mc values in one pass
-        // after the dma has been processed
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_enable & mask)
-                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
-        }
-    }
+        updateMc();
 
         // End DMA for sprite 7
         setBA(true);
@@ -382,51 +353,20 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 15:
-    {
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_y_expansion & mask)
-                sprite_mc_base[i] = sprite_mc[i];
-            if (sprite_mc_base[i] == 0x3f)
-                sprite_dma &= ~mask;
-        }
-    }
+        updateMcBase();
+
         delay = 39;
         break;
 
     case 54:
-    {   // Calculate sprite DMA
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=1; i<0x10; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[i << 1]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-            }
-        }
-    }
+        checkSpriteDma();
 
         // Start DMA for sprite 0
         setBA (!(sprite_dma & 0x01));
         break;
 
     case 55:
-    {   // Calculate sprite DMA and sprite expansion
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=1; i<0x10; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[i << 1]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-                sprite_y_expansion |= mask;
-            }
-        }
-    }
+        checkSpriteDmaExp();
 
         // Start DMA for sprite 0
         if (sprite_dma & 0x01)
@@ -449,10 +389,7 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 57:
-        for (unsigned int i=1; i<0x10; i++)
-        {
-            sprite_mc[i] = sprite_mc_base[i];
-        }
+        checkSpriteDisplay();
         break;
 
     case 58:
@@ -496,37 +433,10 @@ event_clock_t MOS656X::clockNTSC()
 {
     event_clock_t delay = 1;
 
-    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
-
-    // Cycle already executed check
-    if (!cycles)
-        return delay;
-
-    // Update x raster
-    m_rasterClk += cycles;
-    lineCycle   += cycles;
-    lineCycle   %= cyclesPerLine;
-
     switch (lineCycle)
     {
     case 0:
-        // IRQ occurred (xraster != 0)
-        if (rasterY == (maxRasters - 1))
-            vblanking = true;
-        else
-        {
-            rasterY++;
-            // Trigger raster IRQ if IRQ line reached
-            if (rasterY == raster_irq)
-                activateIRQFlag(IRQ_RASTER);
-        }
-
-        // In line $30, the DEN bit controls if Bad Lines can occur
-        if (rasterY == FIRST_DMA_LINE)
-            areBadLinesEnabled = readDEN();
-
-        // Test for bad line condition
-        isBadLine = evaluateIsBadLine();
+        checkVblank();
 
         // Start DMA for sprite 5
         if (sprite_dma & 0x20)
@@ -534,15 +444,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 1:
-        // Vertical blank (line 0)
-        if (vblanking)
-        {
-            vblanking = lp_triggered = false;
-            rasterY = 0;
-            // Trigger raster IRQ if IRQ in line 0
-            if (raster_irq == 0)
-                activateIRQFlag(IRQ_RASTER);
-        }
+        vblank();
 
         // End DMA for sprite 3
         if (!(sprite_dma & 0x30))
@@ -599,16 +501,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 9:
-    {
-        // Update mc values in one pass
-        // after the dma has been processed
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_enable & mask)
-                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
-        }
-    }
+        updateMc();
 
         // End DMA for sprite 7
         setBA(true);
@@ -639,52 +532,20 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 15:
-    {
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_y_expansion & mask)
-                sprite_mc_base[i] = sprite_mc[i];
-            if (sprite_mc_base[i] == 0x3f)
-                sprite_dma &= ~mask;
-        }
-    }
+        updateMcBase();
 
         delay = 40;
         break;
 
     case 55:
-    {   // Calculate sprite DMA and sprite expansion
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=1; i<0x10; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[i << 1]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-                sprite_y_expansion |= mask;
-            }
-        }
-    }
+        checkSpriteDmaExp();
 
         // Start DMA for sprite 0
         setBA (!(sprite_dma & 0x01));
         break;
 
     case 56:
-    {   // Calculate sprite DMA
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=1; i<0x10; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[i << 1]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-            }
-        }
-    }
+        checkSpriteDma();
 
         // Start DMA for sprite 0
         if (sprite_dma & 0x01)
@@ -707,10 +568,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 58:
-        for (unsigned int i=1; i<0x10; i++)
-        {
-            sprite_mc[i] = sprite_mc_base[i];
-        }
+        checkSpriteDisplay();
         break;
 
     case 59:
@@ -756,45 +614,14 @@ event_clock_t MOS656X::clockNTSC()
     return delay;
 }
 
-
-
-
-
 event_clock_t MOS656X::clockOldNTSC()
 {
     event_clock_t delay = 1;
 
-    const event_clock_t cycles = event_context.getTime(m_rasterClk, event_context.phase());
-
-    // Cycle already executed check
-    if (!cycles)
-        return delay;
-
-    // Update x raster
-    m_rasterClk += cycles;
-    lineCycle   += cycles;
-    lineCycle   %= cyclesPerLine;
-
     switch (lineCycle)
     {
     case 0:
-        // IRQ occurred (xraster != 0)
-        if (rasterY == (maxRasters - 1))
-            vblanking = true;
-        else
-        {
-            rasterY++;
-            // Trigger raster IRQ if IRQ line reached
-            if (rasterY == raster_irq)
-                activateIRQFlag(IRQ_RASTER);
-        }
-
-        // In line $30, the DEN bit controls if Bad Lines can occur
-        if (rasterY == FIRST_DMA_LINE)
-            areBadLinesEnabled = readDEN();
-
-        // Test for bad line condition
-        isBadLine = evaluateIsBadLine();
+        checkVblank();
 
         // End DMA for sprite 2
         if (!(sprite_dma & 0x18))
@@ -802,15 +629,7 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 1:
-        // Vertical blank (line 0)
-        if (vblanking)
-        {
-            vblanking = lp_triggered = false;
-            rasterY = 0;
-            // Trigger raster IRQ if IRQ in line 0
-            if (raster_irq == 0)
-                activateIRQFlag(IRQ_RASTER);
-        }
+        vblank();
 
         // Start DMA for sprite 5
         if (sprite_dma & 0x20)
@@ -871,16 +690,7 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 10:
-    {
-        // Update mc values in one pass
-        // after the dma has been processed
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_enable & mask)
-                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
-        }
-    }
+        updateMc();
 
         // End DMA for sprite 7
         setBA(true);
@@ -906,51 +716,20 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 15:
-    {
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_y_expansion & mask)
-                sprite_mc_base[i] = sprite_mc[i];
-            if (sprite_mc_base[i] == 0x3f)
-                sprite_dma &= ~mask;
-        }
-    }
+        updateMcBase();
+
         delay = 40;
         break;
 
     case 55:
-    {   // Calculate sprite DMA and sprite expansion
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=1; i<0x10; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[i << 1]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-                sprite_y_expansion |= mask;
-            }
-        }
-    }
+        checkSpriteDmaExp();
 
         // Start DMA for sprite 0
         setBA (!(sprite_dma & 0x01));
         break;
 
     case 56:
-    {   // Calculate sprite DMA
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=1; i<0x10; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[i << 1]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-            }
-        }
-    }
+        checkSpriteDma();
 
         // Start DMA for sprite 0
         if (sprite_dma & 0x01)
@@ -967,10 +746,7 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 57:
-        for (unsigned int i=1; i<0x10; i++)
-        {
-            sprite_mc[i] = sprite_mc_base[i];
-        }
+        checkSpriteDisplay();
 
         // Start DMA for sprite 1
         if (sprite_dma & 0x02)

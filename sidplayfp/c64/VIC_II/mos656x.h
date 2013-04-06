@@ -125,6 +125,103 @@ private:
         event();
     }
 
+    inline void checkVblank()
+    {
+        // IRQ occurred (xraster != 0)
+        if (rasterY == (maxRasters - 1))
+            vblanking = true;
+        else
+        {
+            rasterY++;
+            // Trigger raster IRQ if IRQ line reached
+            if (rasterY == raster_irq)
+                activateIRQFlag(IRQ_RASTER);
+        }
+
+        // In line $30, the DEN bit controls if Bad Lines can occur
+        if (rasterY == FIRST_DMA_LINE)
+            areBadLinesEnabled = readDEN();
+
+        // Test for bad line condition
+        isBadLine = evaluateIsBadLine();
+    }
+
+    inline void vblank()
+    {
+        // Vertical blank (line 0)
+        if (vblanking)
+        {
+            vblanking = lp_triggered = false;
+            rasterY = 0;
+            // Trigger raster IRQ if IRQ in line 0
+            if (raster_irq == 0)
+                activateIRQFlag(IRQ_RASTER);
+        }
+    }
+
+    inline void updateMc()
+    {
+        // Update mc values in one pass
+        // after the dma has been processed
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if (sprite_enable & mask)
+                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
+        }
+    }
+
+    inline void updateMcBase()
+    {
+        uint8_t mask = 1;
+        for (unsigned int i=0; i<8; i++, mask<<=1)
+        {
+            if (sprite_y_expansion & mask)
+                sprite_mc_base[i] = sprite_mc[i];
+            if (sprite_mc_base[i] == 0x3f)
+                sprite_dma &= ~mask;
+        }
+    }
+
+    // Calculate sprite DMA and sprite expansion
+    inline void checkSpriteDmaExp()
+    {
+        const uint8_t y = rasterY & 0xff;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<8; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+                sprite_y_expansion |= mask;
+            }
+        }
+    }
+
+    // Calculate sprite DMA
+    inline void checkSpriteDma()
+    {
+        const uint8_t y = rasterY & 0xff;
+        uint8_t mask = 1;
+        for (unsigned int i=1; i<8; i++, mask<<=1)
+        {
+            if ((sprite_enable & mask) && (y == regs[i << 1]))
+            {
+                sprite_dma |= mask;
+                sprite_mc_base[i] = 0;
+            }
+        }
+    }
+
+    inline void checkSpriteDisplay()
+    {
+        for (unsigned int i=1; i<8; i++)
+        {
+            sprite_mc[i] = sprite_mc_base[i];
+        }
+    }
+
 protected:
     MOS656X(EventContext *context);
     ~MOS656X() {}
