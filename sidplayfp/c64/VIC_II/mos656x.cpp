@@ -98,7 +98,7 @@ uint8_t MOS656X::read (uint_least8_t addr)
     addr &= 0x3f;
 
     // Sync up timers
-    clock ();
+    sync();
 
     switch (addr)
     {
@@ -136,7 +136,7 @@ void MOS656X::write (uint_least8_t addr, uint8_t data)
     regs[addr] = data;
 
     // Sync up timers
-    clock ();
+    sync();
 
     switch (addr)
     {
@@ -481,7 +481,7 @@ event_clock_t MOS656X::clock ()
 // Handle light pen trigger
 void MOS656X::lightpen ()
 {   // Synchronise simulation
-    clock ();
+    sync();
 
     if (!lp_triggered)
     {   // Latch current coordinates

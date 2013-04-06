@@ -115,6 +115,12 @@ private:
     /** Signal CPU interrupt if requested by VIC. */
     void handleIrqState();
 
+    inline void sync()
+    {
+        event_context.cancel(*this);
+        event();
+    }
+
 protected:
     MOS656X(EventContext *context);
     ~MOS656X() {}
