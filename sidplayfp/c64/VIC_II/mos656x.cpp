@@ -355,7 +355,7 @@ event_clock_t MOS656X::clock ()
             setBA(false);
         }
 
-        delay = 3;
+        delay = 4;
         break;
 
     case 12:
@@ -432,7 +432,6 @@ event_clock_t MOS656X::clock ()
         // Start DMA for sprite 1
         if (sprite_dma & 0x02)
             setBA(false);
-        delay = 2;
         break;
 
     case 57:
