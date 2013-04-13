@@ -65,8 +65,6 @@ public:
     {
         return read(endian_16lo8(address));
     }
-
-    const char *error() const { return ""; }
 };
 
 #endif // C64VIC_H

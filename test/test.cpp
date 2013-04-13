@@ -50,7 +50,6 @@ public:
     const   char *credits () const { return ""; }
     void    voice (const unsigned int num, const bool mute) {}
     void    model    (SidConfig::sid_model_t model)  {}
-    const   char *error   () const { return ""; }
     bool    lock     (EventContext *env) { return true; }
     void    unlock   () {}
 };

@@ -34,7 +34,6 @@ protected:
 public:
     virtual void reset () = 0;
     virtual const char *credits() const = 0;
-    virtual const char *error() const = 0;
 
 protected:
     ~component() {}
