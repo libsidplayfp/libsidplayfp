@@ -85,7 +85,7 @@ public:
         m_credits.push_back(PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\n"
             "\tCopyright (C) 2000 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
-            "\tCopyright (C) 2010-2012 Leandro Nini\n"
+            "\tCopyright (C) 2010-2013 Leandro Nini\n"
             "\thttp://sourceforge.net/projects/sidplay-residfp/\n");
     }
 
