@@ -33,7 +33,6 @@ ExternalFilter::ExternalFilter() :
     w0lp_1_s7(0),
     w0hp_1_s17(0)
 {
-
     reset();
 }
 

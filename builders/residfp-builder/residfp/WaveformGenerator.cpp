@@ -191,7 +191,6 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
 void WaveformGenerator::reset()
 {
-
     accumulator = 0;
     freq = 0;
     pw = 0;

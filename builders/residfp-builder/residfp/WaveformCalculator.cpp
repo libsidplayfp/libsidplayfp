@@ -27,7 +27,6 @@ namespace reSIDfp
 
 WaveformCalculator* WaveformCalculator::getInstance()
 {
-
     static WaveformCalculator instance;
     return &instance;
 }

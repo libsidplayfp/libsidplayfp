@@ -61,7 +61,6 @@ std::auto_ptr<FilterModelConfig> FilterModelConfig::instance(0);
 
 FilterModelConfig* FilterModelConfig::getInstance()
 {
-
     if (!instance.get())
     {
         instance.reset(new FilterModelConfig());
@@ -227,7 +226,6 @@ FilterModelConfig::FilterModelConfig() :
 
 FilterModelConfig::~FilterModelConfig()
 {
-
     for (int i = 0; i < 7; i++)
     {
         delete [] summer[i];
