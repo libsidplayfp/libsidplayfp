@@ -557,6 +557,10 @@ bool SidTuneBase::checkCompatibility ()
         // deliberate run on
 
     case SidTuneInfo::COMPATIBILITY_BASIC:
+        /*
+         * FIXME: Hellbound from Shining 8 (http://csdb.dk/release/?id=3574)
+         * loads at $608, should this check be performed only for PSID files?
+         */
         // Check tune is loadable on a real C64
         if ( info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR )
         {
