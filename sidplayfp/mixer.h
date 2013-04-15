@@ -34,12 +34,6 @@
 */
 class Mixer : private Event
 {
-private:
-    /**
-    * Scheduling time for next sample mixing event. 5000 is roughly 5 ms
-    */
-    static const int MIXER_EVENT_RATE = 5000;
-
 public:
     /** Maximum allowed volume, must be a power of 2 */
     static const int_least32_t VOLUME_MAX = 1024;
@@ -91,7 +85,7 @@ public:
     */
     void event();
 
-    void reset() { event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI2); }
+    void reset();
 
     void begin(short *buffer, uint_least32_t count);
 

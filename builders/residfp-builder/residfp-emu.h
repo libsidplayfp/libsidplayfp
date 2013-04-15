@@ -35,10 +35,6 @@
 
 #define RESID_NAMESPACE reSIDfp
 
-enum {
-    OUTPUTBUFFERSIZE = 5000 //32768
-};
-
 class ReSIDfp: public sidemu
 {
 private:

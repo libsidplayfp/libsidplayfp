@@ -42,10 +42,6 @@
 #   define RESID_NS
 #endif
 
-enum {
-    OUTPUTBUFFERSIZE = 32768
-};
-
 class ReSID: public sidemu
 {
 private:

@@ -24,6 +24,11 @@
 
 #include "sidplayfp/sidemu.h"
 
+/**
+* Scheduling time for next sample mixing event.
+*/
+const int MIXER_EVENT_RATE = OUTPUTBUFFERSIZE;
+
 void Mixer::event()
 {
     /* this clocks the SID to the present moment, if it isn't already. */
@@ -106,6 +111,11 @@ void Mixer::event()
 
     /* Post a callback to ourselves. */
     event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
+}
+
+void Mixer::reset()
+{
+    event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI2);
 }
 
 void Mixer::begin(short *buffer, uint_least32_t count)
