@@ -91,7 +91,7 @@ public:
     */
     void event();
 
-    void reset() { event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI2); }
+    void reset() { event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1); }
 
     void begin(short *buffer, uint_least32_t count);
 

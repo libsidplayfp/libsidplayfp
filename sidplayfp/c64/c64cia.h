@@ -40,7 +40,7 @@ class c64cia1: public MOS6526, public Bank
 {
 private:
     c64env &m_env;
-    uint_least16_t t1a;
+    uint_least16_t last_ta;
     uint8_t lp;
 
 protected:
@@ -66,16 +66,14 @@ public:
 
     void poke(uint_least16_t address, uint8_t value)
     {
-        // Save the value written to Timer A
-        if (address == 0xDC04)
-        {
-            endian_16lo8(t1a, value);
-        }
-        else if (address == 0xDC05)
-        {
-            endian_16hi8 (t1a, value);
-        }
         write(endian_16lo8(address), value);
+
+        // Save the value written to Timer A
+        if (address == 0xDC04 || address == 0xDC05)
+        {
+            if (timerA.getTimer() != 0)
+                last_ta = timerA.getTimer();
+        }
     }
 
     uint8_t peek(uint_least16_t address)
@@ -87,11 +85,12 @@ public:
 
     void reset()
     {
+        last_ta = 0;
         lp = 0x10;
         MOS6526::reset ();
     }
 
-    uint_least16_t getTimerA() const { return t1a; }
+    uint_least16_t getTimerA() const { return last_ta; }
 };
 
 /**
