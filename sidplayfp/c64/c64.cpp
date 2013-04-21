@@ -146,9 +146,8 @@ void c64::setSecondSIDAddress(int sidChipBase2)
     */
     if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
         return;
-    
+
     extraSidBank.resetSIDMapper(ioBank.getBank(idx));
     ioBank.setBank(idx, &extraSidBank);
     extraSidBank.setSIDMapping(sidChipBase2);
-    
 }
