@@ -51,18 +51,23 @@ bool Player::config(const SidConfig &cfg)
         return false;
     }
 
+    uint_least16_t secondSidAddress = cfg.secondSidAddress;
+
     // Only do these if we have a loaded tune
     if (m_tune)
     {
         tuneInfo = m_tune->getInfo();
+
+        if (tuneInfo->sidChipBase2() != 0)
+            secondSidAddress = tuneInfo->sidChipBase2();
 
         try
         {
             // SID emulation setup (must be performed before the
             // environment setup call)
             sidRelease();
-            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel,
-                tuneInfo->isStereo() ? 2 : 1);
+            const int channels = (secondSidAddress != 0) ? 2 : 1;
+            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel, channels);
 
             // Determine clock speed
             const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
@@ -84,25 +89,16 @@ bool Player::config(const SidConfig &cfg)
         }
     }
 
-    if (m_tune && tuneInfo->sidChipBase2())
+    if (secondSidAddress)
     {
         // Assumed to be in d420-d7ff or de00-dfff range
-        m_c64.setSecondSIDAddress(tuneInfo->sidChipBase2());
-        m_info.m_channels = 2;
-    }
-    else if (cfg.secondSidAddress)
-    {
-        /* Tune didn't tell us where; let's put the second SID
-         * at user selected address. */
-        m_c64.setSecondSIDAddress(cfg.secondSidAddress);
+        m_c64.setSecondSIDAddress(secondSidAddress);
         m_info.m_channels = 2;
     }
     else
     {
         m_c64.setSecondSIDAddress(0);
         m_info.m_channels = 1;
-        // without stereo SID mode, we don't emulate the second chip!
-        m_c64.setSid(1, 0);
     }
 
     m_mixer.setSids(m_c64.getSid(0), m_c64.getSid(1));
