@@ -22,6 +22,8 @@
 
 #include "mixer.h"
 
+#include <algorithm> 
+
 #include "sidplayfp/sidemu.h"
 
 /**
@@ -29,25 +31,39 @@
 */
 const int MIXER_EVENT_RATE = OUTPUTBUFFERSIZE;
 
+void clockChip(sidemu *s) { s->clock(); }
+
+class bufferPos
+{
+public:
+    bufferPos(int i) : pos(i) {}
+    void operator()(sidemu *s) { s->bufferpos(pos); }
+
+private:
+    int pos;
+};
+
 void Mixer::event()
 {
-    /* this clocks the SID to the present moment, if it isn't already. */
-    m_chip1->clock();
-    if (m_chip2)
-        m_chip2->clock();
+    /* this clocks the SIDs to the present moment, if they aren't already. */
+    std::for_each(m_chips.begin(), m_chips.end(), clockChip);
 
-    if (m_sampleBuffer)
+    if (m_sampleBuffer && m_chips.size())
     {
         short *buf = m_sampleBuffer + m_sampleIndex;
+
         /* extract buffer info now that the SID is updated.
-        * clock() may update bufferpos. */
-        short *buf1 = m_chip1->buffer();
-        short *buf2 = m_chip2 ? m_chip2->buffer() : 0;
-        int samples = m_chip1->bufferpos();
+         * clock() may update bufferpos. */
+        std::vector<short*> buffers;
+        for(std::vector<sidemu*>::iterator it = m_chips.begin(); it != m_chips.end(); ++it)
+        {
+            buffers.push_back((*it)->buffer());
+        }
         /* NB: if chip2 exists, its bufferpos is identical to chip1's. */
+        int sampleCount = m_chips[0]->bufferpos();
 
         int i = 0;
-        while (i < samples)
+        while (i < sampleCount)
         {
             /* Handle whatever output the sid has generated so far */
             if (m_sampleIndex >= m_sampleCount)
@@ -55,19 +71,21 @@ void Mixer::event()
                 break;
             }
             /* Are there enough samples to generate the next one? */
-            if (i + m_fastForwardFactor >= samples)
+            if (i + m_fastForwardFactor >= sampleCount)
+            {
                 break;
+            }
 
             /* This is a crude boxcar low-pass filter to
-            * reduce aliasing during fast forward, something I commonly do. */
+             * reduce aliasing during fast forward. */
             int sample1 = 0;
             int sample2 = 0;
             int j;
             for (j = 0; j < m_fastForwardFactor; j++)
             {
-                sample1 += buf1[i + j];
-                if (buf2)
-                    sample2 += buf2[i + j];
+                sample1 += buffers[0][i + j];
+                if (buffers.size() > 1)
+                    sample2 += buffers[1][i + j];
             }
             /* increment i to mark we ate some samples, finish the boxcar thing. */
             const int dither = triangularDithering();
@@ -78,11 +96,11 @@ void Mixer::event()
             sample2 /= j;
 
             /* mono mix. */
-            if (buf2 && !m_stereo)
+            if (m_chips.size() > 1 && !m_stereo)
                 sample1 = (sample1 + sample2) / 2;
 
             /* stereo clone, for people who keep stereo on permanently. */
-            if (!buf2 && m_stereo)
+            if (m_chips.size() == 1 && m_stereo)
                 sample2 = sample1;
 
             *buf++ = (short int)sample1;
@@ -95,22 +113,22 @@ void Mixer::event()
         }
 
         /* move the unhandled data to start of buffer, if any. */
-        int j = 0;
-        for (j = 0; j < samples - i; j++)
+        const int samplesLeft = sampleCount - i;
+        for(std::vector<short*>::iterator it = buffers.begin(); it != buffers.end(); ++it)
         {
-            buf1[j] = buf1[i + j];
-            if (buf2)
-                buf2[j] = buf2[i + j];
+            for (int j = 0; j < samplesLeft; j++)
+            {
+                (*it)[j] = (*it)[i + j];
+            }
         }
-        m_chip1->bufferpos(j);
-        if (m_chip2)
-            m_chip2->bufferpos(j);
+
+        std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft - 1));
     }
     else
-        m_sampleIndex++; // FIXME this might break HardSID
+        m_sampleIndex++; // FIXME this sucks
 
     /* Post a callback to ourselves. */
-    event_context.schedule(*this, MIXER_EVENT_RATE);
+    event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
 }
 
 void Mixer::reset()
@@ -127,8 +145,9 @@ void Mixer::begin(short *buffer, uint_least32_t count)
 
 void Mixer::setSids(sidemu *chip1, sidemu *chip2)
 {
-    m_chip1 = chip1;
-    m_chip2 = chip2;
+    m_chips.clear();
+    if (chip1) m_chips.push_back(chip1);
+    if (chip2) m_chips.push_back(chip2);
 }
 
 bool Mixer::setFastForward(int ff)

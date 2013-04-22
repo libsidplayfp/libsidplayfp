@@ -26,6 +26,8 @@
 
 #include <stdlib.h>
 
+#include <vector>
+
 #include "event.h"
 #include "sidbuilder.h"
 
@@ -44,8 +46,7 @@ private:
     */
     EventContext &event_context;
 
-    sidemu *m_chip1;
-    sidemu *m_chip2;
+    std::vector<sidemu *> m_chips;
 
     int oldRandomValue;
     int m_fastForwardFactor;

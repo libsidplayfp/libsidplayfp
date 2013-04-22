@@ -50,6 +50,8 @@ private:
     static unsigned int mapperIndex(int address) { return address >> 5 & (MAPPER_SIZE - 1); }
 
 public:
+    ExtraSidBank() : sid(0) {}
+
     void reset()
     {
         if (sid)
@@ -69,7 +71,8 @@ public:
     */
     void setSIDMapping(int address)
     {
-        mapper[mapperIndex(address)] = sid;
+        if (sid)
+            mapper[mapperIndex(address)] = sid;
     }
 
     uint8_t peek(uint_least16_t addr)
