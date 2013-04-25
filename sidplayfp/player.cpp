@@ -169,24 +169,33 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     if (!m_tune)
         return 0;
 
-    m_mixer.begin(buffer, count);
-
-    // Start the player loop
-    m_isPlaying = true;
-
-    while (m_isPlaying && m_mixer.notFinished())
-        m_c64.getEventScheduler()->clock();
-
-    if (!m_isPlaying)
+    if (count)
     {
-        try
-        {
-            initialise();
-        }
-        catch (configError &e) {}
-    }
+        m_mixer.begin(buffer, count);
 
-    return m_mixer.samplesGenerated();
+        // Start the player loop
+        m_isPlaying = true;
+
+        while (m_isPlaying && m_mixer.notFinished())
+            m_c64.getEventScheduler()->clock();
+
+        if (!m_isPlaying)
+        {
+            try
+            {
+                initialise();
+            }
+            catch (configError &e) {}
+        }
+
+        return m_mixer.samplesGenerated();
+    }
+    else
+    {
+        count = OUTPUTBUFFERSIZE;
+        while (count--)
+            m_c64.getEventScheduler()->clock();
+    }
 }
 
 void Player::stop()
