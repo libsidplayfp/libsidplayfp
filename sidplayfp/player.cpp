@@ -195,6 +195,8 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         count = OUTPUTBUFFERSIZE;
         while (count--)
             m_c64.getEventScheduler()->clock();
+
+        return 0;
     }
 }
 
