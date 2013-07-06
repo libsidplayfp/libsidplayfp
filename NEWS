@@ -1,3 +1,9 @@
+1.0.3 2013-07-06
+* Fix missing constructor in ExtraSidBank.h
+* Fix a regression in resid's external filter
+
+
+
 1.0.2 2013-04-25
 * Fix saving the last CIA 1 Timer A value
 * Fix a crash with stereo prg files
