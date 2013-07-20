@@ -297,7 +297,8 @@ short WaveformGenerator::output(const WaveformGenerator* ringModulator)
 
         if (waveform > 0x8)
         {
-            // Combined waveforms write to the shift register.
+            // Combined waveforms that include noise
+            // write to the shift register.
             write_shift_register();
         }
     }
