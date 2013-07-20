@@ -76,6 +76,8 @@ public:
         if (kernal)
         {
             // Apply Kernal hacks
+            // FIXME these are tailored to the original kernals
+            //       may not work as intended on other roms
             setVal(0xfd69, 0x9f); // Bypass memory check
             setVal(0xe55f, 0x00); // Bypass screen clear
             setVal(0xfdc4, 0xea); // Ignore sid volume reset to avoid DC
