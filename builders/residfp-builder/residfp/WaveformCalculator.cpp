@@ -97,7 +97,7 @@ short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig confi
 
         for (int i = 11; i > 0; i--)
         {
-            o[i] = top ? 1.0f - o[i - 1] :  o[i - 1];
+            o[i] = top ? 1.0f - o[i - 1] : o[i - 1];
         }
 
         o[0] = 0.f;
