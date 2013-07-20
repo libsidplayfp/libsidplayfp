@@ -87,7 +87,7 @@ short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig confi
     /* S with strong top bit for 6581 */
     for (int i = 0; i < 12; i++)
     {
-        o[i] = (accumulator >> 12 & (1 << i)) != 0 ? 1.f : 0.f;
+        o[i] = ((accumulator >> 12) & (1 << i)) != 0 ? 1.f : 0.f;
     }
 
     /* convert to T */
