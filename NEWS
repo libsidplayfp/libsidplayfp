@@ -1,4 +1,16 @@
-1.0.1 2013-03-xx
+1.0.3 2013-07-06
+* Fix missing constructor in ExtraSidBank.h
+* Fix a regression in resid's external filter
+
+
+
+1.0.2 2013-04-25
+* Fix saving the last CIA 1 Timer A value
+* Fix a crash with stereo prg files
+
+
+
+1.0.1 2013-03-23
 * Fix compiling on debian/stable
 * Make sure that song is reinitialized after stop
 
