@@ -3,7 +3,7 @@ m4_define([lib_minor], [1])
 m4_define([lib_level], [0alpha])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
-AC_INIT([libsidplayfp], [lib_version])
+AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([sidplayfp/sidplayfp.cpp])
