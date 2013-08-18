@@ -58,7 +58,8 @@ AS_IF([test "x${ac_cv_header_stdint_h}" != "xyes"],
 )
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([strncasecmp strcasecmp])
+AC_CHECK_FUNCS([strcasecmp stricmp], [break])
+AC_CHECK_FUNCS([strncasecmp strnicmp], [break])
 
 dnl libtool-style version-info number
 #
