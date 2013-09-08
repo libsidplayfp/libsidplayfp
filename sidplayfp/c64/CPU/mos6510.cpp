@@ -33,7 +33,7 @@
 #ifdef PC64_TESTSUITE
 #  include <stdlib.h>
 
-static const char _sidtune_CHRtab[256] =  // CHR$ conversion table (0x01 = no output)
+static const char CHRtab[256] =  // CHR$ conversion table (0x01 = no output)
 {
    0x0, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0xd, 0x1, 0x1,
    0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1,
@@ -445,7 +445,7 @@ void MOS6510::FetchHighAddrX()
     Cycle_EffectiveAddress += Register_X;
 }
 
- // Handle page boundary crossing
+/** Same as #FetchHighAddrX except dosen't worry about page crossing. */
 void MOS6510::FetchHighAddrX2()
 {
     FetchHighAddrX();
@@ -470,7 +470,7 @@ void MOS6510::FetchHighAddrY()
     Cycle_EffectiveAddress += Register_Y;
 }
 
-// Same as above except dosen't worry about page crossing
+/** Same as #FetchHighAddrY except dosen't worry about page crossing. */
 void MOS6510::FetchHighAddrY2()
 {
     FetchHighAddrY();
@@ -573,7 +573,8 @@ void MOS6510::FetchHighEffAddrY()
     Cycle_EffectiveAddress += Register_Y;
 }
 
-// Handle page boundary crossing
+
+/** Same as #FetchHighEffAddrY except dosen't worry about page crossing. */
 void MOS6510::FetchHighEffAddrY2()
 {
     FetchHighEffAddrY();
@@ -712,7 +713,7 @@ void MOS6510::doJSR()
     // Print character
     if (Register_ProgramCounter == 0xffd2)
     {
-        const char ch = _sidtune_CHRtab[Register_Accumulator];
+        const char ch = CHRtab[Register_Accumulator];
         switch (ch)
         {
         case 0:
@@ -814,8 +815,10 @@ void MOS6510::sty_instr()
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 
-// Undocumented - This opcode stores the result of A AND X AND the high
-// byte of the target address of the operand +1 in memory.
+/**
+* Undocumented - This opcode stores the result of A AND X AND the high
+* byte of the target address of the operand +1 in memory.
+*/
 void MOS6510::axa_instr()
 {
     Cycle_Data = Register_X & Register_Accumulator & (endian_16hi8(Cycle_EffectiveAddress) + 1);
@@ -824,9 +827,11 @@ void MOS6510::axa_instr()
     PutEffAddrDataByte();
 }
 
-// Undocumented - AXS ANDs the contents of the A and X registers (without changing the
-// contents of either register) and stores the result in memory.
-// AXS does not affect any flags in the processor status register.
+/**
+* Undocumented - AXS ANDs the contents of the A and X registers (without changing the
+* contents of either register) and stores the result in memory.
+* AXS does not affect any flags in the processor status register.
+*/
 void MOS6510::axs_instr()
 {
     Cycle_Data = Register_Accumulator & Register_X;
@@ -845,20 +850,10 @@ void MOS6510::hlt_instr ()
 }
 */
 
-/* Not required - Operation performed By another method
-void MOS6510::nop_instr ()
-{
-}
+/**
+* Undocumented - This opcode ANDs the contents of the Y register with <ab+1> and stores the
+* result in memory.
 */
-
-/* Not required - Operation performed By another method
-void MOS6510::php_instr ()
-{
-}
-*/
-
-// Undocumented - This opcode ANDs the contents of the Y register with <ab+1> and stores the
-// result in memory.
 void MOS6510::say_instr()
 {
     Cycle_Data = Register_Y & (endian_16hi8(Cycle_EffectiveAddress) + 1);
@@ -867,24 +862,10 @@ void MOS6510::say_instr()
     PutEffAddrDataByte();
 }
 
-/* Not required - Operation performed By another method
-// Undocumented - skip next byte.
-void MOS6510::skb_instr ()
-{
-    Register_ProgramCounter++;
-}
+/**
+* Undocumented - This opcode ANDs the contents of the X register with <ab+1> and stores the
+* result in memory.
 */
-
-/* Not required - Operation performed By another method
-// Undocumented - skip next word.
-void MOS6510::skw_instr ()
-{
-    Register_ProgramCounter += 2;
-}
-*/
-
-// Undocumented - This opcode ANDs the contents of the X register with <ab+1> and stores the
-// result in memory.
 void MOS6510::xas_instr()
 {
     Cycle_Data = Register_X & (endian_16hi8(Cycle_EffectiveAddress) + 1);
@@ -1352,8 +1333,10 @@ void MOS6510::illegal_instr()
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 
-// Undocumented - This opcode ANDs the contents of the A register with an immediate value and
-// then LSRs the result.
+/**
+* Undocumented - This opcode ANDs the contents of the A register with an immediate value and
+* then LSRs the result.
+*/
 void MOS6510::alr_instr()
 {
     Register_Accumulator &= Cycle_Data;
@@ -1362,10 +1345,12 @@ void MOS6510::alr_instr()
     interruptsAndNextOpcode();
 }
 
-// Undocumented - ANC ANDs the contents of the A register with an immediate value and then
-// moves bit 7 of A into the Carry flag.  This opcode works basically
-// identically to AND #immed. except that the Carry flag is set to the same
-// state that the Negative flag is set to.
+/**
+* Undocumented - ANC ANDs the contents of the A register with an immediate value and then
+* moves bit 7 of A into the Carry flag.  This opcode works basically
+* identically to AND #immed. except that the Carry flag is set to the same
+* state that the Negative flag is set to.
+*/
 void MOS6510::anc_instr()
 {
     setFlagsNZ(Register_Accumulator &= Cycle_Data);
@@ -1373,8 +1358,10 @@ void MOS6510::anc_instr()
     interruptsAndNextOpcode();
 }
 
-// Undocumented - This opcode ANDs the contents of the A register with an immediate value and
-// then RORs the result (Implementation based on that of Frodo C64 Emulator)
+/**
+* Undocumented - This opcode ANDs the contents of the A register with an immediate value and
+* then RORs the result (Implementation based on that of Frodo C64 Emulator)
+*/
 void MOS6510::arr_instr()
 {
     const uint8_t data = Cycle_Data & Register_Accumulator;
@@ -1403,8 +1390,10 @@ void MOS6510::arr_instr()
     interruptsAndNextOpcode();
 }
 
-// Undocumented - This opcode ASLs the contents of a memory location and then ORs the result
-// with the accumulator.
+/**
+* Undocumented - This opcode ASLs the contents of a memory location and then ORs the result
+* with the accumulator.
+*/
 void MOS6510::aso_instr()
 {
     PutEffAddrDataByte();
@@ -1413,8 +1402,10 @@ void MOS6510::aso_instr()
     setFlagsNZ(Register_Accumulator |= Cycle_Data);
 }
 
-// Undocumented - This opcode DECs the contents of a memory location and then CMPs the result
-// with the A register.
+/**
+* Undocumented - This opcode DECs the contents of a memory location and then CMPs the result
+* with the A register.
+*/
 void MOS6510::dcm_instr()
 {
     PutEffAddrDataByte();
@@ -1424,8 +1415,10 @@ void MOS6510::dcm_instr()
     flagC = tmp < 0x100;
 }
 
-// Undocumented - This opcode INCs the contents of a memory location and then SBCs the result
-// from the A register.
+/**
+* Undocumented - This opcode INCs the contents of a memory location and then SBCs the result
+* from the A register.
+*/
 void MOS6510::ins_instr ()
 {
     PutEffAddrDataByte ();
@@ -1433,9 +1426,11 @@ void MOS6510::ins_instr ()
     doSBC ();
 }
 
-// Undocumented - This opcode ANDs the contents of a memory location with the contents of the
-// stack pointer register and stores the result in the accumulator, the X
-// register, and the stack pointer.  Affected flags: N Z.
+/**
+* Undocumented - This opcode ANDs the contents of a memory location with the contents of the
+* stack pointer register and stores the result in the accumulator, the X
+* register, and the stack pointer.  Affected flags: N Z.
+*/
 void MOS6510::las_instr()
 {
     setFlagsNZ(Cycle_Data &= Register_StackPointer);
@@ -1445,16 +1440,20 @@ void MOS6510::las_instr()
     interruptsAndNextOpcode();
 }
 
-// Undocumented - This opcode loads both the accumulator and the X register with the contents
-// of a memory location.
+/**
+* Undocumented - This opcode loads both the accumulator and the X register with the contents
+* of a memory location.
+*/
 void MOS6510::lax_instr()
 {
     setFlagsNZ(Register_Accumulator = Register_X = Cycle_Data);
     interruptsAndNextOpcode();
 }
 
-// Undocumented - LSE LSRs the contents of a memory location and then EORs the result with
-// the accumulator.
+/**
+* Undocumented - LSE LSRs the contents of a memory location and then EORs the result with
+* the accumulator.
+*/
 void MOS6510::lse_instr()
 {
     PutEffAddrDataByte();
@@ -1463,17 +1462,21 @@ void MOS6510::lse_instr()
     setFlagsNZ(Register_Accumulator ^= Cycle_Data);
 }
 
-// Undocumented - This opcode ORs the A register with #xx, ANDs the result with an immediate
-// value, and then stores the result in both A and X.
-// xx may be EE,EF,FE, OR FF, but most emulators seem to use EE
+/**
+* Undocumented - This opcode ORs the A register with #xx, ANDs the result with an immediate
+* value, and then stores the result in both A and X.
+* xx may be EE,EF,FE, OR FF, but most emulators seem to use EE
+*/
 void MOS6510::oal_instr()
 {
     setFlagsNZ(Register_X = (Register_Accumulator = (Cycle_Data & (Register_Accumulator | 0xee))));
     interruptsAndNextOpcode();
 }
 
-// Undocumented - RLA ROLs the contents of a memory location and then ANDs the result with
-// the accumulator.
+/**
+* Undocumented - RLA ROLs the contents of a memory location and then ANDs the result with
+* the accumulator.
+*/
 void MOS6510::rla_instr()
 {
     const uint8_t newC = Cycle_Data & 0x80;
@@ -1484,8 +1487,10 @@ void MOS6510::rla_instr()
     setFlagsNZ(Register_Accumulator &= Cycle_Data);
 }
 
-// Undocumented - RRA RORs the contents of a memory location and then ADCs the result with
-// the accumulator.
+/**
+* Undocumented - RRA RORs the contents of a memory location and then ADCs the result with
+* the accumulator.
+*/
 void MOS6510::rra_instr()
 {
     const uint8_t newC = Cycle_Data & 0x01;

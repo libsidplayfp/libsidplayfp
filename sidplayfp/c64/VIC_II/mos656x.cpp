@@ -54,7 +54,7 @@ const char *MOS656X::credit =
 };
 
 
-MOS656X::MOS656X (EventContext *context) :
+MOS656X::MOS656X(EventContext *context) :
     Event("VIC Raster"),
     event_context(*context),
     sprite_enable(regs[0x15]),
@@ -64,7 +64,7 @@ MOS656X::MOS656X (EventContext *context) :
     chip (MOS6569);
 }
 
-void MOS656X::reset ()
+void MOS656X::reset()
 {
     irqFlags     = 0;
     irqMask      = 0;
@@ -85,7 +85,7 @@ void MOS656X::reset ()
     event_context.schedule(*this, 0, EVENT_CLOCK_PHI1);
 }
 
-void MOS656X::chip (model_t model)
+void MOS656X::chip(model_t model)
 {
     maxRasters    = modelData[model].cyclesPerLine;
     cyclesPerLine = modelData[model].rasterLines;
@@ -107,7 +107,7 @@ void MOS656X::chip (model_t model)
     reset ();
 }
 
-uint8_t MOS656X::read (uint_least8_t addr)
+uint8_t MOS656X::read(uint_least8_t addr)
 {
     addr &= 0x3f;
 
@@ -143,7 +143,7 @@ uint8_t MOS656X::read (uint_least8_t addr)
     }
 }
 
-void MOS656X::write (uint_least8_t addr, uint8_t data)
+void MOS656X::write(uint_least8_t addr, uint8_t data)
 {
     addr &= 0x3f;
 
@@ -230,7 +230,7 @@ void MOS656X::handleIrqState()
     }
 }
 
-void MOS656X::event ()
+void MOS656X::event()
 {
     const event_clock_t cycles = event_context.getTime(rasterClk, event_context.phase());
 
@@ -306,7 +306,8 @@ event_clock_t MOS656X::clockPAL()
         {
             setBA(true);
             delay = 5;
-        } else
+        }
+        else
             delay = 2;
         break;
 
@@ -319,7 +320,8 @@ event_clock_t MOS656X::clockPAL()
         {
             setBA(true);
             delay = 3;
-        } else
+        }
+        else
             delay = 2;
         break;
 
@@ -344,11 +346,7 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 12:
-        break;
-
     case 13:
-        break;
-
     case 14:
         break;
 
@@ -362,7 +360,7 @@ event_clock_t MOS656X::clockPAL()
         checkSpriteDma();
 
         // Start DMA for sprite 0
-        setBA (!(sprite_dma & 0x01));
+        setBA(!(sprite_dma & 0x01));
         break;
 
     case 55:
@@ -371,11 +369,11 @@ event_clock_t MOS656X::clockPAL()
         // Start DMA for sprite 0
         if (sprite_dma & 0x01)
         {
-            setBA (false);
+            setBA(false);
         }
         else
         {
-            setBA (true);
+            setBA(true);
             // No sprites before next compulsory cycle
             if (!(sprite_dma & 0x1f))
                 delay = 8;
@@ -480,7 +478,8 @@ event_clock_t MOS656X::clockNTSC()
         {
             setBA(true);
             delay = 5;
-        } else
+        }
+        else
             delay = 2;
         break;
 
@@ -493,7 +492,8 @@ event_clock_t MOS656X::clockNTSC()
         {
             setBA(true);
             delay = 3;
-        } else
+        }
+        else
             delay = 2;
         break;
 
@@ -523,11 +523,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 12:
-        break;
-
     case 13:
-        break;
-
     case 14:
         break;
 
@@ -541,7 +537,7 @@ event_clock_t MOS656X::clockNTSC()
         checkSpriteDmaExp();
 
         // Start DMA for sprite 0
-        setBA (!(sprite_dma & 0x01));
+        setBA(!(sprite_dma & 0x01));
         break;
 
     case 56:
@@ -550,11 +546,11 @@ event_clock_t MOS656X::clockNTSC()
         // Start DMA for sprite 0
         if (sprite_dma & 0x01)
         {
-            setBA (false);
+            setBA(false);
         }
         else
         {
-            setBA (true);
+            setBA(true);
             // No sprites before next compulsory cycle
             if (!(sprite_dma & 0x1f))
                 delay = 8;
@@ -669,7 +665,8 @@ event_clock_t MOS656X::clockOldNTSC()
         {
             setBA(true);
             delay = 5;
-        } else
+        }
+        else
             delay = 2;
         break;
 
@@ -682,7 +679,8 @@ event_clock_t MOS656X::clockOldNTSC()
         {
             setBA(true);
             delay = 3;
-        } else
+        }
+        else
             delay = 2;
         break;
 
@@ -707,11 +705,7 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 12:
-        break;
-
     case 13:
-        break;
-
     case 14:
         break;
 
@@ -725,7 +719,7 @@ event_clock_t MOS656X::clockOldNTSC()
         checkSpriteDmaExp();
 
         // Start DMA for sprite 0
-        setBA (!(sprite_dma & 0x01));
+        setBA(!(sprite_dma & 0x01));
         break;
 
     case 56:
@@ -734,11 +728,11 @@ event_clock_t MOS656X::clockOldNTSC()
         // Start DMA for sprite 0
         if (sprite_dma & 0x01)
         {
-            setBA (false);
+            setBA(false);
         }
         else
         {
-            setBA (true);
+            setBA(true);
             // No sprites before next compulsory cycle
             if (!(sprite_dma & 0x1f))
                 delay = 8;
@@ -752,7 +746,7 @@ event_clock_t MOS656X::clockOldNTSC()
         if (sprite_dma & 0x02)
             setBA(false);
 
-            delay = 2;
+        delay = 2;
         break;
 
     case 58:

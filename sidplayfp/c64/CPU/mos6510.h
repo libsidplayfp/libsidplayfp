@@ -104,7 +104,7 @@ protected:
     bool flagI;
     bool flagB;
 
-    /** Data regarding current instruction */
+    /* Data regarding current instruction */
     uint_least16_t Register_ProgramCounter;
     uint_least16_t Cycle_EffectiveAddress;
     uint_least16_t Cycle_HighByteWrongEffectiveAddress;
@@ -117,7 +117,7 @@ protected:
     uint8_t Register_Y;
 
 #ifdef DEBUG
-    /** Debug info */
+    /* Debug info */
     uint_least16_t instrStartPC;
     uint_least16_t instrOperand;
 
@@ -291,12 +291,12 @@ public:
     virtual void cpuWrite(uint_least16_t addr, uint8_t data) =0;
 
 #ifdef PC64_TESTSUITE
-    virtual void   loadFile (const char *file) =0;
+    virtual void loadFile (const char *file) =0;
 #endif
 
     virtual void reset();
 
-    const char  *credits() const { return credit; }
+    const char *credits() const { return credit; }
 
     void debug(bool enable, FILE *out);
     void setRDY(bool newRDY);
