@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2011 Leandro Nini
+ *  Copyright (C) 2010-2013 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,33 +19,34 @@
 #include "iniParser.h"
 
 #include <stdlib.h>
+#include <iostream>
+#include <fstream>
 
-std::string iniParser::parseSection(const char *buffer)
+std::string iniParser::parseSection(const std::string &buffer)
 {
-    std::string section(buffer);
-    section.erase(0, 1);
-    section.erase(section.find(']'));
-    return section;
-}
-
-std::pair<std::string, std::string> iniParser::parseKey(const char *buffer)
-{
-    std::string section(buffer);
-    size_t pos = section.find('=');
+    const size_t pos = buffer.find(']');
 
     if (pos == std::string::npos)
     {
-        throw emptyPair();
+        throw parseError();
     }
 
-    std::string key = section.substr(0, pos);
-    std::string value = section.substr(pos + 1);
-    //Trim right spaces
-    key.erase(key.find_last_not_of(' ') + 1);
-    return make_pair(key, value);
+    return buffer.substr(1, pos-1);
 }
 
-#define BUFSIZE 2048
+std::pair<std::string, std::string> iniParser::parseKey(const std::string &buffer)
+{
+    const size_t pos = buffer.find('=');
+
+    if (pos == std::string::npos)
+    {
+        throw parseError();
+    }
+
+    const std::string key = buffer.substr(0, buffer.find_last_not_of(' ', pos-1) + 1);
+    const std::string value = buffer.substr(pos + 1);
+    return make_pair(key, value);
+}
 
 bool iniParser::open(const char *fName)
 {
@@ -56,14 +57,17 @@ bool iniParser::open(const char *fName)
         return false;
     }
 
-    std::map<std::string, keys_t>::iterator mIt;
+    sections_t::iterator mIt;
 
     while (iniFile.good())
     {
-        char buffer[BUFSIZE];
-        iniFile.getline(buffer, BUFSIZE);
+        std::string buffer;
+        getline(iniFile, buffer);
 
-        switch (buffer[0])
+        if (buffer.empty())
+            continue;
+
+        switch (buffer.at(0))
         {
         case ';':
         case '#':
@@ -72,10 +76,14 @@ bool iniParser::open(const char *fName)
 
         case '[':
         {
-            std::string section = parseSection(buffer);
-            keys_t keys;
-            std::pair<std::map<std::string, keys_t>::iterator, bool> it = sections.insert(make_pair(section, keys));
-            mIt = it.first;
+            try
+            {
+                const std::string section = parseSection(buffer);
+                const keys_t keys;
+                std::pair<sections_t::iterator, bool> it = sections.insert(make_pair(section, keys));
+                mIt = it.first;
+            }
+            catch (parseError const &e) {};
         }
         break;
 
@@ -84,7 +92,7 @@ bool iniParser::open(const char *fName)
             {
                 (*mIt).second.insert(parseKey(buffer));
             }
-            catch (emptyPair const &e) {};
+            catch (parseError const &e) {};
 
             break;
         }
@@ -106,6 +114,6 @@ bool iniParser::setSection(const char *section)
 
 const char *iniParser::getValue(const char *key)
 {
-    std::map<std::string, std::string>::const_iterator keyIt = (*curSection).second.find(std::string(key));
+    keys_t::const_iterator keyIt = (*curSection).second.find(std::string(key));
     return (keyIt != (*curSection).second.end()) ? keyIt->second.c_str() : 0;
 }
