@@ -94,7 +94,7 @@ unsigned int HardSIDBuilder::create(unsigned int sids)
             sidobjs.insert(sid.release());
         }
         // Memory alloc failed?
-        catch (std::bad_alloc&)
+        catch (std::bad_alloc const &)
         {
             m_errorBuffer.assign(name()).append(" ERROR: Unable to create HardSID object");
             goto HardSIDBuilder_create_error;

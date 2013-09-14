@@ -137,7 +137,7 @@ int_least32_t SidDatabase::length(const char *md5, unsigned int song)
         {
             str = parseTime(str, time);
         }
-        catch (parseError &e)
+        catch (parseError const &e)
         {
             errorString = ERR_DATABASE_CORRUPT;
             return -1;

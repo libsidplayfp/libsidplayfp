@@ -190,7 +190,7 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
     {
         fileBuf.assign(new uint_least8_t[fileLen], fileLen);
     }
-    catch (std::bad_alloc &e)
+    catch (std::bad_alloc const &e)
     {
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
@@ -257,7 +257,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
     {
         tmpBuf = new uint_least8_t[bufferLen];
     }
-    catch (std::bad_alloc &e)
+    catch (std::bad_alloc const &e)
     {
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
@@ -416,7 +416,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                     // The first tune loaded ok, so ignore errors on the
                     // second tune, may find an ok one later
                     }
-                    catch (loadError& e) {}
+                    catch (loadError const &e) {}
                 }
                 n++;
             }

@@ -185,7 +185,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
             {
                 initialise();
             }
-            catch (configError &e) {}
+            catch (configError const &e) {}
         }
 
         return m_mixer.samplesGenerated();
@@ -214,7 +214,7 @@ void Player::stop()
             {
                 initialise();
             }
-            catch (configError &e) {}
+            catch (configError const &e) {}
         }
     }
 }

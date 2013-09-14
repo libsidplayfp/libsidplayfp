@@ -84,7 +84,7 @@ bool iniParser::open(const char *fName)
             {
                 (*mIt).second.insert(parseKey(buffer));
             }
-            catch (emptyPair &e) {};
+            catch (emptyPair const &e) {};
 
             break;
         }

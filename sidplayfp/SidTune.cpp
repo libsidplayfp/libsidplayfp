@@ -69,7 +69,7 @@ void SidTune::load(const char* fileName, bool separatorIsSlash)
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
-    catch (loadError& e)
+    catch (loadError const &e)
     {
         m_status = false;
         m_statusString = e.message();
@@ -84,7 +84,7 @@ void SidTune::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
-    catch (loadError& e)
+    catch (loadError const &e)
     {
         m_status = false;
         m_statusString = e.message();

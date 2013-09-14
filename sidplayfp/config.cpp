@@ -79,7 +79,7 @@ bool Player::config(const SidConfig &cfg)
             // Configure, setup and install C64 environment/events
             initialise();
         }
-        catch (configError &e)
+        catch (configError const &e)
         {
             m_errorString = e.message();
             m_cfg.sidEmulation = 0;

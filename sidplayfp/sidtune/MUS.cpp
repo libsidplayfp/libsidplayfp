@@ -526,7 +526,7 @@ bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     {
         mergeBuf.assign(new uint8_t[mergeLen], mergeLen);
     }
-    catch (std::bad_alloc& e)
+    catch (std::bad_alloc const &e)
     {
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }

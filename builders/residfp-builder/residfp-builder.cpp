@@ -50,7 +50,7 @@ unsigned int ReSIDfpBuilder::create(unsigned int sids)
             sidobjs.insert(new ReSIDfp(this));
         }
         // Memory alloc failed?
-        catch (std::bad_alloc&)
+        catch (std::bad_alloc const &)
         {
             m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfp object");
             m_status = false;
