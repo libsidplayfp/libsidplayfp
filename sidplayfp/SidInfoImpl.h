@@ -86,7 +86,7 @@ public:
             "\tCopyright (C) 2000 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
             "\tCopyright (C) 2010-2013 Leandro Nini\n"
-            "\t"PACKAGE_URL"\n");
+            "\t" PACKAGE_URL "\n");
     }
 
     const char *name() const { return m_name.c_str(); }
