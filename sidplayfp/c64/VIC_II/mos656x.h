@@ -252,114 +252,20 @@ private:
         }
     }
 
-    /// Start DMA for sprite 0
-    inline void startDma0()
+    /// Start DMA for sprite n
+    template<int n>
+    inline void startDma()
     {
-        setBA(!(sprite_dma & 0x01));
-    }
-
-    /// Start DMA for sprite 1
-    inline void startDma1()
-    {
-        if (sprite_dma & 0x02)
+        if (sprite_dma & (0x01 << n))
             setBA(false);
     }
 
-    /// Start DMA for sprite 2
-    inline void startDma2()
+    /// End DMA for sprite n
+    template<int n>
+    inline void endDma()
     {
-        if (sprite_dma & 0x04)
-            setBA(false);
-    }
-
-    /// Start DMA for sprite 3
-    inline void startDma3()
-    {
-        if (sprite_dma & 0x08)
-            setBA(false);
-    }
-
-    /// Start DMA for sprite 4
-    inline void startDma4()
-    {
-        if (sprite_dma & 0x10)
-            setBA(false);
-    }
-
-    /// Start DMA for sprite 5
-    inline void startDma5()
-    {
-        if (sprite_dma & 0x20)
-            setBA(false);
-    }
-
-    /// Start DMA for sprite 6
-    inline void startDma6()
-    {
-        if (sprite_dma & 0x40)
-            setBA(false);
-    }
-
-    /// Start DMA for sprite 7
-    inline void startDma7()
-    {
-        if (sprite_dma & 0x80)
-            setBA(false);
-    }
-
-    /// End DMA for sprite 0
-    inline void endDma0()
-    {
-        if (!(sprite_dma & 0x06))
+        if (!(sprite_dma & (0x06 << n)))
             setBA(true);
-    }
-
-    /// End DMA for sprite 1
-    inline void endDma1()
-    {
-        if (!(sprite_dma & 0x0c))
-            setBA(true);
-    }
-
-    /// End DMA for sprite 2
-    inline void endDma2()
-    {
-        if (!(sprite_dma & 0x18))
-            setBA(true);
-    }
-
-    /// End DMA for sprite 3
-    inline void endDma3()
-    {
-        if (!(sprite_dma & 0x30))
-            setBA(true);
-    }
-
-    /// End DMA for sprite 4
-    inline void endDma4()
-    {
-        if (!(sprite_dma & 0x60))
-            setBA(true);
-    }
-
-    /// End DMA for sprite 5
-    inline void endDma5()
-    {
-        if (!(sprite_dma & 0xc0))
-            setBA(true);
-    }
-
-    /// End DMA for sprite 6
-    inline void endDma6()
-    {
-        if (!(sprite_dma & 0x80))
-            setBA(true);
-    }
-
-    /// End DMA for sprite 7
-    inline void endDma7()
-    {
-        setBA(true);
     }
 
     /// Start bad line
@@ -368,8 +274,6 @@ private:
         if (isBadLine)
             setBA(false);
     }
-
-
 
 protected:
     MOS656X(EventContext *context);
@@ -412,5 +316,21 @@ public:
 
     uint_least16_t getRasterLines() const { return maxRasters; }
 };
+
+// Template specializations
+
+/// Start DMA for sprite 0
+template<>
+inline void MOS656X::startDma<0>()
+{
+    setBA(!(sprite_dma & 0x01));
+}
+
+/// End DMA for sprite 7
+template<>
+inline void MOS656X::endDma<7>()
+{
+    setBA(true);
+}
 
 #endif // MOS656X_H

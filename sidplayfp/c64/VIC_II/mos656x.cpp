@@ -259,12 +259,12 @@ event_clock_t MOS656X::clockPAL()
     {
     case 0:
         checkVblank();
-        endDma2();
+        endDma<2>();
         break;
 
     case 1:
         vblank();
-        startDma5();
+        startDma<5>();
 
         // No sprites before next compulsory cycle
         if (!(sprite_dma & 0xf8))
@@ -272,23 +272,23 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 2:
-        endDma3();
+        endDma<3>();
         break;
 
     case 3:
-        startDma6();
+        startDma<6>();
         break;
 
     case 4:
-        endDma4();
+        endDma<4>();
         break;
 
     case 5:
-        startDma7();
+        startDma<7>();
         break;
 
     case 6:
-        endDma5();
+        endDma<5>();
 
         delay = (sprite_dma & 0xc0) ? 2 : 5;
         break;
@@ -297,7 +297,7 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 8:
-        endDma6();
+        endDma<6>();
 
         delay = (sprite_dma & 0x80) ? 2 : 3;
         break;
@@ -307,7 +307,7 @@ event_clock_t MOS656X::clockPAL()
 
     case 10:
         updateMc();
-        endDma7();
+        endDma<7>();
         break;
 
     case 11:
@@ -329,12 +329,12 @@ event_clock_t MOS656X::clockPAL()
 
     case 54:
         checkSpriteDma();
-        startDma0();
+        startDma<0>();
         break;
 
     case 55:
         checkSpriteDmaExp();
-        startDma0();
+        startDma<0>();
 
         // No sprites before next compulsory cycle
         if (!(sprite_dma & 0x1f))
@@ -342,7 +342,7 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 56:
-        startDma1();
+        startDma<1>();
         break;
 
     case 57:
@@ -350,23 +350,23 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 58:
-        startDma2();
+        startDma<2>();
         break;
 
     case 59:
-        endDma0();
+        endDma<0>();
         break;
 
     case 60:
-        startDma3();
+        startDma<3>();
         break;
 
     case 61:
-        endDma1();
+        endDma<1>();
         break;
 
     case 62:
-        startDma4();
+        startDma<4>();
         break;
 
     default:
@@ -384,12 +384,12 @@ event_clock_t MOS656X::clockNTSC()
     {
     case 0:
         checkVblank();
-        startDma5();
+        startDma<5>();
         break;
 
     case 1:
         vblank();
-        endDma3();
+        endDma<3>();
 
         // No sprites before next compulsory cycle
         if (!(sprite_dma & 0xf8))
@@ -397,19 +397,19 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 2:
-        startDma6();
+        startDma<6>();
         break;
 
     case 3:
-        endDma4();
+        endDma<4>();
         break;
 
     case 4:
-        startDma7();
+        startDma<7>();
         break;
 
     case 5:
-        endDma5();
+        endDma<5>();
 
         delay = (sprite_dma & 0xc0) ? 2 : 5;
         break;
@@ -418,7 +418,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 7:
-        endDma6();
+        endDma<6>();
 
         delay = (sprite_dma & 0x80) ? 2 : 3;
         break;
@@ -428,7 +428,7 @@ event_clock_t MOS656X::clockNTSC()
 
     case 9:
         updateMc();
-        endDma7();
+        endDma<7>();
 
         delay = 2;
         break;
@@ -455,12 +455,12 @@ event_clock_t MOS656X::clockNTSC()
 
     case 55:
         checkSpriteDmaExp();
-        startDma0();
+        startDma<0>();
         break;
 
     case 56:
         checkSpriteDma();
-        startDma0();
+        startDma<0>();
 
         // No sprites before next compulsory cycle
         if (!(sprite_dma & 0x1f))
@@ -468,7 +468,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 57:
-        startDma1();
+        startDma<1>();
         break;
 
     case 58:
@@ -476,27 +476,27 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 59:
-        startDma2();
+        startDma<2>();
         break;
 
     case 60:
-        endDma0();
+        endDma<0>();
         break;
 
     case 61:
-        startDma3();
+        startDma<3>();
         break;
 
     case 62:
-        endDma1();
+        endDma<1>();
         break;
 
     case 63:
-        startDma4();
+        startDma<4>();
         break;
 
     case 64:
-        endDma2();
+        endDma<2>();
         break;
 
     default:
@@ -514,12 +514,12 @@ event_clock_t MOS656X::clockOldNTSC()
     {
     case 0:
         checkVblank();
-        endDma2();
+        endDma<2>();
         break;
 
     case 1:
         vblank();
-        startDma5();
+        startDma<5>();
 
         // No sprites before next compulsory cycle
         if (!(sprite_dma & 0xf8))
@@ -527,23 +527,23 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 2:
-        endDma3();
+        endDma<3>();
         break;
 
     case 3:
-        startDma6();
+        startDma<6>();
         break;
 
     case 4:
-        endDma4();
+        endDma<4>();
         break;
 
     case 5:
-        startDma7();
+        startDma<7>();
         break;
 
     case 6:
-        endDma5();
+        endDma<5>();
 
         delay = (sprite_dma & 0xc0) ? 2 : 5;
         break;
@@ -552,7 +552,7 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 8:
-        endDma6();
+        endDma<6>();
 
         delay = (sprite_dma & 0x80) ? 2 : 3;
         break;
@@ -562,7 +562,7 @@ event_clock_t MOS656X::clockOldNTSC()
 
     case 10:
         updateMc();
-        endDma7();
+        endDma<7>();
         break;
 
     case 11:
@@ -584,12 +584,12 @@ event_clock_t MOS656X::clockOldNTSC()
 
     case 55:
         checkSpriteDmaExp();
-        startDma0();
+        startDma<0>();
         break;
 
     case 56:
         checkSpriteDma();
-        startDma0();
+        startDma<0>();
 
         // No sprites before next compulsory cycle
         if (!(sprite_dma & 0x1f))
@@ -598,7 +598,7 @@ event_clock_t MOS656X::clockOldNTSC()
 
     case 57:
         checkSpriteDisplay();
-        startDma1();
+        startDma<1>();
 
         delay = 2;
         break;
@@ -607,23 +607,23 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 59:
-        startDma2();
+        startDma<2>();
         break;
 
     case 60:
-        endDma0();
+        endDma<0>();
         break;
 
     case 61:
-        startDma3();
+        startDma<3>();
         break;
 
     case 62:
-        endDma1();
+        endDma<1>();
         break;
 
     case 63:
-        startDma4();
+        startDma<4>();
         break;
 
     default:
