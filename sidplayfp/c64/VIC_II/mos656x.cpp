@@ -259,70 +259,47 @@ event_clock_t MOS656X::clockPAL()
     {
     case 0:
         checkVblank();
-
-        // End DMA for sprite 2
-        if (!(sprite_dma & 0x18))
-            setBA(true);
+        endDma2();
         break;
 
     case 1:
         vblank();
+        startDma5();
 
-        // Start DMA for sprite 5
-        if (sprite_dma & 0x20)
-            setBA(false);
         // No sprites before next compulsory cycle
-        else if (!(sprite_dma & 0xf8))
+        if (!(sprite_dma & 0xf8))
            delay = 10;
         break;
 
     case 2:
-        // End DMA for sprite 3
-        if (!(sprite_dma & 0x30))
-            setBA(true);
+        endDma3();
         break;
 
     case 3:
-        // Start DMA for sprite 6
-        if (sprite_dma & 0x40)
-            setBA(false);
+        startDma6();
         break;
 
     case 4:
-        // End DMA for sprite 4
-         if (!(sprite_dma & 0x60))
-            setBA(true);
+        endDma4();
         break;
 
     case 5:
-        // Start DMA for sprite 7
-        if (sprite_dma & 0x80)
-            setBA(false);
+        startDma7();
         break;
 
     case 6:
-        // End DMA for sprite 5
-        if (!(sprite_dma & 0xc0))
-        {
-            setBA(true);
-            delay = 5;
-        }
-        else
-            delay = 2;
+        endDma5();
+
+        delay = (sprite_dma & 0xc0) ? 2 : 5;
         break;
 
     case 7:
         break;
 
     case 8:
-        // End DMA for sprite 6
-        if (!(sprite_dma & 0x80))
-        {
-            setBA(true);
-            delay = 3;
-        }
-        else
-            delay = 2;
+        endDma6();
+
+        delay = (sprite_dma & 0x80) ? 2 : 3;
         break;
 
     case 9:
@@ -330,17 +307,11 @@ event_clock_t MOS656X::clockPAL()
 
     case 10:
         updateMc();
-
-        // End DMA for sprite 7
-        setBA(true);
+        endDma7();
         break;
 
     case 11:
-        // Start bad line
-        if (isBadLine)
-        {   // DMA starts on cycle 15
-            setBA(false);
-        }
+        startBadline();
 
         delay = 4;
         break;
@@ -358,32 +329,20 @@ event_clock_t MOS656X::clockPAL()
 
     case 54:
         checkSpriteDma();
-
-        // Start DMA for sprite 0
-        setBA(!(sprite_dma & 0x01));
+        startDma0();
         break;
 
     case 55:
         checkSpriteDmaExp();
+        startDma0();
 
-        // Start DMA for sprite 0
-        if (sprite_dma & 0x01)
-        {
-            setBA(false);
-        }
-        else
-        {
-            setBA(true);
-            // No sprites before next compulsory cycle
-            if (!(sprite_dma & 0x1f))
-                delay = 8;
-        }
+        // No sprites before next compulsory cycle
+        if (!(sprite_dma & 0x1f))
+            delay = 8;
         break;
 
     case 56:
-        // Start DMA for sprite 1
-        if (sprite_dma & 0x02)
-            setBA(false);
+        startDma1();
         break;
 
     case 57:
@@ -391,33 +350,23 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 58:
-        // Start DMA for sprite 2
-        if (sprite_dma & 0x04)
-            setBA(false);
+        startDma2();
         break;
 
     case 59:
-        // End DMA for sprite 0
-        if (!(sprite_dma & 0x06))
-            setBA(true);
+        endDma0();
         break;
 
     case 60:
-        // Start DMA for sprite 3
-        if (sprite_dma & 0x08)
-            setBA(false);
+        startDma3();
         break;
 
     case 61:
-        // End DMA for sprite 1
-        if (!(sprite_dma & 0x0c))
-            setBA(true);
+        endDma1();
         break;
 
     case 62:
-        // Start DMA for sprite 4
-        if (sprite_dma & 0x10)
-            setBA(false);
+        startDma4();
         break;
 
     default:
@@ -435,66 +384,43 @@ event_clock_t MOS656X::clockNTSC()
     {
     case 0:
         checkVblank();
-
-        // Start DMA for sprite 5
-        if (sprite_dma & 0x20)
-            setBA(false);
+        startDma5();
         break;
 
     case 1:
         vblank();
+        endDma3();
 
-        // End DMA for sprite 3
-        if (!(sprite_dma & 0x30))
-        {
-            setBA(true);
-            // No sprites before next compulsory cycle
-            if (!(sprite_dma & 0xf8))
-                delay = 10;
-        }
+        // No sprites before next compulsory cycle
+        if (!(sprite_dma & 0xf8))
+            delay = 10;
         break;
 
     case 2:
-        // Start DMA for sprite 6
-        if (sprite_dma & 0x40)
-            setBA(false);
+        startDma6();
         break;
 
     case 3:
-        // End DMA for sprite 4
-         if (!(sprite_dma & 0x60))
-            setBA(true);
+        endDma4();
         break;
 
     case 4:
-        // Start DMA for sprite 7
-        if (sprite_dma & 0x80)
-            setBA(false);
+        startDma7();
         break;
 
     case 5:
-        // End DMA for sprite 5
-        if (!(sprite_dma & 0xc0))
-        {
-            setBA(true);
-            delay = 5;
-        }
-        else
-            delay = 2;
+        endDma5();
+
+        delay = (sprite_dma & 0xc0) ? 2 : 5;
         break;
 
     case 6:
         break;
 
     case 7:
-        // End DMA for sprite 6
-        if (!(sprite_dma & 0x80))
-        {
-            setBA(true);
-            delay = 3;
-        }
-        else
-            delay = 2;
+        endDma6();
+
+        delay = (sprite_dma & 0x80) ? 2 : 3;
         break;
 
     case 8:
@@ -502,9 +428,7 @@ event_clock_t MOS656X::clockNTSC()
 
     case 9:
         updateMc();
-
-        // End DMA for sprite 7
-        setBA(true);
+        endDma7();
 
         delay = 2;
         break;
@@ -513,11 +437,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 11:
-        // Start bad line
-        if (isBadLine)
-        {   // DMA starts on cycle 15
-            setBA(false);
-        }
+        startBadline();
 
         delay = 4;
         break;
@@ -535,32 +455,20 @@ event_clock_t MOS656X::clockNTSC()
 
     case 55:
         checkSpriteDmaExp();
-
-        // Start DMA for sprite 0
-        setBA(!(sprite_dma & 0x01));
+        startDma0();
         break;
 
     case 56:
         checkSpriteDma();
+        startDma0();
 
-        // Start DMA for sprite 0
-        if (sprite_dma & 0x01)
-        {
-            setBA(false);
-        }
-        else
-        {
-            setBA(true);
-            // No sprites before next compulsory cycle
-            if (!(sprite_dma & 0x1f))
-                delay = 8;
-        }
+        // No sprites before next compulsory cycle
+        if (!(sprite_dma & 0x1f))
+            delay = 8;
         break;
 
     case 57:
-        // Start DMA for sprite 1
-        if (sprite_dma & 0x02)
-            setBA(false);
+        startDma1();
         break;
 
     case 58:
@@ -568,39 +476,27 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 59:
-        // Start DMA for sprite 2
-        if (sprite_dma & 0x04)
-            setBA(false);
+        startDma2();
         break;
 
     case 60:
-        // End DMA for sprite 0
-        if (!(sprite_dma & 0x06))
-            setBA(true);
+        endDma0();
         break;
 
     case 61:
-        // Start DMA for sprite 3
-        if (sprite_dma & 0x08)
-            setBA(false);
+        startDma3();
         break;
 
     case 62:
-        // End DMA for sprite 1
-        if (!(sprite_dma & 0x0c))
-            setBA(true);
+        endDma1();
         break;
 
     case 63:
-        // Start DMA for sprite 4
-        if (sprite_dma & 0x10)
-            setBA(false);
+        startDma4();
         break;
 
     case 64:
-        // End DMA for sprite 2
-        if (!(sprite_dma & 0x18))
-            setBA(true);
+        endDma2();
         break;
 
     default:
@@ -618,70 +514,47 @@ event_clock_t MOS656X::clockOldNTSC()
     {
     case 0:
         checkVblank();
-
-        // End DMA for sprite 2
-        if (!(sprite_dma & 0x18))
-            setBA(true);
+        endDma2();
         break;
 
     case 1:
         vblank();
+        startDma5();
 
-        // Start DMA for sprite 5
-        if (sprite_dma & 0x20)
-            setBA(false);
         // No sprites before next compulsory cycle
-        else if (!(sprite_dma & 0xf8))
+        if (!(sprite_dma & 0xf8))
            delay = 10;
         break;
 
     case 2:
-        // End DMA for sprite 3
-        if (!(sprite_dma & 0x30))
-            setBA(true);
+        endDma3();
         break;
 
     case 3:
-        // Start DMA for sprite 6
-        if (sprite_dma & 0x40)
-            setBA(false);
+        startDma6();
         break;
 
     case 4:
-        // End DMA for sprite 4
-         if (!(sprite_dma & 0x60))
-            setBA(true);
+        endDma4();
         break;
 
     case 5:
-        // Start DMA for sprite 7
-        if (sprite_dma & 0x80)
-            setBA(false);
+        startDma7();
         break;
 
     case 6:
-        // End DMA for sprite 5
-        if (!(sprite_dma & 0xc0))
-        {
-            setBA(true);
-            delay = 5;
-        }
-        else
-            delay = 2;
+        endDma5();
+
+        delay = (sprite_dma & 0xc0) ? 2 : 5;
         break;
 
     case 7:
         break;
 
     case 8:
-        // End DMA for sprite 6
-        if (!(sprite_dma & 0x80))
-        {
-            setBA(true);
-            delay = 3;
-        }
-        else
-            delay = 2;
+        endDma6();
+
+        delay = (sprite_dma & 0x80) ? 2 : 3;
         break;
 
     case 9:
@@ -689,17 +562,11 @@ event_clock_t MOS656X::clockOldNTSC()
 
     case 10:
         updateMc();
-
-        // End DMA for sprite 7
-        setBA(true);
+        endDma7();
         break;
 
     case 11:
-        // Start bad line
-        if (isBadLine)
-        {   // DMA starts on cycle 15
-            setBA(false);
-        }
+        startBadline();
 
         delay = 4;
         break;
@@ -717,34 +584,21 @@ event_clock_t MOS656X::clockOldNTSC()
 
     case 55:
         checkSpriteDmaExp();
-
-        // Start DMA for sprite 0
-        setBA(!(sprite_dma & 0x01));
+        startDma0();
         break;
 
     case 56:
         checkSpriteDma();
+        startDma0();
 
-        // Start DMA for sprite 0
-        if (sprite_dma & 0x01)
-        {
-            setBA(false);
-        }
-        else
-        {
-            setBA(true);
-            // No sprites before next compulsory cycle
-            if (!(sprite_dma & 0x1f))
-                delay = 8;
-        }
+        // No sprites before next compulsory cycle
+        if (!(sprite_dma & 0x1f))
+            delay = 8;
         break;
 
     case 57:
         checkSpriteDisplay();
-
-        // Start DMA for sprite 1
-        if (sprite_dma & 0x02)
-            setBA(false);
+        startDma1();
 
         delay = 2;
         break;
@@ -753,33 +607,23 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 59:
-        // Start DMA for sprite 2
-        if (sprite_dma & 0x04)
-            setBA(false);
+        startDma2();
         break;
 
     case 60:
-        // End DMA for sprite 0
-        if (!(sprite_dma & 0x06))
-            setBA(true);
+        endDma0();
         break;
 
     case 61:
-        // Start DMA for sprite 3
-        if (sprite_dma & 0x08)
-            setBA(false);
+        startDma3();
         break;
 
     case 62:
-        // End DMA for sprite 1
-        if (!(sprite_dma & 0x0c))
-            setBA(true);
+        endDma1();
         break;
 
     case 63:
-        // Start DMA for sprite 4
-        if (sprite_dma & 0x10)
-            setBA(false);
+        startDma4();
         break;
 
     default:
