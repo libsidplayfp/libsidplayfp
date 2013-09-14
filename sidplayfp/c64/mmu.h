@@ -90,18 +90,18 @@ public:
 
     // RAM access methods
     uint8_t readMemByte(uint_least16_t addr) { return ramBank.peek(addr); }
-    uint_least16_t readMemWord(uint_least16_t addr) { return endian_little16(ramBank.array()+addr); }
+    uint_least16_t readMemWord(uint_least16_t addr) { return endian_little16(ramBank.ram+addr); }
 
     void writeMemByte(uint_least16_t addr, uint8_t value) { ramBank.poke(addr, value); }
-    void writeMemWord(uint_least16_t addr, uint_least16_t value) { endian_little16(ramBank.array()+addr, value); }
+    void writeMemWord(uint_least16_t addr, uint_least16_t value) { endian_little16(ramBank.ram+addr, value); }
 
     void fillRam(uint_least16_t start, uint8_t value, unsigned int size)
     {
-        memset(ramBank.array()+start, value, size);
+        memset(ramBank.ram+start, value, size);
     }
     void fillRam(uint_least16_t start, const uint8_t* source, unsigned int size)
     {
-        memcpy(ramBank.array()+start, source, size);
+        memcpy(ramBank.ram+start, source, size);
     }
 
     // SID specific hacks

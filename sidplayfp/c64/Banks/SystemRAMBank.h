@@ -34,6 +34,8 @@
  */
 class SystemRAMBank : public Bank
 {
+    friend class MMU;
+
 private:
     /** C64 RAM area */
     uint8_t ram[65536];
@@ -57,11 +59,6 @@ public:
     void poke(uint_least16_t address, uint8_t value)
     {
         ram[address] = value;
-    }
-
-    uint8_t* array()
-    {
-        return ram;
     }
 };
 
