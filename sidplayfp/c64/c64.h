@@ -287,7 +287,7 @@ void c64::interruptIRQ (bool state)
 void c64::setBA (bool state)
 {
     /* only react to changes in state */
-    if ((state ^ oldBAState) == false)
+    if (state == oldBAState)
         return;
 
     oldBAState = state;
