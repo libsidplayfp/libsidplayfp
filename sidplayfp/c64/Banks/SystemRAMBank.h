@@ -38,13 +38,13 @@ class SystemRAMBank : public Bank
 
 private:
     /** C64 RAM area */
-    uint8_t ram[65536];
+    uint8_t ram[0x10000];
 
 public:
     /// Initialize RAM with powerup pattern
     void reset()
     {
-        memset(ram, 0, 65536);
+        memset(ram, 0, 0x10000);
         for (int i = 0x07c0; i < 0x10000; i += 128)
         {
             memset(ram+i, 0xff, 64);
