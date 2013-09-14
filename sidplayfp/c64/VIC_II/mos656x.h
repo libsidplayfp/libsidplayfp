@@ -218,7 +218,7 @@ private:
     {
         const uint8_t y = rasterY & 0xff;
         uint8_t mask = 1;
-        for (unsigned int i=1; i<8; i++, mask<<=1)
+        for (unsigned int i=0; i<8; i++, mask<<=1)
         {
             if ((sprite_enable & mask) && (y == regs[i << 1]))
             {
