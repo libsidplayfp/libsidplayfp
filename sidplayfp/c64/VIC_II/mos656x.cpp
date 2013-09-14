@@ -31,18 +31,12 @@
 
 #include "sidplayfp/sidendian.h"
 
-typedef struct
+const MOS656X::model_data_t MOS656X::modelData[] =
 {
-    unsigned int cyclesPerLine;
-    unsigned int rasterLines;
-} model_data_t;
-
-const model_data_t modelData[] =
-{
-    {262, 64}, // Old NTSC
-    {263, 65}, // NTSC-M
-    {312, 63}, // PAL-B
-    {312, 65}, // PAL-N
+    {262, 64, &MOS656X::clockOldNTSC},  // Old NTSC
+    {263, 65, &MOS656X::clockNTSC},     // NTSC-M
+    {312, 63, &MOS656X::clockPAL},      // PAL-B
+    {312, 65, &MOS656X::clockNTSC},     // PAL-N
 };
 
 const char *MOS656X::credit =
@@ -89,20 +83,7 @@ void MOS656X::chip(model_t model)
 {
     maxRasters    = modelData[model].cyclesPerLine;
     cyclesPerLine = modelData[model].rasterLines;
-
-    switch (model)
-    {
-    case MOS6567R56A:
-        clock = &MOS656X::clockOldNTSC;
-        break;
-    case MOS6567R8:
-    case MOS6572:
-        clock = &MOS656X::clockNTSC;
-        break;
-    case MOS6569:
-        clock = &MOS656X::clockPAL;
-        break;
-    }
+    clock         = modelData[model].clock;
 
     reset ();
 }

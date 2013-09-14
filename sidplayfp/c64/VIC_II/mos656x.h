@@ -39,7 +39,17 @@ public:
     } model_t;
 
 private:
+    typedef struct
+    {
+        unsigned int cyclesPerLine;
+        unsigned int rasterLines;
+        event_clock_t (MOS656X::*clock)();
+    } model_data_t;
+
+private:
     static const char *credit;
+
+    static const model_data_t modelData[];
 
 private:
     /** raster IRQ flag */
