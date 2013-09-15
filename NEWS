@@ -1,3 +1,10 @@
+1.1.0 2013-09-xx
+* Rework mixer to fix bug #7
+* Rework VIC emulation to be more faithful to PAL-NTSC models difference
+* Sync reSID codebase to fix a couple of regressions (See VICE bug #290)
+
+
+
 1.0.3 2013-07-06
 * Fix missing constructor in ExtraSidBank.h
 * Fix a regression in resid's external filter
