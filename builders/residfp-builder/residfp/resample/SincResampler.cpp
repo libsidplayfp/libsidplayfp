@@ -163,7 +163,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         * The filter test program indicates that the filter performs well, though. */
     }
 
-    std::ostringstream o(std::ostringstream::out);
+    std::ostringstream o;
     o << firN << "," << firRES << "," << cyclesPerSampleD;
     const std::string firKey = o.str();
     std::map<std::string, array<short> >::iterator lb = FIR_CACHE.lower_bound(firKey);
