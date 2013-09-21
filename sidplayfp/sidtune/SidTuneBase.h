@@ -24,7 +24,6 @@
 #define SIDTUNEBASE_H
 
 #include <stdint.h>
-#include <fstream>
 #include <memory>
 
 #include "sidplayfp/Buffer.h"
