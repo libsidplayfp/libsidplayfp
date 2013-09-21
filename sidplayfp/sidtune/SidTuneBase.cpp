@@ -169,14 +169,14 @@ bool SidTuneBase::placeSidTuneInC64mem(sidmemory* mem)
 
 void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
 {
-    std::ifstream inFile(fileName, std::ios::in|std::ios::binary);
+    std::ifstream inFile(fileName, std::ifstream::binary);
 
     if ( !inFile.is_open() )
     {
         throw loadError(ERR_CANT_OPEN_FILE);
     }
 
-    inFile.seekg(0, std::ios::end);
+    inFile.seekg(0, inFile.end);
     const uint_least32_t fileLen = (uint_least32_t)inFile.tellg();
 
     if ( fileLen == 0 )
@@ -195,7 +195,7 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
         throw loadError(ERR_NOT_ENOUGH_MEMORY);
     }
 
-    inFile.seekg(0, std::ios::beg);
+    inFile.seekg(0, inFile.beg);
 
     inFile.read((char*)fileBuf.get(), fileLen);
 
