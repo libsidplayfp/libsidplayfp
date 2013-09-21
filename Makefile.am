@@ -59,7 +59,6 @@ endif
 #=========================================================
 # libsidplayfp
 sidplayfp_libsidplayfp_la_SOURCES = \
-sidplayfp/Buffer.h \
 sidplayfp/component.h \
 sidplayfp/config.cpp \
 sidplayfp/EventScheduler.cpp \
@@ -79,7 +78,6 @@ sidplayfp/sidmemory.h \
 sidplayfp/sidplayfp.cpp \
 sidplayfp/SidInfoImpl.h \
 sidplayfp/SidTune.cpp \
-sidplayfp/SmartPtr.h \
 sidplayfp/psiddrv.a65 \
 sidplayfp/romCheck.h \
 sidplayfp/sidemu.h \
@@ -113,6 +111,7 @@ sidplayfp/c64/CIA/mos6526.cpp \
 sidplayfp/c64/CIA/mos6526.h \
 sidplayfp/c64/CIA/timer.cpp \
 sidplayfp/c64/CIA/timer.h \
+sidplayfp/sidtune/Buffer.h \
 sidplayfp/sidtune/MUS.cpp \
 sidplayfp/sidtune/MUS.h \
 sidplayfp/sidtune/p00.cpp \
@@ -127,6 +126,7 @@ sidplayfp/sidtune/SidTuneCfg.h \
 sidplayfp/sidtune/SidTuneInfoImpl.h \
 sidplayfp/sidtune/SidTuneTools.cpp \
 sidplayfp/sidtune/SidTuneTools.h \
+sidplayfp/sidtune/SmartPtr.h \
 utils/iniParser.cpp \
 utils/iniParser.h \
 utils/SidDatabase.cpp \
