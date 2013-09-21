@@ -30,7 +30,7 @@ sidemu *sidbuilder::lock (EventContext *env, SidConfig::sid_model_t model)
 {
     m_status = true;
 
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         sidemu *sid = (*it);
         if (sid->lock (env))
@@ -48,7 +48,7 @@ sidemu *sidbuilder::lock (EventContext *env, SidConfig::sid_model_t model)
 
 void sidbuilder::unlock (sidemu *device)
 {
-    std::set<sidemu *>::iterator it = sidobjs.find(device);
+    emuset_t::iterator it = sidobjs.find(device);
     if (it != sidobjs.end())
     {
         (*it)->unlock ();

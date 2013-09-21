@@ -37,12 +37,15 @@ class EventContext;
 class sidbuilder
 {
 private:
+    typedef std::set<sidemu*> emuset_t;
+ 
+private:
     const char * const m_name;
 
 protected:
     std::string m_errorBuffer;
 
-    std::set<sidemu *> sidobjs;
+    emuset_t sidobjs;
 
     bool m_status;
 
