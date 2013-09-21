@@ -37,7 +37,7 @@
 #endif
 
 #ifdef PC64_TESTSUITE
-#  include <string.h>
+#  include <string>
 #endif
 
 
@@ -89,12 +89,13 @@ private:
 
 #ifdef PC64_TESTSUITE
     void load(const char *file)
+    void load(const char *file)
     {
-        char name[0x100] = PC64_TESTSUITE;
-        strcat (name, file);
-        strcat (name, ".prg");
+        std::string name(PC64_TESTSUITE);
+        name.append(file);
+        name.append(".prg");
 
-        m_tune->load (name);
+        m_tune->load(name.c_str());
         m_tune->selectSong(0);
         initialise();
     }
