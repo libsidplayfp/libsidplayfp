@@ -74,7 +74,7 @@ const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 const char P00_ID[]         = "C64File";
 
 
-SidTuneBase* p00::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& dataBuf)
+SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
 {
     const char      *ext     = SidTuneTools::fileExtOfPath(fileName);
     const char      *format  = 0;

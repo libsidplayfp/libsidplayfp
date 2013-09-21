@@ -167,7 +167,7 @@ bool SidTuneBase::placeSidTuneInC64mem(sidmemory* mem)
     return false;
 }
 
-void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef)
+void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
 {
     std::ifstream inFile(fileName, std::ifstream::binary);
 
@@ -184,7 +184,7 @@ void SidTuneBase::loadFile(const char* fileName, Buffer_sidtt<const uint_least8_
          throw loadError(ERR_EMPTY);
     }
 
-    Buffer_sidtt<const uint_least8_t> fileBuf;
+    buffer_t fileBuf;
 
     try
     {
@@ -263,13 +263,13 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
     }
     memcpy(tmpBuf, buffer, bufferLen);
 
-    Buffer_sidtt<const uint_least8_t> buf1(tmpBuf, bufferLen);
+    buffer_t buf1(tmpBuf, bufferLen);
 
     // Here test for the possible single file formats. --------------
     std::auto_ptr<SidTuneBase> s(PSID::load(buf1));
     if (!s.get())
     {
-        Buffer_sidtt<const uint_least8_t> buf2;  // empty
+        buffer_t buf2;  // empty
         s.reset(MUS::load(buf1, buf2, 0, true));
     }
 
@@ -284,7 +284,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
 }
 
 void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileName,
-                            Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName)
+                            buffer_t& buf, bool isSlashedFileName)
 {
     // Make a copy of the data file name and path, if available.
     if ( dataFileName != 0 )
@@ -366,7 +366,7 @@ void SidTuneBase::createNewFileName(std::string& destString,
 
 SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, bool separatorIsSlash)
 {
-    Buffer_sidtt<const uint_least8_t> fileBuf1;
+    buffer_t fileBuf1;
 
     loadFile(fileName, fileBuf1);
 
@@ -374,7 +374,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
     std::auto_ptr<SidTuneBase> s(PSID::load(fileBuf1));
     if (!s.get())
     {
-        Buffer_sidtt<const uint_least8_t> fileBuf2;
+        buffer_t fileBuf2;
 
         // Try some native C64 file formats
         s.reset(MUS::load(fileBuf1, fileBuf2, 0, true));

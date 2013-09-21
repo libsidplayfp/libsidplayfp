@@ -111,7 +111,7 @@ const char ERR_INVALID[]      = "ERROR: File contains invalid data";
 static const int psid_maxStrLen = 32;
 
 
-SidTuneBase* PSID::load(Buffer_sidtt<const uint_least8_t>& dataBuf)
+SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
     // File format check
     if (dataBuf.len()<6)
@@ -128,7 +128,7 @@ SidTuneBase* PSID::load(Buffer_sidtt<const uint_least8_t>& dataBuf)
     return tune.release();
 }
 
-void PSID::tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf)
+void PSID::tryLoad(buffer_t& dataBuf)
 {
     SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
     SidTuneInfo::compatibility_t compatibility = SidTuneInfo::COMPATIBILITY_C64;

@@ -33,7 +33,7 @@ private:
 
 public:
     static SidTuneBase* load(const char *fileName,
-                             Buffer_sidtt<const uint_least8_t>& dataBuf);
+                             buffer_t& dataBuf);
 
     virtual ~prg() {}
 

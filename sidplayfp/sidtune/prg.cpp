@@ -33,7 +33,7 @@ const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 
 
-SidTuneBase* prg::load(const char *fileName, Buffer_sidtt<const uint_least8_t>& dataBuf)
+SidTuneBase* prg::load(const char *fileName, buffer_t& dataBuf)
 {
     const char *ext = SidTuneTools::fileExtOfPath(fileName);
     if ( (MYSTRICMP(ext,".prg")!=0) &&

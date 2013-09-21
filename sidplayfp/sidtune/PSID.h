@@ -32,7 +32,7 @@ private:
     bool resolveAddrs(const uint_least8_t *c64data);
     bool checkRelocInfo();
 
-    void tryLoad(Buffer_sidtt<const uint_least8_t>& dataBuf);
+    void tryLoad(buffer_t& dataBuf);
 
 protected:
     PSID() {}
@@ -40,7 +40,7 @@ protected:
 public:
     virtual ~PSID() {}
 
-    static SidTuneBase* load(Buffer_sidtt<const uint_least8_t>& dataBuf);
+    static SidTuneBase* load(buffer_t& dataBuf);
 
     virtual const char *createMD5(char *md5);
 

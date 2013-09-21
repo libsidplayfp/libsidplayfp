@@ -55,6 +55,9 @@ public:
 class SidTuneBase
 {
 protected:
+    typedef Buffer_sidtt<const uint_least8_t> buffer_t;
+
+protected:
     /// Also PSID file format limit.
     static const unsigned int MAX_SONGS = 256;
 
@@ -125,7 +128,7 @@ protected:  // -------------------------------------------------------------
     /// For files with header: offset to real data
     uint_least32_t fileOffset;
 
-    Buffer_sidtt<const uint_least8_t> cache;
+    buffer_t cache;
 
 protected:
     SidTuneBase();
@@ -134,7 +137,7 @@ protected:
     * Does not affect status of object, and therefore can be used
     * to load files. Error string is put into info.statusString, though.
     */
-    static void loadFile(const char* fileName, Buffer_sidtt<const uint_least8_t>& bufferRef);
+    static void loadFile(const char* fileName,buffer_t& bufferRef);
 
     /// Convert 32-bit PSID-style speed word to internal tables.
     void convertOldStyleSpeedToTables(uint_least32_t speed,
@@ -166,7 +169,7 @@ protected:
     * separator is the forward slash.
     */
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
-                        Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName);
+                        buffer_t& buf, bool isSlashedFileName);
 
     class PetsciiToAscii
     {

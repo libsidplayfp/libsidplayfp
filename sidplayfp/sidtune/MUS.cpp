@@ -79,7 +79,7 @@ void MUS::setPlayerAddress()
 }
 
 void MUS::acceptSidTune(const char* dataFileName, const char* infoFileName,
-                            Buffer_sidtt<const uint_least8_t>& buf, bool isSlashedFileName)
+                            buffer_t& buf, bool isSlashedFileName)
 {
     setPlayerAddress();
     SidTuneBase::acceptSidTune(dataFileName, infoFileName, buf, isSlashedFileName);
@@ -507,8 +507,7 @@ static const uint8_t sidplayer2[] =
     0x60, 0x00, 0x20, 0x60, 0xec, 0x4c, 0x60, 0xfc, 0x20, 0x80, 0xec, 0x4c, 0x80, 0xfc
 };
 
-bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
-                             Buffer_sidtt<const uint_least8_t>& strBuf)
+bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
 {
     Buffer_sidtt<uint8_t> mergeBuf;
 
@@ -577,16 +576,16 @@ void MUS::installPlayer(sidmemory *mem)
     }
 }
 
-SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf, bool init)
+SidTuneBase* MUS::load (buffer_t& musBuf, bool init)
 {
-    Buffer_sidtt<const uint_least8_t> empty;
+    buffer_t empty;
     return load (musBuf, empty, 0, init);
 }
 
-SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf,
-                                       Buffer_sidtt<const uint_least8_t>& strBuf,
-                                       uint_least32_t fileOffset,
-                                       bool init)
+SidTuneBase* MUS::load (buffer_t& musBuf,
+                            buffer_t& strBuf,
+                            uint_least32_t fileOffset,
+                            bool init)
 {
     uint_least32_t voice3Index;
     SmartPtr_sidtt<const uint8_t> spPet(musBuf.get()+fileOffset, musBuf.len()-fileOffset);
@@ -600,11 +599,11 @@ SidTuneBase* MUS::load (Buffer_sidtt<const uint_least8_t>& musBuf,
     return tune.release();
 }
 
-void MUS::tryLoad(Buffer_sidtt<const uint_least8_t>& musBuf,
-                                       Buffer_sidtt<const uint_least8_t>& strBuf,
-                                       SmartPtr_sidtt<const uint8_t> &spPet,
-                                       uint_least32_t voice3Index,
-                                       bool init)
+void MUS::tryLoad(buffer_t& musBuf,
+                    buffer_t& strBuf,
+                    SmartPtr_sidtt<const uint8_t> &spPet,
+                    uint_least32_t voice3Index,
+                    bool init)
 {
     if (init)
     {
