@@ -31,20 +31,16 @@ void EventScheduler::reset()
 
 void EventScheduler::cancel(Event &event)
 {
-    Event *scan = firstEvent;
-    Event *prev = 0;
-    while (scan)
+    Event **scan = &firstEvent;
+
+    while (*scan)
     {
-        if (&event == scan)
+        if (&event == *scan)
         {
-            if (prev)
-                prev->next = scan->next;
-            else
-                firstEvent = scan->next;
+            *scan = (*scan)->next;
             break;
         }
-        prev = scan;
-        scan = scan->next;
+        scan = &((*scan)->next);
     }
 }
 
