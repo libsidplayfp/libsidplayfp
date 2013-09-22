@@ -37,25 +37,7 @@
 #include <sstream>
 #include <utility>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#ifdef HAVE_STRCASECMP
-#  define MYSTRICMP strcasecmp
-#elif HAVE_STRICMP
-#  define MYSTRICMP stricmp
-#else
-#  error Neither strcasecmp nor stricmp is available.
-#endif
-
-#ifdef HAVE_STRNCASECMP
-#  define MYSTRNICMP strncasecmp
-#elif HAVE_STRNICMP
-#  define MYSTRNICMP strnicmp
-#else
-#  error Neither strncasecmp nor strnicmp is available.
-#endif
+#include "sidplayfp/stringutils.h"
 
 using namespace std;
 
@@ -295,7 +277,7 @@ STIL::getAbsEntry(const char *absPathToEntry, int tuneNo, STILField field)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir.data(), baseDir.size()) != 0)
+    if (!stringutils::equal(absPathToEntry, baseDir.data(), baseDir.size()))
     {
         CERR_STIL_DEBUG << "getAbsEntry() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
@@ -323,9 +305,11 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         return NULL;
     }
 
+    const size_t relPathToEntryLen = strlen(relPathToEntry);
+    
     // Fail if a section-global comment was asked for.
 
-    if (*(relPathToEntry + strlen(relPathToEntry) - 1) == '/')
+    if (*(relPathToEntry + relPathToEntryLen - 1) == '/')
     {
         CERR_STIL_DEBUG << "getEntry() section-global comment was asked for - failed" << endl;
         lastError = WRONG_ENTRY;
@@ -343,8 +327,8 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 
     // Find out whether we have this entry in the buffer.
 
-    if ((MYSTRNICMP(entrybuf, relPathToEntry, strlen(relPathToEntry)) != 0) ||
-        ((((size_t)(strchr(entrybuf, '\n') - entrybuf)) != strlen(relPathToEntry))
+    if ((!stringutils::equal(entrybuf, relPathToEntry, relPathToEntryLen)) ||
+        ((((size_t)(strchr(entrybuf, '\n') - entrybuf)) != relPathToEntryLen)
          && (STILVersion > 2.59f)))
     {
 
@@ -414,7 +398,7 @@ STIL::getAbsBug(const char *absPathToEntry, int tuneNo)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir.data(), baseDir.size()) != 0)
+    if (!stringutils::equal(absPathToEntry, baseDir.data(), baseDir.size()))
     {
         CERR_STIL_DEBUG << "getAbsBug() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
@@ -452,8 +436,10 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
     // If the baseDir was changed, we'll have to read it in again,
     // even if it might be in the buffer already.
 
-    if ((MYSTRNICMP(bugbuf, relPathToEntry, strlen(relPathToEntry)) != 0) ||
-        ((((size_t)(strchr(bugbuf, '\n') - bugbuf)) != strlen(relPathToEntry)) &&
+    const size_t relPathToEntryLen = strlen(relPathToEntry);
+
+    if ((!stringutils::equal(bugbuf, relPathToEntry, relPathToEntryLen)) ||
+        ((((size_t)(strchr(bugbuf, '\n') - bugbuf)) != relPathToEntryLen) &&
          (STILVersion > 2.59f)))
     {
 
@@ -523,7 +509,7 @@ STIL::getAbsGlobalComment(const char *absPathToEntry)
 
     // Determine if the baseDir is in the given pathname.
 
-    if (MYSTRNICMP(absPathToEntry, baseDir.data(), baseDir.size()) != 0)
+    if (!stringutils::equal(absPathToEntry, baseDir.data(), baseDir.size()))
     {
         CERR_STIL_DEBUG << "getAbsGC() failed: baseDir=" << baseDir << ", absPath=" << absPathToEntry << endl;
         lastError = WRONG_DIR;
@@ -567,7 +553,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
     // If the baseDir was changed, we'll have to read it in again,
     // even if it might be in the buffer already.
 
-    if ((MYSTRNICMP(globalbuf, dir.data(), pathLen) != 0) ||
+    if ((!stringutils::equal(globalbuf, dir.data(), pathLen)) ||
         ((((size_t)(strchr(globalbuf, '\n') - globalbuf)) != pathLen) &&
          (STILVersion > 2.59f)))
     {
@@ -733,7 +719,7 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
         // Search for the start of a dir separator first.
 
-        if (isSTILFile && !newDir && (MYSTRNICMP(line, "### ", 4) == 0))
+        if (isSTILFile && !newDir && stringutils::equal(line, "### ", 4))
         {
             newDir = true;
             continue;
@@ -806,7 +792,7 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
 
     // Determine whether a section-global comment is asked for.
 
-    size_t entryStrLen = strlen(entryStr);
+    const size_t entryStrLen = strlen(entryStr);
     bool globComm = (pathLen == entryStrLen);
 
     // Find it in the table.
@@ -842,7 +828,7 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
         if (*line == '/')
         {
 
-            if (MYSTRNICMP(elem->first.data(), line, pathLen) != 0)
+            if (!stringutils::equal(elem->first.data(), line, pathLen))
             {
                 // We are outside the section - get out of the loop,
                 // which will fail the search.
@@ -852,28 +838,19 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
             // Check whether we need to find a section-global comment or
             // a specific entry.
 
-            int temp;
-
             if (globComm || (STILVersion > 2.59f))
             {
-                temp = MYSTRICMP(line, entryStr);
+                foundIt = stringutils::equal(line, entryStr);
             }
             else
             {
                 // To be compatible with older versions of STIL, which may have
                 // the tune designation on the first line of a STIL entry
                 // together with the pathname.
-                temp = MYSTRNICMP(line, entryStr, entryStrLen);
+                foundIt = stringutils::equal(line, entryStr, entryStrLen);
             }
 
             CERR_STIL_DEBUG << "pos2Entry() line=" << line << endl;
-
-            if (temp == 0)
-            {
-                // Found it!
-                foundIt = true;
-            }
-
         }
     }
     while (!foundIt);

@@ -33,15 +33,12 @@
 #include "SidTuneTools.h"
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidmemory.h"
+#include "sidplayfp/stringutils.h"
 
 #include "MUS.h"
 #include "p00.h"
 #include "prg.h"
 #include "PSID.h"
-
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
 
 // Error and status message strings.
 const char ERR_EMPTY[]               = "SIDTUNE ERROR: No data to load";
@@ -389,13 +386,13 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                 // 1st data file was loaded into ``fileBuf1'',
                 // so we load the 2nd one into ``fileBuf2''.
                 // Do not load the first file again if names are equal.
-                if (MYSTRICMP(fileName, fileName2.c_str()) != 0)
+                if (!stringutils::equal(fileName, fileName2.data(), fileName2.size()))
                 {
                     try
                     {
                         loadFile(fileName2.c_str(), fileBuf2);
                         // Check if tunes in wrong order and therefore swap them here
-                        if (MYSTRICMP (fileNameExtensions[n], ".mus") == 0)
+                        if (stringutils::equal(fileNameExtensions[n], ".mus"))
                         {
                             std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf2, fileBuf1, 0, true));
                             if (s2.get())

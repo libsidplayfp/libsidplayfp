@@ -29,22 +29,6 @@
 #  include "config.h"
 #endif
 
-#ifdef HAVE_STRCASECMP
-#   define MYSTRICMP strcasecmp
-#elif HAVE_STRICMP
-#   define MYSTRICMP stricmp
-#else
-#  error Neither strcasecmp nor stricmp is available.
-#endif
-
-#ifdef HAVE_STRNCASECMP
-#   define MYSTRNICMP strncasecmp
-#elif HAVE_STRNICMP
-#   define MYSTRNICMP strnicmp
-#else
-#  error Neither strncasecmp nor strnicmp is available.
-#endif
-
 class SidTuneTools
 {
  public:

@@ -83,6 +83,7 @@ sidplayfp/romCheck.h \
 sidplayfp/sidemu.h \
 sidplayfp/sidendian.h \
 sidplayfp/sidrandom.h \
+sidplayfp/stringutils.h \
 sidplayfp/c64/Banks/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
