@@ -125,7 +125,11 @@ void Mixer::event()
         std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft - 1));
     }
     else
-        m_sampleIndex++; // FIXME this sucks
+    {
+        // FIXME this sucks
+        m_sampleIndex++;
+        std::for_each(m_chips.begin(), m_chips.end(), bufferPos(0));
+    }
 
     /* Post a callback to ourselves. */
     event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
