@@ -629,41 +629,33 @@ STIL::determineEOL(ifstream &stilFile)
 
     stilFile.seekg(0);
 
-    // Read in the first line from stilFile to determine what the
-    // EOL character is (it can be different from OS to OS).
-
-    char line[STIL_MAX_LINE_SIZE + 5];
-
-    stilFile.read(line, sizeof(line) - 1);
-    line[sizeof(line) - 1] = '\0';
-
-    CERR_STIL_DEBUG << "detEOL() line=" << line << endl;
-
-    // Now find out what the EOL char is (or are).
-
     STIL_EOL = '\0';
     STIL_EOL2 = '\0';
 
-    int i = 0;
-
-    while (line[i] != '\0')
+    // Determine what the EOL character is
+    // (it can be different from OS to OS).
+    istream::sentry se(stilFile, true);
+    if (se)
     {
-        if ((line[i] == 0x0d) || (line[i] == 0x0a))
+        streambuf *sb = stilFile.rdbuf();
+
+        const int eof = char_traits<char>::eof();
+
+        while (sb->sgetc() != eof)
         {
-            if (STIL_EOL == '\0')
+            const int c = sb->sbumpc();
+            if ((c == '\n') || (c == '\r'))
             {
-                STIL_EOL = line[i];
-            }
-            else
-            {
-                if (line[i] != STIL_EOL)
+                STIL_EOL = c;
+
+                if (c == '\r')
                 {
-                    STIL_EOL2 = line[i];
+                    if (sb->sgetc() == '\n')
+                        STIL_EOL2 = '\n';
                 }
+                break;
             }
         }
-
-        i++;
     }
 
     if (STIL_EOL == '\0')
