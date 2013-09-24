@@ -114,10 +114,10 @@ static const int psid_maxStrLen = 32;
 SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
     // File format check
-    if (dataBuf.len()<6)
+    if (dataBuf.size()<6)
         return 0;
 
-    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(dataBuf.get());
+    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
     if ( (endian_big32((const uint_least8_t*)pHeader->id)!=PSID_ID) &&
          (endian_big32((const uint_least8_t*)pHeader->id)!=RSID_ID) )
          return 0;
@@ -135,7 +135,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
 
     // Require minimum size to allow access to the first few bytes.
     // Require a valid ID and version number.
-    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(dataBuf.get());
+    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
 
     if (endian_big32((const uint_least8_t*)pHeader->id)==PSID_ID)
     {
@@ -169,7 +169,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
     // Due to security concerns, input must be at least as long as version 1
     // header plus 16-bit C64 load address. That is the area which will be
     // accessed.
-    const uint_least32_t bufLen = dataBuf.len();
+    const buffer_t::size_type bufLen = dataBuf.size();
     if ( bufLen < (sizeof(psidHeader)+2) )
     {
         throw loadError(ERR_TRUNCATED);
@@ -286,7 +286,7 @@ const char *PSID::createMD5(char *md5)
     // Include C64 data.
     sidmd5 myMD5;
     uint8_t tmp[2];
-    myMD5.append (cache.get()+fileOffset,info->m_c64dataLen);
+    myMD5.append(&cache[fileOffset], info->m_c64dataLen);
     // Include INIT and PLAY address.
     endian_little16 (tmp,info->m_initAddr);
     myMD5.append    (tmp,sizeof(tmp));

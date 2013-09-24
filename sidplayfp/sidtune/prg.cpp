@@ -43,7 +43,7 @@ SidTuneBase* prg::load(const char *fileName, buffer_t& dataBuf)
         return 0;
     }
 
-    if (dataBuf.len() < 2)
+    if (dataBuf.size() < 2)
     {
         throw loadError(ERR_TRUNCATED);
     }

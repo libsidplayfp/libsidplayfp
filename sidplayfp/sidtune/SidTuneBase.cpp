@@ -27,6 +27,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <iterator>
 
 #include "SidTuneCfg.h"
 #include "SidTuneInfoImpl.h"
@@ -157,7 +158,7 @@ bool SidTuneBase::placeSidTuneInC64mem(sidmemory* mem)
         mem->writeMemWord(0xae, end);
 
         // Copy data from cache to the correct destination.
-        mem->fillRam(info->m_loadAddr, cache.get()+fileOffset, info->m_c64dataLen);
+        mem->fillRam(info->m_loadAddr, &cache[fileOffset], info->m_c64dataLen);
 
         return true;
     }
@@ -174,27 +175,19 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
     }
 
     inFile.seekg(0, inFile.end);
-    const uint_least32_t fileLen = (uint_least32_t)inFile.tellg();
+    const size_t fileLen = (size_t)inFile.tellg();
 
     if ( fileLen == 0 )
     {
          throw loadError(ERR_EMPTY);
     }
 
-    buffer_t fileBuf;
-
-    try
-    {
-        fileBuf.assign(new uint_least8_t[fileLen], fileLen);
-    }
-    catch (std::bad_alloc const &e)
-    {
-        throw loadError(ERR_NOT_ENOUGH_MEMORY);
-    }
-
     inFile.seekg(0, inFile.beg);
 
-    inFile.read((char*)fileBuf.get(), fileLen);
+    buffer_t fileBuf;
+    fileBuf.reserve(fileLen);
+
+    fileBuf.assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
 
     if ( inFile.bad() )
     {
@@ -203,7 +196,7 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
 
     inFile.close();
 
-    bufferRef.assign(fileBuf.xferPtr(), fileBuf.xferLen());
+    bufferRef.swap(fileBuf);
 }
 
 SidTuneBase::SidTuneBase() :
@@ -222,7 +215,7 @@ SidTuneBase::SidTuneBase() :
 
 SidTuneBase* SidTuneBase::getFromStdIn()
 {
-    std::vector<uint_least8_t> fileBuf;
+    buffer_t fileBuf;
 
     // We only read as much as fits in the buffer.
     // This way we avoid choking on huge data.
@@ -249,18 +242,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
         throw loadError(ERR_FILE_TOO_LONG);
     }
 
-    uint_least8_t* tmpBuf;
-    try
-    {
-        tmpBuf = new uint_least8_t[bufferLen];
-    }
-    catch (std::bad_alloc const &e)
-    {
-        throw loadError(ERR_NOT_ENOUGH_MEMORY);
-    }
-    memcpy(tmpBuf, buffer, bufferLen);
-
-    buffer_t buf1(tmpBuf, bufferLen);
+    buffer_t buf1(buffer, buffer+bufferLen);
 
     // Here test for the possible single file formats. --------------
     std::auto_ptr<SidTuneBase> s(PSID::load(buf1));
@@ -312,12 +294,12 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     else if (info->m_startSong == 0)
         info->m_startSong++;
 
-    info->m_dataFileLen = buf.len();
-    info->m_c64dataLen = buf.len() - fileOffset;
+    info->m_dataFileLen = buf.size();
+    info->m_c64dataLen = buf.size() - fileOffset;
 
     // Calculate any remaining addresses and then
     // confirm all the file details are correct
-    resolveAddrs(buf.get() + fileOffset);
+    resolveAddrs(&buf[fileOffset]);
 
     if ( checkRelocInfo() == false )
     {
@@ -333,7 +315,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
         // We only detect an offset of two. Some position independent
         // sidtunes contain a load address of 0xE000, but are loaded
         // to 0x0FFE and call player at 0x1000.
-        info->m_fixLoad = (endian_little16(buf.get()+fileOffset)==(info->m_loadAddr+2));
+        info->m_fixLoad = (endian_little16(&buf[fileOffset])==(info->m_loadAddr+2));
     }
 
     // Check the size of the data.
@@ -347,7 +329,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
         throw loadError(ERR_EMPTY);
     }
 
-    cache.assign(buf.xferPtr(),buf.xferLen());
+    cache.swap(buf);
 }
 
 void SidTuneBase::createNewFileName(std::string& destString,

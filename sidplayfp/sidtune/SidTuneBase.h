@@ -25,15 +25,13 @@
 
 #include <stdint.h>
 #include <memory>
+#include <vector>
 
-#include "Buffer.h"
 #include "SmartPtr.h"
 
 #include "sidplayfp/SidTuneInfo.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/siddefs.h"
-
-template class Buffer_sidtt<const uint_least8_t>;
 
 class SidTuneInfoImpl;
 
@@ -55,7 +53,7 @@ public:
 class SidTuneBase
 {
 protected:
-    typedef Buffer_sidtt<const uint_least8_t> buffer_t;
+    typedef std::vector<uint_least8_t> buffer_t;
 
 protected:
     /// Also PSID file format limit.

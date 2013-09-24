@@ -509,46 +509,23 @@ static const uint8_t sidplayer2[] =
 
 bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
 {
-    Buffer_sidtt<uint8_t> mergeBuf;
-
-    const uint_least32_t mergeLen = musBuf.len()+strBuf.len();
+    const uint_least32_t mergeLen = musBuf.size()+strBuf.size();
 
     // Sanity check. I do not trust those MUS/STR files around.
-    const uint_least32_t freeSpace = endian_16(sidplayer1[1],sidplayer1[0])
+    const uint_least32_t freeSpace = endian_16(sidplayer1[1], sidplayer1[0])
                             - SIDTUNE_MUS_DATA_ADDR;
-    if ( (musBuf.len()+strBuf.len()-4) > freeSpace)
+    if ((mergeLen-4) > freeSpace)
     {
         throw loadError(ERR_SIZE_EXCEEDED);
     }
 
-    try
-    {
-        mergeBuf.assign(new uint8_t[mergeLen], mergeLen);
-    }
-    catch (std::bad_alloc const &e)
-    {
-        throw loadError(ERR_NOT_ENOUGH_MEMORY);
-    }
-
-    // Install MUS data #1 including load address.
-#ifndef SID_HAVE_BAD_COMPILER
-    memcpy(mergeBuf.get(),musBuf.get(),musBuf.len());
-#else
-    memcpy((void*)mergeBuf.get(),musBuf.get(),musBuf.len());
-#endif
-
-    if ( !strBuf.isEmpty() && info->m_sidChipBase2!=0 )
+    if (!strBuf.empty() && info->m_sidChipBase2 != 0)
     {
         // Install MUS data #2 _NOT_ including load address.
-#ifndef SID_HAVE_BAD_COMPILER
-        memcpy(mergeBuf.get()+musBuf.len(),strBuf.get(),strBuf.len());
-#else
-        memcpy((void*)(mergeBuf.get()+musBuf.len()),strBuf.get(),strBuf.len());
-#endif
+        musBuf.insert(musBuf.end(), strBuf.begin(), strBuf.end());
     }
 
-    musBuf.assign(mergeBuf.xferPtr(),mergeBuf.xferLen());
-    strBuf.erase();
+    strBuf.clear();
 
     return true;
 }
@@ -588,7 +565,7 @@ SidTuneBase* MUS::load (buffer_t& musBuf,
                             bool init)
 {
     uint_least32_t voice3Index;
-    SmartPtr_sidtt<const uint8_t> spPet(musBuf.get()+fileOffset, musBuf.len()-fileOffset);
+    SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size()-fileOffset);
     if ( !detect(&spPet[0], spPet.tellLength(), voice3Index) )
         return 0;
 
@@ -630,7 +607,7 @@ void MUS::tryLoad(buffer_t& musBuf,
         }
     }
 
-    musDataLen = musBuf.len();
+    musDataLen = musBuf.size();
     info->m_loadAddr = SIDTUNE_MUS_DATA_ADDR;
     info->m_sidChipBase1 = SIDTUNE_SID1_BASE_ADDR;
 
@@ -649,11 +626,11 @@ void MUS::tryLoad(buffer_t& musBuf,
     // If we appear to have additional data at the end, check is it's
     // another mus file (but only if a second file isn't supplied)
     bool stereo = false;
-    if ( !strBuf.isEmpty() )
+    if (!strBuf.empty())
     {
-        if ( !detect(strBuf.get(), strBuf.len(), voice3Index) )
+        if (!detect(&strBuf[0], strBuf.size(), voice3Index))
             throw loadError(ERR_2ND_INVALID);
-        spPet.setBuffer (strBuf.get(),strBuf.len());
+        spPet.setBuffer(&strBuf[0], strBuf.size());
         stereo = true;
     }
     else
