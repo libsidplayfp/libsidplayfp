@@ -371,15 +371,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
     }
 
     // Put the requested field into the result string.
-
-    if (getField(resultEntry, entrybuf, tuneNo, field) != true)
-    {
-        return NULL;
-    }
-    else
-    {
-        return resultEntry;
-    }
+    return getField(resultEntry, entrybuf, tuneNo, field) ? resultEntry : NULL;
 }
 
 const char *
@@ -482,15 +474,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
     }
 
     // Put the requested field into the result string.
-
-    if (getField(resultBug, bugbuf, tuneNo) != true)
-    {
-        return NULL;
-    }
-    else
-    {
-        return resultBug;
-    }
+    return getField(resultBug, bugbuf, tuneNo) ? resultBug : NULL;
 }
 
 const char *
@@ -603,15 +587,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
     temp++;
 
     // Check whether this is a NULL entry or not.
-
-    if (*temp == '\0')
-    {
-        return NULL;
-    }
-    else
-    {
-        return temp;
-    }
+    return *temp != '\0' ? temp : NULL;
 }
 
 //////// PRIVATE
@@ -737,7 +713,7 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
             if (newDir)
             {
 
-                streampos position = inFile.tellg() - (streampos)strlen(line) - 1L;
+                const streampos position = inFile.tellg() - (streampos)strlen(line) - 1L;
 
                 CERR_STIL_DEBUG << "getDirs() dirName=" << dirName << ", pos=" << position <<  endl;
 
@@ -780,7 +756,7 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
         return false;
     }
 
-    size_t pathLen = chrptr - entryStr + 1;
+    const size_t pathLen = chrptr - entryStr + 1;
 
     // Determine whether a section-global comment is asked for.
 
