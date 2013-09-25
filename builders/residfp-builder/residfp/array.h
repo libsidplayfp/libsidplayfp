@@ -50,7 +50,7 @@ public:
         count(new counter()),
         x(x),
         y(y),
-        data(new T[x* y]) {}
+        data(new T[x * y]) {}
 
     array(const array& p) :
         count(p.count),

@@ -324,7 +324,7 @@ int SID::clock(int cycles, short* buf)
                 delta_t = 1;
             }
 
-            for (int i = 0; i < delta_t; i ++)
+            for (int i = 0; i < delta_t; i++)
             {
                 if (resampler->input(output()))
                 {

@@ -212,7 +212,7 @@ void EnvelopeGenerator::clock()
 {
     if (envelope_pipeline)
     {
-        -- envelope_counter;
+        --envelope_counter;
         envelope_pipeline = false;
         // Check for change of exponential counter period.
         set_exponential_counter();
@@ -263,7 +263,7 @@ void EnvelopeGenerator::clock()
             // zero; to unlock this situation the state must be changed to release,
             // then to attack. This has been verified by sampling ENV3.
             //
-            ++ envelope_counter;
+            ++envelope_counter;
 
             if (envelope_counter == (unsigned char) 0xff)
             {
@@ -303,7 +303,7 @@ void EnvelopeGenerator::clock()
                 return;
             }
 
-            -- envelope_counter;
+            --envelope_counter;
             break;
         }
 

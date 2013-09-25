@@ -206,7 +206,7 @@ void SID::voiceSync(bool sync)
     if (sync)
     {
         /* Synchronize the 3 waveform generators. */
-        for (int i = 0; i < 3 ; i ++)
+        for (int i = 0; i < 3; i++)
         {
             voice[i]->wave()->synchronize(voice[(i + 1) % 3]->wave(), voice[(i + 2) % 3]->wave());
         }
@@ -215,7 +215,7 @@ void SID::voiceSync(bool sync)
     /* Calculate the time to next voice sync */
     nextVoiceSync = std::numeric_limits<int>::max();
 
-    for (int i = 0; i < 3; i ++)
+    for (int i = 0; i < 3; i++)
     {
         const int accumulator = voice[i]->wave()->readAccumulator();
         const int freq = voice[i]->wave()->readFreq();
@@ -381,7 +381,7 @@ void SID::clockSilent(int cycles)
                 delta_t = 1;
             }
 
-            for (int i = 0; i < delta_t; i ++)
+            for (int i = 0; i < delta_t; i++)
             {
                 /* clock waveform generators (can affect OSC3) */
                 voice[0]->wave()->clock();

@@ -252,7 +252,7 @@ void WaveformGenerator::clock()
 {
     if (test)
     {
-        if (shift_register_reset != 0 && -- shift_register_reset == 0)
+        if (shift_register_reset != 0 && --shift_register_reset == 0)
         {
             reset_shift_register();
         }
@@ -277,7 +277,7 @@ void WaveformGenerator::clock()
             // Pipeline: Detect rising bit, shift phase 1, shift phase 2.
             shift_pipeline = 2;
         }
-        else if (shift_pipeline != 0 && -- shift_pipeline == 0)
+        else if (shift_pipeline != 0 && --shift_pipeline == 0)
         {
             clock_shift_register();
         }
@@ -305,7 +305,7 @@ short WaveformGenerator::output(const WaveformGenerator* ringModulator)
     else
     {
         // Age floating DAC input.
-        if (floating_output_ttl != 0 && -- floating_output_ttl == 0)
+        if (floating_output_ttl != 0 && --floating_output_ttl == 0)
         {
             waveform_output = 0;
         }

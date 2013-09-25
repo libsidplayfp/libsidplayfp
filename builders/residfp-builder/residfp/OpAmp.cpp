@@ -40,9 +40,9 @@ double OpAmp::solve(double n, double vi)
     const double b_vi = (b - vi);
     const double c = n * (b_vi * b_vi);
 
-    while (true)
+    for (;;)
     {
-        double xk = x;
+        const double xk = x;
 
         // Calculate f and df.
         opamp->evaluate(x, out);
@@ -64,16 +64,7 @@ double OpAmp::solve(double n, double vi)
         }
 
         // Narrow down root bracket.
-        if (f < 0.)
-        {
-            // f(xk) < 0
-            bk = xk;
-        }
-        else
-        {
-            // f(xk) > 0
-            ak = xk;
-        }
+        (f < 0. ? bk : ak) = xk;
 
         if (x <= ak || x >= bk)
         {

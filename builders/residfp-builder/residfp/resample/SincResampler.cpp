@@ -187,11 +187,11 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         /* Calculate the sinc tables. */
         const double scale = 32768.0 * wc / cyclesPerSampleD / M_PI;
 
-        for (int i = 0; i < firRES; i ++)
+        for (int i = 0; i < firRES; i++)
         {
             const double jPhase = (double) i / firRES + firN / 2;
 
-            for (int j = 0; j < firN; j ++)
+            for (int j = 0; j < firN; j++)
             {
                 const double x = j - jPhase;
 

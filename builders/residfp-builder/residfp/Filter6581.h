@@ -150,51 +150,29 @@ namespace reSIDfp
 RESID_INLINE
 int Filter6581::clock(int voice1, int voice2, int voice3)
 {
-
-    const int v1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
-    const int v2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
-    const int v3 = (voice3 * voiceScaleS14 >> 18) + voiceDC;
+    voice1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
+    voice2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
+    voice3 = (voice3 * voiceScaleS14 >> 18) + voiceDC;
 
     int Vi = 0;
     int Vo = 0;
 
-    if (filt1)
-    {
-        Vi += v1;
-    }
-    else
-    {
-        Vo += v1;
-    }
+    (filt1 ? Vi : Vo) += voice1;
 
-    if (filt2)
-    {
-        Vi += v2;
-    }
-    else
-    {
-        Vo += v2;
-    }
+    (filt2 ? Vi : Vo) += voice2;
 
     // NB! Voice 3 is not silenced by voice3off if it is routed
     // through the filter.
     if (filt3)
     {
-        Vi += v3;
+        Vi += voice3;
     }
     else if (!voice3off)
     {
-        Vo += v3;
+        Vo += voice3;
     }
 
-    if (filtE)
-    {
-        Vi += ve;
-    }
-    else
-    {
-        Vo += ve;
-    }
+    (filtE ? Vi : Vo) += ve;
 
     const int oldVhp = Vhp;
     Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];

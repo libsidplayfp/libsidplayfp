@@ -104,7 +104,7 @@ void EnvelopeGenerator::setChipModel(ChipModel chipModel)
     {
         double dacValue = 0.;
 
-        for (int j = 0; j < dacBitsLength; j ++)
+        for (int j = 0; j < dacBitsLength; j++)
         {
             if ((i & (1 << j)) != 0)
             {

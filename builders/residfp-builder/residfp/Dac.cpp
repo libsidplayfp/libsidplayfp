@@ -32,13 +32,13 @@ void Dac::kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term)
     // Calculate voltage contribution by each individual bit in the R-2R ladder.
     for (int set_bit = 0; set_bit < dacLength; set_bit++)
     {
-        int bit;
-
         double Vn = 1.;          // Normalized bit voltage.
         double R = 1.;           // Normalized R
         const double _2R = _2R_div_R * R; // 2R
         double Rn = term ?         // Rn = 2R for correct termination,
                     _2R : R_INFINITY;         // INFINITY for missing termination.
+
+        int bit;
 
         // Calculate DAC "tail" resistance by repeated parallel substitution.
         for (bit = 0; bit < set_bit; bit++)

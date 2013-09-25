@@ -48,23 +48,9 @@ void Filter6581::updatedMixing()
     int ni = 0;
     int no = 0;
 
-    if (filt1)
-    {
-        ni++;
-    }
-    else
-    {
-        no++;
-    }
+    (filt1 ? ni : no)++;
 
-    if (filt2)
-    {
-        ni++;
-    }
-    else
-    {
-        no++;
-    }
+    (filt2 ? ni : no)++;
 
     if (filt3)
     {
@@ -75,14 +61,7 @@ void Filter6581::updatedMixing()
         no++;
     }
 
-    if (filtE)
-    {
-        ni++;
-    }
-    else
-    {
-        no++;
-    }
+    (filtE ? ni : no)++;
 
     currentSummer = summer[ni];
 
