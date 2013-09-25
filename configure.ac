@@ -57,9 +57,25 @@ AS_IF([test "x${ac_cv_header_stdint_h}" != "xyes"],
   [AC_MSG_ERROR([Required header stdint.h not found])]
 )
 
-dnl Checks for library functions.
-AC_CHECK_FUNCS([strcasecmp stricmp], [break])
-AC_CHECK_FUNCS([strncasecmp strnicmp], [break])
+dnl Checks for non-standard functions.
+
+AC_CHECK_DECL(
+    [strcasecmp],
+    [AC_CHECK_FUNCS([strcasecmp])],
+    [AC_CHECK_DECL(
+        [stricmp],
+        [AC_CHECK_FUNCS([stricmp])]
+    )]
+)
+
+AC_CHECK_DECL(
+    [strncasecmp],
+    [AC_CHECK_FUNCS([strncasecmp])],
+    [AC_CHECK_DECL(
+        [strnicmp],
+        [AC_CHECK_FUNCS([strnicmp])]
+    )]
+)
 
 dnl libtool-style version-info number
 #
