@@ -48,7 +48,8 @@ class Filter8580 : public Filter
 private:
     double highFreq;
     float Vlp, Vbp, Vhp;
-    float ve, w0, _1_div_Q;
+    float w0, _1_div_Q;
+    int ve;
 
 public:
     Filter8580() :
@@ -56,9 +57,9 @@ public:
         Vlp(0.f),
         Vbp(0.f),
         Vhp(0.f),
-        ve(0.f),
         w0(0.f),
-        _1_div_Q(0.f) {}
+        _1_div_Q(0.f),
+        ve(0) {}
 
     int clock(int voice1, int voice2, int voice3);
 
@@ -91,7 +92,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     voice3 >>= 7;
 
     int Vi = 0;
-    float Vo = 0.f;
+    int Vo = 0;
 
     if (filt1)
     {
@@ -124,7 +125,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
 
     if (filtE)
     {
-        Vi += (int)ve;
+        Vi += ve;
     }
     else
     {
@@ -137,22 +138,24 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     Vlp -= dVlp;
     Vhp = (Vbp * _1_div_Q) - Vlp - Vi + float(rand()) / float(RAND_MAX);
 
+    float Vof = (float)Vo;
+
     if (lp)
     {
-        Vo += Vlp;
+        Vof += Vlp;
     }
 
     if (bp)
     {
-        Vo += Vbp;
+        Vof += Vbp;
     }
 
     if (hp)
     {
-        Vo += Vhp;
+        Vof += Vhp;
     }
 
-    return (int) Vo * vol >> 4;
+    return (int) Vof * vol >> 4;
 }
 
 } // namespace reSIDfp
