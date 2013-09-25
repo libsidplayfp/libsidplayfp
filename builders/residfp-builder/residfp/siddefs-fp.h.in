@@ -24,29 +24,12 @@
 #  define M_PI    3.14159265358979323846
 #endif
 
-// Define bool, true, and false for C++ compilers that lack these keywords.
-#define RESID_HAVE_BOOL @RESID_HAVE_BOOL@
-
-#if !RESID_HAVE_BOOL
-typedef int bool;
-const bool true = 1;
-const bool false = 0;
-#endif
-
-typedef unsigned char reg4;
-typedef unsigned char reg8;
-typedef unsigned short reg12;
-typedef unsigned short reg16;
-typedef unsigned int reg24;
-typedef unsigned int reg32;
-
 namespace reSIDfp {
 
-typedef enum chip_model { MOS6581=1, MOS8580 } ChipModel;
+typedef enum { MOS6581=1, MOS8580 } ChipModel;
 
-typedef enum sampling_method { DECIMATE=1, RESAMPLE } SamplingMethod;
+typedef enum { DECIMATE=1, RESAMPLE } SamplingMethod;
 }
-
 
 extern "C"
 {
