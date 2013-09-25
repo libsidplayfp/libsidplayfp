@@ -24,9 +24,11 @@
 
 #include <assert.h>
 #include <string.h>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <sstream>
+
+#include "siddefs-fp.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"

@@ -23,6 +23,8 @@
 #ifndef FILTER8580_H
 #define FILTER8580_H
 
+#include <cmath>
+
 #include "siddefs-fp.h"
 
 #include "Filter.h"
