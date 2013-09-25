@@ -86,7 +86,7 @@ void WaveformGenerator::set_noise_output()
     no_noise_or_noise_output = no_noise | noise_output;
 }
 
-void WaveformGenerator::setWaveformModels(array<short>* models)
+void WaveformGenerator::setWaveformModels(matrix_t* models)
 {
     model_wave = models;
 }

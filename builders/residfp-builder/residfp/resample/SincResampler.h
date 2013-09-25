@@ -70,11 +70,14 @@ namespace reSIDfp
 class SincResampler : public Resampler
 {
 private:
+    typedef std::map<std::string, matrix_t> fir_cache_t;
+
+private:
     static const int RINGSIZE = 2048;
 
     static const int BITS = 16;
 
-    array<short>* firTable;
+    matrix_t* firTable;
 
     int sampleIndex;
 
@@ -91,7 +94,7 @@ private:
     /**
     * Cache for the expensive FIR table computation results.
     */
-    static std::map<std::string, array<short> > FIR_CACHE;
+    static fir_cache_t FIR_CACHE;
 
     /** Maximum error acceptable in I0 is 1e-6, or ~96 dB. */
     static const double I0E;

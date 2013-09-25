@@ -46,7 +46,7 @@ namespace reSIDfp
 class WaveformGenerator
 {
 private:
-    array<short>* model_wave;
+    matrix_t* model_wave;
 
     // PWout = (PWn/40.95)%
     int pw;
@@ -110,7 +110,7 @@ private:
     void set_noise_output();
 
 public:
-    void setWaveformModels(array<short>* models);
+    void setWaveformModels(matrix_t* models);
 
     /**
      * Set the chip model.

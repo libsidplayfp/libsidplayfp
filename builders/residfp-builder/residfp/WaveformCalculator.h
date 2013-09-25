@@ -49,7 +49,10 @@ typedef struct
 class WaveformCalculator
 {
 private:
-    std::map<const CombinedWaveformConfig*, array<short> > CACHE;
+    typedef std::map<const CombinedWaveformConfig*, matrix_t> cw_cache_t;
+
+private:
+    cw_cache_t CACHE;
 
     static const CombinedWaveformConfig config[2][4];
 
@@ -73,7 +76,7 @@ public:
      * @param model Chip model to use
      * @return Waveform table
      */
-    array<short>* buildTable(ChipModel model);
+    matrix_t* buildTable(ChipModel model);
 };
 
 } // namespace reSIDfp

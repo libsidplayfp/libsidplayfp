@@ -67,4 +67,6 @@ public:
     T const* operator[](unsigned int a) const { return a < x ? &data[a * y] : 0; }
 };
 
+typedef array<short> matrix_t;
+
 #endif

@@ -253,7 +253,7 @@ void SID::setChipModel(ChipModel model)
     this->model = model;
 
     /* calculate waveform-related tables, feed them to the generator */
-    array<short>* tables = WaveformCalculator::getInstance()->buildTable(model);
+    matrix_t* tables = WaveformCalculator::getInstance()->buildTable(model);
 
     /* update voice offsets */
     for (int i = 0; i < 3; i++)

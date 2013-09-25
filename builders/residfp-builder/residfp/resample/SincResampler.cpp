@@ -39,7 +39,7 @@
 namespace reSIDfp
 {
 
-std::map<std::string, array<short> > SincResampler::FIR_CACHE;
+SincResampler::fir_cache_t SincResampler::FIR_CACHE;
 
 const double SincResampler::I0E = 1e-6;
 
@@ -166,7 +166,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     std::ostringstream o;
     o << firN << "," << firRES << "," << cyclesPerSampleD;
     const std::string firKey = o.str();
-    std::map<std::string, array<short> >::iterator lb = FIR_CACHE.lower_bound(firKey);
+    fir_cache_t::iterator lb = FIR_CACHE.lower_bound(firKey);
 
     /* The FIR computation is expensive and we set sampling parameters often, but
     * from a very small set of choices. Thus, caching is used to speed initialization.
@@ -178,8 +178,8 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     else
     {
         // Allocate memory for FIR tables.
-        array<short> tempTable(firRES, firN);
-        firTable = &(FIR_CACHE.insert(lb, std::map<std::string, array<short> >::value_type(firKey, tempTable))->second);
+        matrix_t tempTable(firRES, firN);
+        firTable = &(FIR_CACHE.insert(lb, fir_cache_t::value_type(firKey, tempTable))->second);
 
         // The cutoff frequency is midway through the transition band, in effect the same as nyquist.
         const double wc = M_PI;
