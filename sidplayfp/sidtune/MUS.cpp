@@ -517,7 +517,7 @@ bool MUS::mergeParts(Buffer_sidtt<const uint_least8_t>& musBuf,
     // Sanity check. I do not trust those MUS/STR files around.
     const uint_least32_t freeSpace = endian_16(sidplayer1[1],sidplayer1[0])
                             - SIDTUNE_MUS_DATA_ADDR;
-    if ( (musBuf.len()+strBuf.len()-4) > freeSpace)
+    if ( (mergeLen-4) > freeSpace)
     {
         throw loadError(ERR_SIZE_EXCEEDED);
     }
