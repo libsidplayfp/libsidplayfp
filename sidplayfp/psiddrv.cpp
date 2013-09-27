@@ -27,8 +27,6 @@
 // --------------------------------------------------------
 #include "psiddrv.h"
 
-#include <string.h>
-
 #include "sidendian.h"
 #include "sidmemory.h"
 #include "SidTuneInfo.h"

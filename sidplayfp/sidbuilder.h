@@ -36,7 +36,7 @@ class EventContext;
 */ 
 class sidbuilder
 {
-private:
+protected:
     typedef std::set<sidemu*> emuset_t;
  
 private:

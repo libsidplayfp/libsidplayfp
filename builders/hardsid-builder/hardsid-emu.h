@@ -35,6 +35,8 @@
 #  include "config.h"
 #endif
 
+class sidbuilder;
+
 #ifdef _WIN32
 
 #include <windows.h>

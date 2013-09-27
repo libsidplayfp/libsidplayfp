@@ -23,8 +23,6 @@
 
 #include <cmath>
 
-#include "siddefs-fp.h"
-
 #include "Dac.h"
 #include "Integrator.h"
 #include "OpAmp.h"

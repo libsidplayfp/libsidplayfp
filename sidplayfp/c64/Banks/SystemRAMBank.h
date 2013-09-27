@@ -22,8 +22,8 @@
 #ifndef SYSTEMRAMBANK_H
 #define SYSTEMRAMBANK_H
 
-#include <string.h>
 #include <stdint.h>
+#include <cstring>
 
 #include "Bank.h"
 

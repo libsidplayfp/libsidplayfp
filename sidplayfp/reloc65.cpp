@@ -28,7 +28,7 @@
 
 #include "reloc65.h"
 
-#include <string.h>
+#include <cstring>
 
 #include "sidplayfp/siddefs.h"
 

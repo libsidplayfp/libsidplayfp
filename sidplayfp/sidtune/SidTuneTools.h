@@ -21,9 +21,7 @@
 #ifndef SIDTUNETOOLS_H
 #define SIDTUNETOOLS_H
 
-#include <string.h>
-
-#include "SidTuneCfg.h"
+#include <cstring>
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"

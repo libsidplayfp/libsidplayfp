@@ -29,11 +29,12 @@
 
 #include "stil.h"
 
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>      // For snprintf() and NULL
 #include <iostream>
 #include <iomanip>
-#include <cstring>
 #include <fstream>
-#include <cstdio>      // For snprintf() and NULL
 #include <sstream>
 #include <utility>
 

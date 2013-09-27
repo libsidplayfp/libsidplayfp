@@ -23,7 +23,7 @@
 #include "residfp.h"
 
 #include <algorithm>
-#include <functional>
+#include <new>
 
 #include "residfp-emu.h"
 

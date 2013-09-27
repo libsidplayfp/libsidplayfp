@@ -22,13 +22,11 @@
 
 #include "SincResampler.h"
 
-#include <assert.h>
-#include <string.h>
+#include <cassert>
+#include <cstring>
 #include <cmath>
 #include <iostream>
 #include <sstream>
-
-#include "siddefs-fp.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"

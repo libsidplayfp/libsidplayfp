@@ -22,7 +22,7 @@
 
 #include "mos6526.h"
 
-#include <string.h>
+#include <cstring>
 
 #include "sidplayfp/sidendian.h"
 

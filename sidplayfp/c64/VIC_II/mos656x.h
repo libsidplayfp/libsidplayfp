@@ -23,6 +23,9 @@
 #ifndef MOS656X_H
 #define MOS656X_H
 
+#include <stdint.h> 
+
+#include "sidplayfp/event.h" 
 #include "sidplayfp/component.h"
 #include "sidplayfp/EventScheduler.h"
 

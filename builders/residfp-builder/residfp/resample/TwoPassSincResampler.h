@@ -22,7 +22,7 @@
 #ifndef TWOPASSSINCRESAMPLER_H
 #define TWOPASSSINCRESAMPLER_H
 
-#include <math.h>
+#include <cmath>
 
 #include "Resampler.h"
 #include "SincResampler.h"

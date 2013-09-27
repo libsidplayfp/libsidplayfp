@@ -22,11 +22,13 @@
 
 #include "hardsid.h"
 
-#include <string.h>
+#include <cstring>
 #include <string>
 #include <memory>
 #include <sstream>
 #include <algorithm>
+#include <new>
+
 #ifdef _WIN32
 #  include <iomanip>
 #endif
@@ -127,7 +129,7 @@ const char *HardSIDBuilder::credits() const
 
 void HardSIDBuilder::flush()
 {
-    for (std::set<sidemu *>::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+    for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
         static_cast<HardSID*>(*it)->flush();
 }
 

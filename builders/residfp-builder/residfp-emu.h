@@ -23,15 +23,16 @@
 #ifndef RESIDFP_EMU_H
 #define RESIDFP_EMU_H
 
+#include <stdint.h>
+
 #include <string>
 
 #include "residfp/SID.h"
+#include "sidplayfp/SidConfig.h"
 #include "sidplayfp/sidemu.h"
-#include "sidplayfp/EventScheduler.h"
+#include "sidplayfp/event.h"
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+class sidbuilder;
 
 #define RESID_NAMESPACE reSIDfp
 

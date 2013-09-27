@@ -22,11 +22,10 @@
 
 #include "MUS.h"
 
-#include <string.h>
 #include <memory>
 
-#include "SidTuneCfg.h"
-#include "SidTuneInfoImpl.h"
+#include "SmartPtr.h"
+#include "sidplayfp/SidTuneInfo.h"
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidmemory.h"
 

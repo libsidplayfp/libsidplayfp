@@ -23,6 +23,7 @@
 #include "resid.h"
 
 #include <algorithm>
+#include <new>
 
 #include "resid-emu.h"
 

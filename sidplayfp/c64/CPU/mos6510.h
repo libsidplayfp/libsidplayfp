@@ -23,16 +23,16 @@
 #ifndef MOS6510_H
 #define MOS6510_H
 
-#include <stdio.h>
 #include <stdint.h>
+#include <cstdio>
 
-#include "sidplayfp/sidendian.h"
-#include "sidplayfp/component.h"
 #include "sidplayfp/EventScheduler.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
+
+class EventContext;
 
 /**
 * Cycle-exact 6502/6510 emulation core.

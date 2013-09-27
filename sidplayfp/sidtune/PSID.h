@@ -21,7 +21,11 @@
 #ifndef PSID_H
 #define PSID_H
 
+#include <stdint.h>
+
 #include "SidTuneBase.h"
+
+#include "sidplayfp/SidTune.h"
 
 class PSID : public SidTuneBase
 {

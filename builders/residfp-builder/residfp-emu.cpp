@@ -22,8 +22,6 @@
 
 #include "residfp-emu.h"
 
-#include <stdio.h>
-#include <cstring>
 #include <sstream>
 #include <algorithm>
 
@@ -31,6 +29,10 @@
 #include "residfp/Filter8580.h"
 #include "residfp/siddefs-fp.h"
 #include "sidplayfp/siddefs.h"
+
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
 std::string ReSIDfp::m_credit;
 

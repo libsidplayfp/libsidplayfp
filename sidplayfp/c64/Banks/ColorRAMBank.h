@@ -23,7 +23,7 @@
 #define COLORRAMBANK_H
 
 #include <stdint.h>
-#include <string.h>
+#include <cstring>
 
 #include "Bank.h"
 

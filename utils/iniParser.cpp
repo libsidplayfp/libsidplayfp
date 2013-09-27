@@ -18,8 +18,6 @@
 
 #include "iniParser.h"
 
-#include <stdlib.h>
-#include <iostream>
 #include <fstream>
 
 std::string iniParser::parseSection(const std::string &buffer)

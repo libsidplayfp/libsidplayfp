@@ -22,12 +22,14 @@
 
 #include "p00.h"
 
-#include <string.h>
+#include <stdint.h>
+#include <cstring>
+#include <cctype>
 #include <memory>
 
-#include "SidTuneCfg.h"
+#include "SmartPtr.h"
 #include "SidTuneTools.h"
-#include "SidTuneInfoImpl.h"
+#include "sidplayfp/SidTuneInfo.h"
 
 #define X00_ID_LEN   8
 #define X00_NAME_LEN 17

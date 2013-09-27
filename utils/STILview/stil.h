@@ -26,6 +26,7 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <iosfwd>
 
 #include "stildefs.h"
 

@@ -27,7 +27,7 @@
 
 #include "mos656x.h"
 
-#include <string.h>
+#include <cstring>
 
 #include "sidplayfp/sidendian.h"
 

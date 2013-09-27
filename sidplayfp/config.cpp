@@ -22,9 +22,9 @@
 
 #include "player.h"
 
-#include "SidConfig.h"
+#include "sidemu.h"
+#include "SidTune.h"
 #include "sidbuilder.h"
-#include "c64/c64.h"
 
 SIDPLAYFP_NAMESPACE_START
 

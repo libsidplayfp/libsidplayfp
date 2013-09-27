@@ -24,13 +24,11 @@
 #define SIDTUNE_H
 
 #include <stdint.h>
-#include <fstream>
 #include <memory>
 
 #include "sidplayfp/siddefs.h"
 
 class SidTuneInfo;
-class SidTuneInfoImpl;
 class SidTuneBase;
 class sidmemory;
 

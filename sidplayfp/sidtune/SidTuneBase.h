@@ -26,14 +26,16 @@
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <string>
 
+#include "SidTuneCfg.h"
 #include "SmartPtr.h"
-
+#include "SidTuneInfoImpl.h"
 #include "sidplayfp/SidTuneInfo.h"
-#include "sidplayfp/SidTune.h"
 #include "sidplayfp/siddefs.h"
 
-class SidTuneInfoImpl;
+class sidmemory;
+template <class T> class SmartPtr_sidtt;
 
 /**
 * loadError

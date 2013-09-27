@@ -22,14 +22,10 @@
 
 #include "PSID.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
 #include <memory>
 
-#include "SidTuneCfg.h"
-#include "SidTuneInfoImpl.h"
-#include "SidTuneBase.h"
+#include "sidplayfp/SidTuneInfo.h"
 #include "sidplayfp/sidendian.h"
 #include "sidplayfp/sidmd5.h"
 

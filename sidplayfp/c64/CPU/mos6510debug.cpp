@@ -24,8 +24,8 @@
 
 #ifdef DEBUG
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #include "mos6510.h"
 #include "sidplayfp/sidendian.h"

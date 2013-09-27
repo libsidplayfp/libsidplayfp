@@ -23,10 +23,10 @@
 
 #include "player.h"
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <ctime>
 
+#include "SidTune.h"
+#include "sidemu.h"
 #include "psiddrv.h"
 #include "romCheck.h"
 

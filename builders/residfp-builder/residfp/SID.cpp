@@ -26,6 +26,7 @@
 
 #include <limits>
 
+#include "array.h"
 #include "Filter6581.h"
 #include "Filter8580.h"
 #include "Potentiometer.h"

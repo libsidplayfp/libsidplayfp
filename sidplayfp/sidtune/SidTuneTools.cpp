@@ -20,6 +20,8 @@
 
 #include "SidTuneTools.h"
 
+#include "SidTuneCfg.h"
+
 // Return pointer to file name position in complete path.
 size_t SidTuneTools::fileNameWithoutPath(const char* s)
 {

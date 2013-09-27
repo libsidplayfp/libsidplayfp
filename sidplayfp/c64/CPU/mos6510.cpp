@@ -22,11 +22,13 @@
 
 #include "mos6510.h"
 
-#include <string.h>
+#include "sidplayfp/event.h"
+#include "sidplayfp/sidendian.h"
 
 #include "opcodes.h"
 
 #ifdef DEBUG
+#  include <cstdio>
 #  include "mos6510debug.h"
 #endif
 

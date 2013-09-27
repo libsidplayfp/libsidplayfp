@@ -21,7 +21,12 @@
 #ifndef MUS_H
 #define MUS_H
 
+#include <stdint.h>
+
 #include "SidTuneBase.h"
+
+class sidmemory;
+template <class T> class SmartPtr_sidtt;
 
 class MUS : public SidTuneBase
 {

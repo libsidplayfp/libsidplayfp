@@ -24,9 +24,8 @@
 
 #include <memory>
 
-#include "SidTuneCfg.h"
 #include "SidTuneTools.h"
-#include "SidTuneInfoImpl.h"
+#include "sidplayfp/SidTuneInfo.h"
 #include "sidplayfp/stringutils.h"
 
 const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";

@@ -23,8 +23,6 @@
 #ifndef EVENTSCHEDULER_H
 #define EVENTSCHEDULER_H
 
-#include <stdint.h>
-
 #include "event.h"
 
 

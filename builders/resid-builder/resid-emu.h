@@ -23,10 +23,12 @@
 #ifndef RESID_EMU_H
 #define RESID_EMU_H
 
+#include <stdint.h>
 #include <string>
 
+#include "sidplayfp/SidConfig.h"
 #include "sidplayfp/sidemu.h"
-#include "sidplayfp/EventScheduler.h"
+#include "sidplayfp/event.h"
 #include "resid/sid.h"
 
 #ifdef HAVE_CONFIG_H

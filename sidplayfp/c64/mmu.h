@@ -23,12 +23,13 @@
 #ifndef MMU_H
 #define MMU_H
 
+#include <stdint.h>
+
+#include "sidplayfp/event.h"
 #include "sidplayfp/sidendian.h"
-#include "sidplayfp/siddefs.h"
 #include "sidplayfp/sidmemory.h"
 
 #include "Banks/Bank.h"
-#include "Banks/IOBank.h"
 #include "Banks/SystemRAMBank.h"
 #include "Banks/SystemROMBanks.h"
 #include "Banks/ZeroRAMBank.h"

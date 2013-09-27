@@ -24,12 +24,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <stdint.h>
+#include <cstdio>
+
+#include "siddefs.h" 
 #include "SidConfig.h"
-#include "SidTune.h"
 #include "SidTuneInfo.h"
 #include "SidInfoImpl.h"
 #include "sidrandom.h"
 #include "mixer.h"
+#include "event.h"
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
@@ -39,6 +43,10 @@
 #ifdef PC64_TESTSUITE
 #  include <string>
 #endif
+
+class SidInfo;
+class SidTune;
+class sidbuilder;
 
 
 SIDPLAYFP_NAMESPACE_START

@@ -22,10 +22,11 @@
 #ifndef ZERORAMBANK_H
 #define ZERORAMBANK_H
 
-#include "Bank.h"
-#include "sidplayfp/event.h"
-
 #include <stdint.h>
+
+#include "Bank.h"
+
+#include "sidplayfp/event.h"
 
 /**
 * Interface to PLA functions.

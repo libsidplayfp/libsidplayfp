@@ -21,6 +21,7 @@
 
 #include <string>
 #include <map>
+#include <utility>
 
 class iniParser
 {

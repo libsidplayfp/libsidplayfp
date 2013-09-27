@@ -26,7 +26,11 @@
 #include <stdint.h>
 
 #include "timer.h"
+#include "sidplayfp/EventScheduler.h"
 #include "sidplayfp/component.h"
+
+class EventContext;
+class MOS6526;
 
 /**
 * This is the timer A of this CIA.

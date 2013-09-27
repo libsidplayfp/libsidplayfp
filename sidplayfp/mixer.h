@@ -24,12 +24,14 @@
 #ifndef MIXER_H
 #define MIXER_H
 
-#include <stdlib.h>
+#include <stdint.h>
+#include <cstdlib>
 
 #include <vector>
 
 #include "event.h"
-#include "sidbuilder.h"
+
+class sidemu;
 
 /**
 * This class implements the mixer.

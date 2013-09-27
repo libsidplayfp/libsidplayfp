@@ -23,12 +23,16 @@
 #ifndef C64_H
 #define C64_H
 
-#include "Banks/Bank.h"
+#include <stdint.h>
+#include <cstdio>
+
 #include "Banks/IOBank.h"
 #include "Banks/ColorRAMBank.h"
 #include "Banks/DisconnectedBusBank.h"
 #include "Banks/SidBank.h"
 #include "Banks/ExtraSidBank.h"
+
+#include "sidplayfp/EventScheduler.h"
 
 #include "sidplayfp/c64/c64env.h"
 #include "sidplayfp/c64/c64cpu.h"
@@ -36,10 +40,12 @@
 #include "sidplayfp/c64/c64vic.h"
 #include "sidplayfp/c64/mmu.h"
 
-
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
+
+class sidemu;
+class sidmemory;
 
 
 #ifdef PC64_TESTSUITE

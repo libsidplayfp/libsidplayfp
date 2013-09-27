@@ -22,6 +22,8 @@
 
 #include "mmu.h"
 
+class Bank;
+
 static const uint8_t POWERON[] =
 {
 #include "poweron.bin"
