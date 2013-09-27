@@ -669,7 +669,7 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
         if (isSTILFile && (STILVersion == 0.0f))
         {
-            if (stringutils::equal(line, "#  STIL v", 9))
+            if (strncmp(line, "#  STIL v", 9) == 0)
             {
 
                 // Get the version number
