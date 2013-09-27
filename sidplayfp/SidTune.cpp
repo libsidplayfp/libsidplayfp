@@ -58,7 +58,7 @@ SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtu
 
 void SidTune::setFileNameExtensions(const char **fileNameExt)
 {
-    fileNameExtensions = ((fileNameExt!=0)?fileNameExt:defaultFileNameExt);
+    fileNameExtensions = ((fileNameExt != 0) ? fileNameExt : defaultFileNameExt);
 }
 
 void SidTune::load(const char* fileName, bool separatorIsSlash)
@@ -93,17 +93,17 @@ void SidTune::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
 
 unsigned int SidTune::selectSong(unsigned int songNum)
 {
-    return tune.get()?tune->selectSong(songNum):0;
+    return tune.get() ? tune->selectSong(songNum) : 0;
 }
 
 const SidTuneInfo* SidTune::getInfo() const
 {
-    return tune.get()?tune->getInfo():0;
+    return tune.get() ? tune->getInfo() : 0;
 }
 
 const SidTuneInfo* SidTune::getInfo(unsigned int songNum)
 {
-    return tune.get()?tune->getInfo(songNum):0;
+    return tune.get() ? tune->getInfo(songNum) : 0;
 }
 
 bool SidTune::getStatus() const { return m_status; }

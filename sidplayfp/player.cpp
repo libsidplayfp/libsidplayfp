@@ -100,7 +100,7 @@ void Player::initialise()
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
     {
-        const uint_least32_t size = (uint_least32_t) tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
+        const uint_least32_t size = (uint_least32_t)tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
         if (size > 0xffff)
         {
             throw new configError("SIDPLAYER ERROR: Size of music data exceeds C64 memory.");
@@ -111,7 +111,7 @@ void Player::initialise()
     // Delays above MAX result in random delays
     if (powerOnDelay > SidConfig::MAX_POWER_ON_DELAY)
     {   // Limit the delay to something sensible.
-        powerOnDelay = (uint_least16_t) ((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
+        powerOnDelay = (uint_least16_t)((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
     }
 
     psiddrv driver(m_tune->getInfo());
@@ -130,7 +130,7 @@ void Player::initialise()
         throw new configError(m_tune->statusString());
     }
 
-    driver.install (m_c64.getMemInterface());
+    driver.install(m_c64.getMemInterface());
 
     m_c64.resetCpu();
 

@@ -34,8 +34,7 @@ private:
     void load(const char* format, const X00Header* pHeader);
 
 public:
-    static SidTuneBase* load(const char *fileName,
-                             buffer_t& dataBuf);
+    static SidTuneBase* load(const char *fileName, buffer_t& dataBuf);
 
     virtual ~p00() {}
 

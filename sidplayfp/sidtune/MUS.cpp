@@ -46,18 +46,18 @@ static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 bool MUS::detect(const uint_least8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {
-    SmartPtr_sidtt<const uint8_t> spMus((const uint8_t*)buffer,bufLen);
+    SmartPtr_sidtt<const uint8_t> spMus((const uint8_t*)buffer, bufLen);
     // Skip load address and 3x length entry.
     uint_least32_t voice1Index = (2+3*2);
     // Add length of voice 1 data.
-    voice1Index += endian_16(spMus[3],spMus[2]);
+    voice1Index += endian_16(spMus[3], spMus[2]);
     // Add length of voice 2 data.
-    uint_least32_t voice2Index = voice1Index + endian_16(spMus[5],spMus[4]);
+    uint_least32_t voice2Index = voice1Index + endian_16(spMus[5], spMus[4]);
     // Add length of voice 3 data.
-    voice3Index = voice2Index + endian_16(spMus[7],spMus[6]);
-    return ((endian_16(spMus[voice1Index-2],spMus[voice1Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(spMus[voice2Index-2],spMus[voice2Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(spMus[voice3Index-2],spMus[voice3Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
+    voice3Index = voice2Index + endian_16(spMus[7], spMus[6]);
+    return ((endian_16(spMus[voice1Index-2], spMus[voice1Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_16(spMus[voice2Index-2], spMus[voice2Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_16(spMus[voice3Index-2], spMus[voice3Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
             && spMus);
 }
 
@@ -565,7 +565,7 @@ SidTuneBase* MUS::load (buffer_t& musBuf,
 {
     uint_least32_t voice3Index;
     SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size()-fileOffset);
-    if ( !detect(&spPet[0], spPet.tellLength(), voice3Index) )
+    if (!detect(&spPet[0], spPet.tellLength(), voice3Index))
         return 0;
 
     std::auto_ptr<MUS> tune(new MUS());
@@ -590,8 +590,8 @@ void MUS::tryLoad(buffer_t& musBuf,
     }
 
     // Check setting compatibility for MUS playback
-    if ((info->m_compatibility != SidTuneInfo::COMPATIBILITY_C64) ||
-        (info->m_relocStartPage != 0) || (info->m_relocPages != 0))
+    if ((info->m_compatibility != SidTuneInfo::COMPATIBILITY_C64)
+        || (info->m_relocStartPage != 0) || (info->m_relocPages != 0))
     {
         throw loadError(ERR_INVALID);
     }
@@ -634,10 +634,10 @@ void MUS::tryLoad(buffer_t& musBuf,
     }
     else
     {   // For MUS + STR via stdin the files come combined
-        if ( spPet.good() )
+        if (spPet.good())
         {
-            uint_least16_t pos = (uint_least16_t) spPet.tellPos();
-            if ( detect(&spPet[0],spPet.tellLength()-pos,voice3Index) )
+            const uint_least16_t pos = (uint_least16_t)spPet.tellPos();
+            if ( detect(&spPet[0], spPet.tellLength()-pos, voice3Index) )
             {
                 musDataLen = pos;
                 stereo = true;
@@ -645,7 +645,7 @@ void MUS::tryLoad(buffer_t& musBuf,
         }
     }
 
-    if ( stereo )
+    if (stereo)
     {   // Voice3Index now is offset to text lines (uppercase Pet-strings).
         spPet += voice3Index;
 
@@ -670,7 +670,7 @@ void MUS::tryLoad(buffer_t& musBuf,
     // Remove trailing empty lines.
     const int lines = info->m_commentString.size();
     {
-        for ( int line = lines-1; line >= 0; line-- )
+        for (int line = lines-1; line >= 0; line--)
         {
             if (info->m_commentString[line].length() == 0)
                 info->m_commentString.pop_back();

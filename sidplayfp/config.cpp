@@ -84,7 +84,9 @@ bool Player::config(const SidConfig &cfg)
             m_errorString = e.message();
             m_cfg.sidEmulation = 0;
             if (&m_cfg != &cfg)
-                config (m_cfg);
+            {
+                config(m_cfg);
+            }
             return false;
         }
     }
@@ -231,7 +233,8 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                         bool forced, unsigned int channels)
 {
     if (builder)
-    {   // Detect the Correct SID model
+    {
+        // Detect the Correct SID model
         // Determine model when unknown
         SidConfig::sid_model_t userModels[c64::MAX_SIDS];
 
@@ -247,7 +250,9 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
             sidemu *s = builder->lock(m_c64.getEventScheduler(), userModels[i]);
             // Get at least one SID emulation
             if ((i == 0) && !builder->getStatus())
+            {
                 throw new configError(builder->error());
+            }
             m_c64.setSid(i, s);
         }
     }

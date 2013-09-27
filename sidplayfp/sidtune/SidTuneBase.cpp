@@ -89,7 +89,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     // Filename ``-'' is used as a synonym for standard input.
-    if ( strcmp(fileName,"-")==0 )
+    if (strcmp(fileName, "-") == 0)
         return getFromStdIn();
 #endif
     return getFromFiles(fileName, fileNameExt, separatorIsSlash);
@@ -111,32 +111,40 @@ const SidTuneInfo* SidTuneBase::getInfo(unsigned int songNum)
     return info.get();
 }
 
-// First check, whether a song is valid. Then copy any song-specific
-// variable information such a speed/clock setting to the info structure.
 unsigned int SidTuneBase::selectSong(unsigned int selectedSong)
 {
-    unsigned int song = selectedSong;
-    // Determine and set starting song number.
-    if (selectedSong == 0)
-        song = info->m_startSong;
-    if (selectedSong>info->m_songs || selectedSong>MAX_SONGS)
+    // First, check whether selected song is valid.
+    if (selectedSong > info->m_songs || selectedSong > MAX_SONGS)
     {
         return info->m_currentSong;
     }
+
+    // Determine and set starting song number.
+    const unsigned int song = (selectedSong == 0) ? info->m_startSong : selectedSong;
+
+    // Copy any song-specific variable information
+    // such a speed/clock setting to the info structure.
     info->m_currentSong = song;
+
     // Retrieve song speed definition.
-    if (info->m_compatibility == SidTuneInfo::COMPATIBILITY_R64)
+    switch (info->m_compatibility)
+    {
+    case SidTuneInfo::COMPATIBILITY_R64:
         info->m_songSpeed = SidTuneInfo::SPEED_CIA_1A;
-    else if (info->m_compatibility == SidTuneInfo::COMPATIBILITY_PSID)
-    {   // This does not take into account the PlaySID bug upon evaluating the
+        break;
+    case SidTuneInfo::COMPATIBILITY_PSID:
+       // This does not take into account the PlaySID bug upon evaluating the
         // SPEED field. It would most likely break compatibility to lots of
         // sidtunes, which have been converted from .SID format and vice versa.
         // The .SID format does the bit-wise/song-wise evaluation of the SPEED
         // value correctly, like it is described in the PlaySID documentation.
         info->m_songSpeed = songSpeed[(song-1)&31];
-    }
-    else
+        break;
+    default:
         info->m_songSpeed = songSpeed[song-1];
+        break;
+    }
+
     info->m_clockSpeed = clockSpeed[song-1];
 
     return info->m_currentSong;
@@ -170,7 +178,7 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
 {
     std::ifstream inFile(fileName, std::ifstream::binary);
 
-    if ( !inFile.is_open() )
+    if (!inFile.is_open())
     {
         throw loadError(ERR_CANT_OPEN_FILE);
     }
@@ -178,9 +186,9 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
     inFile.seekg(0, inFile.end);
     const size_t fileLen = (size_t)inFile.tellg();
 
-    if ( fileLen == 0 )
+    if (fileLen == 0)
     {
-         throw loadError(ERR_EMPTY);
+        throw loadError(ERR_EMPTY);
     }
 
     inFile.seekg(0, inFile.beg);
@@ -190,7 +198,7 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
 
     fileBuf.assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
 
-    if ( inFile.bad() )
+    if (inFile.bad())
     {
         throw loadError(ERR_CANT_LOAD_FILE);
     }
@@ -205,7 +213,7 @@ SidTuneBase::SidTuneBase() :
     fileOffset(0)
 {
     // Initialize the object with some safe defaults.
-    for ( unsigned int si = 0; si < MAX_SONGS; si++ )
+    for (unsigned int si = 0; si < MAX_SONGS; si++)
     {
         songSpeed[si] = info->m_songSpeed;
         clockSpeed[si] = info->m_clockSpeed;
@@ -221,9 +229,9 @@ SidTuneBase* SidTuneBase::getFromStdIn()
     // We only read as much as fits in the buffer.
     // This way we avoid choking on huge data.
     char datb;
-    while (std::cin.get(datb) && fileBuf.size()<MAX_FILELEN)
+    while (std::cin.get(datb) && fileBuf.size() < MAX_FILELEN)
     {
-        fileBuf.push_back((uint_least8_t) datb);
+        fileBuf.push_back((uint_least8_t)datb);
     }
 
     return getFromBuffer(&fileBuf.front(), fileBuf.size());
@@ -233,7 +241,7 @@ SidTuneBase* SidTuneBase::getFromStdIn()
 
 SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_least32_t bufferLen)
 {
-    if (buffer==0 || bufferLen==0)
+    if (buffer == 0 || bufferLen == 0)
     {
         throw loadError(ERR_EMPTY);
     }
@@ -267,7 +275,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
                             buffer_t& buf, bool isSlashedFileName)
 {
     // Make a copy of the data file name and path, if available.
-    if ( dataFileName != 0 )
+    if (dataFileName != 0)
     {
         const size_t fileNamePos = isSlashedFileName ?
             SidTuneTools::slashedFileNameWithoutPath(dataFileName) :
@@ -277,7 +285,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
 
     // Make a copy of the info file name, if available.
-    if ( infoFileName != 0 )
+    if (infoFileName != 0)
     {
         const size_t fileNamePos = isSlashedFileName ?
             SidTuneTools::slashedFileNameWithoutPath(infoFileName) :
@@ -287,13 +295,22 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
 
     // Fix bad sidtune set up.
     if (info->m_songs > MAX_SONGS)
+    {
         info->m_songs = MAX_SONGS;
+    }
     else if (info->m_songs == 0)
+    {
         info->m_songs++;
+    }
+
     if (info->m_startSong > info->m_songs)
+    {
         info->m_startSong = 1;
+    }
     else if (info->m_startSong == 0)
+    {
         info->m_startSong++;
+    }
 
     info->m_dataFileLen = buf.size();
     info->m_c64dataLen = buf.size() - fileOffset;
@@ -302,11 +319,11 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     // confirm all the file details are correct
     resolveAddrs(&buf[fileOffset]);
 
-    if ( checkRelocInfo() == false )
+    if (checkRelocInfo() == false)
     {
         throw loadError(ERR_BAD_RELOC);
     }
-    if ( checkCompatibility() == false )
+    if (checkCompatibility() == false)
     {
          throw loadError(ERR_BAD_ADDR);
     }
@@ -321,11 +338,11 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
 
     // Check the size of the data.
 
-    if ( info->m_c64dataLen > MAX_MEMORY )
+    if (info->m_c64dataLen > MAX_MEMORY)
     {
         throw loadError(ERR_DATA_TOO_LONG);
     }
-    else if ( info->m_c64dataLen == 0 )
+    else if (info->m_c64dataLen == 0)
     {
         throw loadError(ERR_EMPTY);
     }
@@ -427,16 +444,16 @@ void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo
     for (unsigned int s = 0; s < toDo; s++)
     {
         clockSpeed[s] = clock;
-        if (speed & 1)
-            songSpeed[s] = SidTuneInfo::SPEED_CIA_1A;
-        else
-            songSpeed[s] = SidTuneInfo::SPEED_VBI;
+        songSpeed[s] = (speed & 1) ? SidTuneInfo::SPEED_CIA_1A : SidTuneInfo::SPEED_VBI;
+
         if (s < 31)
+        {
             speed >>= 1;
+        }
     }
 }
 
-bool SidTuneBase::checkRelocInfo ()
+bool SidTuneBase::checkRelocInfo()
 {
     // Fix relocation information
     if (info->m_relocStartPage == 0xFF)
@@ -462,8 +479,8 @@ bool SidTuneBase::checkRelocInfo ()
         const uint_least8_t startlp = (uint_least8_t) (info->m_loadAddr >> 8);
         const uint_least8_t endlp   = startlp + (uint_least8_t) ((info->m_c64dataLen - 1) >> 8);
 
-        if ( ((startp <= startlp) && (endp >= startlp)) ||
-             ((startp <= endlp)   && (endp >= endlp)) )
+        if (((startp <= startlp) && (endp >= startlp))
+            || ((startp <= endlp)   && (endp >= endlp)))
         {
             return false;
         }
@@ -483,39 +500,45 @@ bool SidTuneBase::checkRelocInfo ()
     return true;
 }
 
-void SidTuneBase::resolveAddrs (const uint_least8_t *c64data)
-{   // Originally used as a first attempt at an RSID
+void SidTuneBase::resolveAddrs(const uint_least8_t *c64data)
+{
+    // Originally used as a first attempt at an RSID
     // style format. Now reserved for future use
-    if ( info->m_playAddr == 0xffff )
-        info->m_playAddr  = 0;
+    if (info->m_playAddr == 0xffff)
+    {
+        info->m_playAddr = 0;
+    }
 
     // loadAddr = 0 means, the address is stored in front of the C64 data.
-    if ( info->m_loadAddr == 0 )
+    if (info->m_loadAddr == 0)
     {
-        if ( info->m_c64dataLen < 2 )
+        if (info->m_c64dataLen < 2)
         {
             throw loadError(ERR_CORRUPT);
         }
-        info->m_loadAddr = endian_16( *(c64data+1), *c64data );
+
+        info->m_loadAddr = endian_16(*(c64data+1), *c64data);
         fileOffset += 2;
         c64data += 2;
         info->m_c64dataLen -= 2;
     }
 
-    if ( info->m_compatibility == SidTuneInfo::COMPATIBILITY_BASIC )
+    if (info->m_compatibility == SidTuneInfo::COMPATIBILITY_BASIC)
     {
-        if ( info->m_initAddr != 0 )
+        if (info->m_initAddr != 0)
         {
             throw loadError(ERR_BAD_ADDR);
         }
     }
-    else if ( info->m_initAddr == 0 )
+    else if (info->m_initAddr == 0)
+    {
         info->m_initAddr = info->m_loadAddr;
+    }
 }
 
-bool SidTuneBase::checkCompatibility ()
+bool SidTuneBase::checkCompatibility()
 {
-    switch ( info->m_compatibility )
+    switch (info->m_compatibility)
     {
     case SidTuneInfo::COMPATIBILITY_R64:
         // Check valid init address
@@ -528,8 +551,8 @@ bool SidTuneBase::checkCompatibility ()
         case 0x0A:
             return false;
         default:
-            if ( (info->m_initAddr < info->m_loadAddr) ||
-                 (info->m_initAddr > (info->m_loadAddr + info->m_c64dataLen - 1)) )
+            if ((info->m_initAddr < info->m_loadAddr)
+                || (info->m_initAddr > (info->m_loadAddr + info->m_c64dataLen - 1)))
             {
                 return false;
             }
@@ -542,7 +565,7 @@ bool SidTuneBase::checkCompatibility ()
          * loads at $608, should this check be performed only for PSID files?
          */
         // Check tune is loadable on a real C64
-        if ( info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR )
+        if (info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR)
         {
             return false;
         }
@@ -558,16 +581,18 @@ const char* SidTuneBase::PetsciiToAscii::convert(SmartPtr_sidtt<const uint8_t>& 
     do
     {
         c = CHR_tab[*spPet];  // ASCII CHR$ conversion
-        if ((c>=0x20) && (buffer.length()<=31))
+        if ((c >= 0x20) && (buffer.length() <= 31))
             buffer.push_back(c);  // copy to info string
 
         // If character is 0x9d (left arrow key) then move back.
-        if ((*spPet==0x9d) && (!buffer.empty()))
+        if ((*spPet == 0x9d) && (!buffer.empty()))
+        {
             buffer.resize(buffer.size() - 1);
+        }
 
         spPet++;
     }
-    while ( !((c==0x0D)||(c==0x00)||spPet.fail()) );
+    while (!((c == 0x0D) || (c == 0x00) || spPet.fail()));
 
     return buffer.c_str();
 }

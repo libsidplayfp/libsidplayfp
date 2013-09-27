@@ -56,7 +56,7 @@ uint8_t psiddrv::iomap(uint_least16_t addr) const
         return 0;     // Special case, converted to 0x37 later
     if (addr < 0xa000)
         return 0x37;  // Basic-ROM, Kernal-ROM, I/O
-    if (addr  < 0xd000)
+    if (addr < 0xd000)
         return 0x36;  // Kernal-ROM, I/O
     if (addr >= 0xe000)
         return 0x35;  // I/O only
@@ -113,7 +113,7 @@ bool psiddrv::drvReloc(sidmemory *mem)
     }
 
     // Place psid driver into ram
-    uint_least16_t relocAddr = relocStartPage << 8;
+    const uint_least16_t relocAddr = relocStartPage << 8;
 
     reloc_driver = psid_driver;
     reloc_size   = sizeof (psid_driver);

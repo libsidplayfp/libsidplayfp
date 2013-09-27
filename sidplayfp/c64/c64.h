@@ -210,7 +210,7 @@ public:
     const EventScheduler &getEventScheduler() const { return m_scheduler; }
     //@}
 
-    void debug(bool enable, FILE *out) { cpu.debug (enable, out); }
+    void debug(bool enable, FILE *out) { cpu.debug(enable, out); }
 
     void reset();
     void resetCpu() { cpu.reset(); }

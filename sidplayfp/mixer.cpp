@@ -60,7 +60,7 @@ void Mixer::event()
             buffers.push_back((*it)->buffer());
         }
         /* NB: if chip2 exists, its bufferpos is identical to chip1's. */
-        int sampleCount = m_chips[0]->bufferpos();
+        const int sampleCount = m_chips[0]->bufferpos();
 
         int i = 0;
         while (i < sampleCount)

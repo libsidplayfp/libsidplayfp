@@ -100,13 +100,15 @@ void MMU::reset()
 
             // Determine data count/compression
             if (off & 0x80)
-            {   // fixup offset
+            {
+                // fixup offset
                 off  &= 0x7f;
                 count = POWERON[i++];
                 if (count & 0x80)
-                {   // fixup count
-                count &= 0x7f;
-                compressed = true;
+                {
+                    // fixup count
+                    count &= 0x7f;
+                    compressed = true;
                 }
             }
 
@@ -119,13 +121,17 @@ void MMU::reset()
             {
                 const uint8_t data = POWERON[i++];
                 while (count-- > 0)
+                {
                     ramBank.poke(addr++, data);
+                }
             }
             // Extract uncompressed data
             else
             {
                 while (count-- > 0)
+                {
                     ramBank.poke(addr++, POWERON[i++]);
+                }
             }
         }
     }
