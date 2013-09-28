@@ -44,7 +44,7 @@
 #  include "config.h"
 #endif
 
-class sidemu;
+class c64sid;
 class sidmemory;
 
 
@@ -236,17 +236,9 @@ public:
     * Set the requested SID
     *
     * @param i sid number to set
-    * @param s the sid emu to set
+    * @param s the sid emu to set, or 0 to remove
     */
-    void setSid(unsigned int i, sidemu *s);
-
-    /**
-    * Return the requested SID
-    *
-    * @param i sid number to get
-    * @return the SID emu
-    */
-    sidemu *getSid(unsigned int i) const;
+    void setSid(unsigned int i, c64sid *s);
 
     /**
     * Set the base address of a stereo SID chip.<br/>

@@ -147,13 +147,6 @@ void Mixer::begin(short *buffer, uint_least32_t count)
     m_sampleBuffer = buffer;
 }
 
-void Mixer::setSids(sidemu *chip1, sidemu *chip2)
-{
-    m_chips.clear();
-    if (chip1) m_chips.push_back(chip1);
-    if (chip2) m_chips.push_back(chip2);
-}
-
 bool Mixer::setFastForward(int ff)
 {
     if (ff < 1 || ff > 32)

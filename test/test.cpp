@@ -20,6 +20,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <memory>
 
 #include "sidplayfp/sidplayfp.h"
@@ -37,38 +38,6 @@
 #define KERNAL_PATH "/usr/local/lib/vice/C64/kernal"
 #define BASIC_PATH "/usr/local/lib/vice/C64/basic"
 #define CHARGEN_PATH "/usr/local/lib/vice/C64/chargen"
-
-class NullSID: public sidemu
-{
-public:
-    NullSID () : sidemu(0) { m_buffer = 0; }
-
-    void    reset (uint8_t) {}
-    uint8_t read  (uint_least8_t) { return 0; }
-    void    write (uint_least8_t, uint8_t) {}
-    void    clock() {}
-    const   char *credits () const { return ""; }
-    void    voice (const unsigned int num, const bool mute) {}
-    void    model    (SidConfig::sid_model_t model)  {}
-    bool    lock     (EventContext *env) { return true; }
-    void    unlock   () {}
-};
-
-class FakeBuilder: public sidbuilder
-{
-private:
-    NullSID sidobj;
-
-public:
-    FakeBuilder  (const char * const name)
-      : sidbuilder(name) { sidobjs.insert (new NullSID()); }
-    ~FakeBuilder () {}
-
-    const char *credits () const { return ""; }
-    void        filter (const bool enable) {}
-    unsigned int availDevices() const { return 0; }
-    unsigned int create(unsigned int) { return 1; }
-};
 
 void loadRom(const char* path, char* buffer)
 {
@@ -91,8 +60,6 @@ int main(int argc, char* argv[])
 
     m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic, (const uint8_t*)chargen);
 
-    std::auto_ptr<FakeBuilder> rs(new FakeBuilder("Test"));
-
     std::string name(PC64_TESTSUITE);
 
     if (argc > 1)
@@ -112,13 +79,6 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    SidConfig cfg;
-    cfg.frequency = 48000;
-    cfg.samplingMethod = SidConfig::INTERPOLATE;
-    cfg.playback = SidConfig::MONO;
-    cfg.sidEmulation = rs.get();
-    m_engine.config(cfg);
-
     tune->selectSong(0);
 
     if (!m_engine.load(tune.get()))
@@ -129,6 +89,6 @@ int main(int argc, char* argv[])
 
     for (;;)
     {
-        m_engine.play(0, 48000);
+        m_engine.play(0, 0);
     }
 }

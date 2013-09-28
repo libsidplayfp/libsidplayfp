@@ -88,6 +88,7 @@ sidplayfp/c64/Banks/Bank.h \
 sidplayfp/c64/c64cpu.h \
 sidplayfp/c64/c64cia.h \
 sidplayfp/c64/c64env.h \
+sidplayfp/c64/c64sid.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64.cpp \
 sidplayfp/c64/c64.h \
@@ -97,6 +98,7 @@ sidplayfp/c64/Banks/ColorRAMBank.h \
 sidplayfp/c64/Banks/DisconnectedBusBank.h \
 sidplayfp/c64/Banks/ExtraSidBank.h \
 sidplayfp/c64/Banks/IOBank.h \
+sidplayfp/c64/Banks/NullSid.h \
 sidplayfp/c64/Banks/SidBank.h \
 sidplayfp/c64/Banks/SystemRAMBank.h \
 sidplayfp/c64/Banks/SystemROMBanks.h \

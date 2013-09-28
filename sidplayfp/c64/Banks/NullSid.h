@@ -19,50 +19,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SIDBANK_H
-#define SIDBANK_H
+#ifndef NULLSID_H
+#define NULLSID_H
 
-#include "Bank.h"
 #include "sidplayfp/c64/c64sid.h"
 
-#include "NullSid.h"
-
 /**
-* SID
-* located at $D400-$D7FF, mirrored each 32 bytes
+* SID chip placeholder which does nothing and returns 0xff on reading.
 */
-class SidBank : public Bank
+class NullSid : public c64sid
 {
 private:
-    /** SID chip */
-    c64sid *sid;
+    NullSid() {}
+    virtual ~NullSid() {}
 
 public:
-    SidBank()
-      : sid(NullSid::getInstance())
-    {}
-
-    void reset()
+    /// Retruns singleton instance
+    static NullSid *getInstance()
     {
-        sid->reset(0xf);
+        static NullSid nullsid;
+        return &nullsid;
     }
 
-    uint8_t peek(uint_least16_t addr)
-    {
-        return sid->peek(addr);
-    }
+    void reset(uint8_t) {}
 
-    void poke(uint_least16_t addr, uint8_t data)
-    {
-        sid->poke(addr, data);
-    }
-
-    /**
-    * Set SID emulation.
-    *
-    * @param s the emulation
-    */
-    void setSID(c64sid *s) { sid = (s != 0) ? s : NullSid::getInstance(); }
+    void poke(uint_least16_t address SID_UNUSED, uint8_t value SID_UNUSED) {}
+    uint8_t peek(uint_least16_t address SID_UNUSED) { return 0xff; }
 };
 
-#endif
+#endif // NULLSID_H

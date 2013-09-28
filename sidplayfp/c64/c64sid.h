@@ -1,8 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
- * Copyright 2010 Antti Lankila
+ * Copyright 2013 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,50 +18,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SIDBANK_H
-#define SIDBANK_H
+#ifndef C64SID_H
+#define C64SID_H
 
-#include "Bank.h"
-#include "sidplayfp/c64/c64sid.h"
+#include <stdint.h>
 
-#include "NullSid.h"
+#include "Banks/Bank.h"
 
 /**
-* SID
-* located at $D400-$D7FF, mirrored each 32 bytes
+* SID interface.
 */
-class SidBank : public Bank
+class c64sid : public Bank
 {
-private:
-    /** SID chip */
-    c64sid *sid;
+protected:
+    virtual ~c64sid() {}
 
 public:
-    SidBank()
-      : sid(NullSid::getInstance())
-    {}
+    virtual void reset(uint8_t volume) = 0;
 
-    void reset()
-    {
-        sid->reset(0xf);
-    }
-
-    uint8_t peek(uint_least16_t addr)
-    {
-        return sid->peek(addr);
-    }
-
-    void poke(uint_least16_t addr, uint8_t data)
-    {
-        sid->poke(addr, data);
-    }
-
-    /**
-    * Set SID emulation.
-    *
-    * @param s the emulation
-    */
-    void setSID(c64sid *s) { sid = (s != 0) ? s : NullSid::getInstance(); }
+    virtual void poke(uint_least16_t address, uint8_t value) = 0;
+    virtual uint8_t peek(uint_least16_t address) = 0;
 };
 
-#endif
+#endif // C64SID_H

@@ -158,7 +158,7 @@ bool Player::load(SidTune *tune)
 
 void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
 {
-    sidemu *s = m_c64.getSid(sidNum);
+    sidemu *s = m_mixer.getSid(sidNum);
     if (s)
         s->voice(voice, enable);
 }

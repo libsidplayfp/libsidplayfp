@@ -22,7 +22,9 @@
 #define EXTRASIDBANK_H
 
 #include "Bank.h"
-#include "sidplayfp/sidemu.h"
+#include "sidplayfp/c64/c64sid.h"
+
+#include "NullSid.h"
 
 /**
 * Extra SID bank
@@ -44,18 +46,19 @@ private:
     */
     Bank *mapper[MAPPER_SIZE];
 
-    sidemu *sid;
+    c64sid *sid;
 
 private:
     static unsigned int mapperIndex(int address) { return address >> 5 & (MAPPER_SIZE - 1); }
 
 public:
-    ExtraSidBank() : sid(0) {}
+    ExtraSidBank() :
+        sid(NullSid::getInstance())
+    {}
 
     void reset()
     {
-        if (sid)
-            sid->reset(0xf);
+        sid->reset(0xf);
     }
 
     void resetSIDMapper(Bank *bank)
@@ -71,8 +74,7 @@ public:
     */
     void setSIDMapping(int address)
     {
-        if (sid)
-            mapper[mapperIndex(address)] = sid;
+        mapper[mapperIndex(address)] = sid;
     }
 
     uint8_t peek(uint_least16_t addr)
@@ -90,14 +92,7 @@ public:
     *
     * @param s the emulation
     */
-    void setSID(sidemu *s) { sid = s; }
-
-    /**
-    * Get SID emulation.
-    *
-    * @return the emulation
-    */
-    sidemu *getSID() const { return sid; }
+    void setSID(c64sid *s) { sid = (s != 0) ? s : NullSid::getInstance(); }
 };
 
 #endif

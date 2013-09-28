@@ -42,10 +42,12 @@
 
 #ifdef PC64_TESTSUITE
 #  include <string>
+#  include "SidTune.h"
+#else
+class SidTune;
 #endif
 
 class SidInfo;
-class SidTune;
 class sidbuilder;
 
 
@@ -96,7 +98,6 @@ private:
     static SidConfig::sid_model_t getModel (SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced);
 
 #ifdef PC64_TESTSUITE
-    void load(const char *file)
     void load(const char *file)
     {
         std::string name(PC64_TESTSUITE);

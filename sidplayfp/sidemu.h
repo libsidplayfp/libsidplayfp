@@ -23,10 +23,10 @@
 #ifndef SIDEMU_H
 #define SIDEMU_H
 
-#include "SidConfig.h"
 #include "component.h"
-#include "sidplayfp/c64/Banks/Bank.h"
-#include "sidplayfp/siddefs.h"
+#include "SidConfig.h"
+#include "siddefs.h"
+#include "c64/c64sid.h"
 
 class sidbuilder;
 class EventContext;
@@ -42,7 +42,7 @@ enum
 /**
 * Inherit this class to create a new SID emulation.
 */
-class sidemu : public component, public Bank
+class sidemu : public c64sid, public component
 {
 private:
     sidbuilder *m_builder;
@@ -57,7 +57,7 @@ public:
     virtual ~sidemu() {}
 
     // Standard component functions
-    void reset() { reset (0); }
+    void reset() { reset(0); }
 
     virtual void reset(uint8_t volume) = 0;
 

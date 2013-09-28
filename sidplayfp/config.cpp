@@ -103,7 +103,6 @@ bool Player::config(const SidConfig &cfg)
         m_info.m_channels = 1;
     }
 
-    m_mixer.setSids(m_c64.getSid(0), m_c64.getSid(1));
     m_mixer.setStereo(cfg.playback == SidConfig::STEREO);
     m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
 
@@ -216,17 +215,18 @@ SidConfig::sid_model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig
 
 void Player::sidRelease()
 {
-    for (unsigned int i = 0; i < c64::MAX_SIDS; i++)
+    unsigned int i=0;
+    while (sidemu *s = m_mixer.getSid(i))
     {
-        if (sidemu *s = m_c64.getSid(i))
+        if (sidbuilder *b = s->builder())
         {
-            if (sidbuilder *b = s->builder())
-            {
-                b->unlock (s);
-            }
-            m_c64.setSid(i, 0);
+            b->unlock(s);
         }
+        m_c64.setSid(i, 0);
+        i++;
     }
+
+    m_mixer.clearSids();
 }
 
 void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
@@ -253,7 +253,9 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
             {
                 throw new configError(builder->error());
             }
+
             m_c64.setSid(i, s);
+            m_mixer.addSid(s);
         }
     }
 }
@@ -261,14 +263,13 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 void Player::sidParams(double cpuFreq, int frequency,
                         SidConfig::sampling_method_t sampling, bool fastSampling)
 {
-    for (unsigned int i = 0; i < c64::MAX_SIDS; i++)
-    {
-        if (sidemu *s = m_c64.getSid(i))
-        {
-            s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
-        }
-    }
+    unsigned int i = 0;
 
+    while (sidemu *s = m_mixer.getSid(i))
+    {
+        s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
+        i++;
+    }
 }
 
 SIDPLAYFP_NAMESPACE_STOP

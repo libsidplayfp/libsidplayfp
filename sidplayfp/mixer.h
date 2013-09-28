@@ -92,7 +92,10 @@ public:
 
     void begin(short *buffer, uint_least32_t count);
 
-    void setSids(sidemu *chip1, sidemu *chip2);
+    void clearSids() { return m_chips.clear(); }
+    sidemu* getSid(unsigned int i) { return (i < m_chips.size()) ? m_chips[i] : 0; }
+    void addSid(sidemu *chip) { if (chip) m_chips.push_back(chip); }
+
     bool setFastForward(int ff);
     void setVolume(int_least32_t left, int_least32_t right);
     void setStereo(bool stereo) { m_stereo = stereo; }

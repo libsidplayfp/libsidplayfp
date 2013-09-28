@@ -103,7 +103,7 @@ void c64::setModel(model_t model)
     cia2.setDayOfTimeRate(rate);
 }
 
-void c64::setSid(unsigned int i, sidemu *s)
+void c64::setSid(unsigned int i, c64sid *s)
 {
     switch (i)
     {
@@ -115,21 +115,6 @@ void c64::setSid(unsigned int i, sidemu *s)
         break;
     default:
         break;
-    }
-}
-
-sidemu *c64::getSid(unsigned int i) const
-{
-    switch (i)
-    {
-    case 0:
-        return sidBank.getSID();
-        break;
-    case 1:
-        return extraSidBank.getSID();
-        break;
-    default:
-        return 0;
     }
 }
 
