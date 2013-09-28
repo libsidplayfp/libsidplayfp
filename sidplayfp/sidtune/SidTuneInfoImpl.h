@@ -44,10 +44,10 @@ public:
     int m_songSpeed;
 
     clock_t m_clockSpeed;
-    
+
     model_t m_sidModel1;
     model_t m_sidModel2;
-    
+
     compatibility_t m_compatibility;
 
     uint_least32_t m_dataFileLen;
@@ -117,6 +117,15 @@ public:
 
     uint_least16_t sidChipBase1() const { return m_sidChipBase1; }
     uint_least16_t sidChipBase2() const { return m_sidChipBase2; }
+    uint_least16_t sidChipBase(unsigned int i) const
+    {
+        switch (i)
+        {
+        case 0: return m_sidChipBase1;
+        case 1: return m_sidChipBase2;
+        default: return 0;
+        }
+    }
 
     bool isStereo() const { return (m_sidChipBase1!=0 && m_sidChipBase2!=0); }
 
@@ -128,6 +137,15 @@ public:
 
     model_t sidModel1() const { return m_sidModel1; }
     model_t sidModel2() const { return m_sidModel2; }
+    model_t sidModel(unsigned int i) const
+    {
+        switch (i)
+        {
+        case 0: return m_sidModel1;
+        case 1: return m_sidModel2;
+        default: return SIDMODEL_UNKNOWN;
+        }
+    }
 
     compatibility_t compatibility() const { return m_compatibility; }
 
