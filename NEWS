@@ -1,7 +1,8 @@
-1.1.0 2013-09-xx
+1.1.0 2013-09-28
 * Rework mixer to fix bug #7
 * Rework VIC emulation to be more faithful to PAL-NTSC models difference
 * Sync reSID codebase to fix a couple of regressions (See VICE bug #290)
+* Other minor fixes
 
 
 
