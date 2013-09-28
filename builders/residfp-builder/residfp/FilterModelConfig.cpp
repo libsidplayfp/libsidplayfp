@@ -21,7 +21,9 @@
 
 #include "FilterModelConfig.h"
 
-#include <math.h>
+#include <cmath>
+
+#include "siddefs-fp.h"
 
 #include "Dac.h"
 #include "Integrator.h"
