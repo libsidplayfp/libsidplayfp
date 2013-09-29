@@ -184,7 +184,8 @@ AS_IF([test "$resid_cv_builtin_expect" = no],
 
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
 AS_IF([test -z "$DOXYGEN"],
-  [AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])]
+  [AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])],
+  [AC_CHECK_PROG([DOT], [dot], [YES], [NO])]
 )
 
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
