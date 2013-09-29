@@ -151,7 +151,7 @@ STIL::setBaseDir(const char *pathToHVSC)
     }
 
     // Chop the trailing slash
-    const std::string::iterator lastChar = tempBaseDir.end() - 1;
+    const string::iterator lastChar = tempBaseDir.end() - 1;
 
     if (*lastChar == SLASH)
     {
@@ -718,7 +718,7 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
                 CERR_STIL_DEBUG << "getDirs() dirName=" << dirName << ", pos=" << position <<  endl;
 
-                dirs.insert(std::make_pair(dirName, position));
+                dirs.insert(make_pair(dirName, position));
             }
 
             newDir = !isSTILFile;
