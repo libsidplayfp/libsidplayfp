@@ -24,6 +24,7 @@ EXTRA_DIST = \
 docs/mainpage.dox \
 sidplayfp/psiddrv.bin \
 sidplayfp/c64/poweron.bin \
+sidplayfp/sidtune/sidplayer.bin \
 builders/residfp-builder/residfp/AUTHORS \
 builders/residfp-builder/residfp/COPYING \
 builders/residfp-builder/residfp/README \
