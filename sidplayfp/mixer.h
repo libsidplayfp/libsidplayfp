@@ -92,7 +92,7 @@ public:
 
     void begin(short *buffer, uint_least32_t count);
 
-    void clearSids() { return m_chips.clear(); }
+    void clearSids() { m_chips.clear(); }
     sidemu* getSid(unsigned int i) { return (i < m_chips.size()) ? m_chips[i] : 0; }
     void addSid(sidemu *chip) { if (chip) m_chips.push_back(chip); }
 
