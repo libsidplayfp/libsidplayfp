@@ -358,7 +358,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         {
             // Copy the entry's name to the buffer.
             strncpy(entrybuf, relPathToEntry, STIL_MAX_ENTRY_SIZE - 1);
-            strncat(entrybuf, "\n", 2);
+            strcat(entrybuf, "\n");
             entrybuf[STIL_MAX_ENTRY_SIZE - 1] = '\0';
             CERR_STIL_DEBUG << "getEntry() posToEntry() failed" << endl;
             lastError = NOT_IN_STIL;
@@ -461,7 +461,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         {
             // Copy the entry's name to the buffer.
             strncpy(bugbuf, relPathToEntry, STIL_MAX_ENTRY_SIZE - 1);
-            strncat(bugbuf, "\n", 2);
+            strcat(bugbuf, "\n");
             bugbuf[STIL_MAX_ENTRY_SIZE - 1] = '\0';
             CERR_STIL_DEBUG << "getBug() posToEntry() failed" << endl;
             lastError = NOT_IN_BUG;
@@ -566,7 +566,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
         {
             // Copy the dirname to the buffer.
             strncpy(globalbuf, dir.c_str(), STIL_MAX_ENTRY_SIZE - 1);
-            strncat(globalbuf, "\n", 2);
+            strcat(globalbuf, "\n");
             globalbuf[STIL_MAX_ENTRY_SIZE - 1] = '\0';
             CERR_STIL_DEBUG << "getGC() posToEntry() failed" << endl;
             lastError = NOT_IN_STIL;
@@ -850,7 +850,7 @@ STIL::readEntry(ifstream &inFile, char *buffer)
 
         if (*line != '\0')
         {
-            strncat(buffer, "\n", 2);
+            strcat(buffer, "\n");
         }
     }
     while (*line != '\0');
