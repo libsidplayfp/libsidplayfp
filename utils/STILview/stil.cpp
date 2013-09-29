@@ -130,7 +130,7 @@ bool
 STIL::setBaseDir(const char *pathToHVSC)
 {
     // Temporary placeholder for STIL.txt's version number.
-    float tempSTILVersion = STILVersion;
+    const float tempSTILVersion = STILVersion;
 
     // Temporary placeholders for lists of sections.
     dirList tempStilDirs;
@@ -208,7 +208,7 @@ STIL::setBaseDir(const char *pathToHVSC)
     }
 
     // Save away the current string so we can restore it if needed.
-    string tempVersionString(versionString);
+    const string tempVersionString(versionString);
 
     setVersionString();
 
@@ -523,7 +523,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
     // Save the dirpath.
 
-    char *lastSlash = (char *)strrchr(relPathToEntry, '/');
+    const char *lastSlash = strrchr(relPathToEntry, '/');
 
     if (lastSlash == NULL)
     {
@@ -531,8 +531,8 @@ STIL::getGlobalComment(const char *relPathToEntry)
         return NULL;
     }
 
-    size_t pathLen = lastSlash - relPathToEntry + 1;
-    string dir(relPathToEntry, pathLen);
+    const size_t pathLen = lastSlash - relPathToEntry + 1;
+    const string dir(relPathToEntry, pathLen);
 
     // Find out whether we have this global comment in the buffer.
     // If the baseDir was changed, we'll have to read it in again,
@@ -700,9 +700,9 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
         {
 
             // Get the directory only
-            size_t j = strrchr(line, '/') - line + 1;
+            const size_t j = strrchr(line, '/') - line + 1;
 
-            string dirName(line, j);
+            const string dirName(line, j);
 
             if (!isSTILFile)
             {
@@ -762,10 +762,10 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
     // Determine whether a section-global comment is asked for.
 
     const size_t entryStrLen = strlen(entryStr);
-    bool globComm = (pathLen == entryStrLen);
+    const bool globComm = (pathLen == entryStrLen);
 
     // Find it in the table.
-    string entry(entryStr, pathLen);
+    const string entry(entryStr, pathLen);
     dirList::iterator elem = dirs.find(entry);
 
     if (elem == dirs.end())
