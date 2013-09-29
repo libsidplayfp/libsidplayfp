@@ -187,7 +187,6 @@ STIL::setBaseDir(const char *pathToHVSC)
 
     if (bugFile.fail())
     {
-
         // This is not a critical error - some earlier versions of HVSC did
         // not have a BUGlist.txt file at all.
 
@@ -233,7 +232,6 @@ STIL::setBaseDir(const char *pathToHVSC)
     {
         if (getDirs(bugFile, tempBugDirs, false) != true)
         {
-
             // This is not a critical error - it is possible that the
             // BUGlist.txt file has no entries in it at all (in fact, that's
             // good!).
@@ -319,7 +317,6 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 
     if (STILVersion < 2.59f)
     {
-
         // Older version of STIL is detected.
 
         tuneNo = 0;
@@ -332,7 +329,6 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         ((((size_t)(strchr(entrybuf, '\n') - entrybuf)) != relPathToEntryLen)
          && (STILVersion > 2.59f)))
     {
-
         // The relative pathnames don't match or they're not the same length:
         // we don't have it in the buffer, so pull it in.
 
@@ -435,7 +431,6 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         ((((size_t)(strchr(bugbuf, '\n') - bugbuf)) != relPathToEntryLen) &&
          (STILVersion > 2.59f)))
     {
-
         // The relative pathnames don't match or they're not the same length:
         // we don't have it in the buffer, so pull it in.
 
@@ -542,7 +537,6 @@ STIL::getGlobalComment(const char *relPathToEntry)
         ((((size_t)(strchr(globalbuf, '\n') - globalbuf)) != pathLen) &&
          (STILVersion > 2.59f)))
     {
-
         // The relative pathnames don't match or they're not the same length:
         // we don't have it in the buffer, so pull it in.
 
@@ -660,7 +654,6 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
     while (inFile.good())
     {
-
         getStilLine(inFile, line);
 
         if (!isSTILFile) { CERR_STIL_DEBUG << line << '\n'; }
@@ -671,7 +664,6 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
         {
             if (strncmp(line, "#  STIL v", 9) == 0)
             {
-
                 // Get the version number
                 STILVersion = atof(line + 9);
 
@@ -698,7 +690,6 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
         if (newDir && (*line == '/'))
         {
-
             // Get the directory only
             const size_t j = strrchr(line, '/') - line + 1;
 
@@ -713,7 +704,6 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
             // Store the info
             if (newDir)
             {
-
                 const streampos position = inFile.tellg() - (streampos)strlen(line) - 1L;
 
                 CERR_STIL_DEBUG << "getDirs() dirName=" << dirName << ", pos=" << position <<  endl;
@@ -796,7 +786,6 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
 
         if (*line == '/')
         {
-
             if (!stringutils::equal(elem->first.data(), line, pathLen))
             {
                 // We are outside the section - get out of the loop,
@@ -889,7 +878,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
     if (firstTuneNo == NULL)
     {
-
         //-------------------//
         // SINGLE TUNE ENTRY //
         //-------------------//
@@ -922,14 +910,12 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
         if (temp == start)
         {
-
             // Yes. So it's assumed to be a file-global comment.
 
             CERR_STIL_DEBUG << "getField() single-tune entry, COMMENT only" << endl;
 
             if ((tuneNo == 0) && ((field == all) || ((field == comment) && (temp2 == NULL))))
             {
-
                 // Simply copy the stuff in.
 
                 strncpy(result, start, STIL_MAX_ENTRY_SIZE - 1);
@@ -940,7 +926,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
             else if ((tuneNo == 0) && (field == comment))
             {
-
                 // Copy just the comment.
 
                 strncpy(result, start, temp2 - start);
@@ -951,7 +936,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
             else if ((tuneNo == 1) && (temp2 != NULL))
             {
-
                 // A specific field was asked for.
 
                 CERR_STIL_DEBUG << "getField() copying COMMENT to resultbuf" << endl;
@@ -960,7 +944,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
             else
             {
-
                 // Anything else is invalid as of v2.00.
 
                 CERR_STIL_DEBUG << "getField() invalid parameter combo: single tune, tuneNo=" << tuneNo << ", field=" << field << endl;
@@ -969,14 +952,12 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
         }
         else
         {
-
             // No. Handle it as a regular entry.
 
             CERR_STIL_DEBUG << "getField() single-tune regular entry" << endl;
 
             if ((field == all) && ((tuneNo == 0) || (tuneNo == 1)))
             {
-
                 // The complete entry was asked for. Simply copy the stuff in.
 
                 strncpy(result, start, STIL_MAX_ENTRY_SIZE - 1);
@@ -987,7 +968,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
             else if (tuneNo == 1)
             {
-
                 // A specific field was asked for.
 
                 CERR_STIL_DEBUG << "getField() copying COMMENT to resultbuf" << endl;
@@ -996,7 +976,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
             else
             {
-
                 // Anything else is invalid as of v2.00.
 
                 CERR_STIL_DEBUG << "getField() invalid parameter combo: single tune, tuneNo=" << tuneNo << ", field=" << field << endl;
@@ -1006,7 +985,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
     }
     else
     {
-
         //-------------------//
         // MULTITUNE ENTRY
         //-------------------//
@@ -1017,10 +995,8 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
         if (tuneNo == 0)
         {
-
             switch (field)
             {
-
             case all:
 
                 // Yes. Simply copy the stuff in.
@@ -1069,7 +1045,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 
         if (myTuneNo != NULL)
         {
-
             // We found the requested tune number.
             // Set the pointer beyond it.
             myTuneNo = strchr(myTuneNo, '\n') + 1;
@@ -1121,40 +1096,32 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
 
     switch (field)
     {
-
     case all:
-
         strncat(result, start, end - start);
         return true;
         break;
 
     case name:
-
         temp = strstr(start, _NAME_STR);
         break;
 
     case author:
-
         temp = strstr(start, _AUTHOR_STR);
         break;
 
     case title:
-
         temp = strstr(start, _TITLE_STR);
         break;
 
     case artist:
-
         temp = strstr(start, _ARTIST_STR);
         break;
 
     case comment:
-
         temp = strstr(start, _COMMENT_STR);
         break;
 
     default:
-
         break;
     }
 
@@ -1261,7 +1228,6 @@ STIL::getStilLine(ifstream &infile, char *line)
 {
     if (STIL_EOL2 != '\0')
     {
-
         // If there was a remaining EOL char from the previous read, eat it up.
 
         char temp = infile.peek();
