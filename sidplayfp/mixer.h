@@ -38,6 +38,9 @@ class sidemu;
 */
 class Mixer : private Event
 {
+private:
+    typedef short (Mixer::*mixer_func_t)() const;
+
 public:
     /** Maximum allowed volume, must be a power of 2 */
     static const int_least32_t VOLUME_MAX = 1024;
@@ -48,21 +51,27 @@ private:
     */
     EventContext &event_context;
 
-    std::vector<sidemu *> m_chips;
+    std::vector<sidemu*> m_chips;
+    std::vector<short*> m_buffers;
+
+    std::vector<int_least32_t> m_iSamples;
+    std::vector<int_least32_t> m_volume;
+
+    std::vector<mixer_func_t> m_mix;
 
     int oldRandomValue;
     int m_fastForwardFactor;
 
-    int_least32_t  m_leftVolume;
-    int_least32_t  m_rightVolume;
-    bool           m_stereo;
-
     // Mixer settings
+    short         *m_sampleBuffer;
     uint_least32_t m_sampleCount;
     uint_least32_t m_sampleIndex;
-    short         *m_sampleBuffer;
+
+    bool m_stereo;
 
 private:
+    void updateParams();
+
     int triangularDithering()
     {
         const int prevValue = oldRandomValue;
@@ -70,12 +79,18 @@ private:
         return oldRandomValue - prevValue;
     }
 
+    short channel1MonoMix() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1]) / 2); }
+    short channel1StereoMix() const { return static_cast<short>(m_iSamples[0]); }
+
+    short channel2FromMonoMix() const { return static_cast<short>(m_iSamples[0]); }
+    short channel2FromStereoMix() const { return static_cast<short>(m_iSamples[1]); }
+
 public:
     /**
-    * Create a new mixer.
-    *
-    * @param context event context
-    */
+     * Create a new mixer.
+     *
+     * @param context event context
+     */
     Mixer(EventContext *context) :
         Event("Mixer"),
         event_context(*context),
@@ -84,25 +99,75 @@ public:
         m_sampleCount(0) {}
 
     /**
-    * Timer ticking event.
-    */
+     * Timer ticking event.
+     */
     void event();
 
+    /**
+     * Schedule mixer event.
+     */
     void reset();
 
+    /**
+     * Prepare for mixing cycle.
+     *
+     * @param buffer output buffer
+     * @param count size of the buffer in samples
+     */
     void begin(short *buffer, uint_least32_t count);
 
-    void clearSids() { m_chips.clear(); }
-    sidemu* getSid(unsigned int i) { return (i < m_chips.size()) ? m_chips[i] : 0; }
-    void addSid(sidemu *chip) { if (chip) m_chips.push_back(chip); }
+    /**
+     * Remove all SIDs from the mixer.
+     */
+    void clearSids();
 
+    /**
+     * Add a SID to the mixer.
+     *
+     * @param chip the sid emu to add
+     */
+    void addSid(sidemu *chip);
+
+    /**
+     * Get a SID to the mixer.
+     *
+     * @param i the number of the SID to get
+     * @return a pointer to the requested sid emu or 0 if not found
+     */
+    sidemu* getSid(unsigned int i) const { return (i < m_chips.size()) ? m_chips[i] : 0; }
+
+    /**
+     * Set the fast forward ratio.
+     *
+     * @param ff the fast forward ratio, from 1 to 32
+     * @return true if parameter is valid, false otherwise
+     */
     bool setFastForward(int ff);
-    void setVolume(int_least32_t left, int_least32_t right);
-    void setStereo(bool stereo) { m_stereo = stereo; }
 
+    /**
+     * Set mixing volumes, from 0 to #VOLUME_MAX.
+     *
+     * @param left volume for left or mono channel
+     * @param right volume for right channel in stereo mode
+     */
+    void setVolume(int_least32_t left, int_least32_t right);
+
+    /**
+     * Set mixing mode.
+     *
+     * @param stereo true for stereo mode, false for mono
+     */
+    void setStereo(bool stereo);
+
+    /**
+     * Check if the buffer have been filled.
+     */
     bool notFinished() const { return m_sampleIndex != m_sampleCount; }
+
+    /**
+     * Get the number of samples generated up to now.
+     */
     uint_least32_t samplesGenerated() const { return m_sampleIndex; }
-    uint_least32_t sampleCount() const { return m_sampleCount; }
 };
 
 #endif // MIXER_H

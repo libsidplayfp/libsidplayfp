@@ -43,6 +43,24 @@ private:
     int pos;
 };
 
+class bufferMove
+{
+public:
+    bufferMove(int p, int s) : pos(p), samples(s) {}
+    void operator()(short *dest)
+    {
+        const short* src = dest + pos;
+        for (int j = 0; j < samples; j++)
+        {
+            dest[j] = src[j];
+        }
+    }
+
+private:
+    int pos;
+    int samples;
+};
+
 void Mixer::event()
 {
     /* this clocks the SIDs to the present moment, if they aren't already. */
@@ -53,13 +71,8 @@ void Mixer::event()
         short *buf = m_sampleBuffer + m_sampleIndex;
 
         /* extract buffer info now that the SID is updated.
-         * clock() may update bufferpos. */
-        std::vector<short*> buffers;
-        for(std::vector<sidemu*>::iterator it = m_chips.begin(); it != m_chips.end(); ++it)
-        {
-            buffers.push_back((*it)->buffer());
-        }
-        /* NB: if chip2 exists, its bufferpos is identical to chip1's. */
+         * clock() may update bufferpos.
+         * NB: if chip2 exists, its bufferpos is identical to chip1's. */
         const int sampleCount = m_chips[0]->bufferpos();
 
         int i = 0;
@@ -76,63 +89,47 @@ void Mixer::event()
                 break;
             }
 
+            const int dither = triangularDithering();
+
             /* This is a crude boxcar low-pass filter to
              * reduce aliasing during fast forward. */
-            int sample1 = 0;
-            int sample2 = 0;
-            int j;
-            for (j = 0; j < m_fastForwardFactor; j++)
+            for (int k = 0; k < m_buffers.size(); k++)
             {
-                sample1 += buffers[0][i + j];
-                if (buffers.size() > 1)
-                    sample2 += buffers[1][i + j];
+                int_least32_t sample = 0;
+                const short *buffer = m_buffers[k] + i;
+                for (unsigned int j = 0; j < m_fastForwardFactor; j++)
+                {
+                    sample += buffer[j];
+                }
+
+                m_iSamples[k] = (sample * m_volume[k] + dither) / VOLUME_MAX;
+                m_iSamples[k] /= m_fastForwardFactor;
             }
+
             /* increment i to mark we ate some samples, finish the boxcar thing. */
-            const int dither = triangularDithering();
-            i += j;
-            sample1 = (sample1 * m_leftVolume + dither) / VOLUME_MAX;
-            sample1 /= j;
-            sample2 = (sample2 * m_rightVolume + dither) / VOLUME_MAX;
-            sample2 /= j;
+            i += m_fastForwardFactor;
 
-            /* mono mix. */
-            if (m_chips.size() > 1 && !m_stereo)
-                sample1 = (sample1 + sample2) / 2;
-
-            /* stereo clone, for people who keep stereo on permanently. */
-            if (m_chips.size() == 1 && m_stereo)
-                sample2 = sample1;
-
-            *buf++ = (short int)sample1;
-            m_sampleIndex ++;
-            if (m_stereo)
+            const unsigned int channels = m_stereo ? 2 : 1;
+            for (unsigned int k = 0; k < channels; k++)
             {
-                *buf++ = (short int)sample2;
-                m_sampleIndex ++;
+                *buf++ = (this->*(m_mix[k]))();
+                m_sampleIndex++;
             }
         }
 
         /* move the unhandled data to start of buffer, if any. */
         const int samplesLeft = sampleCount - i;
-        for(std::vector<short*>::iterator it = buffers.begin(); it != buffers.end(); ++it)
-        {
-            for (int j = 0; j < samplesLeft; j++)
-            {
-                (*it)[j] = (*it)[i + j];
-            }
-        }
-
+        std::for_each(m_buffers.begin(), m_buffers.end(), bufferMove(i, samplesLeft));
         std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft - 1));
     }
     else
     {
-        // FIXME this sucks
-        m_sampleIndex++;
+        m_sampleIndex++; // FIXME this sucks
         std::for_each(m_chips.begin(), m_chips.end(), bufferPos(0));
     }
 
     /* Post a callback to ourselves. */
-    event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
+    event_context.schedule(*this, MIXER_EVENT_RATE);
 }
 
 void Mixer::reset()
@@ -147,6 +144,45 @@ void Mixer::begin(short *buffer, uint_least32_t count)
     m_sampleBuffer = buffer;
 }
 
+void Mixer::updateParams()
+{
+    m_mix[0] = (!m_stereo && m_buffers.size() > 1) ? &Mixer::channel1MonoMix : &Mixer::channel1StereoMix;
+    if (m_stereo)
+        m_mix[1] = (m_buffers.size() > 1) ? &Mixer::channel2FromStereoMix : &Mixer::channel2FromMonoMix;
+}
+
+void Mixer::clearSids()
+{
+    m_chips.clear();
+    m_buffers.clear();    
+}
+
+void Mixer::addSid(sidemu *chip)
+{
+    if (chip != 0)
+    {
+        m_chips.push_back(chip);
+        m_buffers.push_back(chip->buffer());
+
+        m_iSamples.resize(m_buffers.size());
+
+        if (m_mix.size() > 0)
+            updateParams();
+    }
+}
+
+void Mixer::setStereo(bool stereo)
+{
+    if (m_stereo != stereo)
+    {
+        m_stereo = stereo;
+
+        m_mix.resize(m_stereo ? 2 : 1);
+
+        updateParams();
+    }
+}
+
 bool Mixer::setFastForward(int ff)
 {
     if (ff < 1 || ff > 32)
@@ -158,6 +194,7 @@ bool Mixer::setFastForward(int ff)
 
 void Mixer::setVolume(int_least32_t left, int_least32_t right)
 {
-    m_leftVolume = left;
-    m_rightVolume = right;
+    m_volume.clear();
+    m_volume.push_back(left);
+    m_volume.push_back(right);
 }
