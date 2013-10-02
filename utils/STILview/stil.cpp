@@ -91,8 +91,6 @@ STIL::STIL(const char *stilPath, const char *bugsPath) :
     memset((void *)entrybuf, 0, sizeof(entrybuf));
     memset((void *)globalbuf, 0, sizeof(globalbuf));
     memset((void *)bugbuf, 0, sizeof(bugbuf));
-    memset((void *)resultEntry, 0, sizeof(resultEntry));
-    memset((void *)resultBug, 0, sizeof(resultBug));
 }
 
 void STIL::setVersionString()
@@ -368,7 +366,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
     }
 
     // Put the requested field into the result string.
-    return getField(resultEntry, entrybuf, tuneNo, field) ? resultEntry : NULL;
+    return getField(resultEntry, entrybuf, tuneNo, field) ? resultEntry.c_str() : NULL;
 }
 
 const char *
@@ -470,7 +468,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
     }
 
     // Put the requested field into the result string.
-    return getField(resultBug, bugbuf, tuneNo) ? resultBug : NULL;
+    return getField(resultBug, bugbuf, tuneNo) ? resultBug.c_str() : NULL;
 }
 
 const char *
@@ -846,12 +844,12 @@ STIL::readEntry(ifstream &inFile, char *buffer)
 }
 
 bool
-STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
+STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
 {
     CERR_STIL_DEBUG << "getField() called, buffer=" << buffer << ", rest=" << tuneNo << "," << field << endl;
 
     // Clean out the result buffer first.
-    *result = '\0';
+    result.clear();
 
     // Position pointer to the first char beyond the file designation.
 
@@ -917,9 +915,7 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
             if ((tuneNo == 0) && ((field == all) || ((field == comment) && (temp2 == NULL))))
             {
                 // Simply copy the stuff in.
-
-                strncpy(result, start, STIL_MAX_ENTRY_SIZE - 1);
-                result[STIL_MAX_ENTRY_SIZE - 1] = '\0';
+                result.append(start);
                 CERR_STIL_DEBUG << "getField() copied to resultbuf" << endl;
                 return true;
             }
@@ -927,9 +923,7 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
             else if ((tuneNo == 0) && (field == comment))
             {
                 // Copy just the comment.
-
-                strncpy(result, start, temp2 - start);
-                *(result + (temp2 - start)) = '\0';
+                result.append(start, temp2 - start);
                 CERR_STIL_DEBUG << "getField() copied to just the COMMENT to resultbuf" << endl;
                 return true;
             }
@@ -959,9 +953,7 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
             if ((field == all) && ((tuneNo == 0) || (tuneNo == 1)))
             {
                 // The complete entry was asked for. Simply copy the stuff in.
-
-                strncpy(result, start, STIL_MAX_ENTRY_SIZE - 1);
-                result[STIL_MAX_ENTRY_SIZE - 1] = '\0';
+                result.append(start);
                 CERR_STIL_DEBUG << "getField() copied to resultbuf" << endl;
                 return true;
             }
@@ -998,17 +990,12 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
             switch (field)
             {
             case all:
-
                 // Yes. Simply copy the stuff in.
-
-                strncpy(result, start, STIL_MAX_ENTRY_SIZE - 1);
-                result[STIL_MAX_ENTRY_SIZE - 1] = '\0';
+                result.append(start);
                 CERR_STIL_DEBUG << "getField() copied all to resultbuf" << endl;
                 return true;
-                break;
 
             case comment:
-
                 // Only the file-global comment field was asked for.
 
                 if (firstTuneNo != start)
@@ -1025,7 +1012,6 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
                 break;
 
             default:
-
                 // If a specific field other than a comment is
                 // asked for tuneNo=0, this is illegal.
 
@@ -1067,7 +1053,7 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
             // Put the desired fields into the result (which may be 'all').
 
             CERR_STIL_DEBUG << "getField() myTuneNo=" << myTuneNo << ", nextTuneNo=" << nextTuneNo << endl;
-            return getOneField(result + strlen(result), myTuneNo, nextTuneNo, field);
+            return getOneField(result, myTuneNo, nextTuneNo, field);
         }
 
         else
@@ -1079,13 +1065,12 @@ STIL::getField(char *result, char *buffer, int tuneNo, STILField field)
 }
 
 bool
-STIL::getOneField(char *result, char *start, char *end, STILField field)
+STIL::getOneField(string &result, char *start, char *end, STILField field)
 {
     // Sanity checking
 
     if ((end < start) || (*(end - 1) != '\n'))
     {
-        *result = '\0';
         CERR_STIL_DEBUG << "getOneField() illegal parameters" << endl;
         return false;
     }
@@ -1097,7 +1082,7 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
     switch (field)
     {
     case all:
-        strncat(result, start, end - start);
+        result.append(start, end - start);
         return true;
         break;
 
@@ -1130,7 +1115,6 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
 
     if ((temp == NULL) || (temp < start) || (temp > end))
     {
-        *result = '\0';
         return false;
     }
 
@@ -1219,7 +1203,7 @@ STIL::getOneField(char *result, char *start, char *end, STILField field)
     // Now nextField points to the last+1 char that should be copied to
     // result. Do that.
 
-    strncat(result, temp, nextField - temp);
+    result.append(temp, nextField - temp);
     return true;
 }
 

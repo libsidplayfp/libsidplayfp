@@ -318,8 +318,8 @@ private:
     char bugbuf[STIL_MAX_ENTRY_SIZE];
 
     /// Buffers to hold the resulting strings
-    char resultEntry[STIL_MAX_ENTRY_SIZE];
-    char resultBug[STIL_MAX_ENTRY_SIZE];
+    std::string resultEntry;
+    std::string resultBug;
 
     ////////////////
 
@@ -391,7 +391,7 @@ private:
     *      - false - if nothing was put into 'result'
     *      - true  - 'result' has the resulting field
     */
-    bool getField(char *result, char *buffer, int tuneNo = 0, STILField field = all);
+    bool getField(std::string &result, char *buffer, int tuneNo = 0, STILField field = all);
 
     /**
     * @param result - where to put the resulting string to (if any)
@@ -405,7 +405,7 @@ private:
     *      - false - if nothing was put into 'result'
     *      - true  - 'result' has the resulting field
     */
-    bool getOneField(char *result, char *start, char *end, STILField field);
+    bool getOneField(std::string &result, char *start, char *end, STILField field);
 
     /**
     * Extracts one line from 'infile' to 'line[]'. The end of
