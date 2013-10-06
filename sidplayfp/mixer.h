@@ -96,7 +96,11 @@ public:
         event_context(*context),
         oldRandomValue(0),
         m_fastForwardFactor(1),
-        m_sampleCount(0) {}
+        m_sampleCount(0),
+        m_stereo(false)
+    {
+        m_mix.push_back(&Mixer::channel1MonoMix);
+    }
 
     /**
      * Timer ticking event.
