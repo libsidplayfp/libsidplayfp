@@ -82,11 +82,10 @@
 #  define SLASH '\\'
 #endif
 
-// Maximum size of a single line in STIL - also accounts for some extra
-// padding, just in case.
+// Unused, will be removed in future version
 #define STIL_MAX_LINE_SIZE 91
 
-// Maximum size of a single STIL entry (in bytes).
+// Unused, will be removed in future version
 #define STIL_MAX_ENTRY_SIZE STIL_MAX_LINE_SIZE*100
 
 // HVSC path to STIL.

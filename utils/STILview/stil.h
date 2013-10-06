@@ -309,13 +309,13 @@ private:
     ////////////////
 
     /// The last retrieved entry
-    char entrybuf[STIL_MAX_ENTRY_SIZE];
+    std::string entrybuf;
 
     /// The last retrieved section-global comment
-    char globalbuf[STIL_MAX_ENTRY_SIZE];
+    std::string globalbuf;
 
     /// The last retrieved BUGentry
-    char bugbuf[STIL_MAX_ENTRY_SIZE];
+    std::string bugbuf;
 
     /// Buffers to hold the resulting strings
     std::string resultEntry;
@@ -372,7 +372,7 @@ private:
     * @param entryStr - the entry needed to be read
     * @param buffer   - where to put the result to
     */
-    void readEntry(std::ifstream &inFile, char *buffer);
+    void readEntry(std::ifstream &inFile, std::string &buffer);
 
     /**
     * Given a STIL formatted entry in 'buffer', a tune number,
@@ -391,7 +391,7 @@ private:
     *      - false - if nothing was put into 'result'
     *      - true  - 'result' has the resulting field
     */
-    bool getField(std::string &result, char *buffer, int tuneNo = 0, STILField field = all);
+    bool getField(std::string &result, const char *buffer, int tuneNo = 0, STILField field = all);
 
     /**
     * @param result - where to put the resulting string to (if any)
@@ -405,7 +405,7 @@ private:
     *      - false - if nothing was put into 'result'
     *      - true  - 'result' has the resulting field
     */
-    bool getOneField(std::string &result, char *start, char *end, STILField field);
+    bool getOneField(std::string &result, const char *start, const char *end, STILField field);
 
     /**
     * Extracts one line from 'infile' to 'line[]'. The end of
@@ -416,7 +416,7 @@ private:
     *                 to the start of the desired line)
     * @param line   - char array to put the line into
     */
-    void getStilLine(std::ifstream &infile, char *line);
+    void getStilLine(std::ifstream &infile, std::string &line);
 
 private:
     /**

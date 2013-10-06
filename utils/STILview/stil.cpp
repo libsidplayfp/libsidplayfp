@@ -87,10 +87,6 @@ STIL::STIL(const char *stilPath, const char *bugsPath) :
     lastError(NO_STIL_ERROR)
 {
     setVersionString();
-
-    memset((void *)entrybuf, 0, sizeof(entrybuf));
-    memset((void *)globalbuf, 0, sizeof(globalbuf));
-    memset((void *)bugbuf, 0, sizeof(bugbuf));
 }
 
 void STIL::setVersionString()
@@ -249,9 +245,9 @@ STIL::setBaseDir(const char *pathToHVSC)
     bugDirs = tempBugDirs;
 
     // Clear the buffers (caches).
-    memset((void *)entrybuf, 0, sizeof(entrybuf));
-    memset((void *)globalbuf, 0, sizeof(globalbuf));
-    memset((void *)bugbuf, 0, sizeof(bugbuf));
+    entrybuf.clear();
+    globalbuf.clear();
+    bugbuf.clear();
 
     CERR_STIL_DEBUG << "setBaseDir() succeeded" << endl;
 
@@ -323,9 +319,9 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
 
     // Find out whether we have this entry in the buffer.
 
-    if ((!stringutils::equal(entrybuf, relPathToEntry, relPathToEntryLen)) ||
-        ((((size_t)(strchr(entrybuf, '\n') - entrybuf)) != relPathToEntryLen)
-         && (STILVersion > 2.59f)))
+    if ((!stringutils::equal(entrybuf.data(), relPathToEntry, relPathToEntryLen))
+        || ((entrybuf.find_first_of('\n') != relPathToEntryLen)
+        && (STILVersion > 2.59f)))
     {
         // The relative pathnames don't match or they're not the same length:
         // we don't have it in the buffer, so pull it in.
@@ -351,22 +347,20 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         if (positionToEntry(relPathToEntry, stilFile, stilDirs) == false)
         {
             // Copy the entry's name to the buffer.
-            strncpy(entrybuf, relPathToEntry, STIL_MAX_ENTRY_SIZE - 1);
-            strcat(entrybuf, "\n");
-            entrybuf[STIL_MAX_ENTRY_SIZE - 1] = '\0';
+            entrybuf.append(relPathToEntry).append("\n");
             CERR_STIL_DEBUG << "getEntry() posToEntry() failed" << endl;
             lastError = NOT_IN_STIL;
         }
         else
         {
-            *entrybuf = '\0';
+            entrybuf.clear();
             readEntry(stilFile, entrybuf);
             CERR_STIL_DEBUG << "getEntry() entry read" << endl;
         }
     }
 
     // Put the requested field into the result string.
-    return getField(resultEntry, entrybuf, tuneNo, field) ? resultEntry.c_str() : NULL;
+    return getField(resultEntry, entrybuf.c_str(), tuneNo, field) ? resultEntry.c_str() : NULL;
 }
 
 const char *
@@ -425,8 +419,8 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
 
     const size_t relPathToEntryLen = strlen(relPathToEntry);
 
-    if ((!stringutils::equal(bugbuf, relPathToEntry, relPathToEntryLen)) ||
-        ((((size_t)(strchr(bugbuf, '\n') - bugbuf)) != relPathToEntryLen) &&
+    if ((!stringutils::equal(bugbuf.data(), relPathToEntry, relPathToEntryLen)) ||
+        ((bugbuf.find_first_of('\n') != relPathToEntryLen) &&
          (STILVersion > 2.59f)))
     {
         // The relative pathnames don't match or they're not the same length:
@@ -453,22 +447,20 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         if (positionToEntry(relPathToEntry, bugFile, bugDirs) == false)
         {
             // Copy the entry's name to the buffer.
-            strncpy(bugbuf, relPathToEntry, STIL_MAX_ENTRY_SIZE - 1);
-            strcat(bugbuf, "\n");
-            bugbuf[STIL_MAX_ENTRY_SIZE - 1] = '\0';
+            bugbuf.append(relPathToEntry).append("\n");
             CERR_STIL_DEBUG << "getBug() posToEntry() failed" << endl;
             lastError = NOT_IN_BUG;
         }
         else
         {
-            *bugbuf = '\0';
+            bugbuf.clear();
             readEntry(bugFile, bugbuf);
             CERR_STIL_DEBUG << "getBug() entry read" << endl;
         }
     }
 
     // Put the requested field into the result string.
-    return getField(resultBug, bugbuf, tuneNo) ? resultBug.c_str() : NULL;
+    return getField(resultBug, bugbuf.c_str(), tuneNo) ? resultBug.c_str() : NULL;
 }
 
 const char *
@@ -531,8 +523,8 @@ STIL::getGlobalComment(const char *relPathToEntry)
     // If the baseDir was changed, we'll have to read it in again,
     // even if it might be in the buffer already.
 
-    if ((!stringutils::equal(globalbuf, dir.data(), pathLen)) ||
-        ((((size_t)(strchr(globalbuf, '\n') - globalbuf)) != pathLen) &&
+    if ((!stringutils::equal(globalbuf.data(), dir.data(), pathLen)) ||
+        ((globalbuf.find_first_of('\n') != pathLen) &&
          (STILVersion > 2.59f)))
     {
         // The relative pathnames don't match or they're not the same length:
@@ -557,15 +549,13 @@ STIL::getGlobalComment(const char *relPathToEntry)
         if (positionToEntry(dir.c_str(), stilFile, stilDirs) == false)
         {
             // Copy the dirname to the buffer.
-            strncpy(globalbuf, dir.c_str(), STIL_MAX_ENTRY_SIZE - 1);
-            strcat(globalbuf, "\n");
-            globalbuf[STIL_MAX_ENTRY_SIZE - 1] = '\0';
+            globalbuf.append(dir).append("\n");
             CERR_STIL_DEBUG << "getGC() posToEntry() failed" << endl;
             lastError = NOT_IN_STIL;
         }
         else
         {
-            *globalbuf = '\0';
+            globalbuf.clear();
             readEntry(stilFile, globalbuf);
             CERR_STIL_DEBUG << "getGC() entry read" << endl;
         }
@@ -576,11 +566,10 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
     // Position pointer to the global comment field.
 
-    char *temp = strchr(globalbuf, '\n');
-    temp++;
+    const size_t temp = globalbuf.find_first_of('\n') + 1;
 
     // Check whether this is a NULL entry or not.
-    return *temp != '\0' ? temp : NULL;
+    return temp != globalbuf.size() ? globalbuf.c_str() + temp : NULL;
 }
 
 //////// PRIVATE
@@ -642,8 +631,6 @@ STIL::determineEOL(ifstream &stilFile)
 bool
 STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 {
-    char line[STIL_MAX_LINE_SIZE];
-
     bool newDir = !isSTILFile;
 
     CERR_STIL_DEBUG << "getDirs() called" << endl;
@@ -652,6 +639,8 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
     while (inFile.good())
     {
+        string line;
+
         getStilLine(inFile, line);
 
         if (!isSTILFile) { CERR_STIL_DEBUG << line << '\n'; }
@@ -660,15 +649,16 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
         if (isSTILFile && (STILVersion == 0.0f))
         {
-            if (strncmp(line, "#  STIL v", 9) == 0)
+            if (strncmp(line.data(), "#  STIL v", 9) == 0)
             {
                 // Get the version number
-                STILVersion = atof(line + 9);
+                STILVersion = atof(line.c_str() + 9);
 
                 // Put it into the string, too.
-                snprintf(line, STIL_MAX_LINE_SIZE - 1, "SID Tune Information List (STIL) v%4.2f\n", STILVersion);
-                line[STIL_MAX_LINE_SIZE - 1] = '\0';
-                versionString.append(line);
+                ostringstream ss;
+                ss << fixed << setw(4) << setprecision(2);
+                ss << "SID Tune Information List (STIL) v" << STILVersion << endl;
+                versionString.append(ss.str());
 
                 CERR_STIL_DEBUG << "getDirs() STILVersion=" << STILVersion << endl;
 
@@ -678,7 +668,7 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
         // Search for the start of a dir separator first.
 
-        if (isSTILFile && !newDir && stringutils::equal(line, "### ", 4))
+        if (isSTILFile && !newDir && stringutils::equal(line.data(), "### ", 4))
         {
             newDir = true;
             continue;
@@ -686,12 +676,10 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
 
         // Is this the start of an entry immediately following a dir separator?
 
-        if (newDir && (*line == '/'))
+        if (newDir && (line[0] == '/'))
         {
             // Get the directory only
-            const size_t j = strrchr(line, '/') - line + 1;
-
-            const string dirName(line, j);
+            const string dirName(line, 0, line.find_last_of('/') + 1);
 
             if (!isSTILFile)
             {
@@ -702,7 +690,7 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
             // Store the info
             if (newDir)
             {
-                const streampos position = inFile.tellg() - (streampos)strlen(line) - 1L;
+                const streampos position = inFile.tellg() - (streampos)line.size() - 1L;
 
                 CERR_STIL_DEBUG << "getDirs() dirName=" << dirName << ", pos=" << position <<  endl;
 
@@ -769,7 +757,7 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
 
     // Now find the desired entry
 
-    char line[STIL_MAX_LINE_SIZE];
+    string line;
 
     do
     {
@@ -782,9 +770,9 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
 
         // Check if it is the start of an entry
 
-        if (*line == '/')
+        if (line[0] == '/')
         {
-            if (!stringutils::equal(elem->first.data(), line, pathLen))
+            if (!stringutils::equal(elem->first.data(), line.data(), pathLen))
             {
                 // We are outside the section - get out of the loop,
                 // which will fail the search.
@@ -796,14 +784,14 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
 
             if (globComm || (STILVersion > 2.59f))
             {
-                foundIt = stringutils::equal(line, entryStr);
+                foundIt = stringutils::equal(line.c_str(), entryStr);
             }
             else
             {
                 // To be compatible with older versions of STIL, which may have
                 // the tune designation on the first line of a STIL entry
                 // together with the pathname.
-                foundIt = stringutils::equal(line, entryStr, entryStrLen);
+                foundIt = stringutils::equal(line.data(), entryStr, entryStrLen);
             }
 
             CERR_STIL_DEBUG << "pos2Entry() line=" << line << endl;
@@ -814,7 +802,7 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
     if (foundIt)
     {
         // Reposition the file pointer back to the start of the entry.
-        inFile.seekg(inFile.tellg() - (streampos)strlen(line) - 1L);
+        inFile.seekg(inFile.tellg() - (streampos)line.size() - 1L);
         CERR_STIL_DEBUG << "pos2Entry() entry found" << endl;
         return true;
     }
@@ -826,25 +814,24 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
 }
 
 void
-STIL::readEntry(ifstream &inFile, char *buffer)
+STIL::readEntry(ifstream &inFile, string &buffer)
 {
-    char line[STIL_MAX_LINE_SIZE];
+    string line;
 
-    do
+    for (;;)
     {
         getStilLine(inFile, line);
-        strcat(buffer, line);
+        buffer.append(line);
 
-        if (*line != '\0')
-        {
-            strcat(buffer, "\n");
-        }
+        if (line[0] == '\0')
+            break;
+
+        buffer.append("\n");
     }
-    while (*line != '\0');
 }
 
 bool
-STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
+STIL::getField(string &result, const char *buffer, int tuneNo, STILField field)
 {
     CERR_STIL_DEBUG << "getField() called, buffer=" << buffer << ", rest=" << tuneNo << "," << field << endl;
 
@@ -853,8 +840,7 @@ STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
 
     // Position pointer to the first char beyond the file designation.
 
-    char *start = strchr(buffer, '\n');
-    start++;
+    const char *start = strchr(buffer, '\n') + 1;
 
     // Check whether this is a NULL entry or not.
 
@@ -865,7 +851,7 @@ STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
     }
 
     // Is this a multitune entry?
-    char *firstTuneNo = strstr(start, "(#");
+    const char *firstTuneNo = strstr(start, "(#");
 
     // This is a tune designation only if the previous char was
     // a newline (ie. if the "(#" is on the beginning of a line).
@@ -882,8 +868,8 @@ STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
 
         // Is the first thing in this STIL entry the COMMENT?
 
-        char *temp = strstr(start, _COMMENT_STR);
-        char *temp2 = NULL;
+        const char *temp = strstr(start, _COMMENT_STR);
+        const char *temp2 = NULL;
 
         // Search for other potential fields beyond the COMMENT.
         if (temp == start)
@@ -1027,7 +1013,7 @@ STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
 
         snprintf(tuneNoStr, 7, "(#%d)", tuneNo);
         tuneNoStr[7] = '\0';
-        char *myTuneNo = strstr(start, tuneNoStr);
+        const char *myTuneNo = strstr(start, tuneNoStr);
 
         if (myTuneNo != NULL)
         {
@@ -1037,7 +1023,7 @@ STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
 
             // Where is the next one?
 
-            char *nextTuneNo = strstr(myTuneNo, "\n(#");
+            const char *nextTuneNo = strstr(myTuneNo, "\n(#");
 
             if (nextTuneNo == NULL)
             {
@@ -1065,7 +1051,7 @@ STIL::getField(string &result, char *buffer, int tuneNo, STILField field)
 }
 
 bool
-STIL::getOneField(string &result, char *start, char *end, STILField field)
+STIL::getOneField(string &result, const char *start, const char *end, STILField field)
 {
     // Sanity checking
 
@@ -1077,7 +1063,7 @@ STIL::getOneField(string &result, char *start, char *end, STILField field)
 
     CERR_STIL_DEBUG << "getOneField() called, start=" << start << ", rest=" << field << endl;
 
-    char *temp = NULL;
+    const char *temp = NULL;
 
     switch (field)
     {
@@ -1121,11 +1107,11 @@ STIL::getOneField(string &result, char *start, char *end, STILField field)
     // Search for the end of this field. This is done by finding
     // where the next field starts.
 
-    char *nextName = strstr(temp + 1, _NAME_STR);
-    char *nextAuthor = strstr(temp + 1, _AUTHOR_STR);
-    char *nextTitle = strstr(temp + 1, _TITLE_STR);
-    char *nextArtist = strstr(temp + 1, _ARTIST_STR);
-    char *nextComment = strstr(temp + 1, _COMMENT_STR);
+    const char *nextName = strstr(temp + 1, _NAME_STR);
+    const char *nextAuthor = strstr(temp + 1, _AUTHOR_STR);
+    const char *nextTitle = strstr(temp + 1, _TITLE_STR);
+    const char *nextArtist = strstr(temp + 1, _ARTIST_STR);
+    const char *nextComment = strstr(temp + 1, _COMMENT_STR);
 
     // If any of these fields is beyond 'end', they are ignored.
 
@@ -1157,7 +1143,7 @@ STIL::getOneField(string &result, char *start, char *end, STILField field)
     // Now determine which one is the closest to our field - that one
     // will mark the end of the required field.
 
-    char *nextField = nextName;
+    const char *nextField = nextName;
 
     if (nextField == NULL)
     {
@@ -1208,7 +1194,7 @@ STIL::getOneField(string &result, char *start, char *end, STILField field)
 }
 
 void
-STIL::getStilLine(ifstream &infile, char *line)
+STIL::getStilLine(ifstream &infile, string &line)
 {
     if (STIL_EOL2 != '\0')
     {
@@ -1222,5 +1208,5 @@ STIL::getStilLine(ifstream &infile, char *line)
         }
     }
 
-    infile.getline(line, STIL_MAX_LINE_SIZE, STIL_EOL);
+    getline(infile, line, STIL_EOL);
 }
