@@ -26,22 +26,37 @@
 
 typedef struct
 {
-    unsigned int crystalFreq;
-    unsigned int divider;
+    double colorBurst;
+    double divider;
     MOS656X::model_t vicModel;
 } model_data_t;
 
+/*
+ * Color burst frequencies:
+ * 
+ * NTSC  - 3.579545455 MHz = 315/88 MHz
+ * PAL-B - 4.43361875 MHz = 283.75 × 15625 Hz + 25 Hz.
+ * PAL-M - 3.57561149 MHz
+ * PAL-N - 3.58205625 MHz
+ */
+
 const model_data_t modelData[] =
 {
-    {17734472u, 18u, MOS656X::MOS6569},     // PAL-B
-    {14318181u, 14u, MOS656X::MOS6567R8},   // NTSC-M
-    {14318181u, 14u, MOS656X::MOS6567R56A}, // Old NTSC-M
-    {14328224u, 14u, MOS656X::MOS6572},     // PAL-N
+    {4.43361875,  18., MOS656X::MOS6569},      // PAL-B
+    {3.579545455, 14., MOS656X::MOS6567R8},    // NTSC-M
+    {3.579545455, 14., MOS656X::MOS6567R56A},  // Old NTSC-M
+    {3.58205625,  14., MOS656X::MOS6572},      // PAL-N
 };
 
 double c64::getCpuFreq(model_t model)
 {
-    return (double)modelData[model].crystalFreq/(double)modelData[model].divider;
+    /*
+     * The crystal clock that drives the VIC II chip is four times
+     * the color burst frequency
+     */
+    const double crystalFreq = modelData[model].colorBurst * 4. * 1000000.;
+
+    return crystalFreq/modelData[model].divider;
 }
 
 c64::c64() :
