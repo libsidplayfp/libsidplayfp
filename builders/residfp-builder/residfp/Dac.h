@@ -35,17 +35,16 @@ namespace reSIDfp
 * on the _2R_div_R parameter. It differs from the version written by Antti Lankila
 * chiefly in the emulation of the lacking termination of the 2R ladder, which
 * destroys the output with respect to the low bits of the DAC.
-*
-* @param dac an array to be filled with the resulting analog values
-* @param dacLength the dac array length
-* @param _2R_div_R nonlinearity parameter, 1.0 for perfect linearity.
-* @param termi is the dac terminated by a 2R resistor? (6581 DACs are not)
-*
-* @return the analog value as modeled from the R-2R network.
 */
 class Dac
 {
 public:
+    /**
+     * @param dac an array to be filled with the resulting analog values
+     * @param dacLength the dac array length
+     * @param _2R_div_R nonlinearity parameter, 1.0 for perfect linearity.
+     * @param term is the dac terminated by a 2R resistor? (6581 DACs are not)
+     */
     static void kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term);
 };
 
