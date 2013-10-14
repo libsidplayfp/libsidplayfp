@@ -1524,7 +1524,7 @@ MOS6510::MOS6510 (EventContext *context) :
     for (int i = 0; i < 0x100; i++)
     {
 #if DEBUG > 1
-        printf ("Building Command %d[%02x]..", i, i);
+        printf("Building Command %d[%02x]... ", i, i);
 #endif
 
         /*
@@ -2152,10 +2152,6 @@ MOS6510::MOS6510 (EventContext *context) :
 
         /* check for IRQ triggers or fetch next opcode... */
         instrTable[buildCycle].func = &MOS6510::interruptsAndNextOpcode;
-
-#if DEBUG > 1
-        printf(".");
-#endif
 
 #if DEBUG > 1
         printf("Done [%d Cycles]\n", buildCycle - (i << 3));
