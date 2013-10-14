@@ -93,11 +93,11 @@ void Mixer::event()
 
             /* This is a crude boxcar low-pass filter to
              * reduce aliasing during fast forward. */
-            for (int k = 0; k < m_buffers.size(); k++)
+            for (size_t k = 0; k < m_buffers.size(); k++)
             {
                 int_least32_t sample = 0;
                 const short *buffer = m_buffers[k] + i;
-                for (unsigned int j = 0; j < m_fastForwardFactor; j++)
+                for (int j = 0; j < m_fastForwardFactor; j++)
                 {
                     sample += buffer[j];
                 }
