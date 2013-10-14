@@ -270,7 +270,7 @@ double FilterModelConfig::evaluateTransistor(double Vw, double vi, double vx)
 unsigned int* FilterModelConfig::getDAC(double dac_zero) const
 {
     const double N16 = norm * ((1L << 16) - 1);
-    const int bits = DAC_SIZE;
+    static const int bits = DAC_SIZE;
     unsigned int* f0_dac = new unsigned int[1 << bits];
 
     for (int i = 0; i < (1 << bits); i++)

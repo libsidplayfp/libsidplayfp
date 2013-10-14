@@ -96,11 +96,12 @@ void EnvelopeGenerator::set_exponential_counter()
 
 void EnvelopeGenerator::setChipModel(ChipModel chipModel)
 {
-    const int dacBitsLength = 8;
+    static const int dacBitsLength = 8;
+
     double dacBits[dacBitsLength];
     Dac::kinkedDac(dacBits, dacBitsLength, chipModel == MOS6581 ? 2.30 : 2.00, chipModel == MOS8580);
 
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < (1 << dacBitsLength); i++)
     {
         double dacValue = 0.;
 

@@ -93,14 +93,16 @@ void WaveformGenerator::setWaveformModels(matrix_t* models)
 
 void WaveformGenerator::setChipModel(ChipModel chipModel)
 {
-    double dacBits[12];
-    Dac::kinkedDac(dacBits, 12, chipModel == MOS6581 ? 2.20 : 2.00, chipModel == MOS8580);
+    static const int dacBitsLength = 12;
 
-    for (int i = 0; i < 4096; i++)
+    double dacBits[dacBitsLength];
+    Dac::kinkedDac(dacBits, dacBitsLength, chipModel == MOS6581 ? 2.20 : 2.00, chipModel == MOS8580);
+
+    for (int i = 0; i < (1 << dacBitsLength); i++)
     {
         double dacValue = 0.;
 
-        for (int j = 0; j < 12; j ++)
+        for (int j = 0; j < dacBitsLength; j ++)
         {
             if ((i & (1 << j)) != 0)
             {
@@ -113,7 +115,7 @@ void WaveformGenerator::setChipModel(ChipModel chipModel)
 
     const int offset = dac[chipModel == MOS6581 ? 0x380 : 0x800];
 
-    for (int i = 0; i < 4096; i ++)
+    for (int i = 0; i < (1 << dacBitsLength); i ++)
     {
         dac[i] -= offset;
     }
