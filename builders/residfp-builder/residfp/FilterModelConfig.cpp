@@ -267,8 +267,10 @@ double FilterModelConfig::evaluateTransistor(double Vw, double vi, double vx)
     return n_I_snake + n_I_vcr;
 }
 
-unsigned int* FilterModelConfig::getDAC(double dac_zero) const
+unsigned int* FilterModelConfig::getDAC(double adjustment) const
 {
+    const double dac_zero = getDacZero(adjustment);
+
     const double N16 = norm * ((1L << 16) - 1);
     unsigned int* f0_dac = new unsigned int[1 << DAC_BITS];
 

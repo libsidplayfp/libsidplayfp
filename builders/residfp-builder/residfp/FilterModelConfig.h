@@ -75,15 +75,16 @@ private:
     unsigned short vcr_n_Ids_term[1 << 16];
     int opamp_rev[1 << 16];
 
+private:
     double evaluateTransistor(double Vw, double vi, double vx);
+
+    double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
 
     FilterModelConfig();
     ~FilterModelConfig();
 
 public:
     static FilterModelConfig* getInstance();
-
-    double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
 
     int getVO_T16() const { return (int)(norm * ((1L << 16) - 1) * vmin); }
 
@@ -102,10 +103,10 @@ public:
      * Ownership is transferred to the requester which becomes responsible
      * of freeing the object when done.
      *
-     * @param dac_zero
+     * @param adjustment
      * @return the DAC table
      */
-    unsigned int* getDAC(double dac_zero) const;
+    unsigned int* getDAC(double adjustment) const;
 
     Integrator* buildIntegrator();
 

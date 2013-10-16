@@ -100,7 +100,7 @@ public:
         currentResonance(0),
         hpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
-        f0_dac(FilterModelConfig::getInstance()->getDAC(FilterModelConfig::getInstance()->getDacZero(0.5))),
+        f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
         mixer(FilterModelConfig::getInstance()->getMixer()),
         summer(FilterModelConfig::getInstance()->getSummer()),
         gain(FilterModelConfig::getInstance()->getGain())
