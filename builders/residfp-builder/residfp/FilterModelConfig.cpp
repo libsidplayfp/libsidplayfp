@@ -100,7 +100,7 @@ FilterModelConfig::FilterModelConfig() :
 
     opamp_working_point = wp;
 
-    Dac::kinkedDac(dac, DAC_SIZE, dac_2R_div_R, dac_term);
+    Dac::kinkedDac(dac, DAC_BITS, dac_2R_div_R, dac_term);
 
     const double N16 = norm * ((1 << 16) - 1);
 
@@ -270,14 +270,13 @@ double FilterModelConfig::evaluateTransistor(double Vw, double vi, double vx)
 unsigned int* FilterModelConfig::getDAC(double dac_zero) const
 {
     const double N16 = norm * ((1L << 16) - 1);
-    static const int bits = DAC_SIZE;
-    unsigned int* f0_dac = new unsigned int[1 << bits];
+    unsigned int* f0_dac = new unsigned int[1 << DAC_BITS];
 
-    for (int i = 0; i < (1 << bits); i++)
+    for (int i = 0; i < (1 << DAC_BITS); i++)
     {
         double fcd = 0.;
 
-        for (int j = 0; j < bits; j ++)
+        for (int j = 0; j < DAC_BITS; j ++)
         {
             if ((i & (1 << j)) != 0)
             {
@@ -285,7 +284,7 @@ unsigned int* FilterModelConfig::getDAC(double dac_zero) const
             }
         }
 
-        f0_dac[i] = (unsigned int)(N16 * (dac_zero + fcd * dac_scale / (1 << bits)) + 0.5);
+        f0_dac[i] = (unsigned int)(N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS)) + 0.5);
     }
 
     return f0_dac;
@@ -302,10 +301,9 @@ Integrator* FilterModelConfig::buildIntegrator()
 double FilterModelConfig::estimateFrequency(double dac_zero, int fc)
 {
     /* Calculate input from DAC */
-    const int bits = DAC_SIZE;
     double Vw = 0.;
 
-    for (int j = 0; j < bits; j ++)
+    for (int j = 0; j < DAC_BITS; j ++)
     {
         if ((fc & (1 << j)) != 0)
         {
@@ -313,7 +311,7 @@ double FilterModelConfig::estimateFrequency(double dac_zero, int fc)
         }
     }
 
-    Vw = dac_zero + dac_scale * Vw / (1 << bits);
+    Vw = dac_zero + dac_scale * Vw / (1 << DAC_BITS);
 
     /* Estimate the behavior for small signals around the op-amp working point. */
     const double vx = opamp_working_point;

@@ -24,9 +24,6 @@
 
 #include <memory>
 
-#define OPAMP_SIZE 22
-#define DAC_SIZE 11
-
 namespace reSIDfp
 {
 
@@ -36,6 +33,10 @@ class Integrator;
 */
 class FilterModelConfig
 {
+private:
+    static const unsigned int OPAMP_SIZE = 22;
+    static const unsigned int DAC_BITS = 11;
+
 private:
     static std::auto_ptr<FilterModelConfig> instance;
     // This allows access to the private constructor
@@ -69,7 +70,7 @@ private:
     unsigned short* mixer[8];
     unsigned short* summer[7];
     unsigned short* gain[16];
-    double dac[DAC_SIZE];
+    double dac[DAC_BITS];
     unsigned short vcr_Vg[1 << 16];
     unsigned short vcr_n_Ids_term[1 << 16];
     int opamp_rev[1 << 16];

@@ -29,6 +29,8 @@
 namespace reSIDfp
 {
 
+const int DAC_BITS = 12;
+
 void WaveformGenerator::clock_shift_register()
 {
     // bit0 = (bit22 | test) ^ bit17
@@ -93,16 +95,14 @@ void WaveformGenerator::setWaveformModels(matrix_t* models)
 
 void WaveformGenerator::setChipModel(ChipModel chipModel)
 {
-    static const int dacBitsLength = 12;
+    double dacBits[DAC_BITS];
+    Dac::kinkedDac(dacBits, DAC_BITS, chipModel == MOS6581 ? 2.20 : 2.00, chipModel == MOS8580);
 
-    double dacBits[dacBitsLength];
-    Dac::kinkedDac(dacBits, dacBitsLength, chipModel == MOS6581 ? 2.20 : 2.00, chipModel == MOS8580);
-
-    for (int i = 0; i < (1 << dacBitsLength); i++)
+    for (int i = 0; i < (1 << DAC_BITS); i++)
     {
         double dacValue = 0.;
 
-        for (int j = 0; j < dacBitsLength; j ++)
+        for (int j = 0; j < DAC_BITS; j ++)
         {
             if ((i & (1 << j)) != 0)
             {
@@ -115,7 +115,7 @@ void WaveformGenerator::setChipModel(ChipModel chipModel)
 
     const int offset = dac[chipModel == MOS6581 ? 0x380 : 0x800];
 
-    for (int i = 0; i < (1 << dacBitsLength); i ++)
+    for (int i = 0; i < (1 << DAC_BITS); i ++)
     {
         dac[i] -= offset;
     }
