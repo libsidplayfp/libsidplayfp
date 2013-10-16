@@ -209,7 +209,7 @@ FilterModelConfig::FilterModelConfig() :
 
     const double Ut = 26.0e-3;  // Thermal voltage.
     const double k = 1.0;
-    const double Is = 2.*uCox_vcr * Ut * Ut / k * WL_vcr;
+    const double Is = 2. * uCox_vcr * Ut * Ut / k * WL_vcr;
     // Normalized current factor for 1 cycle at 1MHz.
     const double n_Is = N15 * 1.0e-6 / C * Is;
 
@@ -218,7 +218,7 @@ FilterModelConfig::FilterModelConfig() :
 
     for (int Vgx = 1; Vgx < (1 << 16); Vgx++)
     {
-        const double log_term = log(1. + exp((Vgx / N16 - k * Vth) / (2.*Ut)));
+        const double log_term = log(1. + exp((Vgx / N16 - k * Vth) / (2. * Ut)));
         // Scaled by m*2^15
         vcr_n_Ids_term[Vgx] = (unsigned short)(n_Is * log_term * log_term + 0.5);
     }
@@ -246,7 +246,7 @@ double FilterModelConfig::evaluateTransistor(double Vw, double vi, double vx)
 {
     const double Vgst = Vdd - Vth - vx;
     const double Vgdt = Vdd - Vth - vi;
-    const double n_snake = uCox_snake / 2.*WL_snake;
+    const double n_snake = uCox_snake / 2. * WL_snake;
     const double n_I_snake = n_snake * (Vgst * Vgst - Vgdt * Vgdt);
 
     const double Vg = Vdd - Vth - sqrt(pow(Vdd - Vth - Vw, 2.) / 2. + pow(Vgdt, 2.) / 2.);
@@ -255,12 +255,12 @@ double FilterModelConfig::evaluateTransistor(double Vw, double vi, double vx)
 
     const double Ut = 26.0e-3;  // Thermal voltage.
     const double k = 1.0;
-    const double Is = 2.*uCox_vcr * Ut * Ut / k * WL_vcr;
+    const double Is = 2. * uCox_vcr * Ut * Ut / k * WL_vcr;
 
-    const double log_term_f = log(1. + exp((Vgs - k * Vth) / (2.*Ut)));
+    const double log_term_f = log(1. + exp((Vgs - k * Vth) / (2. * Ut)));
     const double n_I_vcr_f = Is * log_term_f * log_term_f;
 
-    const double log_term_r = log(1. + exp((Vgd - k * Vth) / (2.*Ut)));
+    const double log_term_r = log(1. + exp((Vgd - k * Vth) / (2. * Ut)));
     const double n_I_vcr_r = Is * log_term_r * log_term_r;
 
     const double n_I_vcr = n_I_vcr_f - n_I_vcr_r;
@@ -296,7 +296,7 @@ Integrator* FilterModelConfig::buildIntegrator()
 {
     const double N16 = norm * ((1 << 16) - 1);
     const int Vddt = (int)(N16 * (Vdd - Vth) + 0.5);
-    const int n_snake = (int)((1 << 13) / norm * (uCox_snake / 2.*WL_snake * 1.0e-6 / C) + 0.5);
+    const int n_snake = (int)((1 << 13) / norm * (uCox_snake / 2. * WL_snake * 1.0e-6 / C) + 0.5);
     return new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, Vddt, n_snake);
 }
 

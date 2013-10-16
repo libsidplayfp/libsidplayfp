@@ -52,11 +52,11 @@ private:
 
     // Transistor parameters.
     const double Vdd;
-    const double Vth;			// Threshold voltage
-    const double uCox_vcr;			// 1/2*u*Cox
-    const double WL_vcr;			// W/L for VCR
-    const double uCox_snake;		// 1/2*u*Cox
-    const double WL_snake;			// W/L for "snake"
+    const double Vth;           // Threshold voltage
+    const double uCox_vcr;      // 1/2*u*Cox
+    const double WL_vcr;        // W/L for VCR
+    const double uCox_snake;    // 1/2*u*Cox
+    const double WL_snake;      // W/L for "snake"
 
     // DAC parameters.
     const double dac_zero;

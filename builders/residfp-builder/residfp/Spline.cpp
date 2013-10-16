@@ -43,12 +43,12 @@ Spline::Spline(const double input[][2], int inputLength) :
         if (p0 == 0)
         {
             k2 = (p3[1] - p1[1]) / (p3[0] - p1[0]);
-            k1 = (3.*(p2[1] - p1[1]) / (p2[0] - p1[0]) - k2) / 2.;
+            k1 = (3. * (p2[1] - p1[1]) / (p2[0] - p1[0]) - k2) / 2.;
         }
         else if (p3 == 0)
         {
             k1 = (p2[1] - p0[1]) / (p2[0] - p0[0]);
-            k2 = (3.*(p2[1] - p1[1]) / (p2[0] - p1[0]) - k1) / 2.;
+            k2 = (3. * (p2[1] - p1[1]) / (p2[0] - p1[0]) - k1) / 2.;
         }
         else
         {
@@ -64,9 +64,9 @@ Spline::Spline(const double input[][2], int inputLength) :
         const double dx = x2 - x1;
         const double dy = y2 - y1;
 
-        const double a = ((k1 + k2) - 2.*dy / dx) / (dx * dx);
-        const double b = ((k2 - k1) / dx - 3.*(x1 + x2) * a) / 2.;
-        const double c = k1 - (3.*x1 * a + 2.*b) * x1;
+        const double a = ((k1 + k2) - 2. * dy / dx) / (dx * dx);
+        const double b = ((k2 - k1) / dx - 3. * (x1 + x2) * a) / 2.;
+        const double c = k1 - (3. * x1 * a + 2.*b) * x1;
         const double d = y1 - ((x1 * a + b) * x1 + c) * x1;
 
         params[i][0] = x1;
@@ -101,7 +101,7 @@ void Spline::evaluate(double x, double* out)
     }
 
     const double y = ((c[2] * x + c[3]) * x + c[4]) * x + c[5];
-    const double yd = (3.*c[2] * x + 2.*c[3]) * x + c[4];
+    const double yd = (3. * c[2] * x + 2. * c[3]) * x + c[4];
     out[0] = y;
     out[1] = yd;
 }

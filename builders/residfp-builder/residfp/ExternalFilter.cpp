@@ -44,7 +44,7 @@ void ExternalFilter::setClockFrequency(double frequency)
     w0hp_1_s17 = (int)(100. / frequency * (1 << 17) + 0.5);
 }
 
-void ExternalFilter:: reset()
+void ExternalFilter::reset()
 {
     // State of filter.
     Vlp = 0; //1 << (15 + 11);
