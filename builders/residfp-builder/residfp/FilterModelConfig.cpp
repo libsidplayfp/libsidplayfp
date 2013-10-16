@@ -88,17 +88,14 @@ FilterModelConfig::FilterModelConfig() :
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
-    double wp = 0.;
-
     for (int i = 0; i < OPAMP_SIZE; i ++)
     {
         if (opamp_voltage[i][0] == opamp_voltage[i][1])
         {
-            wp = opamp_voltage[i][0];
+            opamp_working_point = opamp_voltage[i][0];
+            break;
         }
     }
-
-    opamp_working_point = wp;
 
     Dac::kinkedDac(dac, DAC_BITS, dac_2R_div_R, dac_term);
 
