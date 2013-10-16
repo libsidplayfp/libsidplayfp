@@ -36,7 +36,7 @@ Filter6581::~Filter6581()
 
 void Filter6581::updatedCenterFrequency()
 {
-    const int Vw = f0_dac[fc];
+    const unsigned int Vw = f0_dac[fc];
     hpIntegrator->setVw(Vw);
     bpIntegrator->setVw(Vw);
 }
@@ -45,8 +45,8 @@ void Filter6581::updatedMixing()
 {
     currentGain = gain[vol];
 
-    int ni = 0;
-    int no = 0;
+    unsigned int ni = 0;
+    unsigned int no = 0;
 
     (filt1 ? ni : no)++;
 
