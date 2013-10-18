@@ -61,8 +61,6 @@ private:
     // DAC parameters.
     const double dac_zero;
     const double dac_scale;
-    const double dac_2R_div_R;
-    const bool dac_term;
 
     /* Derived stuff */
     const double vmin, norm;

@@ -81,8 +81,6 @@ FilterModelConfig::FilterModelConfig() :
     WL_snake(1.0 / 115.0),
     dac_zero(6.65),
     dac_scale(2.63),
-    dac_2R_div_R(2.2),
-    dac_term(false),
     vmin(opamp_voltage[0][0]),
     norm(1.0 / ((Vdd - Vth) - vmin))
 {
@@ -97,7 +95,7 @@ FilterModelConfig::FilterModelConfig() :
         }
     }
 
-    Dac::kinkedDac(dac, DAC_BITS, dac_2R_div_R, dac_term);
+    Dac::kinkedDac(dac, DAC_BITS, 2.2, false);
 
     const double N16 = norm * ((1 << 16) - 1);
 
