@@ -33,9 +33,6 @@ private:
     char m_md5[SidTune::MD5_LENGTH+1];
 
 private:
-    bool resolveAddrs(const uint_least8_t *c64data);
-    bool checkRelocInfo();
-
     void tryLoad(buffer_t& dataBuf);
 
 protected:
