@@ -35,7 +35,7 @@ typedef struct
  * Color burst frequencies:
  * 
  * NTSC  - 3.579545455 MHz = 315/88 MHz
- * PAL-B - 4.43361875 MHz = 283.75 × 15625 Hz + 25 Hz.
+ * PAL-B - 4.43361875 MHz = 283.75 * 15625 Hz + 25 Hz.
  * PAL-M - 3.57561149 MHz
  * PAL-N - 3.58205625 MHz
  */

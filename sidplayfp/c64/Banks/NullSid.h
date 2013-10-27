@@ -34,7 +34,7 @@ private:
     virtual ~NullSid() {}
 
 public:
-    /// Retruns singleton instance
+    /// Returns singleton instance
     static NullSid *getInstance()
     {
         static NullSid nullsid;
