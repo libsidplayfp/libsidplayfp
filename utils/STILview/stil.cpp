@@ -821,11 +821,11 @@ STIL::readEntry(ifstream &inFile, string &buffer)
     for (;;)
     {
         getStilLine(inFile, line);
-        buffer.append(line);
 
-        if (line[0] == '\0')
+        if (line.size() == 0)
             break;
 
+        buffer.append(line);
         buffer.append("\n");
     }
 }
