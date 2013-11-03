@@ -63,10 +63,10 @@ private:
 
 protected:
     /** First line when we check for bad lines */
-    static const int FIRST_DMA_LINE = 0x30;
+    static const unsigned int FIRST_DMA_LINE = 0x30;
 
     /** Last line when we check for bad lines */
-    static const int LAST_DMA_LINE = 0xf7;
+    static const unsigned int LAST_DMA_LINE = 0xf7;
 
 protected:
     event_clock_t (MOS656X::*clock)();
@@ -77,20 +77,20 @@ protected:
     EventContext &event_context;
 
     /** Number of cycles per line. */
-    uint_least16_t cyclesPerLine;
+    unsigned int cyclesPerLine;
 
-    uint_least16_t maxRasters;
-
-    uint_least16_t raster_irq;
+    unsigned int maxRasters;
 
     /** Current visible line */
-    uint_least16_t lineCycle;
+    unsigned int lineCycle;
 
     /** current raster line */
-    uint_least16_t rasterY;
+    unsigned int rasterY;
 
     /** vertical scrolling value */
-    uint_least16_t yscroll;
+    unsigned int yscroll;
+
+    uint16_t raster_irq;
 
     /** are bad lines enabled for this frame? */
     bool areBadLinesEnabled;
@@ -325,9 +325,9 @@ public:
 
     const char *credits() const { return credit; }
 
-    uint_least16_t getCyclesPerLine() const { return cyclesPerLine; }
+    int getCyclesPerLine() const { return cyclesPerLine; }
 
-    uint_least16_t getRasterLines() const { return maxRasters; }
+    int getRasterLines() const { return maxRasters; }
 };
 
 // Template specializations

@@ -86,7 +86,7 @@ FilterModelConfig::FilterModelConfig() :
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
-    for (int i = 0; i < OPAMP_SIZE; i ++)
+    for (unsigned int i = 0; i < OPAMP_SIZE; i ++)
     {
         if (opamp_voltage[i][0] == opamp_voltage[i][1])
         {
@@ -107,7 +107,7 @@ FilterModelConfig::FilterModelConfig() :
     // vc -> vx
     double scaled_voltage[OPAMP_SIZE][2];
 
-    for (int i = 0; i < OPAMP_SIZE; i++)
+    for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
         scaled_voltage[i][0] = (N16 * (opamp_voltage[i][0] - opamp_voltage[i][1]) + (1 << 16)) / 2.;
         scaled_voltage[i][1] = N16 * opamp_voltage[i][0];
@@ -273,7 +273,7 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
     {
         double fcd = 0.;
 
-        for (int j = 0; j < DAC_BITS; j ++)
+        for (unsigned int j = 0; j < DAC_BITS; j ++)
         {
             if ((i & (1 << j)) != 0)
             {
@@ -300,7 +300,7 @@ double FilterModelConfig::estimateFrequency(double dac_zero, int fc)
     /* Calculate input from DAC */
     double Vw = 0.;
 
-    for (int j = 0; j < DAC_BITS; j ++)
+    for (unsigned int j = 0; j < DAC_BITS; j ++)
     {
         if ((fc & (1 << j)) != 0)
         {
