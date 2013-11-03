@@ -17,8 +17,8 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //  ---------------------------------------------------------------------------
 
-#ifndef VICE__SIDDEFS_FP_H__
-#define VICE__SIDDEFS_FP_H__
+#ifndef SIDDEFS_FP_H
+#define SIDDEFS_FP_H
 
 #ifndef M_PI
 #  define M_PI    3.14159265358979323846
@@ -36,7 +36,7 @@ extern "C"
 #ifndef __VERSION_CC__
 extern const char* residfp_version_string;
 #else
-const char* residfp_version_string = "0.0.2";
+const char* residfp_version_string = "@PACKAGE_VERSION@";
 #endif
 }
 
@@ -44,4 +44,4 @@ const char* residfp_version_string = "0.0.2";
 #define RESID_INLINING @RESID_INLINING@
 #define RESID_INLINE @RESID_INLINE@
 
-#endif // not __SIDDEFS_H__
+#endif // SIDDEFS_FP_H
