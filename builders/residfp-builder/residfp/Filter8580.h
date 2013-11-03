@@ -65,7 +65,7 @@ public:
 
     int clock(int voice1, int voice2, int voice3);
 
-    void updatedCenterFrequency() { w0 = (float)(2.*M_PI * highFreq * fc / 2047 / 1e6); }
+    void updatedCenterFrequency() { w0 = (float)(2. * M_PI * highFreq * fc / 2047. / 1e6); }
 
     void updatedResonance() { _1_div_Q = 1.f / (0.707f + res / 15.f); }
 

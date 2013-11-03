@@ -163,7 +163,7 @@ short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig confi
 
     for (int i = 0; i < 12; i++)
     {
-        if (o[i] > config.bias )
+        if (o[i] > config.bias)
         {
             value |= 1 << i;
         }
