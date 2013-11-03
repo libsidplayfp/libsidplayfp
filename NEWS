@@ -1,4 +1,15 @@
-1.1.0 2013-09-xx
+1.2.0 2013-xx-xx
+* Clean up includes with the help of IWYU (http://code.google.com/p/include-what-you-use/)
+* Improve checks for non-standard functions
+* Expand SidTuneInfo interface with parametrized methods. Mark the old ones as deprecated
+* Enable use of graphviz for doxygen documentation
+* Refactor mixer to be more clean and flexible
+* Improve the clock frequency calculation. Should fix the slightly off PAL-B clock
+* Some internal refactoring
+
+
+
+1.1.0 2013-09-28
 * Rework mixer to fix bug #7
 * Rework VIC emulation to be more faithful to PAL-NTSC models difference
 * Sync reSID codebase to fix a couple of regressions (See VICE bug #290)
