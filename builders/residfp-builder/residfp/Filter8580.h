@@ -73,6 +73,11 @@ public:
 
     void updatedMixing() {}
 
+    /**
+     * Set filter curve type based on single parameter.
+     *
+     * @param curvePosition filter's center frequency expressed in Hertz, default is 12500
+     */
     void setFilterCurve(double curvePosition) { highFreq = curvePosition; }
 };
 
