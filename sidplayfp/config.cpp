@@ -58,8 +58,8 @@ bool Player::config(const SidConfig &cfg)
     {
         tuneInfo = m_tune->getInfo();
 
-        if (tuneInfo->sidChipBase(1) != 0)
-            secondSidAddress = tuneInfo->sidChipBase(1);
+        if (tuneInfo->sidChipBase2() != 0)
+            secondSidAddress = tuneInfo->sidChipBase2();
 
         try
         {
@@ -234,13 +234,20 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 {
     if (builder)
     {
+        // Detect the Correct SID model
+        // Determine model when unknown
+        SidConfig::sid_model_t userModels[c64::MAX_SIDS];
+
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
+
+        userModels[0] = getModel(tuneInfo->sidModel1(), defaultModel, forced);
+        // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
+        // model as the first SID.
+        userModels[1] = getModel(tuneInfo->sidModel2(), userModels[0], forced);
 
         for (unsigned int i = 0; i < channels; i++)
         {
-            const SidConfig::sid_model_t userModel = getModel(tuneInfo->sidModel(i), defaultModel, forced);
-
-            sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
+            sidemu *s = builder->lock(m_c64.getEventScheduler(), userModels[i]);
             // Get at least one SID emulation
             if ((i == 0) && !builder->getStatus())
             {
@@ -249,10 +256,6 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 
             m_c64.setSid(i, s);
             m_mixer.addSid(s);
-
-            // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
-            // model as the first SID.
-            defaultModel = userModel;
         }
     }
 }

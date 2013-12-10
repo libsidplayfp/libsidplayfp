@@ -25,8 +25,6 @@
 
 #include <stdint.h>
 
-#include "siddefs.h" 
-
 /**
 * This interface is used to get values from SidTune objects.
 *
@@ -94,13 +92,10 @@ public:
     /**
     * @name Base addresses
     * The SID chip base address(es) used by the sidtune.
-    * - 0xD400 for the 1st SID
-    * - 0 if the nth SID is not required
     */
     //@{
-    SID_DEPRECATED virtual uint_least16_t sidChipBase1() const =0; 
-    SID_DEPRECATED virtual uint_least16_t sidChipBase2() const =0;
-    virtual uint_least16_t sidChipBase(unsigned int i) const =0;
+    virtual uint_least16_t sidChipBase1() const =0;    ///< 0xD400 (normal, 1st SID)
+    virtual uint_least16_t sidChipBase2() const =0;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID)
     //@}
 
     /**
@@ -128,9 +123,8 @@ public:
      * The SID chip model(s) requested by the sidtune.
      */
     //@{
-    SID_DEPRECATED virtual model_t sidModel1() const =0;
-    SID_DEPRECATED virtual model_t sidModel2() const =0;
-    virtual model_t sidModel(unsigned int i) const =0;
+    virtual model_t sidModel1() const =0;    ///< first SID
+    virtual model_t sidModel2() const =0;    ///< second SID
     //@}
 
     /**
