@@ -55,5 +55,8 @@ void sidbuilder::unlock (sidemu *device)
 
 void sidbuilder::remove ()
 {
+    for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
+        delete (*it);
+
     sidobjs.clear();
 }
