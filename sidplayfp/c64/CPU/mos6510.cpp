@@ -60,6 +60,22 @@ static char filetmp[0x100];
 static int  filepos = 0;
 #endif // PC64_TESTSUITE
 
+
+/**
+* Magic value for lxa and ane undocumented instructions.
+* Magic may be EE, EF, FE or FF, but most emulators seem to use EE.
+* Based on tests on a couple of chips at
+* http://visual6502.org/wiki/index.php?title=6502_Opcode_8B_(XAA,_ANE)
+* the value of magic for the MOS 6510 is FF.
+* However the Lorentz test suite assumes this to be EE.
+*/
+const uint8_t magic =
+#ifdef PC64_TESTSUITE
+    0xee
+#else
+    0xff
+#endif
+;
 //-------------------------------------------------------------------------//
 
 /** When AEC signal is high, no stealing is possible */
@@ -969,18 +985,12 @@ void MOS6510::and_instr()
     interruptsAndNextOpcode();
 }
 
+/**
+* Undocumented - For a detailed explanation of this opcode look at:
+* http://visual6502.org/wiki/index.php?title=6502_Opcode_8B_(XAA,_ANE)
+*/
 void MOS6510::ane_instr()
 {
-    // For an explanation of this opcode look at:
-    // http://visual6502.org/wiki/index.php?title=6502_Opcode_8B_(XAA,_ANE)
-    // Based on the table on the same page the most common value of magic
-    // for the MOS 6510 is FF
-    // However the Lorentz test suite assumes this to be EE
-#ifdef PC64_TESTSUITE
-    const uint8_t magic = 0xee;
-#else
-    const uint8_t magic = 0xff;
-#endif
     setFlagsNZ(Register_Accumulator = (Register_Accumulator | magic) & Register_X & Cycle_Data);
     interruptsAndNextOpcode();
 }
@@ -1465,13 +1475,12 @@ void MOS6510::lse_instr()
 }
 
 /**
-* Undocumented - This opcode ORs the A register with #xx, ANDs the result with an immediate
-* value, and then stores the result in both A and X.
-* xx may be EE,EF,FE, OR FF, but most emulators seem to use EE
+* Undocumented - This opcode ORs the A register with #xx (the "magic" value),
+* ANDs the result with an immediate value, and then stores the result in both A and X.
 */
 void MOS6510::oal_instr()
 {
-    setFlagsNZ(Register_X = (Register_Accumulator = (Cycle_Data & (Register_Accumulator | 0xee))));
+    setFlagsNZ(Register_X = (Register_Accumulator = (Cycle_Data & (Register_Accumulator | magic))));
     interruptsAndNextOpcode();
 }
 
