@@ -1,10 +1,10 @@
-1.2.0 2013-xx-xx
+1.2.0 2013-12-24
 * Clean up includes with the help of IWYU (http://code.google.com/p/include-what-you-use/)
 * Improve checks for non-standard functions
 * Enable use of graphviz for doxygen documentation
 * Refactor mixer to be more clean and flexible
 * Improve the clock frequency calculation. Should fix the slightly off PAL-B clock
-* Fixed a memory leak introduced in r1015 (bug #11)
+* Fix a memory leak introduced in r1015 (bug #11)
 * Some internal refactoring
 
 
