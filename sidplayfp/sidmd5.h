@@ -25,7 +25,15 @@
 #include <sstream>
 #include <iomanip>
 
-#include "utils/MD5/MD5.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
+#ifdef HAVE_LIBGCRYPT
+#  include "utils/md5_gcrypt.h"
+#else
+#  include "utils/MD5/MD5.h"
+#endif
 
 /**
 * A wrapper around the md5 implementation that provides
@@ -34,7 +42,11 @@
 class sidmd5
 {
 private:
+#ifdef HAVE_LIBGCRYPT
+    md5_gcrypt m_md5;
+#else
     MD5 m_md5;
+#endif
 
 public:
     /// Append a string to the message.
@@ -49,6 +61,10 @@ public:
     /// Return pointer to 32-byte hex fingerprint.
     std::string getDigest()
     {
+        const unsigned char* digest = m_md5.getDigest();
+        if (digest == 0)
+            return std::string();
+
         // Construct fingerprint.
         std::ostringstream ss;
         ss.fill('0');
@@ -56,11 +72,11 @@ public:
 
         for (int di = 0; di < 16; ++di)
         {
-            ss << std::setw(2) << (int) m_md5.getDigest()[di];
+            ss << std::setw(2) << (int) digest[di];
         }
 
         return ss.str();
     }
 };
-    
+
 #endif

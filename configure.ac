@@ -79,6 +79,14 @@ AC_CHECK_DECL(
     )]
 )
 
+AM_PATH_LIBGCRYPT(, [have_libgcrypt="yes"])
+
+if test "x$have_libgcrypt" = "xyes" ; then
+    AC_DEFINE([HAVE_LIBGCRYPT], [1], [Define to 1 if you have libgcrypt])
+fi
+AM_CONDITIONAL([LIBGCRYPT], [test "x$have_libgcrypt" = "xyes"])
+
+
 dnl libtool-style version-info number
 #
 # http://blog.flameeyes.eu/2009/04/22/shared-object-version

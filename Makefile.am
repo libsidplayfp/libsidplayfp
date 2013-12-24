@@ -59,6 +59,17 @@ endif
 
 #=========================================================
 # libsidplayfp
+
+if LIBGCRYPT
+   MD5SRC = \
+utils/md5_gcrypt.h
+else
+   MD5SRC = \
+utils/MD5/MD5.cpp \
+utils/MD5/MD5.h \
+utils/MD5/MD5_Defs.h
+endif
+
 sidplayfp_libsidplayfp_la_SOURCES = \
 sidplayfp/component.h \
 sidplayfp/config.cpp \
@@ -133,9 +144,7 @@ sidplayfp/sidtune/SmartPtr.h \
 utils/iniParser.cpp \
 utils/iniParser.h \
 utils/SidDatabase.cpp \
-utils/MD5/MD5.cpp \
-utils/MD5/MD5.h \
-utils/MD5/MD5_Defs.h
+$(MD5SRC)
 
 sidplayfp_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS)
 
@@ -157,11 +166,14 @@ sidplayfp/sidversion.h
 
 sidplayfp_libsidplayfp_la_LIBADD = \
 builders/residfp-builder/libsidplayfp-residfp.la \
-builders/resid-builder/libsidplayfp-resid.la
+builders/resid-builder/libsidplayfp-resid.la \
+$(LIBGCRYPT_LIBS)
 
 if HARDSID
   sidplayfp_libsidplayfp_la_LIBADD += builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
+
+sidplayfp_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS)
 
 #=========================================================
 # residfp
