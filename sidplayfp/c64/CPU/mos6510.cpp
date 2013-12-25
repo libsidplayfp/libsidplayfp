@@ -377,6 +377,10 @@ void MOS6510::FetchDataByte()
     {
         Register_ProgramCounter++;
     }
+
+#ifdef DEBUG
+    instrOperand = Cycle_Data;
+#endif
 }
 
 /**
@@ -396,6 +400,10 @@ void MOS6510::FetchLowAddr()
 {
     Cycle_EffectiveAddress = cpuRead(Register_ProgramCounter);
     Register_ProgramCounter++;
+
+#ifdef DEBUG
+    instrOperand = Cycle_EffectiveAddress;
+#endif
 }
 
 /**
@@ -442,7 +450,7 @@ void MOS6510::FetchHighAddr()
     Register_ProgramCounter++;
 
 #ifdef DEBUG
-    instrOperand = Cycle_EffectiveAddress;
+    endian_16hi8(instrOperand, endian_16hi8(Cycle_EffectiveAddress));
 #endif
 }
 
@@ -511,7 +519,7 @@ void MOS6510::FetchLowPointer()
     Register_ProgramCounter++;
 
 #ifdef DEBUG
-    endian_16lo8(instrOperand, endian_16lo8 (Cycle_Pointer));
+    instrOperand = Cycle_Pointer;
 #endif
 }
 
@@ -542,7 +550,7 @@ void MOS6510::FetchHighPointer()
     Register_ProgramCounter++;
 
 #ifdef DEBUG
-    endian_16hi8(instrOperand, endian_16hi8 (Cycle_Pointer));
+    endian_16hi8(instrOperand, endian_16hi8(Cycle_Pointer));
 #endif
 }
 
