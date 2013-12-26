@@ -44,8 +44,8 @@ public:
 private:
     typedef struct
     {
-        unsigned int cyclesPerLine;
         unsigned int rasterLines;
+        unsigned int cyclesPerLine;
         event_clock_t (MOS656X::*clock)();
     } model_data_t;
 

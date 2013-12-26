@@ -81,8 +81,8 @@ void MOS656X::reset()
 
 void MOS656X::chip(model_t model)
 {
-    maxRasters    = modelData[model].cyclesPerLine;
-    cyclesPerLine = modelData[model].rasterLines;
+    maxRasters    = modelData[model].rasterLines;
+    cyclesPerLine = modelData[model].cyclesPerLine;
     clock         = modelData[model].clock;
 
     reset ();
