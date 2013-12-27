@@ -271,7 +271,7 @@ event_clock_t MOS656X::clockPAL()
     case 6:
         endDma<5>();
 
-        delay = (sprite_dma & 0xc0) ? 2 : 5;
+        delay = (sprite_dma & 0xc0) ? 2 : 4;
         break;
 
     case 7:
@@ -280,7 +280,7 @@ event_clock_t MOS656X::clockPAL()
     case 8:
         endDma<6>();
 
-        delay = (sprite_dma & 0x80) ? 2 : 3;
+        delay = 2;
         break;
 
     case 9:
@@ -392,7 +392,7 @@ event_clock_t MOS656X::clockNTSC()
     case 5:
         endDma<5>();
 
-        delay = (sprite_dma & 0xc0) ? 2 : 5;
+        delay = (sprite_dma & 0xc0) ? 2 : 4;
         break;
 
     case 6:
@@ -401,7 +401,7 @@ event_clock_t MOS656X::clockNTSC()
     case 7:
         endDma<6>();
 
-        delay = (sprite_dma & 0x80) ? 2 : 3;
+        delay = 2;
         break;
 
     case 8:
@@ -445,7 +445,7 @@ event_clock_t MOS656X::clockNTSC()
 
         // No sprites before next compulsory cycle
         if (!(sprite_dma & 0x1f))
-            delay = 8;
+            delay = 9;
         break;
 
     case 57:
@@ -526,7 +526,7 @@ event_clock_t MOS656X::clockOldNTSC()
     case 6:
         endDma<5>();
 
-        delay = (sprite_dma & 0xc0) ? 2 : 5;
+        delay = (sprite_dma & 0xc0) ? 2 : 4;
         break;
 
     case 7:
@@ -535,7 +535,7 @@ event_clock_t MOS656X::clockOldNTSC()
     case 8:
         endDma<6>();
 
-        delay = (sprite_dma & 0x80) ? 2 : 3;
+        delay = 2;
         break;
 
     case 9:
