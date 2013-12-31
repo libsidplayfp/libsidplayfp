@@ -173,7 +173,7 @@ if HARDSID
   sidplayfp_libsidplayfp_la_LIBADD += builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
-sidplayfp_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS)
+sidplayfp_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
 
 #=========================================================
 # residfp
