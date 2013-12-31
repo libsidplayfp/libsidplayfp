@@ -53,7 +53,8 @@ MOS656X::MOS656X(EventContext *context) :
     event_context(*context),
     sprite_enable(regs[0x15]),
     sprite_y_expansion(regs[0x17]),
-    badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange)
+    badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange),
+    rasterYIRQEdgeDetectorEvent("RasterY changed", *this, &MOS656X::rasterYIRQEdgeDetector)
 {
     chip (MOS6569);
 }
@@ -62,7 +63,6 @@ void MOS656X::reset()
 {
     irqFlags     = 0;
     irqMask      = 0;
-    raster_irq   = 0;
     yscroll      = 0;
     rasterY      = maxRasters - 1;
     lineCycle    = 0;
@@ -137,11 +137,7 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
     {
     case 0x11: // Control register 1
     {
-        endian_16hi8(raster_irq, data >> 7);
         yscroll = data & 7;
-
-        if (lineCycle < 11)
-            break;
 
         /* display enabled at any cycle of line 48 enables badlines */
         if (rasterY == FIRST_DMA_LINE)
@@ -153,13 +149,14 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
         isBadLine = evaluateIsBadLine();
 
         // Start bad dma line now
-        if ((isBadLine != oldBadLine) && (lineCycle < 53))
+        if ((isBadLine != oldBadLine) && (lineCycle > 11) && (lineCycle < 53))
             event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
-        break;
+        // fall-through
     }
 
     case 0x12: // Raster counter
-        endian_16lo8(raster_irq, data);
+        /* check raster Y irq condition changes at the next PHI1 */
+        event_context.schedule(rasterYIRQEdgeDetectorEvent, 0, EVENT_CLOCK_PHI1);
         break;
 
     case 0x17:
