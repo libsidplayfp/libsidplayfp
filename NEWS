@@ -1,3 +1,9 @@
+1.2.1 2013-12-31
+* Fix a bug in VIC-II that broke DEMOS/S-Z/Still_Got_the_Booze_tune_5.sid
+* Fix some wrong values printed by the cpu debugger
+
+
+
 1.2.0 2013-12-24
 * Clean up includes with the help of IWYU (http://code.google.com/p/include-what-you-use/)
 * Improve checks for non-standard functions
