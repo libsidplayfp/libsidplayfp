@@ -164,7 +164,7 @@ private:
     * 
     * @return raster line when to trigger an IRQ
     */
-    int readRasterLineIRQ() const
+    unsigned int readRasterLineIRQ() const
     {
         return (regs[0x12] & 0xff) + ((regs[0x11] & 0x80) << 1);
     }
