@@ -151,8 +151,8 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
         // Start bad dma line now
         if ((isBadLine != oldBadLine) && (lineCycle > 11) && (lineCycle < 53))
             event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
-        // fall-through
     }
+        // fall-through
 
     case 0x12: // Raster counter
         /* check raster Y irq condition changes at the next PHI1 */
