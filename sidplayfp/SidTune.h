@@ -26,10 +26,10 @@
 #include <stdint.h>
 #include <memory>
 
-#include "sidtune/SidTuneBase.h"
 #include "sidplayfp/siddefs.h"
 
 class SidTuneInfo;
+class SidTuneBase;
 class sidmemory;
 
 /**
