@@ -20,8 +20,6 @@
 
 #include "SidTune.h"
 
-#include "sidtune/SidTuneBase.h"
-
 const char MSG_NO_ERRORS[] = "No errors";
 
 // Default sidtune file name extensions. This selection can be overriden
