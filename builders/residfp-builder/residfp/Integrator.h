@@ -84,11 +84,11 @@ int Integrator::solve(int vi)
     const uint64_t Vgdt_2 = (int64_t)Vgdt * (int64_t)Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_snake = n_snake * ((Vgst_2 >> 15) - (Vgdt_2 >> 15));
+    const int n_I_snake = n_snake * ((Vgst_2 - Vgdt_2) >> 15);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int Vg = (int)vcr_Vg[(Vddt_Vw_2 >> 16) + (Vgdt_2 >> 17)];
+    const int Vg = (int)vcr_Vg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16];
 
     // VCR voltages for EKV model table lookup.
     const int Vgs = Vg > x ? Vg - x : 0;
