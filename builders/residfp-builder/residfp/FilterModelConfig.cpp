@@ -131,7 +131,7 @@ FilterModelConfig::FilterModelConfig() :
     // transistors separately would be extremely costly.
     OpAmp opampModel(opamp_voltage, OPAMP_SIZE, Vdd - Vth);
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 5; i++)
     {
         const int idiv = 2 + i;        // 2 - 6 input "resistors".
         const int size = idiv << 16;
@@ -221,7 +221,7 @@ FilterModelConfig::FilterModelConfig() :
 
 FilterModelConfig::~FilterModelConfig()
 {
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 5; i++)
     {
         delete [] summer[i];
     }
