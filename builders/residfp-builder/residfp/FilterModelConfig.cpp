@@ -1,8 +1,9 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
+ * Copyright 2010 Dag Lem
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,30 +32,45 @@
 namespace reSIDfp
 {
 
+// This is the SID 6581 op-amp voltage transfer function, measured on
+// CAP1B/CAP1A on a chip marked MOS 6581R4AR 0687 14.
+// All measured chips have op-amps with output voltages (and thus input
+// voltages) within the range of 0.81V - 10.31V.
 const double FilterModelConfig::opamp_voltage[OPAMP_SIZE][2] =
 {
-    { 0.75, 10.02 }, // Approximate start of actual range
-    { 2.50, 10.13 },
-    { 2.75, 10.12 },
-    { 2.90, 10.04 },
-    { 3.00, 9.92 },
-    { 3.10, 9.74 },
-    { 3.25, 9.40 },
-    { 3.50, 8.68 },
-    { 4.00, 6.90 },
-    { 4.25, 5.88 },
-    { 4.53, 4.53 }, // Working point (vi = vo)
-    { 4.75, 3.20 },
-    { 4.90, 2.30 }, // Change of curvature
-    { 4.95, 2.05 },
-    { 5.00, 1.90 },
-    { 5.10, 1.71 },
-    { 5.25, 1.57 },
-    { 5.50, 1.41 },
-    { 6.00, 1.23 },
-    { 7.50, 1.02 },
-    { 9.00, 0.93 },
-    { 10.25, 0.91 }, // Approximate end of actual range
+  {  0.81, 10.31 },  // Approximate start of actual range
+  {  2.40, 10.31 },
+  {  2.60, 10.30 },
+  {  2.70, 10.29 },
+  {  2.80, 10.26 },
+  {  2.90, 10.17 },
+  {  3.00, 10.04 },
+  {  3.10,  9.83 },
+  {  3.20,  9.58 },
+  {  3.30,  9.32 },
+  {  3.50,  8.69 },
+  {  3.70,  8.00 },
+  {  4.00,  6.89 },
+  {  4.40,  5.21 },
+  {  4.54,  4.54 },  // Working point (vi = vo)
+  {  4.60,  4.19 },
+  {  4.80,  3.00 },
+  {  4.90,  2.30 },  // Change of curvature
+  {  4.95,  2.03 },
+  {  5.00,  1.88 },
+  {  5.05,  1.77 },
+  {  5.10,  1.69 },
+  {  5.20,  1.58 },
+  {  5.40,  1.44 },
+  {  5.60,  1.33 },
+  {  5.80,  1.26 },
+  {  6.00,  1.21 },
+  {  6.40,  1.12 },
+  {  7.00,  1.02 },
+  {  7.50,  0.97 },
+  {  8.50,  0.89 },
+  { 10.00,  0.81 },
+  { 10.31,  0.81 },  // Approximate end of actual range
 };
 
 std::auto_ptr<FilterModelConfig> FilterModelConfig::instance(0);
