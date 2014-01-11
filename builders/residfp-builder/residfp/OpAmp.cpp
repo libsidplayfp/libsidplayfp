@@ -36,7 +36,7 @@ double OpAmp::solve(double n, double vi)
     double bk = vmax;
 
     const double a = n + 1.;
-    const double b = Vddt;
+    const double b = kVddt;
     const double b_vi = (b - vi);
     const double c = n * (b_vi * b_vi);
 

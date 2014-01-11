@@ -69,7 +69,7 @@ private:
     unsigned short* summer[5];
     unsigned short* gain[16];
     double dac[DAC_BITS];
-    unsigned short vcr_Vg[1 << 16];
+    unsigned short vcr_kVg[1 << 16];
     unsigned short vcr_n_Ids_term[1 << 16];
     int opamp_rev[1 << 16];
 

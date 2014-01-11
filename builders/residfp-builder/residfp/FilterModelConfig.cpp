@@ -184,7 +184,7 @@ FilterModelConfig::FilterModelConfig() :
         }
     }
 
-    const double Vddt = N16 * (Vdd - Vth);
+    const double kVddt = N16 * (k * (Vdd - Vth));
 
     for (int i = 0; i < (1 << 16); i++)
     {
@@ -197,8 +197,8 @@ FilterModelConfig::FilterModelConfig() :
         //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
         // I.e. k*Vg - t must be returned.
-        const double Vg = Vddt - sqrt((double) i * (1 << 16));
-        vcr_Vg[i] = (unsigned short)(k * Vg - N16 * vmin + 0.5);
+        const double Vg = kVddt - sqrt((double) i * (1 << 16));
+        vcr_kVg[i] = (unsigned short)(k * Vg - N16 * vmin + 0.5);
     }
 
     /*
@@ -272,9 +272,16 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
 Integrator* FilterModelConfig::buildIntegrator()
 {
     const double N16 = norm * ((1 << 16) - 1);
-    const int Vddt = (int)(N16 * (Vdd - Vth - vmin) + 0.5);
-    const int n_snake = (int)((1 << 13) / norm * (uCox / 2. * WL_snake * 1.0e-6 / C) + 0.5);
-    return new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, Vddt, n_snake);
+
+    // Vdd - Vth, normalized so that translated values can be subtraced:
+    // k*Vddt - x = (k*Vddt - t) - (x - t)
+    const int kVddt = (int)(N16 * (k * (Vdd - Vth) - vmin) + 0.5);
+
+    // Normalized snake current factor, 1 cycle at 1MHz.
+    // Fit in 5 bits.
+    const int n_snake = (int)((1 << 13) / norm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C) + 0.5);
+
+    return new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, kVddt, n_snake);
 }
 
 } // namespace reSIDfp
