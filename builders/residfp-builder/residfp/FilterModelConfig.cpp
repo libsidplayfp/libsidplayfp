@@ -106,10 +106,6 @@ FilterModelConfig::FilterModelConfig() :
 
     const double N16 = norm * ((1 << 16) - 1);
 
-    // The "zero" output level of the voices.
-    // The digital range of one voice is 20 bits; create a scaling term
-    // for multiplication which fits in 11 bits.
-    const double N15 = norm * ((1L << 15) - 1);
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
     // vc -> vx
     double scaled_voltage[OPAMP_SIZE][2];
@@ -209,20 +205,30 @@ FilterModelConfig::FilterModelConfig() :
         vcr_Vg[i] = (unsigned short) Vg;
     }
 
-    const double Ut = 26.0e-3;  // Thermal voltage.
-    const double k = 1.0;
+    /*
+      EKV model:
+
+      Ids = Is*(if - ir)
+      Is = 2*u*Cox*Ut^2/k*W/L
+      if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
+      ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
+    */
+    const double Ut = 26.0e-3;  // Thermal voltage: Ut = k*T/q = 8.61734315e-5*T ~ 26mV
+    const double k = 1.0;       // Gate coupling coefficient: K = Cox/(Cox+Cdep) ~ 0.7
+    const double kVt = k * Vth;
     const double Is = 2. * uCox_vcr * Ut * Ut / k * WL_vcr;
+
     // Normalized current factor for 1 cycle at 1MHz.
+    const double N15 = norm * ((1L << 15) - 1);
     const double n_Is = N15 * 1.0e-6 / C * Is;
 
-    /* 1st term is used for clamping and must therefore be fixed to 0. */
-    vcr_n_Ids_term[0] = 0;
-
-    for (int Vgx = 1; Vgx < (1 << 16); Vgx++)
+    // kVg_Vx = k*Vg - Vx
+    // I.e. if k != 1.0, Vg must be scaled accordingly.
+    for (int kVg_Vx = 0; kVg_Vx < (1 << 16); kVg_Vx++)
     {
-        const double log_term = log(1. + exp((Vgx / N16 - k * Vth) / (2. * Ut)));
+        const double log_term = log(1. + exp((kVg_Vx / N16 - kVt) / (2. * Ut)));
         // Scaled by m*2^15
-        vcr_n_Ids_term[Vgx] = (unsigned short)(n_Is * log_term * log_term + 0.5);
+        vcr_n_Ids_term[kVg_Vx] = (unsigned short)(n_Is * log_term * log_term + 0.5);
     }
 }
 

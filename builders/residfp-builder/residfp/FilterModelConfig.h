@@ -83,8 +83,13 @@ public:
 
     int getVO_T16() const { return (int)(norm * ((1L << 16) - 1) * vmin); }
 
+    /**
+     * The digital range of one voice is 20 bits; create a scaling term
+     * for multiplication which fits in 11 bits.
+     */
     int getVoiceScaleS14() const { return (int)((norm * ((1L << 14) - 1)) * voice_voltage_range); }
 
+    /// The "zero" output level of the voices.
     int getVoiceDC() const { return (int)((norm * ((1L << 16) - 1)) * (voice_DC_voltage - vmin)); }
 
     unsigned short** getGain() { return gain; }
