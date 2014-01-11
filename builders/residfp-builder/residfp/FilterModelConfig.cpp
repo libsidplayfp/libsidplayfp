@@ -91,9 +91,10 @@ FilterModelConfig::FilterModelConfig() :
     C(470e-12),
     Vdd(12.18),
     Vth(1.31),
-    uCox_vcr(20e-6),
+    Ut(26.0e-3),
+    k(1.0),
+    uCox(20e-6),
     WL_vcr(9.0 / 1.0),
-    uCox_snake(20e-6),
     WL_snake(1.0 / 115.0),
     dac_zero(6.65),
     dac_scale(2.63),
@@ -183,21 +184,21 @@ FilterModelConfig::FilterModelConfig() :
         }
     }
 
-    const int Vddt = (int)(N16 * (Vdd - Vth - vmin) + 0.5);
+    const double Vddt = N16 * (Vdd - Vth);
 
     for (int i = 0; i < (1 << 16); i++)
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
         //
-        // If k (kappa) is to be included so that k*Vg is returned, the
-        // returned value must be corrected for translation. Vg always
+        // The returned value must be corrected for translation. Vg always
         // takes part in a subtraction as follows:
         //
-        //   k*(Vg - t) - (Vx - t) = k*Vg + (1 - k)*t - Vx
+        //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
-        // I.e. k*Vg + (1 - k)*t must be returned.
-        vcr_Vg[i] = (unsigned short)(Vddt - (int)(sqrt((double) i * (1 << 16)) + 0.5));
+        // I.e. k*Vg - t must be returned.
+        const double Vg = Vddt - sqrt((double) i * (1 << 16));
+        vcr_Vg[i] = (unsigned short)(k * Vg - N16 * vmin + 0.5);
     }
 
     /*
@@ -208,10 +209,8 @@ FilterModelConfig::FilterModelConfig() :
       if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
       ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
     */
-    const double Ut = 26.0e-3;  // Thermal voltage: Ut = k*T/q = 8.61734315e-5*T ~ 26mV
-    const double k = 1.0;       // Gate coupling coefficient: K = Cox/(Cox+Cdep) ~ 0.7
     const double kVt = k * Vth;
-    const double Is = 2. * uCox_vcr * Ut * Ut / k * WL_vcr;
+    const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
     const double N15 = norm * ((1L << 15) - 1);
@@ -274,7 +273,7 @@ Integrator* FilterModelConfig::buildIntegrator()
 {
     const double N16 = norm * ((1 << 16) - 1);
     const int Vddt = (int)(N16 * (Vdd - Vth - vmin) + 0.5);
-    const int n_snake = (int)((1 << 13) / norm * (uCox_snake / 2. * WL_snake * 1.0e-6 / C) + 0.5);
+    const int n_snake = (int)((1 << 13) / norm * (uCox / 2. * WL_snake * 1.0e-6 / C) + 0.5);
     return new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, Vddt, n_snake);
 }
 
