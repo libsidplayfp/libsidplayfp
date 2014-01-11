@@ -59,7 +59,7 @@ private:
     /** Filter external input. */
     int ve;
 
-    const int voiceScaleS14, voiceDC, vo_T16;
+    const int voiceScaleS14, voiceDC;
 
     /** Current volume amplifier setting. */
     unsigned short* currentGain;
@@ -93,7 +93,6 @@ public:
         ve(0),
         voiceScaleS14(FilterModelConfig::getInstance()->getVoiceScaleS14()),
         voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
-        vo_T16(FilterModelConfig::getInstance()->getVO_T16()),
         currentGain(0),
         currentMixer(0),
         currentSummer(0),
@@ -176,8 +175,8 @@ int Filter6581::clock(int voice1, int voice2, int voice3)
 
     const int oldVhp = Vhp;
     Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
-    Vlp = bpIntegrator->solve(Vbp + vo_T16) - vo_T16;
-    Vbp = hpIntegrator->solve(oldVhp + vo_T16) - vo_T16;
+    Vlp = bpIntegrator->solve(Vbp);
+    Vbp = hpIntegrator->solve(oldVhp);
 
     if (lp)
     {

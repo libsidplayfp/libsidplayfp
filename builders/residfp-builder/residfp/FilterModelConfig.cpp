@@ -113,7 +113,7 @@ FilterModelConfig::FilterModelConfig() :
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
         scaled_voltage[i][0] = (N16 * (opamp_voltage[i][0] - opamp_voltage[i][1]) + (1 << 16)) / 2.;
-        scaled_voltage[i][1] = N16 * opamp_voltage[i][0];
+        scaled_voltage[i][1] = N16 * (opamp_voltage[i][0] - vmin);
     }
 
     Spline s(scaled_voltage, OPAMP_SIZE);
@@ -183,26 +183,21 @@ FilterModelConfig::FilterModelConfig() :
         }
     }
 
-    const int Vddt = (int)(N16 * (Vdd - Vth) + 0.5);
+    const int Vddt = (int)(N16 * (Vdd - Vth - vmin) + 0.5);
 
     for (int i = 0; i < (1 << 16); i++)
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-        int Vg = Vddt - (int)(sqrt((double) i * (1 << 16)) + 0.5);
-
-        if (Vg >= (1 << 16))
-        {
-            // Clamp to 16 bits.
-            // FIXME: If the DAC output voltage exceeds the max op-amp output
-            // voltage while the input voltage is at the max op-amp output
-            // voltage, Vg will not fit in 16 bits.
-            // Check whether this can happen, and if so, change the lookup table
-            // to a plain sqrt.
-            Vg = (1 << 16) - 1;
-        }
-
-        vcr_Vg[i] = (unsigned short) Vg;
+        //
+        // If k (kappa) is to be included so that k*Vg is returned, the
+        // returned value must be corrected for translation. Vg always
+        // takes part in a subtraction as follows:
+        //
+        //   k*(Vg - t) - (Vx - t) = k*Vg + (1 - k)*t - Vx
+        //
+        // I.e. k*Vg + (1 - k)*t must be returned.
+        vcr_Vg[i] = (unsigned short)(Vddt - (int)(sqrt((double) i * (1 << 16)) + 0.5));
     }
 
     /*
@@ -269,7 +264,7 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
             }
         }
 
-        f0_dac[i] = (unsigned int)(N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS)) + 0.5);
+        f0_dac[i] = (unsigned int)(N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin) + 0.5);
     }
 
     return f0_dac;
@@ -278,7 +273,7 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
 Integrator* FilterModelConfig::buildIntegrator()
 {
     const double N16 = norm * ((1 << 16) - 1);
-    const int Vddt = (int)(N16 * (Vdd - Vth) + 0.5);
+    const int Vddt = (int)(N16 * (Vdd - Vth - vmin) + 0.5);
     const int n_snake = (int)((1 << 13) / norm * (uCox_snake / 2. * WL_snake * 1.0e-6 / C) + 0.5);
     return new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, Vddt, n_snake);
 }

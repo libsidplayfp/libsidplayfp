@@ -81,8 +81,6 @@ private:
 public:
     static FilterModelConfig* getInstance();
 
-    int getVO_T16() const { return (int)(norm * ((1L << 16) - 1) * vmin); }
-
     /**
      * The digital range of one voice is 20 bits; create a scaling term
      * for multiplication which fits in 11 bits.
