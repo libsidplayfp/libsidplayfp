@@ -66,7 +66,7 @@ private:
     const double vmin, norm;
     double opamp_working_point;
     unsigned short* mixer[8];
-    unsigned short* summer[7];
+    unsigned short* summer[5];
     unsigned short* gain[16];
     double dac[DAC_BITS];
     unsigned short vcr_Vg[1 << 16];

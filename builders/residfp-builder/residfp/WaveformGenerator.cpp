@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -184,10 +184,11 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
         // FIXME
         // This value has been adjusted aleatorily from the original reSID value (0x4000)
-        // to fix MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
-        // see VICE Bug 3515933
-        // http://sourceforge.net/tracker/?func=detail&aid=3515933&group_id=223021&atid=1057617
-        floating_output_ttl = 0x28000;
+        // to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
+        // and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid
+        // see VICE Bug #290
+        // http://sourceforge.net/p/vice-emu/bugs/290/
+        floating_output_ttl = 0xF4240;
     }
 }
 
