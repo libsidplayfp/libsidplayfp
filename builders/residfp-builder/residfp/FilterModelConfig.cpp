@@ -105,6 +105,7 @@ FilterModelConfig::FilterModelConfig() :
 
     Dac::kinkedDac(dac, DAC_BITS, 2.2, false);
 
+    // Fixed point scaling for 16 bit op-amp output.
     const double N16 = norm * ((1 << 16) - 1);
 
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
@@ -118,10 +119,10 @@ FilterModelConfig::FilterModelConfig() :
     }
 
     Spline s(scaled_voltage, OPAMP_SIZE);
-    double out[2];
-
     for (int x = 0; x < (1 << 16); x ++)
     {
+        double out[2];
+
         s.evaluate(x, out);
         opamp_rev[x] = (int)(out[0] + 0.5);
     }

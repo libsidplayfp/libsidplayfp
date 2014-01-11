@@ -65,12 +65,19 @@ private:
 
     /* Derived stuff */
     const double vmin, norm;
+
+    // Lookup tables for gain and summer op-amps in output stage / filter.
     unsigned short* mixer[8];
     unsigned short* summer[5];
     unsigned short* gain[16];
+
     double dac[DAC_BITS];
+
+    // VCR - 6581 only.
     unsigned short vcr_kVg[1 << 16];
     unsigned short vcr_n_Ids_term[1 << 16];
+
+    // Reverse op-amp transfer function.
     int opamp_rev[1 << 16];
 
 private:
@@ -98,7 +105,7 @@ public:
     unsigned short** getMixer() { return mixer; }
 
     /**
-     * Construct a DAC table.
+     * Construct an 11 bit cutoff frequency DAC output voltage table.
      * Ownership is transferred to the requester which becomes responsible
      * of freeing the object when done.
      *

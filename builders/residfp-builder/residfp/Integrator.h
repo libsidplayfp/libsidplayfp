@@ -43,7 +43,7 @@ class Integrator
 {
 private:
     unsigned int Vddt_Vw_2;
-    int kVddt, n_snake, x;
+    int kVddt, n_snake, vx;
     int vc;
     const unsigned short* vcr_kVg;
     const unsigned short* vcr_n_Ids_term;
@@ -55,7 +55,7 @@ public:
         Vddt_Vw_2(0),
         kVddt(kVddt),
         n_snake(n_snake),
-        x(0),
+        vx(0),
         vc(0),
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
@@ -77,7 +77,7 @@ RESID_INLINE
 int Integrator::solve(int vi)
 {
     // "Snake" voltages for triode mode calculation.
-    const int Vgst = kVddt - x;
+    const int Vgst = kVddt - vx;
     const int Vgdt = kVddt - vi;
 
     const uint64_t Vgst_2 = (int64_t)Vgst * (int64_t)Vgst;
@@ -91,7 +91,7 @@ int Integrator::solve(int vi)
     const int kVg = (int)vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16];
 
     // VCR voltages for EKV model table lookup.
-    const int Vgs = kVg > x ? kVg - x : 0;
+    const int Vgs = kVg > vx ? kVg - vx : 0;
     const int Vgd = kVg > vi ? kVg - vi : 0;
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
@@ -101,10 +101,10 @@ int Integrator::solve(int vi)
     vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    x = opamp_rev[((vc >> 15) + (1 << 15)) & 0xffff];
+    vx = opamp_rev[((vc >> 15) + (1 << 15)) & 0xffff];
 
     // Return vo.
-    return x - (vc >> 14);
+    return vx - (vc >> 14);
 }
 
 } // namespace reSIDfp
