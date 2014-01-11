@@ -64,7 +64,6 @@ private:
 
     /* Derived stuff */
     const double vmin, norm;
-    double opamp_working_point;
     unsigned short* mixer[8];
     unsigned short* summer[5];
     unsigned short* gain[16];
@@ -74,8 +73,6 @@ private:
     int opamp_rev[1 << 16];
 
 private:
-    double evaluateTransistor(double Vw, double vi, double vx);
-
     double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
 
     FilterModelConfig();
@@ -107,21 +104,6 @@ public:
     unsigned int* getDAC(double adjustment) const;
 
     Integrator* buildIntegrator();
-
-    /**
-     * Estimate the center frequency corresponding to some FC setting.
-     *
-     * FIXME: this function is extremely sensitive to prevailing voltage offsets.
-     * They got to be right within about 0.1V, or the results will be simply wrong.
-     * This casts doubt on the feasibility of this approach. Perhaps the offsets
-     * at the integrators would need to be statically solved first for 1-voice null
-     * input.
-     *
-     * @param dac_zero
-     * @param fc
-     * @return frequency in Hz
-     */
-    double estimateFrequency(double dac_zero, int fc);
 };
 
 } // namespace reSIDfp

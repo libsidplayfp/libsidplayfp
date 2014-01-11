@@ -102,15 +102,6 @@ FilterModelConfig::FilterModelConfig() :
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
-    for (unsigned int i = 0; i < OPAMP_SIZE; i ++)
-    {
-        if (opamp_voltage[i][0] == opamp_voltage[i][1])
-        {
-            opamp_working_point = opamp_voltage[i][0];
-            break;
-        }
-    }
-
     Dac::kinkedDac(dac, DAC_BITS, 2.2, false);
 
     const double N16 = norm * ((1 << 16) - 1);
@@ -253,31 +244,6 @@ FilterModelConfig::~FilterModelConfig()
     }
 }
 
-double FilterModelConfig::evaluateTransistor(double Vw, double vi, double vx)
-{
-    const double Vgst = Vdd - Vth - vx;
-    const double Vgdt = Vdd - Vth - vi;
-    const double n_snake = uCox_snake / 2. * WL_snake;
-    const double n_I_snake = n_snake * (Vgst * Vgst - Vgdt * Vgdt);
-
-    const double Vg = Vdd - Vth - sqrt(pow(Vdd - Vth - Vw, 2.) / 2. + pow(Vgdt, 2.) / 2.);
-    const double Vgs = Vg - vx;
-    const double Vgd = Vg - vi;
-
-    const double Ut = 26.0e-3;  // Thermal voltage.
-    const double k = 1.0;
-    const double Is = 2. * uCox_vcr * Ut * Ut / k * WL_vcr;
-
-    const double log_term_f = log(1. + exp((Vgs - k * Vth) / (2. * Ut)));
-    const double n_I_vcr_f = Is * log_term_f * log_term_f;
-
-    const double log_term_r = log(1. + exp((Vgd - k * Vth) / (2. * Ut)));
-    const double n_I_vcr_r = Is * log_term_r * log_term_r;
-
-    const double n_I_vcr = n_I_vcr_f - n_I_vcr_r;
-    return n_I_snake + n_I_vcr;
-}
-
 unsigned int* FilterModelConfig::getDAC(double adjustment) const
 {
     const double dac_zero = getDacZero(adjustment);
@@ -309,33 +275,6 @@ Integrator* FilterModelConfig::buildIntegrator()
     const int Vddt = (int)(N16 * (Vdd - Vth) + 0.5);
     const int n_snake = (int)((1 << 13) / norm * (uCox_snake / 2. * WL_snake * 1.0e-6 / C) + 0.5);
     return new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, Vddt, n_snake);
-}
-
-double FilterModelConfig::estimateFrequency(double dac_zero, int fc)
-{
-    /* Calculate input from DAC */
-    double Vw = 0.;
-
-    for (unsigned int j = 0; j < DAC_BITS; j ++)
-    {
-        if ((fc & (1 << j)) != 0)
-        {
-            Vw += dac[j];
-        }
-    }
-
-    Vw = dac_zero + dac_scale * Vw / (1 << DAC_BITS);
-
-    /* Estimate the behavior for small signals around the op-amp working point. */
-    const double vx = opamp_working_point;
-    const double diff = 0.2;
-    double n_I = 0.;
-    n_I -= evaluateTransistor(Vw, vx - diff, vx);
-    n_I += evaluateTransistor(Vw, vx + diff, vx);
-    n_I /= 2.;
-
-    /* Convert the current to frequency based on the calculated current and the potential. */
-    return n_I / (2. * M_PI * C * diff);
 }
 
 } // namespace reSIDfp
