@@ -142,13 +142,14 @@ FilterModelConfig::FilterModelConfig() :
     {
         const int idiv = 2 + i;        // 2 - 6 input "resistors".
         const int size = idiv << 16;
+        const double n = idiv;
         opampModel.reset();
         summer[i] = new unsigned short[size];
 
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            summer[i][vi] = (unsigned short)((opampModel.solve(idiv, vin) - vmin) * N16 + 0.5);
+            summer[i][vi] = (unsigned short)((opampModel.solve(n, vin) - vmin) * N16 + 0.5);
         }
     }
 
@@ -160,13 +161,14 @@ FilterModelConfig::FilterModelConfig() :
     for (int i = 0; i < 8; i++)
     {
         const int size = (i == 0) ? 1 : i << 16;
+        const double n = i * 8.0 / 6.0;
         opampModel.reset();
         mixer[i] = new unsigned short[size];
 
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / (i == 0 ? 1 : i); /* vmin .. vmax */
-            mixer[i][vi] = (unsigned short)((opampModel.solve(i * 8.0 / 6.0, vin) - vmin) * N16 + 0.5);
+            mixer[i][vi] = (unsigned short)((opampModel.solve(n, vin) - vmin) * N16 + 0.5);
         }
     }
 
@@ -177,17 +179,20 @@ FilterModelConfig::FilterModelConfig() :
     // op-amps and ideal "resistors").
     for (int n8 = 0; n8 < 16; n8++)
     {
+        const int size = 1 << 16;
+        const double n = n8 / 8.0;
         opampModel.reset();
-        gain[n8] = new unsigned short[1 << 16];
+        gain[n8] = new unsigned short[size];
 
-        for (int vi = 0; vi < (1 << 16); vi++)
+        for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            gain[n8][vi] = (unsigned short)((opampModel.solve(n8 / 8.0, vin) - vmin) * N16 + 0.5);
+            gain[n8][vi] = (unsigned short)((opampModel.solve(n, vin) - vmin) * N16 + 0.5);
         }
     }
 
     const double kVddt = N16 * (k * (Vdd - Vth));
+    const double nVmin = N16 * vmin;
 
     for (int i = 0; i < (1 << 16); i++)
     {
@@ -201,7 +206,7 @@ FilterModelConfig::FilterModelConfig() :
         //
         // I.e. k*Vg - t must be returned.
         const double Vg = kVddt - sqrt((double) i * (1 << 16));
-        vcr_kVg[i] = (unsigned short)(k * Vg - N16 * vmin + 0.5);
+        vcr_kVg[i] = (unsigned short)(k * Vg - nVmin + 0.5);
     }
 
     /*
