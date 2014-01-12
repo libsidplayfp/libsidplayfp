@@ -1,6 +1,6 @@
 m4_define([lib_major], [1])
 m4_define([lib_minor], [2])
-m4_define([lib_level], [1])
+m4_define([lib_level], [2])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
@@ -92,7 +92,7 @@ dnl libtool-style version-info number
 #     to zero.
 
 LIBSIDPLAYCUR=3
-LIBSIDPLAYREV=6
+LIBSIDPLAYREV=7
 LIBSIDPLAYAGE=0
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
