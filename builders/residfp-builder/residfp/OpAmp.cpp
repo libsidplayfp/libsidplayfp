@@ -42,11 +42,12 @@ double OpAmp::solve(double n, double vi)
 
     for (;;)
     {
-        double out[2];
-
         const double xk = x;
 
         // Calculate f and df.
+
+        double out[2];
+
         opamp->evaluate(x, out);
         const double vo = out[0];
         const double dvo = out[1];
@@ -54,9 +55,13 @@ double OpAmp::solve(double n, double vi)
         const double b_vx = b - x;
         const double b_vo = b - vo;
 
+        // f = a*(b - vx)^2 - c - (b - vo)^2
         const double f = a * (b_vx * b_vx) - c - (b_vo * b_vo);
+
+        // df = 2*((b - vo)*dvo - a*(b - vx))
         const double df = 2. * (b_vo * dvo - a * b_vx);
 
+        // Newton-Raphson step: xk1 = xk - f(xk)/f'(xk)
         x -= f / df;
 
         if (fabs(x - xk) < EPSILON)
