@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -81,7 +81,7 @@ public:  // ----------------------------------------------------------------
     */
     SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtuneLength);
 
-    virtual ~SidTune();
+    virtual ~SidTune() {}
 
     /**
     * The SidTune class does not copy the list of file name extensions,
