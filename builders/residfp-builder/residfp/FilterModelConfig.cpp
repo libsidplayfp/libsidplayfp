@@ -106,7 +106,7 @@ FilterModelConfig::FilterModelConfig() :
     Dac::kinkedDac(dac, DAC_BITS, 2.2, false);
 
     // Fixed point scaling for 16 bit op-amp output.
-    const double N16 = norm * ((1 << 16) - 1);
+    const double N16 = norm * ((1L << 16) - 1);
 
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
     // vc -> vx
@@ -119,13 +119,17 @@ FilterModelConfig::FilterModelConfig() :
     }
 
     Spline s(scaled_voltage, OPAMP_SIZE);
-    for (int x = 0; x < (1 << 16); x ++)
+    for (int x = 0; x < (1 << 16); x++)
     {
         double out[2];
 
         s.evaluate(x, out);
         opamp_rev[x] = (int)(out[0] + 0.5);
     }
+
+    // Create lookup tables for gains / summers.
+
+    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, Vdd - Vth);
 
     // The filter summer operates at n ~ 1, and has 5 fundamentally different
     // input configurations (2 - 6 input "resistors").
@@ -134,8 +138,6 @@ FilterModelConfig::FilterModelConfig() :
     // entirely accurate, since the input for each transistor is different,
     // and transistors are not linear components. However modeling all
     // transistors separately would be extremely costly.
-    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, Vdd - Vth);
-
     for (int i = 0; i < 5; i++)
     {
         const int idiv = 2 + i;        // 2 - 6 input "resistors".
@@ -272,7 +274,7 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
 
 Integrator* FilterModelConfig::buildIntegrator()
 {
-    const double N16 = norm * ((1 << 16) - 1);
+    const double N16 = norm * ((1L << 16) - 1);
 
     // Vdd - Vth, normalized so that translated values can be subtraced:
     // k*Vddt - x = (k*Vddt - t) - (x - t)
