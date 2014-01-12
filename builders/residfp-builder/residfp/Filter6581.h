@@ -119,10 +119,9 @@ public:
     void updatedCenterFrequency();
 
     /**
-     * Resonance tuned by ear, based on a few observations:
+     * Set filter resonance.
      *
-     * - there's a small notch even in allpass mode - size of resonance hump is
-     * about 8 dB
+     * In the MOS 6581, 1/Q is controlled linearly by res.
      */
     void updatedResonance() { currentResonance = gain[~res & 0xf]; }
 

@@ -1,9 +1,9 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
- * Copyright 2004 Dag Lem <resid@nimrod.no>
+ * Copyright 2004-2010 Dag Lem <resid@nimrod.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,9 +65,19 @@ public:
 
     int clock(int voice1, int voice2, int voice3);
 
+    /**
+     * Set filter cutoff frequency.
+     */
     void updatedCenterFrequency() { w0 = (float)(2. * M_PI * highFreq * fc / 2047. / 1e6); }
 
-    void updatedResonance() { _1_div_Q = 1.f / (0.707f + res / 15.f); }
+    /**
+     * Set filter resonance.
+     *
+     * The following function for 1/Q has been modeled in the MOS 8580:
+     *
+     * 1/Q = 2^(1/2)*2^(-x/8) = 2^(1/2 - x/8) = 2^((4 - x)/8)
+     */
+    void updatedResonance() { _1_div_Q = (float)pow(2., (4 - res) / 8.); }
 
     void input(int input) { ve = input << 4; }
 
