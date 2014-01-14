@@ -132,6 +132,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     const float dVlp = w0 * Vbp;
     Vbp -= dVbp;
     Vlp -= dVlp;
+    // We add a random number in the range [0, 1] as a hack to avoid denormals
     Vhp = (Vbp * _1_div_Q) - Vlp - Vi + float(rand()) / float(RAND_MAX);
 
     float Vof = (float)Vo;
