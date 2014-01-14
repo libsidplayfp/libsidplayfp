@@ -80,8 +80,8 @@ int Integrator::solve(int vi)
     const int Vgst = kVddt - vx;
     const int Vgdt = kVddt - vi;
 
-    const uint64_t Vgst_2 = (int64_t)Vgst * (int64_t)Vgst;
-    const uint64_t Vgdt_2 = (int64_t)Vgdt * (int64_t)Vgdt;
+    const int64_t Vgst_2 = (int64_t)Vgst * (int64_t)Vgst;
+    const int64_t Vgdt_2 = (int64_t)Vgdt * (int64_t)Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
     const int n_I_snake = n_snake * ((Vgst_2 - Vgdt_2) >> 15);
