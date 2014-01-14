@@ -23,6 +23,7 @@
 #include "FilterModelConfig.h"
 
 #include <cmath>
+#include <cassert>
 
 #include "Dac.h"
 #include "Integrator.h"
@@ -149,7 +150,9 @@ FilterModelConfig::FilterModelConfig() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            summer[i][vi] = (unsigned short)((opampModel.solve(n, vin) - vmin) * N16 + 0.5);
+            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
+            assert(tmp > -0.5 && tmp < 65535.5);
+            summer[i][vi] = (unsigned short)(tmp + 0.5);
         }
     }
 
@@ -168,7 +171,9 @@ FilterModelConfig::FilterModelConfig() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / (i == 0 ? 1 : i); /* vmin .. vmax */
-            mixer[i][vi] = (unsigned short)((opampModel.solve(n, vin) - vmin) * N16 + 0.5);
+            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
+            assert(tmp > -0.5 && tmp < 65535.5);
+            mixer[i][vi] = (unsigned short)(tmp + 0.5);
         }
     }
 
@@ -187,7 +192,9 @@ FilterModelConfig::FilterModelConfig() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            gain[n8][vi] = (unsigned short)((opampModel.solve(n, vin) - vmin) * N16 + 0.5);
+            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
+            assert(tmp > -0.5 && tmp < 65535.5);
+            gain[n8][vi] = (unsigned short)(tmp + 0.5);
         }
     }
 
@@ -206,7 +213,9 @@ FilterModelConfig::FilterModelConfig() :
         //
         // I.e. k*Vg - t must be returned.
         const double Vg = kVddt - sqrt((double) i * (1 << 16));
-        vcr_kVg[i] = (unsigned short)(k * Vg - nVmin + 0.5);
+        const double tmp = k * Vg - nVmin;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        vcr_kVg[i] = (unsigned short)(tmp + 0.5);
     }
 
     /*
@@ -230,7 +239,9 @@ FilterModelConfig::FilterModelConfig() :
     {
         const double log_term = log(1. + exp((kVg_Vx / N16 - kVt) / (2. * Ut)));
         // Scaled by m*2^15
-        vcr_n_Ids_term[kVg_Vx] = (unsigned short)(n_Is * log_term * log_term + 0.5);
+        const double tmp = n_Is * log_term * log_term;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        vcr_n_Ids_term[kVg_Vx] = (unsigned short)(tmp + 0.5);
     }
 }
 
@@ -271,7 +282,9 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
             }
         }
 
-        f0_dac[i] = (unsigned int)(N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin) + 0.5);
+        const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
+        assert(tmp > -0.5 && tmp < 4294967296.5);
+        f0_dac[i] = (unsigned int)(tmp + 0.5);
     }
 
     return f0_dac;
