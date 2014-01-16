@@ -25,12 +25,41 @@
 
 #include <cmath>
 
+#include <stdint.h>
+
 #include "siddefs-fp.h"
 
 #include "Filter.h"
 
 namespace reSIDfp
 {
+
+/**
+* Simple white noise generator.
+* Generates small low quality pseudo random numbers
+* useful to prevent float denormals.
+*
+* Based on the paper "Denormal numbers in floating point signal
+* processing applications" from Laurent de Soras
+* www.musicdsp.org/files/denormal.pdf 
+*/
+class antiDenormalNoise
+{
+private:
+    uint32_t rand_state;
+
+public:
+    antiDenormalNoise() :
+        rand_state(1) {}
+
+    inline float get()
+    {
+        rand_state = rand_state * 1234567UL + 890123UL;
+        const uint32_t mantissa = rand_state & 0x807F0000; // Keep only most significant bits
+        const uint32_t flt_rnd = mantissa | 0x1E000000; // Set exponent
+        return *reinterpret_cast<const float*>(&flt_rnd);
+    }
+};
 
 /**
  * Filter for 8580 chip based on simple linear approximation
@@ -52,6 +81,8 @@ private:
     float Vlp, Vbp, Vhp;
     float w0, _1_div_Q;
     int ve;
+
+    antiDenormalNoise noise;
 
 public:
     Filter8580() :
@@ -95,9 +126,6 @@ public:
 
 #if RESID_INLINING || defined(FILTER8580_CPP)
 
-#include <stdlib.h>
-#include <math.h>
-
 namespace reSIDfp
 {
 
@@ -132,9 +160,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     const float dVlp = w0 * Vbp;
     Vbp -= dVbp;
     Vlp -= dVlp;
-    // We add a random number in the range [0, 1] as a hack to avoid denormals
-    Vhp = (Vbp * _1_div_Q) - Vlp - Vi + float(rand()) / float(RAND_MAX);
-
+    Vhp = (Vbp * _1_div_Q) - Vlp - Vi + noise.get();
     float Vof = (float)Vo;
 
     if (lp)
