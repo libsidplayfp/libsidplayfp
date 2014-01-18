@@ -1,9 +1,9 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
- * Copyright 2004 Dag Lem <resid@nimrod.no>
+ * Copyright 2004-2010 Dag Lem <resid@nimrod.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,41 @@
 
 #include <cmath>
 
+#include <stdint.h>
+
 #include "siddefs-fp.h"
 
 #include "Filter.h"
 
 namespace reSIDfp
 {
+
+/**
+* Simple white noise generator.
+* Generates small low quality pseudo random numbers
+* useful to prevent float denormals.
+*
+* Based on the paper "Denormal numbers in floating point signal
+* processing applications" from Laurent de Soras
+* www.musicdsp.org/files/denormal.pdf 
+*/
+class antiDenormalNoise
+{
+private:
+    uint32_t rand_state;
+
+public:
+    antiDenormalNoise() :
+        rand_state(1) {}
+
+    inline float get()
+    {
+        rand_state = rand_state * 1234567UL + 890123UL;
+        const uint32_t mantissa = rand_state & 0x807F0000; // Keep only most significant bits
+        const uint32_t flt_rnd = mantissa | 0x1E000000; // Set exponent
+        return *reinterpret_cast<const float*>(&flt_rnd);
+    }
+};
 
 /**
  * Filter for 8580 chip based on simple linear approximation
@@ -53,6 +82,8 @@ private:
     float w0, _1_div_Q;
     int ve;
 
+    antiDenormalNoise noise;
+
 public:
     Filter8580() :
         highFreq(12500.),
@@ -65,23 +96,35 @@ public:
 
     int clock(int voice1, int voice2, int voice3);
 
+    /**
+     * Set filter cutoff frequency.
+     */
     void updatedCenterFrequency() { w0 = (float)(2. * M_PI * highFreq * fc / 2047. / 1e6); }
 
-    void updatedResonance() { _1_div_Q = 1.f / (0.707f + res / 15.f); }
+    /**
+     * Set filter resonance.
+     *
+     * The following function for 1/Q has been modeled in the MOS 8580:
+     *
+     * 1/Q = 2^(1/2)*2^(-x/8) = 2^(1/2 - x/8) = 2^((4 - x)/8)
+     */
+    void updatedResonance() { _1_div_Q = (float)pow(2., (4 - res) / 8.); }
 
     void input(int input) { ve = input << 4; }
 
     void updatedMixing() {}
 
+    /**
+     * Set filter curve type based on single parameter.
+     *
+     * @param curvePosition filter's center frequency expressed in Hertz, default is 12500
+     */
     void setFilterCurve(double curvePosition) { highFreq = curvePosition; }
 };
 
 } // namespace reSIDfp
 
 #if RESID_INLINING || defined(FILTER8580_CPP)
-
-#include <stdlib.h>
-#include <math.h>
 
 namespace reSIDfp
 {
@@ -117,8 +160,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     const float dVlp = w0 * Vbp;
     Vbp -= dVbp;
     Vlp -= dVlp;
-    Vhp = (Vbp * _1_div_Q) - Vlp - Vi + float(rand()) / float(RAND_MAX);
-
+    Vhp = (Vbp * _1_div_Q) - Vlp - Vi + noise.get();
     float Vof = (float)Vo;
 
     if (lp)

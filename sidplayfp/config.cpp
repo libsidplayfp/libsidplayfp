@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -202,10 +202,10 @@ SidConfig::sid_model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig
 
     switch (tuneModel)
     {
-    case SidTuneInfo::CLOCK_PAL:
+    case SidTuneInfo::SIDMODEL_6581:
         newModel = SidConfig::MOS6581;
         break;
-    case SidTuneInfo::CLOCK_NTSC:
+    case SidTuneInfo::SIDMODEL_8580:
         newModel = SidConfig::MOS8580;
         break;
     }

@@ -59,7 +59,7 @@ private:
     /** Filter external input. */
     int ve;
 
-    const int voiceScaleS14, voiceDC, vo_T16;
+    const int voiceScaleS14, voiceDC;
 
     /** Current volume amplifier setting. */
     unsigned short* currentGain;
@@ -93,7 +93,6 @@ public:
         ve(0),
         voiceScaleS14(FilterModelConfig::getInstance()->getVoiceScaleS14()),
         voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
-        vo_T16(FilterModelConfig::getInstance()->getVO_T16()),
         currentGain(0),
         currentMixer(0),
         currentSummer(0),
@@ -120,10 +119,9 @@ public:
     void updatedCenterFrequency();
 
     /**
-     * Resonance tuned by ear, based on a few observations:
+     * Set filter resonance.
      *
-     * - there's a small notch even in allpass mode - size of resonance hump is
-     * about 8 dB
+     * In the MOS 6581, 1/Q is controlled linearly by res.
      */
     void updatedResonance() { currentResonance = gain[~res & 0xf]; }
 
@@ -133,7 +131,7 @@ public:
     /**
      * Set filter curve type based on single parameter.
      *
-     * @param curvePosition 0 .. 1, where 0 sets center frequency high ("light") and 1 sets it low ("dark")
+     * @param curvePosition 0 .. 1, where 0 sets center frequency high ("light") and 1 sets it low ("dark"), default is 0.5
      */
     void setFilterCurve(double curvePosition);
 };
@@ -176,8 +174,8 @@ int Filter6581::clock(int voice1, int voice2, int voice3)
 
     const int oldVhp = Vhp;
     Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
-    Vlp = bpIntegrator->solve(Vbp + vo_T16) - vo_T16;
-    Vbp = hpIntegrator->solve(oldVhp + vo_T16) - vo_T16;
+    Vlp = bpIntegrator->solve(Vbp);
+    Vbp = hpIntegrator->solve(oldVhp);
 
     if (lp)
     {

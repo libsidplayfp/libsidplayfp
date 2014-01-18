@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,11 +43,9 @@ private:
     /** Current root position (cached as guess to speed up next iteration) */
     double x;
 
-    const double Vddt, vmin, vmax;
+    const double kVddt, vmin, vmax;
 
     Spline* opamp;
-
-    double out[2];
 
 public:
     /**
@@ -55,11 +53,11 @@ public:
      *
      * @param opamp opamp mapping table as pairs of points (in -> out)
      * @param opamplength length of the opamp array
-     * @param Vddt transistor dt parameter (in volts)
+     * @param kVddt transistor dt parameter (in volts)
      */
-    OpAmp(const double opamp[][2], int opamplength, double Vddt) :
+    OpAmp(const double opamp[][2], int opamplength, double kVddt) :
         x(0.),
-        Vddt(Vddt),
+        kVddt(kVddt),
         vmin(opamp[0][0]),
         vmax(opamp[opamplength - 1][0]),
         opamp(new Spline(opamp, opamplength)) {}

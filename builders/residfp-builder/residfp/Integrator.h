@@ -43,25 +43,25 @@ class Integrator
 {
 private:
     unsigned int Vddt_Vw_2;
-    int Vddt, n_snake, x;
+    int kVddt, n_snake, vx;
     int vc;
-    const unsigned short* vcr_Vg;
+    const unsigned short* vcr_kVg;
     const unsigned short* vcr_n_Ids_term;
     const int* opamp_rev;
 
 public:
-    Integrator(const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
-               const int* opamp_rev, int Vddt, int n_snake) :
+    Integrator(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
+               const int* opamp_rev, int kVddt, int n_snake) :
         Vddt_Vw_2(0),
-        Vddt(Vddt),
+        kVddt(kVddt),
         n_snake(n_snake),
-        x(0),
+        vx(0),
         vc(0),
-        vcr_Vg(vcr_Vg),
+        vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev) {}
 
-    void setVw(unsigned int Vw) { Vddt_Vw_2 = (Vddt - Vw) * (Vddt - Vw) >> 1; }
+    void setVw(unsigned int Vw) { Vddt_Vw_2 = (kVddt - Vw) * (kVddt - Vw) >> 1; }
 
     int solve(int vi);
 };
@@ -77,22 +77,22 @@ RESID_INLINE
 int Integrator::solve(int vi)
 {
     // "Snake" voltages for triode mode calculation.
-    const int Vgst = Vddt - x;
-    const int Vgdt = Vddt - vi;
+    const int Vgst = kVddt - vx;
+    const int Vgdt = kVddt - vi;
 
-    const uint64_t Vgst_2 = (int64_t)Vgst * (int64_t)Vgst;
-    const uint64_t Vgdt_2 = (int64_t)Vgdt * (int64_t)Vgdt;
+    const int64_t Vgst_2 = (int64_t)Vgst * (int64_t)Vgst;
+    const int64_t Vgdt_2 = (int64_t)Vgdt * (int64_t)Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_snake = n_snake * ((Vgst_2 >> 15) - (Vgdt_2 >> 15));
+    const int n_I_snake = n_snake * ((Vgst_2 - Vgdt_2) >> 15);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int Vg = (int)vcr_Vg[(Vddt_Vw_2 >> 16) + (Vgdt_2 >> 17)];
+    const int kVg = (int)vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16];
 
     // VCR voltages for EKV model table lookup.
-    const int Vgs = Vg > x ? Vg - x : 0;
-    const int Vgd = Vg > vi ? Vg - vi : 0;
+    const int Vgs = kVg > vx ? kVg - vx : 0;
+    const int Vgd = kVg > vi ? kVg - vi : 0;
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
     const int n_I_vcr = (int)(vcr_n_Ids_term[Vgs & 0xffff] - vcr_n_Ids_term[Vgd & 0xffff]) << 15;
@@ -101,10 +101,10 @@ int Integrator::solve(int vi)
     vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    x = opamp_rev[((vc >> 15) + (1 << 15)) & 0xffff];
+    vx = opamp_rev[((vc >> 15) + (1 << 15)) & 0xffff];
 
     // Return vo.
-    return x - (vc >> 14);
+    return vx - (vc >> 14);
 }
 
 } // namespace reSIDfp

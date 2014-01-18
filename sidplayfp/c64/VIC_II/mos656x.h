@@ -90,13 +90,14 @@ protected:
     /** vertical scrolling value */
     unsigned int yscroll;
 
-    uint16_t raster_irq;
-
     /** are bad lines enabled for this frame? */
     bool areBadLinesEnabled;
 
     /** is the current line a bad line */
     bool isBadLine;
+
+    /** Is rasterYIRQ condition true? */
+    bool rasterYIRQCondition;
 
     /** Set when new frame starts. */
     bool vblanking;
@@ -137,6 +138,17 @@ private:
     /** AEC state was updated. */
     void badLineStateChange() { setBA(!isBadLine); }
 
+    EventCallback<MOS656X> rasterYIRQEdgeDetectorEvent;
+
+    /** RasterY IRQ edge detector. */
+    void rasterYIRQEdgeDetector()
+    {
+        const bool oldRasterYIRQCondition = rasterYIRQCondition;
+        rasterYIRQCondition = rasterY == readRasterLineIRQ();
+        if (!oldRasterYIRQCondition && rasterYIRQCondition)
+            activateIRQFlag(IRQ_RASTER);
+    }
+    
     /**
     * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
     * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
@@ -145,6 +157,16 @@ private:
     {
         irqFlags |= flag;
         handleIrqState();
+    }
+
+    /**
+    * Read the value of the raster line IRQ
+    * 
+    * @return raster line when to trigger an IRQ
+    */
+    unsigned int readRasterLineIRQ() const
+    {
+        return (regs[0x12] & 0xff) + ((regs[0x11] & 0x80) << 1);
     }
 
     /**
@@ -176,9 +198,7 @@ private:
         else
         {
             rasterY++;
-            // Trigger raster IRQ if IRQ line reached
-            if (rasterY == raster_irq)
-                activateIRQFlag(IRQ_RASTER);
+            rasterYIRQEdgeDetector();
         }
 
         // In line $30, the DEN bit controls if Bad Lines can occur
@@ -196,9 +216,7 @@ private:
         {
             vblanking = lp_triggered = false;
             rasterY = 0;
-            // Trigger raster IRQ if IRQ in line 0
-            if (raster_irq == 0)
-                activateIRQFlag(IRQ_RASTER);
+            rasterYIRQEdgeDetector();
         }
     }
 

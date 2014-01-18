@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ double OpAmp::solve(double n, double vi)
     double bk = vmax;
 
     const double a = n + 1.;
-    const double b = Vddt;
+    const double b = kVddt;
     const double b_vi = (b - vi);
     const double c = n * (b_vi * b_vi);
 
@@ -45,6 +45,9 @@ double OpAmp::solve(double n, double vi)
         const double xk = x;
 
         // Calculate f and df.
+
+        double out[2];
+
         opamp->evaluate(x, out);
         const double vo = out[0];
         const double dvo = out[1];
@@ -52,9 +55,13 @@ double OpAmp::solve(double n, double vi)
         const double b_vx = b - x;
         const double b_vo = b - vo;
 
+        // f = a*(b - vx)^2 - c - (b - vo)^2
         const double f = a * (b_vx * b_vx) - c - (b_vo * b_vo);
+
+        // df = 2*((b - vo)*dvo - a*(b - vx))
         const double df = 2. * (b_vo * dvo - a * b_vx);
 
+        // Newton-Raphson step: xk1 = xk - f(xk)/f'(xk)
         x -= f / df;
 
         if (fabs(x - xk) < EPSILON)

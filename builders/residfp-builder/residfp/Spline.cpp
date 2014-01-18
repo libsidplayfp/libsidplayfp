@@ -31,7 +31,7 @@ Spline::Spline(const double input[][2], int inputLength) :
     params(new double[paramsLength][6])
 {
 
-    for (int i = 0; i < paramsLength; i ++)
+    for (int i = 0; i < paramsLength; i++)
     {
         const double* p0 = i != 0 ? input[i - 1] : 0;
         const double* p1 = input[i];
@@ -66,7 +66,7 @@ Spline::Spline(const double input[][2], int inputLength) :
 
         const double a = ((k1 + k2) - 2. * dy / dx) / (dx * dx);
         const double b = ((k2 - k1) / dx - 3. * (x1 + x2) * a) / 2.;
-        const double c = k1 - (3. * x1 * a + 2.*b) * x1;
+        const double c = k1 - (3. * x1 * a + 2. * b) * x1;
         const double d = y1 - ((x1 * a + b) * x1 + c) * x1;
 
         params[i][0] = x1;
