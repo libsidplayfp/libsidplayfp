@@ -24,6 +24,7 @@
 #define FILTER8580_H
 
 #include <cmath>
+#include <cstring>
 
 #include <stdint.h>
 
@@ -41,7 +42,7 @@ namespace reSIDfp
 *
 * Based on the paper "Denormal numbers in floating point signal
 * processing applications" from Laurent de Soras
-* www.musicdsp.org/files/denormal.pdf 
+* http://ldesoras.free.fr/prod.html#doc_denormal
 */
 class antiDenormalNoise
 {
@@ -54,10 +55,15 @@ public:
 
     inline float get()
     {
+        // FIXME
+        // This code assumes IEEE-754 floating point representation
+        // and same endianness for integers and floats
         rand_state = rand_state * 1234567UL + 890123UL;
         const uint32_t mantissa = rand_state & 0x807F0000; // Keep only most significant bits
         const uint32_t flt_rnd = mantissa | 0x1E000000; // Set exponent
-        return *reinterpret_cast<const float*>(&flt_rnd);
+        float temp;
+        memcpy(&temp, &flt_rnd, sizeof(float));
+        return temp;
     }
 };
 
@@ -126,6 +132,8 @@ public:
 
 #if RESID_INLINING || defined(FILTER8580_CPP)
 
+#include <cassert>
+
 namespace reSIDfp
 {
 
@@ -156,11 +164,14 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
 
     (filtE ? Vi : Vo) += ve;
 
-    const float dVbp = w0 * Vhp;
-    const float dVlp = w0 * Vbp;
-    Vbp -= dVbp;
-    Vlp -= dVlp;
+    Vlp -= w0 * Vbp;
+    Vbp -= w0 * Vhp;
     Vhp = (Vbp * _1_div_Q) - Vlp - Vi + noise.get();
+
+    assert(std::fpclassify(Vlp) != FP_SUBNORMAL);
+    assert(std::fpclassify(Vbp) != FP_SUBNORMAL);
+    assert(std::fpclassify(Vhp) != FP_SUBNORMAL);
+
     float Vof = (float)Vo;
 
     if (lp)
