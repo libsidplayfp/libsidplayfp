@@ -21,6 +21,7 @@
 
 #include "Spline.h"
 
+#include <cassert>
 #include <limits>
 
 namespace reSIDfp
@@ -30,6 +31,7 @@ Spline::Spline(const double input[][2], int inputLength) :
     paramsLength(inputLength - 1),
     params(new double[paramsLength][6])
 {
+    assert(inputLength > 2);
 
     for (int i = 0; i < paramsLength; i++)
     {
