@@ -519,7 +519,6 @@ void SidTuneBase::resolveAddrs(const uint_least8_t *c64data)
 
         info->m_loadAddr = endian_16(*(c64data+1), *c64data);
         fileOffset += 2;
-        c64data += 2;
         info->m_c64dataLen -= 2;
     }
 
