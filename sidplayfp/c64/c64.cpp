@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -26,14 +26,14 @@
 
 typedef struct
 {
-    double colorBurst;
-    double divider;
-    MOS656X::model_t vicModel;
+    double colorBurst;         // Colorburst frequency in Herz
+    double divider;            // Frequency divider
+    MOS656X::model_t vicModel; // Video chip model
 } model_data_t;
 
 /*
  * Color burst frequencies:
- * 
+ *
  * NTSC  - 3.579545455 MHz = 315/88 MHz
  * PAL-B - 4.43361875 MHz = 283.75 * 15625 Hz + 25 Hz.
  * PAL-M - 3.57561149 MHz
@@ -42,10 +42,10 @@ typedef struct
 
 const model_data_t modelData[] =
 {
-    {4.43361875,  18., MOS656X::MOS6569},      // PAL-B
-    {3.579545455, 14., MOS656X::MOS6567R8},    // NTSC-M
-    {3.579545455, 14., MOS656X::MOS6567R56A},  // Old NTSC-M
-    {3.58205625,  14., MOS656X::MOS6572},      // PAL-N
+    {4433618.75,  18., MOS656X::MOS6569},      // PAL-B
+    {3579545.455, 14., MOS656X::MOS6567R8},    // NTSC-M
+    {3579545.455, 14., MOS656X::MOS6567R56A},  // Old NTSC-M
+    {3582056.25,  14., MOS656X::MOS6572},      // PAL-N
 };
 
 double c64::getCpuFreq(model_t model)
@@ -54,8 +54,12 @@ double c64::getCpuFreq(model_t model)
      * The crystal clock that drives the VIC II chip is four times
      * the color burst frequency
      */
-    const double crystalFreq = modelData[model].colorBurst * 4. * 1000000.;
+    const double crystalFreq = modelData[model].colorBurst * 4.;
 
+    /*
+     * The VIC II produces the two-phase system clock
+     * by running the input clock through a divider
+     */
     return crystalFreq/modelData[model].divider;
 }
 
