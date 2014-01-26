@@ -67,6 +67,8 @@ void MOS656X::reset()
     rasterY      = maxRasters - 1;
     lineCycle    = 0;
     areBadLinesEnabled = false;
+    isBadLine    = false;
+    rasterYIRQCondition = false;
     rasterClk    = 0;
     vblanking    = lp_triggered = false;
     lpx          = 0;
