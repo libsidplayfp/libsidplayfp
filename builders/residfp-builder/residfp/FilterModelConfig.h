@@ -3,6 +3,7 @@
  *
  * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
+ * Copyright 2004,2010 Dag Lem
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +31,8 @@ namespace reSIDfp
 class Integrator;
 
 /**
-*/
+ * Calculate parameters for 6581 filter emulation.
+ */
 class FilterModelConfig
 {
 private:
@@ -47,10 +49,11 @@ private:
     const double voice_voltage_range;
     const double voice_DC_voltage;
 
-    // Capacitor value.
+    /// Capacitor value.
     const double C;
 
-    // Transistor parameters.
+    /// Transistor parameters.
+    //@{
     const double Vdd;
     const double Vth;           ///< Threshold voltage
     const double Ut;            ///< Thermal voltage: Ut = k*T/q = 8.61734315e-5*T ~ 26mV
@@ -58,26 +61,34 @@ private:
     const double uCox;          ///< u*Cox
     const double WL_vcr;        ///< W/L for VCR
     const double WL_snake;      ///< W/L for "snake"
+    //@}
 
-    // DAC parameters.
+    /// DAC parameters.
+    //@{
     const double dac_zero;
     const double dac_scale;
+    //@}
 
-    /* Derived stuff */
+    // Derived stuff
     const double vmin, norm;
 
-    // Lookup tables for gain and summer op-amps in output stage / filter.
+    /// Lookup tables for gain and summer op-amps in output stage / filter.
+    //@{
     unsigned short* mixer[8];
     unsigned short* summer[5];
     unsigned short* gain[16];
+    //@}
 
+    /// DAC lookup table
     double dac[DAC_BITS];
 
-    // VCR - 6581 only.
+    /// VCR - 6581 only.
+    //@{
     unsigned short vcr_kVg[1 << 16];
     unsigned short vcr_n_Ids_term[1 << 16];
+    //@}
 
-    // Reverse op-amp transfer function.
+    /// Reverse op-amp transfer function.
     int opamp_rev[1 << 16];
 
 private:
@@ -95,7 +106,9 @@ public:
      */
     int getVoiceScaleS14() const { return (int)((norm * ((1L << 14) - 1)) * voice_voltage_range); }
 
-    /// The "zero" output level of the voices.
+    /**
+     * The "zero" output level of the voices.
+     */
     int getVoiceDC() const { return (int)((norm * ((1L << 16) - 1)) * (voice_DC_voltage - vmin)); }
 
     unsigned short** getGain() { return gain; }

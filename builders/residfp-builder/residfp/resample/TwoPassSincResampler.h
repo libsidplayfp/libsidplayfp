@@ -32,8 +32,6 @@ namespace reSIDfp
 
 /**
  * Compose a more efficient SINC from chaining two other SINCs.
- *
- * @author Antti Lankila
  */
 class TwoPassSincResampler : public Resampler
 {

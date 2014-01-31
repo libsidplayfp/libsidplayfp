@@ -28,7 +28,8 @@ namespace reSIDfp
 typedef double(*Params)[6];
 
 /**
-*/
+ * Spline interpolation
+ */
 class Spline
 {
 private:

@@ -3,6 +3,7 @@
  *
  * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
+ * Copyright 2004,2010 Dag Lem
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,19 +29,44 @@ namespace reSIDfp
 {
 
 /**
- * This class solves the opamp equation when loaded by different sets of resistors.
- * Equations and first implementation were written by Dag Lem.
- * This class is a rewrite without use of fixed point integer mathematics, and
- * uses the actual voltages instead of the normalized values.
+ * Find output voltage in inverting gain and inverting summer SID op-amp
+ * circuits, using a combination of Newton-Raphson and bisection.
  *
- * @author alankila
+ *              ---R2--
+ *             |       |
+ *   vi ---R1-----[A>----- vo
+ *             vx
+ *
+ * From Kirchoff's current law it follows that
+ *
+ *   IR1 - IR2 = 0
+ *
+ * Substituting the triode mode transistor model K*W/L*(Vgst^2 - Vgdt^2)
+ * for the currents, we get:
+ *
+ *   n*(2*(Vddt-vx)-(vi-vx))*(vi-vx) - (2*(Vddt-vo)-(vx-vo))*(vx-vo) = 0
+ *
+ * Our root function f can thus be written as:
+ *
+ *   f = (2*Vddt - vo)*vo - (n + 1)*(2*Vddt - vx)*vx + n*(2*Vddt - vi)*vi = 0
+ *
+ * Using substitution constants
+ * 
+ *   a = n + 1
+ *   b = Vddt
+ *   c = n*(2*Vddt - vi)*vi
+ *
+ * the equations for the root function and its derivative can be written as:
+ * 
+ *   f = (2*b - vo)*vo - a*(2*b - vx)*vx + c
+ *   df = 2*((b - vo)*dvo - a*(b - vx))
  */
 class OpAmp
 {
 private:
     static const double EPSILON;
 
-    /** Current root position (cached as guess to speed up next iteration) */
+    /// Current root position (cached as guess to speed up next iteration)
     double x;
 
     const double kVddt, vmin, vmax;

@@ -126,7 +126,7 @@ void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformG
     // A special case occurs when a sync source is synced itself on the same
     // cycle as when its MSB is set high. In this case the destination will
     // not be synced. This has been verified by sampling OSC3.
-    if (msb_rising && syncDest->sync && !(sync && syncSource->msb_rising))
+    if (unlikely(msb_rising) && syncDest->sync && !(sync && syncSource->msb_rising))
     {
         syncDest->accumulator = 0;
     }

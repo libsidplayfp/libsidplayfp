@@ -199,7 +199,6 @@ builders/residfp-builder/residfp/resample/ZeroOrderResampler.h \
 builders/residfp-builder/residfp/resample/SincResampler.cpp \
 builders/residfp-builder/residfp/resample/SincResampler.h \
 builders/residfp-builder/residfp/resample/TwoPassSincResampler.h \
-builders/residfp-builder/residfp/residfp-config.h \
 builders/residfp-builder/residfp/version.cc
 
 #=========================================================

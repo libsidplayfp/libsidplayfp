@@ -3,7 +3,7 @@
  *
  * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
- * Copyright 2004-2010 Dag Lem <resid@nimrod.no>
+ * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,14 +36,14 @@ namespace reSIDfp
 {
 
 /**
-* Simple white noise generator.
-* Generates small low quality pseudo random numbers
-* useful to prevent float denormals.
-*
-* Based on the paper "Denormal numbers in floating point signal
-* processing applications" from Laurent de Soras
-* http://ldesoras.free.fr/prod.html#doc_denormal
-*/
+ * Simple white noise generator.
+ * Generates small low quality pseudo random numbers
+ * useful to prevent float denormals.
+ *
+ * Based on the paper "Denormal numbers in floating point signal
+ * processing applications" from Laurent de Soras
+ * http://ldesoras.free.fr/prod.html#doc_denormal
+ */
 class antiDenormalNoise
 {
 private:
@@ -70,15 +70,6 @@ public:
 /**
  * Filter for 8580 chip based on simple linear approximation
  * of the FC control.
- *
- * This is like the original reSID filter except the phase
- * of BP output has been inverted. I saw samplings on the internet
- * that indicated it would genuinely happen like this.
- *
- * @author Ken Händel
- * @author Dag Lem
- * @author Antti Lankila
- * @author Leandro Nini
  */
 class Filter8580 : public Filter
 {

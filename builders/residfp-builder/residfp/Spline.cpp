@@ -79,7 +79,7 @@ Spline::Spline(const double input[][2], int inputLength) :
         params[i][5] = d;
     }
 
-    /* Fix the value ranges, because we interpolate outside original bounds if necessary. */
+    // Fix the value ranges, because we interpolate outside original bounds if necessary.
     params[0][0] = std::numeric_limits<double>::min();
     params[paramsLength - 1][1] = std::numeric_limits<double>::max();
 
