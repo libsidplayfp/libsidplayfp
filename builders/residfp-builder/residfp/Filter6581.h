@@ -36,47 +36,40 @@ class Integrator;
 /**
  * Filter based on Dag Lem's 6581 filter from reSID 1.0 prerelease. See original
  * source for discussion about theory of operation.
- *
- * Java port by Antti S. Lankila
- *
- * @author Ken Händel
- * @author Dag Lem
- * @author Antti Lankila
- * @author Leandro Nini
  */
 class Filter6581 : public Filter
 {
 private:
-    /** Filter highpass state. */
+    /// Filter highpass state.
     int Vhp;
 
-    /** Filter bandpass state. */
+    /// Filter bandpass state.
     int Vbp;
 
-    /** Filter lowpass state. */
+    /// Filter lowpass state.
     int Vlp;
 
-    /** Filter external input. */
+    /// Filter external input.
     int ve;
 
     const int voiceScaleS14, voiceDC;
 
-    /** Current volume amplifier setting. */
+    /// Current volume amplifier setting.
     unsigned short* currentGain;
 
-    /** Current filter/voice mixer setting. */
+    /// Current filter/voice mixer setting.
     unsigned short* currentMixer;
 
-    /** Filter input summer setting. */
+    /// Filter input summer setting.
     unsigned short* currentSummer;
 
-    /** Filter resonance value. */
+    /// Filter resonance value.
     unsigned short* currentResonance;
 
-    /** VCR + associated capacitor connected to highpass output. */
+    /// VCR + associated capacitor connected to highpass output.
     Integrator* hpIntegrator;
 
-    /** VCR + associated capacitor connected to lowpass output. */
+    /// VCR + associated capacitor connected to lowpass output.
     Integrator* bpIntegrator;
 
     const unsigned int* f0_dac;
@@ -114,7 +107,7 @@ public:
     void input(int sample) { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
 
     /**
-     * Switch to new distortion curve.
+     * Set filter cutoff frequency.
      */
     void updatedCenterFrequency();
 

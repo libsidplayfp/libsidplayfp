@@ -28,60 +28,36 @@ namespace reSIDfp
 
 /**
  * SID filter base class
- *
- * @author Ken Händel
- * @author Dag Lem
- * @author Antti Lankila
- * @author Leandro Nini
  */
 class Filter
 {
 private:
-    /**
-     * Filter enabled.
-     */
+    /// Filter enabled.
     bool enabled;
 
-    /**
-     * Selects which inputs to route through filter.
-     */
+    /// Selects which inputs to route through filter.
     char filt;
 
 protected:
-
-    /**
-     * Current clock frequency.
-     */
+    /// Current clock frequency.
     double clockFrequency;
 
-    /**
-     * Filter cutoff frequency.
-     */
+    /// Filter cutoff frequency.
     int fc;
 
-    /**
-     * Filter resonance.
-     */
+    /// Filter resonance.
     int res;
 
-    /**
-     * Current volume.
-     */
+    /// Current volume.
     int vol;
 
-    /**
-     * Routing to filter or outside filter
-     */
+    /// Routing to filter or outside filter
     bool filt1, filt2, filt3, filtE;
 
-    /**
-     * Switch voice 3 off.
-     */
+    /// Switch voice 3 off.
     bool voice3off;
 
-    /**
-     * Highpass, bandpass, and lowpass filter modes.
-     */
+    /// Highpass, bandpass, and lowpass filter modes.
     bool hp, bp, lp;
 
 protected:
@@ -144,28 +120,28 @@ public:
     void reset();
 
     /**
-     * Register function.
+     * Write Frequency Cutoff Low register.
      *
      * @param fc_lo Frequency Cutoff Low-Byte
      */
     void writeFC_LO(unsigned char fc_lo);
 
     /**
-     * Register function.
+     * Write Frequency Cutoff High register.
      *
      * @param fc_hi Frequency Cutoff High-Byte
      */
     void writeFC_HI(unsigned char fc_hi);
 
     /**
-     * Register function.
+     * Write Resonance/Filter register.
      *
      * @param res_filt Resonance/Filter
      */
     void writeRES_FILT(unsigned char res_filt);
 
     /**
-     * Register function.
+     * Write filter Mode/Volume register.
      *
      * @param mode_vol Filter Mode/Volume
      */

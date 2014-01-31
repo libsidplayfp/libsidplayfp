@@ -218,14 +218,13 @@ FilterModelConfig::FilterModelConfig() :
         vcr_kVg[i] = (unsigned short)(tmp + 0.5);
     }
 
-    /*
-      EKV model:
+    //  EKV model:
+    //
+    //  Ids = Is*(if - ir)
+    //  Is = 2*u*Cox*Ut^2/k*W/L
+    //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
+    //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
 
-      Ids = Is*(if - ir)
-      Is = 2*u*Cox*Ut^2/k*W/L
-      if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
-      ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
-    */
     const double kVt = k * Vth;
     const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
 

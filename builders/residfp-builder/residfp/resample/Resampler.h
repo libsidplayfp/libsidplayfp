@@ -28,8 +28,6 @@ namespace reSIDfp
 /**
  * Abstraction of a resampling process. Given enough input, produces output.
  * Constructors take additional arguments that configure these objects.
- *
- * @author Antti Lankila
  */
 class Resampler
 {

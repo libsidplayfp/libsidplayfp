@@ -3,7 +3,7 @@
  *
  * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
- * Copyright 2004 Dag Lem <resid@nimrod.no>
+ * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,15 +31,11 @@ namespace reSIDfp
 /**
  * A 15 bit LFSR is used to implement the envelope rates, in effect dividing
  * the clock to the envelope counter by the currently selected rate period.
- * <P>
+ * <p>
  * In addition, another counter is used to implement the exponential envelope decay,
  * in effect further dividing the clock to the envelope counter.
  * The period of this counter is set to 1, 2, 4, 8, 16, 30 at the envelope counter
  * values 255, 93, 54, 26, 14, 6, respectively.
- *
- * @author Ken Händel
- * @author Dag Lem
- * @author Antti Lankila
  */
 class EnvelopeGenerator
 {
@@ -53,14 +49,10 @@ private:
         ATTACK, DECAY_SUSTAIN, RELEASE
     };
 
-    /**
-     * XOR shift register for ADSR prescaling
-     */
+    /// XOR shift register for ADSR prescaling.
     int lfsr;
 
-    /**
-     * Comparison value (period) of the rate counter before next event.
-     */
+    /// Comparison value (period) of the rate counter before next event.
     int rate;
 
     /**
@@ -75,32 +67,30 @@ private:
      */
     int exponential_counter_period;
 
-    /** Attack register */
+    /// Attack register
     int attack;
 
-    /** Decay register */
+    /// Decay register
     int decay;
 
-    /** Sustain register */
+    /// Sustain register
     int sustain;
 
-    /** Release register */
+    /// Release register
     int release;
 
-    /** Current envelope state */
+    /// Current envelope state
     State state;
 
-    /**
-     * Whether hold is enabled. Only switching to ATTACK can release envelope.
-     */
+    /// Whether hold is enabled. Only switching to ATTACK can release envelope.
     bool hold_zero;
 
     bool envelope_pipeline;
 
-    /** Gate bit */
+    /// Gate bit
     bool gate;
 
-    /** The current digital value of envelope output. */
+    /// The current digital value of envelope output.
     unsigned char envelope_counter;
 
     /**
@@ -110,12 +100,10 @@ private:
      */
     short dac[256];
 
-    void set_exponential_counter();
-
     /**
      * Lookup table to convert from attack, decay, or release value to rate
      * counter period.
-     * <P>
+     * <p>
      * The rate counter is a 15 bit register which is left shifted each cycle.
      * When the counter reaches a specific comparison value,
      * the envelope counter is incremented (attack) or decremented
@@ -124,6 +112,9 @@ private:
      * see <a href="http://blog.kevtris.org/?p=13">kevtris.org</a>
      */
     static const int adsrtable[16];
+
+private:
+    void set_exponential_counter();
 
 public:
     /**
@@ -136,7 +127,7 @@ public:
     void setChipModel(ChipModel chipModel);
 
     /**
-     * SID clocking - 1 cycle.
+     * SID clocking.
      */
     void clock();
 
@@ -170,23 +161,25 @@ public:
      */
     void reset();
 
-    // ----------------------------------------------------------------------------
-    // Register functions.
-    // ----------------------------------------------------------------------------
-
     /**
+     * Write control register.
+     *
      * @param control
      *            control register
      */
     void writeCONTROL_REG(unsigned char control);
 
     /**
+     * Write Attack/Decay register.
+     *
      * @param attack_decay
      *            attack/decay value
      */
     void writeATTACK_DECAY(unsigned char attack_decay);
 
     /**
+     * Write Sustain/Release register.
+     *
      * @param sustain_release
      *            sustain/release value
      */
