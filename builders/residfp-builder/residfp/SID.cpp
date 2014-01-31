@@ -188,20 +188,6 @@ void SID::writeImmediate(int offset, unsigned char value)
     voiceSync(false);
 }
 
-void SID::ageBusValue(int n)
-{
-    if (busValueTtl != 0)
-    {
-        busValueTtl -= n;
-
-        if (unlikely(busValueTtl <= 0))
-        {
-            busValue = 0;
-            busValueTtl = 0;
-        }
-    }
-}
-
 void SID::voiceSync(bool sync)
 {
     if (sync)

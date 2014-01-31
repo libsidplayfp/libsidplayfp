@@ -294,6 +294,22 @@ public:
 
 namespace reSIDfp
 {
+
+RESID_INLINE  
+void SID::ageBusValue(int n)
+{
+    if (busValueTtl != 0)
+    {
+        busValueTtl -= n;
+
+        if (unlikely(busValueTtl <= 0))
+        {
+            busValue = 0;
+            busValueTtl = 0;
+        }
+    }
+}
+
 RESID_INLINE
 int SID::output() const
 {
