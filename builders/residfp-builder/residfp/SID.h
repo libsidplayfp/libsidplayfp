@@ -23,7 +23,7 @@
 #ifndef SIDFP_H
 #define SIDFP_H
 
-#include "residfp-config.h"
+#include "siddefs-fp.h"
 
 namespace reSIDfp
 {
@@ -342,7 +342,7 @@ int SID::clock(int cycles, short* buf)
                 voice[2]->envelope()->clock();
             }
 
-            if (delayedOffset != -1)
+            if (unlikely(delayedOffset != -1))
             {
                 writeImmediate(delayedOffset, delayedValue);
                 delayedOffset = -1;

@@ -23,6 +23,8 @@
 
 #include <cmath>
 
+#include "siddefs-fp.h"
+
 namespace reSIDfp
 {
 
@@ -64,7 +66,7 @@ double OpAmp::solve(double n, double vi)
         // Newton-Raphson step: xk1 = xk - f(xk)/f'(xk)
         x -= f / df;
 
-        if (fabs(x - xk) < EPSILON)
+        if (unlikely(fabs(x - xk) < EPSILON))
         {
             opamp->evaluate(x, out);
             return out[0];
@@ -73,7 +75,7 @@ double OpAmp::solve(double n, double vi)
         // Narrow down root bracket.
         (f < 0. ? bk : ak) = xk;
 
-        if (x <= ak || x >= bk)
+        if (unlikely(x <= ak) || unlikely(x >= bk))
         {
             // Bisection step (ala Dekker's method).
             x = (ak + bk) * 0.5;

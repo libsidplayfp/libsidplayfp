@@ -194,7 +194,7 @@ void SID::ageBusValue(int n)
     {
         busValueTtl -= n;
 
-        if (busValueTtl <= 0)
+        if (unlikely(busValueTtl <= 0))
         {
             busValue = 0;
             busValueTtl = 0;

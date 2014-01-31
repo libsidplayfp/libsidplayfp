@@ -210,7 +210,7 @@ namespace reSIDfp
 RESID_INLINE
 void EnvelopeGenerator::clock()
 {
-    if (envelope_pipeline)
+    if (unlikely(envelope_pipeline))
     {
         --envelope_counter;
         envelope_pipeline = false;
@@ -229,7 +229,7 @@ void EnvelopeGenerator::clock()
     // so the ADSR delay bug should be correcly modeled
 
     // check to see if LFSR matches table value
-    if (lfsr != rate)
+    if (likely(lfsr != rate))
     {
         // it wasn't a match, clock the LFSR once
         // by performing XOR on last 2 bits
@@ -250,7 +250,7 @@ void EnvelopeGenerator::clock()
         exponential_counter = 0;
 
         // Check whether the envelope counter is frozen at zero.
-        if (hold_zero)
+        if (unlikely(hold_zero))
         {
             return;
         }
@@ -265,7 +265,7 @@ void EnvelopeGenerator::clock()
             //
             ++envelope_counter;
 
-            if (envelope_counter == (unsigned char) 0xff)
+            if (unlikely(envelope_counter == (unsigned char) 0xff))
             {
                 state = DECAY_SUSTAIN;
                 rate = adsrtable[decay];
@@ -281,7 +281,7 @@ void EnvelopeGenerator::clock()
             //
             // For a detailed description see:
             // http://ploguechipsounds.blogspot.it/2010/11/new-research-on-sid-adsr.html
-            if (envelope_counter == (unsigned char)(sustain << 4 | sustain))
+            if (likely(envelope_counter == (unsigned char)(sustain << 4 | sustain)))
             {
                 return;
             }

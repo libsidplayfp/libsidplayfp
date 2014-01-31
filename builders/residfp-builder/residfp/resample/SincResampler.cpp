@@ -28,6 +28,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "siddefs-fp.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -106,7 +108,7 @@ int SincResampler::fir(int subcycle)
 
     // Use next FIR table, wrap around to first FIR table using
     // previous sample.
-    if (++firTableFirst == firRES)
+    if (unlikely(++firTableFirst == firRES))
     {
         firTableFirst = 0;
         ++sampleStart;

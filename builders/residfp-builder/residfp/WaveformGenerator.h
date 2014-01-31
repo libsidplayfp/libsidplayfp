@@ -250,9 +250,9 @@ namespace reSIDfp
 RESID_INLINE
 void WaveformGenerator::clock()
 {
-    if (test)
+    if (unlikely(test))
     {
-        if (shift_register_reset != 0 && --shift_register_reset == 0)
+        if (unlikely(shift_register_reset != 0) && unlikely(--shift_register_reset == 0))
         {
             reset_shift_register();
         }
@@ -272,12 +272,12 @@ void WaveformGenerator::clock()
 
         // Shift noise register once for each time accumulator bit 19 is set high.
         // The shift is delayed 2 cycles.
-        if ((accumulator_bits_set & 0x080000) != 0)
+        if (unlikely((accumulator_bits_set & 0x080000) != 0))
         {
             // Pipeline: Detect rising bit, shift phase 1, shift phase 2.
             shift_pipeline = 2;
         }
-        else if (shift_pipeline != 0 && --shift_pipeline == 0)
+        else if (unlikely(shift_pipeline) != 0 && --shift_pipeline == 0)
         {
             clock_shift_register();
         }
@@ -288,14 +288,14 @@ RESID_INLINE
 short WaveformGenerator::output(const WaveformGenerator* ringModulator)
 {
     // Set output value.
-    if (waveform != 0)
+    if (likely(waveform != 0))
     {
         // The bit masks no_pulse and no_noise are used to achieve branch-free
         // calculation of the output value.
         const int ix = (accumulator ^ (ringModulator->accumulator & ring_msb_mask)) >> 12;
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
 
-        if (waveform > 0x8)
+        if (unlikely(waveform > 0x8))
         {
             // Combined waveforms that include noise
             // write to the shift register.
@@ -305,7 +305,7 @@ short WaveformGenerator::output(const WaveformGenerator* ringModulator)
     else
     {
         // Age floating DAC input.
-        if (floating_output_ttl != 0 && --floating_output_ttl == 0)
+        if (likely(floating_output_ttl != 0) && unlikely(--floating_output_ttl == 0))
         {
             waveform_output = 0;
         }
