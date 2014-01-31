@@ -88,7 +88,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
         return 0;
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
-    // Filename ``-'' is used as a synonym for standard input.
+    // Filename "-" is used as a synonym for standard input.
     if (strcmp(fileName, "-") == 0)
         return getFromStdIn();
 #endif
@@ -133,7 +133,7 @@ unsigned int SidTuneBase::selectSong(unsigned int selectedSong)
         info->m_songSpeed = SidTuneInfo::SPEED_CIA_1A;
         break;
     case SidTuneInfo::COMPATIBILITY_PSID:
-       // This does not take into account the PlaySID bug upon evaluating the
+        // This does not take into account the PlaySID bug upon evaluating the
         // SPEED field. It would most likely break compatibility to lots of
         // sidtunes, which have been converted from .SID format and vice versa.
         // The .SID format does the bit-wise/song-wise evaluation of the SPEED
@@ -253,7 +253,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
 
     buffer_t buf1(buffer, buffer+bufferLen);
 
-    // Here test for the possible single file formats. --------------
+    // Here test for the possible single file formats.
     std::auto_ptr<SidTuneBase> s(PSID::load(buf1));
     if (!s.get())
     {
@@ -337,7 +337,6 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
 
     // Check the size of the data.
-
     if (info->m_c64dataLen > MAX_MEMORY)
     {
         throw loadError(ERR_DATA_TOO_LONG);
@@ -383,8 +382,8 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
             while (fileNameExtensions[n] != 0)
             {
                 createNewFileName(fileName2, fileName, fileNameExtensions[n]);
-                // 1st data file was loaded into ``fileBuf1'',
-                // so we load the 2nd one into ``fileBuf2''.
+                // 1st data file was loaded into "fileBuf1",
+                // so we load the 2nd one into "fileBuf2".
                 // Do not load the first file again if names are equal.
                 if (!stringutils::equal(fileName, fileName2.data(), fileName2.size()))
                 {
