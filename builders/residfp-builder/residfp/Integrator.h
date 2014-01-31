@@ -91,8 +91,10 @@ int Integrator::solve(int vi)
     const int kVg = (int)vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16];
 
     // VCR voltages for EKV model table lookup.
-    const int Vgs = kVg > vx ? kVg - vx : 0;
-    const int Vgd = kVg > vi ? kVg - vi : 0;
+    int Vgs = kVg - vx;
+    if (Vgs < 0) Vgs = 0;
+    int Vgd = kVg - vi;
+    if (Vgd < 0) Vgd = 0;
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
     const int n_I_vcr = (int)(vcr_n_Ids_term[Vgs & 0xffff] - vcr_n_Ids_term[Vgd & 0xffff]) << 15;
