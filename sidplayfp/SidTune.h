@@ -81,7 +81,7 @@ public:  // ----------------------------------------------------------------
     */
     SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtuneLength);
 
-    virtual ~SidTune();
+    ~SidTune();
 
     /**
     * The SidTune class does not copy the list of file name extensions,
