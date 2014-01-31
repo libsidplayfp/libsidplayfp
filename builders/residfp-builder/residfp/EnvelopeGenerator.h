@@ -289,7 +289,7 @@ void EnvelopeGenerator::clock()
             // This has been verified by sampling ENV3.
             // NB! The operation below requires two's complement integer.
             //
-            if (exponential_counter_period != 1)
+            if (unlikely(exponential_counter_period != 1))
             {
                 // The decrement is delayed one cycle.
                 envelope_pipeline = true;

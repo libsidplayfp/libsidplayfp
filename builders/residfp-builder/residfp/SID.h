@@ -286,7 +286,7 @@ namespace reSIDfp
 RESID_INLINE  
 void SID::ageBusValue(int n)
 {
-    if (busValueTtl != 0)
+    if (likely(busValueTtl != 0))
     {
         busValueTtl -= n;
 
@@ -321,7 +321,7 @@ int SID::clock(int cycles, short* buf)
     {
         int delta_t = std::min(nextVoiceSync, cycles);
 
-        if (delta_t > 0)
+        if (likely(delta_t > 0))
         {
             if (unlikely(delayedOffset != -1))
             {
@@ -356,7 +356,7 @@ int SID::clock(int cycles, short* buf)
             nextVoiceSync -= delta_t;
         }
 
-        if (nextVoiceSync == 0)
+        if (unlikely(nextVoiceSync == 0))
         {
             voiceSync(true);
         }
