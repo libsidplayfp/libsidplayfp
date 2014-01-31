@@ -335,14 +335,14 @@ int SID::clock(int cycles, short* buf)
 
         if (delta_t > 0)
         {
-            if (delayedOffset != -1)
+            if (unlikely(delayedOffset != -1))
             {
                 delta_t = 1;
             }
 
             for (int i = 0; i < delta_t; i++)
             {
-                if (resampler->input(output()))
+                if (unlikely(resampler->input(output())))
                 {
                     buf[s++] = resampler->getOutput();
                 }
