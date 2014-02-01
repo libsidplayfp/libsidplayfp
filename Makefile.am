@@ -170,6 +170,7 @@ builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
 builders/residfp-builder/residfp/array.h \
 builders/residfp-builder/residfp/Dac.cpp \
 builders/residfp-builder/residfp/Dac.h \
+builders/residfp-builder/residfp/Integrator.cpp \
 builders/residfp-builder/residfp/Integrator.h \
 builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
 builders/residfp-builder/residfp/EnvelopeGenerator.h \
@@ -179,6 +180,7 @@ builders/residfp-builder/residfp/FilterModelConfig.cpp \
 builders/residfp-builder/residfp/FilterModelConfig.h \
 builders/residfp-builder/residfp/Filter.cpp \
 builders/residfp-builder/residfp/Filter.h \
+builders/residfp-builder/residfp/Filter8580.cpp \
 builders/residfp-builder/residfp/Filter8580.h \
 builders/residfp-builder/residfp/Filter6581.cpp \
 builders/residfp-builder/residfp/Filter6581.h \
