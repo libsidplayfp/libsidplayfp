@@ -111,6 +111,8 @@ FilterModelConfig::FilterModelConfig() :
     // Fixed point scaling for 16 bit op-amp output.
     const double N16 = norm * ((1L << 16) - 1);
 
+    const double kVddt = k * (Vdd - Vth);
+
     double scaled_voltage[OPAMP_SIZE][2];
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
@@ -133,7 +135,7 @@ FilterModelConfig::FilterModelConfig() :
 
     // Create lookup tables for gains / summers.
 
-    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, Vdd - Vth);
+    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, kVddt);
 
     // The filter summer operates at n ~ 1, and has 5 fundamentally different
     // input configurations (2 - 6 input "resistors").
@@ -166,6 +168,7 @@ FilterModelConfig::FilterModelConfig() :
     // the filter summer.
     for (int i = 0; i < 8; i++)
     {
+        const int idiv = (i == 0 ? 1 : i); 
         const int size = (i == 0) ? 1 : i << 16;
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
@@ -173,7 +176,7 @@ FilterModelConfig::FilterModelConfig() :
 
         for (int vi = 0; vi < size; vi++)
         {
-            const double vin = vmin + vi / N16 / (i == 0 ? 1 : i); /* vmin .. vmax */
+            const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
             mixer[i][vi] = (unsigned short)(tmp + 0.5);
@@ -201,7 +204,7 @@ FilterModelConfig::FilterModelConfig() :
         }
     }
 
-    const double kVddt = N16 * (k * (Vdd - Vth));
+    const double nkVddt = N16 * kVddt;
     const double nVmin = N16 * vmin;
 
     for (int i = 0; i < (1 << 16); i++)
@@ -215,7 +218,7 @@ FilterModelConfig::FilterModelConfig() :
         //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
         // I.e. k*Vg - t must be returned.
-        const double Vg = kVddt - sqrt((double) i * (1 << 16));
+        const double Vg = nkVddt - sqrt((double) i * (1 << 16));
         const double tmp = k * Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         vcr_kVg[i] = (unsigned short)(tmp + 0.5);
