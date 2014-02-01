@@ -111,9 +111,6 @@ FilterModelConfig::FilterModelConfig() :
     // Fixed point scaling for 16 bit op-amp output.
     const double N16 = norm * ((1L << 16) - 1);
 
-    // Create lookup table mapping capacitor voltage to op-amp input voltage:
-    // vc -> vx
-
     double scaled_voltage[OPAMP_SIZE][2];
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
@@ -122,7 +119,10 @@ FilterModelConfig::FilterModelConfig() :
         scaled_voltage[i][1] = N16 * (opamp_voltage[i][0] - vmin);
     }
 
+    // Create lookup table mapping capacitor voltage to op-amp input voltage:
+
     Spline s(scaled_voltage, OPAMP_SIZE);
+
     for (int x = 0; x < (1 << 16); x++)
     {
         double out[2];
