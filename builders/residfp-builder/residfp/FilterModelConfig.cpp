@@ -33,10 +33,12 @@
 namespace reSIDfp
 {
 
-// This is the SID 6581 op-amp voltage transfer function, measured on
-// CAP1B/CAP1A on a chip marked MOS 6581R4AR 0687 14.
-// All measured chips have op-amps with output voltages (and thus input
-// voltages) within the range of 0.81V - 10.31V.
+/**
+ * This is the SID 6581 op-amp voltage transfer function, measured on
+ * CAP1B/CAP1A on a chip marked MOS 6581R4AR 0687 14.
+ * All measured chips have op-amps with output voltages (and thus input
+ * voltages) within the range of 0.81V - 10.31V.
+ */
 const double FilterModelConfig::opamp_voltage[OPAMP_SIZE][2] =
 {
   {  0.81, 10.31 },  // Approximate start of actual range
@@ -111,6 +113,7 @@ FilterModelConfig::FilterModelConfig() :
 
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
     // vc -> vx
+
     double scaled_voltage[OPAMP_SIZE][2];
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
@@ -293,7 +296,7 @@ Integrator* FilterModelConfig::buildIntegrator()
 {
     const double N16 = norm * ((1L << 16) - 1);
 
-    // Vdd - Vth, normalized so that translated values can be subtraced:
+    // Vdd - Vth, normalized so that translated values can be subtracted:
     // k*Vddt - x = (k*Vddt - t) - (x - t)
     const int kVddt = (int)(N16 * (k * (Vdd - Vth) - vmin) + 0.5);
 
