@@ -44,9 +44,11 @@ private:
 
 private:
     /**
-    * @param addr a 16-bit effective address
-    * @return a default bank-select value for $01
-    */
+     * Get required I/O map to reach address
+     *
+     * @param addr a 16-bit effective address
+     * @return a default bank-select value for $01
+     */
     uint8_t iomap(uint_least16_t addr) const;
 
 public:
@@ -55,17 +57,17 @@ public:
         m_powerOnDelay(0) {}
 
     /**
-    * Set the power on delay cycles.
-    *
-    * @param delay the delay
-    */
+     * Set the power on delay cycles.
+     *
+     * @param delay the delay
+     */
     void powerOnDelay(uint_least16_t delay) { m_powerOnDelay = delay; }
 
     /**
-    * Relocate the driver.
-    *
-    * @param mem the c64 memory interface
-    */
+     * Relocate the driver.
+     *
+     * @param mem the c64 memory interface
+     */
     bool drvReloc(sidmemory *mem);
 
     /**
@@ -77,10 +79,10 @@ public:
     void install(sidmemory *mem) const;
 
     /**
-    * Get a detailed error message.
-    *
-    * @return a pointer to the string
-    */
+     * Get a detailed error message.
+     *
+     * @return a pointer to the string
+     */
     const char* errorString() const { return m_errorString; }
 
     uint_least16_t driverAddr() const { return m_driverAddr; }

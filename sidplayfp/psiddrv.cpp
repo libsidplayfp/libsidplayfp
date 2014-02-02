@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -54,14 +54,12 @@ uint8_t psiddrv::iomap(uint_least16_t addr) const
 
     if (addr == 0)
         return 0;     // Special case, converted to 0x37 later
-    if (addr < 0xa000)
-        return 0x37;  // Basic-ROM, Kernal-ROM, I/O
-    if (addr < 0xd000)
-        return 0x36;  // Kernal-ROM, I/O
     if (addr >= 0xe000)
         return 0x35;  // I/O only
+    if (addr >= 0xd000)
+        return 0x34;  // RAM only
 
-    return 0x34;  // RAM only (special I/O in PlaySID mode)
+    return 0x36;  // Kernal-ROM, I/O
 }
 
 bool psiddrv::drvReloc(sidmemory *mem)
