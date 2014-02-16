@@ -38,7 +38,6 @@ const char TXT_NA[]             = "NA";
 
 Player::Player () :
     // Set default settings for system
-    m_mixer(m_c64.getEventScheduler()),
     m_tune(0),
     m_errorString(TXT_NA),
     m_isPlaying(false),
@@ -133,8 +132,6 @@ void Player::initialise()
     driver.install(m_c64.getMemInterface());
 
     m_c64.resetCpu();
-
-    m_mixer.reset();
 }
 
 bool Player::load(SidTune *tune)
@@ -177,7 +174,11 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         m_isPlaying = true;
 
         while (m_isPlaying && m_mixer.notFinished())
-            m_c64.getEventScheduler()->clock();
+        {
+            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                m_c64.getEventScheduler()->clock();
+            m_mixer.event();
+        }
 
         if (!m_isPlaying)
         {

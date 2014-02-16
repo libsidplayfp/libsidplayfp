@@ -26,11 +26,6 @@
 
 #include "sidplayfp/sidemu.h"
 
-/**
-* Scheduling time for next sample mixing event.
-*/
-const int MIXER_EVENT_RATE = OUTPUTBUFFERSIZE;
-
 void clockChip(sidemu *s) { s->clock(); }
 
 class bufferPos
@@ -127,14 +122,6 @@ void Mixer::event()
         m_sampleIndex++; // FIXME this sucks
         std::for_each(m_chips.begin(), m_chips.end(), bufferPos(0));
     }
-
-    /* Post a callback to ourselves. */
-    event_context.schedule(*this, MIXER_EVENT_RATE);
-}
-
-void Mixer::reset()
-{
-    event_context.schedule(*this, MIXER_EVENT_RATE, EVENT_CLOCK_PHI1);
 }
 
 void Mixer::begin(short *buffer, uint_least32_t count)
