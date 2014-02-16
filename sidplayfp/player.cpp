@@ -166,10 +166,10 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     if (!m_tune)
         return 0;
 
+    m_mixer.begin(buffer, count);
+
     if (count)
     {
-        m_mixer.begin(buffer, count);
-
         // Start the player loop
         m_isPlaying = true;
 
@@ -193,9 +193,9 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     }
     else
     {
-        count = OUTPUTBUFFERSIZE;
-        while (count--)
+        for (int i=0; i<OUTPUTBUFFERSIZE; i++)
             m_c64.getEventScheduler()->clock();
+        m_mixer.event();
 
         return 0;
     }
