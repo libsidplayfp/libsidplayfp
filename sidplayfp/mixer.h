@@ -94,9 +94,19 @@ public:
     }
 
     /**
-     * Timer ticking event.
+     * Do the mixing.
      */
-    void event();
+    void doMix();
+
+    /**
+     * This clocks the SIDs to the present moment, if they aren't already.
+     */
+    void clockChips();
+
+    /**
+     * Reset sidemu buffer position discarding produced samples.
+     */
+    void resetBufs();
 
     /**
      * Prepare for mixing cycle.
