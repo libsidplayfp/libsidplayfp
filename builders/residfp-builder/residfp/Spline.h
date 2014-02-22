@@ -49,7 +49,7 @@ private:
     /**
      * Calculate the slope of the line crossing the given points.
      */
-    double slope(const Point &a, const Point &b);
+    inline double slope(const Point &a, const Point &b);
 
 public:
     Spline(const Point input[], int inputLength);
