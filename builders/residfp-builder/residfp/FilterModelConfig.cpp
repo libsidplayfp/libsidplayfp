@@ -267,12 +267,12 @@ FilterModelConfig::~FilterModelConfig()
     }
 }
 
-unsigned int* FilterModelConfig::getDAC(double adjustment) const
+unsigned short* FilterModelConfig::getDAC(double adjustment) const
 {
     const double dac_zero = getDacZero(adjustment);
 
     const double N16 = norm * ((1L << 16) - 1);
-    unsigned int* f0_dac = new unsigned int[1 << DAC_BITS];
+    unsigned short* f0_dac = new unsigned short[1 << DAC_BITS];
 
     for (int i = 0; i < (1 << DAC_BITS); i++)
     {
@@ -287,8 +287,8 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
         }
 
         const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
-        assert(tmp > -0.5 && tmp < 4294967296.5);
-        f0_dac[i] = (unsigned int)(tmp + 0.5);
+        assert(tmp > -0.5 && tmp < 65535.5);
+        f0_dac[i] = (unsigned short)(tmp + 0.5);
     }
 
     return f0_dac;

@@ -127,7 +127,7 @@ public:
      * @param adjustment
      * @return the DAC table
      */
-    unsigned int* getDAC(double adjustment) const;
+    unsigned short* getDAC(double adjustment) const;
 
     Integrator* buildIntegrator();
 };
