@@ -63,6 +63,7 @@ private:
     const double uCox;          ///< u*Cox
     const double WL_vcr;        ///< W/L for VCR
     const double WL_snake;      ///< W/L for "snake"
+    const double kVddt;
     //@}
 
     /// DAC parameters.
@@ -73,6 +74,9 @@ private:
 
     // Derived stuff
     const double vmin, norm;
+    
+    /// Fixed point scaling for 16 bit op-amp output.
+    const double N16;
 
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
@@ -106,12 +110,12 @@ public:
      * The digital range of one voice is 20 bits; create a scaling term
      * for multiplication which fits in 11 bits.
      */
-    int getVoiceScaleS14() const { return (int)((norm * ((1L << 14) - 1)) * voice_voltage_range); }
+    int getVoiceScaleS14() const { return (int)((norm * ((1 << 14) - 1)) * voice_voltage_range); }
 
     /**
      * The "zero" output level of the voices.
      */
-    int getVoiceDC() const { return (int)((norm * ((1L << 16) - 1)) * (voice_DC_voltage - vmin)); }
+    int getVoiceDC() const { return (int)(N16 * (voice_DC_voltage - vmin)); }
 
     unsigned short** getGain() { return gain; }
 

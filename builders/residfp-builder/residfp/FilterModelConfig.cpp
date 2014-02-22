@@ -98,19 +98,16 @@ FilterModelConfig::FilterModelConfig() :
     uCox(20e-6),
     WL_vcr(9.0 / 1.0),
     WL_snake(1.0 / 115.0),
+    kVddt(k * (Vdd - Vth)),
     dac_zero(6.65),
     dac_scale(2.63),
     vmin(opamp_voltage[0].x),
-    norm(1.0 / ((Vdd - Vth) - vmin))
+    norm(1.0 / (kVddt - vmin)),
+    N16(norm * ((1 << 16) - 1))
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
     Dac::kinkedDac(dac, DAC_BITS, 2.2, false);
-
-    // Fixed point scaling for 16 bit op-amp output.
-    const double N16 = norm * ((1L << 16) - 1);
-
-    const double kVddt = k * (Vdd - Vth);
 
     Spline::Point scaled_voltage[OPAMP_SIZE];
 
@@ -234,7 +231,7 @@ FilterModelConfig::FilterModelConfig() :
     const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
-    const double N15 = norm * ((1L << 15) - 1);
+    const double N15 = norm * ((1 << 15) - 1);
     const double n_Is = N15 * 1.0e-6 / C * Is;
 
     // kVg_Vx = k*Vg - Vx
@@ -271,7 +268,6 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
 {
     const double dac_zero = getDacZero(adjustment);
 
-    const double N16 = norm * ((1L << 16) - 1);
     unsigned short* f0_dac = new unsigned short[1 << DAC_BITS];
 
     for (int i = 0; i < (1 << DAC_BITS); i++)
@@ -296,17 +292,15 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
 
 Integrator* FilterModelConfig::buildIntegrator()
 {
-    const double N16 = norm * ((1L << 16) - 1);
-
     // Vdd - Vth, normalized so that translated values can be subtracted:
     // k*Vddt - x = (k*Vddt - t) - (x - t)
-    const int kVddt = (int)(N16 * (k * (Vdd - Vth) - vmin) + 0.5);
+    const int nkVddt = (int)(N16 * (kVddt - vmin) + 0.5);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     // Fit in 5 bits.
     const int n_snake = (int)((1 << 13) / norm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C) + 0.5);
 
-    return new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, kVddt, n_snake);
+    return new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, nkVddt, n_snake);
 }
 
 } // namespace reSIDfp
