@@ -168,64 +168,56 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
 
     m_mixer.begin(buffer, count);
 
+    // Start the player loop
+    m_isPlaying = true;
+
     if (count && m_mixer.getSid(0))
     {
-        // Start the player loop
-        m_isPlaying = true;
-
         while (m_isPlaying && m_mixer.notFinished())
         {
             for (int i=0; i<OUTPUTBUFFERSIZE; i++)
                 m_c64.getEventScheduler()->clock();
+
             m_mixer.clockChips();
             m_mixer.doMix();
         }
-
-        if (!m_isPlaying)
-        {
-            try
-            {
-                initialise();
-            }
-            catch (configError const &e) {}
-        }
-
-        return m_mixer.samplesGenerated();
+        count = m_mixer.samplesGenerated();
     }
     else if (m_mixer.getSid(0))
     {
-        // Start the player loop
-        m_isPlaying = true;
-
-        const int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
-        for (int j; j<size; j++)
+        int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
+        while (m_isPlaying && --size)
         {
             for (int i=0; i<OUTPUTBUFFERSIZE; i++)
                 m_c64.getEventScheduler()->clock();
+
             m_mixer.clockChips();
             m_mixer.resetBufs();
+            size--;
         }
-
-        if (!m_isPlaying)
-        {
-            try
-            {
-                initialise();
-            }
-            catch (configError const &e) {}
-        }
-
-        return count;
     }
     else
     {
-        const int size = OUTPUTBUFFERSIZE * (m_c64.getMainCpuSpeed() / m_cfg.frequency);
-        for (int i=0; i<size; i++)
-            m_c64.getEventScheduler()->clock();
-        m_mixer.resetBufs();
+        int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
+        while (m_isPlaying && --size)
+        {
+            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                m_c64.getEventScheduler()->clock();
 
-        return count;
+            m_mixer.resetBufs();
+        }
     }
+
+    if (!m_isPlaying)
+    {
+        try
+        {
+            initialise();
+        }
+        catch (configError const &e) {}
+    }
+
+    return count;
 }
 
 void Player::stop()
