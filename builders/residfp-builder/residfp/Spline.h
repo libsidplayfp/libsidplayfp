@@ -25,13 +25,14 @@
 namespace reSIDfp
 {
 
-typedef double(*Params)[6];
-
 /**
  * Spline interpolation
  */
 class Spline
 {
+private:
+    typedef double(*Params)[6];
+
 private:
     double* c;
     const int paramsLength;
