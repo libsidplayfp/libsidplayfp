@@ -25,6 +25,8 @@
 
 #include <memory>
 
+#include "Spline.h"
+
 namespace reSIDfp
 {
 
@@ -44,7 +46,7 @@ private:
     // This allows access to the private constructor
     friend class std::auto_ptr<FilterModelConfig>;
 
-    static const double opamp_voltage[OPAMP_SIZE][2];
+    static const Spline::Point opamp_voltage[OPAMP_SIZE];
 
     const double voice_voltage_range;
     const double voice_DC_voltage;

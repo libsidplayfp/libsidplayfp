@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,13 @@ namespace reSIDfp
  */
 class Spline
 {
+public:
+    typedef struct
+    {
+        double x;
+        double y;
+    } Point;
+
 private:
     typedef double(*Params)[6];
 
@@ -38,11 +45,17 @@ private:
     const int paramsLength;
     Params params;
 
+private:
+    /**
+     * Calculate the slope of the line crossing the given points.
+     */
+    double slope(const Point &a, const Point &b);
+
 public:
-    Spline(const double input[][2], int inputLength);
+    Spline(const Point input[], int inputLength);
     ~Spline() { delete [] params; }
 
-    void evaluate(double x, double* out);
+    void evaluate(double x, Point &out);
 };
 
 } // namespace reSIDfp

@@ -48,11 +48,11 @@ double OpAmp::solve(double n, double vi)
 
         // Calculate f and df.
 
-        double out[2];
+        Spline::Point out;
 
         opamp->evaluate(x, out);
-        const double vo = out[0];
-        const double dvo = out[1];
+        const double vo = out.x;
+        const double dvo = out.y;
 
         const double b_vx = b - x;
         const double b_vo = b - vo;
@@ -69,7 +69,7 @@ double OpAmp::solve(double n, double vi)
         if (unlikely(fabs(x - xk) < EPSILON))
         {
             opamp->evaluate(x, out);
-            return out[0];
+            return out.x;
         }
 
         // Narrow down root bracket.

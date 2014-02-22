@@ -28,7 +28,6 @@
 #include "Dac.h"
 #include "Integrator.h"
 #include "OpAmp.h"
-#include "Spline.h"
 
 namespace reSIDfp
 {
@@ -39,7 +38,7 @@ namespace reSIDfp
  * All measured chips have op-amps with output voltages (and thus input
  * voltages) within the range of 0.81V - 10.31V.
  */
-const double FilterModelConfig::opamp_voltage[OPAMP_SIZE][2] =
+const Spline::Point FilterModelConfig::opamp_voltage[OPAMP_SIZE] =
 {
   {  0.81, 10.31 },  // Approximate start of actual range
   {  2.40, 10.31 },
@@ -101,7 +100,7 @@ FilterModelConfig::FilterModelConfig() :
     WL_snake(1.0 / 115.0),
     dac_zero(6.65),
     dac_scale(2.63),
-    vmin(opamp_voltage[0][0]),
+    vmin(opamp_voltage[0].x),
     norm(1.0 / ((Vdd - Vth) - vmin))
 {
     // Convert op-amp voltage transfer to 16 bit values.
@@ -113,12 +112,12 @@ FilterModelConfig::FilterModelConfig() :
 
     const double kVddt = k * (Vdd - Vth);
 
-    double scaled_voltage[OPAMP_SIZE][2];
+    Spline::Point scaled_voltage[OPAMP_SIZE];
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
-        scaled_voltage[i][0] = (N16 * (opamp_voltage[i][0] - opamp_voltage[i][1]) + (1 << 16)) / 2.;
-        scaled_voltage[i][1] = N16 * (opamp_voltage[i][0] - vmin);
+        scaled_voltage[i].x = (N16 * (opamp_voltage[i].x - opamp_voltage[i].y) + (1 << 16)) / 2.;
+        scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
     }
 
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
@@ -127,10 +126,10 @@ FilterModelConfig::FilterModelConfig() :
 
     for (int x = 0; x < (1 << 16); x++)
     {
-        double out[2];
+        Spline::Point out;
 
         s.evaluate(x, out);
-        opamp_rev[x] = (int)(out[0] + 0.5);
+        opamp_rev[x] = (int)(out.x + 0.5);
     }
 
     // Create lookup tables for gains / summers.

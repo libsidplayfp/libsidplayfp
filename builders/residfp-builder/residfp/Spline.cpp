@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,12 @@
 namespace reSIDfp
 {
 
-Spline::Spline(const double input[][2], int inputLength) :
+double Spline::slope(const Point &a, const Point &b)
+{
+    return (b.y - a.y) / (b.x - a.x);
+}
+
+Spline::Spline(const Point input[], int inputLength) :
     paramsLength(inputLength - 1),
     params(new double[paramsLength][6])
 {
@@ -35,33 +40,33 @@ Spline::Spline(const double input[][2], int inputLength) :
 
     for (int i = 0; i < paramsLength; i++)
     {
-        const double* p0 = i != 0 ? input[i - 1] : 0;
-        const double* p1 = input[i];
-        const double* p2 = input[i + 1];
-        const double* p3 = i != inputLength - 2 ? input[i + 2] : 0;
+        const Point *p0 = i != 0 ? &input[i - 1] : 0;
+        const Point &p1 = input[i];
+        const Point &p2 = input[i + 1];
+        const Point *p3 = i != inputLength - 2 ? &input[i + 2] : 0;
 
         double k1, k2;
 
         if (p0 == 0)
         {
-            k2 = (p3[1] - p1[1]) / (p3[0] - p1[0]);
-            k1 = (3. * (p2[1] - p1[1]) / (p2[0] - p1[0]) - k2) / 2.;
+            k2 = slope(p1, *p3);
+            k1 = (3. * slope(p1, p2) - k2) / 2.;
         }
         else if (p3 == 0)
         {
-            k1 = (p2[1] - p0[1]) / (p2[0] - p0[0]);
-            k2 = (3. * (p2[1] - p1[1]) / (p2[0] - p1[0]) - k1) / 2.;
+            k1 = slope(*p0, p2);
+            k2 = (3. * slope(p1, p2) - k1) / 2.;
         }
         else
         {
-            k1 = (p2[1] - p0[1]) / (p2[0] - p0[0]);
-            k2 = (p3[1] - p1[1]) / (p3[0] - p1[0]);
+            k1 = slope(*p0, p2);
+            k2 = slope(p1, *p3);
         }
 
-        const double x1 = p1[0];
-        const double y1 = p1[1];
-        const double x2 = p2[0];
-        const double y2 = p2[1];
+        const double x1 = p1.x;
+        const double y1 = p1.y;
+        const double x2 = p2.x;
+        const double y2 = p2.y;
 
         const double dx = x2 - x1;
         const double dy = y2 - y1;
@@ -86,7 +91,7 @@ Spline::Spline(const double input[][2], int inputLength) :
     c = params[0];
 }
 
-void Spline::evaluate(double x, double* out)
+void Spline::evaluate(double x, Point &out)
 {
     if (x < c[0] || x > c[1])
     {
@@ -104,8 +109,8 @@ void Spline::evaluate(double x, double* out)
 
     const double y = ((c[2] * x + c[3]) * x + c[4]) * x + c[5];
     const double yd = (3. * c[2] * x + 2. * c[3]) * x + c[4];
-    out[0] = y;
-    out[1] = yd;
+    out.x = y;
+    out.y = yd;
 }
 
 } // namespace reSIDfp
