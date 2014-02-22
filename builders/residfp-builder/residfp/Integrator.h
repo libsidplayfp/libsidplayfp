@@ -24,6 +24,7 @@
 #define INTEGRATOR_H
 
 #include <stdint.h>
+#include <cassert>
 
 #include "siddefs-fp.h"
 
@@ -202,17 +203,21 @@ int Integrator::solve(int vi)
     // VCR voltages for EKV model table lookup.
     int Vgs = kVg - vx;
     if (Vgs < 0) Vgs = 0;
+    assert(Vgs < (1 << 16));
     int Vgd = kVg - vi;
     if (Vgd < 0) Vgd = 0;
+    assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const int n_I_vcr = (int)(vcr_n_Ids_term[Vgs & 0xffff] - vcr_n_Ids_term[Vgd & 0xffff]) << 15;
+    const int n_I_vcr = (int)(vcr_n_Ids_term[Vgs] - vcr_n_Ids_term[Vgd]) << 15;
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    vx = opamp_rev[((vc >> 15) + (1 << 15)) & 0xffff];
+    const int tmp = (vc >> 15) + (1 << 15);
+    assert(tmp < (1 << 16));
+    vx = opamp_rev[tmp];
 
     // Return vo.
     return vx - (vc >> 14);
