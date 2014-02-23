@@ -126,7 +126,9 @@ FilterModelConfig::FilterModelConfig() :
         Spline::Point out;
 
         s.evaluate(x, out);
-        opamp_rev[x] = (int)(out.x + 0.5);
+        if (out.x < 0.) out.x = 0.;
+        assert(out.x < 65535.5); 
+        opamp_rev[x] = (unsigned short)(out.x + 0.5);
     }
 
     // Create lookup tables for gains / summers.

@@ -95,7 +95,7 @@ private:
     //@}
 
     /// Reverse op-amp transfer function.
-    int opamp_rev[1 << 16];
+    unsigned short opamp_rev[1 << 16];
 
 private:
     double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }

@@ -157,11 +157,11 @@ private:
     int vc;
     const unsigned short* vcr_kVg;
     const unsigned short* vcr_n_Ids_term;
-    const int* opamp_rev;
+    const unsigned short* opamp_rev;
 
 public:
     Integrator(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
-               const int* opamp_rev, int kVddt, int n_snake) :
+               const unsigned short* opamp_rev, int kVddt, int n_snake) :
         Vddt_Vw_2(0),
         kVddt(kVddt),
         n_snake(n_snake),
