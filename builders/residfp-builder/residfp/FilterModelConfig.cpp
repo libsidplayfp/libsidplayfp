@@ -102,7 +102,9 @@ FilterModelConfig::FilterModelConfig() :
     dac_zero(6.65),
     dac_scale(2.63),
     vmin(opamp_voltage[0].x),
-    norm(1.0 / (kVddt - vmin)),
+    vmax(kVddt < opamp_voltage[0].y ? opamp_voltage[0].y : kVddt),
+    denorm(vmax - vmin),
+    norm(1.0 / denorm),
     N16(norm * ((1 << 16) - 1))
 {
     // Convert op-amp voltage transfer to 16 bit values.
@@ -166,7 +168,7 @@ FilterModelConfig::FilterModelConfig() :
     // the filter summer.
     for (int i = 0; i < 8; i++)
     {
-        const int idiv = (i == 0 ? 1 : i); 
+        const int idiv = (i == 0) ? 1 : i; 
         const int size = (i == 0) ? 1 : i << 16;
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
@@ -205,7 +207,7 @@ FilterModelConfig::FilterModelConfig() :
     const double nkVddt = N16 * kVddt;
     const double nVmin = N16 * vmin;
 
-    for (int i = 0; i < (1 << 16); i++)
+    for (unsigned int i = 0; i < (1 << 16); i++)
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
@@ -216,7 +218,7 @@ FilterModelConfig::FilterModelConfig() :
         //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
         // I.e. k*Vg - t must be returned.
-        const double Vg = nkVddt - sqrt((double) i * (1 << 16));
+        const double Vg = nkVddt - sqrt((double)(i << 16));
         const double tmp = k * Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         vcr_kVg[i] = (unsigned short)(tmp + 0.5);
@@ -300,7 +302,7 @@ Integrator* FilterModelConfig::buildIntegrator()
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     // Fit in 5 bits.
-    const int n_snake = (int)((1 << 13) / norm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C) + 0.5);
+    const int n_snake = (int)(denorm * (1 << 13) * (uCox / (2. * k) * WL_snake * 1.0e-6 / C) + 0.5);
 
     return new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, nkVddt, n_snake);
 }

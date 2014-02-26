@@ -63,7 +63,7 @@ private:
     const double uCox;          ///< u*Cox
     const double WL_vcr;        ///< W/L for VCR
     const double WL_snake;      ///< W/L for "snake"
-    const double kVddt;
+    const double kVddt;         ///< k * (Vdd - Vth)
     //@}
 
     /// DAC parameters.
@@ -73,7 +73,8 @@ private:
     //@}
 
     // Derived stuff
-    const double vmin, norm;
+    const double vmin, vmax;
+    const double denorm, norm;
     
     /// Fixed point scaling for 16 bit op-amp output.
     const double N16;
