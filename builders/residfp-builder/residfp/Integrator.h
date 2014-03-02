@@ -153,15 +153,15 @@ class Integrator
 {
 private:
     unsigned int Vddt_Vw_2;
-    int kVddt, n_snake, vx;
-    int vc;
+    const unsigned short kVddt, n_snake;
+    int vx, vc;
     const unsigned short* vcr_kVg;
     const unsigned short* vcr_n_Ids_term;
     const unsigned short* opamp_rev;
 
 public:
     Integrator(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
-               const unsigned short* opamp_rev, int kVddt, int n_snake) :
+               const unsigned short* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
         Vddt_Vw_2(0),
         kVddt(kVddt),
         n_snake(n_snake),
@@ -171,7 +171,7 @@ public:
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev) {}
 
-    void setVw(unsigned int Vw) { Vddt_Vw_2 = (kVddt - Vw) * (kVddt - Vw) >> 1; }
+    void setVw(unsigned short Vw) { Vddt_Vw_2 = (kVddt - Vw) * (kVddt - Vw) >> 1; }
 
     int solve(int vi);
 };
@@ -187,14 +187,14 @@ RESID_INLINE
 int Integrator::solve(int vi)
 {
     // "Snake" voltages for triode mode calculation.
-    const int Vgst = kVddt - vx;
-    const int Vgdt = kVddt - vi;
+    const unsigned int Vgst = kVddt - vx;
+    const unsigned int Vgdt = kVddt - vi;
 
-    const int64_t Vgst_2 = (int64_t)Vgst * (int64_t)Vgst;
-    const int64_t Vgdt_2 = (int64_t)Vgdt * (int64_t)Vgdt;
+    const unsigned int Vgst_2 = Vgst * Vgst;
+    const unsigned int Vgdt_2 = Vgdt * Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_snake = n_snake * ((Vgst_2 - Vgdt_2) >> 15);
+    const int n_I_snake = n_snake * (int(Vgst_2 - Vgdt_2) >> 15);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)

@@ -298,11 +298,15 @@ Integrator* FilterModelConfig::buildIntegrator()
 {
     // Vdd - Vth, normalized so that translated values can be subtracted:
     // k*Vddt - x = (k*Vddt - t) - (x - t)
-    const int nkVddt = (int)(N16 * (kVddt - vmin) + 0.5);
+    double tmp = N16 * (kVddt - vmin);
+    assert(tmp > -0.5 && tmp < 65535.5);
+    const unsigned short nkVddt = (unsigned short)(tmp + 0.5);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     // Fit in 5 bits.
-    const int n_snake = (int)(denorm * (1 << 13) * (uCox / (2. * k) * WL_snake * 1.0e-6 / C) + 0.5);
+    tmp = denorm * (1 << 13) * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
+    assert(tmp > -0.5 && tmp < 65535.5);
+    const unsigned short n_snake = (unsigned short)(tmp + 0.5);
 
     return new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, nkVddt, n_snake);
 }
