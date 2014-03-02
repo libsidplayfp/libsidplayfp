@@ -40,6 +40,8 @@ Spline::Spline(const Point input[], int inputLength) :
 
     for (int i = 0; i < paramsLength; i++)
     {
+        assert(input[i].x < input[i + 1].x);
+
         const Point *p0 = i != 0 ? &input[i - 1] : 0;
         const Point &p1 = input[i];
         const Point &p2 = input[i + 1];
@@ -95,22 +97,21 @@ void Spline::evaluate(double x, Point &out)
 {
     if (x < c[0] || x > c[1])
     {
-        for (int i = 0; i < paramsLength; i ++)
+        for (int i = 0; i < paramsLength; i++)
         {
-            if (params[i][1] < x)
+            if (x <= params[i][1])
             {
-                continue;
+                c = params[i];
+                break;
             }
-
-            c = params[i];
-            break;
         }
     }
 
-    const double y = ((c[2] * x + c[3]) * x + c[4]) * x + c[5];
-    const double yd = (3. * c[2] * x + 2. * c[3]) * x + c[4];
-    out.x = y;
-    out.y = yd;
+    // y = a*x^3 + b*x^2 + c*x + d
+    out.x = ((c[2] * x + c[3]) * x + c[4]) * x + c[5];
+
+    // yd = 3*a*x^2 + 2*b*x + c
+    out.y = (3. * c[2] * x + 2. * c[3]) * x + c[4];
 }
 
 } // namespace reSIDfp
