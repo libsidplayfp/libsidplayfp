@@ -26,9 +26,10 @@
 
 typedef struct
 {
-    double colorBurst;         // Colorburst frequency in Herz
-    double divider;            // Frequency divider
-    MOS656X::model_t vicModel; // Video chip model
+    double colorBurst;         ///< Colorburst frequency in Herz
+    double divider;            ///< Clock frequency divider
+    double powerFreq;          ///< Power line frequency in Herz
+    MOS656X::model_t vicModel; ///< Video chip model
 } model_data_t;
 
 /*
@@ -42,10 +43,10 @@ typedef struct
 
 const model_data_t modelData[] =
 {
-    {4433618.75,  18., MOS656X::MOS6569},      // PAL-B
-    {3579545.455, 14., MOS656X::MOS6567R8},    // NTSC-M
-    {3579545.455, 14., MOS656X::MOS6567R56A},  // Old NTSC-M
-    {3582056.25,  14., MOS656X::MOS6572},      // PAL-N
+    {4433618.75,  18., 50., MOS656X::MOS6569},      // PAL-B
+    {3579545.455, 14., 60., MOS656X::MOS6567R8},    // NTSC-M
+    {3579545.455, 14., 60., MOS656X::MOS6567R56A},  // Old NTSC-M
+    {3582056.25,  14., 60., MOS656X::MOS6572},      // PAL-N
 };
 
 double c64::getCpuFreq(model_t model)
@@ -117,7 +118,7 @@ void c64::setModel(model_t model)
     m_cpuFreq = getCpuFreq(model);
     vic.chip(modelData[model].vicModel);
 
-    const unsigned int rate = vic.getCyclesPerLine() * vic.getRasterLines();
+    const unsigned int rate = m_cpuFreq / modelData[model].powerFreq;
     cia1.setDayOfTimeRate(rate);
     cia2.setDayOfTimeRate(rate);
 }
