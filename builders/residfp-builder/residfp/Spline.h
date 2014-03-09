@@ -26,7 +26,10 @@ namespace reSIDfp
 {
 
 /**
- * Spline interpolation
+ * Fritsch-Carlson monotone cubic spline interpolation.
+ *
+ * Based on the implementation from the wikipedia page:
+ * https://en.wikipedia.org/wiki/Monotone_cubic_interpolation
  */
 class Spline
 {
@@ -55,6 +58,9 @@ public:
     Spline(const Point input[], int inputLength);
     ~Spline() { delete [] params; }
 
+    /**
+     * Evaluate y and its derivative at given point x.
+     */
     void evaluate(double x, Point &out);
 };
 
