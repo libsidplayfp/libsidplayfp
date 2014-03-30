@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -38,7 +38,6 @@ const char TXT_NA[]             = "NA";
 
 Player::Player () :
     // Set default settings for system
-    m_mixer(m_c64.getEventScheduler()),
     m_tune(0),
     m_errorString(TXT_NA),
     m_isPlaying(false),
@@ -133,8 +132,6 @@ void Player::initialise()
     driver.install(m_c64.getMemInterface());
 
     m_c64.resetCpu();
-
-    m_mixer.reset();
 }
 
 bool Player::load(SidTune *tune)
@@ -169,35 +166,57 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     if (!m_tune)
         return 0;
 
-    if (count)
+    m_mixer.begin(buffer, count);
+
+    // Start the player loop
+    m_isPlaying = true;
+
+    if (count && m_mixer.getSid(0))
     {
-        m_mixer.begin(buffer, count);
-
-        // Start the player loop
-        m_isPlaying = true;
-
         while (m_isPlaying && m_mixer.notFinished())
-            m_c64.getEventScheduler()->clock();
-
-        if (!m_isPlaying)
         {
-            try
-            {
-                initialise();
-            }
-            catch (configError const &e) {}
-        }
+            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                m_c64.getEventScheduler()->clock();
 
-        return m_mixer.samplesGenerated();
+            m_mixer.clockChips();
+            m_mixer.doMix();
+        }
+        count = m_mixer.samplesGenerated();
+    }
+    else if (m_mixer.getSid(0))
+    {
+        int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
+        while (m_isPlaying && --size)
+        {
+            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                m_c64.getEventScheduler()->clock();
+
+            m_mixer.clockChips();
+            m_mixer.resetBufs();
+        }
     }
     else
     {
-        count = OUTPUTBUFFERSIZE;
-        while (count--)
-            m_c64.getEventScheduler()->clock();
+        int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
+        while (m_isPlaying && --size)
+        {
+            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                m_c64.getEventScheduler()->clock();
 
-        return 0;
+            m_mixer.resetBufs();
+        }
     }
+
+    if (!m_isPlaying)
+    {
+        try
+        {
+            initialise();
+        }
+        catch (configError const &e) {}
+    }
+
+    return count;
 }
 
 void Player::stop()

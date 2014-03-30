@@ -25,6 +25,8 @@
 
 #include <memory>
 
+#include "Spline.h"
+
 namespace reSIDfp
 {
 
@@ -44,7 +46,7 @@ private:
     // This allows access to the private constructor
     friend class std::auto_ptr<FilterModelConfig>;
 
-    static const double opamp_voltage[OPAMP_SIZE][2];
+    static const Spline::Point opamp_voltage[OPAMP_SIZE];
 
     const double voice_voltage_range;
     const double voice_DC_voltage;
@@ -61,6 +63,7 @@ private:
     const double uCox;          ///< u*Cox
     const double WL_vcr;        ///< W/L for VCR
     const double WL_snake;      ///< W/L for "snake"
+    const double kVddt;         ///< k * (Vdd - Vth)
     //@}
 
     /// DAC parameters.
@@ -70,7 +73,11 @@ private:
     //@}
 
     // Derived stuff
-    const double vmin, norm;
+    const double vmin, vmax;
+    const double denorm, norm;
+    
+    /// Fixed point scaling for 16 bit op-amp output.
+    const double N16;
 
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
@@ -89,7 +96,7 @@ private:
     //@}
 
     /// Reverse op-amp transfer function.
-    int opamp_rev[1 << 16];
+    unsigned short opamp_rev[1 << 16];
 
 private:
     double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
@@ -104,12 +111,12 @@ public:
      * The digital range of one voice is 20 bits; create a scaling term
      * for multiplication which fits in 11 bits.
      */
-    int getVoiceScaleS14() const { return (int)((norm * ((1L << 14) - 1)) * voice_voltage_range); }
+    int getVoiceScaleS14() const { return (int)((norm * ((1 << 14) - 1)) * voice_voltage_range); }
 
     /**
      * The "zero" output level of the voices.
      */
-    int getVoiceDC() const { return (int)((norm * ((1L << 16) - 1)) * (voice_DC_voltage - vmin)); }
+    int getVoiceDC() const { return (int)(N16 * (voice_DC_voltage - vmin)); }
 
     unsigned short** getGain() { return gain; }
 
@@ -125,7 +132,7 @@ public:
      * @param adjustment
      * @return the DAC table
      */
-    unsigned int* getDAC(double adjustment) const;
+    unsigned short* getDAC(double adjustment) const;
 
     Integrator* buildIntegrator();
 };

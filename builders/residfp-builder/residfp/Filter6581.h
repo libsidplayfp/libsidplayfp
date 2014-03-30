@@ -72,7 +72,7 @@ private:
     /// VCR + associated capacitor connected to lowpass output.
     Integrator* bpIntegrator;
 
-    const unsigned int* f0_dac;
+    const unsigned short* f0_dac;
 
     unsigned short** mixer;
     unsigned short** summer;

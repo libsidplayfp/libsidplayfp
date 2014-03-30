@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -60,13 +60,17 @@ public:
 /**
 * Commodore 64 emulation core.
 *
-* It consists of the following chips: PLA, MOS6510, MOS6526(a), VIC
-* 6569(PAL)/6567(NTSC), RAM/ROM.<BR>
-*
-* @author Antti Lankila
-* @author Ken Händel
-* @author Leandro Nini
-*
+* It consists of the following chips:
+* - CPU 6510
+* - VIC-II 6567/6569/6572
+* - CIA 6526
+* - SID 6581/8580
+* - PLA 7700/82S100
+* - Color RAM 2114
+* - System RAM 4164-20/50464-150
+* - Character ROM 2332
+* - Basic ROM 2364
+* - Kernal ROM 2364
 */
 class c64: private c64env
 {

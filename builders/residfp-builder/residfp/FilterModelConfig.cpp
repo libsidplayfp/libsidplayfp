@@ -28,7 +28,6 @@
 #include "Dac.h"
 #include "Integrator.h"
 #include "OpAmp.h"
-#include "Spline.h"
 
 namespace reSIDfp
 {
@@ -39,7 +38,7 @@ namespace reSIDfp
  * All measured chips have op-amps with output voltages (and thus input
  * voltages) within the range of 0.81V - 10.31V.
  */
-const double FilterModelConfig::opamp_voltage[OPAMP_SIZE][2] =
+const Spline::Point FilterModelConfig::opamp_voltage[OPAMP_SIZE] =
 {
   {  0.81, 10.31 },  // Approximate start of actual range
   {  2.40, 10.31 },
@@ -99,26 +98,25 @@ FilterModelConfig::FilterModelConfig() :
     uCox(20e-6),
     WL_vcr(9.0 / 1.0),
     WL_snake(1.0 / 115.0),
+    kVddt(k * (Vdd - Vth)),
     dac_zero(6.65),
     dac_scale(2.63),
-    vmin(opamp_voltage[0][0]),
-    norm(1.0 / ((Vdd - Vth) - vmin))
+    vmin(opamp_voltage[0].x),
+    vmax(kVddt < opamp_voltage[0].y ? opamp_voltage[0].y : kVddt),
+    denorm(vmax - vmin),
+    norm(1.0 / denorm),
+    N16(norm * ((1 << 16) - 1))
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
     Dac::kinkedDac(dac, DAC_BITS, 2.2, false);
 
-    // Fixed point scaling for 16 bit op-amp output.
-    const double N16 = norm * ((1L << 16) - 1);
-
-    const double kVddt = k * (Vdd - Vth);
-
-    double scaled_voltage[OPAMP_SIZE][2];
+    Spline::Point scaled_voltage[OPAMP_SIZE];
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
-        scaled_voltage[i][0] = (N16 * (opamp_voltage[i][0] - opamp_voltage[i][1]) + (1 << 16)) / 2.;
-        scaled_voltage[i][1] = N16 * (opamp_voltage[i][0] - vmin);
+        scaled_voltage[i].x = (N16 * (opamp_voltage[i].x - opamp_voltage[i].y) + (1 << 16)) / 2.;
+        scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
     }
 
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
@@ -127,10 +125,12 @@ FilterModelConfig::FilterModelConfig() :
 
     for (int x = 0; x < (1 << 16); x++)
     {
-        double out[2];
+        Spline::Point out;
 
         s.evaluate(x, out);
-        opamp_rev[x] = (int)(out[0] + 0.5);
+        if (out.x < 0.) out.x = 0.;
+        assert(out.x < 65535.5); 
+        opamp_rev[x] = (unsigned short)(out.x + 0.5);
     }
 
     // Create lookup tables for gains / summers.
@@ -168,7 +168,7 @@ FilterModelConfig::FilterModelConfig() :
     // the filter summer.
     for (int i = 0; i < 8; i++)
     {
-        const int idiv = (i == 0 ? 1 : i); 
+        const int idiv = (i == 0) ? 1 : i; 
         const int size = (i == 0) ? 1 : i << 16;
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
@@ -207,7 +207,7 @@ FilterModelConfig::FilterModelConfig() :
     const double nkVddt = N16 * kVddt;
     const double nVmin = N16 * vmin;
 
-    for (int i = 0; i < (1 << 16); i++)
+    for (unsigned int i = 0; i < (1 << 16); i++)
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
@@ -218,7 +218,7 @@ FilterModelConfig::FilterModelConfig() :
         //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
         // I.e. k*Vg - t must be returned.
-        const double Vg = nkVddt - sqrt((double) i * (1 << 16));
+        const double Vg = nkVddt - sqrt((double)(i << 16));
         const double tmp = k * Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         vcr_kVg[i] = (unsigned short)(tmp + 0.5);
@@ -235,7 +235,7 @@ FilterModelConfig::FilterModelConfig() :
     const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
-    const double N15 = norm * ((1L << 15) - 1);
+    const double N15 = norm * ((1 << 15) - 1);
     const double n_Is = N15 * 1.0e-6 / C * Is;
 
     // kVg_Vx = k*Vg - Vx
@@ -268,12 +268,11 @@ FilterModelConfig::~FilterModelConfig()
     }
 }
 
-unsigned int* FilterModelConfig::getDAC(double adjustment) const
+unsigned short* FilterModelConfig::getDAC(double adjustment) const
 {
     const double dac_zero = getDacZero(adjustment);
 
-    const double N16 = norm * ((1L << 16) - 1);
-    unsigned int* f0_dac = new unsigned int[1 << DAC_BITS];
+    unsigned short* f0_dac = new unsigned short[1 << DAC_BITS];
 
     for (int i = 0; i < (1 << DAC_BITS); i++)
     {
@@ -288,8 +287,8 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
         }
 
         const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
-        assert(tmp > -0.5 && tmp < 4294967296.5);
-        f0_dac[i] = (unsigned int)(tmp + 0.5);
+        assert(tmp > -0.5 && tmp < 65535.5);
+        f0_dac[i] = (unsigned short)(tmp + 0.5);
     }
 
     return f0_dac;
@@ -297,17 +296,19 @@ unsigned int* FilterModelConfig::getDAC(double adjustment) const
 
 Integrator* FilterModelConfig::buildIntegrator()
 {
-    const double N16 = norm * ((1L << 16) - 1);
-
     // Vdd - Vth, normalized so that translated values can be subtracted:
     // k*Vddt - x = (k*Vddt - t) - (x - t)
-    const int kVddt = (int)(N16 * (k * (Vdd - Vth) - vmin) + 0.5);
+    double tmp = N16 * (kVddt - vmin);
+    assert(tmp > -0.5 && tmp < 65535.5);
+    const unsigned short nkVddt = (unsigned short)(tmp + 0.5);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     // Fit in 5 bits.
-    const int n_snake = (int)((1 << 13) / norm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C) + 0.5);
+    tmp = denorm * (1 << 13) * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
+    assert(tmp > -0.5 && tmp < 65535.5);
+    const unsigned short n_snake = (unsigned short)(tmp + 0.5);
 
-    return new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, kVddt, n_snake);
+    return new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, nkVddt, n_snake);
 }
 
 } // namespace reSIDfp

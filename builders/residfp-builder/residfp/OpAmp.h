@@ -81,11 +81,11 @@ public:
      * @param opamplength length of the opamp array
      * @param kVddt transistor dt parameter (in volts)
      */
-    OpAmp(const double opamp[][2], int opamplength, double kVddt) :
+    OpAmp(const Spline::Point opamp[], int opamplength, double kVddt) :
         x(0.),
         kVddt(kVddt),
-        vmin(opamp[0][0]),
-        vmax(opamp[opamplength - 1][0]),
+        vmin(opamp[0].x),
+        vmax(opamp[opamplength - 1].x),
         opamp(new Spline(opamp, opamplength)) {}
 
     ~OpAmp() { delete opamp; }

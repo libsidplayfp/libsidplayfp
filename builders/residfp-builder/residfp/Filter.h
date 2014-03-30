@@ -36,20 +36,20 @@ private:
     bool enabled;
 
     /// Selects which inputs to route through filter.
-    char filt;
+    unsigned char filt;
 
 protected:
     /// Current clock frequency.
     double clockFrequency;
 
     /// Filter cutoff frequency.
-    int fc;
+    unsigned int fc;
 
     /// Filter resonance.
-    int res;
+    unsigned char res;
 
     /// Current volume.
-    int vol;
+    unsigned char vol;
 
     /// Routing to filter or outside filter
     bool filt1, filt2, filt3, filtE;
