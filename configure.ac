@@ -1,5 +1,5 @@
 m4_define([lib_major], [1])
-m4_define([lib_minor], [3])
+m4_define([lib_minor], [4])
 m4_define([lib_level], [0])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
@@ -92,7 +92,7 @@ dnl libtool-style version-info number
 #     to zero.
 
 LIBSIDPLAYCUR=3
-LIBSIDPLAYREV=8
+LIBSIDPLAYREV=9
 LIBSIDPLAYAGE=0
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
