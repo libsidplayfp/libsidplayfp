@@ -242,6 +242,8 @@ protected:
     void write(uint_least8_t addr, uint8_t data);
 
 private:
+    void setTodReg(uint_least8_t addr, uint8_t data);
+
     // TOD implementation taken from Vice
     static uint8_t byte2bcd(uint8_t byte) { return (((byte / 10) << 4) + (byte % 10)) & 0xff; }
     static uint8_t bcd2byte(uint8_t bcd) { return ((10*((bcd & 0xf0) >> 4)) + (bcd & 0xf)) & 0xff; }
