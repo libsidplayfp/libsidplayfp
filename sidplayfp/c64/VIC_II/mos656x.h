@@ -1,7 +1,8 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -117,6 +118,7 @@ protected:
     /** the 8 sprites data*/
     //@{
     uint8_t &sprite_enable, &sprite_y_expansion;
+    uint8_t sprite_exp_flop;
     uint8_t sprite_dma;
     uint8_t sprite_mc_base[8];
     uint8_t sprite_mc[8];
@@ -220,14 +222,16 @@ private:
         }
     }
 
+    /**
+    * Update mc values in one pass
+    * after the dma has been processed
+    */
     inline void updateMc()
     {
-        // Update mc values in one pass
-        // after the dma has been processed
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if (sprite_enable & mask)
+            if (sprite_dma & mask)
                 sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
         }
     }
@@ -237,27 +241,19 @@ private:
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if (sprite_y_expansion & mask)
+            if (sprite_exp_flop & mask)
+            {
                 sprite_mc_base[i] = sprite_mc[i];
-            if (sprite_mc_base[i] == 0x3f)
-                sprite_dma &= ~mask;
+                if (sprite_mc_base[i] == 0x3f)
+                    sprite_dma &= ~mask;
+            }
         }
     }
 
-    /// Calculate sprite DMA and sprite expansion
-    inline void checkSpriteDmaExp()
+    /// Calculate sprite expansion
+    inline void checkSpriteExp()
     {
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[(i << 1) + 1]))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-                sprite_y_expansion |= mask;
-            }
-        }
+        sprite_exp_flop ^= sprite_dma & sprite_y_expansion;
     }
 
     /// Calculate sprite DMA
@@ -267,10 +263,11 @@ private:
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if ((sprite_enable & mask) && (y == regs[(i << 1) + 1]))
+            if ((sprite_enable & mask) && (y == regs[(i << 1) + 1]) && !(sprite_dma & mask))
             {
                 sprite_dma |= mask;
                 sprite_mc_base[i] = 0;
+                sprite_exp_flop |= mask;
             }
         }
     }

@@ -1,7 +1,8 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -44,7 +45,8 @@ const char *MOS656X::credit =
     "MOS6567/6569/6572 (VICII) Emulation:\n"
     "\tCopyright (C) 2001 Simon White\n"
     "\tCopyright (C) 2007-2010 Antti Lankila\n"
-    "\tCopyright (C) 2011-2013 Leandro Nini\n"
+    "\tCopyright (C) 2009-2014 VICE Project\n"
+    "\tCopyright (C) 2011-2014 Leandro Nini\n"
 };
 
 
@@ -73,6 +75,7 @@ void MOS656X::reset()
     vblanking    = lp_triggered = false;
     lpx          = 0;
     lpy          = 0;
+    sprite_exp_flop = 0xff;
     sprite_dma   = 0;
     memset(regs, 0, sizeof (regs));
     memset(sprite_mc_base, 0, sizeof (sprite_mc_base));
@@ -166,13 +169,20 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if ((sprite_enable & mask) && !(sprite_y_expansion & mask))
+            if (!(data & mask) && !(sprite_exp_flop & mask))
             {
+                /* sprite crunch */
                 if (lineCycle == 14)
                 {
-                    sprite_mc[i] = (0x2a & (sprite_mc_base[i] & sprite_mc[i])) | (0x15 & (sprite_mc_base[i] | sprite_mc[i]));
+                    const uint8_t mc = sprite_mc[i];
+                    const uint8_t mcBase = sprite_mc_base[i];
+
+                    sprite_mc[i] = (0x2a & (mcBase & mc)) | (0x15 & (mcBase | mc));
+
+                    /* mcbase will be set from mc on the following clock call */
                 }
-                sprite_y_expansion |= mask;
+
+                sprite_exp_flop |= mask;
             }
         }
     }
@@ -313,7 +323,8 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 55:
-        checkSpriteDmaExp();
+        checkSpriteExp();
+        checkSpriteDma();
         startDma<0>();
 
         // No sprites before next compulsory cycle
@@ -434,7 +445,8 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 55:
-        checkSpriteDmaExp();
+        checkSpriteExp();
+        checkSpriteDma();
         startDma<0>();
         break;
 
@@ -563,7 +575,8 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 55:
-        checkSpriteDmaExp();
+        checkSpriteExp();
+        checkSpriteDma();
         startDma<0>();
         break;
 
