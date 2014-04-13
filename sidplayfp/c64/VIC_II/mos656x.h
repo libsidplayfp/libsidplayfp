@@ -178,12 +178,13 @@ private:
     */
     bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
 
-    bool evaluateIsBadLine() const
+    /**
+     * Get previous value of Y raster
+     */
+    inline int oldRasterY()
     {
-        return areBadLinesEnabled
-            && rasterY >= FIRST_DMA_LINE
-            && rasterY <= LAST_DMA_LINE
-            && (rasterY & 7) == yscroll;
+        const int prevRasterY = rasterY - 1;
+        return prevRasterY >= 0 ? prevRasterY : cyclesPerLine - 1;
     }
 
     inline void sync()
@@ -196,19 +197,31 @@ private:
     {
         // IRQ occurred (xraster != 0)
         if (rasterY == (maxRasters - 1))
+        {
             vblanking = true;
-        else
+        }
+
+        /* Check DEN bit on first cycle of the line following the first DMA line  */
+        if (rasterY == FIRST_DMA_LINE
+            && !areBadLinesEnabled
+            && readDEN())
+        {
+            areBadLinesEnabled = true;
+        }
+
+        /* Disallow bad lines after the last possible one has passed */
+        if (rasterY == LAST_DMA_LINE)
+        {
+            areBadLinesEnabled = false;
+        }
+
+        isBadLine = false;
+
+        if (!vblanking)
         {
             rasterY++;
             rasterYIRQEdgeDetector();
         }
-
-        // In line $30, the DEN bit controls if Bad Lines can occur
-        if (rasterY == FIRST_DMA_LINE)
-            areBadLinesEnabled = readDEN();
-
-        // Test for bad line condition
-        isBadLine = evaluateIsBadLine();
     }
 
     inline void vblank()

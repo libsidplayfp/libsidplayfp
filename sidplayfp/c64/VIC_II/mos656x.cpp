@@ -32,6 +32,11 @@
 
 #include "sidplayfp/sidendian.h"
 
+/** Cycle # at which the VIC takes the bus in a bad line (BA goes low). */
+const unsigned int VICII_FETCH_CYCLE = 11;
+
+const unsigned int VICII_SCREEN_TEXTCOLS = 40;
+
 const MOS656X::model_data_t MOS656X::modelData[] =
 {
     {262, 64, &MOS656X::clockOldNTSC},  // Old NTSC
@@ -142,20 +147,51 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
     {
     case 0x11: // Control register 1
     {
-        yscroll = data & 7;
+        const unsigned int oldYscroll = yscroll;
+        yscroll = data & 0x7;
 
-        /* display enabled at any cycle of line 48 enables badlines */
-        if (rasterY == FIRST_DMA_LINE)
-            areBadLinesEnabled |= readDEN();
+        /* This is the funniest part... handle bad line tricks.  */
+        const bool wasBadLinesEnabled = areBadLinesEnabled;
 
-        const bool oldBadLine = isBadLine;
+        if (rasterY == FIRST_DMA_LINE && lineCycle == 0)
+        {
+            areBadLinesEnabled = readDEN();
+        }
 
-        /* Re-evaluate badline condition */
-        isBadLine = evaluateIsBadLine();
+        if (oldRasterY() == FIRST_DMA_LINE && readDEN())
+        {
+            areBadLinesEnabled = true;
+        }
 
-        // Start bad dma line now
-        if ((isBadLine != oldBadLine) && (lineCycle > 11) && (lineCycle < 53))
-            event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+        if ((oldYscroll != yscroll || areBadLinesEnabled != wasBadLinesEnabled)
+            && rasterY >= FIRST_DMA_LINE
+            && rasterY <= LAST_DMA_LINE)
+        {
+            /* Check whether bad line state has changed.  */
+            const bool wasBadLine = (wasBadLinesEnabled && (oldYscroll == (rasterY & 7)));
+            const bool nowBadLine = (areBadLinesEnabled && (yscroll == (rasterY & 7)));
+
+            const bool oldBadLine = isBadLine;
+
+            if (wasBadLine && !nowBadLine)
+            {
+                if (lineCycle < VICII_FETCH_CYCLE)
+                {
+                    isBadLine = false;
+                }
+            }
+            else if (!wasBadLine && nowBadLine)
+            {
+                if (lineCycle >= VICII_FETCH_CYCLE
+                    && lineCycle < VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 3)
+                {
+                    isBadLine = true;
+                }
+            }
+
+            if (isBadLine != oldBadLine)
+                event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+        }
     }
         // fall-through
 
