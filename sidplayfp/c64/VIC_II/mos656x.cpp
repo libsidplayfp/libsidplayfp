@@ -166,7 +166,7 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if ((sprite_enable & mask) && !(sprite_y_expansion & mask))
+            if ((data & mask) && !(sprite_y_expansion & mask))
             {
                 if (lineCycle == 14)
                 {

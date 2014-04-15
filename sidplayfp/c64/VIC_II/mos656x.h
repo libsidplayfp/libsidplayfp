@@ -227,7 +227,7 @@ private:
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if (sprite_enable & mask)
+            if (sprite_dma & mask)
                 sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
         }
     }
@@ -267,7 +267,7 @@ private:
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if ((sprite_enable & mask) && (y == regs[(i << 1) + 1]))
+            if ((sprite_enable & mask) && (y == regs[(i << 1) + 1]) && !(sprite_dma & mask))
             {
                 sprite_dma |= mask;
                 sprite_mc_base[i] = 0;
