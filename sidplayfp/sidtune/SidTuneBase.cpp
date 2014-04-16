@@ -184,7 +184,7 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
     }
 
     inFile.seekg(0, inFile.end);
-    const int fileLen = (size_t)inFile.tellg();
+    const int fileLen = inFile.tellg();
 
     if (fileLen <= 0)
     {
