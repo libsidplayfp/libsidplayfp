@@ -184,7 +184,7 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
     }
 
     inFile.seekg(0, inFile.end);
-    const int fileLen = (size_t)inFile.tellg();
+    const int fileLen = inFile.tellg();
 
     if (fileLen <= 0)
     {
@@ -196,7 +196,14 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
     buffer_t fileBuf;
     fileBuf.reserve(fileLen);
 
-    fileBuf.assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
+    try
+    {
+        fileBuf.assign(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
+    }
+    catch (std::exception &ex)
+    {
+        throw loadError(ex.what());
+    }
 
     if (inFile.bad())
     {
