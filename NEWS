@@ -1,3 +1,9 @@
+1.4.1 2014-04-19
+* Fix crash when trying to open a directory on *NIX
+* Various VIC II fixes, makes /MUSICIANS/T/The_Power_Terminator/Act_of_Revenge.sid play at the right speed
+
+
+
 1.4.0 2014-04-01
 * Drive the CIA TOD counter using the actual power line frequency
 * Cleanup playing routine
