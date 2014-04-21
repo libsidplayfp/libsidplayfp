@@ -1,8 +1,9 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
+ * Copyright 2009-2014 VICE Project
  * Copyright 2000 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
@@ -77,9 +78,9 @@ const char *MOS6526::credit =
 {
     "MOS6526 (CIA) Emulation:\n"
     "\tCopyright (C) 2001-2004 Simon White\n"
-    "\tCopyright (C) 2009 VICE Project\n"
+    "\tCopyright (C) 2009-2014 VICE Project\n"
     "\tCopyright (C) 2009-2010 Antti S. Lankila\n"
-    "\tCopyright (C) 2011-2012 Leandro Nini\n"
+    "\tCopyright (C) 2011-2014 Leandro Nini\n"
 };
 
 MOS6526::MOS6526(EventContext *context) :
@@ -149,11 +150,11 @@ void MOS6526::reset()
 
     // Reset tod
     memset(m_todclock, 0, sizeof(m_todclock));
+    m_todclock[TOD_HR-TOD_TEN] = 1; // the most common value
+    memcpy(m_todlatch, m_todclock, sizeof(m_todlatch));
     memset(m_todalarm, 0, sizeof(m_todalarm));
-    memset(m_todlatch, 0, sizeof(m_todlatch));
     m_todlatched = false;
     m_todstopped = true;
-    m_todclock[TOD_HR-TOD_TEN] = 1; // the most common value
     m_todCycles = 0;
 
     triggerScheduled = false;
@@ -237,6 +238,30 @@ uint8_t MOS6526::read(uint_least8_t addr)
     }
 }
 
+void MOS6526::setTodReg(uint_least8_t addr, uint8_t data)
+{
+    if (regs[CRB] & 0x80)
+    {
+        /* set alarm */
+        m_todalarm[addr - TOD_TEN] = data;
+    }
+    else
+    {
+        /* set time */
+        if (addr == TOD_TEN)
+            m_todstopped = false;
+        if (addr == TOD_HR)
+            m_todstopped = true;
+        m_todclock[addr - TOD_TEN] = data;
+    }
+
+    // check alarm
+    if (!m_todstopped && !memcmp(m_todalarm, m_todclock, sizeof(m_todalarm)))
+    {
+        trigger(INTERRUPT_ALARM);
+    }
+}
+
 void MOS6526::write(uint_least8_t addr, uint8_t data)
 {
     addr &= 0x0f;
@@ -272,32 +297,24 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
 
     // TOD implementation taken from Vice
     case TOD_HR:  // Time Of Day clock hour
-        // Flip AM/PM on hour 12
-        //   (Andreas Boose <viceteam@t-online.de> 1997/10/11).
-        // Flip AM/PM only when writing time, not when writing alarm
-        // (Alexander Bluhm <mam96ehy@studserv.uni-leipzig.de> 2000/09/17).
+        /* force bits 6-5 = 0 */
         data &= 0x9f;
+        /* Flip AM/PM on hour 12  */
+        /* Flip AM/PM only when writing time, not when writing alarm */
         if ((data & 0x1f) == 0x12 && !(regs[CRB] & 0x80))
             data ^= 0x80;
-        // deliberate run on
+
+        setTodReg(addr, data);
+        break;
     case TOD_TEN: // Time Of Day clock 1/10 s
+        data &= 0x0f;
+        setTodReg(addr, data);
+        break;
     case TOD_SEC: // Time Of Day clock sec
+        // deliberate run on
     case TOD_MIN: // Time Of Day clock min
-        if (regs[CRB] & 0x80)
-            m_todalarm[addr - TOD_TEN] = data;
-        else
-        {
-            if (addr == TOD_TEN)
-                m_todstopped = false;
-            if (addr == TOD_HR)
-                m_todstopped = true;
-            m_todclock[addr - TOD_TEN] = data;
-        }
-        // check alarm
-        if (!m_todstopped && !memcmp(m_todalarm, m_todclock, sizeof(m_todalarm)))
-        {
-            trigger(INTERRUPT_ALARM);
-        }
+        data &= 0x7f;
+        setTodReg(addr, data);
         break;
     case SDR:
         if (regs[CRA] & 0x40)
@@ -394,33 +411,76 @@ void MOS6526::tod()
 
     if (!m_todstopped)
     {
-        // inc timer
-        uint8_t *tod = m_todclock;
-        uint8_t t = bcd2byte(*tod) + 1;
-        *tod++ = byte2bcd(t % 10);
-        if (t >= 10)
+        /* advance the counters.
+         * - individual counters are all 4 bit
+         */
+        uint8_t t0 = m_todclock[TOD_TEN-TOD_TEN] & 0x0f;
+        uint8_t t1 = m_todclock[TOD_SEC-TOD_TEN] & 0x0f;
+        uint8_t t2 = (m_todclock[TOD_SEC-TOD_TEN] >> 4) & 0x0f;
+        uint8_t t3 = m_todclock[TOD_MIN-TOD_TEN] & 0x0f;
+        uint8_t t4 = (m_todclock[TOD_MIN-TOD_TEN] >> 4) & 0x0f;
+        uint8_t t5 = m_todclock[TOD_HR-TOD_TEN] & 0x0f;
+        uint8_t t6 = (m_todclock[TOD_HR-TOD_TEN] >> 4) & 0x01;
+        uint8_t pm = m_todclock[TOD_HR-TOD_TEN] & 0x80;
+
+        /* tenth seconds (0-9) */
+        t0 = (t0 + 1) & 0x0f;
+        if (t0 == 10)
         {
-            t = bcd2byte(*tod) + 1;
-            *tod++ = byte2bcd(t % 60);
-            if (t >= 60)
+            t0 = 0;
+            /* seconds (0-59) */
+            t1 = (t1 + 1) & 0x0f; /* x0...x9 */
+            if (t1 == 10)
             {
-                t = bcd2byte(*tod) + 1;
-                *tod++ = byte2bcd(t % 60);
-                if (t >= 60)
+                t1 = 0;
+                t2 = (t2 + 1) & 0x07; /* 0x...5x */
+                if (t2 == 6)
                 {
-                    uint8_t pm = *tod & 0x80;
-                    t = *tod & 0x1f;
-                    if (t == 0x11)
-                        pm ^= 0x80; // toggle am/pm on 0:59->1:00 hr
-                    if (t == 0x12)
-                        t = 1;
-                    else if (++t == 10)
-                        t = 0x10;   // increment, adjust bcd
-                    t &= 0x1f;
-                    *tod = t | pm;
+                    t2 = 0;
+                    /* minutes (0-59) */
+                    t3 = (t3 + 1) & 0x0f; /* x0...x9 */
+                    if (t3 == 10)
+                    {
+                        t3 = 0;
+                        t4 = (t4 + 1) & 0x07; /* 0x...5x */
+                        if (t4 == 6)
+                        {
+                            t4 = 0;
+                            /* hours (1-12) */
+                            t5 = (t5 + 1) & 0x0f;
+                            if (t6)
+                            {
+                                /* toggle the am/pm flag when going from 11 to 12 (!) */
+                                if (t5 == 2)
+                                {
+                                    pm ^= 0x80;
+                                }
+                                /* wrap 12h -> 1h (FIXME: when hour became x3 ?) */
+                                if (t5 == 3)
+                                {
+                                    t5 = 1;
+                                    t6 = 0;
+                                }
+                            }
+                            else
+                            {
+                                if (t5 == 10)
+                                {
+                                    t5 = 0;
+                                    t6 = 1;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
+
+        m_todclock[TOD_TEN-TOD_TEN] = t0;
+        m_todclock[TOD_SEC-TOD_TEN] = t1 | (t2 << 4);
+        m_todclock[TOD_MIN-TOD_TEN] = t3 | (t4 << 4);
+        m_todclock[TOD_HR-TOD_TEN] = t5 | (t6 << 4) | pm;
+
         // check alarm
         if (!memcmp(m_todalarm, m_todclock, sizeof(m_todalarm)))
         {

@@ -1,7 +1,8 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -31,6 +32,11 @@
 
 #include "sidplayfp/sidendian.h"
 
+/** Cycle # at which the VIC takes the bus in a bad line (BA goes low). */
+const unsigned int VICII_FETCH_CYCLE = 11;
+
+const unsigned int VICII_SCREEN_TEXTCOLS = 40;
+
 const MOS656X::model_data_t MOS656X::modelData[] =
 {
     {262, 64, &MOS656X::clockOldNTSC},  // Old NTSC
@@ -44,7 +50,8 @@ const char *MOS656X::credit =
     "MOS6567/6569/6572 (VICII) Emulation:\n"
     "\tCopyright (C) 2001 Simon White\n"
     "\tCopyright (C) 2007-2010 Antti Lankila\n"
-    "\tCopyright (C) 2011-2013 Leandro Nini\n"
+    "\tCopyright (C) 2009-2014 VICE Project\n"
+    "\tCopyright (C) 2011-2014 Leandro Nini\n"
 };
 
 
@@ -73,6 +80,7 @@ void MOS656X::reset()
     vblanking    = lp_triggered = false;
     lpx          = 0;
     lpy          = 0;
+    sprite_exp_flop = 0xff;
     sprite_dma   = 0;
     memset(regs, 0, sizeof (regs));
     memset(sprite_mc_base, 0, sizeof (sprite_mc_base));
@@ -139,20 +147,51 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
     {
     case 0x11: // Control register 1
     {
-        yscroll = data & 7;
+        const unsigned int oldYscroll = yscroll;
+        yscroll = data & 0x7;
 
-        /* display enabled at any cycle of line 48 enables badlines */
-        if (rasterY == FIRST_DMA_LINE)
-            areBadLinesEnabled |= readDEN();
+        /* This is the funniest part... handle bad line tricks.  */
+        const bool wasBadLinesEnabled = areBadLinesEnabled;
 
-        const bool oldBadLine = isBadLine;
+        if (rasterY == FIRST_DMA_LINE && lineCycle == 0)
+        {
+            areBadLinesEnabled = readDEN();
+        }
 
-        /* Re-evaluate badline condition */
-        isBadLine = evaluateIsBadLine();
+        if (oldRasterY() == FIRST_DMA_LINE && readDEN())
+        {
+            areBadLinesEnabled = true;
+        }
 
-        // Start bad dma line now
-        if ((isBadLine != oldBadLine) && (lineCycle > 11) && (lineCycle < 53))
-            event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+        if ((oldYscroll != yscroll || areBadLinesEnabled != wasBadLinesEnabled)
+            && rasterY >= FIRST_DMA_LINE
+            && rasterY <= LAST_DMA_LINE)
+        {
+            /* Check whether bad line state has changed.  */
+            const bool wasBadLine = (wasBadLinesEnabled && (oldYscroll == (rasterY & 7)));
+            const bool nowBadLine = (areBadLinesEnabled && (yscroll == (rasterY & 7)));
+
+            const bool oldBadLine = isBadLine;
+
+            if (wasBadLine && !nowBadLine)
+            {
+                if (lineCycle < VICII_FETCH_CYCLE)
+                {
+                    isBadLine = false;
+                }
+            }
+            else if (!wasBadLine && nowBadLine)
+            {
+                if (lineCycle >= VICII_FETCH_CYCLE
+                    && lineCycle < VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 3)
+                {
+                    isBadLine = true;
+                }
+            }
+
+            if (isBadLine != oldBadLine)
+                event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+        }
     }
         // fall-through
 
@@ -166,13 +205,20 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
         uint8_t mask = 1;
         for (unsigned int i=0; i<8; i++, mask<<=1)
         {
-            if ((data & mask) && !(sprite_y_expansion & mask))
+            if (!(data & mask) && !(sprite_exp_flop & mask))
             {
+                /* sprite crunch */
                 if (lineCycle == 14)
                 {
-                    sprite_mc[i] = (0x2a & (sprite_mc_base[i] & sprite_mc[i])) | (0x15 & (sprite_mc_base[i] | sprite_mc[i]));
+                    const uint8_t mc = sprite_mc[i];
+                    const uint8_t mcBase = sprite_mc_base[i];
+
+                    sprite_mc[i] = (0x2a & (mcBase & mc)) | (0x15 & (mcBase | mc));
+
+                    /* mcbase will be set from mc on the following clock call */
                 }
-                sprite_y_expansion |= mask;
+
+                sprite_exp_flop |= mask;
             }
         }
     }
@@ -319,7 +365,8 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 55:
-        checkSpriteDmaExp();
+        checkSpriteExp();
+        checkSpriteDma();
         startDma<0>();
         break;
 
@@ -446,7 +493,8 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 55:
-        checkSpriteDmaExp();
+        checkSpriteExp();
+        checkSpriteDma();
         startDma<0>();
         break;
 
@@ -581,7 +629,8 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 55:
-        checkSpriteDmaExp();
+        checkSpriteExp();
+        checkSpriteDma();
         startDma<0>();
         break;
 
