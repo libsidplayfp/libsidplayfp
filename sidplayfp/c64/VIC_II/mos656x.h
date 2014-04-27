@@ -181,7 +181,7 @@ private:
     /**
      * Get previous value of Y raster
      */
-    inline int oldRasterY()
+    inline unsigned int oldRasterY()
     {
         const int prevRasterY = rasterY - 1;
         return prevRasterY >= 0 ? prevRasterY : cyclesPerLine - 1;

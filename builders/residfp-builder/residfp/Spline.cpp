@@ -21,6 +21,7 @@
 
 #include "Spline.h"
 
+#include <vector>
 #include <cassert>
 #include <limits>
 
@@ -38,8 +39,8 @@ Spline::Spline(const Point input[], int inputLength) :
 {
     assert(inputLength > 2);
 
-    double dxs[inputLength - 1];
-    double ms[inputLength - 1];
+    std::vector<double> dxs(inputLength - 1);
+    std::vector<double> ms(inputLength - 1);
 
     // Get consecutive differences and slopes
     for (int i = 0; i < inputLength - 1; i++)
