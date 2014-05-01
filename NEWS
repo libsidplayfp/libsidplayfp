@@ -1,3 +1,9 @@
+1.4.2 2014-05-01
+* Fix a typo made during merging in VIC II code
+* Use vector instead of non-standard VLA
+
+
+
 1.4.1 2014-04-19
 * Fix crash when trying to open a directory on *NIX
 * Various VIC II fixes, makes /MUSICIANS/T/The_Power_Terminator/Act_of_Revenge.sid play at the right speed
