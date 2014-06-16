@@ -32,9 +32,9 @@
 #include "VIC_II/mos656x.h"
 
 /**
-* VIC-II
-* located at $D000-$D3FF
-*/
+ * VIC-II
+ * located at $D000-$D3FF
+ */
 class c64vic: public MOS656X, public Bank
 {
 private:

@@ -32,16 +32,16 @@ class sidbuilder;
 class EventContext;
 
 /**
-* Buffer size. 5000 is roughly 5 ms at 96 kHz
-*/
+ * Buffer size. 5000 is roughly 5 ms at 96 kHz
+ */
 enum
 {
     OUTPUTBUFFERSIZE = 5000
 };
 
 /**
-* Inherit this class to create a new SID emulation.
-*/
+ * Inherit this class to create a new SID emulation.
+ */
 class sidemu : public c64sid, public component
 {
 private:

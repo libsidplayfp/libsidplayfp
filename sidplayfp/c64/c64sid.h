@@ -26,8 +26,8 @@
 #include "Banks/Bank.h"
 
 /**
-* SID interface.
-*/
+ * SID interface.
+ */
 class c64sid : public Bank
 {
 protected:

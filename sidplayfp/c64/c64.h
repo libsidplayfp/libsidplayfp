@@ -58,24 +58,24 @@ public:
 #endif
 
 /**
-* Commodore 64 emulation core.
-*
-* It consists of the following chips:
-* - CPU 6510
-* - VIC-II 6567/6569/6572
-* - CIA 6526
-* - SID 6581/8580
-* - PLA 7700/82S100
-* - Color RAM 2114
-* - System RAM 4164-20/50464-150
-* - Character ROM 2332
-* - Basic ROM 2364
-* - Kernal ROM 2364
-*/
+ * Commodore 64 emulation core.
+ *
+ * It consists of the following chips:
+ * - CPU 6510
+ * - VIC-II 6567/6569/6572
+ * - CIA 6526
+ * - SID 6581/8580
+ * - PLA 7700/82S100
+ * - Color RAM 2114
+ * - System RAM 4164-20/50464-150
+ * - Character ROM 2332
+ * - Basic ROM 2364
+ * - Kernal ROM 2364
+ */
 class c64: private c64env
 {
 public:
-    /** Maximum number of supported SIDs (mono and stereo) */
+    /// Maximum number of supported SIDs (mono and stereo)
     static const unsigned int MAX_SIDS = 2;
 
 public:
@@ -88,46 +88,46 @@ public:
     } model_t;
 
 private:
-    /** System clock frequency */
+    /// System clock frequency
     double m_cpuFreq;
 
-    /** Number of sources asserting IRQ */
+    /// Number of sources asserting IRQ
     int irqCount;
 
-    /** BA state */
+    /// BA state
     bool oldBAState;
 
-    /** System event context */
+    /// System event context
     EventScheduler m_scheduler;
 
-    /** CPU */
+    /// CPU
     c64cpu cpu;
 
-    /** CIA1 */
+    /// CIA1
     c64cia1 cia1;
 
-    /** CIA2 */
+    /// CIA2
     c64cia2 cia2;
 
-    /** VIC */
+    /// VIC
     c64vic vic;
 
-    /** Color RAM */
+    /// Color RAM
     ColorRAMBank colorRAMBank;
 
-    /** SID */
+    /// SID
     SidBank sidBank;
 
-    /** 2nd SID */
+    /// 2nd SID
     ExtraSidBank extraSidBank;
 
-    /** I/O Area #1 and #2 */
+    /// I/O Area #1 and #2
     DisconnectedBusBank disconnectedBusBank;
 
-    /** I/O Area */
+    /// I/O Area
     IOBank ioBank;
 
-    /** MMU chip */
+    /// MMU chip
     MMU mmu;
 
 private:
@@ -135,49 +135,49 @@ private:
 
 private:
     /**
-    * Access memory as seen by CPU.
-    *
-    * @param addr the address where to read from
-    * @return value at address
-    */
+     * Access memory as seen by CPU.
+     *
+     * @param addr the address where to read from
+     * @return value at address
+     */
     uint8_t cpuRead(uint_least16_t addr) { return mmu.cpuRead(addr); }
 
     /**
-    * Access memory as seen by CPU.
-    *
-    * @param addr the address where to write to
-    * @param data the value to write
-    */
+     * Access memory as seen by CPU.
+     *
+     * @param addr the address where to write to
+     * @param data the value to write
+     */
     void cpuWrite(uint_least16_t addr, uint8_t data) { mmu.cpuWrite(addr, data); }
 
     /**
-    * IRQ trigger signal.
-    *
-    * Calls permitted any time, but normally originated by chips at PHI1.
-    *
-    * @param state
-    */
+     * IRQ trigger signal.
+     *
+     * Calls permitted any time, but normally originated by chips at PHI1.
+     *
+     * @param state
+     */
     inline void interruptIRQ(bool state);
 
     /**
-    * NMI trigger signal.
-    *
-    * Calls permitted any time, but normally originated by chips at PHI1.
-    */
+     * NMI trigger signal.
+     *
+     * Calls permitted any time, but normally originated by chips at PHI1.
+     */
     inline void interruptNMI() { cpu.triggerNMI (); }
 
     /**
-    * Reset signal.
-    */
+     * Reset signal.
+     */
     inline void interruptRST() { cpu.triggerRST (); }
 
     /**
-    * BA signal.
-    *
-    * Calls permitted during PHI1.
-    *
-    * @param state
-    */
+     * BA signal.
+     *
+     * Calls permitted during PHI1.
+     *
+     * @param state
+     */
     inline void setBA(bool state);
 
     inline void lightpen() { vic.lightpen (); }
@@ -205,10 +205,10 @@ public:
 #endif
 
     /**
-    * Get C64's event scheduler
-    *
-    * @return the scheduler
-    */
+     * Get C64's event scheduler
+     *
+     * @return the scheduler
+     */
     //@{
     EventScheduler *getEventScheduler() { return &m_scheduler; }
     const EventScheduler &getEventScheduler() const { return m_scheduler; }
@@ -220,8 +220,8 @@ public:
     void resetCpu() { cpu.reset(); }
 
     /**
-    * Set the c64 model.
-    */
+     * Set the c64 model.
+     */
     void setModel(model_t model);
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
@@ -230,34 +230,34 @@ public:
     }
 
     /**
-    * Get the CPU clock speed.
-    *
-    * @return the speed in Hertz
-    */
+     * Get the CPU clock speed.
+     *
+     * @return the speed in Hertz
+     */
     double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**
-    * Set the requested SID
-    *
-    * @param i sid number to set
-    * @param s the sid emu to set, or 0 to remove
-    */
+     * Set the requested SID
+     *
+     * @param i sid number to set
+     * @param s the sid emu to set, or 0 to remove
+     */
     void setSid(unsigned int i, c64sid *s);
 
     /**
-    * Set the base address of a stereo SID chip.<br/>
-    * Valid addresses includes the SID area ($d400-$d7ff)
-    * and the IO Area ($de00-$dfff).
-    *
-    * @param sidChipBase2
-    *            base address (e.g. 0xd420)
-    *            0 to remove second SID
-    */
+     * Set the base address of a stereo SID chip.<br/>
+     * Valid addresses includes the SID area ($d400-$d7ff)
+     * and the IO Area ($de00-$dfff).
+     *
+     * @param sidChipBase2
+     *            base address (e.g. 0xd420)
+     *            0 to remove second SID
+     */
     void setSecondSIDAddress(int sidChipBase2);
 
     /**
-    * Get the components credits
-    */
+     * Get the components credits
+     */
     //@{
     const char* cpuCredits () const { return cpu.credits(); }
     const char* ciaCredits () const { return cia1.credits(); }
@@ -269,7 +269,7 @@ public:
     uint_least16_t getCia1TimerA() const { return cia1.getTimerA(); }
 };
 
-void c64::interruptIRQ (bool state)
+void c64::interruptIRQ(bool state)
 {
     if (state)
     {
@@ -286,15 +286,15 @@ void c64::interruptIRQ (bool state)
     }
 }
 
-void c64::setBA (bool state)
+void c64::setBA(bool state)
 {
-    /* only react to changes in state */
+    // only react to changes in state
     if (state == oldBAState)
         return;
 
     oldBAState = state;
 
-    /* Signal changes in BA to interested parties */
+    // Signal changes in BA to interested parties
     cpu.setRDY (state);
 }
 

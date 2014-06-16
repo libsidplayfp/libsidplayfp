@@ -32,15 +32,17 @@
 class sidemu;
 
 /**
-* This class implements the mixer.
-*/
+ * This class implements the mixer.
+ */
 class Mixer
 {
 private:
     typedef short (Mixer::*mixer_func_t)() const;
 
 public:
-    /** Maximum allowed volume, must be a power of 2 */
+    /**
+     * Maximum allowed volume, must be a power of 2.
+     */
     static const int_least32_t VOLUME_MAX = 1024;
 
 private:
