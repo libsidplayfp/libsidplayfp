@@ -35,7 +35,8 @@ double Spline::slope(const Point &a, const Point &b)
 
 Spline::Spline(const Point input[], int inputLength) :
     paramsLength(inputLength),
-    params(new double[paramsLength][6])
+    params(new Param[paramsLength]),
+    c(&params[0])
 {
     assert(inputLength > 2);
 
@@ -54,66 +55,64 @@ Spline::Spline(const Point input[], int inputLength) :
     }
 
     // Get degree-1 coefficients
-    params[0][4] = ms[0];
+    params[0].c = ms[0];
     for (int i = 1; i < inputLength - 1; i++)
     {
         const double m = ms[i - 1];
         const double mNext = ms[i];
         if (m * mNext <= 0) {
-            params[i][4] = 0.0;
+            params[i].c = 0.0;
         } else {
             const double dx = dxs[i - 1];
             const double dxNext = dxs[i];
             const double common = dx + dxNext;
-            params[i][4] = 3.0 * common / ((common + dxNext) / m + (common + dx) / mNext);
+            params[i].c = 3.0 * common / ((common + dxNext) / m + (common + dx) / mNext);
         }
     }
-    params[inputLength - 1][4] = ms[inputLength - 2];
+    params[inputLength - 1].c = ms[inputLength - 2];
 
     // Get degree-2 and degree-3 coefficients
     for (int i = 0; i < inputLength - 1; i++)
     {
-        params[i][0] = input[i].x;
-        params[i][1] = input[i + 1].x;
-        params[i][5] = input[i].y;
+        params[i].x1 = input[i].x;
+        params[i].x2 = input[i + 1].x;
+        params[i].d = input[i].y;
 
-        const double c1 = params[i][4];
+        const double c1 = params[i].c;
         const double m = ms[i];
         const double invDx = 1.0 / dxs[i];
-        const double common = c1 + params[i + 1][4] - m - m;
-        params[i][3] = (m - c1 - common) * invDx;
-        params[i][2] = common * invDx * invDx;
+        const double common = c1 + params[i + 1].c - m - m;
+        params[i].b = (m - c1 - common) * invDx;
+        params[i].a = common * invDx * invDx;
     }
 
     // Fix the value ranges, because we interpolate outside original bounds if necessary.
-    params[0][0] = std::numeric_limits<double>::min();
-    params[inputLength - 2][1] = std::numeric_limits<double>::max();
-
-    c = params[0];
+    params[0].x1 = std::numeric_limits<double>::min();
+    params[inputLength - 2].x2 = std::numeric_limits<double>::max();
 }
 
 void Spline::evaluate(double x, Point &out)
 {
-    if (x < c[0] || x > c[1])
+    if (x < c->x1 || x > c->x2)
     {
         for (int i = 0; i < paramsLength; i++)
         {
-            if (x <= params[i][1])
+            if (x <= params[i].x2)
             {
-                c = params[i];
+                c = &params[i];
                 break;
             }
         }
     }
 
     // Interpolate
-    const double diff = x - c[0];
+    const double diff = x - c->x1;
 
     // y = a*x^3 + b*x^2 + c*x + d
-    out.x =  ((c[2] * diff + c[3]) * diff + c[4]) * diff + c[5];
+    out.x =  ((c->a * diff + c->b) * diff + c->c) * diff + c->d;
 
     // dy = 3*a*x^2 + 2*b*x + c
-    out.y = (3.0 * c[2] * diff + 2.0 * c[3]) * diff + c[4];
+    out.y = (3.0 * c->a * diff + 2.0 * c->b) * diff + c->c;
 }
 
 } // namespace reSIDfp

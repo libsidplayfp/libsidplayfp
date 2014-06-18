@@ -25,8 +25,8 @@
 #include "sidplayfp/c64/c64sid.h"
 
 /**
-* SID chip placeholder which does nothing and returns 0xff on reading.
-*/
+ * SID chip placeholder which does nothing and returns 0xff on reading.
+ */
 class NullSid : public c64sid
 {
 private:
@@ -34,7 +34,9 @@ private:
     virtual ~NullSid() {}
 
 public:
-    /// Returns singleton instance
+    /**
+     * Returns singleton instance.
+     */
     static NullSid *getInstance()
     {
         static NullSid nullsid;

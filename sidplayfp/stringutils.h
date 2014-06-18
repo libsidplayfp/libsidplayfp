@@ -44,12 +44,18 @@ private:
     static bool casecompare(char c1, char c2) { return (tolower(c1)==tolower(c2)); }
 
 public:
+    /**
+     * Compares two strings case insensitively and returns true if they are equal.
+     */
     static bool equal(const std::string& s1, const std::string& s2)
     {
         return s1.size() == s2.size()
             && std::equal(s1.begin(), s1.end(), s2.begin(), casecompare);
     }
 
+    /**
+     * Compares two strings case insensitively and returns true if they are equal.
+     */
     static bool equal(const char* s1, const char* s2)
     {
 
@@ -76,6 +82,9 @@ public:
 #endif
     }
 
+    /**
+     * Compares first n characters of two strings case insensitively and returns true if they are equal.
+     */
     static bool equal(const char* s1, const char* s2, size_t n)
     {
 

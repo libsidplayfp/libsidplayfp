@@ -38,36 +38,37 @@
 
 /**
  * The C64 MMU chip.
-*/
+ */
 class MMU : public PLA, public sidmemory
 {
 private:
     EventContext &context;
 
-    /** CPU port signals */
+    /// CPU port signals
     bool loram, hiram, charen;
 
-    /** CPU read memory mapping in 4k chunks */
+    /// CPU read memory mapping in 4k chunks
     Bank* cpuReadMap[16];
 
-    /** CPU write memory mapping in 4k chunks */
+    /// CPU write memory mapping in 4k chunks
     Bank* cpuWriteMap[16];
 
-    /** IO region handler */
+    /// IO region handler
     Bank* ioBank;
 
-    /** Kernal ROM */
+    /// Kernal ROM
     KernalRomBank kernalRomBank;
 
-    /** BASIC ROM */
+    /// BASIC ROM
     BasicRomBank basicRomBank;
 
-    /** Character ROM */
+    /// Character ROM
     CharacterRomBank characterRomBank;
 
-    /** RAM */
+    /// RAM
     SystemRAMBank ramBank;
 
+    /// RAM bank 0
     ZeroRAMBank zeroRAMBank;
 
 private:

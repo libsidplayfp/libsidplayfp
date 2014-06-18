@@ -60,26 +60,26 @@ public:
     reloc65();
 
     /**
-    * Select segment to relocate.
-    * 
-    * @param type the segment to relocate
-    * @param addr new address
-    */
+     * Select segment to relocate.
+     * 
+     * @param type the segment to relocate
+     * @param addr new address
+     */
     void setReloc(segment_t type, int addr);
 
-    /**
-    * Select segment to extract.
-    * 
-    * @param type the segment to extract
-    */
+     /**
+     * Select segment to extract.
+     * 
+     * @param type the segment to extract
+     */
     void setExtract(segment_t type);
 
     /**
-    * Do the relocation.
-    *
-    * @param buf
-    * @param fsize
-    */
+     * Do the relocation.
+     *
+     * @param buf
+     * @param fsize
+     */
     bool reloc(unsigned char **buf, int *fsize);
 };
 

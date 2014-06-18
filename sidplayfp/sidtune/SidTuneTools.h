@@ -30,19 +30,21 @@
 class SidTuneTools
 {
  public:
-    /** Return pointer to file name position in complete path. */
+    /**
+     * Return pointer to file name position in complete path.
+     */
     static size_t fileNameWithoutPath(const char* s);
 
     /**
-    * Return pointer to file name position in complete path.
-    * Special version: file separator = forward slash.
-    */
+     * Return pointer to file name position in complete path.
+     * Special version: file separator = forward slash.
+     */
     static size_t slashedFileNameWithoutPath(const char* s);
 
     /**
-    * Return pointer to file name extension in path.
-    * Searching backwards until first dot is found.
-    */
+     * Return pointer to file name extension in path.
+     * Searching backwards until first dot is found.
+     */
     static const char* fileExtOfPath(const char* s);
 };
 

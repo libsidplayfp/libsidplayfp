@@ -40,13 +40,20 @@ public:
         double y;
     } Point;
 
-private:
-    typedef double(*Params)[6];
+    typedef struct
+    {
+        double x1;
+        double x2;
+        double a;
+        double b;
+        double c;
+        double d;
+    } Param;
 
 private:
-    double* c;
     const int paramsLength;
-    Params params;
+    Param *params;
+    Param *c;
 
 private:
     /**

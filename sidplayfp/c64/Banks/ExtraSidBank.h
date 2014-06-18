@@ -27,23 +27,23 @@
 #include "NullSid.h"
 
 /**
-* Extra SID bank
-*/
+ * Extra SID bank
+ */
 class ExtraSidBank : public Bank
 {
 private:
     /**
-    * Size of mapping table. Each 32 bytes another SID chip base address
-    * can be assigned to.
-    */
+     * Size of mapping table. Each 32 bytes another SID chip base address
+     * can be assigned to.
+     */
     static const int MAPPER_SIZE = 8;
 
 private:
     /**
-    * SID mapping table.
-    * Maps a SID chip base address to a SID
-    * or to the underlying bank.
-    */
+     * SID mapping table.
+     * Maps a SID chip base address to a SID
+     * or to the underlying bank.
+     */
     Bank *mapper[MAPPER_SIZE];
 
     c64sid *sid;
@@ -68,10 +68,10 @@ public:
     }
 
     /**
-    * Put a SID at desired location.
-    *
-    * @param address the address
-    */
+     * Put a SID at desired location.
+     *
+     * @param address the address
+     */
     void setSIDMapping(int address)
     {
         mapper[mapperIndex(address)] = sid;
@@ -88,10 +88,10 @@ public:
     }
 
     /**
-    * Set SID emulation.
-    *
-    * @param s the emulation
-    */
+     * Set SID emulation.
+     *
+     * @param s the emulation
+     */
     void setSID(c64sid *s) { sid = (s != 0) ? s : NullSid::getInstance(); }
 };
 

@@ -29,8 +29,8 @@
 #include "sidplayfp/event.h"
 
 /**
-* Interface to PLA functions.
-*/
+ * Interface to PLA functions.
+ */
 class PLA
 {
 public:
@@ -40,19 +40,19 @@ public:
 };
 
 /**
-* Area backed by RAM, including cpu port addresses 0 and 1.
-*
-* This is bit of a fake. We know that the CPU port is an internal
-* detail of the CPU, and therefore CPU should simply pay the price
-* for reading/writing to 0/1.
-*
-* However, that would slow down all accesses, which is suboptimal. Therefore
-* we install this little hook to the 4k 0 region to deal with this.
-*
-* Implementation based on VICE code.
-*
-* @author Antti Lankila
-*/
+ * Area backed by RAM, including cpu port addresses 0 and 1.
+ *
+ * This is bit of a fake. We know that the CPU port is an internal
+ * detail of the CPU, and therefore CPU should simply pay the price
+ * for reading/writing to 0/1.
+ *
+ * However, that would slow down all accesses, which is suboptimal. Therefore
+ * we install this little hook to the 4k 0 region to deal with this.
+ *
+ * Implementation based on VICE code.
+ *
+ * @author Antti Lankila
+ */
 class ZeroRAMBank : public Bank
 {
 private:
@@ -86,39 +86,37 @@ private:
 private:
     PLA* pla;
 
-    /** C64 RAM area */
+    /// C64 RAM area
     Bank* ramBank;
 
-    /** cycle that should invalidate the unused bits of the data port. */
+    /// Cycle that should invalidate the unused bits of the data port.
     //@{
     event_clock_t dataSetClkBit6;
     event_clock_t dataSetClkBit7;
     //@}
 
-    /**
-     * indicates if the unused bits of the data port are in the process of falling off
-     */
+    /// Indicates if the unused bits of the data port are in the process of falling off.
     //@{
     bool dataFalloffBit6;
     bool dataFalloffBit7;
     //@}
 
-    /** Value of the unused bit of the processor port.  */
+    /// Value of the unused bit of the processor port.
     //@{
     uint8_t dataSetBit6;
     uint8_t dataSetBit7;
     //@}
 
-    /** Value written to processor port.  */
+    /// Value written to processor port.
     //@{
     uint8_t dir;
     uint8_t data;
     //@}
 
-    /** Value read from processor port.  */
+    /// Value read from processor port.
     uint8_t dataRead;
 
-    /** State of processor port pins.  */
+    /// State of processor port pins.
     uint8_t procPortPins;
 
 private:
@@ -141,7 +139,8 @@ private:
         }
     }
 
-private:    // prevent copying
+private:
+    // prevent copying
     ZeroRAMBank(const ZeroRAMBank&);
     ZeroRAMBank& operator=(const ZeroRAMBank&);
 

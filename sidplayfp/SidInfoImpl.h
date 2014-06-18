@@ -44,8 +44,8 @@
 #endif
 
 /**
-* The implementation of the SidInfo interface.
-*/
+ * The implementation of the SidInfo interface.
+ */
 class SidInfoImpl : public SidInfo
 {
 public:
@@ -68,7 +68,8 @@ public:
 
     uint_least16_t m_powerOnDelay;
 
-private:    // prevent copying
+private:
+    // prevent copying
     SidInfoImpl(const SidInfoImpl&);
     SidInfoImpl& operator=(SidInfoImpl&);
 
@@ -85,7 +86,7 @@ public:
         m_credits.push_back(PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\n"
             "\tCopyright (C) 2000 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
-            "\tCopyright (C) 2010-2013 Leandro Nini\n"
+            "\tCopyright (C) 2010-2014 Leandro Nini\n"
             "\t" PACKAGE_URL "\n");
     }
 

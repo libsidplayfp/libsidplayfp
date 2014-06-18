@@ -36,10 +36,10 @@ class MOS656X: public component, private Event
 public:
     typedef enum
     {
-        MOS6567R56A = 0  /* OLD NTSC CHIP */
-        ,MOS6567R8       /* NTSC-M */
-        ,MOS6569         /* PAL-B */
-        ,MOS6572         /* PAL-N */
+        MOS6567R56A = 0  ///< OLD NTSC CHIP
+        ,MOS6567R8       ///< NTSC-M
+        ,MOS6569         ///< PAL-B
+        ,MOS6572         ///< PAL-N
     } model_t;
 
 private:
@@ -56,17 +56,17 @@ private:
     static const model_data_t modelData[];
 
 private:
-    /** raster IRQ flag */
+    /// raster IRQ flag
     static const int IRQ_RASTER = 1 << 0;
 
-    /** Light-Pen IRQ flag */
+    /// Light-Pen IRQ flag
     static const int IRQ_LIGHTPEN = 1 << 3;
 
 protected:
-    /** First line when we check for bad lines */
+    /// First line when we check for bad lines
     static const unsigned int FIRST_DMA_LINE = 0x30;
 
-    /** Last line when we check for bad lines */
+    /// Last line when we check for bad lines
     static const unsigned int LAST_DMA_LINE = 0xf7;
 
 protected:
@@ -74,48 +74,49 @@ protected:
 
     event_clock_t rasterClk;
 
-    /** CPU's event context. */
+    /// CPU's event context.
     EventContext &event_context;
 
-    /** Number of cycles per line. */
+    /// Number of cycles per line.
     unsigned int cyclesPerLine;
 
+    /// Number of raster lines.
     unsigned int maxRasters;
 
-    /** Current visible line */
+    /// Current visible line
     unsigned int lineCycle;
 
-    /** current raster line */
+    /// current raster line
     unsigned int rasterY;
 
-    /** vertical scrolling value */
+    /// vertical scrolling value
     unsigned int yscroll;
 
-    /** are bad lines enabled for this frame? */
+    /// are bad lines enabled for this frame?
     bool areBadLinesEnabled;
 
-    /** is the current line a bad line */
+    /// is the current line a bad line
     bool isBadLine;
 
-    /** Is rasterYIRQ condition true? */
+    /// Is rasterYIRQ condition true?
     bool rasterYIRQCondition;
 
-    /** Set when new frame starts. */
+    /// Set when new frame starts.
     bool vblanking;
 
-    /** Has light pen IRQ been triggered in this frame already? */
+    /// Has light pen IRQ been triggered in this frame already?
     bool lp_triggered;
 
-    /** internal IRQ flags */
+    /// internal IRQ flags
     uint8_t irqFlags;
 
-    /** masks for the IRQ flags */
+    /// masks for the IRQ flags
     uint8_t irqMask;
 
-    /** Light pen coordinates */
+    /// Light pen coordinates
     uint8_t lpx, lpy;
 
-    /** the 8 sprites data*/
+    /// the 8 sprites data
     //@{
     uint8_t &sprite_enable, &sprite_y_expansion;
     uint8_t sprite_exp_flop;
@@ -124,7 +125,7 @@ protected:
     uint8_t sprite_mc[8];
     //@}
 
-    /** memory for chip registers */
+    /// memory for chip registers
     uint8_t regs[0x40];
 
 private:
@@ -132,17 +133,23 @@ private:
     event_clock_t clockNTSC();
     event_clock_t clockOldNTSC();
 
-    /** Signal CPU interrupt if requested by VIC. */
+    /**
+     * Signal CPU interrupt if requested by VIC.
+     */
     void handleIrqState();
 
     EventCallback<MOS656X> badLineStateChangeEvent;
 
-    /** AEC state was updated. */
+    /**
+     * AEC state was updated.
+     */
     void badLineStateChange() { setBA(!isBadLine); }
 
     EventCallback<MOS656X> rasterYIRQEdgeDetectorEvent;
 
-    /** RasterY IRQ edge detector. */
+    /**
+     * RasterY IRQ edge detector.
+     */
     void rasterYIRQEdgeDetector()
     {
         const bool oldRasterYIRQCondition = rasterYIRQCondition;
@@ -152,9 +159,9 @@ private:
     }
     
     /**
-    * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
-    * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
-    */
+     * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
+     * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
+     */
     void activateIRQFlag(int flag)
     {
         irqFlags |= flag;
@@ -162,20 +169,20 @@ private:
     }
 
     /**
-    * Read the value of the raster line IRQ
-    * 
-    * @return raster line when to trigger an IRQ
-    */
+     * Read the value of the raster line IRQ
+     * 
+     * @return raster line when to trigger an IRQ
+     */
     unsigned int readRasterLineIRQ() const
     {
         return (regs[0x12] & 0xff) + ((regs[0x11] & 0x80) << 1);
     }
 
     /**
-    * Read the DEN flag which tells whether the display is enabled
-    *
-    * @return true if DEN is set, otherwise false
-    */
+     * Read the DEN flag which tells whether the display is enabled
+     *
+     * @return true if DEN is set, otherwise false
+     */
     bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
 
     /**
@@ -193,6 +200,9 @@ private:
         event();
     }
 
+    /**
+     * Check for vertical blanking.
+     */
     inline void checkVblank()
     {
         // IRQ occurred (xraster != 0)
@@ -201,7 +211,7 @@ private:
             vblanking = true;
         }
 
-        /* Check DEN bit on first cycle of the line following the first DMA line  */
+        // Check DEN bit on first cycle of the line following the first DMA line
         if (rasterY == FIRST_DMA_LINE
             && !areBadLinesEnabled
             && readDEN())
@@ -209,7 +219,7 @@ private:
             areBadLinesEnabled = true;
         }
 
-        /* Disallow bad lines after the last possible one has passed */
+        // Disallow bad lines after the last possible one has passed
         if (rasterY == LAST_DMA_LINE)
         {
             areBadLinesEnabled = false;
@@ -236,9 +246,9 @@ private:
     }
 
     /**
-    * Update mc values in one pass
-    * after the dma has been processed
-    */
+     * Update mc values in one pass
+     * after the dma has been processed
+     */
     inline void updateMc()
     {
         uint8_t mask = 1;
@@ -263,13 +273,17 @@ private:
         }
     }
 
-    /// Calculate sprite expansion
+    /**
+     * Calculate sprite expansion.
+     */
     inline void checkSpriteExp()
     {
         sprite_exp_flop ^= sprite_dma & sprite_y_expansion;
     }
 
-    /// Calculate sprite DMA
+    /**
+     * Calculate sprite DMA.
+     */
     inline void checkSpriteDma()
     {
         const uint8_t y = rasterY & 0xff;
@@ -293,7 +307,9 @@ private:
         }
     }
 
-    /// Start DMA for sprite n
+    /**
+     * Start DMA for sprite n.
+     */
     template<int n>
     inline void startDma()
     {
@@ -301,7 +317,9 @@ private:
             setBA(false);
     }
 
-    /// End DMA for sprite n
+    /**
+     * End DMA for sprite n.
+     */
     template<int n>
     inline void endDma()
     {
@@ -309,7 +327,9 @@ private:
             setBA(true);
     }
 
-    /// Start bad line
+    /**
+     * Start bad line.
+     */
     inline void startBadline()
     {
         if (isBadLine)
@@ -325,21 +345,21 @@ protected:
     virtual void setBA     (bool state) = 0;
 
     /**
-    * Read VIC register.
-    *
-    * @param addr
-    *            Register to read.
-    */
+     * Read VIC register.
+     *
+     * @param addr
+     *            Register to read.
+     */
     uint8_t read(uint_least8_t addr);
 
     /**
-    * Write to VIC register.
-    *
-    * @param addr
-    *            Register to write to.
-    * @param data
-    *            Data byte to write.
-    */
+     * Write to VIC register.
+     *
+     * @param addr
+     *            Register to write to.
+     * @param data
+     *            Data byte to write.
+     */
     void write(uint_least8_t addr, uint8_t data);
 
 public:
@@ -356,14 +376,18 @@ public:
 
 // Template specializations
 
-/// Start DMA for sprite 0
+/**
+ * Start DMA for sprite 0.
+ */
 template<>
 inline void MOS656X::startDma<0>()
 {
     setBA(!(sprite_dma & 0x01));
 }
 
-/// End DMA for sprite 7
+/**
+ * End DMA for sprite 7.
+ */
 template<>
 inline void MOS656X::endDma<7>()
 {

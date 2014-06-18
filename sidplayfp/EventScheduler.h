@@ -48,28 +48,32 @@ public:
 
 
 /**
-* Fast EventScheduler implementation
-*
-* @author Antti S. Lankila
-*/
+ * Fast EventScheduler implementation
+ *
+ * @author Antti S. Lankila
+ */
 class EventScheduler: public EventContext
 {
 private:
-    /** EventScheduler's current clock */
+    /**
+     * EventScheduler's current clock.
+     */
     event_clock_t  currentTime;
 
-    /** The first event of the chain */
+    /**
+     * The first event of the chain.
+     */
     Event *firstEvent;
 
 private:
     /**
-    * Scan the event queue and schedule event for execution.
-    *
-    * @param event The event to add
-    */
+     * Scan the event queue and schedule event for execution.
+     *
+     * @param event The event to add
+     */
     void schedule(Event &event)
     {
-        /* find the right spot where to tuck this new event */
+        // find the right spot where to tuck this new event
         Event **scan = &firstEvent;
         for (;;)
         {
@@ -105,10 +109,14 @@ public:
           currentTime(0),
           firstEvent(0) {}
 
-    /** Cancel all pending events and reset time. */
+    /**
+     * Cancel all pending events and reset time.
+     */
     void reset();
 
-    /** Fire next event, advance system time to that event. */
+    /**
+     * Fire next event, advance system time to that event.
+     */
     void clock()
     {
         Event &event = *firstEvent;
@@ -117,6 +125,9 @@ public:
         event.event();
     }
 
+    /**
+     * Check if an event is in the queue.
+     */
     bool isPending(Event &event) const;
 
     event_clock_t getTime(event_phase_t phase) const

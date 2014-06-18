@@ -37,11 +37,13 @@ class SystemRAMBank : public Bank
     friend class MMU;
 
 private:
-    /** C64 RAM area */
+    /// C64 RAM area
     uint8_t ram[0x10000];
 
 public:
-    /// Initialize RAM with powerup pattern
+    /**
+     * Initialize RAM with powerup pattern.
+     */
     void reset()
     {
         memset(ram, 0, 0x10000);
