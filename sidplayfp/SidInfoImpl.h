@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2012 Leandro Nini
+ *  Copyright 2011-2014 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -90,26 +90,26 @@ public:
             "\t" PACKAGE_URL "\n");
     }
 
-    const char *name() const { return m_name.c_str(); }
-    const char *version() const { return m_version.c_str(); }
+    const char *getName() const { return m_name.c_str(); }
+    const char *getVersion() const { return m_version.c_str(); }
 
-    unsigned int numberOfCredits() const { return m_credits.size(); }
-    const char *credits(unsigned int i) const { return i<m_credits.size()?m_credits[i].c_str():""; }
+    unsigned int getNumberOfCredits() const { return m_credits.size(); }
+    const char *getCredits(unsigned int i) const { return i<m_credits.size()?m_credits[i].c_str():""; }
 
-    unsigned int maxsids() const { return m_maxsids; }
+    unsigned int getMaxsids() const { return m_maxsids; }
 
-    unsigned int channels() const { return m_channels; }
+    unsigned int getChannels() const { return m_channels; }
 
-    uint_least16_t driverAddr() const { return m_driverAddr; }
-    uint_least16_t driverLength() const { return m_driverLength; }
+    uint_least16_t getDriverAddr() const { return m_driverAddr; }
+    uint_least16_t getDriverLength() const { return m_driverLength; }
 
-    uint_least16_t powerOnDelay() const { return m_powerOnDelay; }
+    uint_least16_t getPowerOnDelay() const { return m_powerOnDelay; }
 
-    const char *speedString() const { return m_speedString.c_str(); }
+    const char *getSpeedString() const { return m_speedString.c_str(); }
 
-    const char *kernalDesc() const { return m_kernalDesc.c_str(); }
-    const char *basicDesc() const { return m_basicDesc.c_str(); }
-    const char *chargenDesc() const { return m_chargenDesc.c_str(); }
+    const char *getKernalDesc() const { return m_kernalDesc.c_str(); }
+    const char *getBasicDesc() const { return m_basicDesc.c_str(); }
+    const char *getChargenDesc() const { return m_chargenDesc.c_str(); }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */

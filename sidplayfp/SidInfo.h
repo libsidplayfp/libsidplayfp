@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2012 Leandro Nini
+ *  Copyright 2011-2014 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -32,41 +32,65 @@ class SidInfo
 {
 public:
     /// Library name
-    virtual const char *name() const =0;
+    const char *name() const { return getName(); }
 
     /// Library version
-    virtual const char *version() const =0;
+    const char *version() const { return getVersion(); }
 
     /// Library credits
     //@{
-    virtual unsigned int numberOfCredits() const =0;
-    virtual const char *credits(unsigned int i) const =0;
+    unsigned int numberOfCredits() const  { return getNumberOfCredits(); }
+    const char *credits(unsigned int i) const { return  getCredits(i); }
     //@}
 
     /// Number of SIDs supported by this library
-    virtual unsigned int maxsids() const =0;
+    unsigned int maxsids() const { return getMaxsids(); }
 
     /// Number of output channels (1-mono, 2-stereo)
-    virtual unsigned int channels() const =0;
+    unsigned int channels() const { return getChannels(); }
 
     /// Address of the driver
-    virtual uint_least16_t driverAddr() const =0;
+    uint_least16_t driverAddr() const { return getDriverAddr(); }
 
     /// Size of the driver in bytes
-    virtual uint_least16_t driverLength() const =0;
+    uint_least16_t driverLength() const { return getDriverLength(); }
 
     /// Power on delay
-    virtual uint_least16_t powerOnDelay() const =0;
+    uint_least16_t powerOnDelay() const { return getPowerOnDelay(); }
 
     /// Describes the speed current song is running at
-    virtual const char *speedString() const =0;
+    const char *speedString() const { return getSpeedString(); }
 
     /// Description of the laoded ROM images
     //@{
-    virtual const char *kernalDesc() const =0;
-    virtual const char *basicDesc() const =0;
-    virtual const char *chargenDesc() const =0;
+    const char *kernalDesc() const { return getKernalDesc(); }
+    const char *basicDesc() const { return getBasicDesc(); }
+    const char *chargenDesc() const { return getChargenDesc(); }
     //@}
+
+private:
+    virtual const char *getName() const =0;
+
+    virtual const char *getVersion() const =0;
+
+    virtual unsigned int getNumberOfCredits() const =0;
+    virtual const char *getCredits(unsigned int i) const =0;
+
+    virtual unsigned int getMaxsids() const =0;
+
+    virtual unsigned int getChannels() const =0;
+
+    virtual uint_least16_t getDriverAddr() const =0;
+
+    virtual uint_least16_t getDriverLength() const =0;
+
+    virtual uint_least16_t getPowerOnDelay() const =0;
+
+    virtual const char *getSpeedString() const =0;
+
+    virtual const char *getKernalDesc() const =0;
+    virtual const char *getBasicDesc() const =0;
+    virtual const char *getChargenDesc() const =0;
 
 protected:
     ~SidInfo() {}

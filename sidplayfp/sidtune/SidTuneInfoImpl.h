@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2012 Leandro Nini
+ *  Copyright 2011-2014 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -103,21 +103,21 @@ public:
         m_relocPages(0),
         m_fixLoad(false) {}
 
-    uint_least16_t loadAddr() const { return m_loadAddr; }
+    uint_least16_t getLoadAddr() const { return m_loadAddr; }
 
-    uint_least16_t initAddr() const { return m_initAddr; }
+    uint_least16_t getInitAddr() const { return m_initAddr; }
 
-    uint_least16_t playAddr() const { return m_playAddr; }
+    uint_least16_t getPlayAddr() const { return m_playAddr; }
 
-    unsigned int songs() const { return m_songs; }
+    unsigned int getSongs() const { return m_songs; }
 
-    unsigned int startSong() const { return m_startSong; }
+    unsigned int getStartSong() const { return m_startSong; }
 
-    unsigned int currentSong() const { return m_currentSong; }
+    unsigned int getCurrentSong() const { return m_currentSong; }
 
     uint_least16_t sidChipBase1() const { return m_sidChipBase1; }
     uint_least16_t sidChipBase2() const { return m_sidChipBase2; }
-    uint_least16_t sidChipBase(unsigned int i) const
+    uint_least16_t getSidChipBase(unsigned int i) const
     {
         switch (i)
         {
@@ -127,17 +127,17 @@ public:
         }
     }
 
-    bool isStereo() const { return (m_sidChipBase1!=0 && m_sidChipBase2!=0); }
+    bool getIsStereo() const { return (m_sidChipBase1!=0 && m_sidChipBase2!=0); }
 
-    int songSpeed() const { return m_songSpeed; }
+    int getSongSpeed() const { return m_songSpeed; }
 
-    uint_least8_t relocStartPage() const { return m_relocStartPage; }
+    uint_least8_t getRelocStartPage() const { return m_relocStartPage; }
 
-    uint_least8_t relocPages() const { return m_relocPages; }
+    uint_least8_t getRelocPages() const { return m_relocPages; }
 
     model_t sidModel1() const { return m_sidModel1; }
     model_t sidModel2() const { return m_sidModel2; }
-    model_t sidModel(unsigned int i) const
+    model_t getSidModel(unsigned int i) const
     {
         switch (i)
         {
@@ -147,29 +147,29 @@ public:
         }
     }
 
-    compatibility_t compatibility() const { return m_compatibility; }
+    compatibility_t getCompatibility() const { return m_compatibility; }
 
-    unsigned int numberOfInfoStrings() const { return m_infoString.size(); }
-    const char* infoString(unsigned int i) const { return i<numberOfInfoStrings()?m_infoString[i].c_str():""; }
+    unsigned int getNumberOfInfoStrings() const { return m_infoString.size(); }
+    const char* getInfoString(unsigned int i) const { return i<getNumberOfInfoStrings()?m_infoString[i].c_str():""; }
 
-    unsigned int numberOfCommentStrings() const { return m_commentString.size(); }
-    const char* commentString(unsigned int i) const { return i<numberOfCommentStrings()?m_commentString[i].c_str():""; }
+    unsigned int getNumberOfCommentStrings() const { return m_commentString.size(); }
+    const char* getCommentString(unsigned int i) const { return i<getNumberOfCommentStrings()?m_commentString[i].c_str():""; }
 
-    uint_least32_t dataFileLen() const { return m_dataFileLen; }
+    uint_least32_t getDataFileLen() const { return m_dataFileLen; }
 
-    uint_least32_t c64dataLen() const { return m_c64dataLen; }
+    uint_least32_t getC64dataLen() const { return m_c64dataLen; }
 
-    clock_t clockSpeed() const { return m_clockSpeed; }
+    clock_t getClockSpeed() const { return m_clockSpeed; }
 
-    const char* formatString() const { return m_formatString; }
+    const char* getFormatString() const { return m_formatString; }
 
-    bool fixLoad() const { return m_fixLoad; }
+    bool getFixLoad() const { return m_fixLoad; }
 
-    const char* path() const { return m_path.c_str(); }
+    const char* getPath() const { return m_path.c_str(); }
 
-    const char* dataFileName() const { return m_dataFileName.c_str(); }
+    const char* getDataFileName() const { return m_dataFileName.c_str(); }
 
-    const char* infoFileName() const { return !m_infoFileName.empty()?m_infoFileName.c_str():0; }
+    const char* getInfoFileName() const { return !m_infoFileName.empty()?m_infoFileName.c_str():0; }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */
