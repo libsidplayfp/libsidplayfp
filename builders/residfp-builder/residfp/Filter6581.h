@@ -25,6 +25,8 @@
 
 #include "siddefs-fp.h"
 
+#include <memory>
+
 #include "Filter.h"
 #include "FilterModelConfig.h"
 
@@ -67,10 +69,10 @@ private:
     unsigned short* currentResonance;
 
     /// VCR + associated capacitor connected to highpass output.
-    Integrator* hpIntegrator;
+    std::auto_ptr<Integrator> hpIntegrator;
 
     /// VCR + associated capacitor connected to lowpass output.
-    Integrator* bpIntegrator;
+    std::auto_ptr<Integrator> bpIntegrator;
 
     const unsigned short* f0_dac;
 
