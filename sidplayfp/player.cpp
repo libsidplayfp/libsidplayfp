@@ -102,7 +102,7 @@ void Player::initialise()
         const uint_least32_t size = (uint_least32_t)tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
         if (size > 0xffff)
         {
-            throw new configError("SIDPLAYER ERROR: Size of music data exceeds C64 memory.");
+            throw configError("SIDPLAYER ERROR: Size of music data exceeds C64 memory.");
         }
     }
 
@@ -117,7 +117,7 @@ void Player::initialise()
     driver.powerOnDelay(powerOnDelay);
     if (!driver.drvReloc(m_c64.getMemInterface()))
     {
-        throw new configError(driver.errorString());
+        throw configError(driver.errorString());
     }
 
     m_info.m_driverAddr = driver.driverAddr();
@@ -126,7 +126,7 @@ void Player::initialise()
 
     if (!m_tune->placeSidTuneInC64mem(m_c64.getMemInterface()))
     {
-        throw new configError(m_tune->statusString());
+        throw configError(m_tune->statusString());
     }
 
     driver.install(m_c64.getMemInterface());
