@@ -24,17 +24,19 @@
 #define GCRYPT_NO_MPI_MACROS
 #define GCRYPT_NO_DEPRECATED
 
+#include "iMd5.h"
+
 #include <gcrypt.h>
 
-class md5_gcrypt
+class md5Gcrypt : public iMd5
 {
 private:
     gcry_md_hd_t hd;
 
-    bool status;
+    bool status; // FIXME remove and throw exception in constructor instead
 
 public:
-    md5_gcrypt() :
+    md5Gcrypt() :
         status(false)
     {
         if (gcry_check_version(GCRYPT_VERSION) == 0)
@@ -54,12 +56,12 @@ public:
         status = true;
     }
 
-    ~md5_gcrypt() { if (status) gcry_md_close(hd); }
+    ~md5Gcrypt() { if (status) gcry_md_close(hd); }
 
     void append(const void* data, int nbytes) { if (status) gcry_md_write(hd, data, nbytes); }
 
     void finish() { if (status) gcry_md_final(hd); }
-    
+
     const unsigned char* getDigest() { return status ? gcry_md_read(hd, 0) : 0; }
 
     void reset() { if (status) gcry_md_reset(hd); }

@@ -24,16 +24,9 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <memory>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
-#ifdef HAVE_LIBGCRYPT
-#  include "utils/md5_gcrypt.h"
-#else
-#  include "utils/MD5/MD5.h"
-#endif
+#include "utils/md5Factory.h"
 
 /**
  * A wrapper around the md5 implementation that provides
@@ -42,34 +35,34 @@
 class sidmd5
 {
 private:
-#ifdef HAVE_LIBGCRYPT
-    md5_gcrypt m_md5;
-#else
-    MD5 m_md5;
-#endif
+    std::auto_ptr<iMd5> m_md5;
 
 public:
+    sidmd5() :
+        m_md5(md5Factory::get())
+    {}
+
     /**
      * Append a string to the message.
      */
-    void append(const void* data, int nbytes) { m_md5.append(data, nbytes); }
+    void append(const void* data, int nbytes) { m_md5->append(data, nbytes); }
 
     /**
      * Finish the message.
      */
-    void finish() { m_md5.finish(); }
+    void finish() { m_md5->finish(); }
 
     /**
      * Initialize the algorithm. Reset starting values.
      */
-    void reset() { m_md5.reset(); }
+    void reset() { m_md5->reset(); }
 
     /**
      * Return pointer to 32-byte hex fingerprint.
-     * */
+     */
     std::string getDigest()
     {
-        const unsigned char* digest = m_md5.getDigest();
+        const unsigned char* digest = m_md5->getDigest();
         if (digest == 0)
             return std::string();
 

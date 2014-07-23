@@ -62,9 +62,10 @@ endif
 
 if LIBGCRYPT
    MD5SRC = \
-utils/md5_gcrypt.h
+utils/md5Gcrypt.h
 else
    MD5SRC = \
+utils/md5Internal.h \
 utils/MD5/MD5.cpp \
 utils/MD5/MD5.h \
 utils/MD5/MD5_Defs.h
@@ -141,8 +142,10 @@ sidplayfp/sidtune/SidTuneInfoImpl.h \
 sidplayfp/sidtune/SidTuneTools.cpp \
 sidplayfp/sidtune/SidTuneTools.h \
 sidplayfp/sidtune/SmartPtr.h \
+utils/iMd5.h \
 utils/iniParser.cpp \
 utils/iniParser.h \
+utils/md5Factory.h \
 utils/SidDatabase.cpp \
 $(MD5SRC)
 
