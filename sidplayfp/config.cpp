@@ -251,7 +251,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
             // Get at least one SID emulation
             if ((i == 0) && !builder->getStatus())
             {
-                throw new configError(builder->error());
+                throw configError(builder->error());
             }
 
             m_c64.setSid(i, s);

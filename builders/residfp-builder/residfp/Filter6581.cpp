@@ -29,8 +29,6 @@ namespace reSIDfp
 
 Filter6581::~Filter6581()
 {
-    delete hpIntegrator;
-    delete bpIntegrator;
     delete [] f0_dac;
 }
 

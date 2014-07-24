@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -126,15 +126,13 @@ public:
 
     /**
      * Construct an 11 bit cutoff frequency DAC output voltage table.
-     * Ownership is transferred to the requester which becomes responsible
-     * of freeing the object when done.
      *
      * @param adjustment
      * @return the DAC table
      */
     unsigned short* getDAC(double adjustment) const;
 
-    Integrator* buildIntegrator();
+    std::auto_ptr<Integrator> buildIntegrator();
 };
 
 } // namespace reSIDfp
