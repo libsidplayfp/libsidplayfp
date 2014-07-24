@@ -40,11 +40,13 @@ class md5Factory
 public:
     static std::auto_ptr<iMd5> get()
     {
+        return std::auto_ptr<iMd5>(
 #ifdef HAVE_LIBGCRYPT
-        return std::auto_ptr<iMd5>(new md5Gcrypt());
+            new md5Gcrypt()
 #else
-        return std::auto_ptr<iMd5>(new md5Internal());
+            new md5Internal()
 #endif
+        );
     }
 };
 

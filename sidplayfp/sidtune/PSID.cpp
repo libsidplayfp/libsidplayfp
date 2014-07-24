@@ -279,57 +279,61 @@ const char *PSID::createMD5(char *md5)
         md5 = m_md5;
     *md5 = '\0';
 
-    // Include C64 data.
-    sidmd5 myMD5;
-    uint8_t tmp[2];
-    myMD5.append(&cache[fileOffset], info->m_c64dataLen);
-
-    // Include INIT and PLAY address.
-    endian_little16(tmp,info->m_initAddr);
-    myMD5.append(tmp,sizeof(tmp));
-    endian_little16(tmp,info->m_playAddr);
-    myMD5.append(tmp,sizeof(tmp));
-
-    // Include number of songs.
-    endian_little16(tmp,info->m_songs);
-    myMD5.append(tmp,sizeof(tmp));
-
-    {   // Include song speed for each song.
-        const unsigned int currentSong = info->m_currentSong;
-        for (unsigned int s = 1; s <= info->m_songs; s++)
-        {
-            selectSong (s);
-            const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
-            myMD5.append (&songSpeed,sizeof(songSpeed));
-        }
-        // Restore old song
-        selectSong (currentSong);
-    }
-
-    // Deal with PSID v2NG clock speed flags: Let only NTSC
-    // clock speed change the MD5 fingerprint. That way the
-    // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
-    // PSID v2NG format is the same.
-    if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
+    try
     {
-        const uint_least8_t ntsc_val = 2;
-        myMD5.append (&ntsc_val,sizeof(ntsc_val));
+        // Include C64 data.
+        sidmd5 myMD5;
+        uint8_t tmp[2];
+        myMD5.append(&cache[fileOffset], info->m_c64dataLen);
+
+        // Include INIT and PLAY address.
+        endian_little16(tmp,info->m_initAddr);
+        myMD5.append(tmp,sizeof(tmp));
+        endian_little16(tmp,info->m_playAddr);
+        myMD5.append(tmp,sizeof(tmp));
+
+        // Include number of songs.
+        endian_little16(tmp,info->m_songs);
+        myMD5.append(tmp,sizeof(tmp));
+
+        {   // Include song speed for each song.
+            const unsigned int currentSong = info->m_currentSong;
+            for (unsigned int s = 1; s <= info->m_songs; s++)
+            {
+                selectSong (s);
+                const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
+                myMD5.append (&songSpeed,sizeof(songSpeed));
+            }
+            // Restore old song
+            selectSong (currentSong);
+        }
+
+        // Deal with PSID v2NG clock speed flags: Let only NTSC
+        // clock speed change the MD5 fingerprint. That way the
+        // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
+        // PSID v2NG format is the same.
+        if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
+        {
+            const uint_least8_t ntsc_val = 2;
+            myMD5.append (&ntsc_val,sizeof(ntsc_val));
+        }
+
+        // NB! If the fingerprint is used as an index into a
+        // song-lengths database or cache, modify above code to
+        // allow for PSID v2NG files which have clock speed set to
+        // SIDTUNE_CLOCK_ANY. If the SID player program fully
+        // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
+        // either create two different fingerprints depending on
+        // the clock speed chosen by the player, or there could be
+        // two different values stored in the database/cache.
+
+        myMD5.finish();
+
+        // Get fingerprint.
+        myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
+        md5[SidTune::MD5_LENGTH] ='\0';
     }
-
-    // NB! If the fingerprint is used as an index into a
-    // song-lengths database or cache, modify above code to
-    // allow for PSID v2NG files which have clock speed set to
-    // SIDTUNE_CLOCK_ANY. If the SID player program fully
-    // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
-    // either create two different fingerprints depending on
-    // the clock speed chosen by the player, or there could be
-    // two different values stored in the database/cache.
-
-    myMD5.finish();
-
-    // Get fingerprint.
-    myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
-    md5[SidTune::MD5_LENGTH] ='\0';
+    catch (md5Error const &e) {}
 
     return md5;
 }

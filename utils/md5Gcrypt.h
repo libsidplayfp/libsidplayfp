@@ -33,38 +33,33 @@ class md5Gcrypt : public iMd5
 private:
     gcry_md_hd_t hd;
 
-    bool status; // FIXME remove and throw exception in constructor instead
-
 public:
-    md5Gcrypt() :
-        status(false)
+    md5Gcrypt()
     {
         if (gcry_check_version(GCRYPT_VERSION) == 0)
-            return;
+            throw md5Error();
 
         /* Disable secure memory. */
         if (gcry_control(GCRYCTL_DISABLE_SECMEM, 0) != 0)
-            return;
+            throw md5Error();
 
         /* Tell Libgcrypt that initialization has completed. */
         if (gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0) != 0)
-            return;
+            throw md5Error();
 
         if (gcry_md_open(&hd, GCRY_MD_MD5, 0) != 0)
-            return;
-
-        status = true;
+            throw md5Error();
     }
 
-    ~md5Gcrypt() { if (status) gcry_md_close(hd); }
+    ~md5Gcrypt() { gcry_md_close(hd); }
 
-    void append(const void* data, int nbytes) { if (status) gcry_md_write(hd, data, nbytes); }
+    void append(const void* data, int nbytes) { gcry_md_write(hd, data, nbytes); }
 
-    void finish() { if (status) gcry_md_final(hd); }
+    void finish() { gcry_md_final(hd); }
 
-    const unsigned char* getDigest() { return status ? gcry_md_read(hd, 0) : 0; }
+    const unsigned char* getDigest() { return gcry_md_read(hd, 0); }
 
-    void reset() { if (status) gcry_md_reset(hd); }
+    void reset() { gcry_md_reset(hd); }
 };
 
 #endif

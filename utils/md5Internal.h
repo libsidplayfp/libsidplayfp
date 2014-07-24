@@ -35,7 +35,7 @@ public:
 
     void finish() { hd.finish(); }
 
-    const unsigned char* getDigest() { hd.getDigest(0); }
+    const unsigned char* getDigest() { hd.getDigest(); }
 
     void reset() { hd.reset(); }
 };

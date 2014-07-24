@@ -30,4 +30,6 @@ public:
     virtual const unsigned char* getDigest() =0;
 };
 
+class md5Error {};
+
 #endif // IMD5_H

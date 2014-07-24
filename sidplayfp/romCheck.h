@@ -61,11 +61,18 @@ private:
      */
     std::string checksum() const
     {
-        sidmd5 md5;
-        md5.append (m_rom, m_size);
-        md5.finish();
+        try
+        {
+            sidmd5 md5;
+            md5.append (m_rom, m_size);
+            md5.finish();
 
-        return md5.getDigest();
+            return md5.getDigest();
+        }
+        catch (md5Error const &e)
+        {
+            return std::string();
+        }
     }
 
 protected:

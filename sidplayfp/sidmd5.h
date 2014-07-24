@@ -38,6 +38,9 @@ private:
     std::auto_ptr<iMd5> m_md5;
 
 public:
+    /**
+     * @throw md5Error
+     */
     sidmd5() :
         m_md5(md5Factory::get())
     {}
