@@ -46,6 +46,7 @@ class EventContext;
 class MOS6510
 {
     friend class MOS6510Debug;
+
 private:
     static const char *credit;
 
@@ -64,7 +65,7 @@ public:
     /// Status register interrupt bit.
     static const int SR_INTERRUPT = 2;
 
-protected:
+private:
     struct ProcessorCycle
     {
         void (MOS6510::*func)();
@@ -74,7 +75,7 @@ protected:
             nosteal(false) {}
     };
 
-protected:
+private:
     /// Our event context copy. */
     EventContext &eventContext;
 
@@ -130,10 +131,7 @@ protected:
     /// Table of CPU opcode implementations
     struct ProcessorCycle  instrTable[0x101 << 3];
 
-protected:
-    MOS6510(EventContext *context);
-    ~MOS6510() {}
-
+private:
     /// Represents an instruction subcycle that writes
     EventCallback<MOS6510> m_nosteal;
 
@@ -273,6 +271,10 @@ protected:
     inline void doSBC();
 
     inline void doJSR();
+
+protected:
+    MOS6510(EventContext *context);
+    ~MOS6510() {}
 
 public:
     /**
