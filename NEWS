@@ -1,3 +1,9 @@
+1.4.2 2014-05-01
+* Fix a typo made during merging in VIC II code
+* Use vector instead of non-standard VLA
+
+
+
 1.4.1 2014-04-19
 * Fix crash when trying to open a directory on *NIX
 * Various VIC II fixes, makes /MUSICIANS/T/The_Power_Terminator/Act_of_Revenge.sid play at the right speed
@@ -182,6 +188,12 @@ curve for 6581 chip filter in a range from 0.0 (light) to 1.0 (dark)
 filter frequency for 8580 chip (default 12500)
 
 SidDatabase.h does not include SidTuneMod.h anymore
+
+
+
+0.1.1 2011-07-10
+* add support for PSID v3 tunes (patch by hbekel)
+* minor fixes
 
 
 
