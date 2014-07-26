@@ -56,30 +56,31 @@ public:
 class ZeroRAMBank : public Bank
 {
 private:
-/*
-    NOTE: fall-off cycles are heavily chip- and temperature dependent. as a
-          consequence it is very hard to find suitable realistic values that
-          always work and we can only tweak them based on testcases. (unless we
-          want to make it configurable or emulate temperature over time =))
-
-          it probably makes sense to tweak the values for a warmed up CPU, since
-          this is likely how (old) programs were coded and tested :)
-*/
-
-/* $01 bits 6 and 7 fall-off cycles (1->0), average is about 350 msec for a 6510
-   and about 1500 msec for a 8500 */
-/* NOTE: the unused bits of the 6510 seem to be much more temperature dependant
-         and the fall-off time decreases quicker and more drastically than on a
-         8500
-*/
+    /**
+     * $01 bits 6 and 7 fall-off cycles (1->0), average is about 350 msec for a 6510
+     * and about 1500 msec for a 8500.
+     *
+     *  NOTE: fall-off cycles are heavily chip- and temperature dependent. as a
+     *        consequence it is very hard to find suitable realistic values that
+     *        always work and we can only tweak them based on testcases. (unless we
+     *        want to make it configurable or emulate temperature over time =))
+     *
+     *      it probably makes sense to tweak the values for a warmed up CPU, since
+     *      this is likely how (old) programs were coded and tested :)
+     *
+     *  NOTE: the unused bits of the 6510 seem to be much more temperature dependant
+     *         and the fall-off time decreases quicker and more drastically than on a
+     *         8500
+     *
+     * cpuports.prg from the lorenz testsuite will fail when the falloff takes more
+     * than 1373 cycles. this suggests that he tested on a well warmed up c64 :)
+     * he explicitly delays by ~1280 cycles and mentions capacitance, so he probably 
+     * even was aware of what happens.
+     */
+    //@{
     static const event_clock_t C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES = 350000;
-    //static const event_clock_t C64_CPU8500_DATA_PORT_FALL_OFF_CYCLES = 1500000;
-/*
-   cpuports.prg from the lorenz testsuite will fail when the falloff takes more
-   than 1373 cycles. this suggests that he tested on a well warmed up c64 :)
-   he explicitly delays by ~1280 cycles and mentions capacitance, so he probably 
-   even was aware of what happens.
-*/
+    static const event_clock_t C64_CPU8500_DATA_PORT_FALL_OFF_CYCLES = 1500000; // Curently unused
+    //@}
 
     static const bool tape_sense = false;
 
@@ -160,21 +161,21 @@ public:
         updateCpuPort();
     }
 
-/*
-    $00/$01 unused bits emulation, as investigated by groepaz:
-
-    - There are 2 different unused bits, 1) the output bits, 2) the input bits
-    - The output bits can be (re)set when the data-direction is set to output
-      for those bits and the output bits will not drop-off to 0.
-    - When the data-direction for the unused bits is set to output then the
-      unused input bits can be (re)set by writing to them, when set to 1 the
-      drop-off timer will start which will cause the unused input bits to drop
-      down to 0 in a certain amount of time.
-    - When an unused input bit already had the drop-off timer running, and is
-      set to 1 again, the drop-off timer will restart.
-    - when a an unused bit changes from output to input, and the current output
-      bit is 1, the drop-off timer will restart again
-*/
+    /*
+    *  $00/$01 unused bits emulation, as investigated by groepaz:
+    *
+    *  - There are 2 different unused bits, 1) the output bits, 2) the input bits
+    *  - The output bits can be (re)set when the data-direction is set to output
+    *    for those bits and the output bits will not drop-off to 0.
+    *  - When the data-direction for the unused bits is set to output then the
+    *    unused input bits can be (re)set by writing to them, when set to 1 the
+    *    drop-off timer will start which will cause the unused input bits to drop
+    *    down to 0 in a certain amount of time.
+    *  - When an unused input bit already had the drop-off timer running, and is
+    *    set to 1 again, the drop-off timer will restart.
+    *  - when a an unused bit changes from output to input, and the current output
+    *    bit is 1, the drop-off timer will restart again
+    */
 
     uint8_t peek(uint_least16_t address)
     {

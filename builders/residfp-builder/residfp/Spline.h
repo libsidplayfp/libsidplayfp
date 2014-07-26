@@ -28,8 +28,9 @@ namespace reSIDfp
 /**
  * Fritsch-Carlson monotone cubic spline interpolation.
  *
- * Based on the implementation from the wikipedia page:
- * https://en.wikipedia.org/wiki/Monotone_cubic_interpolation
+ * Based on the implementation from the [Monotone cubic interpolation] wikipedia page.
+ *
+ * [Monotone cubic interpolation]: https://en.wikipedia.org/wiki/Monotone_cubic_interpolation
  */
 class Spline
 {

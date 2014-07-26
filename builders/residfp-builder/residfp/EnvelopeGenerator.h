@@ -31,7 +31,7 @@ namespace reSIDfp
 /**
  * A 15 bit LFSR is used to implement the envelope rates, in effect dividing
  * the clock to the envelope counter by the currently selected rate period.
- * <p>
+ *
  * In addition, another counter is used to implement the exponential envelope decay,
  * in effect further dividing the clock to the envelope counter.
  * The period of this counter is set to 1, 2, 4, 8, 16, 30 at the envelope counter
@@ -103,13 +103,13 @@ private:
     /**
      * Lookup table to convert from attack, decay, or release value to rate
      * counter period.
-     * <p>
+     *
      * The rate counter is a 15 bit register which is left shifted each cycle.
      * When the counter reaches a specific comparison value,
      * the envelope counter is incremented (attack) or decremented
      * (decay/release) and the rate counter is resetted.
      *
-     * see <a href="http://blog.kevtris.org/?p=13">kevtris.org</a>
+     * see [kevtris.org](http://blog.kevtris.org/?p=13)
      */
     static const int adsrtable[16];
 

@@ -40,9 +40,9 @@ namespace reSIDfp
  * Generates small low quality pseudo random numbers
  * useful to prevent float denormals.
  *
- * Based on the paper "Denormal numbers in floating point signal
- * processing applications" from Laurent de Soras
- * http://ldesoras.free.fr/prod.html#doc_denormal
+ * Based on the paper [Denormal numbers in floating point signal
+ * processing applications](http://ldesoras.free.fr/prod.html#doc_denormal)
+ * from Laurent de Soras.
  */
 class antiDenormalNoise
 {

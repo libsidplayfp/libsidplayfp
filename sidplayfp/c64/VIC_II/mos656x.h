@@ -232,9 +232,11 @@ private:
         }
     }
 
+    /**
+     * Vertical blank (line 0).
+     */
     inline void vblank()
     {
-        // Vertical blank (line 0)
         if (vblanking)
         {
             vblanking = lp_triggered = false;
@@ -245,7 +247,7 @@ private:
 
     /**
      * Update mc values in one pass
-     * after the dma has been processed
+     * after the dma has been processed.
      */
     inline void updateMc()
     {
