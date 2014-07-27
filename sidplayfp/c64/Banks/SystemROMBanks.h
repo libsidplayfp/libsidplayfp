@@ -83,48 +83,8 @@ public:
     {
         romBank<0x2000>::set(kernal);
 
-        if (kernal)
+        if (!kernal)
         {
-            // Apply Kernal hacks
-            // FIXME these are tailored to the original kernals
-            //       may not work as intended on other roms
-            setVal(0xfd69, 0x9f); // Bypass memory check
-            setVal(0xe55f, 0x00); // Bypass screen clear
-            setVal(0xfdc4, 0xea); // Ignore sid volume reset to avoid DC
-            setVal(0xfdc5, 0xea); //   click (potentially incompatibility)!!
-            setVal(0xfdc6, 0xea);
-        }
-        else
-        {
-            // Hardware setup routine
-            setVal(0xff84, LDAa); // Set CIA 1 Timer A
-            setVal(0xff85, 0xa6);
-            setVal(0xff86, 0x02);
-            setVal(0xff87, BEQr);
-            setVal(0xff88, 0x06);
-            setVal(0xff89, LDAb); // PAL
-            setVal(0xff8a, 0x25);
-            setVal(0xff8b, LDXb);
-            setVal(0xff8c, 0x40);
-            setVal(0xff8d, BNEr);
-            setVal(0xff8e, 0x04);
-            setVal(0xff8f, LDAb); // NTSC
-            setVal(0xff90, 0x95);
-            setVal(0xff91, LDXb);
-            setVal(0xff92, 0x42);
-            setVal(0xff93, STAa);
-            setVal(0xff94, 0x04);
-            setVal(0xff95, 0xdc);
-            setVal(0xff96, STXa);
-            setVal(0xff97, 0x05);
-            setVal(0xff98, 0xdc);
-            setVal(0xff99, LDAb); // Set SID to maximum volume
-            setVal(0xff9a, 0x0f);
-            setVal(0xff9b, STAa);
-            setVal(0xff9c, 0x18);
-            setVal(0xff9d, 0xd4);
-            setVal(0xff9e, RTSn);
-
             // IRQ entry point
             setVal(0xffa0, PHAn); // Save regs
             setVal(0xffa1, TXAn);
@@ -134,6 +94,9 @@ public:
             setVal(0xffa5, JMPi); // Jump to IRQ routine
             setVal(0xffa6, 0x14);
             setVal(0xffa7, 0x03);
+
+            // Halt
+            setVal(0xea39, 0x02);
 
             // Hardware vectors
             setVal(0xfffa, 0x39); // NMI vector
