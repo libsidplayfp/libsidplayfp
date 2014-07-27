@@ -96,17 +96,6 @@ public:
         }
         else
         {
-            // Normal IRQ interrupt
-            setVal(0xea31, LDAa); // Ack IRQs
-            setVal(0xea32, 0x0D);
-            setVal(0xea33, 0xDC);
-            setVal(0xea34, PLAn); // Restore regs
-            setVal(0xea35, TAYn);
-            setVal(0xea36, PLAn);
-            setVal(0xea37, TAXn);
-            setVal(0xea38, PLAn);
-            setVal(0xea39, RTIn); // Return
-
             // Hardware setup routine
             setVal(0xff84, LDAa); // Set CIA 1 Timer A
             setVal(0xff85, 0xa6);
