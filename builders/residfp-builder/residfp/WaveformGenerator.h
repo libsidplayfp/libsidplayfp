@@ -90,9 +90,9 @@ private:
     matrix_t* model_wave;
 
     // PWout = (PWn/40.95)%
-    int pw;
+    unsigned int pw;
 
-    int shift_register;
+    unsigned int shift_register;
 
     /// Remaining time to fully reset shift register.
     int shift_register_reset;

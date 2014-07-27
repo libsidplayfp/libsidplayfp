@@ -101,11 +101,11 @@ void EnvelopeGenerator::setChipModel(ChipModel chipModel)
     double dacBits[DAC_BITS];
     Dac::kinkedDac(dacBits, DAC_BITS, chipModel == MOS6581 ? 2.30 : 2.00, chipModel == MOS8580);
 
-    for (int i = 0; i < (1 << DAC_BITS); i++)
+    for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         double dacValue = 0.;
 
-        for (int j = 0; j < DAC_BITS; j++)
+        for (unsigned int j = 0; j < DAC_BITS; j++)
         {
             if ((i & (1 << j)) != 0)
             {
