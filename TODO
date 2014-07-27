@@ -1,4 +1,3 @@
-* fix gcrypt md5 wrapper
 * Use some c++11 features
 * move mixer client side
 * rework sid player routine to not use kernal calls
