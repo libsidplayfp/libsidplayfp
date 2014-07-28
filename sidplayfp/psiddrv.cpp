@@ -45,15 +45,14 @@ uint8_t psiddrv::psid_driver[] = {
 uint8_t psiddrv::iomap(uint_least16_t addr) const
 {
     // Force Real C64 Compatibility
-    switch (m_tuneInfo->compatibility())
+    if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64
+        || m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC
+        || addr == 0)
     {
-    case SidTuneInfo::COMPATIBILITY_R64:
-    case SidTuneInfo::COMPATIBILITY_BASIC:
-        return 0;     // Special case, converted to 0x37 later
+        // Special case, converted to 0x37 by the psid driver
+        return 0;
     }
 
-    if (addr == 0)
-        return 0;     // Special case, converted to 0x37 later
     if (addr >= 0xe000)
         return 0x35;  // I/O only
     if (addr >= 0xd000)
@@ -70,7 +69,6 @@ bool psiddrv::drvReloc(sidmemory *mem)
     uint_least8_t relocStartPage = m_tuneInfo->relocStartPage();
     uint_least8_t relocPages = m_tuneInfo->relocPages();
 
-    // Will get done later if can't now
     mem->writeMemByte(0x02a6, (m_tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
 
     if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
