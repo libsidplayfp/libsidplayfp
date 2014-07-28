@@ -1,10 +1,11 @@
+2.0.0:
+
 * Use some c++11 features
 * move mixer client side
-* rework sid player routine to not use kernal calls
+
+
+someday:
 
 * add SIDid support
 * implement support for mus data embedded in psid files
 * test hardsid support
-* improve documentation
-
-* add an optional VIC II cycle exact emulation (?)
