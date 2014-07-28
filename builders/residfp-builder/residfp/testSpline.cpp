@@ -27,7 +27,7 @@
 using namespace reSIDfp;
 
 const unsigned int OPAMP_SIZE = 33;
-    
+
 const Spline::Point opamp_voltage[OPAMP_SIZE] =
 {
   {  0.81, 10.31 },  // Approximate start of actual range

@@ -26,7 +26,7 @@
 
 /**
  * IO1/IO2
- * memory mapped registers or machine code routines of optional external devices 
+ * memory mapped registers or machine code routines of optional external devices
  * I/O Area #1 located at $DE00-$DEFF
  * I/O Area #2 located at $DF00-$DFFF
  */

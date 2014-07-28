@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <cstdio>
 
-#include "siddefs.h" 
+#include "siddefs.h"
 #include "SidConfig.h"
 #include "SidTuneInfo.h"
 #include "SidInfoImpl.h"

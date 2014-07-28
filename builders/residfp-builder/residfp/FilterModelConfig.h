@@ -75,7 +75,7 @@ private:
     // Derived stuff
     const double vmin, vmax;
     const double denorm, norm;
-    
+
     /// Fixed point scaling for 16 bit op-amp output.
     const double N16;
 

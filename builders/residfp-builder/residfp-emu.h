@@ -57,7 +57,7 @@ public:
 
     // Standard component functions
     const char *credits() const { return getCredits(); }
-    
+
     void reset() { sidemu::reset (); }
     void reset(uint8_t volume);
 

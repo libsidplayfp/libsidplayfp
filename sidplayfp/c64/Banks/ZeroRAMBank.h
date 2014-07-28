@@ -74,7 +74,7 @@ private:
      *
      * cpuports.prg from the lorenz testsuite will fail when the falloff takes more
      * than 1373 cycles. this suggests that he tested on a well warmed up c64 :)
-     * he explicitly delays by ~1280 cycles and mentions capacitance, so he probably 
+     * he explicitly delays by ~1280 cycles and mentions capacitance, so he probably
      * even was aware of what happens.
      */
     //@{

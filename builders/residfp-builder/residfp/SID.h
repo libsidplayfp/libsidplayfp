@@ -283,7 +283,7 @@ public:
 namespace reSIDfp
 {
 
-RESID_INLINE  
+RESID_INLINE
 void SID::ageBusValue(int n)
 {
     if (likely(busValueTtl != 0))

@@ -152,7 +152,7 @@ bool ReSID::lock(EventContext *env)
     m_locked  = true;
     m_context = env;
 
-    return true; 
+    return true;
 }
 
 // Unlock sid
@@ -184,7 +184,7 @@ void ReSID::model(SidConfig::sid_model_t model)
             m_error = "Invalid chip model.";
             return;
     }
-    
+
     m_sid.set_chip_model (chipModel);
     m_status = true;
 }

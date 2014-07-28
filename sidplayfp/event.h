@@ -99,7 +99,7 @@ protected:
  * The phi1 clocks are used by VIC and CIA chips, phi2 clocks by CPU.
  *
  * Scheduling an event for a phi1 clock when system is in phi2 causes the
- * event to be moved to the next phi1 cycle. Correspondingly, requesting 
+ * event to be moved to the next phi1 cycle. Correspondingly, requesting
  * a phi1 time when system is in phi2 returns the value of the next phi1.
  *
  * @author Antti S. Lankila
@@ -136,7 +136,7 @@ public:
 
     /**
      * Is the event pending in this scheduler?
-     * 
+     *
      * @param event the event
      * @return true when pending
      */

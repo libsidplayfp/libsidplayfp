@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include "siddefs.h" 
+#include "siddefs.h"
 
 /**
  * This interface is used to get values from SidTune objects.
