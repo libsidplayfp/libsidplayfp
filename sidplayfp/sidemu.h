@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -26,6 +26,7 @@
 #include "component.h"
 #include "SidConfig.h"
 #include "siddefs.h"
+#include "event.h"
 #include "c64/c64sid.h"
 
 class sidbuilder;
@@ -48,12 +49,27 @@ private:
     sidbuilder *m_builder;
 
 protected:
+    EventContext *m_context;
+
+    event_clock_t m_accessClk;
+
     short *m_buffer;
     int m_bufferpos;
 
+    bool m_status;
+    bool m_locked;
+
+    std::string   m_error;
+
 public:
     sidemu(sidbuilder *builder) :
-        m_builder (builder), m_buffer(0) {}
+        m_builder (builder),
+        m_context(0),
+        m_buffer(0),
+        m_bufferpos(0),
+        m_status(true),
+        m_locked(false),
+        m_error("N/A") {}
     virtual ~sidemu() {}
 
     // Standard component functions
@@ -65,6 +81,8 @@ public:
 
     virtual bool lock(EventContext *env) = 0;
     virtual void unlock() = 0;
+
+    const char *error() const { return m_error.c_str(); }
 
     // Standard SID functions
     virtual void voice(unsigned int num, bool mute) = 0;

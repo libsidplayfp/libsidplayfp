@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001-2002 by Jarno Paananen
  * Copyright 2000-2002 Simon White
@@ -112,17 +112,9 @@ private:
 
     static std::string m_credit;
 
-
-    // Generic variables
-    EventContext *m_eventContext;
-    event_clock_t m_accessClk;
-    std::string   m_errorBuffer;
-
     // Must stay in this order
     bool           muted[HARDSID_VOICES];
     unsigned int   m_instance;
-    bool           m_status;
-    bool           m_locked;
 
 public:
     static const char* getCredits();
@@ -141,7 +133,6 @@ public:
     void write(uint_least8_t addr, uint8_t data);
 
     void clock();
-    const char *error() const { return m_errorBuffer.c_str(); }
     bool getStatus() const { return m_status; }
 
     // Standard SID functions

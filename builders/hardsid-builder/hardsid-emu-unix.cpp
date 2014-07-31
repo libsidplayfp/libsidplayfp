@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001-2001 by Jarno Paananen
  *
@@ -70,10 +70,7 @@ HardSID::HardSID (sidbuilder *builder) :
     sidemu(builder),
     Event("HardSID Delay"),
     m_handle(0),
-    m_eventContext(0),
-    m_instance(sid++),
-    m_status(false),
-    m_locked(false)
+    m_instance(sid++)
 {
     unsigned int num = 16;
     for ( unsigned int i = 0; i < 16; i++ )
@@ -103,13 +100,13 @@ HardSID::HardSID (sidbuilder *builder) :
                 m_handle = open ("/dev/sid", O_RDWR);
                 if (m_handle < 0)
                 {
-                    m_errorBuffer.assign("HARDSID ERROR: Cannot access \"/dev/sid\" or \"").append(device).append("\"");
+                    m_error.assign("HARDSID ERROR: Cannot access \"/dev/sid\" or \"").append(device).append("\"");
                     return;
                 }
             }
             else
             {
-                m_errorBuffer.assign("HARDSID ERROR: Cannot access \"").append(device).append("\"");
+                m_error.assign("HARDSID ERROR: Cannot access \"").append(device).append("\"");
                 return;
             }
         }
@@ -133,8 +130,8 @@ void HardSID::reset(uint8_t volume)
         muted[i] = false;
     ioctl(m_handle, HSID_IOCTL_RESET, volume);
     m_accessClk = 0;
-    if (m_eventContext != 0)
-        m_eventContext->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+    if (m_context != 0)
+        m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 
 void HardSID::clock()
@@ -142,7 +139,7 @@ void HardSID::clock()
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_eventContext->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while (cycles > 0xffff)
@@ -159,7 +156,7 @@ uint8_t HardSID::read(uint_least8_t addr)
     if (!m_handle)
         return 0;
 
-    event_clock_t cycles = m_eventContext->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while ( cycles > 0xffff )
@@ -180,7 +177,7 @@ void HardSID::write(uint_least8_t addr, uint8_t data)
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_context->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while ( cycles > 0xffff )
@@ -211,17 +208,17 @@ void HardSID::voice(unsigned int num, bool mute)
 
 void HardSID::event()
 {
-    event_clock_t cycles = m_eventContext->getTime (m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_context->getTime (m_accessClk, EVENT_CLOCK_PHI1);
     if (cycles < HARDSID_DELAY_CYCLES)
     {
-        m_eventContext->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
+        m_context->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
                   EVENT_CLOCK_PHI1);
     }
     else
     {
         m_accessClk += cycles;
         ioctl(m_handle, HSID_IOCTL_DELAY, (uint) cycles);
-        m_eventContext->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+        m_context->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
 }
 
@@ -241,15 +238,15 @@ bool HardSID::lock(EventContext* env)
         return false;
 
     m_locked = true;
-    m_eventContext = env;
-    m_eventContext->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+    m_context = env;
+    m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 
     return true;
 }
 
 void HardSID::unlock()
 {
-    m_eventContext->cancel(*this);
+    m_context->cancel(*this);
     m_locked = false;
-    m_eventContext = 0;
+    m_context = 0;
 }
