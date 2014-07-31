@@ -25,8 +25,6 @@
 
 #include <stdint.h>
 
-#include <string>
-
 #include "residfp/SID.h"
 #include "sidplayfp/SidConfig.h"
 #include "sidplayfp/sidemu.h"
@@ -40,8 +38,6 @@ class ReSIDfp: public sidemu
 {
 private:
     RESID_NAMESPACE::SID &m_sid;
-
-    static std::string m_credit;
 
 public:
     static const char* getCredits();
@@ -73,10 +69,6 @@ public:
     void filter6581Curve(double filterCurve);
     void filter8580Curve(double filterCurve);
     void model(SidConfig::sid_model_t model);
-
-    // Must lock the SID before using the standard functions.
-    bool lock(EventContext *env);
-    void unlock();
 };
 
 #endif // RESIDFP_EMU_H

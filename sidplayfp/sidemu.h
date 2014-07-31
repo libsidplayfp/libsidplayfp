@@ -23,6 +23,8 @@
 #ifndef SIDEMU_H
 #define SIDEMU_H
 
+#include <string>
+
 #include "component.h"
 #include "SidConfig.h"
 #include "siddefs.h"
@@ -49,6 +51,9 @@ private:
     sidbuilder *m_builder;
 
 protected:
+    static std::string m_credit;
+
+protected:
     EventContext *m_context;
 
     event_clock_t m_accessClk;
@@ -59,7 +64,7 @@ protected:
     bool m_status;
     bool m_locked;
 
-    std::string   m_error;
+    std::string m_error;
 
 public:
     sidemu(sidbuilder *builder) :
@@ -79,8 +84,11 @@ public:
 
     virtual void clock() = 0;
 
-    virtual bool lock(EventContext *env) = 0;
-    virtual void unlock() = 0;
+    /// Set execution environment and lock sid to it
+    virtual bool lock(EventContext *env);
+
+    /// Unlock sid
+    virtual void unlock();
 
     const char *error() const { return m_error.c_str(); }
 

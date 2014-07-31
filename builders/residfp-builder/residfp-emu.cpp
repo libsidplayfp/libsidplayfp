@@ -23,6 +23,7 @@
 #include "residfp-emu.h"
 
 #include <sstream>
+#include <string>
 #include <algorithm>
 
 #include "residfp/Filter6581.h"
@@ -33,8 +34,6 @@
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-
-std::string ReSIDfp::m_credit;
 
 const char* ReSIDfp::getCredits()
 {
@@ -142,25 +141,6 @@ void ReSIDfp::sampling(float systemclock, float freq,
     }
 
     m_status = true;
-}
-
-// Set execution environment and lock sid to it
-bool ReSIDfp::lock(EventContext *env)
-{
-    if (m_locked)
-        return false;
-
-    m_locked  = true;
-    m_context = env;
-
-    return true;
-}
-
-// Unlock sid
-void ReSIDfp::unlock()
-{
-    m_locked  = false;
-    m_context = 0;
 }
 
 // Set the emulated SID model

@@ -25,8 +25,8 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <sys/ioctl.h>
+#include <cstdio>
 #include <sstream>
 #include <string>
 
@@ -49,8 +49,6 @@
 bool HardSID::m_sidFree[16] = {0};
 const unsigned int HardSID::voices = HARDSID_VOICES;
 unsigned int HardSID::sid = 0;
-
-std::string HardSID::m_credit;
 
 const char* HardSID::getCredits()
 {
@@ -234,11 +232,7 @@ void HardSID::flush()
 
 bool HardSID::lock(EventContext* env)
 {
-    if (m_locked)
-        return false;
-
-    m_locked = true;
-    m_context = env;
+    sidemu::lock(env);
     m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 
     return true;
@@ -247,6 +241,5 @@ bool HardSID::lock(EventContext* env)
 void HardSID::unlock()
 {
     m_context->cancel(*this);
-    m_locked = false;
-    m_context = 0;
+    sidemu::unlock();
 }

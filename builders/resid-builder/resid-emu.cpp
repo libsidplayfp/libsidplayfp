@@ -22,14 +22,13 @@
 
 #include "resid-emu.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <cstring>
 #include <sstream>
+#include <string>
 
 #include "resid/siddefs.h"
 #include "resid/spline.h"
-
-std::string ReSID::m_credit;
 
 const char* ReSID::getCredits()
 {
@@ -135,25 +134,6 @@ void ReSID::voice (unsigned int num, bool mute)
         m_voiceMask |= 1<<num;
 
     m_sid.set_voice_mask(m_voiceMask);
-}
-
-// Set execution environment and lock sid to it
-bool ReSID::lock(EventContext *env)
-{
-    if (m_locked)
-        return false;
-
-    m_locked  = true;
-    m_context = env;
-
-    return true;
-}
-
-// Unlock sid
-void ReSID::unlock()
-{
-    m_locked  = false;
-    m_context = 0;
 }
 
 // Set the emulated SID model

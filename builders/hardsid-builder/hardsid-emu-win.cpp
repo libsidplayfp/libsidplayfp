@@ -22,8 +22,9 @@
 
 #include "hardsid-emu.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <sstream>
+#include <string>
 
 #include "hardsid.h"
 
@@ -40,8 +41,6 @@ Sidplay2 patch
 extern HsidDLL2 hsid2;
 const  unsigned int HardSID::voices = HARDSID_VOICES;
 unsigned int HardSID::sid = 0;
-
-std::string HardSID::m_credit;
 
 const char* HardSID::getCredits()
 {
@@ -139,17 +138,13 @@ void HardSID::voice(unsigned int num, bool mute)
 // Set execution environment and lock sid to it
 bool HardSID::lock(EventContext *env)
 {
-    if (m_locked)
-        return false;
-
     if (hsid2.Version >= HSID_VERSION_204)
     {
         if (hsid2.Lock(m_instance) == FALSE)
             return false;
     }
 
-    m_locked = true;
-    m_context = env;
+    sidemu::lock(env);
     m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 
     return true;
@@ -161,9 +156,8 @@ void HardSID::unlock()
     if (hsid2.Version >= HSID_VERSION_204)
         hsid2.Unlock(m_instance);
 
-    m_locked = false;
     m_context->cancel(*this);
-    m_context = 0;
+    sidemu::unlock();
 }
 
 void HardSID::event ()

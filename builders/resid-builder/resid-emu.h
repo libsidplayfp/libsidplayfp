@@ -24,7 +24,6 @@
 #define RESID_EMU_H
 
 #include <stdint.h>
-#include <string>
 
 #include "sidplayfp/SidConfig.h"
 #include "sidplayfp/sidemu.h"
@@ -49,8 +48,6 @@ class ReSID: public sidemu
 private:
     RESID_NS::SID &m_sid;
     uint8_t       m_voiceMask;
-
-    static std::string m_credit;
 
 public:
     static const char* getCredits();
@@ -81,10 +78,6 @@ public:
 
     void bias(double dac_bias);
     void model(SidConfig::sid_model_t model);
-
-    // Must lock the SID before using the standard functions.
-    bool lock(EventContext *env);
-    void unlock();
 };
 
 #endif // RESID_EMU_H

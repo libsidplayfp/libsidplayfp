@@ -24,8 +24,6 @@
 #ifndef HARDSID_EMU_H
 #define HARDSID_EMU_H
 
-#include <string>
-
 #include "sidplayfp/event.h"
 #include "sidplayfp/sidemu.h"
 #include "sidplayfp/EventScheduler.h"
@@ -109,8 +107,6 @@ private:
 
     static const unsigned int voices;
     static       unsigned int sid;
-
-    static std::string m_credit;
 
     // Must stay in this order
     bool           muted[HARDSID_VOICES];
