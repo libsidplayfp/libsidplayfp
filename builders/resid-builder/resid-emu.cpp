@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -22,14 +22,13 @@
 
 #include "resid-emu.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <cstring>
 #include <sstream>
+#include <string>
 
 #include "resid/siddefs.h"
 #include "resid/spline.h"
-
-std::string ReSID::m_credit;
 
 const char* ReSID::getCredits()
 {
@@ -49,16 +48,10 @@ const char* ReSID::getCredits()
 
 ReSID::ReSID (sidbuilder *builder) :
     sidemu(builder),
-    m_context(0),
     m_sid(*(new RESID_NS::SID)),
-    m_status(true),
-    m_locked(false),
     m_voiceMask(0x07)
 {
-    m_error = "N/A";
-
     m_buffer = new short[OUTPUTBUFFERSIZE];
-    m_bufferpos = 0;
     reset (0);
 }
 
@@ -141,25 +134,6 @@ void ReSID::voice (unsigned int num, bool mute)
         m_voiceMask |= 1<<num;
 
     m_sid.set_voice_mask(m_voiceMask);
-}
-
-// Set execution environment and lock sid to it
-bool ReSID::lock(EventContext *env)
-{
-    if (m_locked)
-        return false;
-
-    m_locked  = true;
-    m_context = env;
-
-    return true; 
-}
-
-// Unlock sid
-void ReSID::unlock()
-{
-    m_locked  = false;
-    m_context = 0;
 }
 
 // Set the emulated SID model

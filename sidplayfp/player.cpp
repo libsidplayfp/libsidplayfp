@@ -171,28 +171,31 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     // Start the player loop
     m_isPlaying = true;
 
-    if (count && m_mixer.getSid(0))
+    if (m_mixer.getSid(0))
     {
-        while (m_isPlaying && m_mixer.notFinished())
+        if (count)
         {
-            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
-                m_c64.getEventScheduler()->clock();
+            while (m_isPlaying && m_mixer.notFinished())
+            {
+                for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                    m_c64.getEventScheduler()->clock();
 
-            m_mixer.clockChips();
-            m_mixer.doMix();
+                m_mixer.clockChips();
+                m_mixer.doMix();
+            }
+            count = m_mixer.samplesGenerated();
         }
-        count = m_mixer.samplesGenerated();
-    }
-    else if (m_mixer.getSid(0))
-    {
-        int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
-        while (m_isPlaying && --size)
+        else
         {
-            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
-                m_c64.getEventScheduler()->clock();
+            int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
+            while (m_isPlaying && --size)
+            {
+                for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                    m_c64.getEventScheduler()->clock();
 
-            m_mixer.clockChips();
-            m_mixer.resetBufs();
+                m_mixer.clockChips();
+                m_mixer.resetBufs();
+            }
         }
     }
     else
@@ -202,8 +205,6 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         {
             for (int i=0; i<OUTPUTBUFFERSIZE; i++)
                 m_c64.getEventScheduler()->clock();
-
-            m_mixer.resetBufs();
         }
     }
 

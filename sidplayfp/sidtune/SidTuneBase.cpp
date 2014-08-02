@@ -543,9 +543,8 @@ void SidTuneBase::resolveAddrs(const uint_least8_t *c64data)
 
 bool SidTuneBase::checkCompatibility()
 {
-    switch (info->m_compatibility)
+    if  (info->m_compatibility == SidTuneInfo::COMPATIBILITY_R64)
     {
-    case SidTuneInfo::COMPATIBILITY_R64:
         // Check valid init address
         switch (info->m_initAddr >> 12)
         {
@@ -562,19 +561,12 @@ bool SidTuneBase::checkCompatibility()
                 return false;
             }
         }
-        // deliberate run on
 
-    case SidTuneInfo::COMPATIBILITY_BASIC:
-        /*
-         * FIXME: Hellbound from Shining 8 (http://csdb.dk/release/?id=3574)
-         * loads at $608, should this check be performed only for PSID files?
-         */
         // Check tune is loadable on a real C64
         if (info->m_loadAddr < SIDTUNE_R64_MIN_LOAD_ADDR)
         {
             return false;
         }
-        break;
     }
 
     return true;

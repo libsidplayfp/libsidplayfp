@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -23,6 +23,7 @@
 #include "residfp-emu.h"
 
 #include <sstream>
+#include <string>
 #include <algorithm>
 
 #include "residfp/Filter6581.h"
@@ -33,8 +34,6 @@
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
-
-std::string ReSIDfp::m_credit;
 
 const char* ReSIDfp::getCredits()
 {
@@ -55,15 +54,9 @@ const char* ReSIDfp::getCredits()
 
 ReSIDfp::ReSIDfp(sidbuilder *builder) :
     sidemu(builder),
-    m_context(0),
-    m_sid(*(new RESID_NAMESPACE::SID)),
-    m_status(true),
-    m_locked(false)
+    m_sid(*(new RESID_NAMESPACE::SID))
 {
-    m_error = "N/A";
-
     m_buffer = new short[OUTPUTBUFFERSIZE];
-    m_bufferpos = 0;
     reset (0);
 }
 
@@ -148,25 +141,6 @@ void ReSIDfp::sampling(float systemclock, float freq,
     }
 
     m_status = true;
-}
-
-// Set execution environment and lock sid to it
-bool ReSIDfp::lock(EventContext *env)
-{
-    if (m_locked)
-        return false;
-
-    m_locked  = true;
-    m_context = env;
-
-    return true;
-}
-
-// Unlock sid
-void ReSIDfp::unlock()
-{
-    m_locked  = false;
-    m_context = 0;
 }
 
 // Set the emulated SID model
