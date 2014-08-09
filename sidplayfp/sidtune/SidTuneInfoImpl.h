@@ -115,8 +115,6 @@ public:
 
     unsigned int getCurrentSong() const { return m_currentSong; }
 
-    uint_least16_t sidChipBase1() const { return m_sidChipBase1; }
-    uint_least16_t sidChipBase2() const { return m_sidChipBase2; }
     uint_least16_t getSidChipBase(unsigned int i) const
     {
         switch (i)
@@ -135,8 +133,6 @@ public:
 
     uint_least8_t getRelocPages() const { return m_relocPages; }
 
-    model_t sidModel1() const { return m_sidModel1; }
-    model_t sidModel2() const { return m_sidModel2; }
     model_t getSidModel(unsigned int i) const
     {
         switch (i)
