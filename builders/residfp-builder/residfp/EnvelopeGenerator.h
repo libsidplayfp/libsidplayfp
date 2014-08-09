@@ -29,13 +29,15 @@ namespace reSIDfp
 {
 
 /**
- * A 15 bit LFSR is used to implement the envelope rates, in effect dividing
+ * A 15 bit [LFSR] is used to implement the envelope rates, in effect dividing
  * the clock to the envelope counter by the currently selected rate period.
  *
  * In addition, another counter is used to implement the exponential envelope decay,
  * in effect further dividing the clock to the envelope counter.
  * The period of this counter is set to 1, 2, 4, 8, 16, 30 at the envelope counter
  * values 255, 93, 54, 26, 14, 6, respectively.
+ * 
+ * [LFSR]: https://en.wikipedia.org/wiki/Linear_feedback_shift_register
  */
 class EnvelopeGenerator
 {

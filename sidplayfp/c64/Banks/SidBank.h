@@ -29,7 +29,8 @@
 
 /**
  * SID
- * located at $D400-$D7FF, mirrored each 32 bytes
+ *
+ * Located at $D400-$D7FF, mirrored each 32 bytes
  */
 class SidBank : public Bank
 {

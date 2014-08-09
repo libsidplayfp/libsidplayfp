@@ -33,8 +33,10 @@
 
 /**
  * CIA 1
+ *
  * Generates IRQs
- * located at $DC00-$DCFF
+ *
+ * Located at $DC00-$DCFF
  */
 class c64cia1: public MOS6526, public Bank
 {
@@ -93,8 +95,10 @@ public:
 
 /**
  * CIA 2
+ *
  * Generates NMIs
- * located at $DD00-$DDFF
+ *
+ * Located at $DD00-$DDFF
  */
 class c64cia2: public MOS6526, public Bank
 {
