@@ -350,3 +350,14 @@ endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libsidplayfp.pc libstilview.pc
+
+#=========================================================
+# Recreate psiddrv.bin, needs xa65
+
+CLEANFILES = sidplayfp/psiddrv.o65 sidplayfp/psiddrv.bin
+
+sidplayfp/psiddrv.o65:
+	xa -R -G $(srcdir)/sidplayfp/psiddrv.a65 -o $@
+
+sidplayfp/psiddrv.bin: sidplayfp/psiddrv.o65
+	od -v -An -w8 -tx1 $< | sed -re 's/[[:alnum:]]+/0x&,/g' > sidplayfp/psiddrv.bin
