@@ -1,36 +1,36 @@
-/*
- * This file is part of libsidplayfp, a SID player engine.
- *
- * Copyright 2014 Leandro Nini <drfiemost@users.sourceforge.net>
- * Copyright 2001-2004 Simon White
- * Copyright 2000 Dag Lem
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+; 
+; This file is part of libsidplayfp, a SID player engine.
+; 
+; Copyright 2014 Leandro Nini <drfiemost@users.sourceforge.net>
+; Copyright 2001-2004 Simon White
+; Copyright 2000 Dag Lem
+; 
+; This program is free software; you can redistribute it and/or modify
+; it under the terms of the GNU General Public License as published by
+; the Free Software Foundation; either version 2 of the License, or
+; (at your option) any later version.
+; 
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+; 
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+; 
 
 
-/***************************************************************************
- * psiddrv.a65  -  C64 Sid Player
- * 
- * written by Dag Lem
- * modified by Simon White for use in the sidplayer SIDPlay2.
- * 
- * Build with:
- * xa -R -G psiddrv.a65 -o psiddrv.o65
- * od -v -An -w8 -tx1 psiddrv.o65 | sed -re 's/[[:alnum:]]+/0x&,/g' > psiddrv.bin
- ***************************************************************************/
+;**************************************************************************
+; psiddrv.a65  -  C64 Sid Player
+; 
+; written by Dag Lem
+; modified by Simon White for use in the sidplayer SIDPlay2.
+; 
+; Build with:
+; xa -R -G psiddrv.a65 -o psiddrv.o65
+; od -v -An -w8 -tx1 psiddrv.o65 | sed -re 's/[[:alnum:]]+/0x&,/g' > psiddrv.bin
+;**************************************************************************/
 
             ; entry address
 coldvec     .word cold
