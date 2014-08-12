@@ -36,10 +36,9 @@
 coldvec     .word cold
 
             ; initial user interrupt vectors
-irqusr      .word irqret
-            ; These should never run
-brkusr      .word exception
-nmiusr      .word exception
+irqusr      .word irqjob
+brkusr      .word irqret
+nmiusr      .word nmijob
 
             ; redirect basic restart vector
             ; to finish the init sequence
@@ -61,7 +60,8 @@ flags       .byte 0
 play        jmp (playvec)
 init        jmp (initvec)
 
-cold        ; cold start
+            ; cold start
+cold        sei
 
             ; Turn interrupts off and
             ; clear any pending irqs
@@ -184,15 +184,15 @@ irqjob      lda $01
             pla
             sta $01
             dec $d019
-irqret      lda $dc0d
-            pla
+            lda $dc0d
+irqret      pla
             tay
             pla
             tax
             pla
             rti
 
-            ; HLT
-exception   .byte $02
+nmijob      bit $dd0d
+            rti
 
 .end
