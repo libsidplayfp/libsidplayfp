@@ -102,12 +102,12 @@ unsigned int SidTune::selectSong(unsigned int songNum)
 
 const SidTuneInfo* SidTune::getInfo() const
 {
-    return tune.get() ? tune->getInfo() : 0;
+    return tune.get() ? tune->getInfo() : nullptr;
 }
 
 const SidTuneInfo* SidTune::getInfo(unsigned int songNum)
 {
-    return tune.get() ? tune->getInfo(songNum) : 0;
+    return tune.get() ? tune->getInfo(songNum) : nullptr;
 }
 
 bool SidTune::getStatus() const { return m_status; }
