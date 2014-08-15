@@ -49,7 +49,7 @@ Player::Player () :
     m_c64.setTestEnv(this);
 #endif
 
-    m_c64.setRoms(0, 0, 0);
+    m_c64.setRoms(nullptr, nullptr, nullptr);
     config(m_cfg);
 
     // Get component credits
@@ -60,19 +60,19 @@ Player::Player () :
 
 void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {
-    if (kernal)
+    if (kernal != nullptr)
     {
         kernalCheck k(kernal);
         m_info.m_kernalDesc = k.info();
     }
 
-    if (basic)
+    if (basic != nullptr)
     {
         basicCheck b(basic);
         m_info.m_basicDesc = b.info();
     }
 
-    if (character)
+    if (character != nullptr)
     {
         chargenCheck c(character);
         m_info.m_chargenDesc = c.info();
