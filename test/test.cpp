@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,8 +32,8 @@
 #endif
 
 /*
-* Adjust these paths to point to existing ROM dumps
-*/
+ * Adjust these paths to point to existing ROM dumps
+ */
 #define KERNAL_PATH "/usr/lib/vice/C64/kernal"
 #define BASIC_PATH "/usr/lib/vice/C64/basic"
 #define CHARGEN_PATH "/usr/lib/vice/C64/chargen"

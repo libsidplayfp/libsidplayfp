@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <stdlib.h>
-#include <string.h>
 #include <fcntl.h>
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
+
+#include <stdlib.h>
+#include <cstring>
+
 #include <fstream>
 #include <memory>
 #include <vector>
@@ -33,10 +36,14 @@
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/builders/residfp.h>
 
+/**
+ * Compile with
+ *     g++ `pkg-config --cflags libsidplayfp` `pkg-config --libs libsidplayfp` demo.cpp
+ */
 
 /*
-* Adjust these paths to point to existing ROM dumps
-*/
+ * Adjust these paths to point to existing ROM dumps if needed.
+ */
 #define KERNAL_PATH  ""
 #define BASIC_PATH   ""
 #define CHARGEN_PATH ""
@@ -44,9 +51,9 @@
 #define SAMPLERATE 48000
 
 /*
-* Load ROM dump from file.
-* Allocate the buffer if file exists, otherwise return 0.
-*/
+ * Load ROM dump from file.
+ * Allocate the buffer if file exists, otherwise return 0.
+ */
 char* loadRom(const char* path, size_t romSize)
 {
     char* buffer = 0;
@@ -61,10 +68,10 @@ char* loadRom(const char* path, size_t romSize)
 }
 
 /*
-* Sample application that shows how to use libsidplayfp
-* to play a SID tune from a file
-* It uses OSS for audio output
-*/
+ * Sample application that shows how to use libsidplayfp
+ * to play a SID tune from a file.
+ * It uses OSS for audio output.
+ */
 int main(int argc, char* argv[])
 {
     sidplayfp m_engine;
