@@ -297,7 +297,7 @@ public:
     virtual void loadFile (const char *file) =0;
 #endif
 
-    virtual void reset();
+    void reset();
 
     const char *credits() const { return credit; }
 
