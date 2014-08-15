@@ -17,6 +17,7 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 -I $(top_builddir)/builders/resid-builder \
 -I $(top_builddir)/builders/resid-builder/resid \
 -I $(top_builddir)/sidplayfp \
+-I $(top_srcdir)/sidplayfp \
 @debug_flags@
 
 #=========================================================

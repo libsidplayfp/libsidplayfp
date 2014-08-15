@@ -28,7 +28,7 @@
 #include <cstdlib>
 
 #include "mos6510.h"
-#include "sidplayfp/sidendian.h"
+#include "sidendian.h"
 #include "opcodes.h"
 
 void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)

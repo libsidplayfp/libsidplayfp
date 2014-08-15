@@ -22,7 +22,7 @@
 #define EXTRASIDBANK_H
 
 #include "Bank.h"
-#include "sidplayfp/c64/c64sid.h"
+#include "c64/c64sid.h"
 
 #include "NullSid.h"
 

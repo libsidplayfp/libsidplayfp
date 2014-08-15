@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <cstdio>
 
-#include "sidplayfp/EventScheduler.h"
+#include "EventScheduler.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"

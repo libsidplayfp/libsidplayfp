@@ -26,7 +26,6 @@
 #include "sidplayfp/sidplayfp.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/sidbuilder.h"
-#include "sidplayfp/sidemu.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"

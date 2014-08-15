@@ -27,8 +27,8 @@
 // wire them into the computer (like adding a chip to a PCB).
 
 #include "Banks/Bank.h"
-#include "sidplayfp/c64/c64env.h"
-#include "sidplayfp/sidendian.h"
+#include "c64/c64env.h"
+#include "sidendian.h"
 #include "CIA/mos6526.h"
 
 /**

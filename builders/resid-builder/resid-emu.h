@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "sidplayfp/SidConfig.h"
-#include "sidplayfp/sidemu.h"
+#include "sidemu.h"
 #include "sidplayfp/event.h"
 #include "resid/sid.h"
 

@@ -23,7 +23,7 @@
 #include "mos6510.h"
 
 #include "sidplayfp/event.h"
-#include "sidplayfp/sidendian.h"
+#include "sidendian.h"
 
 #include "opcodes.h"
 

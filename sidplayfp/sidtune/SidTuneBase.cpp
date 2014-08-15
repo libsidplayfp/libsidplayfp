@@ -33,9 +33,9 @@
 #include "SmartPtr.h"
 #include "SidTuneTools.h"
 #include "SidTuneInfoImpl.h"
-#include "sidplayfp/sidendian.h"
-#include "sidplayfp/sidmemory.h"
-#include "sidplayfp/stringutils.h"
+#include "sidendian.h"
+#include "sidmemory.h"
+#include "stringutils.h"
 
 #include "MUS.h"
 #include "p00.h"

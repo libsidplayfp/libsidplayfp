@@ -28,10 +28,10 @@
 #include <vector>
 #include <iostream>
 
-#include "sidplayfp/sidplayfp.h"
-#include "sidplayfp/SidTune.h"
+#include <sidplayfp/sidplayfp.h>
+#include <sidplayfp/SidTune.h>
 #include <sidplayfp/SidInfo.h>
-#include "sidplayfp/builders/residfp.h"
+#include <sidplayfp/builders/residfp.h>
 
 
 /*

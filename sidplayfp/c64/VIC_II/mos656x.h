@@ -27,8 +27,8 @@
 #include <stdint.h>
 
 #include "sidplayfp/event.h"
-#include "sidplayfp/component.h"
-#include "sidplayfp/EventScheduler.h"
+#include "component.h"
+#include "EventScheduler.h"
 
 
 class MOS656X: public component, private Event

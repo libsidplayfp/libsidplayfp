@@ -26,8 +26,8 @@
 #include <stdint.h>
 
 #include "timer.h"
-#include "sidplayfp/EventScheduler.h"
-#include "sidplayfp/component.h"
+#include "EventScheduler.h"
+#include "component.h"
 
 class EventContext;
 class MOS6526;
