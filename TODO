@@ -1,8 +1,7 @@
 2.0.0:
 
-* Use some c++11 features where available
 * move mixer client side
-* add suppeort for 3rd SID
+* add support for 3rd SID
 * support non-ascii paths on Windows
 * wrap everything into __sidplayfp__ namespace (?)
 
