@@ -41,6 +41,11 @@
 void loadRom(const char* path, char* buffer)
 {
     std::ifstream is(path, std::ios::binary);
+    if (!is.is_open())
+    {
+        std::cout << "File " << path << " not found" << std::endl;
+        exit(-1);
+    }
     is.read(buffer, 8192);
     is.close();
 }
