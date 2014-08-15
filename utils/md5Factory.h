@@ -23,6 +23,8 @@
 
 #include "iMd5.h"
 
+#include "sidcxx11.h"
+
 #include <memory>
 
 #ifdef HAVE_CONFIG_H
@@ -38,9 +40,9 @@
 class md5Factory
 {
 public:
-    static std::auto_ptr<iMd5> get()
+    static std::unique_ptr<iMd5> get()
     {
-        return std::auto_ptr<iMd5>(
+        return std::unique_ptr<iMd5>(
 #ifdef HAVE_LIBGCRYPT
             new md5Gcrypt()
 #else

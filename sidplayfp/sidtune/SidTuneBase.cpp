@@ -263,7 +263,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
     buffer_t buf1(buffer, buffer+bufferLen);
 
     // Here test for the possible single file formats.
-    std::auto_ptr<SidTuneBase> s(PSID::load(buf1));
+    std::unique_ptr<SidTuneBase> s(PSID::load(buf1));
     if (s.get() == nullptr)
     {
         buffer_t buf2;  // empty
@@ -376,7 +376,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
     loadFile(fileName, fileBuf1);
 
     // File loaded. Now check if it is in a valid single-file-format.
-    std::auto_ptr<SidTuneBase> s(PSID::load(fileBuf1));
+    std::unique_ptr<SidTuneBase> s(PSID::load(fileBuf1));
     if (s.get() == nullptr)
     {
         buffer_t fileBuf2;
@@ -402,7 +402,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                         // Check if tunes in wrong order and therefore swap them here
                         if (stringutils::equal(fileNameExtensions[n], ".mus"))
                         {
-                            std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf2, fileBuf1, 0, true));
+                            std::unique_ptr<SidTuneBase> s2(MUS::load(fileBuf2, fileBuf1, 0, true));
                             if (s2.get())
                             {
                                 s2->acceptSidTune(fileName2.c_str(), fileName, fileBuf2, separatorIsSlash);
@@ -411,7 +411,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                         }
                         else
                         {
-                            std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf1, fileBuf2, 0, true));
+                            std::unique_ptr<SidTuneBase> s2(MUS::load(fileBuf1, fileBuf2, 0, true));
                             if (s2.get() != nullptr)
                             {
                                 s2->acceptSidTune(fileName, fileName2.c_str(), fileBuf1, separatorIsSlash);

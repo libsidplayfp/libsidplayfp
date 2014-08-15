@@ -34,6 +34,8 @@
 #include "sidplayfp/SidTuneInfo.h"
 #include "sidplayfp/siddefs.h"
 
+#include "sidcxx11.h"
+
 class sidmemory;
 template <class T> class SmartPtr_sidtt;
 
@@ -120,7 +122,7 @@ public:  // ----------------------------------------------------------------
 
 protected:  // -------------------------------------------------------------
 
-    std::auto_ptr<SidTuneInfoImpl> info;
+    std::unique_ptr<SidTuneInfoImpl> info;
 
     uint_least8_t songSpeed[MAX_SONGS];
     SidTuneInfo::clock_t clockSpeed[MAX_SONGS];

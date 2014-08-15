@@ -120,7 +120,7 @@ SidTuneBase* PSID::load(buffer_t& dataBuf)
         && (endian_big32((const uint_least8_t*)pHeader->id)!=RSID_ID))
          return nullptr;
 
-    std::auto_ptr<PSID> tune(new PSID());
+    std::unique_ptr<PSID> tune(new PSID());
     tune->tryLoad(dataBuf);
 
     return tune.release();

@@ -37,7 +37,7 @@
 class sidmd5
 {
 private:
-    std::auto_ptr<iMd5> m_md5;
+    std::unique_ptr<iMd5> m_md5;
 
 public:
     /**
