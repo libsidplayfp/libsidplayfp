@@ -38,7 +38,7 @@ private:
     static unsigned int m_count;
 #endif
 
-    int init ();
+    int init();
 
 public:
     HardSIDBuilder(const char * const name);

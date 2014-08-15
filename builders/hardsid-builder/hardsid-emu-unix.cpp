@@ -89,13 +89,13 @@ HardSID::HardSID (sidbuilder *builder) :
 
     {
         char device[20];
-        sprintf (device, "/dev/sid%u", m_instance);
+        sprintf(device, "/dev/sid%u", m_instance);
         m_handle = open (device, O_RDWR);
         if (m_handle < 0)
         {
             if (m_instance == 0)
             {
-                m_handle = open ("/dev/sid", O_RDWR);
+                m_handle = open("/dev/sid", O_RDWR);
                 if (m_handle < 0)
                 {
                     m_error.assign("HARDSID ERROR: Cannot access \"/dev/sid\" or \"").append(device).append("\"");
@@ -111,7 +111,7 @@ HardSID::HardSID (sidbuilder *builder) :
     }
 
     m_status = true;
-    reset ();
+    reset();
 }
 
 HardSID::~HardSID()
@@ -119,7 +119,7 @@ HardSID::~HardSID()
     sid--;
     m_sidFree[m_instance] = 0;
     if (m_handle)
-        close (m_handle);
+        close(m_handle);
 }
 
 void HardSID::reset(uint8_t volume)
@@ -175,10 +175,10 @@ void HardSID::write(uint_least8_t addr, uint8_t data)
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_context->getTime (m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
-    while ( cycles > 0xffff )
+    while (cycles > 0xffff)
     {
         /* delay */
         ioctl(m_handle, HSID_IOCTL_DELAY, 0xffff);
@@ -188,7 +188,7 @@ void HardSID::write(uint_least8_t addr, uint8_t data)
     unsigned int packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 )
         | (data & 0xff);
 
-    ::write (m_handle, &packet, sizeof (packet));
+    ::write(m_handle, &packet, sizeof(packet));
 }
 
 void HardSID::voice(unsigned int num, bool mute)
@@ -206,7 +206,7 @@ void HardSID::voice(unsigned int num, bool mute)
 
 void HardSID::event()
 {
-    event_clock_t cycles = m_context->getTime (m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     if (cycles < HARDSID_DELAY_CYCLES)
     {
         m_context->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
@@ -216,7 +216,7 @@ void HardSID::event()
     {
         m_accessClk += cycles;
         ioctl(m_handle, HSID_IOCTL_DELAY, (uint) cycles);
-        m_context->schedule (*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+        m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
 }
 

@@ -63,7 +63,7 @@ MOS656X::MOS656X(EventContext *context) :
     badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange),
     rasterYIRQEdgeDetectorEvent("RasterY changed", *this, &MOS656X::rasterYIRQEdgeDetector)
 {
-    chip (MOS6569);
+    chip(MOS6569);
 }
 
 void MOS656X::reset()
@@ -77,14 +77,17 @@ void MOS656X::reset()
     isBadLine    = false;
     rasterYIRQCondition = false;
     rasterClk    = 0;
-    vblanking    = lp_triggered = false;
+    vblanking    = false;
+    lp_triggered = false;
     lpx          = 0;
     lpy          = 0;
     sprite_exp_flop = 0xff;
     sprite_dma   = 0;
-    memset(regs, 0, sizeof (regs));
-    memset(sprite_mc_base, 0, sizeof (sprite_mc_base));
-    memset(sprite_mc, 0, sizeof (sprite_mc));
+
+    memset(regs, 0, sizeof(regs));
+    memset(sprite_mc_base, 0, sizeof(sprite_mc_base));
+    memset(sprite_mc, 0, sizeof(sprite_mc));
+
     event_context.cancel(*this);
     event_context.schedule(*this, 0, EVENT_CLOCK_PHI1);
 }
@@ -95,7 +98,7 @@ void MOS656X::chip(model_t model)
     cyclesPerLine = modelData[model].cyclesPerLine;
     clock         = modelData[model].clock;
 
-    reset ();
+    reset();
 }
 
 uint8_t MOS656X::read(uint_least8_t addr)

@@ -82,7 +82,7 @@ private:
 
 public:
     MMU(EventContext *context, Bank* ioBank);
-    ~MMU () {}
+    ~MMU() {}
 
     void reset();
 

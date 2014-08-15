@@ -53,7 +53,7 @@ public:
     // Standard component functions
     const char *credits() const override { return getCredits(); }
 
-    void reset() override { sidemu::reset (); }
+    void reset() override { sidemu::reset(); }
 
     uint8_t read(uint_least8_t addr) override;
     void write(uint_least8_t addr, uint8_t data) override;
@@ -65,7 +65,7 @@ public:
     void clock() override;
 
     void sampling(float systemclock, float freq,
-        SidConfig::sampling_method_t method, bool fast) override;
+        SidConfig::sampling_method_t method, bool) override;
 
     void voice(unsigned int num, bool mute) override { m_sid.mute(num, mute); }
 

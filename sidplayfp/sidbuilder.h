@@ -71,7 +71,7 @@ public:
     sidbuilder(const char * const name) :
         m_name(name),
         m_errorBuffer("N/A"),
-        m_status (true) {}
+        m_status(true) {}
     virtual ~sidbuilder() {}
 
     /**
@@ -79,7 +79,7 @@ public:
      *
      * @return number of used sids, 0 if none.
      */
-    unsigned int usedDevices() const { return sidobjs.size (); }
+    unsigned int usedDevices() const { return sidobjs.size(); }
 
     /**
      * Available devices.

@@ -342,8 +342,8 @@ protected:
     ~MOS656X() {}
 
     // Environment Interface
-    virtual void interrupt (bool state) = 0;
-    virtual void setBA     (bool state) = 0;
+    virtual void interrupt(bool state) = 0;
+    virtual void setBA(bool state) = 0;
 
     /**
      * Read VIC register.

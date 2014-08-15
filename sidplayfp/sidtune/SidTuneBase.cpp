@@ -421,7 +421,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                     // The first tune loaded ok, so ignore errors on the
                     // second tune, may find an ok one later
                     }
-                    catch (loadError const &e) {}
+                    catch (loadError const &) {}
                 }
                 n++;
             }

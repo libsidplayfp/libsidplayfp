@@ -70,7 +70,7 @@ private:
     {
         void (MOS6510::*func)();
         bool nosteal;
-        ProcessorCycle () :
+        ProcessorCycle() :
             func(0),
             nosteal(false) {}
     };
@@ -129,7 +129,7 @@ private:
 #endif
 
     /// Table of CPU opcode implementations
-    struct ProcessorCycle  instrTable[0x101 << 3];
+    struct ProcessorCycle instrTable[0x101 << 3];
 
 private:
     /// Represents an instruction subcycle that writes
@@ -174,7 +174,7 @@ private:
     inline void FetchLowPointer();
     inline void FetchLowPointerX();
     inline void FetchHighPointer();
-    inline void FetchEffAddrDataByte ();
+    inline void FetchEffAddrDataByte();
     inline void PutEffAddrDataByte();
     inline void PushLowPC();
     inline void PushHighPC();
@@ -294,7 +294,7 @@ public:
     virtual void cpuWrite(uint_least16_t addr, uint8_t data) =0;
 
 #ifdef PC64_TESTSUITE
-    virtual void loadFile (const char *file) =0;
+    virtual void loadFile(const char *file) =0;
 #endif
 
     void reset();

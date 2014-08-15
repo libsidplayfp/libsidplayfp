@@ -144,13 +144,13 @@ void MUS::installPlayer(sidmemory *mem)
     }
 }
 
-SidTuneBase* MUS::load (buffer_t& musBuf, bool init)
+SidTuneBase* MUS::load(buffer_t& musBuf, bool init)
 {
     buffer_t empty;
-    return load (musBuf, empty, 0, init);
+    return load(musBuf, empty, 0, init);
 }
 
-SidTuneBase* MUS::load (buffer_t& musBuf,
+SidTuneBase* MUS::load(buffer_t& musBuf,
                             buffer_t& strBuf,
                             uint_least32_t fileOffset,
                             bool init)

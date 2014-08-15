@@ -123,7 +123,7 @@ private:
     /**
      * Handle the serial port.
      */
-    virtual void serialPort() {};
+    virtual void serialPort() {}
 
 protected:
     /**

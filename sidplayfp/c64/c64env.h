@@ -40,8 +40,8 @@ private:
     EventContext &m_context;
 
 public:
-    c64env (EventContext *context) :
-        m_context (*context) {}
+    c64env(EventContext *context) :
+        m_context(*context) {}
 
     EventContext &context() const { return m_context; }
 
@@ -56,7 +56,7 @@ public:
     virtual void interruptNMI() = 0;
     virtual void interruptRST() = 0;
 
-    virtual void setBA (bool state) = 0;
+    virtual void setBA(bool state) = 0;
     virtual void lightpen() = 0;
 
 protected:

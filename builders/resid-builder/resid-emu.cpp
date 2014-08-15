@@ -46,13 +46,13 @@ const char* ReSID::getCredits()
     return m_credit.c_str();
 }
 
-ReSID::ReSID (sidbuilder *builder) :
+ReSID::ReSID(sidbuilder *builder) :
     sidemu(builder),
     m_sid(*(new RESID_NS::SID)),
     m_voiceMask(0x07)
 {
     m_buffer = new short[OUTPUTBUFFERSIZE];
-    reset (0);
+    reset(0);
 }
 
 ReSID::~ReSID()
@@ -126,7 +126,7 @@ void ReSID::sampling(float systemclock, float freq,
     m_status = true;
 }
 
-void ReSID::voice (unsigned int num, bool mute)
+void ReSID::voice(unsigned int num, bool mute)
 {
     if (mute)
         m_voiceMask &= ~(1<<num);
@@ -159,6 +159,6 @@ void ReSID::model(SidConfig::sid_model_t model)
             return;
     }
 
-    m_sid.set_chip_model (chipModel);
+    m_sid.set_chip_model(chipModel);
     m_status = true;
 }

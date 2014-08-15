@@ -124,9 +124,9 @@ public:
     bool getStatus() const { return m_status; }
 
     // Standard component functions
-    const char *credits () const override { return getCredits(); }
+    const char *credits() const override { return getCredits(); }
 
-    void reset() override { sidemu::reset (); }
+    void reset() override { sidemu::reset(); }
 
     uint8_t read(uint_least8_t addr) override;
     void write(uint_least8_t addr, uint8_t data) override;
@@ -137,7 +137,7 @@ public:
     // Standard SID functions
     void clock() override;
 
-    void model(SidConfig::sid_model_t model SID_UNUSED) override {;}
+    void model(SidConfig::sid_model_t) override {}
 
     void voice(unsigned int num, bool mute) override;
 

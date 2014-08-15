@@ -95,7 +95,7 @@ private:
     void sidParams(double cpuFreq, int frequency,
                     SidConfig::sampling_method_t sampling, bool fastSampling);
 
-    static SidConfig::sid_model_t getModel (SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced);
+    static SidConfig::sid_model_t getModel(SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced);
 
 #ifdef PC64_TESTSUITE
     void load(const char *file)
@@ -134,7 +134,7 @@ public:
 
     uint_least32_t time() const { return (uint_least32_t)(m_c64.getEventScheduler().getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
 
-    void debug(const bool enable, FILE *out) { m_c64.debug (enable, out); }
+    void debug(const bool enable, FILE *out) { m_c64.debug(enable, out); }
 
     void mute(unsigned int sidNum, unsigned int voice, bool enable);
 

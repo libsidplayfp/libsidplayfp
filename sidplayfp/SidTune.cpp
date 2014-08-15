@@ -116,10 +116,10 @@ const char* SidTune::statusString() const { return m_statusString; }
 
 bool SidTune::placeSidTuneInC64mem(sidmemory* mem)
 {
-    return tune.get()?tune->placeSidTuneInC64mem(mem):false;
+    return tune.get() ? tune->placeSidTuneInC64mem(mem) : false;
 }
 
 const char* SidTune::createMD5(char *md5)
 {
-    return tune.get()?tune->createMD5(md5):nullptr;
+    return tune.get() ? tune->createMD5(md5) : nullptr;
 }

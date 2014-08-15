@@ -166,12 +166,12 @@ private:
      *
      * Calls permitted any time, but normally originated by chips at PHI1.
      */
-    inline void interruptNMI() override { cpu.triggerNMI (); }
+    inline void interruptNMI() override { cpu.triggerNMI(); }
 
     /**
      * Reset signal.
      */
-    inline void interruptRST() override { cpu.triggerRST (); }
+    inline void interruptRST() override { cpu.triggerRST(); }
 
     /**
      * BA signal.
@@ -182,7 +182,7 @@ private:
      */
     inline void setBA(bool state) override;
 
-    inline void lightpen() override { vic.lightpen (); }
+    inline void lightpen() override { vic.lightpen(); }
 
 #ifdef PC64_TESTSUITE
     testEnv *m_env;
@@ -261,9 +261,9 @@ public:
      * Get the components credits
      */
     //@{
-    const char* cpuCredits () const { return cpu.credits(); }
-    const char* ciaCredits () const { return cia1.credits(); }
-    const char* vicCredits () const { return vic.credits(); }
+    const char* cpuCredits() const { return cpu.credits(); }
+    const char* ciaCredits() const { return cia1.credits(); }
+    const char* vicCredits() const { return vic.credits(); }
     //@}
 
     sidmemory *getMemInterface() { return &mmu; }
@@ -276,7 +276,7 @@ void c64::interruptIRQ(bool state)
     if (state)
     {
         if (irqCount == 0)
-            cpu.triggerIRQ ();
+            cpu.triggerIRQ();
 
         irqCount ++;
     }
@@ -284,7 +284,7 @@ void c64::interruptIRQ(bool state)
     {
         irqCount --;
         if (irqCount == 0)
-             cpu.clearIRQ ();
+             cpu.clearIRQ();
     }
 }
 
@@ -297,7 +297,7 @@ void c64::setBA(bool state)
     oldBAState = state;
 
     // Signal changes in BA to interested parties
-    cpu.setRDY (state);
+    cpu.setRDY(state);
 }
 
 #endif // C64_H

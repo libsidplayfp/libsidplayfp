@@ -24,36 +24,36 @@
 
 #include "sidemu.h"
 
-sidemu *sidbuilder::lock (EventContext *env, SidConfig::sid_model_t model)
+sidemu *sidbuilder::lock(EventContext *env, SidConfig::sid_model_t model)
 {
     m_status = true;
 
     for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
         sidemu *sid = (*it);
-        if (sid->lock (env))
+        if (sid->lock(env))
         {
-            sid->model (model);
+            sid->model(model);
             return sid;
         }
     }
 
     // Unable to locate free SID
     m_status = false;
-    m_errorBuffer.assign(name ()).append("ERROR: No available SIDs to lock");
+    m_errorBuffer.assign(name()).append("ERROR: No available SIDs to lock");
     return 0;
 }
 
-void sidbuilder::unlock (sidemu *device)
+void sidbuilder::unlock(sidemu *device)
 {
     emuset_t::iterator it = sidobjs.find(device);
     if (it != sidobjs.end())
     {
-        (*it)->unlock ();
+        (*it)->unlock();
     }
 }
 
-void sidbuilder::remove ()
+void sidbuilder::remove()
 {
     for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
         delete (*it);

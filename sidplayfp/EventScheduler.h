@@ -60,7 +60,7 @@ private:
     /**
      * EventScheduler's current clock.
      */
-    event_clock_t  currentTime;
+    event_clock_t currentTime;
 
     /**
      * The first event of the chain.
@@ -107,9 +107,9 @@ protected:
     void cancel(Event &event) override;
 
 public:
-    EventScheduler () :
-          currentTime(0),
-          firstEvent(nullptr) {}
+    EventScheduler() :
+        currentTime(0),
+        firstEvent(nullptr) {}
 
     /**
      * Cancel all pending events and reset time.
@@ -139,7 +139,7 @@ public:
 
     event_clock_t getTime(event_clock_t clock, event_phase_t phase) const override
     {
-        return getTime (phase) - clock;
+        return getTime(phase) - clock;
     }
 
     event_phase_t phase() const override { return (event_phase_t) (currentTime & 1); }

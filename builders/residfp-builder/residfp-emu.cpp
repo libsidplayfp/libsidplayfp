@@ -57,7 +57,7 @@ ReSIDfp::ReSIDfp(sidbuilder *builder) :
     m_sid(*(new RESID_NAMESPACE::SID))
 {
     m_buffer = new short[OUTPUTBUFFERSIZE];
-    reset (0);
+    reset(0);
 }
 
 ReSIDfp::~ReSIDfp()
@@ -110,7 +110,7 @@ void ReSIDfp::filter(bool enable)
 }
 
 void ReSIDfp::sampling(float systemclock, float freq,
-        SidConfig::sampling_method_t method, bool fast SID_UNUSED)
+        SidConfig::sampling_method_t method, bool)
 {
     reSIDfp::SamplingMethod sampleMethod;
     switch (method)
@@ -131,9 +131,9 @@ void ReSIDfp::sampling(float systemclock, float freq,
     {
         // Round half frequency to the nearest multiple of 5000
         const int halfFreq = 5000*(((int)freq+5000)/10000);
-        m_sid.setSamplingParameters (systemclock, sampleMethod, freq, std::min(halfFreq, 20000));
+        m_sid.setSamplingParameters(systemclock, sampleMethod, freq, std::min(halfFreq, 20000));
     }
-    catch (RESID_NAMESPACE::SIDError const &e)
+    catch (RESID_NAMESPACE::SIDError const &)
     {
         m_status = false;
         m_error = "Unable to set desired output frequency.";
@@ -161,6 +161,6 @@ void ReSIDfp::model(SidConfig::sid_model_t model)
             return;
     }
 
-    m_sid.setChipModel (chipModel);
+    m_sid.setChipModel(chipModel);
     m_status = true;
 }

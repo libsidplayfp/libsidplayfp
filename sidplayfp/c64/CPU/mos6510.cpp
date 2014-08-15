@@ -172,7 +172,7 @@ void MOS6510::setStatusRegister(uint8_t sr)
  *
  * @param rdy new state for RDY signal
  */
-void MOS6510::setRDY (bool newRDY)
+void MOS6510::setRDY(bool newRDY)
 {
     rdy = newRDY;
 
@@ -195,7 +195,7 @@ void MOS6510::setRDY (bool newRDY)
 void MOS6510::PushSR()
 {
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    cpuWrite (addr, getStatusRegister());
+    cpuWrite(addr, getStatusRegister());
     Register_StackPointer--;
 }
 
@@ -207,7 +207,7 @@ void MOS6510::PopSR()
     // Get status register off stack
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    setStatusRegister(cpuRead (addr));
+    setStatusRegister(cpuRead(addr));
     flagB = true;
 
     calculateInterruptTriggerCycle();
@@ -254,7 +254,9 @@ void MOS6510::triggerNMI()
     }
 }
 
-/** Pull IRQ line low on CPU. */
+/**
+ * Pull IRQ line low on CPU.
+ */
 void MOS6510::triggerIRQ()
 {
     irqAssertedOnPin = true;
@@ -268,7 +270,9 @@ void MOS6510::triggerIRQ()
     }
 }
 
-/** Inform CPU that IRQ is no longer pulled low. */
+/**
+ * Inform CPU that IRQ is no longer pulled low.
+ */
 void MOS6510::clearIRQ()
 {
     irqAssertedOnPin = false;
@@ -282,10 +286,10 @@ void MOS6510::interruptsAndNextOpcode()
 #ifdef DEBUG
         if (dodump)
         {
-            const event_clock_t cycles = eventContext.getTime (EVENT_CLOCK_PHI2);
-            fprintf (m_fdbg, "****************************************************\n");
-            fprintf (m_fdbg, " interrupt (%d)\n", (int)cycles);
-            fprintf (m_fdbg, "****************************************************\n");
+            const event_clock_t cycles = eventContext.getTime(EVENT_CLOCK_PHI2);
+            fprintf(m_fdbg, "****************************************************\n");
+            fprintf(m_fdbg, " interrupt (%d)\n", (int)cycles);
+            fprintf(m_fdbg, "****************************************************\n");
             MOS6510Debug::DumpState(cycles, *this);
         }
 #endif
@@ -340,12 +344,12 @@ void MOS6510::calculateInterruptTriggerCycle()
 
 void MOS6510::IRQLoRequest()
 {
-    endian_16lo8(Register_ProgramCounter, cpuRead (Cycle_EffectiveAddress));
+    endian_16lo8(Register_ProgramCounter, cpuRead(Cycle_EffectiveAddress));
 }
 
 void MOS6510::IRQHiRequest()
 {
-    endian_16hi8(Register_ProgramCounter, cpuRead (Cycle_EffectiveAddress + 1));
+    endian_16hi8(Register_ProgramCounter, cpuRead(Cycle_EffectiveAddress + 1));
 }
 
 /**
@@ -353,7 +357,7 @@ void MOS6510::IRQHiRequest()
  */
 void MOS6510::throwAwayFetch()
 {
-    cpuRead (Register_ProgramCounter);
+    cpuRead(Register_ProgramCounter);
 }
 
 /**
@@ -361,7 +365,7 @@ void MOS6510::throwAwayFetch()
  */
 void MOS6510::throwAwayRead()
 {
-    cpuRead (Cycle_HighByteWrongEffectiveAddress);
+    cpuRead(Cycle_HighByteWrongEffectiveAddress);
 }
 
 /**
@@ -439,7 +443,7 @@ void MOS6510::FetchLowAddrY()
  */
 void MOS6510::FetchHighAddr()
 {   // Get the high byte of an address from memory
-    endian_16hi8 (Cycle_EffectiveAddress, cpuRead(Register_ProgramCounter));
+    endian_16hi8(Cycle_EffectiveAddress, cpuRead(Register_ProgramCounter));
     Register_ProgramCounter++;
 
 #ifdef DEBUG
@@ -461,7 +465,9 @@ void MOS6510::FetchHighAddrX()
     Cycle_EffectiveAddress += Register_X;
 }
 
-/** Same as #FetchHighAddrX except dosen't worry about page crossing. */
+/**
+ * Same as #FetchHighAddrX except dosen't worry about page crossing.
+ */
 void MOS6510::FetchHighAddrX2()
 {
     FetchHighAddrX();
@@ -483,7 +489,9 @@ void MOS6510::FetchHighAddrY()
     Cycle_EffectiveAddress += Register_Y;
 }
 
-/** Same as #FetchHighAddrY except dosen't worry about page crossing. */
+/**
+ * Same as #FetchHighAddrY except dosen't worry about page crossing.
+ */
 void MOS6510::FetchHighAddrY2()
 {
     FetchHighAddrY();
@@ -527,7 +535,7 @@ void MOS6510::FetchLowPointerX()
  */
 void MOS6510::FetchHighPointer()
 {
-    endian_16hi8(Cycle_Pointer, cpuRead (Register_ProgramCounter));
+    endian_16hi8(Cycle_Pointer, cpuRead(Register_ProgramCounter));
     Register_ProgramCounter++;
 
 #ifdef DEBUG
@@ -631,7 +639,7 @@ void MOS6510::PopLowPC()
 {
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    endian_16lo8(Cycle_EffectiveAddress, cpuRead (addr));
+    endian_16lo8(Cycle_EffectiveAddress, cpuRead(addr));
 }
 
 /**
@@ -641,11 +649,10 @@ void MOS6510::PopHighPC()
 {
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    endian_16hi8(Cycle_EffectiveAddress, cpuRead (addr));
+    endian_16hi8(Cycle_EffectiveAddress, cpuRead(addr));
 }
 
-void MOS6510::WasteCycle()
-{}
+void MOS6510::WasteCycle() {}
 
 void MOS6510::brkPushLowPC()
 {
@@ -841,17 +848,15 @@ void MOS6510::axs_instr()
     PutEffAddrDataByte();
 }
 
-/* Not required - Operation performed By another method
+#if 0 // Not required - Operation performed By another method
 // Undocumented - HLT crashes the microprocessor.  When this opcode is executed, program
 // execution ceases.  No hardware interrupts will execute either.  The author
 // has characterized this instruction as a halt instruction since this is the
 // most straightforward explanation for this opcode's behaviour.  Only a reset
 // will restart execution.  This opcode leaves no trace of any operation
 // performed!  No registers affected.
-void MOS6510::hlt_instr ()
-{
-}
-*/
+void MOS6510::hlt_instr() {}
+#endif
 
 /**
  * Undocumented - This opcode ANDs the contents of the Y register with <ab+1> and stores the
@@ -878,7 +883,9 @@ void MOS6510::xas_instr()
 }
 
 
-/** BCD adding */
+/**
+ * BCD adding.
+ */
 void MOS6510::doADC()
 {
     const unsigned int C      = flagC ? 1 : 0;
@@ -908,11 +915,13 @@ void MOS6510::doADC()
     {   // Binary mode
         flagC = regAC2 > 0xff;
         flagV = ((regAC2 ^ A) & 0x80) && !((A ^ s) & 0x80);
-        setFlagsNZ (Register_Accumulator = regAC2 & 0xff);
+        setFlagsNZ(Register_Accumulator = regAC2 & 0xff);
     }
 }
 
-/** BCD subtracting */
+/**
+ * BCD subtracting.
+ */
 void MOS6510::doSBC()
 {
     const unsigned int C      = flagC? 0 : 1;
@@ -921,8 +930,8 @@ void MOS6510::doSBC()
     const unsigned int regAC2 = A - s - C;
 
     flagC = regAC2 < 0x100;
-    flagV =((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80);
-    setFlagsNZ (regAC2);
+    flagV = ((regAC2 ^ A) & 0x80) && ((A ^ s) & 0x80);
+    setFlagsNZ(regAC2);
 
     if (flagD)
     {   // BCD mode
@@ -1009,7 +1018,7 @@ void MOS6510::branch_instr(bool condition)
      */
     if (condition)
     {
-        /* issue the spurious read for next insn here. */
+        // issue the spurious read for next insn here.
         cpuRead(Register_ProgramCounter);
 
         Cycle_HighByteWrongEffectiveAddress = (Register_ProgramCounter & 0xff00) | ((Register_ProgramCounter + (int8_t) Cycle_Data) & 0xff);
@@ -1019,7 +1028,7 @@ void MOS6510::branch_instr(bool condition)
         if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
         {
             cycleCount ++;
-            /* Hack: delay the interrupt past this instruction. */
+            // Hack: delay the interrupt past this instruction.
             if (interruptCycle >> 3 == cycleCount >> 3)
                 interruptCycle += 2;
         }
@@ -1027,7 +1036,7 @@ void MOS6510::branch_instr(bool condition)
     }
     else
     {
-        /* branch not taken: skip the following spurious read insn and go to FetchNextInstr immediately. */
+        // branch not taken: skip the following spurious read insn and go to FetchNextInstr immediately.
         interruptsAndNextOpcode();
     }
 }
@@ -1275,7 +1284,7 @@ void MOS6510::sec_instr()
 void MOS6510::shs_instr()
 {
     Register_StackPointer = Register_Accumulator & Register_X;
-    Cycle_Data = (endian_16hi8 (Cycle_EffectiveAddress) + 1) & Register_StackPointer;
+    Cycle_Data = (endian_16hi8(Cycle_EffectiveAddress) + 1) & Register_StackPointer;
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
         Cycle_EffectiveAddress = endian_16(Cycle_Data, (uint8_t)Cycle_EffectiveAddress);
     PutEffAddrDataByte();
@@ -1357,7 +1366,7 @@ void MOS6510::anc_instr()
 
 /**
  * Undocumented - This opcode ANDs the contents of the A register with an immediate value and
- * then RORs the result (Implementation based on that of Frodo C64 Emulator)
+ * then RORs the result. (Implementation based on that of Frodo C64 Emulator)
  */
 void MOS6510::arr_instr()
 {
@@ -1416,17 +1425,17 @@ void MOS6510::dcm_instr()
  * Undocumented - This opcode INCs the contents of a memory location and then SBCs the result
  * from the A register.
  */
-void MOS6510::ins_instr ()
+void MOS6510::ins_instr()
 {
-    PutEffAddrDataByte ();
+    PutEffAddrDataByte();
     Cycle_Data++;
-    doSBC ();
+    doSBC();
 }
 
 /**
  * Undocumented - This opcode ANDs the contents of a memory location with the contents of the
  * stack pointer register and stores the result in the accumulator, the X
- * register, and the stack pointer.  Affected flags: N Z.
+ * register, and the stack pointer. Affected flags: N Z.
  */
 void MOS6510::las_instr()
 {
@@ -1500,12 +1509,12 @@ void MOS6510::rra_instr()
 //-------------------------------------------------------------------------//
 
 /**
- * Create new CPU emu
+ * Create new CPU emu.
  *
  * @param context
  *            The Event Context
  */
-MOS6510::MOS6510 (EventContext *context) :
+MOS6510::MOS6510(EventContext *context) :
     eventContext(*context),
 #ifdef DEBUG
     m_fdbg(stdout),
@@ -1522,14 +1531,14 @@ MOS6510::MOS6510 (EventContext *context) :
 #endif
 
         /*
-        * So: what cycles are marked as stealable? Rules are:
-        *
-        * - CPU performs either read or write at every cycle. Reads are
-        *   always stealable. Writes are rare.
-        *
-        * - Every instruction begins with a sequence of reads. Writes,
-        *   if any, are at the end for most instructions.
-        */
+         * So: what cycles are marked as stealable? Rules are:
+         *
+         * - CPU performs either read or write at every cycle. Reads are
+         *   always stealable. Writes are rare.
+         *
+         * - Every instruction begins with a sequence of reads. Writes,
+         *   if any, are at the end for most instructions.
+         */
 
         int buildCycle = i << 3;
 
@@ -1856,16 +1865,15 @@ MOS6510::MOS6510 (EventContext *context) :
         case EORiy: case EORb:
             instrTable[buildCycle++].func = &MOS6510::eor_instr;
         break;
-
-/* HLT // Also known as JAM
+#if 0
+        // HLT, also known as JAM
         case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52:
         case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
         case 0x02: case 0x12: case 0x22: case 0x32: case 0x42: case 0x52:
         case 0x62: case 0x72: case 0x92: case 0xb2: case 0xd2: case 0xf2:
             instrTable[buildCycle++].func = hlt_instr;
         break;
-*/
-
+#endif
         case INCz: case INCzx: case INCa: case INCax:
             instrTable[buildCycle].nosteal = true;
             instrTable[buildCycle++].func = &MOS6510::inc_instr;
@@ -2137,14 +2145,14 @@ MOS6510::MOS6510 (EventContext *context) :
         }
 
         /* Missing an addressing mode or implementation makes opcode invalid.
-        * These are normally called HLT instructions. In the hardware, the
-        * CPU state machine locks up and will never recover. */
+         * These are normally called HLT instructions. In the hardware, the
+         * CPU state machine locks up and will never recover. */
         if (!(legalMode && legalInstr))
         {
             instrTable[buildCycle++].func = &MOS6510::illegal_instr;
         }
 
-        /* check for IRQ triggers or fetch next opcode... */
+        // check for IRQ triggers or fetch next opcode...
         instrTable[buildCycle].func = &MOS6510::interruptsAndNextOpcode;
 
 #if DEBUG > 1
@@ -2208,8 +2216,8 @@ void MOS6510::reset()
 
     // Requires External Bits
     // Read from reset vector for program entry point
-    endian_16lo8 (Cycle_EffectiveAddress, cpuRead(0xFFFC));
-    endian_16hi8 (Cycle_EffectiveAddress, cpuRead(0xFFFD));
+    endian_16lo8(Cycle_EffectiveAddress, cpuRead(0xFFFC));
+    endian_16hi8(Cycle_EffectiveAddress, cpuRead(0xFFFD));
     Register_ProgramCounter = Cycle_EffectiveAddress;
 }
 

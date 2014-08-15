@@ -64,12 +64,12 @@ private:
         try
         {
             sidmd5 md5;
-            md5.append (m_rom, m_size);
+            md5.append(m_rom, m_size);
             md5.finish();
 
             return md5.getDigest();
         }
-        catch (md5Error const &e)
+        catch (md5Error const &)
         {
             return std::string();
         }
@@ -83,8 +83,8 @@ protected:
      * @param size size of the ROM buffer
      */
     romCheck(const uint8_t* rom, int size) :
-      m_rom(rom),
-      m_size(size) {}
+        m_rom(rom),
+        m_size(size) {}
 
     void add(const char* md5, const char* desc)
     {
@@ -100,7 +100,7 @@ public:
     const char* info() const
     {
         md5map::const_iterator res = m_checksums.find(checksum());
-        return (res!=m_checksums.end())?res->second:"Unknown Rom";
+        return (res != m_checksums.end())?res->second:"Unknown Rom";
     }
 };
 

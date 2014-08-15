@@ -51,7 +51,7 @@ bool HardSIDBuilder::m_initialised = false;
 unsigned int HardSIDBuilder::m_count = 0;
 #endif
 
-HardSIDBuilder::HardSIDBuilder (const char * const name) :
+HardSIDBuilder::HardSIDBuilder(const char * const name) :
     sidbuilder (name)
 {
     if (!m_initialised)
@@ -244,7 +244,7 @@ int HardSIDBuilder::init()
 
 HardSID_init_error:
     if (dll)
-        FreeLibrary (dll);
+        FreeLibrary(dll);
     return -1;
 }
 

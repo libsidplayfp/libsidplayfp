@@ -92,7 +92,7 @@ void Mixer::doMix()
         const int dither = triangularDithering();
 
         /* This is a crude boxcar low-pass filter to
-            * reduce aliasing during fast forward. */
+         * reduce aliasing during fast forward. */
         for (size_t k = 0; k < m_buffers.size(); k++)
         {
             int_least32_t sample = 0;

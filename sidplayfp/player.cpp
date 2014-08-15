@@ -35,10 +35,10 @@
 SIDPLAYFP_NAMESPACE_START
 
 
-const char TXT_NA[]             = "NA";
+const char TXT_NA[] = "NA";
 
 
-Player::Player () :
+Player::Player() :
     // Set default settings for system
     m_tune(nullptr),
     m_errorString(TXT_NA),
@@ -216,7 +216,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         {
             initialise();
         }
-        catch (configError const &e) {}
+        catch (configError const &) {}
     }
 
     return count;
@@ -236,7 +236,7 @@ void Player::stop()
             {
                 initialise();
             }
-            catch (configError const &e) {}
+            catch (configError const &) {}
         }
     }
 }

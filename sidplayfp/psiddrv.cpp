@@ -112,7 +112,7 @@ bool psiddrv::drvReloc(sidmemory *mem)
     const uint_least16_t relocAddr = relocStartPage << 8;
 
     reloc_driver = psid_driver;
-    reloc_size   = sizeof (psid_driver);
+    reloc_size   = sizeof(psid_driver);
 
     reloc65 relocator;
     relocator.setReloc(reloc65::TEXT, relocAddr - 10);

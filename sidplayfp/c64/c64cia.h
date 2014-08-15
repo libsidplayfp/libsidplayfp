@@ -50,7 +50,7 @@ private:
 protected:
     void interrupt(bool state) override
     {
-        m_env.interruptIRQ (state);
+        m_env.interruptIRQ(state);
     }
 
     void portB() override
@@ -65,7 +65,7 @@ protected:
 
 public:
     c64cia1(c64env *env) :
-        MOS6526(&(env->context ())),
+        MOS6526(&(env->context())),
         m_env(*env) {}
 
     void poke(uint_least16_t address, uint8_t value) override
@@ -89,7 +89,7 @@ public:
     {
         last_ta = 0;
         lp = 0x10;
-        MOS6526::reset ();
+        MOS6526::reset();
     }
 
     uint_least16_t getTimerA() const { return last_ta; }
@@ -111,12 +111,12 @@ protected:
     void interrupt(bool state) override
     {
         if (state)
-            m_env.interruptNMI ();
+            m_env.interruptNMI();
     }
 
 public:
     c64cia2(c64env *env) :
-        MOS6526(&(env->context ())),
+        MOS6526(&(env->context())),
         m_env(*env) {}
 
     void poke(uint_least16_t address, uint8_t value) override

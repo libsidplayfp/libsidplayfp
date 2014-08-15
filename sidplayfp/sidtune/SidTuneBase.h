@@ -118,7 +118,7 @@ public:  // ----------------------------------------------------------------
      * If provided, buffer must be MD5_LENGTH + 1
      * @return a pointer to the buffer containing the md5 string.
      */
-    virtual const char *createMD5(char *md5 SID_UNUSED) { return 0; }
+    virtual const char *createMD5(char *) { return 0; }
 
 protected:  // -------------------------------------------------------------
 

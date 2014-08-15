@@ -473,8 +473,8 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
     break;
     }
 
-    fprintf (cpu.m_fdbg, "\n\n");
-    fflush  (cpu.m_fdbg);
+    fprintf(cpu.m_fdbg, "\n\n");
+    fflush(cpu.m_fdbg);
 }
 
 #endif

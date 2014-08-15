@@ -83,7 +83,7 @@ bool iniParser::open(const char *fName)
                 std::pair<sections_t::iterator, bool> it = sections.insert(make_pair(section, keys));
                 mIt = it.first;
             }
-            catch (parseError const &e) {};
+            catch (parseError const &) {};
         }
         break;
 
@@ -92,7 +92,7 @@ bool iniParser::open(const char *fName)
             {
                 (*mIt).second.insert(parseKey(buffer));
             }
-            catch (parseError const &e) {};
+            catch (parseError const &) {};
 
             break;
         }

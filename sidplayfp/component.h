@@ -32,7 +32,7 @@ protected:
     virtual void write(uint_least8_t addr, uint8_t data) = 0;
 
 public:
-    virtual void reset () = 0;
+    virtual void reset() = 0;
     virtual const char *credits() const = 0;
 
 protected:
