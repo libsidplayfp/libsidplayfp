@@ -73,8 +73,8 @@ protected:
 public:
     sidemu(sidbuilder *builder) :
         m_builder (builder),
-        m_context(0),
-        m_buffer(0),
+        m_context(nullptr),
+        m_buffer(nullptr),
         m_bufferpos(0),
         m_status(true),
         m_locked(false),
