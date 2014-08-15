@@ -30,6 +30,8 @@
 #include "sidplayfp/event.h"
 #include "resid/sid.h"
 
+#include "sidcxx11.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -56,28 +58,32 @@ public:
     ReSID(sidbuilder *builder);
     ~ReSID();
 
-    // Standard component functions
-    const char *credits () const { return getCredits(); }
-
-    void reset() { sidemu::reset (); }
-    void reset(uint8_t volume);
-
-    uint8_t read(uint_least8_t addr);
-    void write(uint_least8_t addr, uint8_t data);
-
-    // Standard SID functions
-    void clock();
-    void filter(bool enable);
-    void voice(unsigned int num, bool mute);
-
     bool getStatus() const { return m_status; }
 
-    // Specific to resid
-    void sampling(float systemclock, float freq,
-        SidConfig::sampling_method_t method, bool fast);
+    // Standard component functions
+    const char *credits () const override { return getCredits(); }
 
+    void reset() override { sidemu::reset (); }
+
+    uint8_t read(uint_least8_t addr) override;
+    void write(uint_least8_t addr, uint8_t data) override;
+
+    // c64sid functions
+    void reset(uint8_t volume) override;
+
+    // Standard SID emu functions
+    void clock() override;
+
+    void sampling(float systemclock, float freq,
+        SidConfig::sampling_method_t method, bool fast) override;
+
+    void voice(unsigned int num, bool mute);
+
+    void model(SidConfig::sid_model_t model) override;
+
+    // Specific to resid
     void bias(double dac_bias);
-    void model(SidConfig::sid_model_t model);
+    void filter(bool enable);
 };
 
 #endif // RESID_EMU_H

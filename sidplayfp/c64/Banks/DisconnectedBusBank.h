@@ -38,10 +38,10 @@ class DisconnectedBusBank : public Bank
     /**
      * No device is connected so this is a no-op.
      */
-    void poke(uint_least16_t addr SID_UNUSED, uint8_t data SID_UNUSED) {}
+    void poke(uint_least16_t addr SID_UNUSED, uint8_t data SID_UNUSED) override {}
 
     // FIXME this should actually return last byte read from VIC
-    uint8_t peek(uint_least16_t addr SID_UNUSED) { return 0; }
+    uint8_t peek(uint_least16_t addr SID_UNUSED) override { return 0; }
 };
 
 #endif

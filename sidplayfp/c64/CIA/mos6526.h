@@ -29,6 +29,8 @@
 #include "EventScheduler.h"
 #include "component.h"
 
+#include "sidcxx11.h"
+
 class EventContext;
 class MOS6526;
 
@@ -44,9 +46,9 @@ private:
     /**
      * Signal underflows of Timer A to Timer B.
      */
-    void underFlow();
+    void underFlow() override;
 
-    void serialPort();
+    void serialPort() override;
 
 public:
     /**
@@ -65,7 +67,7 @@ public:
 class TimerB : public Timer
 {
 private:
-    void underFlow();
+    void underFlow() override;
 
 public:
     /**
@@ -231,7 +233,7 @@ protected:
      * @param addr
      *            register address to read (lowest 4 bits)
      */
-    uint8_t read(uint_least8_t addr);
+    uint8_t read(uint_least8_t addr) override;
 
     /**
      * Write CIA register.
@@ -241,7 +243,7 @@ protected:
      * @param data
      *            value to write
      */
-    void write(uint_least8_t addr, uint8_t data);
+    void write(uint_least8_t addr, uint8_t data) override;
 
 private:
     void setTodReg(uint_least8_t addr, uint8_t data);
@@ -254,14 +256,14 @@ public:
     /**
      * Reset CIA.
      */
-    virtual void reset();
+    virtual void reset() override;
 
     /**
      * Get the credits.
      *
      * @return the credits
      */
-    const char *credits() const { return credit; }
+    const char *credits() const override { return credit; }
 
     /**
      * Set day-of-time event occurence of rate.

@@ -53,12 +53,12 @@ public:
         }
     }
 
-    uint8_t peek(uint_least16_t address)
+    uint8_t peek(uint_least16_t address) override
     {
         return ram[address];
     }
 
-    void poke(uint_least16_t address, uint8_t value)
+    void poke(uint_least16_t address, uint8_t value) override
     {
         ram[address] = value;
     }

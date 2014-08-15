@@ -29,6 +29,8 @@
 #include "EventScheduler.h"
 #include "sidplayfp/siddefs.h"
 
+#include "sidcxx11.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -119,34 +121,39 @@ public:
     HardSID(sidbuilder *builder);
     ~HardSID();
 
-    // Standard component functions
-    const char *credits () const { return getCredits(); }
-
-    void reset() { sidemu::reset (); }
-    void reset(uint8_t volume);
-
-    uint8_t read(uint_least8_t addr);
-    void write(uint_least8_t addr, uint8_t data);
-
-    void clock();
     bool getStatus() const { return m_status; }
 
+    // Standard component functions
+    const char *credits () const override { return getCredits(); }
+
+    void reset() override { sidemu::reset (); }
+
+    uint8_t read(uint_least8_t addr) override;
+    void write(uint_least8_t addr, uint8_t data) override;
+
+    // c64sid functions
+    void reset(uint8_t volume) override;
+
     // Standard SID functions
-    void filter(bool enable);
-    void model(SidConfig::sid_model_t model SID_UNUSED) {;}
-    void voice(unsigned int num, bool mute);
+    void clock() override;
+
+    void model(SidConfig::sid_model_t model SID_UNUSED) override {;}
+
+    void voice(unsigned int num, bool mute) override;
+
     // HardSID specific
     void flush();
+    void filter(bool enable);
 
     // Must lock the SID before using the standard functions.
-    bool lock(EventContext *env);
-    void unlock();
+    bool lock(EventContext *env) override;
+    void unlock() override;
 
 private:
     // Fixed interval timer delay to prevent sidplay2
     // shoot to 100% CPU usage when song nolonger
     // writes to SID.
-    void event();
+    void event() override;
 };
 
 #endif // HARDSID_EMU_H

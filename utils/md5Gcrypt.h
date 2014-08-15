@@ -26,6 +26,8 @@
 
 #include "iMd5.h"
 
+#include  "sidcxx11.h"
+
 #include <gcrypt.h>
 
 class md5Gcrypt : public iMd5
@@ -53,13 +55,13 @@ public:
 
     ~md5Gcrypt() { gcry_md_close(hd); }
 
-    void append(const void* data, int nbytes) { gcry_md_write(hd, data, nbytes); }
+    void append(const void* data, int nbytes) override { gcry_md_write(hd, data, nbytes); }
 
-    void finish() { gcry_md_final(hd); }
+    void finish() override { gcry_md_final(hd); }
 
-    const unsigned char* getDigest() { return gcry_md_read(hd, 0); }
+    const unsigned char* getDigest() override { return gcry_md_read(hd, 0); }
 
-    void reset() { gcry_md_reset(hd); }
+    void reset() override { gcry_md_reset(hd); }
 };
 
 #endif

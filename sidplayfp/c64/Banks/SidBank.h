@@ -50,12 +50,12 @@ public:
         sid->reset(0xf);
     }
 
-    uint8_t peek(uint_least16_t addr)
+    uint8_t peek(uint_least16_t addr) override
     {
         return sid->peek(addr);
     }
 
-    void poke(uint_least16_t addr, uint8_t data)
+    void poke(uint_least16_t addr, uint8_t data) override
     {
         sid->poke(addr, data);
     }

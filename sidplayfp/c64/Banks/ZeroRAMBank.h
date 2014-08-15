@@ -28,6 +28,8 @@
 
 #include "sidplayfp/event.h"
 
+#include "sidcxx11.h"
+
 /**
  * Interface to PLA functions.
  */
@@ -177,7 +179,7 @@ public:
     *    bit is 1, the drop-off timer will restart again
     */
 
-    uint8_t peek(uint_least16_t address)
+    uint8_t peek(uint_least16_t address) override
     {
         switch (address)
         {
@@ -230,7 +232,7 @@ public:
         }
     }
 
-    void poke(uint_least16_t address, uint8_t value)
+    void poke(uint_least16_t address, uint8_t value) override
     {
         switch (address)
         {

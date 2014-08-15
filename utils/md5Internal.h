@@ -25,19 +25,21 @@
 
 #include "MD5/MD5.h"
 
+#include  "sidcxx11.h"
+
 class md5Internal : public iMd5
 {
 private:
     MD5 hd;
 
 public:
-    void append(const void* data, int nbytes) { hd.append(data, nbytes); }
+    void append(const void* data, int nbytes) override { hd.append(data, nbytes); }
 
-    void finish() { hd.finish(); }
+    void finish() override { hd.finish(); }
 
-    const unsigned char* getDigest() { hd.getDigest(); }
+    const unsigned char* getDigest() override { hd.getDigest(); }
 
-    void reset() { hd.reset(); }
+    void reset() override { hd.reset(); }
 };
 
 #endif

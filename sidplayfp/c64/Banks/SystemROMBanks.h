@@ -66,9 +66,9 @@ public:
     /**
      * Writing to ROM is a no-op.
      */
-    void poke(uint_least16_t address SID_UNUSED, uint8_t value SID_UNUSED) {}
+    void poke(uint_least16_t address SID_UNUSED, uint8_t value SID_UNUSED) override {}
 
-    uint8_t peek(uint_least16_t address) { return rom[address & (N-1)]; }
+    uint8_t peek(uint_least16_t address) override { return rom[address & (N-1)]; }
 };
 
 /**

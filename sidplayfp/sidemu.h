@@ -31,6 +31,8 @@
 #include "event.h"
 #include "c64/c64sid.h"
 
+#include "sidcxx11.h"
+
 class sidbuilder;
 class EventContext;
 
@@ -80,7 +82,11 @@ public:
     virtual ~sidemu() {}
 
     // Standard component functions
-    void reset() { reset(0); }
+    void reset() override { reset(0); }
+
+    // Bank functions
+    void poke(uint_least16_t address, uint8_t value) override { write(address & 0x1f, value); }
+    uint8_t peek(uint_least16_t address) override { return read(address & 0x1f); }
 
     virtual void clock() = 0;
 
@@ -104,9 +110,6 @@ public:
     int bufferpos() const { return m_bufferpos; }
     void bufferpos(int pos) { m_bufferpos = pos; }
     short *buffer() const { return m_buffer; }
-
-    void poke(uint_least16_t address, uint8_t value) { write(address & 0x1f, value); }
-    uint8_t peek(uint_least16_t address) { return read(address & 0x1f); }
 };
 
 #endif // SIDEMU_H

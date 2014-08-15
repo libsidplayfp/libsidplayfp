@@ -79,12 +79,12 @@ public:
         mapper[mapperIndex(address)] = sid;
     }
 
-    uint8_t peek(uint_least16_t addr)
+    uint8_t peek(uint_least16_t addr) override
     {
         return mapper[mapperIndex(addr)]->peek(addr);
     }
 
-    void poke(uint_least16_t addr, uint8_t data)
+    void poke(uint_least16_t addr, uint8_t data) override
     {
         mapper[mapperIndex(addr)]->poke(addr, data);
     }

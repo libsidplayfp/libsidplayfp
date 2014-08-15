@@ -31,6 +31,9 @@
 
 #include "c64/c64.h"
 
+#include "sidcxx11.h"
+
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -90,26 +93,26 @@ public:
             "\t" PACKAGE_URL "\n");
     }
 
-    const char *getName() const { return m_name.c_str(); }
-    const char *getVersion() const { return m_version.c_str(); }
+    const char *getName() const override { return m_name.c_str(); }
+    const char *getVersion() const override { return m_version.c_str(); }
 
-    unsigned int getNumberOfCredits() const { return m_credits.size(); }
-    const char *getCredits(unsigned int i) const { return i<m_credits.size()?m_credits[i].c_str():""; }
+    unsigned int getNumberOfCredits() const override { return m_credits.size(); }
+    const char *getCredits(unsigned int i) const override { return i<m_credits.size()?m_credits[i].c_str():""; }
 
-    unsigned int getMaxsids() const { return m_maxsids; }
+    unsigned int getMaxsids() const override { return m_maxsids; }
 
-    unsigned int getChannels() const { return m_channels; }
+    unsigned int getChannels() const override { return m_channels; }
 
-    uint_least16_t getDriverAddr() const { return m_driverAddr; }
-    uint_least16_t getDriverLength() const { return m_driverLength; }
+    uint_least16_t getDriverAddr() const override { return m_driverAddr; }
+    uint_least16_t getDriverLength() const override { return m_driverLength; }
 
-    uint_least16_t getPowerOnDelay() const { return m_powerOnDelay; }
+    uint_least16_t getPowerOnDelay() const override { return m_powerOnDelay; }
 
-    const char *getSpeedString() const { return m_speedString.c_str(); }
+    const char *getSpeedString() const override { return m_speedString.c_str(); }
 
-    const char *getKernalDesc() const { return m_kernalDesc.c_str(); }
-    const char *getBasicDesc() const { return m_basicDesc.c_str(); }
-    const char *getChargenDesc() const { return m_chargenDesc.c_str(); }
+    const char *getKernalDesc() const override { return m_kernalDesc.c_str(); }
+    const char *getBasicDesc() const override { return m_basicDesc.c_str(); }
+    const char *getChargenDesc() const override { return m_chargenDesc.c_str(); }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */

@@ -30,6 +30,7 @@
 #include "component.h"
 #include "EventScheduler.h"
 
+#include "sidcxx11.h"
 
 class MOS656X: public component, private Event
 {
@@ -350,7 +351,7 @@ protected:
      * @param addr
      *            Register to read.
      */
-    uint8_t read(uint_least8_t addr);
+    uint8_t read(uint_least8_t addr) override;
 
     /**
      * Write to VIC register.
@@ -360,18 +361,18 @@ protected:
      * @param data
      *            Data byte to write.
      */
-    void write(uint_least8_t addr, uint8_t data);
+    void write(uint_least8_t addr, uint8_t data) override;
 
 public:
-    void event();
+    void event() override;
 
     void chip(model_t model);
     void lightpen();
 
     // Component Standard Calls
-    void reset();
+    void reset() override;
 
-    const char *credits() const { return credit; }
+    const char *credits() const override { return credit; }
 };
 
 // Template specializations

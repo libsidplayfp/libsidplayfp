@@ -40,6 +40,8 @@
 #include "c64/c64vic.h"
 #include "c64/mmu.h"
 
+#include "sidcxx11.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -140,7 +142,7 @@ private:
      * @param addr the address where to read from
      * @return value at address
      */
-    uint8_t cpuRead(uint_least16_t addr) { return mmu.cpuRead(addr); }
+    uint8_t cpuRead(uint_least16_t addr) override { return mmu.cpuRead(addr); }
 
     /**
      * Access memory as seen by CPU.
@@ -148,7 +150,7 @@ private:
      * @param addr the address where to write to
      * @param data the value to write
      */
-    void cpuWrite(uint_least16_t addr, uint8_t data) { mmu.cpuWrite(addr, data); }
+    void cpuWrite(uint_least16_t addr, uint8_t data) override { mmu.cpuWrite(addr, data); }
 
     /**
      * IRQ trigger signal.
@@ -157,19 +159,19 @@ private:
      *
      * @param state
      */
-    inline void interruptIRQ(bool state);
+    inline void interruptIRQ(bool state) override;
 
     /**
      * NMI trigger signal.
      *
      * Calls permitted any time, but normally originated by chips at PHI1.
      */
-    inline void interruptNMI() { cpu.triggerNMI (); }
+    inline void interruptNMI() override { cpu.triggerNMI (); }
 
     /**
      * Reset signal.
      */
-    inline void interruptRST() { cpu.triggerRST (); }
+    inline void interruptRST() override { cpu.triggerRST (); }
 
     /**
      * BA signal.
@@ -178,14 +180,14 @@ private:
      *
      * @param state
      */
-    inline void setBA(bool state);
+    inline void setBA(bool state) override;
 
-    inline void lightpen() { vic.lightpen (); }
+    inline void lightpen() override { vic.lightpen (); }
 
 #ifdef PC64_TESTSUITE
     testEnv *m_env;
 
-    void loadFile(const char *file)
+    void loadFile(const char *file) override
     {
         m_env->load(file);
     }

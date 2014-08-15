@@ -31,6 +31,8 @@
 #include "sidendian.h"
 #include "VIC_II/mos656x.h"
 
+#include "sidcxx11.h"
+
 /**
  * VIC-II
  *
@@ -42,12 +44,12 @@ private:
     c64env &m_env;
 
 protected:
-    void interrupt(bool state)
+    void interrupt(bool state) override
     {
         m_env.interruptIRQ (state);
     }
 
-    void setBA(bool state)
+    void setBA(bool state) override
     {
         m_env.setBA (state);
     }
@@ -57,12 +59,12 @@ public:
         MOS656X(&(env->context ())),
         m_env(*env) {}
 
-    void poke(uint_least16_t address, uint8_t value)
+    void poke(uint_least16_t address, uint8_t value) override
     {
         write(endian_16lo8(address), value);
     }
 
-    uint8_t peek(uint_least16_t address)
+    uint8_t peek(uint_least16_t address) override
     {
         return read(endian_16lo8(address));
     }

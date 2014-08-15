@@ -39,7 +39,7 @@ private:
     Callback const m_callback;
 
 private:
-    void event() { (m_this.*m_callback)(); }
+    void event() override { (m_this.*m_callback)(); }
 
 public:
     EventCallback(const char * const name, This &_this, Callback callback) :
@@ -91,20 +91,20 @@ private:
 
 protected:
     void schedule(Event &event, event_clock_t cycles,
-                   event_phase_t phase)
+                   event_phase_t phase) override
     {
         // this strange formulation always selects the next available slot regardless of specified phase.
         event.triggerTime = (cycles << 1) + currentTime + ((currentTime & 1) ^ phase);
         schedule(event);
     }
 
-    void schedule(Event &event, event_clock_t cycles)
+    void schedule(Event &event, event_clock_t cycles) override
     {
         event.triggerTime = (cycles << 1) + currentTime;
         schedule(event);
     }
 
-    void cancel(Event &event);
+    void cancel(Event &event) override;
 
 public:
     EventScheduler () :
@@ -130,19 +130,19 @@ public:
     /**
      * Check if an event is in the queue.
      */
-    bool isPending(Event &event) const;
+    bool isPending(Event &event) const override;
 
-    event_clock_t getTime(event_phase_t phase) const
+    event_clock_t getTime(event_phase_t phase) const override
     {
         return (currentTime + (phase ^ 1)) >> 1;
     }
 
-    event_clock_t getTime(event_clock_t clock, event_phase_t phase) const
+    event_clock_t getTime(event_clock_t clock, event_phase_t phase) const override
     {
         return getTime (phase) - clock;
     }
 
-    event_phase_t phase() const { return (event_phase_t) (currentTime & 1); }
+    event_phase_t phase() const override { return (event_phase_t) (currentTime & 1); }
 };
 
 #endif // EVENTSCHEDULER_H

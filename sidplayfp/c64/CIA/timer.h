@@ -28,6 +28,8 @@
 #include "sidplayfp/event.h"
 #include "EventScheduler.h"
 
+#include "sidcxx11.h"
+
 class MOS6526;
 
 /**
@@ -111,7 +113,7 @@ private:
     /**
      * Timer ticking event.
      */
-    void event();
+    void event() override;
 
     /**
     * Signal timer underflow.

@@ -24,6 +24,8 @@
 #include "c64/c64env.h"
 #include "CPU/mos6510.h"
 
+#include "sidcxx11.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -38,11 +40,11 @@ public:
         MOS6510(&(env->context ())),
         m_env(*env) {}
 
-    uint8_t cpuRead(uint_least16_t addr) { return m_env.cpuRead (addr); }
-    void cpuWrite(uint_least16_t addr, uint8_t data) { m_env.cpuWrite (addr, data); }
+    uint8_t cpuRead(uint_least16_t addr) override { return m_env.cpuRead (addr); }
+    void cpuWrite(uint_least16_t addr, uint8_t data) override { m_env.cpuWrite (addr, data); }
 
 #ifdef PC64_TESTSUITE
-    void loadFile(const char *file) { m_env.loadFile (file); }
+    void loadFile(const char *file) override { m_env.loadFile (file); }
 #endif
 };
 

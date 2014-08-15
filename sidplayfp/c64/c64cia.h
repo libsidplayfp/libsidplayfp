@@ -31,6 +31,8 @@
 #include "sidendian.h"
 #include "CIA/mos6526.h"
 
+#include "sidcxx11.h"
+
 /**
  * CIA 1
  *
@@ -46,12 +48,12 @@ private:
     uint8_t lp;
 
 protected:
-    void interrupt(bool state)
+    void interrupt(bool state) override
     {
         m_env.interruptIRQ (state);
     }
 
-    void portB()
+    void portB() override
     {
         const uint8_t lp = (prb | ~ddrb) & 0x10;
         if (lp != this->lp)
@@ -66,7 +68,7 @@ public:
         MOS6526(&(env->context ())),
         m_env(*env) {}
 
-    void poke(uint_least16_t address, uint8_t value)
+    void poke(uint_least16_t address, uint8_t value) override
     {
         write(endian_16lo8(address), value);
 
@@ -78,7 +80,7 @@ public:
         }
     }
 
-    uint8_t peek(uint_least16_t address)
+    uint8_t peek(uint_least16_t address) override
     {
         return read(endian_16lo8(address));
     }
@@ -106,7 +108,7 @@ private:
     c64env &m_env;
 
 protected:
-    void interrupt(bool state)
+    void interrupt(bool state) override
     {
         if (state)
             m_env.interruptNMI ();
@@ -117,12 +119,12 @@ public:
         MOS6526(&(env->context ())),
         m_env(*env) {}
 
-    void poke(uint_least16_t address, uint8_t value)
+    void poke(uint_least16_t address, uint8_t value) override
     {
         write(address, value);
     }
 
-    uint8_t peek(uint_least16_t address)
+    uint8_t peek(uint_least16_t address) override
     {
         return read(address);
     }

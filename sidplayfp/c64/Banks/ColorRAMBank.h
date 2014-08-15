@@ -45,12 +45,12 @@ public:
          memset(ram, 0, 0x400);
     }
 
-    void poke(uint_least16_t address, uint8_t value)
+    void poke(uint_least16_t address, uint8_t value) override
     {
         ram[address & 0x3ff] = value & 0xf;
     }
 
-    uint8_t peek(uint_least16_t address)
+    uint8_t peek(uint_least16_t address) override
     {
         return ram[address & 0x3ff];
     }
