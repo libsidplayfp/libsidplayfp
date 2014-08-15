@@ -29,6 +29,8 @@
 
 #include "sidplayfp/SidTuneInfo.h"
 
+#include "sidcxx11.h"
+
 /**
  * The implementation of the SidTuneInfo interface.
  */
@@ -103,19 +105,19 @@ public:
         m_relocPages(0),
         m_fixLoad(false) {}
 
-    uint_least16_t getLoadAddr() const { return m_loadAddr; }
+    uint_least16_t getLoadAddr() const override { return m_loadAddr; }
 
-    uint_least16_t getInitAddr() const { return m_initAddr; }
+    uint_least16_t getInitAddr() const override { return m_initAddr; }
 
-    uint_least16_t getPlayAddr() const { return m_playAddr; }
+    uint_least16_t getPlayAddr() const override  { return m_playAddr; }
 
-    unsigned int getSongs() const { return m_songs; }
+    unsigned int getSongs() const override  { return m_songs; }
 
-    unsigned int getStartSong() const { return m_startSong; }
+    unsigned int getStartSong() const override  { return m_startSong; }
 
-    unsigned int getCurrentSong() const { return m_currentSong; }
+    unsigned int getCurrentSong() const override  { return m_currentSong; }
 
-    uint_least16_t getSidChipBase(unsigned int i) const
+    uint_least16_t getSidChipBase(unsigned int i) const override
     {
         switch (i)
         {
@@ -125,15 +127,15 @@ public:
         }
     }
 
-    bool getIsStereo() const { return (m_sidChipBase1!=0 && m_sidChipBase2!=0); }
+    bool getIsStereo() const override  { return (m_sidChipBase1!=0 && m_sidChipBase2!=0); }
 
-    int getSongSpeed() const { return m_songSpeed; }
+    int getSongSpeed() const override  { return m_songSpeed; }
 
-    uint_least8_t getRelocStartPage() const { return m_relocStartPage; }
+    uint_least8_t getRelocStartPage() const override  { return m_relocStartPage; }
 
-    uint_least8_t getRelocPages() const { return m_relocPages; }
+    uint_least8_t getRelocPages() const override  { return m_relocPages; }
 
-    model_t getSidModel(unsigned int i) const
+    model_t getSidModel(unsigned int i) const override
     {
         switch (i)
         {
@@ -143,29 +145,29 @@ public:
         }
     }
 
-    compatibility_t getCompatibility() const { return m_compatibility; }
+    compatibility_t getCompatibility() const override  { return m_compatibility; }
 
-    unsigned int getNumberOfInfoStrings() const { return m_infoString.size(); }
-    const char* getInfoString(unsigned int i) const { return i<getNumberOfInfoStrings()?m_infoString[i].c_str():""; }
+    unsigned int getNumberOfInfoStrings() const override  { return m_infoString.size(); }
+    const char* getInfoString(unsigned int i) const override  { return i<getNumberOfInfoStrings()?m_infoString[i].c_str():""; }
 
-    unsigned int getNumberOfCommentStrings() const { return m_commentString.size(); }
-    const char* getCommentString(unsigned int i) const { return i<getNumberOfCommentStrings()?m_commentString[i].c_str():""; }
+    unsigned int getNumberOfCommentStrings() const override  { return m_commentString.size(); }
+    const char* getCommentString(unsigned int i) const override  { return i<getNumberOfCommentStrings()?m_commentString[i].c_str():""; }
 
-    uint_least32_t getDataFileLen() const { return m_dataFileLen; }
+    uint_least32_t getDataFileLen() const override  { return m_dataFileLen; }
 
-    uint_least32_t getC64dataLen() const { return m_c64dataLen; }
+    uint_least32_t getC64dataLen() const override  { return m_c64dataLen; }
 
-    clock_t getClockSpeed() const { return m_clockSpeed; }
+    clock_t getClockSpeed() const override  { return m_clockSpeed; }
 
-    const char* getFormatString() const { return m_formatString; }
+    const char* getFormatString() const override  { return m_formatString; }
 
-    bool getFixLoad() const { return m_fixLoad; }
+    bool getFixLoad() const override  { return m_fixLoad; }
 
-    const char* getPath() const { return m_path.c_str(); }
+    const char* getPath() const override  { return m_path.c_str(); }
 
-    const char* getDataFileName() const { return m_dataFileName.c_str(); }
+    const char* getDataFileName() const override  { return m_dataFileName.c_str(); }
 
-    const char* getInfoFileName() const { return !m_infoFileName.empty()?m_infoFileName.c_str():0; }
+    const char* getInfoFileName() const override  { return !m_infoFileName.empty()?m_infoFileName.c_str():0; }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */

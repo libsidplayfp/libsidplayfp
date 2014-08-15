@@ -26,7 +26,7 @@
 void EventScheduler::reset()
 {
     currentTime = 0;
-    firstEvent = 0;
+    firstEvent = nullptr;
 }
 
 void EventScheduler::cancel(Event &event)
