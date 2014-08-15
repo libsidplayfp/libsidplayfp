@@ -22,6 +22,8 @@
 
 #include "sidemu.h"
 
+#include "sidcxx11.h"
+
 std::string sidemu::m_credit;
 
 bool sidemu::lock(EventContext *env)
@@ -38,5 +40,5 @@ bool sidemu::lock(EventContext *env)
 void sidemu::unlock()
 {
     m_locked  = false;
-    m_context = 0;
+    m_context = nullptr;
 }

@@ -25,6 +25,8 @@
 #include "Bank.h"
 #include "c64/c64sid.h"
 
+#include "sidcxx11.h"
+
 #include "NullSid.h"
 
 /**
@@ -63,7 +65,7 @@ public:
      *
      * @param s the emulation
      */
-    void setSID(c64sid *s) { sid = (s != 0) ? s : NullSid::getInstance(); }
+    void setSID(c64sid *s) { sid = (s != nullptr) ? s : NullSid::getInstance(); }
 };
 
 #endif

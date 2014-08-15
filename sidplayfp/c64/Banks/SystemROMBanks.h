@@ -28,6 +28,8 @@
 #include "Bank.h"
 #include "c64/CPU/opcodes.h"
 
+#include "sidcxx11.h"
+
 /**
  * ROM bank base class
  * N must be a power of two
@@ -59,7 +61,7 @@ public:
     /**
      * Copy content from source buffer.
      */
-    void set(const uint8_t* source) { if (source) memcpy(rom, source, N); }
+    void set(const uint8_t* source) { if (source != nullptr) memcpy(rom, source, N); }
 
     /**
      * Writing to ROM is a no-op.
@@ -85,7 +87,7 @@ public:
     {
         romBank<0x2000>::set(kernal);
 
-        if (!kernal)
+        if (kernal != nullptr)
         {
             // IRQ entry point
             setVal(0xffa0, PHAn); // Save regs

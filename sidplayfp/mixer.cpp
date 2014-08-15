@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -145,7 +145,7 @@ void Mixer::clearSids()
 
 void Mixer::addSid(sidemu *chip)
 {
-    if (chip != 0)
+    if (chip != nullptr)
     {
         m_chips.push_back(chip);
         m_buffers.push_back(chip->buffer());

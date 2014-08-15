@@ -22,6 +22,8 @@
 
 #include "sidtune/SidTuneBase.h"
 
+#include "sidcxx11.h"
+
 const char MSG_NO_ERRORS[] = "No errors";
 
 // Default sidtune file name extensions. This selection can be overriden
@@ -60,7 +62,7 @@ SidTune::~SidTune() {}
 
 void SidTune::setFileNameExtensions(const char **fileNameExt)
 {
-    fileNameExtensions = ((fileNameExt != 0) ? fileNameExt : defaultFileNameExt);
+    fileNameExtensions = ((fileNameExt != nullptr) ? fileNameExt : defaultFileNameExt);
 }
 
 void SidTune::load(const char* fileName, bool separatorIsSlash)
@@ -119,5 +121,5 @@ bool SidTune::placeSidTuneInC64mem(sidmemory* mem)
 
 const char* SidTune::createMD5(char *md5)
 {
-    return tune.get()?tune->createMD5(md5):0;
+    return tune.get()?tune->createMD5(md5):nullptr;
 }

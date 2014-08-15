@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@
 #include <memory>
 
 #include "utils/md5Factory.h"
+
+#include "sidcxx11.h"
 
 /**
  * A wrapper around the md5 implementation that provides
@@ -66,7 +68,7 @@ public:
     std::string getDigest()
     {
         const unsigned char* digest = m_md5->getDigest();
-        if (digest == 0)
+        if (digest == nullptr)
             return std::string();
 
         // Construct fingerprint.

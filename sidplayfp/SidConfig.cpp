@@ -24,6 +24,8 @@
 
 #include "mixer.h"
 
+#include "sidcxx11.h"
+
 SidConfig::SidConfig() :
     defaultC64Model(PAL),
     forceC64Model(false),
@@ -32,7 +34,7 @@ SidConfig::SidConfig() :
     playback(MONO),
     frequency(DEFAULT_SAMPLING_FREQ),
     secondSidAddress(0),
-    sidEmulation(0),
+    sidEmulation(nullptr),
     leftVolume(Mixer::VOLUME_MAX),
     rightVolume(Mixer::VOLUME_MAX),
     powerOnDelay(DEFAULT_POWER_ON_DELAY),

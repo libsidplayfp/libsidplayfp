@@ -37,6 +37,8 @@
 #include "sidmemory.h"
 #include "stringutils.h"
 
+#include "sidcxx11.h"
+
 #include "MUS.h"
 #include "p00.h"
 #include "prg.h"
@@ -85,7 +87,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
                  bool separatorIsSlash)
 {
     if (!fileName)
-        return 0;
+        return nullptr;
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     // Filename "-" is used as a synonym for standard input.
@@ -154,7 +156,7 @@ unsigned int SidTuneBase::selectSong(unsigned int selectedSong)
 
 bool SidTuneBase::placeSidTuneInC64mem(sidmemory* mem)
 {
-    if (mem != 0)
+    if (mem != nullptr)
     {
         // The Basic ROM sets these values on loading a file.
         // Program end address
@@ -248,7 +250,7 @@ SidTuneBase* SidTuneBase::getFromStdIn()
 
 SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_least32_t bufferLen)
 {
-    if (buffer == 0 || bufferLen == 0)
+    if (buffer == nullptr || bufferLen == 0)
     {
         throw loadError(ERR_EMPTY);
     }
@@ -262,13 +264,13 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
 
     // Here test for the possible single file formats.
     std::auto_ptr<SidTuneBase> s(PSID::load(buf1));
-    if (!s.get())
+    if (s.get() == nullptr)
     {
         buffer_t buf2;  // empty
         s.reset(MUS::load(buf1, buf2, 0, true));
     }
 
-    if (s.get())
+    if (s.get() != nullptr)
     {
         s->acceptSidTune("-", "-", buf1, false);
         return s.release();
@@ -282,7 +284,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
                             buffer_t& buf, bool isSlashedFileName)
 {
     // Make a copy of the data file name and path, if available.
-    if (dataFileName != 0)
+    if (dataFileName != nullptr)
     {
         const size_t fileNamePos = isSlashedFileName ?
             SidTuneTools::slashedFileNameWithoutPath(dataFileName) :
@@ -292,7 +294,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
 
     // Make a copy of the info file name, if available.
-    if (infoFileName != 0)
+    if (infoFileName != nullptr)
     {
         const size_t fileNamePos = isSlashedFileName ?
             SidTuneTools::slashedFileNameWithoutPath(infoFileName) :
@@ -375,18 +377,18 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
 
     // File loaded. Now check if it is in a valid single-file-format.
     std::auto_ptr<SidTuneBase> s(PSID::load(fileBuf1));
-    if (!s.get())
+    if (s.get() == nullptr)
     {
         buffer_t fileBuf2;
 
         // Try some native C64 file formats
         s.reset(MUS::load(fileBuf1, fileBuf2, 0, true));
-        if (s.get())
+        if (s.get() != nullptr)
         {
             // Try to find second file.
             std::string fileName2;
             int n = 0;
-            while (fileNameExtensions[n] != 0)
+            while (fileNameExtensions[n] != nullptr)
             {
                 createNewFileName(fileName2, fileName, fileNameExtensions[n]);
                 // 1st data file was loaded into "fileBuf1",
@@ -410,7 +412,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                         else
                         {
                             std::auto_ptr<SidTuneBase> s2(MUS::load(fileBuf1, fileBuf2, 0, true));
-                            if (s2.get())
+                            if (s2.get() != nullptr)
                             {
                                 s2->acceptSidTune(fileName, fileName2.c_str(), fileBuf1, separatorIsSlash);
                                 return s2.release();
@@ -428,10 +430,10 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
             return s.release();
         }
     }
-    if (!s.get()) s.reset(p00::load(fileName, fileBuf1));
-    if (!s.get()) s.reset(prg::load(fileName, fileBuf1));
+    if (s.get() == nullptr) s.reset(p00::load(fileName, fileBuf1));
+    if (s.get() == nullptr) s.reset(prg::load(fileName, fileBuf1));
 
-    if (s.get())
+    if (s.get() != nullptr)
     {
         s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
         return s.release();

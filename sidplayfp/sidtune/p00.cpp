@@ -31,6 +31,8 @@
 #include "SidTuneTools.h"
 #include "sidplayfp/SidTuneInfo.h"
 
+#include "sidcxx11.h"
+
 #define X00_ID_LEN   8
 #define X00_NAME_LEN 17
 
@@ -85,9 +87,9 @@ SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
 
     // Combined extension & magic field identification
     if (strlen (ext) != 4)
-        return 0;
+        return nullptr;
     if (!isdigit(ext[2]) || !isdigit(ext[3]))
-        return 0;
+        return nullptr;
 
     X00Format type = X00_UNKNOWN;
     switch (toupper(ext[1]))
@@ -115,14 +117,14 @@ SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
     }
 
     if (type == X00_UNKNOWN)
-        return 0;
+        return nullptr;
 
     // Verify the file is what we think it is
     if (bufLen < X00_ID_LEN)
-        return 0;
+        return nullptr;
 
     if (strcmp (pHeader->id, P00_ID))
-        return 0;
+        return nullptr;
 
     // File types current supported
     if (type != X00_PRG)

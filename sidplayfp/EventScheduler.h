@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2011-2012 Leandro Nini
+ *  Copyright (C) 2011-2014 Leandro Nini
  *  Copyright (C) 2009 Antti S. Lankila
  *  Copyright (C) 2001 Simon White
  *
@@ -24,6 +24,8 @@
 #define EVENTSCHEDULER_H
 
 #include "event.h"
+
+#include "sidcxx11.h"
 
 
 template< class This >
@@ -77,7 +79,7 @@ private:
         Event **scan = &firstEvent;
         for (;;)
         {
-            if (*scan == 0 || (*scan)->triggerTime > event.triggerTime)
+            if (*scan == nullptr || (*scan)->triggerTime > event.triggerTime)
             {
                  event.next = *scan;
                  *scan = &event;
@@ -107,7 +109,7 @@ protected:
 public:
     EventScheduler () :
           currentTime(0),
-          firstEvent(0) {}
+          firstEvent(nullptr) {}
 
     /**
      * Cancel all pending events and reset time.

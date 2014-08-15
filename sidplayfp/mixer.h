@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright (C) 2000 Simon White
  *
@@ -23,6 +23,8 @@
 
 #ifndef MIXER_H
 #define MIXER_H
+
+#include "sidcxx11.h"
 
 #include <stdint.h>
 #include <cstdlib>
@@ -136,7 +138,7 @@ public:
      * @param i the number of the SID to get
      * @return a pointer to the requested sid emu or 0 if not found
      */
-    sidemu* getSid(unsigned int i) const { return (i < m_chips.size()) ? m_chips[i] : 0; }
+    sidemu* getSid(unsigned int i) const { return (i < m_chips.size()) ? m_chips[i] : nullptr; }
 
     /**
      * Set the fast forward ratio.

@@ -29,6 +29,8 @@
 #include "sidendian.h"
 #include "sidmd5.h"
 
+#include "sidcxx11.h"
+
 #define PSID_ID 0x50534944
 #define RSID_ID 0x52534944
 
@@ -111,12 +113,12 @@ SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
     // File format check
     if (dataBuf.size()<6)
-        return 0;
+        return nullptr;
 
     const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
     if ((endian_big32((const uint_least8_t*)pHeader->id)!=PSID_ID)
         && (endian_big32((const uint_least8_t*)pHeader->id)!=RSID_ID))
-         return 0;
+         return nullptr;
 
     std::auto_ptr<PSID> tune(new PSID());
     tune->tryLoad(dataBuf);
@@ -275,7 +277,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
 
 const char *PSID::createMD5(char *md5)
 {
-    if (!md5)
+    if (md5 == nullptr)
         md5 = m_md5;
     *md5 = '\0';
 

@@ -1,9 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2011-2014 Leandro Nini
- *  Copyright (C) 2009 Antti S. Lankila
- *  Copyright (C) 2001 Simon White
+ *  Copyright 2014 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,40 +18,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "EventScheduler.h"
+#ifndef SIDCXX11_H
+#define SIDCXX11_H
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
 
-void EventScheduler::reset()
-{
-    currentTime = 0;
-    firstEvent = 0;
-}
+#ifndef HAVE_CXX11
+#  define nullptr    0
+#  define override
+#  define final
+#  define unique_ptr auto_ptr
+#endif
 
-void EventScheduler::cancel(Event &event)
-{
-    Event **scan = &firstEvent;
-
-    while (*scan != nullptr)
-    {
-        if (&event == *scan)
-        {
-            *scan = (*scan)->next;
-            break;
-        }
-        scan = &((*scan)->next);
-    }
-}
-
-bool EventScheduler::isPending(Event &event) const
-{
-    Event *scan = firstEvent;
-    while (scan != nullptr)
-    {
-        if (&event == scan)
-        {
-            return true;
-        }
-        scan = scan->next;
-    }
-    return false;
-}
+#endif

@@ -29,6 +29,8 @@
 #include "sidendian.h"
 #include "sidmemory.h"
 
+#include "sidcxx11.h"
+
 #include "sidplayer.bin"
 
 const char TXT_FORMAT_MUS[]        = "C64 Sidplayer format (MUS)";
@@ -121,7 +123,7 @@ bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
 
 void MUS::installPlayer(sidmemory *mem)
 {
-    if (mem != 0)
+    if (mem != nullptr)
     {
         // Install MUS player #1.
         uint_least16_t dest = endian_16(sidplayer1[1], sidplayer1[0]);
@@ -156,7 +158,7 @@ SidTuneBase* MUS::load (buffer_t& musBuf,
     uint_least32_t voice3Index;
     SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size()-fileOffset);
     if (!detect(&spPet[0], spPet.tellLength(), voice3Index))
-        return 0;
+        return nullptr;
 
     std::auto_ptr<MUS> tune(new MUS());
     tune->tryLoad(musBuf, strBuf, spPet, voice3Index, init);

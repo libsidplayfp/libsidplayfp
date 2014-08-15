@@ -30,6 +30,8 @@
 #include "psiddrv.h"
 #include "romCheck.h"
 
+#include "sidcxx11.h"
+
 SIDPLAYFP_NAMESPACE_START
 
 
@@ -38,7 +40,7 @@ const char TXT_NA[]             = "NA";
 
 Player::Player () :
     // Set default settings for system
-    m_tune(0),
+    m_tune(nullptr),
     m_errorString(TXT_NA),
     m_isPlaying(false),
     m_rand((unsigned int)::time(0))
@@ -137,7 +139,7 @@ void Player::initialise()
 bool Player::load(SidTune *tune)
 {
     m_tune = tune;
-    if (!tune)
+    if (tune == nullptr)
     {   // Unload tune
         return true;
     }
@@ -146,7 +148,7 @@ bool Player::load(SidTune *tune)
         if (!config(m_cfg))
         {
             // Failed configuration with new tune, reject it
-            m_tune = 0;
+            m_tune = nullptr;
             return false;
         }
     }
@@ -156,14 +158,14 @@ bool Player::load(SidTune *tune)
 void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
 {
     sidemu *s = m_mixer.getSid(sidNum);
-    if (s)
+    if (s != nullptr)
         s->voice(voice, enable);
 }
 
 uint_least32_t Player::play(short *buffer, uint_least32_t count)
 {
     // Make sure a tune is loaded
-    if (!m_tune)
+    if (m_tune == nullptr)
         return 0;
 
     m_mixer.begin(buffer, count);
@@ -171,7 +173,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     // Start the player loop
     m_isPlaying = true;
 
-    if (m_mixer.getSid(0))
+    if (m_mixer.getSid(0) != nullptr)
     {
         if (count)
         {
