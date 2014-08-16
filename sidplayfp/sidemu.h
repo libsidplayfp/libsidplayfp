@@ -25,7 +25,6 @@
 
 #include <string>
 
-#include "component.h"
 #include "SidConfig.h"
 #include "siddefs.h"
 #include "event.h"

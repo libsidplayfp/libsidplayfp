@@ -72,7 +72,6 @@ utils/MD5/MD5_Defs.h
 endif
 
 sidplayfp_libsidplayfp_la_SOURCES = \
-sidplayfp/component.h \
 sidplayfp/config.cpp \
 sidplayfp/EventScheduler.cpp \
 sidplayfp/EventScheduler.h \
@@ -107,6 +106,7 @@ sidplayfp/c64/c64sid.h \
 sidplayfp/c64/c64vic.h \
 sidplayfp/c64/c64.cpp \
 sidplayfp/c64/c64.h \
+sidplayfp/c64/component.h \
 sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
 sidplayfp/c64/poweron.bin \
