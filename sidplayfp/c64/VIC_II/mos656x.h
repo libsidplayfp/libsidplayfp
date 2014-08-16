@@ -372,7 +372,7 @@ public:
     // Component Standard Calls
     void reset() override;
 
-    const char *credits() const override { return credit; }
+    static const char *credits() { return credit; }
 };
 
 // Template specializations

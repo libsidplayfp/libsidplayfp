@@ -124,8 +124,6 @@ public:
     bool getStatus() const { return m_status; }
 
     // Standard component functions
-    const char *credits() const override { return getCredits(); }
-
     void reset() override { sidemu::reset(); }
 
     uint8_t read(uint_least8_t addr) override;

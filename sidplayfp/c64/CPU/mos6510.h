@@ -299,7 +299,7 @@ public:
 
     void reset();
 
-    const char *credits() const { return credit; }
+    static const char *credits() { return credit; }
 
     void debug(bool enable, FILE *out);
     void setRDY(bool newRDY);
