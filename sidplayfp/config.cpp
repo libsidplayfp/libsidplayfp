@@ -215,8 +215,7 @@ SidConfig::sid_model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig
 
 void Player::sidRelease()
 {
-    unsigned int i=0;
-    for (;;)
+    for (unsigned int i=0; ; i++)
     {
         sidemu *s = m_mixer.getSid(i);
         if (s == nullptr)
@@ -227,7 +226,6 @@ void Player::sidRelease()
             b->unlock(s);
         }
         m_c64.setSid(i, 0);
-        i++;
     }
 
     m_mixer.clearSids();
@@ -264,16 +262,13 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 void Player::sidParams(double cpuFreq, int frequency,
                         SidConfig::sampling_method_t sampling, bool fastSampling)
 {
-    unsigned int i = 0;
-
-    for (;;)
+    for (unsigned int i = 0; ; i++)
     {
         sidemu *s = m_mixer.getSid(i);
         if (s == nullptr)
             break;
 
         s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
-        i++;
     }
 }
 
