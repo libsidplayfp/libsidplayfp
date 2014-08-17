@@ -41,6 +41,7 @@ const char TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 
 // Error Strings
 const char ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
+const char ERR_UNSUPPORTED_SID_ADDR[]  = "SIDPLAYER ERROR: Unsupported SID address.";
 
 bool Player::config(const SidConfig &cfg)
 {
@@ -76,6 +77,9 @@ bool Player::config(const SidConfig &cfg)
 
             sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
 
+            if (!m_c64.setSecondSIDAddress(secondSidAddress))
+                throw configError(ERR_UNSUPPORTED_SID_ADDR);
+
             // Configure, setup and install C64 environment/events
             initialise();
         }
@@ -91,17 +95,7 @@ bool Player::config(const SidConfig &cfg)
         }
     }
 
-    if (secondSidAddress)
-    {
-        // Assumed to be in d420-d7ff or de00-dfff range
-        m_c64.setSecondSIDAddress(secondSidAddress);
-        m_info.m_channels = 2;
-    }
-    else
-    {
-        m_c64.setSecondSIDAddress(0);
-        m_info.m_channels = 1;
-    }
+    m_info.m_channels = secondSidAddress ? 2 : 1;
 
     m_mixer.setStereo(cfg.playback == SidConfig::STEREO);
     m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
