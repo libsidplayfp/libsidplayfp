@@ -91,7 +91,7 @@ private:
     void initialise();
     void sidRelease();
     void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
-                    bool forced, unsigned int channels);
+                    bool forced, unsigned int secondSidAddress);
     void sidParams(double cpuFreq, int frequency,
                     SidConfig::sampling_method_t sampling, bool fastSampling);
 

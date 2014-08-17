@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,20 +63,15 @@ public:
         sid->reset(0xf);
     }
 
+    void resetSID()
+    {
+        sid = NullSid::getInstance();
+    }
+
     void resetSIDMapper(Bank *bank)
     {
         for (int i = 0; i < MAPPER_SIZE; i++)
             mapper[i] = bank;
-    }
-
-    /**
-     * Put a SID at desired location.
-     *
-     * @param address the address
-     */
-    void setSIDMapping(int address)
-    {
-        mapper[mapperIndex(address)] = sid;
     }
 
     uint8_t peek(uint_least16_t addr) override
@@ -93,8 +88,13 @@ public:
      * Set SID emulation.
      *
      * @param s the emulation
+     * @param address the address where to put the chip
      */
-    void setSID(c64sid *s) { sid = (s != nullptr) ? s : NullSid::getInstance(); }
+    void setSID(c64sid *s, int address)
+    {
+        sid = s;
+        mapper[mapperIndex(address)] = sid;
+    }
 };
 
 #endif

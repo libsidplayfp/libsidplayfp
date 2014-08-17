@@ -243,21 +243,13 @@ public:
      *
      * @param i sid number to set
      * @param s the sid emu to set, or 0 to remove
-     */
-    void setSid(unsigned int i, c64sid *s);
-
-    /**
-     * Set the base address of a stereo SID chip.<br/>
-     * Valid addresses includes the SID area ($d400-$d7ff)
-     * and the IO Area ($de00-$dfff).
-     *
-     * @param sidChipBase2
-     *            base address (e.g. 0xd420)
-     *            0 to remove second SID
+     * @param sidAddress
+     *            base address (e.g. 0xd420),
+     *            ignored for base SID
      *
      * @return false if address is unsupported
      */
-    bool setSecondSIDAddress(int sidChipBase2);
+    bool setSid(unsigned int i, c64sid *s, int sidAddress);
 
     /**
      * Get the components credits

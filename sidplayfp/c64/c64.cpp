@@ -101,11 +101,12 @@ void c64::reset()
 {
     m_scheduler.reset();
 
-    //cpu.reset  ();
+    //cpu.reset();
     cia1.reset();
     cia2.reset();
     vic.reset();
     sidBank.reset();
+    extraSidBank.reset();
     colorRAMBank.reset();
     mmu.reset();
 
@@ -123,47 +124,42 @@ void c64::setModel(model_t model)
     cia2.setDayOfTimeRate(rate);
 }
 
-void c64::setSid(unsigned int i, c64sid *s)
+bool c64::setSid(unsigned int i, c64sid *s, int sidAddress)
 {
     switch (i)
     {
     case 0:
         sidBank.setSID(s);
-        break;
+        return true;
     case 1:
-        extraSidBank.setSID(s);
-        break;
-    default:
-        break;
-    }
-}
-
-bool c64::setSecondSIDAddress(int sidChipBase2)
-{
-    if (sidChipBase2 == 0)
     {
-        // No 2nd SID, just reset the IO bank mapping
+        if (s == nullptr)
+        {
+            // No 2nd SID, just reset the IO bank mapping
+            resetIoBank();
+            extraSidBank.resetSID();
+            return true;
+        }
+
+        // Check for valid address in the IO area range ($dxxx)
+        if ((sidAddress & 0xf000) != 0xd000)
+            return false;
+
+        const int idx = (sidAddress >> 8) & 0xf;
+
+        // Only allow second SID chip in SID area ($d400-$d7ff)
+        // or IO Area ($de00-$dfff)
+        if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
+            return false;
+
         resetIoBank();
+
+        extraSidBank.resetSIDMapper(ioBank.getBank(idx));
+        ioBank.setBank(idx, &extraSidBank);
+        extraSidBank.setSID(s, sidAddress);
         return true;
     }
-
-    // Check for valid address in the IO area range ($dxxx)
-    if ((sidChipBase2 & 0xf000) != 0xd000)
+    default:
         return false;
-
-    const int idx = (sidChipBase2 >> 8) & 0xf;
-
-    /*
-     * Only allow second SID chip in SID area ($d400-$d7ff)
-     * or IO Area ($de00-$dfff)
-     */
-    if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
-        return false;
-
-    resetIoBank();
-
-    extraSidBank.resetSIDMapper(ioBank.getBank(idx));
-    ioBank.setBank(idx, &extraSidBank);
-    extraSidBank.setSIDMapping(sidChipBase2);
-    return true;
+    }
 }
