@@ -46,7 +46,7 @@
 
 struct psidHeader           // all values are big-endian
 {
-    char id[4];             // 'PSID' or 'RSID' (ASCII)
+    uint8_t id[4];          // 'PSID' or 'RSID' (ASCII)
     uint8_t version[2];     // 1, 2 or 3
     uint8_t data[2];        // 16-bit offset to binary data in file
     uint8_t load[2];        // 16-bit C64 address to load file to
@@ -62,8 +62,8 @@ struct psidHeader           // all values are big-endian
     uint8_t flags[2];       // only version >= 2
     uint8_t relocStartPage; // only version >= 2NG
     uint8_t relocPages;     // only version >= 2NG
-    unsigned char sidChipBase2;      // only version >= 3
-    unsigned char reserved;          // only version >= 2
+    uint8_t sidChipBase2;   // only version >= 3
+    uint8_t reserved;       // only version >= 2
 
 };
 
@@ -118,8 +118,8 @@ SidTuneBase* PSID::load(buffer_t& dataBuf)
         return nullptr;
 
     const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
-    if ((endian_big32((const uint_least8_t*)pHeader->id)!=PSID_ID)
-        && (endian_big32((const uint_least8_t*)pHeader->id)!=RSID_ID))
+    if ((endian_big32(pHeader->id)!=PSID_ID)
+        && (endian_big32(pHeader->id)!=RSID_ID))
          return nullptr;
 
     std::unique_ptr<PSID> tune(new PSID());
@@ -137,7 +137,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
     // Require a valid ID and version number.
     const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
 
-    if (endian_big32((const uint_least8_t*)pHeader->id)==PSID_ID)
+    if (endian_big32(pHeader->id)==PSID_ID)
     {
        switch (endian_big16(pHeader->version))
        {
@@ -152,7 +152,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
        }
        info->m_formatString = TXT_FORMAT_PSID;
     }
-    else if (endian_big32((const uint_least8_t*)pHeader->id)==RSID_ID)
+    else if (endian_big32(pHeader->id)==RSID_ID)
     {
        switch (endian_big16(pHeader->version))
        {
