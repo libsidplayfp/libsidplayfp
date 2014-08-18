@@ -62,8 +62,8 @@ struct psidHeader           // all values are big-endian
     uint8_t flags[2];       // only version >= 2
     uint8_t relocStartPage; // only version >= 2NG
     uint8_t relocPages;     // only version >= 2NG
-    char sidChipBase2;      // only version >= 3
-    char reserved;          // only version >= 2
+    unsigned char sidChipBase2;      // only version >= 3
+    unsigned char reserved;          // only version >= 2
 
 };
 
