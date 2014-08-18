@@ -47,6 +47,8 @@
 class SidTune;
 #endif
 
+#include <vector>
+
 class SidInfo;
 class sidbuilder;
 
@@ -91,7 +93,7 @@ private:
     void initialise();
     void sidRelease();
     void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
-                    bool forced, unsigned int secondSidAddress);
+                    bool forced, const std::vector<unsigned int> &extraSidAddresses);
     void sidParams(double cpuFreq, int frequency,
                     SidConfig::sampling_method_t sampling, bool fastSampling);
 

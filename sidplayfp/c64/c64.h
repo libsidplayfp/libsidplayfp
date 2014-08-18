@@ -239,17 +239,27 @@ public:
     double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**
-     * Set the requested SID
+     * Set the base SID.
      *
-     * @param i sid number to set
-     * @param s the sid emu to set, or 0 to remove
+     * @param s the sid emu to set
+     */
+    void setBaseSid(c64sid *s);
+
+    /**
+     * Add an extra SID.
+     *
+     * @param s the sid emu to set
      * @param sidAddress
-     *            base address (e.g. 0xd420),
-     *            ignored for base SID
+     *            base address (e.g. 0xd420)
      *
      * @return false if address is unsupported
      */
-    bool setSid(unsigned int i, c64sid *s, int sidAddress);
+    bool addExtraSid(c64sid *s, int address);
+
+    /**
+     * Remove all the SIDs.
+     */
+    void clearSids();
 
     /**
      * Get the components credits

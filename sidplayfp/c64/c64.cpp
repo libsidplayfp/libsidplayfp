@@ -124,42 +124,36 @@ void c64::setModel(model_t model)
     cia2.setDayOfTimeRate(rate);
 }
 
-bool c64::setSid(unsigned int i, c64sid *s, int sidAddress)
+void c64::setBaseSid(c64sid *s)
 {
-    switch (i)
-    {
-    case 0:
-        sidBank.setSID(s);
-        return true;
-    case 1:
-    {
-        if (s == nullptr)
-        {
-            // No 2nd SID, just reset the IO bank mapping
-            resetIoBank();
-            extraSidBank.resetSID();
-            return true;
-        }
+    sidBank.setSID(s);
+}
 
-        // Check for valid address in the IO area range ($dxxx)
-        if ((sidAddress & 0xf000) != 0xd000)
-            return false;
-
-        const int idx = (sidAddress >> 8) & 0xf;
-
-        // Only allow second SID chip in SID area ($d400-$d7ff)
-        // or IO Area ($de00-$dfff)
-        if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
-            return false;
-
-        resetIoBank();
-
-        extraSidBank.resetSIDMapper(ioBank.getBank(idx));
-        ioBank.setBank(idx, &extraSidBank);
-        extraSidBank.setSID(s, sidAddress);
-        return true;
-    }
-    default:
+bool c64::addExtraSid(c64sid *s, int address)
+{
+    // Check for valid address in the IO area range ($dxxx)
+    if ((address & 0xf000) != 0xd000)
         return false;
-    }
+
+    const int idx = (address >> 8) & 0xf;
+
+    // Only allow second SID chip in SID area ($d400-$d7ff)
+    // or IO Area ($de00-$dfff)
+    if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
+        return false;
+
+    //FIXME this will work only for second SID
+    resetIoBank();
+
+    extraSidBank.resetSIDMapper(ioBank.getBank(idx));
+    ioBank.setBank(idx, &extraSidBank);
+    extraSidBank.setSID(s, address);
+    return true;
+}
+
+void c64::clearSids()
+{
+    sidBank.setSID(nullptr);
+    resetIoBank();
+    extraSidBank.resetSID();
 }
