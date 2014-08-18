@@ -37,16 +37,17 @@
 // Header has been extended for 'RSID' format
 // The following changes are present:
 //     id = 'RSID'
-//     version = 2 only
+//     version = 2 and 3 only
 //     play, load and speed reserved 0
-//     psidspecific flag reserved 0
-//     init cannot be under ROMS/IO
-//     load cannot be less than 0x0801 (start of basic)
+//     psidspecific flag is called C64BASIC flag
+//     init cannot be under ROMS/IO memory area
+//     load address cannot be less than $07E8
+//     info strings may be 32 characters long without trailing zero
 
-struct psidHeader           // all values big-endian
+struct psidHeader           // all values are big-endian
 {
-    char id[4];             // 'PSID' (ASCII)
-    uint8_t version[2];     // 0x0001 or 0x0002
+    char id[4];             // 'PSID' or 'RSID' (ASCII)
+    uint8_t version[2];     // 1, 2 or 3
     uint8_t data[2];        // 16-bit offset to binary data in file
     uint8_t load[2];        // 16-bit C64 address to load file to
     uint8_t init[2];        // 16-bit C64 address of init subroutine
@@ -58,11 +59,12 @@ struct psidHeader           // all values big-endian
     char name[32];          // ASCII strings, 31 characters long and
     char author[32];        // terminated by a trailing zero
     char released[32];      //
-    uint8_t flags[2];       // only version >= 0x0002
-    uint8_t relocStartPage; // only version >= 0x0002B
-    uint8_t relocPages;     // only version >= 0x0002B
-    char sidChipBase2;      // only version >= 0x0003
-    char reserved;          // only version >= 0x0002
+    uint8_t flags[2];       // only version >= 2
+    uint8_t relocStartPage; // only version >= 2NG
+    uint8_t relocPages;     // only version >= 2NG
+    char sidChipBase2;      // only version >= 3
+    char reserved;          // only version >= 2
+
 };
 
 enum
@@ -239,6 +241,12 @@ void PSID::tryLoad(buffer_t& dataBuf)
 
         if (endian_big16(pHeader->version) >= 3)
         {
+            /*
+             * FIXME add check for valid address
+             * Only even values are valid. Ranges $00-$41 ($D000-$D410) and
+             * $80-$DF ($D800-$DDF0) are invalid. Any invalid value means that no second SID
+             * is used, like $00.
+             */
             info->m_sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
 
             if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
