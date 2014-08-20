@@ -22,6 +22,8 @@
 
 #include "c64.h"
 
+#include <algorithm>
+
 #include "c64/VIC_II/mos656x.h"
 
 typedef struct
@@ -106,9 +108,10 @@ void c64::reset()
     cia2.reset();
     vic.reset();
     sidBank.reset();
-    extraSidBank.reset();
     colorRAMBank.reset();
     mmu.reset();
+
+    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), resetSID());
 
     irqCount = 0;
     oldBAState = true;
@@ -142,18 +145,33 @@ bool c64::addExtraSid(c64sid *s, int address)
     if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
         return false;
 
-    //FIXME this will work only for second SID
-    resetIoBank();
+    //Add new SID bank
+    sidBankMap_t::iterator it = extraSidBanks.find(idx);
+    if (it != extraSidBanks.end())
+    {
+         ExtraSidBank *extraSidBank = it->second;
+         extraSidBank->addSID(s, address);
+    }
+    else
+    {
+        ExtraSidBank *extraSidBank = extraSidBanks.insert(it, sidBankMap_t::value_type(idx, new ExtraSidBank()))->second;
+        extraSidBank->resetSIDMapper(ioBank.getBank(idx));
+        ioBank.setBank(idx, extraSidBank);
+        extraSidBank->addSID(s, address);
+    }
 
-    extraSidBank.resetSIDMapper(ioBank.getBank(idx));
-    ioBank.setBank(idx, &extraSidBank);
-    extraSidBank.setSID(s, address);
     return true;
 }
 
 void c64::clearSids()
 {
     sidBank.setSID(nullptr);
+
     resetIoBank();
-    extraSidBank.resetSID();
+
+    for(sidBankMap_t::const_iterator it = extraSidBanks.begin(); it != extraSidBanks.end(); ++it)
+    {
+        delete it->second;
+    }
+    extraSidBanks.clear();
 }

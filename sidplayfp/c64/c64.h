@@ -26,6 +26,8 @@
 #include <stdint.h>
 #include <cstdio>
 
+#include <map>
+
 #include "Banks/IOBank.h"
 #include "Banks/ColorRAMBank.h"
 #include "Banks/DisconnectedBusBank.h"
@@ -90,6 +92,15 @@ public:
     } model_t;
 
 private:
+    typedef std::map<int, ExtraSidBank*> sidBankMap_t;
+
+    class resetSID
+    {
+    public:
+        void operator() (sidBankMap_t::value_type &e) { e.second->reset(); }
+    };
+
+private:
     /// System clock frequency
     double m_cpuFreq;
 
@@ -120,8 +131,8 @@ private:
     /// SID
     SidBank sidBank;
 
-    /// 2nd SID
-    ExtraSidBank extraSidBank;
+    /// Extra SIDs
+    sidBankMap_t extraSidBanks;
 
     /// I/O Area #1 and #2
     DisconnectedBusBank disconnectedBusBank;

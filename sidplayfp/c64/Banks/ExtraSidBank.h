@@ -24,15 +24,25 @@
 #include "Bank.h"
 #include "c64/c64sid.h"
 
-#include "sidcxx11.h"
+#include <vector>
+#include <algorithm>
 
-#include "NullSid.h"
+#include "sidcxx11.h"
 
 /**
  * Extra SID bank
  */
 class ExtraSidBank : public Bank
 {
+private:
+    typedef std::vector<c64sid*> sids_t;
+
+    class resetSID
+    {
+    public:
+        void operator() (sids_t::value_type &e) { e->reset(0xf); }
+    };
+
 private:
     /**
      * Size of mapping table. Each 32 bytes another SID chip base address
@@ -48,24 +58,15 @@ private:
      */
     Bank *mapper[MAPPER_SIZE];
 
-    c64sid *sid;
+    sids_t sids;
 
 private:
     static unsigned int mapperIndex(int address) { return address >> 5 & (MAPPER_SIZE - 1); }
 
 public:
-    ExtraSidBank() :
-        sid(NullSid::getInstance())
-    {}
-
     void reset()
     {
-        sid->reset(0xf);
-    }
-
-    void resetSID()
-    {
-        sid = NullSid::getInstance();
+        std::for_each(sids.begin(), sids.end(), resetSID());
     }
 
     void resetSIDMapper(Bank *bank)
@@ -90,10 +91,10 @@ public:
      * @param s the emulation
      * @param address the address where to put the chip
      */
-    void setSID(c64sid *s, int address)
+    void addSID(c64sid *s, int address)
     {
-        sid = s;
-        mapper[mapperIndex(address)] = sid;
+        sids.push_back(s);
+        mapper[mapperIndex(address)] = s;
     }
 };
 
