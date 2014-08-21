@@ -79,10 +79,6 @@ public:
 class c64: private c64env
 {
 public:
-    /// Maximum number of supported SIDs (mono and stereo)
-    static const unsigned int MAX_SIDS = 2;
-
-public:
     typedef enum
     {
         PAL_B = 0     ///< PAL C64
