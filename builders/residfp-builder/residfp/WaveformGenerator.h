@@ -90,7 +90,7 @@ private:
     matrix_t* model_wave;
 
     // PWout = (PWn/40.95)%
-    unsigned int pw;
+    int pw;
 
     unsigned int shift_register;
 
