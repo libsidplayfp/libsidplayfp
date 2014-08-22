@@ -1,13 +1,14 @@
 2.0.0:
 
 * move mixer client side
-* add support for 3rd SID
 * support non-ascii paths on Windows
+* keep event scheduler internal
 * wrap everything into __sidplayfp__ namespace (?)
 
 
 someday:
 
+* relocate only psid tunes (?)
 * add SIDid support
 * implement support for mus data embedded in psid files
 * test hardsid support
