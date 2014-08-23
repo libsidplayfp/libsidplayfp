@@ -96,7 +96,6 @@ sidplayfp/romCheck.h \
 sidplayfp/sidemu.cpp \
 sidplayfp/sidemu.h \
 sidplayfp/sidendian.h \
-sidplayfp/sidrandom.h \
 sidplayfp/stringutils.h \
 sidplayfp/c64/Banks/Bank.h \
 sidplayfp/c64/c64cpu.h \

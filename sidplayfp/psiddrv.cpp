@@ -170,8 +170,6 @@ void psiddrv::install(sidmemory *mem) const
     pos += 2;
     mem->writeMemWord(pos, m_tuneInfo->playAddr());
     pos += 2;
-    mem->writeMemWord(pos, m_powerOnDelay);
-    pos += 2;
 
     mem->writeMemByte(pos, iomap(m_tuneInfo->initAddr()));
     pos++;

@@ -25,6 +25,8 @@
 
 #include <stdint.h>
 
+#include "siddefs.h"
+
 /**
  * This interface is used to get sid engine informations.
  */
@@ -56,7 +58,7 @@ public:
     uint_least16_t driverLength() const { return getDriverLength(); }
 
     /// Power on delay
-    uint_least16_t powerOnDelay() const { return getPowerOnDelay(); }
+    SID_DEPRECATED uint_least16_t powerOnDelay() const { return 0; }
 
     /// Describes the speed current song is running at
     const char *speedString() const { return getSpeedString(); }
@@ -83,8 +85,6 @@ private:
     virtual uint_least16_t getDriverAddr() const =0;
 
     virtual uint_least16_t getDriverLength() const =0;
-
-    virtual uint_least16_t getPowerOnDelay() const =0;
 
     virtual const char *getSpeedString() const =0;
 

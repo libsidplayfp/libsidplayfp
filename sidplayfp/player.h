@@ -31,7 +31,6 @@
 #include "SidConfig.h"
 #include "SidTuneInfo.h"
 #include "SidInfoImpl.h"
-#include "sidrandom.h"
 #include "mixer.h"
 #include "event.h"
 #include "c64/c64.h"
@@ -85,8 +84,6 @@ private:
     const char *m_errorString;
 
     volatile bool m_isPlaying;
-
-    sidrandom m_rand;
 
 private:
     c64::model_t c64model(SidConfig::c64_model_t defaultModel, bool forced);

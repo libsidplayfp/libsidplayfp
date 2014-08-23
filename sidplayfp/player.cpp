@@ -42,8 +42,7 @@ Player::Player() :
     // Set default settings for system
     m_tune(nullptr),
     m_errorString(TXT_NA),
-    m_isPlaying(false),
-    m_rand((unsigned int)::time(0))
+    m_isPlaying(false)
 {
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
@@ -108,15 +107,7 @@ void Player::initialise()
         }
     }
 
-    uint_least16_t powerOnDelay = m_cfg.powerOnDelay;
-    // Delays above MAX result in random delays
-    if (powerOnDelay > SidConfig::MAX_POWER_ON_DELAY)
-    {   // Limit the delay to something sensible.
-        powerOnDelay = (uint_least16_t)((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
-    }
-
     psiddrv driver(m_tune->getInfo());
-    driver.powerOnDelay(powerOnDelay);
     if (!driver.drvReloc(m_c64.getMemInterface()))
     {
         throw configError(driver.errorString());
@@ -124,7 +115,6 @@ void Player::initialise()
 
     m_info.m_driverAddr = driver.driverAddr();
     m_info.m_driverLength = driver.driverLength();
-    m_info.m_powerOnDelay = powerOnDelay;
 
     if (!m_tune->placeSidTuneInC64mem(m_c64.getMemInterface()))
     {
