@@ -87,7 +87,7 @@ public:
     {
         romBank<0x2000>::set(kernal);
 
-        if (kernal != nullptr)
+        if (kernal == nullptr)
         {
             // IRQ entry point
             setVal(0xffa0, PHAn); // Save regs
