@@ -53,12 +53,14 @@ uint8_t psiddrv::iomap(uint_least16_t addr) const
         return 0;
     }
 
+    if (addr < 0xa000)
+        return 0x37;  // Basic-ROM, Kernal-ROM, I/O
+    if (addr < 0xd000)
+        return 0x36;  // Kernal-ROM, I/O
     if (addr >= 0xe000)
         return 0x35;  // I/O only
-    if (addr >= 0xd000)
-        return 0x34;  // RAM only
 
-    return 0x36;  // Kernal-ROM, I/O
+    return 0x34;  // RAM only
 }
 
 bool psiddrv::drvReloc(sidmemory *mem)
