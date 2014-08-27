@@ -32,6 +32,7 @@ typedef struct
     double divider;            ///< Clock frequency divider
     double powerFreq;          ///< Power line frequency in Herz
     MOS656X::model_t vicModel; ///< Video chip model
+    uint8_t videoSwitch;       ///< PAL/NTSC switch
 } model_data_t;
 
 /*
@@ -45,10 +46,10 @@ typedef struct
 
 const model_data_t modelData[] =
 {
-    {4433618.75,  18., 50., MOS656X::MOS6569},      // PAL-B
-    {3579545.455, 14., 60., MOS656X::MOS6567R8},    // NTSC-M
-    {3579545.455, 14., 60., MOS656X::MOS6567R56A},  // Old NTSC-M
-    {3582056.25,  14., 60., MOS656X::MOS6572},      // PAL-N
+    {4433618.75,  18., 50., MOS656X::MOS6569,     1},  // PAL-B
+    {3579545.455, 14., 60., MOS656X::MOS6567R8,   0},  // NTSC-M
+    {3579545.455, 14., 60., MOS656X::MOS6567R56A, 0},  // Old NTSC-M
+    {3582056.25,  14., 60., MOS656X::MOS6572,     1},  // PAL-N
 };
 
 double c64::getCpuFreq(model_t model)
@@ -125,6 +126,8 @@ void c64::setModel(model_t model)
     const unsigned int rate = m_cpuFreq / modelData[model].powerFreq;
     cia1.setDayOfTimeRate(rate);
     cia2.setDayOfTimeRate(rate);
+
+    mmu.setVideoSwitch(modelData[model].videoSwitch);
 }
 
 void c64::setBaseSid(c64sid *s)

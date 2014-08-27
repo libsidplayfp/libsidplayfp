@@ -73,6 +73,8 @@ private:
     /// RAM bank 0
     ZeroRAMBank zeroRAMBank;
 
+    uint8_t videoSwitch;
+
 private:
     void setCpuPort(int state) override;
     uint8_t getLastReadByte() const override { return 0; }
@@ -83,6 +85,13 @@ private:
 public:
     MMU(EventContext *context, Bank* ioBank);
     ~MMU() {}
+
+    /**
+     * Set PAL/NTSC switch value which will be put at $02a6 on reset.
+     *
+     * @param vs 0: NTSC, 1: PAL
+     */
+    void setVideoSwitch(uint8_t vs) { videoSwitch = vs; }
 
     void reset();
 

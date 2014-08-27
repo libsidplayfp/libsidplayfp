@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -35,7 +35,8 @@ MMU::MMU(EventContext *context, Bank* ioBank) :
     hiram(false),
     charen(false),
     ioBank(ioBank),
-    zeroRAMBank(this, &ramBank)
+    zeroRAMBank(this, &ramBank),
+    videoSwitch(0)
 {
     cpuReadMap[0] = &zeroRAMBank;
     cpuWriteMap[0] = &zeroRAMBank;
@@ -135,4 +136,7 @@ void MMU::reset()
             }
         }
     }
+
+    // Set PAL/NTSC switch
+    ramBank.poke(0x02a6, videoSwitch);
 }
