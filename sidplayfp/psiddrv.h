@@ -56,10 +56,8 @@ public:
 
     /**
      * Relocate the driver.
-     *
-     * @param mem the c64 memory interface
      */
-    bool drvReloc(sidmemory *mem);
+    bool drvReloc();
 
     /**
      * Install the driver.
