@@ -26,6 +26,7 @@
 
 #include <stdint.h>
 
+#include "sprites.h"
 #include "sidplayfp/event.h"
 #include "c64/component.h"
 #include "EventScheduler.h"
@@ -116,13 +117,7 @@ private:
     uint8_t lpx, lpy;
 
     /// the 8 sprites data
-    //@{
-    uint8_t &sprite_enable, &sprite_y_expansion;
-    uint8_t sprite_exp_flop;
-    uint8_t sprite_dma;
-    uint8_t sprite_mc_base[8];
-    uint8_t sprite_mc[8];
-    //@}
+    Sprites sprites;
 
     /// memory for chip registers
     uint8_t regs[0x40];
@@ -247,74 +242,12 @@ private:
     }
 
     /**
-     * Update mc values in one pass
-     * after the dma has been processed.
-     */
-    inline void updateMc()
-    {
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_dma & mask)
-                sprite_mc[i] = (sprite_mc[i] + 3) & 0x3f;
-        }
-    }
-
-    inline void updateMcBase()
-    {
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if (sprite_exp_flop & mask)
-            {
-                sprite_mc_base[i] = sprite_mc[i];
-                if (sprite_mc_base[i] == 0x3f)
-                    sprite_dma &= ~mask;
-            }
-        }
-    }
-
-    /**
-     * Calculate sprite expansion.
-     */
-    inline void checkSpriteExp()
-    {
-        sprite_exp_flop ^= sprite_dma & sprite_y_expansion;
-    }
-
-    /**
-     * Calculate sprite DMA.
-     */
-    inline void checkSpriteDma()
-    {
-        const uint8_t y = rasterY & 0xff;
-        uint8_t mask = 1;
-        for (unsigned int i=0; i<8; i++, mask<<=1)
-        {
-            if ((sprite_enable & mask) && (y == regs[(i << 1) + 1]) && !(sprite_dma & mask))
-            {
-                sprite_dma |= mask;
-                sprite_mc_base[i] = 0;
-                sprite_exp_flop |= mask;
-            }
-        }
-    }
-
-    inline void checkSpriteDisplay()
-    {
-        for (unsigned int i=0; i<8; i++)
-        {
-            sprite_mc[i] = sprite_mc_base[i];
-        }
-    }
-
-    /**
      * Start DMA for sprite n.
      */
     template<int n>
     inline void startDma()
     {
-        if (sprite_dma & (0x01 << n))
+        if (sprites.isDma(0x01 << n))
             setBA(false);
     }
 
@@ -324,7 +257,7 @@ private:
     template<int n>
     inline void endDma()
     {
-        if (!(sprite_dma & (0x06 << n)))
+        if (!sprites.isDma(0x06 << n))
             setBA(true);
     }
 
@@ -383,7 +316,7 @@ public:
 template<>
 inline void MOS656X::startDma<0>()
 {
-    setBA(!(sprite_dma & 0x01));
+    setBA(!sprites.isDma(0x01));
 }
 
 /**

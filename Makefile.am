@@ -120,6 +120,7 @@ sidplayfp/c64/Banks/SystemROMBanks.h \
 sidplayfp/c64/Banks/ZeroRAMBank.h \
 sidplayfp/c64/VIC_II/mos656x.cpp \
 sidplayfp/c64/VIC_II/mos656x.h \
+sidplayfp/c64/VIC_II/sprites.h \
 sidplayfp/c64/CPU/mos6510.cpp \
 sidplayfp/c64/CPU/mos6510.h \
 sidplayfp/c64/CPU/mos6510debug.cpp \
