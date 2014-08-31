@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -57,12 +57,12 @@ struct psidHeader           // all values are big-endian
     char name[32];          // ASCII strings, 31 characters long and
     char author[32];        // terminated by a trailing zero
     char released[32];      //
+
     uint8_t flags[2];       // only version >= 2
     uint8_t relocStartPage; // only version >= 2NG
     uint8_t relocPages;     // only version >= 2NG
     uint8_t sidChipBase2;   // only version >= 3
     uint8_t reserved;       // only version >= 2
-
 };
 
 enum
@@ -112,13 +112,12 @@ static const int psid_maxStrLen = 32;
 SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
     // File format check
-    if (dataBuf.size()<6)
+    if (dataBuf.size() < 4
+        || ((endian_big32(&dataBuf[0]) != PSID_ID)
+        && (endian_big32(&dataBuf[0]) != RSID_ID)))
+    {
         return 0;
-
-    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
-    if ((endian_big32(pHeader->id)!=PSID_ID)
-        && (endian_big32(pHeader->id)!=RSID_ID))
-         return 0;
+    }
 
     std::auto_ptr<PSID> tune(new PSID());
     tune->tryLoad(dataBuf);
@@ -128,20 +127,28 @@ SidTuneBase* PSID::load(buffer_t& dataBuf)
 
 void PSID::tryLoad(buffer_t& dataBuf)
 {
-    SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
+    // Due to security concerns, input must be at least as long as version 1
+    // header plus 16-bit C64 load address. That is the area which will be
+    // accessed.
+    const buffer_t::size_type bufLen = dataBuf.size();
+    if (bufLen < (sizeof(psidHeader) - 6 + 2))
+    {
+        throw loadError(ERR_TRUNCATED);
+    }
+
     SidTuneInfo::compatibility_t compatibility = SidTuneInfo::COMPATIBILITY_C64;
 
-    // Require minimum size to allow access to the first few bytes.
     // Require a valid ID and version number.
+    // FIXME not entirely safe due to possible struct padding
     const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
 
-    if (endian_big32(pHeader->id)==PSID_ID)
+    if (endian_big32(pHeader->id) == PSID_ID)
     {
        switch (endian_big16(pHeader->version))
        {
        case 1:
            compatibility = SidTuneInfo::COMPATIBILITY_PSID;
-           // Deliberate run on
+           break;
        case 2:
        case 3:
            break;
@@ -150,7 +157,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
        }
        info->m_formatString = TXT_FORMAT_PSID;
     }
-    else if (endian_big32(pHeader->id)==RSID_ID)
+    else if (endian_big32(pHeader->id) == RSID_ID)
     {
        switch (endian_big16(pHeader->version))
        {
@@ -164,26 +171,22 @@ void PSID::tryLoad(buffer_t& dataBuf)
        compatibility = SidTuneInfo::COMPATIBILITY_R64;
     }
 
-    // Due to security concerns, input must be at least as long as version 1
-    // header plus 16-bit C64 load address. That is the area which will be
-    // accessed.
-    const buffer_t::size_type bufLen = dataBuf.size();
-    if (bufLen < (sizeof(psidHeader)+2))
-    {
-        throw loadError(ERR_TRUNCATED);
-    }
-
-    fileOffset            = endian_big16(pHeader->data);
-    info->m_loadAddr      = endian_big16(pHeader->load);
-    info->m_initAddr      = endian_big16(pHeader->init);
-    info->m_playAddr      = endian_big16(pHeader->play);
-    info->m_songs         = endian_big16(pHeader->songs);
-    info->m_startSong     = endian_big16(pHeader->start);
-    info->m_sidChipBase1  = 0xd400;
-    info->m_sidChipBase2  = 0;
-    info->m_compatibility = compatibility;
+    fileOffset             = endian_big16(pHeader->data);
+    info->m_loadAddr       = endian_big16(pHeader->load);
+    info->m_initAddr       = endian_big16(pHeader->init);
+    info->m_playAddr       = endian_big16(pHeader->play);
+    info->m_songs          = endian_big16(pHeader->songs);
+    info->m_startSong      = endian_big16(pHeader->start);
+    info->m_sidChipBase1   = 0xd400;
+    info->m_sidChipBase2   = 0;
+    info->m_compatibility  = compatibility;
+    info->m_sidModel1      = SidTuneInfo::SIDMODEL_UNKNOWN;
+    info->m_sidModel2      = SidTuneInfo::SIDMODEL_UNKNOWN;
+    info->m_relocPages     = 0;
+    info->m_relocStartPage = 0;
 
     uint_least32_t speed = endian_big32(pHeader->speed);
+    SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
 
     if (info->m_songs > MAX_SONGS)
     {
@@ -192,10 +195,6 @@ void PSID::tryLoad(buffer_t& dataBuf)
 
     bool musPlayer = false;
 
-    info->m_sidModel1      = SidTuneInfo::SIDMODEL_UNKNOWN;
-    info->m_sidModel2      = SidTuneInfo::SIDMODEL_UNKNOWN;
-    info->m_relocPages     = 0;
-    info->m_relocStartPage = 0;
     if (endian_big16(pHeader->version) >= 2)
     {
         const uint_least16_t flags = endian_big16(pHeader->flags);
@@ -225,6 +224,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
             clock = SidTuneInfo::CLOCK_PAL;
         else if (flags & PSID_CLOCK_NTSC)
             clock = SidTuneInfo::CLOCK_NTSC;
+
         info->m_clockSpeed = clock;
 
         if ((flags & PSID_SIDMODEL1_ANY) == PSID_SIDMODEL1_ANY)
@@ -239,20 +239,28 @@ void PSID::tryLoad(buffer_t& dataBuf)
 
         if (endian_big16(pHeader->version) >= 3)
         {
-            /*
-             * FIXME add check for valid address
-             * Only even values are valid. Ranges $00-$41 ($D000-$D410) and
-             * $80-$DF ($D800-$DDF0) are invalid. Any invalid value means that no second SID
-             * is used, like $00.
-             */
-            info->m_sidChipBase2 = 0xd000 | (pHeader->sidChipBase2<<4);
+            const uint8_t sidChipBase2 = pHeader->sidChipBase2;
 
-            if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
-                info->m_sidModel2 = SidTuneInfo::SIDMODEL_ANY;
-            else if (flags & PSID_SIDMODEL2_6581)
-                info->m_sidModel2 = SidTuneInfo::SIDMODEL_6581;
-            else if (flags & PSID_SIDMODEL2_8580)
-                info->m_sidModel2 = SidTuneInfo::SIDMODEL_8580;
+            // Only even values are valid. Ranges $00-$41 ($D000-$D410) and
+            // $80-$DF ($D800-$DDF0) are invalid. Any invalid value means that no second SID
+            // is used, like $00.
+            if (sidChipBase2 & 1 
+                || (sidChipBase2 >= 0x00 && sidChipBase2 <= 0x41)
+                || (sidChipBase2 >= 0x80 && sidChipBase2 <= 0xdf))
+            {
+                info->m_sidChipBase2 = 0;
+            }
+            else
+            {
+                info->m_sidChipBase2 = 0xd000 | (sidChipBase2 << 4);
+
+                if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
+                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_ANY;
+                else if (flags & PSID_SIDMODEL2_6581)
+                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_6581;
+                else if (flags & PSID_SIDMODEL2_8580)
+                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_8580;
+            }
         }
     }
 
@@ -266,9 +274,11 @@ void PSID::tryLoad(buffer_t& dataBuf)
         {
             throw loadError(ERR_INVALID);
         }
+
         // Real C64 tunes appear as CIA
         speed = ~0;
     }
+
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(speed, clock);
 
@@ -285,6 +295,7 @@ const char *PSID::createMD5(char *md5)
 {
     if (!md5)
         md5 = m_md5;
+
     *md5 = '\0';
 
     // Include C64 data.

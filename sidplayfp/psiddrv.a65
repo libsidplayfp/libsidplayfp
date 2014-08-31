@@ -61,10 +61,10 @@ flags       .byte 0
 play        jmp (playvec)
 init        jmp (initvec)
 
-cold        ; cold start
-            sei
+            ; cold start
+cold        sei
 
-            ; Turn interrupts off and
+            ; turn interrupts off and
             ; clear any pending irqs
             lda #$00
             sta $d01a
@@ -76,22 +76,22 @@ cold        ; cold start
             lda $dc0d
             lda $dd0d
 
-doinit      ; setup hardware
+            ; setup hardware
 
-            ; Set CIA 1 Timer A to 50/60Hz
-            lda video
-            beq ntsc
-pal         lda #$25
-            ldx #$40
-            jmp timer
-ntsc        lda #$95
-            ldx #$42
-timer       sta $dc04
-            stx $dc05
-
-            ; Maximum volume
+            ; maximum volume
             lda #$0f
             sta $d418
+
+            ; set CIA 1 Timer A to 50/60 Hz
+            lda video
+            beq ntsc
+pal         ldx #$25
+            ldy #$40
+            jmp timer
+ntsc        ldx #$95
+            ldy #$42
+timer       stx $dc04
+            sty $dc05
 
             ; set VICII raster to line 311 for RSIDs
             ldx #$9b
@@ -102,7 +102,6 @@ timer       sta $dc04
             ; is playing at the wrong speed (e.g.
             ; PAL at NTSC) use the compatibility
             ; raster instead to try make it work
-            lda video
             eor clock
             ora initiomap
             beq vicinit
@@ -114,14 +113,15 @@ timer       sta $dc04
 vicinit     stx $d011
             sty $d012
 
-            ; Don't override default irq handler for RSIDs
+            ; don't override default irq handler for RSIDs
             lda initiomap
             beq random
 
-            ; If play address, override default irq vector so
+            ; if play address, override default irq vector so
             ; we reach our routine to handle play routine
             lda playiomap
             beq random
+
             ldx #<irqjob
             stx $0314
 
@@ -151,11 +151,11 @@ ciainit     lda #$81
             sta $dc0d
             stx $dc0e
 
-setiomap    ; set I/O map and call song init routine
-            lda initiomap
+            ; set I/O map and call song init routine
+setiomap    lda initiomap
             bne setbank
 
-            ; Only release interrupt mask for real
+            ; only release interrupt mask for real
             ; C64 tunes (initiomap = 0) thus
             ; providing a more realistic environment
             lda #$37
