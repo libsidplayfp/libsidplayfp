@@ -24,9 +24,9 @@
 #ifndef MOS656X_H
 #define MOS656X_H
 
-#include <stdint.h> 
+#include <stdint.h>
 
-#include "sidplayfp/event.h" 
+#include "sidplayfp/event.h"
 #include "sidplayfp/component.h"
 #include "sidplayfp/EventScheduler.h"
 
@@ -155,7 +155,7 @@ private:
         if (!oldRasterYIRQCondition && rasterYIRQCondition)
             activateIRQFlag(IRQ_RASTER);
     }
-    
+
     /**
      * Set an IRQ flag and trigger an IRQ if the corresponding IRQ mask is set.
      * The IRQ only gets activated, i.e. flag 0x80 gets set, if it was not active before.
@@ -168,7 +168,7 @@ private:
 
     /**
      * Read the value of the raster line IRQ
-     * 
+     *
      * @return raster line when to trigger an IRQ
      */
     unsigned int readRasterLineIRQ() const

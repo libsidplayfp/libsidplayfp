@@ -299,7 +299,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
     }
 
     const size_t relPathToEntryLen = strlen(relPathToEntry);
-    
+
     // Fail if a section-global comment was asked for.
 
     if (*(relPathToEntry + relPathToEntryLen - 1) == '/')

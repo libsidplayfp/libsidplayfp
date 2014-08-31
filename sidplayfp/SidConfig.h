@@ -38,7 +38,7 @@ class sidbuilder;
  */
 class SID_EXTERN SidConfig
 {
-public:  
+public:
     typedef enum {MONO = 1,  STEREO} playback_t;
     typedef enum {MOS6581, MOS8580} sid_model_t;
     typedef enum {PAL, NTSC, OLD_NTSC, DREAN} c64_model_t;

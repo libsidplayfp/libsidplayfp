@@ -51,13 +51,13 @@ namespace reSIDfp
  *   f = (n + 1)*(Vddt - vx)^2 - n*(Vddt - vi)^2 - (Vddt - vo)^2 = 0
  *
  * Using substitution constants
- * 
+ *
  *   a = n + 1
  *   b = Vddt
  *   c = n*(Vddt - vi)^2
  *
  * the equations for the root function and its derivative can be written as:
- * 
+ *
  *   f = a*(b - vx)^2 - c - (b - vo)^2
  *   df = 2*((b - vo)*dvo - a*(b - vx))
  */

@@ -129,7 +129,7 @@ FilterModelConfig::FilterModelConfig() :
 
         s.evaluate(x, out);
         if (out.x < 0.) out.x = 0.;
-        assert(out.x < 65535.5); 
+        assert(out.x < 65535.5);
         opamp_rev[x] = (unsigned short)(out.x + 0.5);
     }
 
@@ -168,7 +168,7 @@ FilterModelConfig::FilterModelConfig() :
     // the filter summer.
     for (int i = 0; i < 8; i++)
     {
-        const int idiv = (i == 0) ? 1 : i; 
+        const int idiv = (i == 0) ? 1 : i;
         const int size = (i == 0) ? 1 : i << 16;
         const double n = i * 8.0 / 6.0;
         opampModel.reset();

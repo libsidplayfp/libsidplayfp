@@ -33,12 +33,12 @@ class EventContext;
 
 /**
  * Base class for sid builders.
- */ 
+ */
 class sidbuilder
 {
 protected:
     typedef std::set<sidemu*> emuset_t;
- 
+
 private:
     const char * const m_name;
 
@@ -52,7 +52,7 @@ protected:
 protected:
     /**
      * Utility class for setting emu parameters in builders.
-     */ 
+     */
     template<class Temu, typename Tparam>
     class applyParameter
     {
@@ -106,7 +106,7 @@ public:
 
     /**
      * Release this SID.
-     * 
+     *
      * @param device the sid emu to unlock
      */
     void unlock(sidemu *device);
@@ -118,14 +118,14 @@ public:
      * Get the builder's name.
      *
      * @return the name
-     */ 
+     */
     const char *name() const { return m_name; }
 
     /**
      * Error message.
      *
      * @return string error message.
-     */ 
+     */
     const char *error() const { return m_errorBuffer.c_str(); }
 
     /**
