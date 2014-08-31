@@ -138,23 +138,32 @@ void c64::setSid(unsigned int i, c64sid *s)
     }
 }
 
-void c64::setSecondSIDAddress(int sidChipBase2)
+bool c64::setSecondSIDAddress(int sidChipBase2)
 {
-    resetIoBank();
+    if (sidChipBase2 == 0)
+    {
+        // No 2nd SID, just reset the IO bank mapping
+        resetIoBank();
+        return true;
+    }
 
     // Check for valid address in the IO area range ($dxxx)
-    if (sidChipBase2 == 0 || ((sidChipBase2 & 0xf000) != 0xd000))
-        return;
+    if ((sidChipBase2 & 0xf000) != 0xd000)
+        return false;
 
     const int idx = (sidChipBase2 >> 8) & 0xf;
+
     /*
-    * Only allow second SID chip in SID area ($d400-$d7ff)
-    * or IO Area ($de00-$dfff)
-    */
+     * Only allow second SID chip in SID area ($d400-$d7ff)
+     * or IO Area ($de00-$dfff)
+     */
     if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
-        return;
+        return false;
+
+    resetIoBank();
 
     extraSidBank.resetSIDMapper(ioBank.getBank(idx));
     ioBank.setBank(idx, &extraSidBank);
     extraSidBank.setSIDMapping(sidChipBase2);
+    return true;
 }

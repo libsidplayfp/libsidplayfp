@@ -252,8 +252,10 @@ public:
      * @param sidChipBase2
      *            base address (e.g. 0xd420)
      *            0 to remove second SID
+     *
+     * @return false if address is unsupported
      */
-    void setSecondSIDAddress(int sidChipBase2);
+    bool setSecondSIDAddress(int sidChipBase2);
 
     /**
      * Get the components credits
