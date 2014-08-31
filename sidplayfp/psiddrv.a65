@@ -62,6 +62,7 @@ play        jmp (playvec)
 init        jmp (initvec)
 
 cold        ; cold start
+            sei
 
             ; Turn interrupts off and
             ; clear any pending irqs
