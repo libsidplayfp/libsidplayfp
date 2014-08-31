@@ -33,7 +33,8 @@
 
 /**
  * VIC-II
- * located at $D000-$D3FF
+ *
+ * Located at $D000-$D3FF
  */
 class c64vic: public MOS656X, public Bank
 {

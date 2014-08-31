@@ -30,11 +30,11 @@ namespace reSIDfp
  * Estimate DAC nonlinearity.
  * The SID DACs are built up as R-2R ladder as follows:
  *
- *          n  n-1      2   1   0    VGND
- *          |   |       |   |   |      |   Termination
- *         2R  2R      2R  2R  2R     2R   only for
- *          |   |       |   |   |      |   MOS 8580
- *      Vo  --R---R--...--R---R--    ---
+ *         n  n-1      2   1   0    VGND
+ *         |   |       |   |   |      |   Termination
+ *        2R  2R      2R  2R  2R     2R   only for
+ *         |   |       |   |   |      |   MOS 8580
+ *     Vo  --R---R--...--R---R--    ---
  *
  *
  * All MOS 6581 DACs are missing a termination resistor at bit 0. This causes

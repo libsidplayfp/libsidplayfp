@@ -32,34 +32,34 @@ namespace reSIDfp
  * Find output voltage in inverting gain and inverting summer SID op-amp
  * circuits, using a combination of Newton-Raphson and bisection.
  *
- *              ---R2--
- *             |       |
- *   vi ---R1-----[A>----- vo
- *             vx
+ *                ---R2--
+ *               |       |
+ *     vi ---R1-----[A>----- vo
+ *               vx
  *
  * From Kirchoff's current law it follows that
  *
- *   IR1f + IR2r = 0
+ *     IR1f + IR2r = 0
  *
  * Substituting the triode mode transistor model K*W/L*(Vgst^2 - Vgdt^2)
  * for the currents, we get:
  *
- *   n*((Vddt - vx)^2 - (Vddt - vi)^2) + (Vddt - vx)^2 - (Vddt - vo)^2 = 0
+ *     n*((Vddt - vx)^2 - (Vddt - vi)^2) + (Vddt - vx)^2 - (Vddt - vo)^2 = 0
  *
  * Our root function f can thus be written as:
  *
- *   f = (n + 1)*(Vddt - vx)^2 - n*(Vddt - vi)^2 - (Vddt - vo)^2 = 0
+ *     f = (n + 1)*(Vddt - vx)^2 - n*(Vddt - vi)^2 - (Vddt - vo)^2 = 0
  *
  * Using substitution constants
  *
- *   a = n + 1
- *   b = Vddt
- *   c = n*(Vddt - vi)^2
+ *     a = n + 1
+ *     b = Vddt
+ *     c = n*(Vddt - vi)^2
  *
  * the equations for the root function and its derivative can be written as:
  *
- *   f = a*(b - vx)^2 - c - (b - vo)^2
- *   df = 2*((b - vo)*dvo - a*(b - vx))
+ *     f = a*(b - vx)^2 - c - (b - vo)^2
+ *     df = 2*((b - vo)*dvo - a*(b - vx))
  */
 class OpAmp
 {

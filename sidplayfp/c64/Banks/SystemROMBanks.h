@@ -71,6 +71,8 @@ public:
 
 /**
  * Kernal ROM
+ *
+ * Located at $E000-$FFFF
  */
 class KernalRomBank : public romBank<0x2000>
 {
@@ -133,6 +135,8 @@ public:
 
 /**
  * BASIC ROM
+ *
+ * Located at $A000-$BFFF
  */
 class BasicRomBank : public romBank<0x2000>
 {
@@ -189,6 +193,8 @@ public:
 
 /**
  * Character ROM
+ *
+ * Located at $D000-$DFFF
  */
 class CharacterRomBank : public romBank<0x1000> {};
 

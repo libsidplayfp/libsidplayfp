@@ -34,13 +34,15 @@ namespace reSIDfp
  * 3-dB frequency 16Hz (the latter provided an audio equipment input impedance
  * of 1kOhm).
  * <p>
- * The STC networks are connected with a BJT supposedly meant to act
+ * The STC networks are connected with a [BJT] supposedly meant to act
  * as a unity gain buffer, which is not really how it works.
  * A more elaborate model would include the BJT, however DC circuit analysis
  * yields BJT base-emitter and emitter-base impedances sufficiently low
  * to produce additional low-pass and high-pass 3dB-frequencies
  * in the order of hundreds of kHz. This calls for a sampling frequency
  * of several MHz, which is far too high for practical use.
+ *
+ * [BJT]: https://en.wikipedia.org/wiki/Bipolar_junction_transistor
  */
 class ExternalFilter
 {
