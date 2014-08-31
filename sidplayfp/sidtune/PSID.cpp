@@ -26,8 +26,8 @@
 #include <memory>
 
 #include "sidplayfp/SidTuneInfo.h"
-#include "sidplayfp/sidendian.h"
-#include "sidplayfp/sidmd5.h"
+#include "sidendian.h"
+#include "sidmd5.h"
 
 #define PSID_ID 0x50534944
 #define RSID_ID 0x52534944

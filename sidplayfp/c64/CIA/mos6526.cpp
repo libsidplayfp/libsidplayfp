@@ -25,7 +25,7 @@
 
 #include <cstring>
 
-#include "sidplayfp/sidendian.h"
+#include "sidendian.h"
 
 enum
 {

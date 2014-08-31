@@ -26,7 +26,7 @@
 #include <string>
 #include <utility>
 
-#include "sidplayfp/sidmd5.h"
+#include "sidmd5.h"
 
 /**
  * Utility class to identify known ROMs through their md5 checksum.

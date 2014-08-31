@@ -24,7 +24,7 @@
 
 #include <algorithm>
 
-#include "sidplayfp/sidemu.h"
+#include "sidemu.h"
 
 void clockChip(sidemu *s) { s->clock(); }
 

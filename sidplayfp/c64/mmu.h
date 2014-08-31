@@ -26,8 +26,8 @@
 #include <stdint.h>
 
 #include "sidplayfp/event.h"
-#include "sidplayfp/sidendian.h"
-#include "sidplayfp/sidmemory.h"
+#include "sidendian.h"
+#include "sidmemory.h"
 
 #include "Banks/Bank.h"
 #include "Banks/SystemRAMBank.h"

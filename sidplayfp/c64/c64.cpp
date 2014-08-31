@@ -22,7 +22,7 @@
 
 #include "c64.h"
 
-#include "sidplayfp/c64/VIC_II/mos656x.h"
+#include "c64/VIC_II/mos656x.h"
 
 typedef struct
 {

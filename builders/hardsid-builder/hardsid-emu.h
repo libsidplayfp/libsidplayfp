@@ -25,8 +25,8 @@
 #define HARDSID_EMU_H
 
 #include "sidplayfp/event.h"
-#include "sidplayfp/sidemu.h"
-#include "sidplayfp/EventScheduler.h"
+#include "sidemu.h"
+#include "EventScheduler.h"
 #include "sidplayfp/siddefs.h"
 
 #ifdef HAVE_CONFIG_H

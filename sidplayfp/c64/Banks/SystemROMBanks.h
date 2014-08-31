@@ -26,7 +26,7 @@
 #include <cstring>
 
 #include "Bank.h"
-#include "sidplayfp/c64/CPU/opcodes.h"
+#include "c64/CPU/opcodes.h"
 
 /**
  * ROM bank base class

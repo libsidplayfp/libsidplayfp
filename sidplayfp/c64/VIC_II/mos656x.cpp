@@ -30,7 +30,7 @@
 
 #include <cstring>
 
-#include "sidplayfp/sidendian.h"
+#include "sidendian.h"
 
 /** Cycle # at which the VIC takes the bus in a bad line (BA goes low). */
 const unsigned int VICII_FETCH_CYCLE = 11;

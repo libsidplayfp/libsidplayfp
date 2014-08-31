@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "sidplayfp/event.h"
-#include "sidplayfp/EventScheduler.h"
+#include "EventScheduler.h"
 
 class MOS6526;
 

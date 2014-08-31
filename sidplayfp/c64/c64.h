@@ -32,13 +32,13 @@
 #include "Banks/SidBank.h"
 #include "Banks/ExtraSidBank.h"
 
-#include "sidplayfp/EventScheduler.h"
+#include "EventScheduler.h"
 
-#include "sidplayfp/c64/c64env.h"
-#include "sidplayfp/c64/c64cpu.h"
-#include "sidplayfp/c64/c64cia.h"
-#include "sidplayfp/c64/c64vic.h"
-#include "sidplayfp/c64/mmu.h"
+#include "c64/c64env.h"
+#include "c64/c64cpu.h"
+#include "c64/c64cia.h"
+#include "c64/c64vic.h"
+#include "c64/mmu.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"

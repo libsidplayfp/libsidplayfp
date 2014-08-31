@@ -27,7 +27,7 @@
 
 #include "residfp/SID.h"
 #include "sidplayfp/SidConfig.h"
-#include "sidplayfp/sidemu.h"
+#include "sidemu.h"
 #include "sidplayfp/event.h"
 
 class sidbuilder;
