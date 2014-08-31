@@ -26,6 +26,8 @@
 #include <stdint.h>
 #include <cstdio>
 
+#include <map>
+
 #include "Banks/IOBank.h"
 #include "Banks/ColorRAMBank.h"
 #include "Banks/DisconnectedBusBank.h"
@@ -88,6 +90,15 @@ public:
     } model_t;
 
 private:
+    typedef std::map<int, ExtraSidBank*> sidBankMap_t;
+
+    class resetSID
+    {
+    public:
+        void operator() (sidBankMap_t::value_type &e) { e.second->reset(); }
+    };
+
+private:
     /// System clock frequency
     double m_cpuFreq;
 
@@ -118,8 +129,8 @@ private:
     /// SID
     SidBank sidBank;
 
-    /// 2nd SID
-    ExtraSidBank extraSidBank;
+    /// Extra SIDs
+    sidBankMap_t extraSidBanks;
 
     /// I/O Area #1 and #2
     DisconnectedBusBank disconnectedBusBank;
@@ -237,25 +248,27 @@ public:
     double getMainCpuSpeed() const { return m_cpuFreq; }
 
     /**
-     * Set the requested SID
+     * Set the base SID.
      *
-     * @param i sid number to set
-     * @param s the sid emu to set, or 0 to remove
+     * @param s the sid emu to set
      */
-    void setSid(unsigned int i, c64sid *s);
+    void setBaseSid(c64sid *s);
 
     /**
-     * Set the base address of a stereo SID chip.<br/>
-     * Valid addresses includes the SID area ($d400-$d7ff)
-     * and the IO Area ($de00-$dfff).
+     * Add an extra SID.
      *
-     * @param sidChipBase2
+     * @param s the sid emu to set
+     * @param sidAddress
      *            base address (e.g. 0xd420)
-     *            0 to remove second SID
      *
      * @return false if address is unsupported
      */
-    bool setSecondSIDAddress(int sidChipBase2);
+    bool addExtraSid(c64sid *s, int address);
+
+    /**
+     * Remove all the SIDs.
+     */
+    void clearSids();
 
     /**
      * Get the components credits

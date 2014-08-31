@@ -38,8 +38,8 @@ const char TXT_NTSC_CIA[]       = "CIA (NTSC)";
 const char TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 
 // Error Strings
-const char ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling frequency.";
-const char ERR_UNSUPPORTED_SID_ADDR[]  = "SIDPLAYER ERROR: Unsupported SID address.";
+const char ERR_UNSUPPORTED_FREQ[]     = "SIDPLAYER ERROR: Unsupported sampling frequency.";
+const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID address.";
 
 bool Player::config(const SidConfig &cfg)
 {
@@ -62,11 +62,15 @@ bool Player::config(const SidConfig &cfg)
 
         try
         {
+            sidRelease();
+
+            std::vector<unsigned int> addresses;
+            if (secondSidAddress != 0)
+                addresses.push_back(secondSidAddress);
+
             // SID emulation setup (must be performed before the
             // environment setup call)
-            sidRelease();
-            const int channels = (secondSidAddress != 0) ? 2 : 1;
-            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel, channels);
+            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel, addresses);
 
             // Determine clock speed
             const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
@@ -74,9 +78,6 @@ bool Player::config(const SidConfig &cfg)
             m_c64.setModel(model);
 
             sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
-
-            if (!m_c64.setSecondSIDAddress(secondSidAddress))
-                throw configError(ERR_UNSUPPORTED_SID_ADDR);
 
             // Configure, setup and install C64 environment/events
             initialise();
@@ -207,7 +208,9 @@ SidConfig::sid_model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig
 
 void Player::sidRelease()
 {
-    for (unsigned int i=0; ; i++)
+    m_c64.clearSids();
+
+    for (unsigned int i = 0; ; i++)
     {
         sidemu *s = m_mixer.getSid(i);
         if (s == 0)
@@ -217,39 +220,49 @@ void Player::sidRelease()
         {
             b->unlock(s);
         }
-        m_c64.setSid(i, 0);
     }
 
     m_mixer.clearSids();
 }
 
 void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
-                        bool forced, unsigned int channels)
+                        bool forced, const std::vector<unsigned int> &extraSidAddresses)
 {
     if (builder != 0)
     {
-        // Detect the Correct SID model
-        // Determine model when unknown
-        SidConfig::sid_model_t userModels[c64::MAX_SIDS];
-
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
-        userModels[0] = getModel(tuneInfo->sidModel1(), defaultModel, forced);
-        // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
-        // model as the first SID.
-        userModels[1] = getModel(tuneInfo->sidModel2(), userModels[0], forced);
-
-        for (unsigned int i = 0; i < channels; i++)
+        // Setup base SID
+        const SidConfig::sid_model_t userModel = getModel(tuneInfo->sidModel1(), defaultModel, forced);
+        sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
+        if (!builder->getStatus())
         {
-            sidemu *s = builder->lock(m_c64.getEventScheduler(), userModels[i]);
-            // Get at least one SID emulation
-            if ((i == 0) && !builder->getStatus())
-            {
-                throw configError(builder->error());
-            }
+            throw configError(builder->error());
+        }
 
-            m_c64.setSid(i, s);
-            m_mixer.addSid(s);
+        m_c64.setBaseSid(s);
+        m_mixer.addSid(s);
+
+        // Setup extra SIDs if needed
+        if (extraSidAddresses.size() != 0)
+        {
+            // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
+            // model as the first SID.
+            defaultModel = userModel;
+
+            const unsigned int extraSidChips = extraSidAddresses.size();
+
+            for (unsigned int i = 0; i < extraSidChips; i++)
+            {
+                const SidConfig::sid_model_t userModel = getModel(tuneInfo->sidModel2(), defaultModel, forced);
+
+                sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
+
+                if (!m_c64.addExtraSid(s, extraSidAddresses[i]))
+                    throw configError(ERR_UNSUPPORTED_SID_ADDR);
+
+                m_mixer.addSid(s);
+            }
         }
     }
 }
