@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <cstdio>
 
+#include "flags.h"
 #include "EventScheduler.h"
 
 #ifdef HAVE_CONFIG_H
@@ -97,14 +98,8 @@ private:
     /// RDY pin state (stop CPU on read)
     bool rdy;
 
-    // Flags
-    bool flagN;
-    bool flagC;
-    bool flagD;
-    bool flagZ;
-    bool flagV;
-    bool flagI;
-    bool flagB;
+    /// Status register
+    Flags flags;
 
     // Data regarding current instruction
     uint_least16_t Register_ProgramCounter;
@@ -142,11 +137,6 @@ private:
     void eventWithSteals();
 
     void Initialise();
-
-    // Flag utility functions
-    inline void setFlagsNZ(uint8_t value);
-    inline uint8_t getStatusRegister();
-    inline void setStatusRegister(uint8_t sr);
 
     // Declare Interrupt Routines
     inline void IRQLoRequest();
