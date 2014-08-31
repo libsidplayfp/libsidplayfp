@@ -42,8 +42,6 @@ const char ERR_UNSUPPORTED_FREQ[]      = "SIDPLAYER ERROR: Unsupported sampling 
 
 bool Player::config(const SidConfig &cfg)
 {
-    const SidTuneInfo* tuneInfo = 0;
-
     // Check for base sampling frequency
     if (cfg.frequency < 8000)
     {
@@ -56,7 +54,7 @@ bool Player::config(const SidConfig &cfg)
     // Only do these if we have a loaded tune
     if (m_tune)
     {
-        tuneInfo = m_tune->getInfo();
+        const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
         if (tuneInfo->sidChipBase2() != 0)
             secondSidAddress = tuneInfo->sidChipBase2();

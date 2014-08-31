@@ -369,7 +369,7 @@ public:
     // Component Standard Calls
     void reset();
 
-    const char *credits() const { return credit; }
+    static const char *credits() { return credit; }
 };
 
 // Template specializations
