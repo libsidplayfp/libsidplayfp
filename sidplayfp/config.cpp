@@ -52,7 +52,7 @@ bool Player::config(const SidConfig &cfg)
     uint_least16_t secondSidAddress = cfg.secondSidAddress;
 
     // Only do these if we have a loaded tune
-    if (m_tune)
+    if (m_tune != 0)
     {
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
@@ -214,8 +214,12 @@ SidConfig::sid_model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig
 void Player::sidRelease()
 {
     unsigned int i=0;
-    while (sidemu *s = m_mixer.getSid(i))
+    for (;;)
     {
+        sidemu *s = m_mixer.getSid(i);
+        if (s == 0)
+            break;
+
         if (sidbuilder *b = s->builder())
         {
             b->unlock(s);
@@ -230,7 +234,7 @@ void Player::sidRelease()
 void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                         bool forced, unsigned int channels)
 {
-    if (builder)
+    if (builder != 0)
     {
         // Detect the Correct SID model
         // Determine model when unknown
@@ -263,8 +267,12 @@ void Player::sidParams(double cpuFreq, int frequency,
 {
     unsigned int i = 0;
 
-    while (sidemu *s = m_mixer.getSid(i))
+    for (;;)
     {
+        sidemu *s = m_mixer.getSid(i);
+        if (s == 0)
+            break;
+
         s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
         i++;
     }
