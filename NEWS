@@ -1,3 +1,8 @@
+1.5.2 2014-08-31
+* Restore original iomap function, fixes /MUSICIANS/C/Cooksey_Mark/Airwolf.sid
+
+
+
 1.5.1 2014-08-24
 * Correctly interpret second sid address from PSID tunes header, fixes /MUSICIANS/T/TSM/Fiki_Fiki_2SID.sid
 * Fix a signedness warning
