@@ -25,7 +25,6 @@
 
 #include <string>
 
-#include "component.h"
 #include "SidConfig.h"
 #include "siddefs.h"
 #include "event.h"
@@ -45,10 +44,8 @@ enum
 /**
  * Inherit this class to create a new SID emulation.
  */
-class sidemu : public c64sid, public component
+class sidemu : public c64sid
 {
-    using c64sid::reset;
-
 private:
     sidbuilder *m_builder;
 
@@ -79,9 +76,6 @@ public:
         m_error("N/A") {}
     virtual ~sidemu() {}
 
-    // Standard component functions
-    void reset() { reset(0); }
-
     virtual void clock() = 0;
 
     /// Set execution environment and lock sid to it
@@ -90,16 +84,16 @@ public:
     /// Unlock sid
     virtual void unlock();
 
-    const char *error() const { return m_error.c_str(); }
-
     // Standard SID functions
     virtual void voice(unsigned int num, bool mute) = 0;
     virtual void model(SidConfig::sid_model_t model) = 0;
 
-    sidbuilder *builder() const { return m_builder; }
-
     virtual void sampling(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED,
         SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) {}
+
+    const char *error() const { return m_error.c_str(); }
+
+    sidbuilder *builder() const { return m_builder; }
 
     int bufferpos() const { return m_bufferpos; }
     void bufferpos(int pos) { m_bufferpos = pos; }

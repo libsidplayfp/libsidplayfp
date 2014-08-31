@@ -27,7 +27,7 @@
 
 #include "timer.h"
 #include "EventScheduler.h"
-#include "component.h"
+#include "c64/component.h"
 
 class EventContext;
 class MOS6526;

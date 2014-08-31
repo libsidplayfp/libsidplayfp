@@ -27,7 +27,7 @@
 #include <stdint.h>
 
 #include "sidplayfp/event.h"
-#include "component.h"
+#include "c64/component.h"
 #include "EventScheduler.h"
 
 
