@@ -115,7 +115,7 @@ void Player::initialise()
 
     psiddrv driver(m_tune->getInfo());
     driver.powerOnDelay(powerOnDelay);
-    if (!driver.drvReloc(m_c64.getMemInterface()))
+    if (!driver.drvReloc())
     {
         throw configError(driver.errorString());
     }

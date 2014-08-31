@@ -63,7 +63,7 @@ uint8_t psiddrv::iomap(uint_least16_t addr) const
     return 0x34;  // RAM only
 }
 
-bool psiddrv::drvReloc(sidmemory *mem)
+bool psiddrv::drvReloc()
 {
     const int startlp = m_tuneInfo->loadAddr() >> 8;
     const int endlp   = (m_tuneInfo->loadAddr() + (m_tuneInfo->c64dataLen() - 1)) >> 8;
@@ -71,10 +71,9 @@ bool psiddrv::drvReloc(sidmemory *mem)
     uint_least8_t relocStartPage = m_tuneInfo->relocStartPage();
     uint_least8_t relocPages = m_tuneInfo->relocPages();
 
-    mem->writeMemByte(0x02a6, (m_tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
-
     if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
-    {   // The psiddrv is only used for initialisation and to
+    {
+        // The psiddrv is only used for initialisation and to
         // autorun basic tunes as running the kernel falls
         // into a manual load/run mode
         relocStartPage = 0x04;
@@ -88,8 +87,8 @@ bool psiddrv::drvReloc(sidmemory *mem)
     else if (relocStartPage == 0)
     {
         relocPages = 0;
-        /* find area where to dump the driver in.
-        * It's only 1 block long, so any free block we can find will do. */
+        // find area where to dump the driver in.
+        // It's only 1 block long, so any free block we can find will do.
         for (int i = 4; i < 0xd0; i ++)
         {
             if (i >= startlp && i <= endlp)
@@ -127,23 +126,31 @@ bool psiddrv::drvReloc(sidmemory *mem)
 
     // Adjust size to not included initialisation data.
     reloc_size -= 10;
+
     m_driverAddr   = relocAddr;
     m_driverLength = (uint_least16_t)reloc_size;
     // Round length to end of page
     m_driverLength += 0xff;
     m_driverLength &= 0xff00;
 
+    return true;
+}
+
+void psiddrv::install(sidmemory *mem) const
+{    
     mem->installResetHook(endian_little16(reloc_driver));
 
     // If not a basic tune then the psiddrv must install
     // interrupt hooks and trap programs trying to restart basic
     if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
-    {   // Install hook to set subtune number for basic
-        mem->setBasicSubtune((uint8_t) (m_tuneInfo->currentSong() - 1));
+    {
+        // Install hook to set subtune number for basic
+        mem->setBasicSubtune((uint8_t)(m_tuneInfo->currentSong() - 1));
         mem->installBasicTrap(0xbf53);
     }
     else
-    {   // Only install irq handle for RSID tunes
+    {
+        // Only install irq handle for RSID tunes
         mem->fillRam(0x0314, &reloc_driver[2], m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64 ? 2 : 6);
 
         // Experimental restart basic trap
@@ -152,34 +159,40 @@ bool psiddrv::drvReloc(sidmemory *mem)
         mem->writeMemWord(0x0328, addr);
     }
 
-    return true;
-}
-
-void psiddrv::install(sidmemory *mem) const
-{
     int pos = m_driverAddr;
 
     // Install driver to ram
     mem->fillRam(pos, &reloc_driver[10], reloc_size);
 
-    // Tell C64 about song
+    // Set song number
     mem->writeMemByte(pos, (uint8_t) (m_tuneInfo->currentSong() - 1));
     pos++;
+
+    // Set speed flag
     mem->writeMemByte(pos, m_tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
     pos++;
+
+    // Set init address
     mem->writeMemWord(pos, m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC ?
                      0xbf55 /*Was 0xa7ae, see above*/ : m_tuneInfo->initAddr());
     pos += 2;
+
+    // Set play address
     mem->writeMemWord(pos, m_tuneInfo->playAddr());
     pos += 2;
     mem->writeMemWord(pos, m_powerOnDelay);
     pos += 2;
 
+    // Set init address io bank value
     mem->writeMemByte(pos, iomap(m_tuneInfo->initAddr()));
     pos++;
+
+    // Set play address io bank value
     mem->writeMemByte(pos, iomap(m_tuneInfo->playAddr()));
     pos++;
-    const uint8_t flag = mem->readMemByte(0x02a6); // PAL/NTSC flag
+
+    // Set PAL/NTSC flag
+    const uint8_t flag = mem->readMemByte(0x02a6);
     mem->writeMemByte(pos, flag);
     pos++;
 
@@ -198,6 +211,6 @@ void psiddrv::install(sidmemory *mem) const
     }
     pos++;
 
-    // Default processor register flags on calling init
+    // Set default processor register flags on calling init
     mem->writeMemByte(pos, m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
 }
