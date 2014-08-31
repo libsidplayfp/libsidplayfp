@@ -47,6 +47,8 @@ enum
  */
 class sidemu : public c64sid, public component
 {
+    using c64sid::reset;
+
 private:
     sidbuilder *m_builder;
 
@@ -79,8 +81,6 @@ public:
 
     // Standard component functions
     void reset() { reset(0); }
-
-    virtual void reset(uint8_t volume) = 0;
 
     virtual void clock() = 0;
 

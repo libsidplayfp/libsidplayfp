@@ -35,9 +35,6 @@ protected:
 
 public:
     virtual void reset(uint8_t volume) = 0;
-
-    virtual void poke(uint_least16_t address, uint8_t value) = 0;
-    virtual uint8_t peek(uint_least16_t address) = 0;
 };
 
 #endif // C64SID_H
