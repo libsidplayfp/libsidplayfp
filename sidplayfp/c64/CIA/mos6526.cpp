@@ -92,9 +92,8 @@ MOS6526::MOS6526(EventContext *context) :
     timerB(context, this),
     idr(0),
     event_context(*context),
-    m_todPeriod(~0), // Dummy
+    tod(context, this, regs),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick),
-    todEvent("CIA Time of Day", *this, &MOS6526::tod),
     triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger)
 {
     reset();
@@ -129,11 +128,6 @@ void MOS6526::clear()
 }
 
 
-void MOS6526::setDayOfTimeRate(unsigned int clock)
-{
-    m_todPeriod = (event_clock_t) clock * (1 << 7);
-}
-
 void MOS6526::reset()
 {
     sdr_out = 0;
@@ -149,19 +143,12 @@ void MOS6526::reset()
     timerB.reset();
 
     // Reset tod
-    memset(m_todclock, 0, sizeof(m_todclock));
-    m_todclock[TOD_HR-TOD_TEN] = 1; // the most common value
-    memcpy(m_todlatch, m_todclock, sizeof(m_todlatch));
-    memset(m_todalarm, 0, sizeof(m_todalarm));
-    m_todlatched = false;
-    m_todstopped = true;
-    m_todCycles = 0;
+    tod.reset();
 
     triggerScheduled = false;
 
     event_context.cancel(bTickEvent);
     event_context.cancel(triggerEvent);
-    event_context.schedule(todEvent, 0, EVENT_CLOCK_PHI1);
 }
 
 uint8_t MOS6526::read(uint_least8_t addr)
@@ -201,23 +188,11 @@ uint8_t MOS6526::read(uint_least8_t addr)
         return endian_16lo8(timerB.getTimer());
     case TBH:
         return endian_16hi8(timerB.getTimer());
-
-    // TOD implementation taken from Vice
-    // TOD clock is latched by reading Hours, and released
-    // upon reading Tenths of Seconds. The counter itself
-    // keeps ticking all the time.
-    // Also note that this latching is different from the input one.
-    case TOD_TEN: // Time Of Day clock 1/10 s
-    case TOD_SEC: // Time Of Day clock sec
-    case TOD_MIN: // Time Of Day clock min
-    case TOD_HR:  // Time Of Day clock hour
-        if (!m_todlatched)
-            memcpy(m_todlatch, m_todclock, sizeof(m_todlatch));
-        if (addr == TOD_TEN)
-            m_todlatched = false;
-        if (addr == TOD_HR)
-            m_todlatched = true;
-        return m_todlatch[addr - TOD_TEN];
+    case TOD_TEN:
+    case TOD_SEC:
+    case TOD_MIN:
+    case TOD_HR:
+        return tod.read(addr - TOD_TEN);
     case IDR:{
         if (triggerScheduled)
         {
@@ -235,30 +210,6 @@ uint8_t MOS6526::read(uint_least8_t addr)
         return (regs[CRB] & 0xee) | (timerB.getState() & 1);
     default:
         return regs[addr];
-    }
-}
-
-void MOS6526::setTodReg(uint_least8_t addr, uint8_t data)
-{
-    if (regs[CRB] & 0x80)
-    {
-        /* set alarm */
-        m_todalarm[addr - TOD_TEN] = data;
-    }
-    else
-    {
-        /* set time */
-        if (addr == TOD_TEN)
-            m_todstopped = false;
-        if (addr == TOD_HR)
-            m_todstopped = true;
-        m_todclock[addr - TOD_TEN] = data;
-    }
-
-    // check alarm
-    if (!m_todstopped && !memcmp(m_todalarm, m_todclock, sizeof(m_todalarm)))
-    {
-        trigger(INTERRUPT_ALARM);
     }
 }
 
@@ -294,27 +245,11 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
     case TBH:
         timerB.latchHi(data);
         break;
-
-    // TOD implementation taken from Vice
-    case TOD_HR:  // Time Of Day clock hour
-        /* force bits 6-5 = 0 */
-        data &= 0x9f;
-        /* Flip AM/PM on hour 12  */
-        /* Flip AM/PM only when writing time, not when writing alarm */
-        if ((data & 0x1f) == 0x12 && !(regs[CRB] & 0x80))
-            data ^= 0x80;
-
-        setTodReg(addr, data);
-        break;
-    case TOD_TEN: // Time Of Day clock 1/10 s
-        data &= 0x0f;
-        setTodReg(addr, data);
-        break;
-    case TOD_SEC: // Time Of Day clock sec
-        // deliberate run on
-    case TOD_MIN: // Time Of Day clock min
-        data &= 0x7f;
-        setTodReg(addr, data);
+    case TOD_TEN:
+    case TOD_SEC:
+    case TOD_MIN:
+    case TOD_HR:
+        tod.write(addr - TOD_TEN, data);
         break;
     case SDR:
         if (regs[CRA] & 0x40)
@@ -396,95 +331,7 @@ void MOS6526::underflowB()
     trigger(INTERRUPT_UNDERFLOW_B);
 }
 
-void MOS6526::tod()
+void MOS6526::todInterrupt()
 {
-    // Reload divider according to 50/60 Hz flag
-    // Only performed on expiry according to Frodo
-    if (regs[CRA] & 0x80)
-        m_todCycles += (m_todPeriod * 5);
-    else
-        m_todCycles += (m_todPeriod * 6);
-
-    // Fixed precision 25.7
-    event_context.schedule(todEvent, m_todCycles >> 7);
-    m_todCycles &= 0x7F; // Just keep the decimal part
-
-    if (!m_todstopped)
-    {
-        /* advance the counters.
-         * - individual counters are all 4 bit
-         */
-        uint8_t t0 = m_todclock[TOD_TEN-TOD_TEN] & 0x0f;
-        uint8_t t1 = m_todclock[TOD_SEC-TOD_TEN] & 0x0f;
-        uint8_t t2 = (m_todclock[TOD_SEC-TOD_TEN] >> 4) & 0x0f;
-        uint8_t t3 = m_todclock[TOD_MIN-TOD_TEN] & 0x0f;
-        uint8_t t4 = (m_todclock[TOD_MIN-TOD_TEN] >> 4) & 0x0f;
-        uint8_t t5 = m_todclock[TOD_HR-TOD_TEN] & 0x0f;
-        uint8_t t6 = (m_todclock[TOD_HR-TOD_TEN] >> 4) & 0x01;
-        uint8_t pm = m_todclock[TOD_HR-TOD_TEN] & 0x80;
-
-        /* tenth seconds (0-9) */
-        t0 = (t0 + 1) & 0x0f;
-        if (t0 == 10)
-        {
-            t0 = 0;
-            /* seconds (0-59) */
-            t1 = (t1 + 1) & 0x0f; /* x0...x9 */
-            if (t1 == 10)
-            {
-                t1 = 0;
-                t2 = (t2 + 1) & 0x07; /* 0x...5x */
-                if (t2 == 6)
-                {
-                    t2 = 0;
-                    /* minutes (0-59) */
-                    t3 = (t3 + 1) & 0x0f; /* x0...x9 */
-                    if (t3 == 10)
-                    {
-                        t3 = 0;
-                        t4 = (t4 + 1) & 0x07; /* 0x...5x */
-                        if (t4 == 6)
-                        {
-                            t4 = 0;
-                            /* hours (1-12) */
-                            t5 = (t5 + 1) & 0x0f;
-                            if (t6)
-                            {
-                                /* toggle the am/pm flag when going from 11 to 12 (!) */
-                                if (t5 == 2)
-                                {
-                                    pm ^= 0x80;
-                                }
-                                /* wrap 12h -> 1h (FIXME: when hour became x3 ?) */
-                                if (t5 == 3)
-                                {
-                                    t5 = 1;
-                                    t6 = 0;
-                                }
-                            }
-                            else
-                            {
-                                if (t5 == 10)
-                                {
-                                    t5 = 0;
-                                    t6 = 1;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        m_todclock[TOD_TEN-TOD_TEN] = t0;
-        m_todclock[TOD_SEC-TOD_TEN] = t1 | (t2 << 4);
-        m_todclock[TOD_MIN-TOD_TEN] = t3 | (t4 << 4);
-        m_todclock[TOD_HR-TOD_TEN] = t5 | (t6 << 4) | pm;
-
-        // check alarm
-        if (!memcmp(m_todalarm, m_todclock, sizeof(m_todalarm)))
-        {
-            trigger(INTERRUPT_ALARM);
-        }
-    }
+    trigger(INTERRUPT_ALARM);
 }
