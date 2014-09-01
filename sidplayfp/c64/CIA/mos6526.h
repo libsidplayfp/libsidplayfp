@@ -2,6 +2,7 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -102,7 +103,7 @@ public:
  *
  * @author alankila
  */
-class MOS6526: public component
+class MOS6526 : public component
 {
     friend class TimerA;
     friend class TimerB;
@@ -154,14 +155,11 @@ protected:
     EventCallback<MOS6526> triggerEvent;
     //@}
 
-protected:
+private:
     /**
-     * Create a new CIA.
-     *
-     * @param context the event context
+     * TOD alarm interrupt.
      */
-    MOS6526(EventContext *context);
-    ~MOS6526() {}
+    void todInterrupt();
 
     /**
      * This event exists solely to break the ambiguity of what scheduling on
@@ -207,6 +205,15 @@ protected:
      */
     void serialPort();
 
+protected:
+    /**
+     * Create a new CIA.
+     *
+     * @param context the event context
+     */
+    MOS6526(EventContext *context);
+    ~MOS6526() {}
+
     /**
      * Signal interrupt.
      *
@@ -235,9 +242,6 @@ protected:
      *            value to write
      */
     void write(uint_least8_t addr, uint8_t data) override;
-
-private:
-    void todInterrupt();
 
 public:
     /**
