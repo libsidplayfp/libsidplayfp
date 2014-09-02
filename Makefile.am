@@ -82,6 +82,7 @@ sidplayfp/psiddrv.h \
 sidplayfp/psiddrv.bin \
 sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
+sidplayfp/poweron.bin \
 sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
 sidplayfp/sidbuilder.cpp \
@@ -108,7 +109,6 @@ sidplayfp/c64/c64.h \
 sidplayfp/c64/component.h \
 sidplayfp/c64/mmu.cpp \
 sidplayfp/c64/mmu.h \
-sidplayfp/c64/poweron.bin \
 sidplayfp/c64/Banks/ColorRAMBank.h \
 sidplayfp/c64/Banks/DisconnectedBusBank.h \
 sidplayfp/c64/Banks/ExtraSidBank.h \

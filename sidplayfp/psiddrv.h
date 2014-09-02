@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,11 @@ private:
      * @return a default bank-select value for $01
      */
     uint8_t iomap(uint_least16_t addr) const;
+
+    /**
+     * Copy power on pattern in memory.
+     */
+    void copyPoweronPattern(sidmemory *mem) const;
 
 public:
     psiddrv(const SidTuneInfo *tuneInfo) :
