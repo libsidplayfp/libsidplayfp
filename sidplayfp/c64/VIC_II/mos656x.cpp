@@ -77,12 +77,10 @@ void MOS656X::reset()
     rasterYIRQCondition = false;
     rasterClk           = 0;
     vblanking           = false;
-    lp_triggered        = false;
-    lpx                 = 0;
-    lpy                 = 0;
 
     memset(regs, 0, sizeof(regs));
 
+    lp.reset();
     sprites.reset();
 
     event_context.cancel(*this);
@@ -114,9 +112,9 @@ uint8_t MOS656X::read(uint_least8_t addr)
         // Raster counter
         return rasterY & 0xFF;
     case 0x13:
-        return lpx;
+        return lp.getX();
     case 0x14:
-        return lpy;
+        return lp.getY();
     case 0x19:
         // Interrupt Pending Register
         return irqFlags | 0x70;
@@ -663,14 +661,13 @@ event_clock_t MOS656X::clockOldNTSC()
 }
 
 // Handle light pen trigger
-void MOS656X::lightpen ()
-{   // Synchronise simulation
+void MOS656X::lightpen()
+{
+    // Synchronise simulation
     sync();
 
-    if (!lp_triggered)
-    {   // Latch current coordinates
-        lpx = lineCycle << 2;
-        lpy = (uint8_t)rasterY & 0xff;
+    if (lp.trigger(lineCycle, rasterY))
+    {
         activateIRQFlag(IRQ_LIGHTPEN);
     }
 }
