@@ -76,6 +76,8 @@ bool psiddrv::drvReloc()
     uint_least8_t relocStartPage = m_tuneInfo->relocStartPage();
     uint_least8_t relocPages = m_tuneInfo->relocPages();
 
+    mem->writeMemByte(0x02a6, (m_tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
+
     if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
     {
         // The psiddrv is only used for initialisation and to
