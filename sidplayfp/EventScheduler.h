@@ -58,14 +58,14 @@ class EventScheduler: public EventContext
 {
 private:
     /**
-     * EventScheduler's current clock.
-     */
-    event_clock_t currentTime;
-
-    /**
      * The first event of the chain.
      */
     Event *firstEvent;
+
+    /**
+     * EventScheduler's current clock.
+     */
+    event_clock_t currentTime;
 
 private:
     /**
@@ -108,8 +108,8 @@ protected:
 
 public:
     EventScheduler() :
-        currentTime(0),
-        firstEvent(nullptr) {}
+        firstEvent(nullptr),
+        currentTime(0) {}
 
     /**
      * Cancel all pending events and reset time.

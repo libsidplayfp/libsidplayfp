@@ -53,9 +53,9 @@ class SID_EXTERN Event
 
 private:
     /**
-     * Describe event for humans.
+     * The next event in sequence.
      */
-    const char * const m_name;
+    Event *next;
 
     /**
      * The clock this event fires.
@@ -63,9 +63,10 @@ private:
     event_clock_t triggerTime;
 
     /**
-     * The next event in sequence.
+     * Describe event for humans.
      */
-    Event *next;
+    const char * const m_name;
+
 
 public:
     /**

@@ -84,15 +84,15 @@ const char *MOS6526::credit =
 };
 
 MOS6526::MOS6526(EventContext *context) :
+    event_context(*context),
     pra(regs[PRA]),
     prb(regs[PRB]),
     ddra(regs[DDRA]),
     ddrb(regs[DDRB]),
     timerA(context, this),
     timerB(context, this),
-    idr(0),
-    event_context(*context),
     tod(context, this, regs),
+    idr(0),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick),
     triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger)
 {

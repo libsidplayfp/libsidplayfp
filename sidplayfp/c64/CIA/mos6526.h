@@ -113,6 +113,9 @@ private:
     static const char *credit;
 
 protected:
+    /// Event context.
+    EventContext &event_context;
+
     /// These are all CIA registers.
     uint8_t regs[0x10];
 
@@ -127,6 +130,9 @@ protected:
     TimerB timerB;
     //@}
 
+    /// TOD
+    Tod tod;
+
     /// Serial Data Registers
     //@{
     uint8_t sdr_out;
@@ -139,12 +145,6 @@ protected:
 
     /// Interrupt data register
     uint8_t idr;
-
-    /// Event context.
-    EventContext &event_context;
-
-    /// TOD
-    Tod tod;
 
     /// Have we already scheduled CIA->CPU interrupt transition?
     bool triggerScheduled;
