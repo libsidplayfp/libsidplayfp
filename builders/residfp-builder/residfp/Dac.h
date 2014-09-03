@@ -60,7 +60,7 @@ namespace Dac
      * @param term is the dac terminated by a 2R resistor? (6581 DACs are not)
      */
     void kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term);
-};
+}
 
 } // namespace reSIDfp
 
