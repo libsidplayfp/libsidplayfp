@@ -39,9 +39,6 @@ private:
     uint_least16_t m_driverLength;
 
 private:
-    static uint8_t psid_driver[];
-
-private:
     /**
      * Get required I/O map to reach address
      *
