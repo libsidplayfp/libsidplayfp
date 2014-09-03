@@ -231,4 +231,17 @@ void Player::stop()
     }
 }
 
+#ifdef PC64_TESTSUITE
+    void Player::load(const char *file)
+    {
+        std::string name(PC64_TESTSUITE);
+        name.append(file);
+        name.append(".prg");
+
+        m_tune->load(name.c_str());
+        m_tune->selectSong(0);
+        initialise();
+    }
+#endif
+
 SIDPLAYFP_NAMESPACE_STOP
