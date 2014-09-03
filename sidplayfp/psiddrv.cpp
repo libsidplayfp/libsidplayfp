@@ -76,8 +76,6 @@ bool psiddrv::drvReloc()
     uint_least8_t relocStartPage = m_tuneInfo->relocStartPage();
     uint_least8_t relocPages = m_tuneInfo->relocPages();
 
-    mem->writeMemByte(0x02a6, (m_tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_PAL) ? 1 : 0);
-
     if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
     {
         // The psiddrv is only used for initialisation and to
@@ -143,12 +141,14 @@ bool psiddrv::drvReloc()
     return true;
 }
 
-void psiddrv::install(sidmemory *mem) const
+void psiddrv::install(sidmemory *mem, uint8_t video) const
 {
     if (m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64)
     {
         copyPoweronPattern(mem);
     }
+
+    mem->writeMemByte(0x02a6, video);
 
     mem->installResetHook(endian_little16(reloc_driver));
 
@@ -202,8 +202,7 @@ void psiddrv::install(sidmemory *mem) const
     pos++;
 
     // Set PAL/NTSC flag
-    const uint8_t flag = mem->readMemByte(0x02a6);
-    mem->writeMemByte(pos, flag);
+    mem->writeMemByte(pos, video);
     pos++;
 
     // Add the required tune speed
@@ -216,7 +215,7 @@ void psiddrv::install(sidmemory *mem) const
         mem->writeMemByte(pos, 0);
         break;
     default: // UNKNOWN or ANY
-        mem->writeMemByte(pos, flag);
+        mem->writeMemByte(pos, video);
         break;
     }
     pos++;

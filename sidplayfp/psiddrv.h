@@ -69,8 +69,9 @@ public:
      * Must be called after the tune has been placed in memory.
      *
      * @param mem the c64 memory interface
+     * @param video the PAL/NTSC switch value, 0: NTSC, 1: PAL
      */
-    void install(sidmemory *mem) const;
+    void install(sidmemory *mem, uint8_t video) const;
 
     /**
      * Get a detailed error message.

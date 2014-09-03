@@ -121,7 +121,7 @@ void Player::initialise()
         throw configError(m_tune->statusString());
     }
 
-    driver.install(m_c64.getMemInterface());
+    driver.install(m_c64.getMemInterface(), videoSwitch);
 
     m_c64.resetCpu();
 }
