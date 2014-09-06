@@ -27,13 +27,29 @@
 
 #include "sidplayfp/SidTune.h"
 
+#include "sidcxx11.h"
+
+struct psidHeader;
+
 class PSID : public SidTuneBase
 {
 private:
     char m_md5[SidTune::MD5_LENGTH+1];
 
 private:
-    void tryLoad(buffer_t& dataBuf);
+    /**
+     * Load PSID file.
+     *
+     * @throw loadError
+     */
+    void tryLoad(const psidHeader &pHeader);
+
+    /**
+     * Read PSID file header.
+     *
+     * @throw loadError
+     */
+    static void readHeader(const buffer_t &dataBuf, psidHeader &hdr);
 
 protected:
     PSID() {}
@@ -41,9 +57,13 @@ protected:
 public:
     virtual ~PSID() {}
 
+    /**
+     * @return pointer to a SidTune or 0 if not a PSID file
+     * @throw loadError if PSID file is corrupt
+     */
     static SidTuneBase* load(buffer_t& dataBuf);
 
-    virtual const char *createMD5(char *md5);
+    virtual const char *createMD5(char *md5) override;
 
 private:
     // prevent copying

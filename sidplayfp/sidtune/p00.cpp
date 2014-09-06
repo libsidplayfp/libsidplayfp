@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -48,18 +48,18 @@
 // as the filename becomes <= 8.  The removal of characters
 // occurs in three passes, the first removes all '_', then
 // vowels and finally numerics.  If the filename is still
-// greater than 8 it is trucated. struct X00Header
+// greater than 8 it is trucated.
+
 struct X00Header
 {
-    char    id[X00_ID_LEN];     // C64File
-    char    name[X00_NAME_LEN]; // C64 name
+    char    id[X00_ID_LEN];     // 'C64File' (ASCII)
+    uint8_t name[X00_NAME_LEN]; // C64 name (PETSCII)
     uint8_t length;             // Rel files only (Bytes/Record),
                                 // should be 0 for all other types
 };
 
 typedef enum
 {
-    X00_UNKNOWN,
     X00_DEL,
     X00_SEQ,
     X00_PRG,
@@ -67,12 +67,14 @@ typedef enum
     X00_REL
 } X00Format;
 
+// Format strings
 const char TXT_FORMAT_DEL[] = "Unsupported tape image file (DEL)";
 const char TXT_FORMAT_SEQ[] = "Unsupported tape image file (SEQ)";
 const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 const char TXT_FORMAT_USR[] = "Unsupported USR file (USR)";
 const char TXT_FORMAT_REL[] = "Unsupported tape image file (REL)";
 
+// Error strings
 const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 
 const char P00_ID[]         = "C64File";
@@ -80,18 +82,18 @@ const char P00_ID[]         = "C64File";
 
 SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
 {
-    const char      *ext     = SidTuneTools::fileExtOfPath(fileName);
-    const char      *format  = 0;
-    const X00Header *pHeader = reinterpret_cast<const X00Header*>(&dataBuf[0]);
-    const buffer_t::size_type bufLen = dataBuf.size();
+    const char *ext = SidTuneTools::fileExtOfPath(fileName);
 
     // Combined extension & magic field identification
-    if (strlen (ext) != 4)
+    if (strlen(ext) != 4)
         return nullptr;
+
     if (!isdigit(ext[2]) || !isdigit(ext[3]))
         return nullptr;
 
-    X00Format type = X00_UNKNOWN;
+    const char *format = nullptr;
+    X00Format type;
+
     switch (toupper(ext[1]))
     {
     case 'D':
@@ -114,27 +116,32 @@ SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
         type   = X00_REL;
         format = TXT_FORMAT_REL;
         break;
+    default:
+        return nullptr;
     }
 
-    if (type == X00_UNKNOWN)
-        return nullptr;
-
     // Verify the file is what we think it is
+    const buffer_t::size_type bufLen = dataBuf.size();
     if (bufLen < X00_ID_LEN)
         return nullptr;
 
-    if (strcmp (pHeader->id, P00_ID))
+    X00Header pHeader;
+    memcpy(pHeader.id,     &dataBuf[0], X00_ID_LEN);
+    memcpy(pHeader.name,   &dataBuf[X00_ID_LEN], X00_NAME_LEN);
+    pHeader.length = dataBuf[X00_ID_LEN + X00_NAME_LEN];
+
+    if (strcmp(pHeader.id, P00_ID))
         return nullptr;
 
     // File types current supported
     if (type != X00_PRG)
         throw loadError("Not a PRG inside X00");
 
-    if (bufLen < sizeof(X00Header)+2)
+    if (bufLen < sizeof(X00Header) + 2)
         throw loadError(ERR_TRUNCATED);
 
     std::unique_ptr<p00> tune(new p00());
-    tune->load(format, pHeader);
+    tune->load(format, &pHeader);
 
     return tune.release();
 }
@@ -145,12 +152,12 @@ void p00::load(const char* format, const X00Header* pHeader)
 
     {   // Decode file name
         PetsciiToAscii converter;
-        SmartPtr_sidtt<const uint8_t> spPet((const uint8_t*)pHeader->name, X00_NAME_LEN);
+        SmartPtr_sidtt<const uint8_t> spPet(pHeader->name, X00_NAME_LEN);
         info->m_infoString.push_back(converter.convert(spPet));
     }
 
     // Automatic settings
-    fileOffset            = sizeof(X00Header);
+    fileOffset            = X00_ID_LEN + X00_NAME_LEN + 1;
     info->m_songs         = 1;
     info->m_startSong     = 1;
     info->m_compatibility = SidTuneInfo::COMPATIBILITY_BASIC;
