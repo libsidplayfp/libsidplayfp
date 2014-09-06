@@ -77,18 +77,24 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
         kernalCheck k(kernal);
         m_info.m_kernalDesc = k.info();
     }
+    else
+        m_info.m_kernalDesc.clear();
 
     if (basic != nullptr)
     {
         basicCheck b(basic);
         m_info.m_basicDesc = b.info();
     }
+    else
+        m_info.m_basicDesc.clear();
 
     if (character != nullptr)
     {
         chargenCheck c(character);
         m_info.m_chargenDesc = c.info();
     }
+    else
+        m_info.m_chargenDesc.clear();
 
     m_c64.setRoms(kernal, basic, character);
 }
