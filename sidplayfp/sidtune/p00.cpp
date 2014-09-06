@@ -36,7 +36,7 @@
 #define X00_ID_LEN   8
 #define X00_NAME_LEN 17
 
-// File format from PC64.  PC64 automatically generates
+// File format from PC64. PC64 automatically generates
 // the filename from the cbm name (16 to 8 conversion)
 // but we only need to worry about that when writing files
 // should we want pc64 compatibility.  The extension numbers
@@ -74,6 +74,7 @@ const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 const char TXT_FORMAT_USR[] = "Unsupported USR file (USR)";
 const char TXT_FORMAT_REL[] = "Unsupported tape image file (REL)";
 
+// Magic field
 const char P00_ID[]         = "C64File";
 
 

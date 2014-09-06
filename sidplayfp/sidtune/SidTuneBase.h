@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -66,12 +66,6 @@ protected:
     static const char ERR_NOT_ENOUGH_MEMORY[];
     static const char ERR_TRUNCATED[];
     static const char ERR_INVALID[];
-
-private:
-    /// C64KB+LOAD+PSID
-    static const uint_least32_t MAX_FILELEN = 65536+2+0x7C;
-
-    static const uint_least32_t MAX_MEMORY = 65536;
 
 public:  // ----------------------------------------------------------------
     virtual ~SidTuneBase() {}

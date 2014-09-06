@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -47,7 +47,7 @@ static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
-bool MUS::detect(const uint_least8_t* buffer, uint_least32_t bufLen,
+bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {
     SmartPtr_sidtt<const uint8_t> spMus((const uint8_t*)buffer, bufLen);
@@ -100,12 +100,11 @@ bool MUS::placeSidTuneInC64mem(sidmemory* mem)
 
 bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
 {
-    const uint_least32_t mergeLen = musBuf.size()+strBuf.size();
+    const uint_least32_t mergeLen = musBuf.size() + strBuf.size();
 
     // Sanity check. I do not trust those MUS/STR files around.
-    const uint_least32_t freeSpace = endian_16(sidplayer1[1], sidplayer1[0])
-                            - SIDTUNE_MUS_DATA_ADDR;
-    if ((mergeLen-4) > freeSpace)
+    const uint_least32_t freeSpace = endian_16(sidplayer1[1], sidplayer1[0]) - SIDTUNE_MUS_DATA_ADDR;
+    if ((mergeLen - 4) > freeSpace)
     {
         throw loadError(ERR_SIZE_EXCEEDED);
     }
@@ -127,7 +126,8 @@ void MUS::installPlayer(sidmemory *mem)
     {
         // Install MUS player #1.
         uint_least16_t dest = endian_16(sidplayer1[1], sidplayer1[0]);
-        mem->fillRam(dest, sidplayer1+2, sizeof(sidplayer1)-2);
+
+        mem->fillRam(dest, sidplayer1 + 2, sizeof(sidplayer1) - 2);
         // Point player #1 to data #1.
         mem->writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+2)&0xFF);
         mem->writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+2)>>8);
@@ -136,10 +136,10 @@ void MUS::installPlayer(sidmemory *mem)
         {
             // Install MUS player #2.
             dest = endian_16(sidplayer2[1], sidplayer2[0]);
-            mem->fillRam(dest, sidplayer2+2, sizeof(sidplayer2)-2);
+            mem->fillRam(dest, sidplayer2 + 2, sizeof(sidplayer2) - 2);
             // Point player #2 to data #2.
-            mem->writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)&0xFF);
-            mem->writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+musDataLen+2)>>8);
+            mem->writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) & 0xFF);
+            mem->writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) >> 8);
         }
     }
 }
@@ -225,7 +225,8 @@ void MUS::tryLoad(buffer_t& musBuf,
         stereo = true;
     }
     else
-    {   // For MUS + STR via stdin the files come combined
+    {
+        // For MUS + STR via stdin the files come combined
         if (spPet.good())
         {
             const uint_least16_t pos = (uint_least16_t)spPet.tellPos();
@@ -238,7 +239,8 @@ void MUS::tryLoad(buffer_t& musBuf,
     }
 
     if (stereo)
-    {   // Voice3Index now is offset to text lines (uppercase Pet-strings).
+    {
+        // Voice3Index now is offset to text lines (uppercase Pet-strings).
         spPet += voice3Index;
 
         // Extract credits

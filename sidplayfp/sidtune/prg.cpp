@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -37,7 +37,7 @@ SidTuneBase* prg::load(const char *fileName, buffer_t& dataBuf)
 {
     const char *ext = SidTuneTools::fileExtOfPath(fileName);
     if ((!stringutils::equal(ext, ".prg")) &&
-         (!stringutils::equal(ext, ".c64")))
+        (!stringutils::equal(ext, ".c64")))
     {
         return nullptr;
     }

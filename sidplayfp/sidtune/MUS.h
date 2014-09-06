@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,9 +35,6 @@ private:
     uint_least16_t musDataLen;
 
 private:
-    static bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
-                         uint_least32_t& voice3Index);
-
     bool mergeParts(buffer_t& musBuf, buffer_t& strBuf);
 
     void tryLoad(buffer_t& musBuf,

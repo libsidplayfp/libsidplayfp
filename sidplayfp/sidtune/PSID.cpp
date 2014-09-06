@@ -108,6 +108,7 @@ const char TXT_UNKNOWN_RSID[] = "Unsupported RSID version";
 const int psid_headerSize = 118;
 const int psidv2_headerSize = psid_headerSize + 6;
 
+// Magic fields
 const uint32_t PSID_ID = 0x50534944;
 const uint32_t RSID_ID = 0x52534944;
 
