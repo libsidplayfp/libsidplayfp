@@ -23,6 +23,8 @@
 #ifndef VOICE_H
 #define VOICE_H
 
+#include <memory>
+
 #include "siddefs-fp.h"
 #include "WaveformGenerator.h"
 #include "EnvelopeGenerator.h"
@@ -36,9 +38,9 @@ namespace reSIDfp
 class Voice
 {
 private:
-    WaveformGenerator* waveformGenerator;
+    std::auto_ptr<WaveformGenerator> waveformGenerator;
 
-    EnvelopeGenerator* envelopeGenerator;
+    std::auto_ptr<EnvelopeGenerator> envelopeGenerator;
 
 public:
     /**
@@ -68,15 +70,9 @@ public:
         waveformGenerator(new WaveformGenerator()),
         envelopeGenerator(new EnvelopeGenerator()) {}
 
-    ~Voice()
-    {
-        delete waveformGenerator;
-        delete envelopeGenerator;
-    }
+    WaveformGenerator* wave() const { return waveformGenerator.get(); }
 
-    WaveformGenerator* wave() const { return waveformGenerator; }
-
-    EnvelopeGenerator* envelope() const { return envelopeGenerator; }
+    EnvelopeGenerator* envelope() const { return envelopeGenerator.get(); }
 
     /**
      * Write control register.

@@ -23,6 +23,8 @@
 #ifndef SIDFP_H
 #define SIDFP_H
 
+#include <memory>
+
 #include "siddefs-fp.h"
 
 namespace reSIDfp
@@ -60,28 +62,28 @@ private:
     Filter* filter;
 
     /// Filter used, if model is set to 6581
-    Filter6581* filter6581;
+    std::auto_ptr<Filter6581> filter6581;
 
     /// Filter used, if model is set to 8580
-    Filter8580* filter8580;
+    std::auto_ptr<Filter8580> filter8580;
 
     /**
      * External filter that provides high-pass and low-pass filtering
      * to adjust sound tone slightly.
      */
-    ExternalFilter* externalFilter;
+    std::auto_ptr<ExternalFilter> externalFilter;
 
     /// Resampler used by audio generation code.
-    Resampler* resampler;
+    std::auto_ptr<Resampler> resampler;
 
     /// Paddle X register support
-    Potentiometer* potX;
+    std::auto_ptr<Potentiometer> potX;
 
     /// Paddle Y register support
-    Potentiometer* potY;
+    std::auto_ptr<Potentiometer> potY;
 
     /// SID voices
-    Voice* voice[3];
+    std::auto_ptr<Voice> voice[3];
 
     /// Time to live for the last written value
     int busValueTtl;
@@ -137,7 +139,6 @@ private:
 
 public:
     SID();
-    ~SID();
 
     /**
      * Set chip model.
@@ -256,14 +257,14 @@ public:
      *
      * @return filter
      */
-    Filter6581* getFilter6581() const { return filter6581; }
+    Filter6581* getFilter6581() const { return filter6581.get(); }
 
     /**
      * Get chip's 8580 filter.
      *
      * @return filter
      */
-    Filter8580* getFilter8580() const { return filter8580; }
+    Filter8580* getFilter8580() const { return filter8580.get(); }
 };
 
 } // namespace reSIDfp

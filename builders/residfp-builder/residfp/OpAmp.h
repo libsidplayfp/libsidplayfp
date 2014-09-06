@@ -23,6 +23,7 @@
 #ifndef OPAMP_H
 #define OPAMP_H
 
+#include <memory>>
 #include "Spline.h"
 
 namespace reSIDfp
@@ -69,7 +70,7 @@ private:
 
     const double kVddt, vmin, vmax;
 
-    Spline* opamp;
+    std::auto_ptr<Spline> opamp;
 
 public:
     /**
@@ -85,8 +86,6 @@ public:
         vmin(opamp[0].x),
         vmax(opamp[opamplength - 1].x),
         opamp(new Spline(opamp, opamplength)) {}
-
-    ~OpAmp() { delete opamp; }
 
     void reset()
     {

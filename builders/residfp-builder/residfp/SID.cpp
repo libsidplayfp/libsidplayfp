@@ -51,27 +51,14 @@ SID::SID() :
     potX(new Potentiometer()),
     potY(new Potentiometer())
 {
-    voice[0] = new Voice();
-    voice[1] = new Voice();
-    voice[2] = new Voice();
+    voice[0].reset(new Voice());
+    voice[1].reset(new Voice());
+    voice[2].reset(new Voice());
 
     muted[0] = muted[1] = muted[2] = false;
 
     reset();
     setChipModel(MOS8580);
-}
-
-SID::~SID()
-{
-    delete filter6581;
-    delete filter8580;
-    delete externalFilter;
-    delete potX;
-    delete potY;
-    delete voice[0];
-    delete voice[1];
-    delete voice[2];
-    delete resampler;
 }
 
 void SID::writeImmediate(int offset, unsigned char value)
@@ -228,11 +215,11 @@ void SID::setChipModel(ChipModel model)
     switch (model)
     {
     case MOS6581:
-        filter = filter6581;
+        filter = filter6581.get();
         break;
 
     case MOS8580:
-        filter = filter8580;
+        filter = filter8580.get();
         break;
 
     default:
@@ -264,7 +251,7 @@ void SID::reset()
     filter8580->reset();
     externalFilter->reset();
 
-    if (resampler)
+    if (resampler.get())
     {
         resampler->reset();
     }
@@ -338,16 +325,14 @@ void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, do
     filter8580->setClockFrequency(clockFrequency);
     externalFilter->setClockFrequency(clockFrequency);
 
-    delete resampler;
-
     switch (method)
     {
     case DECIMATE:
-        resampler = new ZeroOrderResampler(clockFrequency, samplingFrequency);
+        resampler.reset(new ZeroOrderResampler(clockFrequency, samplingFrequency));
         break;
 
     case RESAMPLE:
-        resampler = new TwoPassSincResampler(clockFrequency, samplingFrequency, highestAccurateFrequency);
+        resampler.reset(new TwoPassSincResampler(clockFrequency, samplingFrequency, highestAccurateFrequency));
         break;
 
     default:
