@@ -36,10 +36,12 @@
 
 namespace reSIDfp
 {
+
+/// Bus value stays alive for some time after each operation.
 // This value has been adjusted empirically from the original reSID value (0x9000)
 // according to this discussion on CSDb:
 // http://noname.c64.org/csdb/forums/?roomid=11&topicid=29025&showallposts=1
-const int SID::BUS_TTL = 0x1000;
+const int BUS_TTL = 0x1000;
 
 SID::SID() :
     filter6581(new Filter6581()),

@@ -64,8 +64,6 @@ namespace reSIDfp
 class OpAmp
 {
 private:
-    static const double EPSILON;
-
     /// Current root position (cached as guess to speed up next iteration)
     double x;
 

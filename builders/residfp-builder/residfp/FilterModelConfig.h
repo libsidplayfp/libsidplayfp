@@ -38,15 +38,12 @@ class Integrator;
 class FilterModelConfig
 {
 private:
-    static const unsigned int OPAMP_SIZE = 33;
     static const unsigned int DAC_BITS = 11;
 
 private:
     static std::auto_ptr<FilterModelConfig> instance;
     // This allows access to the private constructor
     friend class std::auto_ptr<FilterModelConfig>;
-
-    static const Spline::Point opamp_voltage[OPAMP_SIZE];
 
     const double voice_voltage_range;
     const double voice_DC_voltage;

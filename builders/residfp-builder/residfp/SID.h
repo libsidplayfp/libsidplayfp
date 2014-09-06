@@ -56,9 +56,6 @@ public:
 class SID
 {
 private:
-    /// Bus value stays alive for some time after each operation.
-    static const int BUS_TTL;
-
     /// Currently active filter
     Filter* filter;
 
