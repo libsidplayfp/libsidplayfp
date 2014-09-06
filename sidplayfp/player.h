@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -58,6 +58,9 @@ class Player
 #endif
 {
 private:
+    /**
+     * Configuration error exception.
+     */
     class configError
     {
     private:
@@ -69,33 +72,68 @@ private:
     };
 
 private:
+    /// Commodore 64 emulator
     c64 m_c64;
 
+    /// Mixer
     Mixer m_mixer;
 
+    /// Emulator info
     SidTune *m_tune;
+
+    /// User Configuration Settings
     SidInfoImpl m_info;
 
-    // User Configuration Settings
+    /// User Configuration Settings
     SidConfig m_cfg;
 
+    /// Error message
     const char *m_errorString;
 
     volatile bool m_isPlaying;
 
-    /// The PAL/NTSC switch value
+    /// PAL/NTSC switch value
     uint8_t videoSwitch;
 
 private:
+    /**
+     * Get the C64 model for the current loaded tune.
+     *
+     * @param defaultModel the default model
+     * @param forced true if the default model shold be forced in spite of tune model
+     */
     c64::model_t c64model(SidConfig::c64_model_t defaultModel, bool forced);
+
+    /**
+     * Initialize the emulation.
+     *
+     * @throw configError
+     */
     void initialise();
+
+    /**
+     * Release the SID builders.
+     */
     void sidRelease();
+
+    /**
+     * Create the SID emulation(s).
+     *
+     * @throw configError
+     */
     void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                     bool forced, const std::vector<unsigned int> &extraSidAddresses);
+
+    /**
+     * Set the SID emulation parameters.
+     *
+     * @param cpuFreq the CPU clock frequency
+     * @param frequency the output sampling frequency
+     * @param sampling the sampling method to use
+     * @param fastSampling true to enable fast low quality resampling (only for reSID)
+     */
     void sidParams(double cpuFreq, int frequency,
                     SidConfig::sampling_method_t sampling, bool fastSampling);
-
-    static SidConfig::sid_model_t getModel(SidTuneInfo::model_t sidModel, SidConfig::sid_model_t defaultModel, bool forced);
 
 #ifdef PC64_TESTSUITE
     void load(const char *file);
