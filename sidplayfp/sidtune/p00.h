@@ -23,6 +23,9 @@
 
 #include "SidTuneBase.h"
 
+namespace libsidplayfp
+{
+
 struct X00Header;
 
 class p00 : public SidTuneBase
@@ -47,5 +50,7 @@ private:
     p00(const p00&);
     p00& operator=(p00&);
 };
+
+}
 
 #endif

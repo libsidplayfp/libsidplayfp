@@ -30,6 +30,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 // Format strings
 const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 
@@ -64,4 +67,6 @@ void prg::load()
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
+}
+
 }

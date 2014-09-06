@@ -29,8 +29,12 @@
 #include "sidplayfp/siddefs.h"
 
 class SidTuneInfo;
-class SidTuneBase;
 class sidmemory;
+
+namespace libsidplayfp
+{
+class SidTuneBase;
+}
 
 /**
  * SidTune
@@ -45,7 +49,7 @@ private:
     static const char** fileNameExtensions;
 
 private:  // -------------------------------------------------------------
-    std::auto_ptr<SidTuneBase> tune;
+    std::auto_ptr<libsidplayfp::SidTuneBase> tune;
 
     const char* m_statusString;
 

@@ -27,6 +27,9 @@
 #  include "config.h"
 #endif
 
+namespace libsidplayfp
+{
+
 namespace SidTuneTools
 {
     /**
@@ -45,6 +48,8 @@ namespace SidTuneTools
      * Searching backwards until first dot is found.
      */
     const char* fileExtOfPath(const char* s);
+}
+
 }
 
 #endif  /* SIDTUNETOOLS_H */

@@ -44,6 +44,9 @@
 #include "prg.h"
 #include "PSID.h"
 
+namespace libsidplayfp
+{
+
 // Error and status message strings.
 const char ERR_EMPTY[]               = "SIDTUNE ERROR: No data to load";
 const char ERR_UNRECOGNIZED_FORMAT[] = "SIDTUNE ERROR: Could not determine file format";
@@ -601,4 +604,6 @@ const char* SidTuneBase::PetsciiToAscii::convert(SmartPtr_sidtt<const uint8_t>& 
     while (!((c == 0x0D) || (c == 0x00) || spPet.fail()));
 
     return buffer.c_str();
+}
+
 }

@@ -29,6 +29,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 struct psidHeader;
 
 class PSID : public SidTuneBase
@@ -70,5 +73,7 @@ private:
     PSID(const PSID&);
     PSID& operator=(PSID&);
 };
+
+}
 
 #endif // PSID_H

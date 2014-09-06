@@ -28,6 +28,9 @@
 class sidmemory;
 template <class T> class SmartPtr_sidtt;
 
+namespace libsidplayfp
+{
+
 class MUS : public SidTuneBase
 {
 private:
@@ -69,5 +72,7 @@ private:
     MUS(const MUS&);
     MUS& operator=(MUS&);
 };
+
+}
 
 #endif // MUS_H

@@ -22,6 +22,9 @@
 
 #include "SidTuneCfg.h"
 
+namespace libsidplayfp
+{
+
 // Return pointer to file name position in complete path.
 size_t SidTuneTools::fileNameWithoutPath(const char* s)
 {
@@ -80,4 +83,6 @@ const char* SidTuneTools::fileExtOfPath(const char* s)
         }
     }
     return  &s[last_dot_pos];
+}
+
 }

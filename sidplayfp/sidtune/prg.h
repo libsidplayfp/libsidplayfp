@@ -23,6 +23,9 @@
 
 #include "SidTuneBase.h"
 
+namespace libsidplayfp
+{
+
 class prg : public SidTuneBase
 {
 protected:
@@ -41,5 +44,7 @@ private:
     prg(const prg&);
     prg& operator=(prg&);
 };
+
+}
 
 #endif

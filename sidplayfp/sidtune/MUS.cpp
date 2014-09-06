@@ -33,6 +33,9 @@
 
 #include "sidplayer.bin"
 
+namespace libsidplayfp
+{
+
 // Format strings
 const char TXT_FORMAT_MUS[]        = "C64 Sidplayer format (MUS)";
 const char TXT_FORMAT_STR[]        = "C64 Stereo Sidplayer format (MUS+STR)";
@@ -272,4 +275,6 @@ void MUS::tryLoad(buffer_t& musBuf,
                 break;
         }
     }
+}
+
 }

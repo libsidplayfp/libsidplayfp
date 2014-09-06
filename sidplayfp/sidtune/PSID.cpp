@@ -30,6 +30,9 @@
 #include "sidendian.h"
 #include "sidmd5.h"
 
+namespace libsidplayfp
+{
+
 #define PSID_MAXSTRLEN 32
 
 
@@ -387,4 +390,6 @@ const char *PSID::createMD5(char *md5)
     catch (md5Error const &) {}
 
     return md5;
+}
+
 }

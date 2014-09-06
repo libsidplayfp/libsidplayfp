@@ -39,6 +39,9 @@
 class sidmemory;
 template <class T> class SmartPtr_sidtt;
 
+namespace libsidplayfp
+{
+
 /**
  * loadError
  */
@@ -207,5 +210,7 @@ private:
     SidTuneBase(const SidTuneBase&);
     SidTuneBase& operator=(SidTuneBase&);
 };
+
+}
 
 #endif  /* SIDTUNEBASE_H */

@@ -33,6 +33,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 #define X00_ID_LEN   8
 #define X00_NAME_LEN 17
 
@@ -162,4 +165,6 @@ void p00::load(const char* format, const X00Header* pHeader)
 
     // Create the speed/clock setting table.
     convertOldStyleSpeedToTables(~0, info->m_clockSpeed);
+}
+
 }
