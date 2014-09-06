@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -24,6 +24,7 @@
 #define SIDDATABASE_H
 
 #include <stdint.h>
+#include <memory>
 
 #include "sidplayfp/siddefs.h"
 
@@ -42,12 +43,12 @@ private:
     static const char *parseTime(const char *str, long &result);
 
 private:
-    iniParser  *m_parser;
+    std::auto_ptr<iniParser> m_parser;
+
     const char *errorString;
 
 public:
     SidDatabase();
-    ~SidDatabase();
 
     /**
      * Open the songlength DataBase.

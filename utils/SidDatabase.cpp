@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -29,6 +29,8 @@
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/SidTuneInfo.h"
 
+#include "sidcxx11.h"
+
 const char ERR_DATABASE_CORRUPT[]        = "SID DATABASE ERROR: Database seems to be corrupt.";
 const char ERR_NO_DATABASE_LOADED[]      = "SID DATABASE ERROR: Songlength database not loaded.";
 const char ERR_NO_SELECTED_SONG[]        = "SID DATABASE ERROR: No song selected for retrieving song length.";
@@ -40,10 +42,6 @@ SidDatabase::SidDatabase() :
     errorString(ERR_NO_DATABASE_LOADED)
 {}
 
-SidDatabase::~SidDatabase()
-{
-    close();
-}
 
 const char *SidDatabase::parseTime(const char *str, long &result)
 {
@@ -69,11 +67,11 @@ const char *SidDatabase::parseTime(const char *str, long &result)
 
 bool SidDatabase::open(const char *filename)
 {
-    close();
-    m_parser = new iniParser();
+    m_parser.reset(new iniParser());
 
     if (!m_parser->open(filename))
     {
+        close();
         errorString = ERR_UNABLE_TO_LOAD_DATABASE;
         return false;
     }
@@ -83,8 +81,7 @@ bool SidDatabase::open(const char *filename)
 
 void SidDatabase::close()
 {
-    delete m_parser;
-    m_parser = 0;
+    m_parser.reset(nullptr);
 }
 
 int_least32_t SidDatabase::length(SidTune &tune)
@@ -104,7 +101,7 @@ int_least32_t SidDatabase::length(SidTune &tune)
 
 int_least32_t SidDatabase::length(const char *md5, unsigned int song)
 {
-    if (!m_parser)
+    if (m_parser.get() == nullptr)
     {
         errorString = ERR_NO_DATABASE_LOADED;
         return -1;
