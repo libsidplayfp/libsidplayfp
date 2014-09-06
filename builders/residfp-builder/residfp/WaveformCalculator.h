@@ -96,8 +96,6 @@ private:
 private:
     cw_cache_t CACHE;
 
-    static const CombinedWaveformConfig config[2][4];
-
     /**
      * Generate bitstate based on emulation of combined waves.
      *

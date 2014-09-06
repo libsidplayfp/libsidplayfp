@@ -35,7 +35,7 @@ WaveformCalculator* WaveformCalculator::getInstance()
  * and waveforms that are mostly zero have low scores. More comparable scores would be found by
  * dividing with the count of 1-bits, or something.
  */
-const CombinedWaveformConfig WaveformCalculator::config[2][4] =
+const CombinedWaveformConfig config[2][4] =
 {
     { /* kevtris chip G (6581r2/r3) */
         {0.880592f, 0.f,      0.f,       0.327589f,  0.611491f}, // error 1741
