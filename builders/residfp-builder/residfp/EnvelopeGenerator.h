@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -100,7 +100,7 @@ private:
      *
      * @See SID.kinked_dac
      */
-    short dac[256];
+    float dac[256];
 
     /**
      * Lookup table to convert from attack, decay, or release value to rate
@@ -138,7 +138,7 @@ public:
      * DAC imperfections are emulated by using envelope_counter as an index
      * into a DAC lookup table. readENV() uses envelope_counter directly.
      */
-    short output() const { return dac[envelope_counter]; }
+    float output() const { return dac[envelope_counter]; }
 
     /**
      * Constructor.

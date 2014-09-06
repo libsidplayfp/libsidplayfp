@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -130,7 +130,7 @@ private:
     /// Tell whether the accumulator MSB was set high on this cycle.
     bool msb_rising;
 
-    short dac[4096];
+    float dac[4096];
 
 private:
     void clock_shift_register();
@@ -243,7 +243,7 @@ public:
      * @param ringModulator The oscillator ring-modulating me.
      * @return output from waveform generator
      */
-    short output(const WaveformGenerator* ringModulator);
+    float output(const WaveformGenerator* ringModulator);
 
     /**
      * Read OSC3 value (6581, not latched/delayed version)
@@ -316,7 +316,7 @@ void WaveformGenerator::clock()
 }
 
 RESID_INLINE
-short WaveformGenerator::output(const WaveformGenerator* ringModulator)
+float WaveformGenerator::output(const WaveformGenerator* ringModulator)
 {
     // Set output value.
     if (likely(waveform != 0))

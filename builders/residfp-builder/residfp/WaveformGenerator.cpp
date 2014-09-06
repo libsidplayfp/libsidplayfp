@@ -110,10 +110,10 @@ void WaveformGenerator::setChipModel(ChipModel chipModel)
             }
         }
 
-        dac[i] = (short)(dacValue + 0.5);
+        dac[i] = (float)dacValue;
     }
 
-    const short offset = dac[chipModel == MOS6581 ? 0x380 : 0x800];
+    const float offset = dac[chipModel == MOS6581 ? 0x380 : 0x800];
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i ++)
     {
