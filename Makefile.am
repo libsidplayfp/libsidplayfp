@@ -22,9 +22,7 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 #=========================================================
 EXTRA_DIST = \
 docs/mainpage.dox \
-sidplayfp/psiddrv.bin \
-sidplayfp/c64/poweron.bin \
-sidplayfp/sidtune/sidplayer.bin \
+sidplayfp/psiddrv.a65 \
 builders/residfp-builder/residfp/AUTHORS \
 builders/residfp-builder/residfp/COPYING \
 builders/residfp-builder/residfp/README \
@@ -33,6 +31,7 @@ builders/resid-builder/resid/ChangeLog \
 builders/resid-builder/resid/COPYING \
 builders/resid-builder/resid/configure.in \
 builders/resid-builder/resid/INSTALL \
+builders/resid-builder/resid/Makefile.am \
 builders/resid-builder/resid/NEWS \
 builders/resid-builder/resid/README \
 builders/resid-builder/resid/README.VICE \
@@ -68,6 +67,7 @@ sidplayfp/player.cpp \
 sidplayfp/player.h \
 sidplayfp/psiddrv.cpp \
 sidplayfp/psiddrv.h \
+sidplayfp/psiddrv.bin \
 sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
 sidplayfp/poweron.bin \
@@ -80,7 +80,6 @@ sidplayfp/sidmemory.h \
 sidplayfp/sidplayfp.cpp \
 sidplayfp/SidInfoImpl.h \
 sidplayfp/SidTune.cpp \
-sidplayfp/psiddrv.a65 \
 sidplayfp/romCheck.h \
 sidplayfp/sidemu.cpp \
 sidplayfp/sidemu.h \
@@ -125,6 +124,7 @@ sidplayfp/sidtune/prg.cpp \
 sidplayfp/sidtune/prg.h \
 sidplayfp/sidtune/PSID.cpp \
 sidplayfp/sidtune/PSID.h \
+sidplayfp/sidtune/sidplayer.bin \
 sidplayfp/sidtune/SidTuneBase.cpp \
 sidplayfp/sidtune/SidTuneBase.h \
 sidplayfp/sidtune/SidTuneCfg.h \
@@ -335,10 +335,3 @@ endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libsidplayfp.pc libstilview.pc
-
-#=========================================================
-# Remove SVN directories from any subdirs that get
-# included completely (e.g. win, directx,...).
-
-dist-hook:
-	rm -rf `find $(distdir) -path \*/.svn`
