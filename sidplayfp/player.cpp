@@ -49,7 +49,8 @@ const char TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 const char ERR_NA[]                   = "NA";
 const char ERR_UNSUPPORTED_FREQ[]     = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID address.";
-
+const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
+const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
 
 Player::Player() :
     // Set default settings for system
@@ -103,7 +104,7 @@ bool Player::fastForward(unsigned int percent)
 {
     if (!m_mixer.setFastForward(percent / 100))
     {
-        m_errorString = "SIDPLAYER ERROR: Percentage value out of range.";
+        m_errorString = ERR_INVALID_PERCENTAGE;
         return false;
     }
 
@@ -118,12 +119,10 @@ void Player::initialise()
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
+    const uint_least32_t size = (uint_least32_t)tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
+    if (size > 0xffff)
     {
-        const uint_least32_t size = (uint_least32_t)tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
-        if (size > 0xffff)
-        {
-            throw configError("SIDPLAYER ERROR: Size of music data exceeds C64 memory.");
-        }
+        throw configError(ERR_UNSUPPORTED_SIZE);
     }
 
     psiddrv driver(m_tune->getInfo());
@@ -148,12 +147,10 @@ void Player::initialise()
 bool Player::load(SidTune *tune)
 {
     m_tune = tune;
-    if (tune == nullptr)
-    {   // Unload tune
-        return true;
-    }
 
-    {   // Must re-configure on fly for stereo support!
+    if (tune != nullptr)
+    {
+        // Must re-configure on fly for stereo support!
         if (!config(m_cfg))
         {
             // Failed configuration with new tune, reject it
