@@ -1,3 +1,8 @@
+1.5.3 2014-09-06
+* Copy poweron pattern in memory only if real c64 compatibility is needed, fixes /MUSICIANS/B/Brennan_Neil/Super_Pac-Man.sid
+
+
+
 1.5.2 2014-08-31
 * Restore original iomap function, fixes /MUSICIANS/C/Cooksey_Mark/Airwolf.sid
 
