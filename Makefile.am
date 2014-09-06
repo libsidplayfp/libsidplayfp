@@ -70,6 +70,7 @@ sidplayfp/psiddrv.cpp \
 sidplayfp/psiddrv.h \
 sidplayfp/mixer.cpp \
 sidplayfp/mixer.h \
+sidplayfp/poweron.bin \
 sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
 sidplayfp/sidbuilder.cpp \
