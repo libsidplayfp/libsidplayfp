@@ -74,9 +74,6 @@ const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 const char TXT_FORMAT_USR[] = "Unsupported USR file (USR)";
 const char TXT_FORMAT_REL[] = "Unsupported tape image file (REL)";
 
-// Error strings
-const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
-
 const char P00_ID[]         = "C64File";
 
 

@@ -63,6 +63,10 @@ protected:
     /// Also PSID file format limit.
     static const unsigned int MAX_SONGS = 256;
 
+    static const char ERR_NOT_ENOUGH_MEMORY[];
+    static const char ERR_TRUNCATED[];
+    static const char ERR_INVALID[];
+
 private:
     /// C64KB+LOAD+PSID
     static const uint_least32_t MAX_FILELEN = 65536+2+0x7C;

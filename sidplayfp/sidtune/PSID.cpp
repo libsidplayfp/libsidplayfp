@@ -105,10 +105,6 @@ const char TXT_FORMAT_RSID[]  = "Real C64 one-file format (RSID)";
 const char TXT_UNKNOWN_PSID[] = "Unsupported PSID version";
 const char TXT_UNKNOWN_RSID[] = "Unsupported RSID version";
 
-// Error strings
-const char ERR_TRUNCATED[]    = "ERROR: File is most likely truncated";
-const char ERR_INVALID[]      = "ERROR: File contains invalid data";
-
 const int psid_headerSize = 118;
 const int psidv2_headerSize = psid_headerSize + 6;
 
