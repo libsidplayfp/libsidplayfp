@@ -156,7 +156,7 @@ public:
      *
      * @param val sprites bitmask
      */
-    bool isDma(uint8_t val)
+    bool isDma(unsigned int val)
     {
         return dma && val;
     }

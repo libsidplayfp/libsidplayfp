@@ -108,6 +108,7 @@ sidplayfp/c64/Banks/SystemROMBanks.h \
 sidplayfp/c64/Banks/ZeroRAMBank.h \
 sidplayfp/c64/VIC_II/mos656x.cpp \
 sidplayfp/c64/VIC_II/mos656x.h \
+sidplayfp/c64/VIC_II/lightpen.h \
 sidplayfp/c64/VIC_II/sprites.h \
 sidplayfp/c64/CPU/flags.h \
 sidplayfp/c64/CPU/mos6510.cpp \
@@ -119,6 +120,8 @@ sidplayfp/c64/CIA/mos6526.cpp \
 sidplayfp/c64/CIA/mos6526.h \
 sidplayfp/c64/CIA/timer.cpp \
 sidplayfp/c64/CIA/timer.h \
+sidplayfp/c64/CIA/tod.cpp \
+sidplayfp/c64/CIA/tod.h \
 sidplayfp/sidtune/MUS.cpp \
 sidplayfp/sidtune/MUS.h \
 sidplayfp/sidtune/p00.cpp \

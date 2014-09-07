@@ -26,6 +26,7 @@
 #include <stdint.h>
 
 #include "timer.h"
+#include "tod.h"
 #include "EventScheduler.h"
 #include "c64/component.h"
 
@@ -103,6 +104,7 @@ class MOS6526: public component
 {
     friend class TimerA;
     friend class TimerB;
+    friend class Tod;
 
 private:
     static const char *credit;
@@ -139,12 +141,7 @@ protected:
     EventContext &event_context;
 
     /// TOD
-    //@{
-    bool    m_todlatched;
-    bool    m_todstopped;
-    uint8_t m_todclock[4], m_todalarm[4], m_todlatch[4];
-    event_clock_t m_todCycles, m_todPeriod;
-    //@}
+    Tod tod;
 
     /// Have we already scheduled CIA->CPU interrupt transition?
     bool triggerScheduled;
@@ -152,7 +149,6 @@ protected:
     /// Events
     //@{
     EventCallback<MOS6526> bTickEvent;
-    EventCallback<MOS6526> todEvent;
     EventCallback<MOS6526> triggerEvent;
     //@}
 
@@ -178,11 +174,6 @@ protected:
      * - PHI1 b.event()
      */
     void bTick();
-
-    /**
-     * TOD event.
-     */
-    void tod();
 
     /**
      * Signal interrupt to CPU.
@@ -244,11 +235,7 @@ protected:
     void write(uint_least8_t addr, uint8_t data);
 
 private:
-    void setTodReg(uint_least8_t addr, uint8_t data);
-
-    // TOD implementation taken from Vice
-    static uint8_t byte2bcd(uint8_t byte) { return (((byte / 10) << 4) + (byte % 10)) & 0xff; }
-    static uint8_t bcd2byte(uint8_t bcd) { return ((10*((bcd & 0xf0) >> 4)) + (bcd & 0xf)) & 0xff; }
+    void todInterrupt();
 
 public:
     /**
@@ -269,7 +256,7 @@ public:
      *
      * @param clock
      */
-    void setDayOfTimeRate(unsigned int clock);
+    void setDayOfTimeRate(unsigned int clock) { tod.setPeriod(clock); }
 };
 
 #endif // MOS6526_H

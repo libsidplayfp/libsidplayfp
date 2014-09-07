@@ -26,6 +26,7 @@
 
 #include <stdint.h>
 
+#include "lightpen.h"
 #include "sprites.h"
 #include "sidplayfp/event.h"
 #include "c64/component.h"
@@ -103,9 +104,6 @@ private:
     /// Set when new frame starts.
     bool vblanking;
 
-    /// Has light pen IRQ been triggered in this frame already?
-    bool lp_triggered;
-
     /// internal IRQ flags
     uint8_t irqFlags;
 
@@ -113,7 +111,7 @@ private:
     uint8_t irqMask;
 
     /// Light pen coordinates
-    uint8_t lpx, lpy;
+    Lightpen lp;
 
     /// the 8 sprites data
     Sprites sprites;
@@ -232,7 +230,8 @@ private:
         // Vertical blank (line 0)
         if (vblanking)
         {
-            vblanking = lp_triggered = false;
+            vblanking = false;
+            lp.untrigger();
             rasterY = 0;
             rasterYIRQEdgeDetector();
         }
