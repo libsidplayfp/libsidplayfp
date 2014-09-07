@@ -63,18 +63,24 @@ void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t*
         kernalCheck k(kernal);
         m_info.m_kernalDesc = k.info();
     }
+    else
+        m_info.m_kernalDesc.clear();
 
     if (basic)
     {
         basicCheck b(basic);
         m_info.m_basicDesc = b.info();
     }
+    else
+        m_info.m_basicDesc.clear();
 
     if (character)
     {
         chargenCheck c(character);
         m_info.m_chargenDesc = c.info();
     }
+    else
+        m_info.m_chargenDesc.clear();
 
     m_c64.setRoms(kernal, basic, character);
 }
@@ -238,5 +244,18 @@ void Player::stop()
         }
     }
 }
+
+#ifdef PC64_TESTSUITE
+    void Player::load(const char *file)
+    {
+        std::string name(PC64_TESTSUITE);
+        name.append(file);
+        name.append(".prg");
+
+        m_tune->load(name.c_str());
+        m_tune->selectSong(0);
+        initialise();
+    }
+#endif
 
 SIDPLAYFP_NAMESPACE_STOP
