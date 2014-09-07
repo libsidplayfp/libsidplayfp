@@ -88,6 +88,9 @@ private:
 
     sidrandom m_rand;
 
+    /// The PAL/NTSC switch value
+    uint8_t videoSwitch;
+
 private:
     c64::model_t c64model(SidConfig::c64_model_t defaultModel, bool forced);
     void initialise();

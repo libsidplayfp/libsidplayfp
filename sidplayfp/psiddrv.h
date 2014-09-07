@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,6 +51,11 @@ private:
      */
     uint8_t iomap(uint_least16_t addr) const;
 
+    /**
+     * Copy power on pattern in memory.
+     */
+    void copyPoweronPattern(sidmemory *mem) const;
+
 public:
     psiddrv(const SidTuneInfo *tuneInfo) :
         m_tuneInfo(tuneInfo),
@@ -73,8 +78,9 @@ public:
      * Must be called after the tune has been placed in memory.
      *
      * @param mem the c64 memory interface
+     * @param video the PAL/NTSC switch value, 0: NTSC, 1: PAL
      */
-    void install(sidmemory *mem) const;
+    void install(sidmemory *mem, uint8_t video) const;
 
     /**
      * Get a detailed error message.

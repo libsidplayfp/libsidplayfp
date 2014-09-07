@@ -122,18 +122,22 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
         case SidConfig::PAL:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
             model = c64::PAL_B;
+            videoSwitch = 1;
             break;
         case SidConfig::DREAN:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
             model = c64::PAL_N;
+            videoSwitch = 1; // TODO verify
             break;
         case SidConfig::NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::NTSC_M;
+            videoSwitch = 0;
             break;
         case SidConfig::OLD_NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::OLD_NTSC_M;
+            videoSwitch = 0;
             break;
         }
     }
@@ -143,9 +147,11 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
         {
         case SidTuneInfo::CLOCK_PAL:
             model = c64::PAL_B;
+            videoSwitch = 1;
             break;
         case SidTuneInfo::CLOCK_NTSC:
             model = c64::NTSC_M;
+            videoSwitch = 0;
             break;
         }
     }

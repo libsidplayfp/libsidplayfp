@@ -41,6 +41,11 @@ uint8_t psiddrv::psid_driver[] = {
 #  include "psiddrv.bin"
 };
 
+static const uint8_t POWERON[] =
+{
+#include "poweron.bin"
+};
+
 
 uint8_t psiddrv::iomap(uint_least16_t addr) const
 {
@@ -136,8 +141,15 @@ bool psiddrv::drvReloc()
     return true;
 }
 
-void psiddrv::install(sidmemory *mem) const
-{    
+void psiddrv::install(sidmemory *mem, uint8_t video) const
+{
+    if (m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64)
+    {
+        copyPoweronPattern(mem);
+    }
+
+    mem->writeMemByte(0x02a6, video);
+
     mem->installResetHook(endian_little16(reloc_driver));
 
     // If not a basic tune then the psiddrv must install
@@ -192,8 +204,7 @@ void psiddrv::install(sidmemory *mem) const
     pos++;
 
     // Set PAL/NTSC flag
-    const uint8_t flag = mem->readMemByte(0x02a6);
-    mem->writeMemByte(pos, flag);
+    mem->writeMemByte(pos, video);
     pos++;
 
     // Add the required tune speed
@@ -206,11 +217,67 @@ void psiddrv::install(sidmemory *mem) const
         mem->writeMemByte(pos, 0);
         break;
     default: // UNKNOWN or ANY
-        mem->writeMemByte(pos, flag);
+        mem->writeMemByte(pos, video);
         break;
     }
     pos++;
 
     // Set default processor register flags on calling init
     mem->writeMemByte(pos, m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
+}
+
+void psiddrv::copyPoweronPattern(sidmemory *mem) const
+{
+    // Copy in power on settings. These were created by running
+    // the kernel reset routine and storing the useful values
+    // from $0000-$03ff. Format is:
+    // - offset byte (bit 7 indicates presence rle byte)
+    // - rle count byte (bit 7 indicates compression used)
+    // - data (single byte) or quantity represented by uncompressed count
+    // all counts and offsets are 1 less than they should be
+    {
+        uint_least16_t addr = 0;
+        for (unsigned int i = 0; i < sizeof(POWERON);)
+        {
+            uint8_t off   = POWERON[i++];
+            uint8_t count = 0;
+            bool compressed = false;
+
+            // Determine data count/compression
+            if (off & 0x80)
+            {
+                // fixup offset
+                off  &= 0x7f;
+                count = POWERON[i++];
+                if (count & 0x80)
+                {
+                    // fixup count
+                    count &= 0x7f;
+                    compressed = true;
+                }
+            }
+
+            // Fix count off by ones (see format details)
+            count++;
+            addr += off;
+
+            // Extract compressed data
+            if (compressed)
+            {
+                const uint8_t data = POWERON[i++];
+                while (count-- > 0)
+                {
+                    mem->writeMemByte(addr++, data);
+                }
+            }
+            // Extract uncompressed data
+            else
+            {
+                while (count-- > 0)
+                {
+                    mem->writeMemByte(addr++, POWERON[i++]);
+                }
+            }
+        }
+    }
 }
