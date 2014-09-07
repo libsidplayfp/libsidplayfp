@@ -30,6 +30,9 @@
 
 #define SPRITES 8
 
+/**
+ * Sprites handling.
+ */
 class Sprites
 {
 private:

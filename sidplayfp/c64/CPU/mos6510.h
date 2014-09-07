@@ -35,6 +35,16 @@
 
 class EventContext;
 
+#ifdef DEBUG
+class MOS6510;
+
+namespace MOS6510Debug
+{
+    void DumpState(event_clock_t time, MOS6510 &cpu);
+}
+#endif
+
+
 /**
  * Cycle-exact 6502/6510 emulation core.
  *
@@ -46,7 +56,9 @@ class EventContext;
  */
 class MOS6510
 {
-    friend class MOS6510Debug;
+#ifdef DEBUG
+    friend void MOS6510Debug::DumpState(event_clock_t time, MOS6510 &cpu);
+#endif
 
 private:
     static const char *credit;

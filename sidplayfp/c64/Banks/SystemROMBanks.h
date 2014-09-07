@@ -31,8 +31,8 @@
 #include "sidcxx11.h"
 
 /**
- * ROM bank base class
- * N must be a power of two
+ * ROM bank base class.
+ * N must be a power of two.
  */
 template <int N>
 class romBank : public Bank

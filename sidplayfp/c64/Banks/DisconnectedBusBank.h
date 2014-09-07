@@ -27,7 +27,7 @@
 /**
  * IO1/IO2
  *
- * memory mapped registers or machine code routines of optional external devices
+ * memory mapped registers or machine code routines of optional external devices.
  *
  * I/O Area #1 located at $DE00-$DEFF
  *
@@ -40,7 +40,11 @@ class DisconnectedBusBank : public Bank
      */
     void poke(uint_least16_t, uint8_t) override {}
 
-    // FIXME this should actually return last byte read from VIC
+    /**
+     * This should actually return last byte read from VIC
+     * but since the VIC emulation currently does not fetch
+     * any value from memory we return zero.
+     */
     uint8_t peek(uint_least16_t) override { return 0; }
 };
 

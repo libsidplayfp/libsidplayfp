@@ -49,7 +49,7 @@ enum
 class sidemu : public c64sid
 {
 private:
-    sidbuilder *m_builder;
+    sidbuilder* const m_builder;
 
 protected:
     static std::string m_credit;
@@ -93,9 +93,9 @@ public:
     virtual void sampling(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED,
         SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) {}
 
-    const char *error() const { return m_error.c_str(); }
+    const char* error() const { return m_error.c_str(); }
 
-    sidbuilder *builder() const { return m_builder; }
+    sidbuilder* builder() const { return m_builder; }
 
     int bufferpos() const { return m_bufferpos; }
     void bufferpos(int pos) { m_bufferpos = pos; }

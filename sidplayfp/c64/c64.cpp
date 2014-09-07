@@ -53,16 +53,12 @@ const model_data_t modelData[] =
 
 double c64::getCpuFreq(model_t model)
 {
-    /*
-     * The crystal clock that drives the VIC II chip is four times
-     * the color burst frequency
-     */
+    // The crystal clock that drives the VIC II chip is four times
+    // the color burst frequency
     const double crystalFreq = modelData[model].colorBurst * 4.;
 
-    /*
-     * The VIC II produces the two-phase system clock
-     * by running the input clock through a divider
-     */
+    // The VIC II produces the two-phase system clock
+    // by running the input clock through a divider
     return crystalFreq/modelData[model].divider;
 }
 
@@ -99,6 +95,9 @@ void c64::resetIoBank()
     ioBank.setBank(0xf, &disconnectedBusBank);
 }
 
+template<typename T>
+void resetSID(T &e) { e.second->reset(); }
+
 void c64::reset()
 {
     m_scheduler.reset();
@@ -111,7 +110,7 @@ void c64::reset()
     colorRAMBank.reset();
     mmu.reset();
 
-    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), resetSID());
+    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), resetSID<sidBankMap_t::value_type>);
 
     irqCount = 0;
     oldBAState = true;
@@ -163,15 +162,16 @@ bool c64::addExtraSid(c64sid *s, int address)
     return true;
 }
 
+template<class T>
+void Delete(T &s) { delete s.second; }
+
 void c64::clearSids()
 {
     sidBank.setSID(nullptr);
 
     resetIoBank();
 
-    for(sidBankMap_t::const_iterator it = extraSidBanks.begin(); it != extraSidBanks.end(); ++it)
-    {
-        delete it->second;
-    }
+    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), Delete<sidBankMap_t::value_type>);
+
     extraSidBanks.clear();
 }

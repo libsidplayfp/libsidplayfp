@@ -1,7 +1,8 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2009-2014 VICE project
  * Copyright 2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -163,21 +164,19 @@ public:
         updateCpuPort();
     }
 
-    /*
-    *  $00/$01 unused bits emulation, as investigated by groepaz:
-    *
-    *  - There are 2 different unused bits, 1) the output bits, 2) the input bits
-    *  - The output bits can be (re)set when the data-direction is set to output
-    *    for those bits and the output bits will not drop-off to 0.
-    *  - When the data-direction for the unused bits is set to output then the
-    *    unused input bits can be (re)set by writing to them, when set to 1 the
-    *    drop-off timer will start which will cause the unused input bits to drop
-    *    down to 0 in a certain amount of time.
-    *  - When an unused input bit already had the drop-off timer running, and is
-    *    set to 1 again, the drop-off timer will restart.
-    *  - when a an unused bit changes from output to input, and the current output
-    *    bit is 1, the drop-off timer will restart again
-    */
+    // $00/$01 unused bits emulation, as investigated by groepaz:
+    //
+    // - There are 2 different unused bits, 1) the output bits, 2) the input bits
+    // - The output bits can be (re)set when the data-direction is set to output
+    //   for those bits and the output bits will not drop-off to 0.
+    // - When the data-direction for the unused bits is set to output then the
+    //   unused input bits can be (re)set by writing to them, when set to 1 the
+    //   drop-off timer will start which will cause the unused input bits to drop
+    //   down to 0 in a certain amount of time.
+    // - When an unused input bit already had the drop-off timer running, and is
+    //   set to 1 again, the drop-off timer will restart.
+    // - when a an unused bit changes from output to input, and the current output
+    //   bit is 1, the drop-off timer will restart again
 
     uint8_t peek(uint_least16_t address) override
     {
@@ -187,19 +186,19 @@ public:
             return dir;
         case 1:
         {
-            /* discharge the "capacitor" */
+            // discharge the "capacitor"
             if (dataFalloffBit6 || dataFalloffBit7)
             {
                 const event_clock_t phi2time = pla->getPhi2Time();
 
-                /* set real value of read bit 6 */
+                // set real value of read bit 6
                 if (dataFalloffBit6 && dataSetClkBit6 < phi2time)
                 {
                     dataFalloffBit6 = false;
                     dataSetBit6 = 0;
                 }
 
-                /* set real value of read bit 7 */
+                // set real value of read bit 7
                 if (dataFalloffBit7 && dataSetClkBit7 < phi2time)
                 {
                     dataFalloffBit7 = false;
@@ -209,16 +208,16 @@ public:
 
             uint8_t retval = dataRead;
 
-            /* for unused bits in input mode, the value comes from the "capacitor" */
+            // for unused bits in input mode, the value comes from the "capacitor"
 
-            /* set real value of bit 6 */
+            // set real value of bit 6
             if (!(dir & 0x40))
             {
                 retval &= ~0x40;
                 retval |= dataSetBit6;
             }
 
-            /* set real value of bit 7 */
+            // set real value of bit 7
             if (!(dir & 0x80))
             {
                 retval &= ~0x80;
@@ -237,11 +236,11 @@ public:
         switch (address)
         {
         case 0:
-            /* when switching an unused bit from output (where it contained a
-             * stable value) to input mode (where the input is floating), some
-             * of the charge is transferred to the floating input */
+            // when switching an unused bit from output (where it contained a
+            // stable value) to input mode (where the input is floating), some
+            // of the charge is transferred to the floating input
 
-            /* check if bit 6 has flipped from 1 to 0 */
+            // check if bit 6 has flipped from 1 to 0
             if ((dir & 0x40) && !(value & 0x40))
             {
                 dataSetClkBit6 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
@@ -249,7 +248,7 @@ public:
                 dataFalloffBit6 = true;
             }
 
-            /* check if bit 7 has flipped from 1 to 0 */
+            // check if bit 7 has flipped from 1 to 0
             if ((dir & 0x80) && !(value & 0x80))
             {
                 dataSetClkBit7 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
@@ -265,8 +264,8 @@ public:
             value = pla->getLastReadByte();
             break;
         case 1:
-            /* when writing to an unused bit that is output, charge the "capacitor",
-             * otherwise don't touch it */
+            // when writing to an unused bit that is output, charge the "capacitor",
+            // otherwise don't touch it
 
             if (dir & 0x40)
             {

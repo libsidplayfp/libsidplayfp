@@ -25,7 +25,7 @@
 #define LIGHTPEN_H
 
 /**
- * Lightpen
+ * Lightpen.
  */
 class Lightpen
 {

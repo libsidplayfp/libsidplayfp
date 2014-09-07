@@ -30,7 +30,7 @@
 /**
  * Color RAM.
  *
- * 1K x 4-bit Static RAM that stores text screen color information
+ * 1K x 4-bit Static RAM that stores text screen color information.
  *
  * Located at $D800-$DBFF (last 24 bytes are unused)
  */

@@ -90,12 +90,6 @@ public:
 private:
     typedef std::map<int, ExtraSidBank*> sidBankMap_t;
 
-    class resetSID
-    {
-    public:
-        void operator() (sidBankMap_t::value_type &e) { e.second->reset(); }
-    };
-
 private:
     /// System clock frequency
     double m_cpuFreq;

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -21,6 +21,8 @@
  */
 
 #include "sidbuilder.h"
+
+#include <algorithm>
 
 #include "sidemu.h"
 
@@ -53,10 +55,12 @@ void sidbuilder::unlock(sidemu *device)
     }
 }
 
+template<class T>
+void Delete(T s) { delete s; }
+
 void sidbuilder::remove()
 {
-    for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-        delete (*it);
+    std::for_each(sidobjs.begin(), sidobjs.end(), Delete<emuset_t::value_type>);
 
     sidobjs.clear();
 }

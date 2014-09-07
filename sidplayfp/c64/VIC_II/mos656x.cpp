@@ -46,7 +46,7 @@ const MOS656X::model_data_t MOS656X::modelData[] =
 };
 
 const char *MOS656X::credit =
-{   // Optional information
+{
     "MOS6567/6569/6572 (VIC II) Emulation:\n"
     "\tCopyright (C) 2001 Simon White\n"
     "\tCopyright (C) 2007-2010 Antti Lankila\n"

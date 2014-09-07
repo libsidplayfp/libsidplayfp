@@ -38,10 +38,9 @@ void Timer::syncWithCpu()
         event_context.cancel(m_cycleSkippingEvent);
         const event_clock_t elapsed = event_context.getTime(EVENT_CLOCK_PHI2) - ciaEventPauseTime;
 
-        /* It's possible for CIA to determine that it wants to go to sleep starting from the next
-         * cycle, and then have its plans aborted by CPU. Thus, we must avoid modifying
-         * the CIA state if the first sleep clock was still in the future.
-         */
+        // It's possible for CIA to determine that it wants to go to sleep starting from the next
+        // cycle, and then have its plans aborted by CPU. Thus, we must avoid modifying
+        // the CIA state if the first sleep clock was still in the future.
         if (elapsed >= 0)
         {
             timer -= elapsed;
@@ -93,7 +92,7 @@ void Timer::clock()
     {
         adj |= CIAT_COUNT3;
     }
-    /* CR_FLOAD -> LOAD1, CR_ONESHOT -> ONESHOT0, LOAD1 -> LOAD, ONESHOT0 -> ONESHOT */
+    // CR_FLOAD -> LOAD1, CR_ONESHOT -> ONESHOT0, LOAD1 -> LOAD, ONESHOT0 -> ONESHOT
     adj |= (state & (CIAT_CR_FLOAD | CIAT_CR_ONESHOT | CIAT_LOAD1 | CIAT_ONESHOT0)) << 8;
     state = adj;
     /* ciatimer.c block end */

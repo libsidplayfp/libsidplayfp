@@ -30,18 +30,12 @@
 #include "sidcxx11.h"
 
 /**
- * Extra SID bank
+ * Extra SID bank.
  */
 class ExtraSidBank : public Bank
 {
 private:
     typedef std::vector<c64sid*> sids_t;
-
-    class resetSID
-    {
-    public:
-        void operator() (sids_t::value_type &e) { e->reset(0xf); }
-    };
 
 private:
     /**
@@ -61,6 +55,8 @@ private:
     sids_t sids;
 
 private:
+    static void resetSID(sids_t::value_type &e) { e->reset(0xf); }
+
     static unsigned int mapperIndex(int address) { return address >> 5 & (MAPPER_SIZE - 1); }
 
 public:
@@ -68,7 +64,7 @@ public:
 
     void reset()
     {
-        std::for_each(sids.begin(), sids.end(), resetSID());
+        std::for_each(sids.begin(), sids.end(), resetSID);
     }
 
     void resetSIDMapper(Bank *bank)
