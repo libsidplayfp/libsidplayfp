@@ -56,6 +56,8 @@ SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtu
     read(oneFileFormatSidtune, sidtuneLength);
 }
 
+SidTune::~SidTune() {}
+
 void SidTune::setFileNameExtensions(const char **fileNameExt)
 {
     fileNameExtensions = ((fileNameExt != 0) ? fileNameExt : defaultFileNameExt);
