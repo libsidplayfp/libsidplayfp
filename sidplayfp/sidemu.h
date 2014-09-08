@@ -55,6 +55,11 @@ protected:
     static std::string m_credit;
 
 protected:
+    static const char ERR_UNSUPPORTED_FREQ[];
+    static const char ERR_INVALID_SAMPLING[];
+    static const char ERR_INVALID_CHIP[];
+
+protected:
     EventContext *m_context;
 
     event_clock_t m_accessClk;

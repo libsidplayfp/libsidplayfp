@@ -24,6 +24,10 @@
 
 std::string sidemu::m_credit;
 
+const char sidemu::ERR_UNSUPPORTED_FREQ[] = "Unable to set desired output frequency.";
+const char sidemu::ERR_INVALID_SAMPLING[] = "Invalid sampling method.";
+const char sidemu::ERR_INVALID_CHIP[]     = "Invalid chip model.";
+
 bool sidemu::lock(EventContext *env)
 {
     if (m_locked)

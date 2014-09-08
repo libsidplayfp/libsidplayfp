@@ -112,14 +112,14 @@ void ReSID::sampling(float systemclock, float freq,
         break;
     default:
         m_status = false;
-        m_error = "Invalid sampling method.";
+        m_error = ERR_INVALID_SAMPLING;
         return;
     }
 
     if (! m_sid.set_sampling_parameters(systemclock, sampleMethod, freq))
     {
         m_status = false;
-        m_error = "Unable to set desired output frequency.";
+        m_error = ERR_UNSUPPORTED_FREQ;
         return;
     }
 
@@ -155,7 +155,7 @@ void ReSID::model(SidConfig::sid_model_t model)
         */
         default:
             m_status = false;
-            m_error = "Invalid chip model.";
+            m_error = ERR_INVALID_CHIP;
             return;
     }
 
