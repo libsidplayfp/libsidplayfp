@@ -42,6 +42,10 @@ SidDatabase::SidDatabase() :
     errorString(ERR_NO_DATABASE_LOADED)
 {}
 
+SidDatabase::~SidDatabase()
+{
+    // Needed to delete auto_ptr with complete type
+}
 
 const char *SidDatabase::parseTime(const char *str, long &result)
 {

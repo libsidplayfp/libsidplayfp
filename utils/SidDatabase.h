@@ -49,6 +49,7 @@ private:
 
 public:
     SidDatabase();
+    ~SidDatabase();
 
     /**
      * Open the songlength DataBase.
