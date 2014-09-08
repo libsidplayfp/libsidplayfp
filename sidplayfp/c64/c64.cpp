@@ -48,7 +48,7 @@ const model_data_t modelData[] =
     {4433618.75,  18., 50., MOS656X::MOS6569},      // PAL-B
     {3579545.455, 14., 60., MOS656X::MOS6567R8},    // NTSC-M
     {3579545.455, 14., 60., MOS656X::MOS6567R56A},  // Old NTSC-M
-    {3582056.25,  14., 60., MOS656X::MOS6572},      // PAL-N
+    {3582056.25,  14., 50., MOS656X::MOS6572},      // PAL-N
 };
 
 double c64::getCpuFreq(model_t model)
