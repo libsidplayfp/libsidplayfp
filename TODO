@@ -1,9 +1,12 @@
-2.0.0:
+2.0:
+* support non-ascii paths on Windows (SidTune, SidDatabase, STIL)
+* wrap internal classes into a library namespace
+* support 3rd SID
 
+3.0
 * move mixer client side
-* support non-ascii paths on Windows
 * keep event scheduler internal
-* wrap everything into __sidplayfp__ namespace (?)
+* wrap everything into a library namespace (?)
 
 
 someday:
