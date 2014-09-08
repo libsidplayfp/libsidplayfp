@@ -66,9 +66,12 @@ public:
     {
         if (!isTriggered)
         {
+            isTriggered = true;
+
             // Latch current coordinates
             lpx = lineCycle << 2;
             lpy = (uint8_t)rasterY & 0xff;
+
             return true;
         }
         return false;
