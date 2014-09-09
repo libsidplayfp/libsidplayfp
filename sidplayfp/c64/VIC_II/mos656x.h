@@ -109,6 +109,9 @@ private:
     /// Set when new frame starts.
     bool vblanking;
 
+    /// Is CIA asserting lightpen?
+    bool lpAsserted;
+
     /// internal IRQ flags
     uint8_t irqFlags;
 
@@ -238,9 +241,13 @@ private:
         if (vblanking)
         {
             vblanking = false;
-            lp.untrigger();
             rasterY = 0;
             rasterYIRQEdgeDetector();
+            lp.untrigger();
+            if (lpAsserted && lp.retrigger(lineCycle, rasterY))
+            {
+                activateIRQFlag(IRQ_LIGHTPEN);
+            }
         }
     }
 
@@ -303,7 +310,16 @@ public:
     void event() override;
 
     void chip(model_t model);
-    void lightpen();
+
+    /**
+     * Trigger the lightpen. Sets the lightpen usage flag.
+     */
+    void triggerLightpen();
+
+    /**
+     * Clears the lightpen usage flag.
+     */
+    void clearLightpen();
 
     // Component Standard Calls
     void reset() override;

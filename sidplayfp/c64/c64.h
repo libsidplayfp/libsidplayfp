@@ -183,7 +183,7 @@ private:
      */
     inline void setBA(bool state) override;
 
-    inline void lightpen() override { vic.lightpen(); }
+    inline void lightpen(bool state) override;
 
 #ifdef PC64_TESTSUITE
     testEnv *m_env;
@@ -303,6 +303,14 @@ void c64::setBA(bool state)
 
     // Signal changes in BA to interested parties
     cpu.setRDY(state);
+}
+
+void c64::lightpen(bool state)
+{
+    if (state)
+        vic.triggerLightpen();
+    else
+        vic.clearLightpen();
 }
 
 #endif // C64_H

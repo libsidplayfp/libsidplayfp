@@ -25,42 +25,88 @@
 #define LIGHTPEN_H
 
 /**
- * Lightpen.
+ * Lightpen emulation.
  */
 class Lightpen
 {
 private:
-    /// Horizontal coordinate
-    uint8_t lpx;
+    /// Last VIC raster line
+    unsigned int lastLine;
 
-    /// Vertical coordinate
-    uint8_t lpy;
+    /// VIC cycles per line
+    unsigned int cyclesPerLine;
+
+    /// X coordinate
+    unsigned int lpx;
+
+    /// Y coordinate
+    unsigned int lpy;
 
     /// Has light pen IRQ been triggered in this frame already?
     bool isTriggered;
 
 public:
     /**
-     * Reset lightpen status.
+     * Set Vic screen size.
+     *
+     * @param height number of raster lines
+     * @param width number of cycles per line
      */
-    void reset()
+    void setScreenSize(unsigned int height, unsigned int width)
     {
-        isTriggered  = false;
-
-        lpx = 0;
-        lpy = 0;
+        lastLine = height - 1;
+        cyclesPerLine = width;
     }
 
     /**
-     * Reset IRQ status.
+     * Reset the lightpen.
      */
-    void untrigger() { isTriggered = false; }
+    void reset()
+    {
+        lpx = 0;
+        lpy = 0;
+        isTriggered = false;
+    }
 
     /**
-     * Check if an IRQ is triggered.
+     * Return the low byte of x coordinate.
+     */
+    uint8_t getX() const { return lpx; }
+
+    /**
+     * Return the low byte of y coordinate.
+     */
+    uint8_t getY() const { return lpy; }
+
+    /**
+     * Retrigger lightpen on vertical blank.
      *
-     * @param lineCycle
-     * @param rasterY
+     * @param lineCycle current line cycle
+     * @param rasterY current y raster position
+     * @return true if an IRQ should be triggered
+     */
+    bool retrigger(unsigned int lineCycle, unsigned int rasterY)
+    {
+        const bool triggered = trigger(lineCycle, rasterY);
+        switch (cyclesPerLine)
+        {
+        case 63:
+        default:
+            lpx = 0xd1;
+            break;
+        case 65:
+            lpx = 0xd5;
+            break;
+        }
+        return triggered;
+    }
+
+    /**
+     * Trigger lightpen from CIA.
+     *
+     * @param lineCycle current line cycle
+     * @param rasterY current y raster position
+     * @return true if an IRQ should be triggered
      */
     bool trigger(unsigned int lineCycle, unsigned int rasterY)
     {
@@ -68,24 +114,23 @@ public:
         {
             isTriggered = true;
 
-            // Latch current coordinates
-            lpx = lineCycle << 2;
-            lpy = (uint8_t)rasterY & 0xff;
+            // don't trigger on the last line, except on the first cycle
+            if ((rasterY == lastLine) && (lineCycle > 0)) {
+                return false;
+            }
 
+            // Latch current coordinates
+            lpx = (lineCycle << 2) + 2;
+            lpy = rasterY;
             return true;
         }
         return false;
     }
 
     /**
-     * Get X coordinete.
+     * Untrigger lightpen from CIA.
      */
-    uint8_t getX() const { return lpx; }
-
-    /**
-     * Get Y coordinete.
-     */
-    uint8_t getY() const { return lpy; }
+    void untrigger() { isTriggered = false; }
 };
 
-#endif // LIGHTPEN_H
+#endif
