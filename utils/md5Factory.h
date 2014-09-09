@@ -37,9 +37,8 @@
 #  include "md5Internal.h"
 #endif
 
-class md5Factory
+namespace md5Factory
 {
-public:
     static std::unique_ptr<iMd5> get()
     {
         return std::unique_ptr<iMd5>(
@@ -50,6 +49,6 @@ public:
 #endif
         );
     }
-};
+}
 
 #endif // MD5_FACTORY_H
