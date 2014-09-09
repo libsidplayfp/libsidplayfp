@@ -28,6 +28,7 @@ public:
     virtual void finish() =0;
     virtual void reset() =0;
     virtual const unsigned char* getDigest() =0;
+    virtual ~iMd5() {}
 };
 
 class md5Error {};
