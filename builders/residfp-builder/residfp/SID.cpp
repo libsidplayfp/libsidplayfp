@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -59,6 +59,22 @@ SID::SID() :
 
     reset();
     setChipModel(MOS8580);
+}
+
+void SID::setFilter6581Curve(double filterCurve)
+{
+    filter6581->setFilterCurve(filterCurve);
+}
+
+void SID::setFilter8580Curve(double filterCurve)
+{
+    filter8580->setFilterCurve(filterCurve);
+}
+
+void SID::enableFilter(bool enable)
+{
+    filter6581->enable(enable);
+    filter8580->enable(enable);
 }
 
 void SID::writeImmediate(int offset, unsigned char value)
