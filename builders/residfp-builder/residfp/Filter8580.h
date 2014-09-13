@@ -58,7 +58,7 @@ public:
         // FIXME
         // This code assumes IEEE-754 floating point representation
         // and same endianness for integers and floats
-        rand_state = rand_state * 1234567UL + 890123UL;
+        rand_state = rand_state * 1664525 + 1013904223; // LCG from Numerical Recipes
         const uint32_t mantissa = rand_state & 0x807F0000; // Keep only most significant bits
         const uint32_t flt_rnd = mantissa | 0x1E000000; // Set exponent
         float temp;
