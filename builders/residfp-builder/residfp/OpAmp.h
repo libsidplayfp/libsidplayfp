@@ -23,7 +23,7 @@
 #ifndef OPAMP_H
 #define OPAMP_H
 
-#include <memory>>
+#include <memory>
 #include "Spline.h"
 
 namespace reSIDfp
