@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -43,7 +43,6 @@ class c64cia1: public MOS6526, public Bank
 private:
     c64env &m_env;
     uint_least16_t last_ta;
-    uint8_t lp;
 
 protected:
     void interrupt(bool state)
@@ -53,12 +52,7 @@ protected:
 
     void portB()
     {
-        const uint8_t lp = (prb | ~ddrb) & 0x10;
-        if (lp != this->lp)
-        {
-            m_env.lightpen();
-            this->lp = lp;
-        }
+        m_env.lightpen((prb | ~ddrb) & 0x10);
     }
 
 public:
@@ -86,7 +80,6 @@ public:
     void reset()
     {
         last_ta = 0;
-        lp = 0x10;
         MOS6526::reset ();
     }
 

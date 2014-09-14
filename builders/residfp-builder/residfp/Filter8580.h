@@ -49,21 +49,32 @@ class antiDenormalNoise
 private:
     uint32_t rand_state;
 
+private:
+    /**
+     * Reduce 32bit integer to float with a magnitude of about 10^–20.
+     */
+    static inline float reduce(uint32_t val)
+    {
+        // FIXME
+        // This code assumes IEEE-754 floating point representation
+        // and same endianness for integers and floats
+        const uint32_t mantissa = val & 0x807F0000; // Keep only most significant bits
+        const uint32_t flt_rnd = mantissa | 0x1E000000; // Set exponent
+        float temp;
+        memcpy(&temp, &flt_rnd, sizeof(float));
+        return temp;
+    }
+
 public:
     antiDenormalNoise() :
         rand_state(1) {}
 
     inline float get()
     {
-        // FIXME
-        // This code assumes IEEE-754 floating point representation
-        // and same endianness for integers and floats
-        rand_state = rand_state * 1234567UL + 890123UL;
-        const uint32_t mantissa = rand_state & 0x807F0000; // Keep only most significant bits
-        const uint32_t flt_rnd = mantissa | 0x1E000000; // Set exponent
-        float temp;
-        memcpy(&temp, &flt_rnd, sizeof(float));
-        return temp;
+        // LCG from Numerical Recipes
+        rand_state = rand_state * 1664525 + 1013904223;
+
+        return reduce(rand_state);
     }
 };
 

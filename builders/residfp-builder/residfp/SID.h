@@ -255,18 +255,25 @@ public:
     void clockSilent(int cycles);
 
     /**
-     * Get chip's 6581 filter.
+     * Set filter curve parameter for 6581 model.
      *
-     * @return filter
+     * @see Filter6581::setFilterCurve(double)
      */
-    Filter6581* getFilter6581() const { return filter6581; }
+    void setFilter6581Curve(double filterCurve);
 
     /**
-     * Get chip's 8580 filter.
+     * Set filter curve parameter for 8580 model.
      *
-     * @return filter
+     * @see Filter8580::setFilterCurve(double)
      */
-    Filter8580* getFilter8580() const { return filter8580; }
+    void setFilter8580Curve(double filterCurve);
+
+    /**
+     * Enable filter emulation.
+     *
+     * @param enable false to turn off filter emulation
+     */
+    void enableFilter(bool enable);
 };
 
 } // namespace reSIDfp

@@ -77,6 +77,7 @@ void MOS656X::reset()
     rasterYIRQCondition = false;
     rasterClk           = 0;
     vblanking           = false;
+    lpAsserted          = false;
 
     memset(regs, 0, sizeof(regs));
 
@@ -93,7 +94,9 @@ void MOS656X::chip(model_t model)
     cyclesPerLine = modelData[model].cyclesPerLine;
     clock         = modelData[model].clock;
 
-    reset ();
+    lp.setScreenSize(maxRasters, cyclesPerLine);
+
+    reset();
 }
 
 uint8_t MOS656X::read(uint_least8_t addr)
@@ -660,14 +663,20 @@ event_clock_t MOS656X::clockOldNTSC()
     return delay;
 }
 
-// Handle light pen trigger
-void MOS656X::lightpen()
+void MOS656X::triggerLightpen()
 {
     // Synchronise simulation
     sync();
+
+    lpAsserted = true;
 
     if (lp.trigger(lineCycle, rasterY))
     {
         activateIRQFlag(IRQ_LIGHTPEN);
     }
+}
+
+void MOS656X::clearLightpen()
+{
+    lpAsserted = false;
 }

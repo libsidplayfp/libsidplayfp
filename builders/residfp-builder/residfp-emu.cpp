@@ -26,8 +26,6 @@
 #include <string>
 #include <algorithm>
 
-#include "residfp/Filter6581.h"
-#include "residfp/Filter8580.h"
 #include "residfp/siddefs-fp.h"
 #include "sidplayfp/siddefs.h"
 
@@ -68,12 +66,12 @@ ReSIDfp::~ReSIDfp()
 
 void ReSIDfp::filter6581Curve(double filterCurve)
 {
-   m_sid.getFilter6581()->setFilterCurve(filterCurve);
+   m_sid.setFilter6581Curve(filterCurve);
 }
 
 void ReSIDfp::filter8580Curve(double filterCurve)
 {
-   m_sid.getFilter8580()->setFilterCurve(filterCurve);
+   m_sid.setFilter8580Curve(filterCurve);
 }
 
 // Standard component options
@@ -105,8 +103,7 @@ void ReSIDfp::clock()
 
 void ReSIDfp::filter(bool enable)
 {
-      m_sid.getFilter6581()->enable(enable);
-      m_sid.getFilter8580()->enable(enable);
+      m_sid.enableFilter(enable);
 }
 
 void ReSIDfp::sampling(float systemclock, float freq,
