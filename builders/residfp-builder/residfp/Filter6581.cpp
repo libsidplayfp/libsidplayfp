@@ -47,36 +47,18 @@ void Filter6581::updatedMixing()
     unsigned int no = 0;
 
     (filt1 ? ni : no)++;
-
     (filt2 ? ni : no)++;
 
-    if (filt3)
-    {
-        ni++;
-    }
-    else if (!voice3off)
-    {
-        no++;
-    }
+    if (filt3) ni++;
+    else if (!voice3off) no++;
 
     (filtE ? ni : no)++;
 
     currentSummer = summer[ni];
 
-    if (lp)
-    {
-        no++;
-    }
-
-    if (bp)
-    {
-        no++;
-    }
-
-    if (hp)
-    {
-        no++;
-    }
+    if (lp) no++;
+    if (bp) no++;
+    if (hp) no++;
 
     currentMixer = mixer[no];
 }

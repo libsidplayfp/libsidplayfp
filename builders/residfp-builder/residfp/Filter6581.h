@@ -429,19 +429,12 @@ int Filter6581::clock(int voice1, int voice2, int voice3)
     int Vo = 0;
 
     (filt1 ? Vi : Vo) += voice1;
-
     (filt2 ? Vi : Vo) += voice2;
 
     // NB! Voice 3 is not silenced by voice3off if it is routed
     // through the filter.
-    if (filt3)
-    {
-        Vi += voice3;
-    }
-    else if (!voice3off)
-    {
-        Vo += voice3;
-    }
+    if (filt3) Vi += voice3;
+    else if (!voice3off) Vo += voice3;
 
     (filtE ? Vi : Vo) += ve;
 
@@ -450,20 +443,9 @@ int Filter6581::clock(int voice1, int voice2, int voice3)
     Vlp = bpIntegrator->solve(Vbp);
     Vbp = hpIntegrator->solve(oldVhp);
 
-    if (lp)
-    {
-        Vo += Vlp;
-    }
-
-    if (bp)
-    {
-        Vo += Vbp;
-    }
-
-    if (hp)
-    {
-        Vo += Vhp;
-    }
+    if (lp) Vo += Vlp;
+    if (bp) Vo += Vbp;
+    if (hp) Vo += Vhp;
 
     return currentGain[currentMixer[Vo]] - (1 << 15);
 }

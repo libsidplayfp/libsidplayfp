@@ -150,7 +150,6 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     int Vo = 0;
 
     (filt1 ? Vi : Vo) += voice1;
-
     (filt2 ? Vi : Vo) += voice2;
 
     // NB! Voice 3 is not silenced by voice3off if it is routed
@@ -176,20 +175,9 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
 
     float Vof = (float)Vo;
 
-    if (lp)
-    {
-        Vof += Vlp;
-    }
-
-    if (bp)
-    {
-        Vof += Vbp;
-    }
-
-    if (hp)
-    {
-        Vof += Vhp;
-    }
+    if (lp) Vof += Vlp;
+    if (bp) Vof += Vbp;
+    if (hp) Vof += Vhp;
 
     return (int) Vof * vol >> 4;
 }
