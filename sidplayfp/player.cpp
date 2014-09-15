@@ -273,6 +273,8 @@ bool Player::config(const SidConfig &cfg)
             std::vector<unsigned int> addresses;
             if (secondSidAddress != 0)
                 addresses.push_back(secondSidAddress);
+            if (cfg.thirdSidAddress != 0)
+                addresses.push_back(cfg.thirdSidAddress);
 
             // SID emulation setup (must be performed before the
             // environment setup call)

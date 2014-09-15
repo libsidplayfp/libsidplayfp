@@ -80,11 +80,19 @@ private:
         return oldRandomValue - prevValue;
     }
 
-    short channel1MonoMix() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1]) / 2); }
-    short channel1StereoMix() const { return static_cast<short>(m_iSamples[0]); }
+    // Mono mixing
+    short mono_OneChip() const { return static_cast<short>(m_iSamples[0]); }
+    short mono_TwoChips() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1]) / 2); }
+    short mono_ThreeChips() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1] + m_iSamples[2]) / 3); }
 
-    short channel2FromMonoMix() const { return static_cast<short>(m_iSamples[0]); }
-    short channel2FromStereoMix() const { return static_cast<short>(m_iSamples[1]); }
+    // Stereo mixing
+    short stereo_OneChip() const { return static_cast<short>(m_iSamples[0]); }
+
+    short stereo_ch1_TwoChips() const { return static_cast<short>(m_iSamples[0]); }
+    short stereo_ch2_TwoChips() const { return static_cast<short>(m_iSamples[1]); }
+
+    short stereo_ch1_ThreeChips() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1]) / 2); }
+    short stereo_ch2_ThreeChips() const { return static_cast<short>((m_iSamples[1] + m_iSamples[2]) / 2); }
 
 public:
     /**
@@ -98,7 +106,7 @@ public:
         m_sampleCount(0),
         m_stereo(false)
     {
-        m_mix.push_back(&Mixer::channel1MonoMix);
+        m_mix.push_back(&Mixer::mono_OneChip);
     }
 
     /**
