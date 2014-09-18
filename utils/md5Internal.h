@@ -37,7 +37,7 @@ public:
 
     void finish() override { hd.finish(); }
 
-    const unsigned char* getDigest() override { hd.getDigest(); }
+    const unsigned char* getDigest() override { return hd.getDigest(); }
 
     void reset() override { hd.reset(); }
 };
