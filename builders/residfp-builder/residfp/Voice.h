@@ -60,7 +60,7 @@ public:
     RESID_INLINE
     int output(const WaveformGenerator* ringModulator) const
     {
-        return (int)(waveformGenerator->output(ringModulator) * envelopeGenerator->output() + 0.5f);
+        return static_cast<int>(waveformGenerator->output(ringModulator) * envelopeGenerator->output() + 0.5f);
     }
 
     /**

@@ -53,7 +53,7 @@ int main(int argc, const char* argv[])
 
         for (int j = 0; j < RINGSIZE; j ++)
         {
-            int signal = (int)(32768.0 * sin(k++ * omega) * sqrt(2));
+            int signal = static_cast<int>(32768.0 * sin(k++ * omega) * sqrt(2));
             r->input(signal);
         }
 
@@ -63,7 +63,7 @@ int main(int argc, const char* argv[])
         /* Now, during measurement stage, put 100 cycles of waveform through filter. */
         for (int j = 0; j < 100000; j ++)
         {
-            int signal = (int)(32768.0 * sin(k++ * omega) * sqrt(2));
+            int signal = static_cast<int>(32768.0 * sin(k++ * omega) * sqrt(2));
 
             if (r->input(signal))
             {

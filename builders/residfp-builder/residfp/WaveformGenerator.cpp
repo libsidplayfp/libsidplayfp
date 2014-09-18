@@ -110,7 +110,7 @@ void WaveformGenerator::setChipModel(ChipModel chipModel)
             }
         }
 
-        dac[i] = (float)dacValue;
+        dac[i] = static_cast<float>(dacValue);
     }
 
     const float offset = dac[chipModel == MOS6581 ? 0x380 : 0x800];
