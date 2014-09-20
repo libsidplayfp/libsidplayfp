@@ -34,7 +34,7 @@
 #include "player.h"
 
 sidplayfp::sidplayfp() :
-    sidplayer(*(new SIDPLAYFP_NAMESPACE::Player)) {}
+    sidplayer(*(new libsidplayfp::Player)) {}
 
 sidplayfp::~sidplayfp()
 {

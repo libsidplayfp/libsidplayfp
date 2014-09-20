@@ -50,7 +50,8 @@ class SidInfo;
 class sidbuilder;
 
 
-SIDPLAYFP_NAMESPACE_START
+namespace libsidplayfp
+{
 
 class Player
 #ifdef PC64_TESTSUITE
@@ -176,6 +177,6 @@ public:
     uint_least16_t getCia1TimerA() const { return m_c64.getCia1TimerA(); }
 };
 
-SIDPLAYFP_NAMESPACE_STOP
+}
 
 #endif // PLAYER_H

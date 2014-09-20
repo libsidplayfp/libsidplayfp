@@ -35,7 +35,7 @@ class  SidInfo;
 class  EventContext;
 
 // Private Sidplayer
-namespace SIDPLAYFP_NAMESPACE
+namespace libsidplayfp
 {
     class Player;
 }
@@ -46,7 +46,7 @@ namespace SIDPLAYFP_NAMESPACE
 class SID_EXTERN sidplayfp
 {
 private:
-    SIDPLAYFP_NAMESPACE::Player &sidplayer;
+    libsidplayfp::Player &sidplayer;
 
 public:
     sidplayfp();

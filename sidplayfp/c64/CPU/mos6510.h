@@ -35,6 +35,9 @@
 
 class EventContext;
 
+namespace libsidplayfp
+{
+
 #ifdef DEBUG
 class MOS6510;
 
@@ -312,5 +315,7 @@ public:
     void triggerIRQ();
     void clearIRQ();
 };
+
+}
 
 #endif // MOS6510_H

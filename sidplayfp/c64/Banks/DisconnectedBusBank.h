@@ -24,6 +24,9 @@
 
 #include "Bank.h"
 
+namespace libsidplayfp
+{
+
 /**
  * IO1/IO2
  *
@@ -47,5 +50,7 @@ class DisconnectedBusBank : public Bank
      */
     uint8_t peek(uint_least16_t) override { return 0; }
 };
+
+}
 
 #endif

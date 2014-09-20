@@ -24,6 +24,9 @@
 #ifndef LIGHTPEN_H
 #define LIGHTPEN_H
 
+namespace libsidplayfp
+{
+
 /**
  * Lightpen emulation.
  */
@@ -132,5 +135,7 @@ public:
      */
     void untrigger() { isTriggered = false; }
 };
+
+}
 
 #endif

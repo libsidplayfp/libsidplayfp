@@ -33,7 +33,8 @@
 
 #include "sidcxx11.h"
 
-SIDPLAYFP_NAMESPACE_START
+namespace libsidplayfp
+{
 
 // Speed strings
 const char TXT_PAL_VBI[]        = "50 Hz VBI (PAL)";
@@ -514,4 +515,4 @@ void Player::sidParams(double cpuFreq, int frequency,
     }
 #endif
 
-SIDPLAYFP_NAMESPACE_STOP
+}

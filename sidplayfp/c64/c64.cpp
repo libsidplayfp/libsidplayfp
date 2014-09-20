@@ -26,6 +26,9 @@
 
 #include "c64/VIC_II/mos656x.h"
 
+namespace libsidplayfp
+{
+
 typedef struct
 {
     double colorBurst;         ///< Colorburst frequency in Herz
@@ -174,4 +177,6 @@ void c64::clearSids()
     std::for_each(extraSidBanks.begin(), extraSidBanks.end(), Delete<sidBankMap_t::value_type>);
 
     extraSidBanks.clear();
+}
+
 }

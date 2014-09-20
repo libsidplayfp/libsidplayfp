@@ -29,6 +29,9 @@
 
 #include "NullSid.h"
 
+namespace libsidplayfp
+{
+
 /**
  * SID
  *
@@ -67,5 +70,7 @@ public:
      */
     void setSID(c64sid *s) { sid = (s != nullptr) ? s : NullSid::getInstance(); }
 };
+
+}
 
 #endif

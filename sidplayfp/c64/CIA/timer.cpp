@@ -24,6 +24,9 @@
 
 #include "sidendian.h"
 
+namespace libsidplayfp
+{
+
 void Timer::setControlRegister(uint8_t cr)
 {
     state &= ~CIAT_CR_MASK;
@@ -148,4 +151,6 @@ void Timer::latchHi(uint8_t data)
     endian_16hi8(latch, data);
     if ((state & CIAT_LOAD) || !(state & CIAT_CR_START)) // Reload timer if stopped
         timer = latch;
+}
+
 }

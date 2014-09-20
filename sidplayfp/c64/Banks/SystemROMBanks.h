@@ -30,6 +30,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * ROM bank base class.
  * N must be a power of two.
@@ -199,5 +202,7 @@ public:
  * Located at $D000-$DFFF
  */
 class CharacterRomBank : public romBank<0x1000> {};
+
+}
 
 #endif

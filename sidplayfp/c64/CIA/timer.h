@@ -30,6 +30,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 class MOS6526;
 
 /**
@@ -272,6 +275,8 @@ void Timer::reschedule()
 
         ciaEventPauseTime = -1;
     }
+}
+
 }
 
 #endif // TIMER_H

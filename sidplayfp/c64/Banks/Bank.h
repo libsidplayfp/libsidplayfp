@@ -26,6 +26,9 @@
 
 #include "sidplayfp/siddefs.h"
 
+namespace libsidplayfp
+{
+
 /**
  * Base interface for memory and I/O banks.
  */
@@ -57,5 +60,7 @@ public:
 protected:
     ~Bank() {}
 };
+
+}
 
 #endif

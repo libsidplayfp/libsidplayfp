@@ -25,6 +25,9 @@
 
 #include <stdint.h>
 
+namespace libsidplayfp
+{
+
 class component
 {
 protected:
@@ -37,5 +40,7 @@ public:
 protected:
     ~component() {}
 };
+
+}
 
 #endif // COMPONENT_H

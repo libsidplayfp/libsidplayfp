@@ -29,6 +29,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * Extra SID bank.
  */
@@ -95,5 +98,7 @@ public:
         mapper[mapperIndex(address)] = s;
     }
 };
+
+}
 
 #endif

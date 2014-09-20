@@ -32,6 +32,9 @@
 #  include "mos6510debug.h"
 #endif
 
+namespace libsidplayfp
+{
+
 #ifdef PC64_TESTSUITE
 #  include <stdlib.h>
 
@@ -2188,4 +2191,6 @@ void MOS6510::debug(bool enable, FILE *out)
     else
         m_fdbg = out;
 #endif
+}
+
 }

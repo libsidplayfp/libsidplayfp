@@ -46,7 +46,7 @@ enum
 /**
  * Inherit this class to create a new SID emulation.
  */
-class sidemu : public c64sid
+class sidemu : public libsidplayfp::c64sid
 {
 private:
     sidbuilder* const m_builder;

@@ -28,6 +28,9 @@
 
 #include "sidplayfp/event.h"
 
+namespace libsidplayfp
+{
+
 class MOS6526;
 
 /**
@@ -108,5 +111,7 @@ public:
      */
     void setPeriod(event_clock_t clock) { period = clock * (1 << 7); }
 };
+
+}
 
 #endif

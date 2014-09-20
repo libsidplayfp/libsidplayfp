@@ -30,6 +30,9 @@
 #  include "config.h"
 #endif
 
+namespace libsidplayfp
+{
+
 class c64cpu: public MOS6510
 {
 private:
@@ -47,6 +50,8 @@ public:
     void loadFile(const char *file) override { m_env.loadFile(file); }
 #endif
 };
+
+}
 
 #endif // C64CPU_H
 

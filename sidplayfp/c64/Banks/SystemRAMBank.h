@@ -27,6 +27,9 @@
 
 #include "Bank.h"
 
+namespace libsidplayfp
+{
+
 /**
  * Area backed by RAM.
  *
@@ -63,5 +66,7 @@ public:
         ram[address] = value;
     }
 };
+
+}
 
 #endif

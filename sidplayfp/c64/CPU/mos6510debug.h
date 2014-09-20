@@ -31,11 +31,16 @@
 
 #include "EventScheduler.h"
 
+namespace libsidplayfp
+{
+
 class MOS6510;
 
 namespace MOS6510Debug
 {
     void DumpState(event_clock_t time, MOS6510 &cpu);
+}
+
 }
 
 #endif

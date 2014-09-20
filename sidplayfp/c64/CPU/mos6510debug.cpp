@@ -31,6 +31,9 @@
 #include "sidendian.h"
 #include "opcodes.h"
 
+namespace libsidplayfp
+{
+
 void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
 {
     fprintf(cpu.m_fdbg, " PC  I  A  X  Y  SP  DR PR NV-BDIZC  Instruction (%d)\n", (int)time);
@@ -475,6 +478,8 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
 
     fprintf(cpu.m_fdbg, "\n\n");
     fflush(cpu.m_fdbg);
+}
+
 }
 
 #endif

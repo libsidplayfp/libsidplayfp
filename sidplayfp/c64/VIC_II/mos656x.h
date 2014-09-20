@@ -34,6 +34,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * MOS 6567/6569/6572 emulation.
  * Non cycle exact but good enough for SID playback.
@@ -345,6 +348,8 @@ template<>
 inline void MOS656X::endDma<7>()
 {
     setBA(true);
+}
+
 }
 
 #endif // MOS656X_H

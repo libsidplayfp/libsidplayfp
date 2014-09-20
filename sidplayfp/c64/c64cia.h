@@ -33,6 +33,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * CIA 1
  *
@@ -122,5 +125,7 @@ public:
         return read(address);
     }
 };
+
+}
 
 #endif // C64CIA_H

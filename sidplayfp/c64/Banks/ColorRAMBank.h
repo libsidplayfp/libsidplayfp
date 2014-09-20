@@ -27,6 +27,9 @@
 
 #include "Bank.h"
 
+namespace libsidplayfp
+{
+
 /**
  * Color RAM.
  *
@@ -55,5 +58,7 @@ public:
         return ram[address & 0x3ff];
     }
 };
+
+}
 
 #endif

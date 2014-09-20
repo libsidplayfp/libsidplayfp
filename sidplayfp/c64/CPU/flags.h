@@ -25,6 +25,9 @@
 
 #include <stdint.h>
 
+namespace libsidplayfp
+{
+
 /**
  * Processor status flag.
  */
@@ -89,5 +92,7 @@ public:
         N = sr & 0x80;
     }
 };
+
+}
 
 #endif

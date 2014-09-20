@@ -56,17 +56,4 @@
 #  define SID_UNUSED
 #endif
 
-/* Namespace support */
-#define SIDPLAYFP_NAMESPACE __sidplayfp__
-#ifdef  SIDPLAYFP_NAMESPACE
-#   define SIDPLAYFP_NAMESPACE_START \
-    namespace SIDPLAYFP_NAMESPACE    \
-    {
-#   define SIDPLAYFP_NAMESPACE_STOP  \
-    }
-#else
-#   define SIDPLAYFP_NAMESPACE_START
-#   define SIDPLAYFP_NAMESPACE_STOP
-#endif
-
 #endif /* SIDDEFS_H */

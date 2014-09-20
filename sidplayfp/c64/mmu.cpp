@@ -22,6 +22,9 @@
 
 #include "mmu.h"
 
+namespace libsidplayfp
+{
+
 class Bank;
 
 MMU::MMU(EventContext *context, Bank* ioBank) :
@@ -76,4 +79,6 @@ void MMU::reset()
     basicRomBank.reset();
 
     updateMappingPHI2();
+}
+
 }

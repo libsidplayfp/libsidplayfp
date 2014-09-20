@@ -48,9 +48,12 @@
 #  include "config.h"
 #endif
 
-class c64sid;
 class sidmemory;
 
+namespace libsidplayfp
+{
+
+class c64sid;
 
 #ifdef PC64_TESTSUITE
 class testEnv
@@ -311,6 +314,8 @@ void c64::lightpen(bool state)
         vic.triggerLightpen();
     else
         vic.clearLightpen();
+}
+
 }
 
 #endif // C64_H

@@ -33,6 +33,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * VIC-II
  *
@@ -69,5 +72,7 @@ public:
         return read(endian_16lo8(address));
     }
 };
+
+}
 
 #endif // C64VIC_H

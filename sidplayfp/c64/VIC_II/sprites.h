@@ -30,6 +30,9 @@
 
 #define SPRITES 8
 
+namespace libsidplayfp
+{
+
 /**
  * Sprites handling.
  */
@@ -164,5 +167,7 @@ public:
         return dma && val;
     }
 };
+
+}
 
 #endif

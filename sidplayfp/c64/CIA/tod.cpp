@@ -27,6 +27,9 @@
 
 #include "mos6526.h"
 
+namespace libsidplayfp
+{
+
 void Tod::reset()
 {
     cycles = 0;
@@ -195,4 +198,6 @@ void Tod::checkAlarm()
     {
         parent->todInterrupt();
     }
+}
+
 }

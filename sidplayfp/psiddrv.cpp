@@ -33,6 +33,9 @@
 #include "reloc65.h"
 #include "c64/CPU/mos6510.h"
 
+namespace libsidplayfp
+{
+
 // Error Strings
 const char ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
 const char ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
@@ -276,4 +279,6 @@ void psiddrv::copyPoweronPattern(sidmemory *mem) const
             }
         }
     }
+}
+
 }

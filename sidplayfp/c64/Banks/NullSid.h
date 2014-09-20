@@ -24,6 +24,9 @@
 
 #include "sidplayfp/c64/c64sid.h"
 
+namespace libsidplayfp
+{
+
 /**
  * SID chip placeholder which does nothing and returns 0xff on reading.
  */
@@ -48,5 +51,7 @@ public:
     void write(uint_least8_t, uint8_t) {}
     uint8_t read(uint_least8_t) { return 0xff; }
 };
+
+}
 
 #endif // NULLSID_H

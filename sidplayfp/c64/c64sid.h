@@ -28,6 +28,9 @@
 
 #include <stdint.h>
 
+namespace libsidplayfp
+{
+
 /**
  * SID interface.
  */
@@ -45,5 +48,7 @@ public:
     void poke(uint_least16_t address, uint8_t value) override { write(address & 0x1f, value); }
     uint8_t peek(uint_least16_t address) override { return read(address & 0x1f); }
 };
+
+}
 
 #endif // C64SID_H

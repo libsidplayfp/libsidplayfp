@@ -27,6 +27,9 @@
 
 #include "sidendian.h"
 
+namespace libsidplayfp
+{
+
 enum
 {
     INTERRUPT_NONE         = 0,
@@ -334,4 +337,6 @@ void MOS6526::underflowB()
 void MOS6526::todInterrupt()
 {
     trigger(INTERRUPT_ALARM);
+}
+
 }

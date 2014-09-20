@@ -31,6 +31,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * Interface to PLA functions.
  */
@@ -295,5 +298,7 @@ public:
         ramBank->poke(address, value);
     }
 };
+
+}
 
 #endif

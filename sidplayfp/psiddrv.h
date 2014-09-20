@@ -26,6 +26,9 @@
 class SidTuneInfo;
 class sidmemory;
 
+namespace libsidplayfp
+{
+
 class psiddrv
 {
 private:
@@ -80,5 +83,7 @@ public:
     uint_least16_t driverAddr() const { return m_driverAddr; }
     uint_least16_t driverLength() const { return m_driverLength; }
 };
+
+}
 
 #endif
