@@ -324,13 +324,17 @@ endif
 # test
 if TESTSUITE
 noinst_PROGRAMS = \
+test/demo \
 test/test \
 builders/residfp-builder/residfp/resample/test
 
+test_demo_SOURCES = test/demo.cpp 
+
+test_demo_LDADD = sidplayfp/libsidplayfp.la
+
 test_test_SOURCES = test/test.cpp 
 
-test_test_LDADD = sidplayfp/libsidplayfp.la \
-builders/residfp-builder/libsidplayfp-residfp.la
+test_test_LDADD = sidplayfp/libsidplayfp.la
 
 builders_residfp_builder_residfp_resample_test_SOURCES = builders/residfp-builder/residfp/resample/test.cpp
 
