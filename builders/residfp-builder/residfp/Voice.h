@@ -38,9 +38,9 @@ namespace reSIDfp
 class Voice
 {
 private:
-    std::auto_ptr<WaveformGenerator> waveformGenerator;
+    std::auto_ptr<WaveformGenerator> const waveformGenerator;
 
-    std::auto_ptr<EnvelopeGenerator> envelopeGenerator;
+    std::auto_ptr<EnvelopeGenerator> const envelopeGenerator;
 
 public:
     /**

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 #include <cmath>
 
+#include <memory>
+
 #include "Resampler.h"
 #include "SincResampler.h"
 
@@ -36,26 +38,25 @@ namespace reSIDfp
 class TwoPassSincResampler : public Resampler
 {
 private:
-    SincResampler* s1;
-    SincResampler* s2;
+    std::auto_ptr<SincResampler> const s1;
+    std::auto_ptr<SincResampler> const s2;
+
+private:
+    TwoPassSincResampler(double clockFrequency, double samplingFrequency,
+                         double highestAccurateFrequency, double intermediateFrequency) :
+        s1(new SincResampler(clockFrequency, intermediateFrequency, highestAccurateFrequency)),
+        s2(new SincResampler(intermediateFrequency, samplingFrequency, highestAccurateFrequency))
+    {}
 
 public:
-    TwoPassSincResampler(double clockFrequency, double samplingFrequency,
-                         double highestAccurateFrequency)
+    static TwoPassSincResampler* create(double clockFrequency, double samplingFrequency, double highestAccurateFrequency)
     {
         // Calculation according to Laurent Ganier. It evaluates to about 120 kHz at typical settings.
         // Some testing around the chosen value seems to confirm that this does work.
-        const double intermediateFrequency = 2. * highestAccurateFrequency
-                                             + sqrt(2. * highestAccurateFrequency * clockFrequency
-                                                     * (samplingFrequency - 2. * highestAccurateFrequency) / samplingFrequency);
-        s1 = new SincResampler(clockFrequency, intermediateFrequency, highestAccurateFrequency);
-        s2 = new SincResampler(intermediateFrequency, samplingFrequency, highestAccurateFrequency);
-    }
-
-    ~TwoPassSincResampler()
-    {
-        delete s1;
-        delete s2;
+        double const intermediateFrequency = 2. * highestAccurateFrequency
+            + sqrt(2. * highestAccurateFrequency * clockFrequency
+                * (samplingFrequency - 2. * highestAccurateFrequency) / samplingFrequency);
+        return new TwoPassSincResampler(clockFrequency, samplingFrequency, highestAccurateFrequency, intermediateFrequency);
     }
 
     bool input(int sample)

@@ -347,10 +347,10 @@ private:
     unsigned short* currentResonance;
 
     /// VCR + associated capacitor connected to highpass output.
-    std::auto_ptr<Integrator> hpIntegrator;
+    std::auto_ptr<Integrator> const hpIntegrator;
 
     /// VCR + associated capacitor connected to lowpass output.
-    std::auto_ptr<Integrator> bpIntegrator;
+    std::auto_ptr<Integrator> const bpIntegrator;
 
     const unsigned short* f0_dac;
 

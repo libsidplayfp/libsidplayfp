@@ -70,7 +70,7 @@ private:
 
     const double kVddt, vmin, vmax;
 
-    std::auto_ptr<Spline> opamp;
+    std::auto_ptr<Spline> const opamp;
 
 public:
     /**

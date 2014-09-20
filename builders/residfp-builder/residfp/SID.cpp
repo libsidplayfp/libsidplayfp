@@ -348,7 +348,7 @@ void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, do
         break;
 
     case RESAMPLE:
-        resampler.reset(new TwoPassSincResampler(clockFrequency, samplingFrequency, highestAccurateFrequency));
+        resampler.reset(TwoPassSincResampler::create(clockFrequency, samplingFrequency, highestAccurateFrequency));
         break;
 
     default:
