@@ -64,13 +64,9 @@ bool Player::config(const SidConfig &cfg)
         {
             sidRelease();
 
-            std::vector<unsigned int> addresses;
-            if (secondSidAddress != 0)
-                addresses.push_back(secondSidAddress);
-
             // SID emulation setup (must be performed before the
             // environment setup call)
-            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel, addresses);
+            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel, secondSidAddress);
 
             // Determine clock speed
             const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
@@ -232,7 +228,7 @@ void Player::sidRelease()
 }
 
 void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
-                        bool forced, const std::vector<unsigned int> &extraSidAddresses)
+                        bool forced, const unsigned int secondSidAddresses)
 {
     if (builder != 0)
     {
@@ -250,25 +246,18 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
         m_mixer.addSid(s);
 
         // Setup extra SIDs if needed
-        if (extraSidAddresses.size() != 0)
+        if (secondSidAddresses != 0)
         {
             // If bits 6-7 are set to Unknown then the second SID will be set to the same SID
             // model as the first SID.
-            defaultModel = userModel;
+            const SidConfig::sid_model_t secondSidModel = getModel(tuneInfo->sidModel2(), userModel, forced);
 
-            const unsigned int extraSidChips = extraSidAddresses.size();
+            sidemu *s = builder->lock(m_c64.getEventScheduler(), secondSidModel);
 
-            for (unsigned int i = 0; i < extraSidChips; i++)
-            {
-                const SidConfig::sid_model_t userModel = getModel(tuneInfo->sidModel2(), defaultModel, forced);
+            if (!m_c64.addExtraSid(s, secondSidAddresses))
+                throw configError(ERR_UNSUPPORTED_SID_ADDR);
 
-                sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
-
-                if (!m_c64.addExtraSid(s, extraSidAddresses[i]))
-                    throw configError(ERR_UNSUPPORTED_SID_ADDR);
-
-                m_mixer.addSid(s);
-            }
+            m_mixer.addSid(s);
         }
     }
 }
