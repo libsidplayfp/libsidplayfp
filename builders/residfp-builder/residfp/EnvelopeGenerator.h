@@ -53,34 +53,37 @@ private:
 
 private:
     /// XOR shift register for ADSR prescaling.
-    int lfsr;
+    unsigned int lfsr;
 
     /// Comparison value (period) of the rate counter before next event.
-    int rate;
+    unsigned int rate;
 
     /**
      * During release mode, the SID arpproximates envelope decay via piecewise
      * linear decay rate.
      */
-    int exponential_counter;
+    unsigned int exponential_counter;
 
     /**
      * Comparison value (period) of the exponential decay counter before next
      * decrement.
      */
-    int exponential_counter_period;
+    unsigned int exponential_counter_period;
 
     /// Attack register
-    int attack;
+    unsigned char attack;
 
     /// Decay register
-    int decay;
+    unsigned char decay;
 
     /// Sustain register
-    int sustain;
+    unsigned char sustain;
 
     /// Release register
-    int release;
+    unsigned char release;
+
+    /// The current digital value of envelope output.
+    unsigned char envelope_counter;
 
     /// Current envelope state
     State state;
@@ -92,9 +95,6 @@ private:
 
     /// Gate bit
     bool gate;
-
-    /// The current digital value of envelope output.
-    unsigned char envelope_counter;
 
     /**
      * Emulated nonlinearity of the envelope DAC.
@@ -115,7 +115,7 @@ private:
      *
      * see [kevtris.org](http://blog.kevtris.org/?p=13)
      */
-    static const int adsrtable[16];
+    static const unsigned int adsrtable[16];
 
 private:
     void set_exponential_counter();
@@ -154,11 +154,11 @@ public:
         decay(0),
         sustain(0),
         release(0),
+        envelope_counter(0),
         state(RELEASE),
         hold_zero(true),
         envelope_pipeline(false),
-        gate(false),
-        envelope_counter(0) {}
+        gate(false) {}
 
     /**
      * SID reset.
@@ -230,7 +230,7 @@ void EnvelopeGenerator::clock()
     {
         // it wasn't a match, clock the LFSR once
         // by performing XOR on last 2 bits
-        const int feedback = ((lfsr << 14) ^ (lfsr << 13)) & 0x4000;
+        const unsigned int feedback = ((lfsr << 14) ^ (lfsr << 13)) & 0x4000;
         lfsr = (lfsr >> 1) | feedback;
         return;
     }

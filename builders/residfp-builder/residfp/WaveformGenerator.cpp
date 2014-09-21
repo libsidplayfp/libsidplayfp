@@ -134,7 +134,7 @@ void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformG
 
 void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 {
-    const int waveform_prev = waveform;
+    const unsigned int waveform_prev = waveform;
     const bool test_prev = test;
     waveform = (control >> 4) & 0x0f;
     test = (control & 0x08) != 0;

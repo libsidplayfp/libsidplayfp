@@ -91,7 +91,7 @@ private:
     short* wave;
 
     // PWout = (PWn/40.95)%
-    int pw;
+    unsigned int pw;
 
     unsigned int shift_register;
 
@@ -101,25 +101,25 @@ private:
     /// Emulation of pipeline causing bit 19 to clock the shift register.
     int shift_pipeline;
 
-    int ring_msb_mask;
-    int no_noise;
-    int noise_output;
-    int no_noise_or_noise_output;
-    int no_pulse;
-    int pulse_output;
+    unsigned int ring_msb_mask;
+    unsigned int no_noise;
+    unsigned int noise_output;
+    unsigned int no_noise_or_noise_output;
+    unsigned int no_pulse;
+    unsigned int pulse_output;
 
     /// The control register right-shifted 4 bits; used for output function table lookup.
-    int waveform;
+    unsigned int waveform;
 
     int floating_output_ttl;
 
-    int waveform_output;
+    unsigned int waveform_output;
 
     /// Current and previous accumulator value.
-    int accumulator;
+    unsigned int accumulator;
 
     // Fout  = (Fn*Fclk/16777216)Hz
-    int freq;
+    unsigned int freq;
 
     /// The control register bits. Gate is handled by EnvelopeGenerator.
     //@{
@@ -248,17 +248,17 @@ public:
     /**
      * Read OSC3 value (6581, not latched/delayed version)
      */
-    unsigned char readOSC() const { return (unsigned char)(waveform_output >> 4); }
+    unsigned char readOSC() const { return static_cast<unsigned char>(waveform_output >> 4); }
 
     /**
      * Read accumulator value.
      */
-    int readAccumulator() const { return accumulator; }
+    unsigned int readAccumulator() const { return accumulator; }
 
     /**
      * Read freq value.
      */
-    int readFreq() const { return freq; }
+    unsigned int readFreq() const { return freq; }
 
     /**
      * Read test value.
@@ -294,8 +294,8 @@ void WaveformGenerator::clock()
     else
     {
         // Calculate new accumulator value;
-        const int accumulator_next = (accumulator + freq) & 0xffffff;
-        const int accumulator_bits_set = ~accumulator & accumulator_next;
+        const unsigned int accumulator_next = (accumulator + freq) & 0xffffff;
+        const unsigned int accumulator_bits_set = ~accumulator & accumulator_next;
         accumulator = accumulator_next;
 
         // Check whether the MSB is set high. This is used for synchronization.
@@ -323,7 +323,7 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
     {
         // The bit masks no_pulse and no_noise are used to achieve branch-free
         // calculation of the output value.
-        const int ix = (accumulator ^ (ringModulator->accumulator & ring_msb_mask)) >> 12;
+        const unsigned int ix = (accumulator ^ (ringModulator->accumulator & ring_msb_mask)) >> 12;
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
 
         if (unlikely(waveform > 0x8))

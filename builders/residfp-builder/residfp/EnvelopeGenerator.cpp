@@ -29,9 +29,9 @@
 namespace reSIDfp
 {
 
-const int DAC_BITS = 8;
+const unsigned int DAC_BITS = 8;
 
-const int EnvelopeGenerator::adsrtable[16] =
+const unsigned int EnvelopeGenerator::adsrtable[16] =
 {
     0x007f,
     0x3000,
