@@ -96,6 +96,7 @@ private:
 private:
     cw_cache_t CACHE;
 
+private:
     /**
      * Generate bitstate based on emulation of combined waves.
      *

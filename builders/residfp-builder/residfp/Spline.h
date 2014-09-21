@@ -41,6 +41,7 @@ public:
         double y;
     } Point;
 
+private:
     typedef struct
     {
         double x1;
