@@ -68,7 +68,7 @@ public:
     /**
      * Evaluate y and its derivative at given point x.
      */
-    void evaluate(double x, Point &out);
+    Point evaluate(double x);
 };
 
 } // namespace reSIDfp
