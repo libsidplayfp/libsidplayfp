@@ -53,13 +53,13 @@ private:
     } Param;
 
 private:
-    const int paramsLength;
-
     /// Interpolation parameters
     Param *params;
 
     /// last used parameters, cached for speed up
     Param *c;
+
+    const int paramsLength;
 
 public:
     Spline(const Point input[], int inputLength);

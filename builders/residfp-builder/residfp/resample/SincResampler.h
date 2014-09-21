@@ -74,8 +74,6 @@ private:
 
     short sample[RINGSIZE * 2];
 
-    static const double I0E;
-
 private:
     /**
      * I0() computes the 0th order modified Bessel function of the first kind.

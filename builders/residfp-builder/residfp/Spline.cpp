@@ -37,9 +37,9 @@ double slope(const Spline::Point &a, const Spline::Point &b)
 }
 
 Spline::Spline(const Point input[], int inputLength) :
-    paramsLength(inputLength),
-    params(new Param[paramsLength]),
-    c(&params[0])
+    params(new Param[inputLength]),
+    c(&params[0]),
+    paramsLength(inputLength)
 {
     assert(inputLength > 2);
 

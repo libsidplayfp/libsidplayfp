@@ -153,24 +153,28 @@ namespace reSIDfp
 class Integrator
 {
 private:
-    unsigned int Vddt_Vw_2;
-    const unsigned short kVddt, n_snake;
-    int vx, vc;
     const unsigned short* vcr_kVg;
     const unsigned short* vcr_n_Ids_term;
     const unsigned short* opamp_rev;
 
+    unsigned int Vddt_Vw_2;
+    int vx;
+    int vc;
+
+    const unsigned short kVddt;
+    const unsigned short n_snake;
+
 public:
     Integrator(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
                const unsigned short* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
-        Vddt_Vw_2(0),
-        kVddt(kVddt),
-        n_snake(n_snake),
-        vx(0),
-        vc(0),
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
-        opamp_rev(opamp_rev) {}
+        opamp_rev(opamp_rev),
+        Vddt_Vw_2(0),
+        vx(0),
+        vc(0),
+        kVddt(kVddt),
+        n_snake(n_snake) {}
 
     void setVw(unsigned short Vw) { Vddt_Vw_2 = (kVddt - Vw) * (kVddt - Vw) >> 1; }
 
