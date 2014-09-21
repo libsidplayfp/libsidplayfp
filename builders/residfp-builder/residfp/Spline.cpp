@@ -28,7 +28,10 @@
 namespace reSIDfp
 {
 
-double Spline::slope(const Point &a, const Point &b)
+/**
+ * Calculate the slope of the line crossing the given points.
+ */
+double slope(const Spline::Point &a, const Spline::Point &b)
 {
     return (b.y - a.y) / (b.x - a.x);
 }

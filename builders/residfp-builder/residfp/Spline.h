@@ -60,12 +60,6 @@ private:
     /// last used parameters, cached for speed up
     Param *c;
 
-private:
-    /**
-     * Calculate the slope of the line crossing the given points.
-     */
-    inline double slope(const Point &a, const Point &b);
-
 public:
     Spline(const Point input[], int inputLength);
     ~Spline() { delete [] params; }

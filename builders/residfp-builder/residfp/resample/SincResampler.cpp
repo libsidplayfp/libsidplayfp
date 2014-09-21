@@ -41,9 +41,15 @@
 namespace reSIDfp
 {
 
-SincResampler::fir_cache_t SincResampler::FIR_CACHE;
+typedef std::map<std::string, matrix_t> fir_cache_t;
 
-const double SincResampler::I0E = 1e-6;
+/// Cache for the expensive FIR table computation results.
+fir_cache_t FIR_CACHE;
+
+/// Maximum error acceptable in I0 is 1e-6, or ~96 dB.
+const double I0E = 1e-6;
+
+const int BITS = 16;
 
 double SincResampler::I0(double x)
 {
