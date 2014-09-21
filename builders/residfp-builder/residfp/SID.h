@@ -89,7 +89,7 @@ private:
     int busValueTtl;
 
     /// Time until #voiceSync must be run.
-    int nextVoiceSync;
+    unsigned int nextVoiceSync;
 
     /// Delayed MOS8580 write register
     int delayedOffset;
@@ -120,7 +120,7 @@ private:
      *
      * @param n the number of cycles
      */
-    void ageBusValue(int n);
+    void ageBusValue(unsigned int n);
 
     /**
      * Get output sample.
@@ -238,7 +238,7 @@ public:
      * @param buf audio output buffer
      * @return number of samples produced
      */
-    int clock(int cycles, short* buf);
+    int clock(unsigned int cycles, short* buf);
 
     /**
      * Clock SID forward with no audio production.
@@ -250,7 +250,7 @@ public:
      *
      * @param cycles c64 clocks to clock.
      */
-    void clockSilent(int cycles);
+    void clockSilent(unsigned int cycles);
 
     /**
      * Set filter curve parameter for 6581 model.
@@ -289,7 +289,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-void SID::ageBusValue(int n)
+void SID::ageBusValue(unsigned int n)
 {
     if (likely(busValueTtl != 0))
     {
@@ -315,14 +315,14 @@ int SID::output() const
 
 
 RESID_INLINE
-int SID::clock(int cycles, short* buf)
+int SID::clock(unsigned int cycles, short* buf)
 {
     ageBusValue(cycles);
     int s = 0;
 
     while (cycles != 0)
     {
-        int delta_t = std::min(nextVoiceSync, cycles);
+        unsigned int delta_t = std::min(nextVoiceSync, cycles);
 
         if (likely(delta_t > 0))
         {
@@ -331,7 +331,7 @@ int SID::clock(int cycles, short* buf)
                 delta_t = 1;
             }
 
-            for (int i = 0; i < delta_t; i++)
+            for (unsigned int i = 0; i < delta_t; i++)
             {
                 /* clock waveform generators */
                 voice[0]->wave()->clock();

@@ -213,15 +213,15 @@ void SID::voiceSync(bool sync)
 
     for (int i = 0; i < 3; i++)
     {
-        const int accumulator = voice[i]->wave()->readAccumulator();
-        const int freq = voice[i]->wave()->readFreq();
+        const unsigned int freq = voice[i]->wave()->readFreq();
 
         if (voice[i]->wave()->readTest() || freq == 0 || !voice[(i + 1) % 3]->wave()->readSync())
         {
             continue;
         }
 
-        const int thisVoiceSync = ((0x7fffff - accumulator) & 0xffffff) / freq + 1;
+        const unsigned int accumulator = voice[i]->wave()->readAccumulator();
+        const unsigned int thisVoiceSync = ((0x7fffff - accumulator) & 0xffffff) / freq + 1;
 
         if (thisVoiceSync < nextVoiceSync)
         {
@@ -360,7 +360,7 @@ void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, do
     }
 }
 
-void SID::clockSilent(int cycles)
+void SID::clockSilent(unsigned int cycles)
 {
     ageBusValue(cycles);
 
