@@ -54,15 +54,21 @@ private:
     typedef std::map<std::string, matrix_t> fir_cache_t;
 
 private:
+    /// Size of the ring buffer
     static const int RINGSIZE = 2048;
 
     static const int BITS = 16;
 
+    /// Table of the fir filter coefficients
     matrix_t* firTable;
 
     int sampleIndex;
 
-    int firRES, firN;
+    /// Filter resolution
+    int firRES;
+
+    /// Filter length
+    int firN;
 
     const int cyclesPerSample;
 

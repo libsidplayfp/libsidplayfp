@@ -53,7 +53,11 @@ public:
 
 private:
     const int paramsLength;
+
+    /// Interpolation parameters
     Param *params;
+
+    /// last used parameters, cached for speed up
     Param *c;
 
 private:

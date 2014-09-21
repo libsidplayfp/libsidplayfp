@@ -36,10 +36,15 @@ class ZeroOrderResampler : public Resampler
 {
 
 private:
+    /// Last sample
     int cachedSample;
 
+    /// Number of cycles per sample
     const int cyclesPerSample;
+
     int sampleOffset;
+
+    /// Calculated sample
     int outputValue;
 
 public:

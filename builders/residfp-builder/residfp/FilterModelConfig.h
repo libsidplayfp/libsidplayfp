@@ -123,12 +123,19 @@ public:
 
     /**
      * Construct an 11 bit cutoff frequency DAC output voltage table.
+     * Ownership is transferred to the requester which becomes responsible
+     * of freeing the object when done.
      *
      * @param adjustment
      * @return the DAC table
      */
     unsigned short* getDAC(double adjustment) const;
 
+    /**
+     * Construct an integrator solver.
+     *
+     * @return the integrator
+     */
     std::auto_ptr<Integrator> buildIntegrator();
 };
 
