@@ -143,7 +143,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         // N >= (96.33 - 7.95)/(2 * pi * 2.285 * (maxfreq - passbandfreq) >= 123
         // The filter order is equal to the number of zero crossings, i.e.
         // it should be an even number (sinc is symmetric about x = 0).
-        int N = (int)((A - 7.95) / (2.285 * dw) + 0.5);
+        int N = static_cast<int>((A - 7.95) / (2.285 * dw) + 0.5);
         N += N & 1;
 
         // The filter length is equal to the filter order + 1.

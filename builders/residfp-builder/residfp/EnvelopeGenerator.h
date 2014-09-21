@@ -260,7 +260,7 @@ void EnvelopeGenerator::clock()
             //
             ++envelope_counter;
 
-            if (unlikely(envelope_counter == (unsigned char) 0xff))
+            if (unlikely(envelope_counter == 0xff))
             {
                 state = DECAY_SUSTAIN;
                 rate = adsrtable[decay];
@@ -276,7 +276,7 @@ void EnvelopeGenerator::clock()
             //
             // For a detailed description see:
             // http://ploguechipsounds.blogspot.it/2010/11/new-research-on-sid-adsr.html
-            if (likely(envelope_counter == (unsigned char)(sustain << 4 | sustain)))
+            if (likely(envelope_counter == (sustain << 4 | sustain)))
             {
                 return;
             }
