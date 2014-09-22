@@ -23,8 +23,6 @@
 
 #include "player.h"
 
-#include <ctime>
-
 #include "SidTune.h"
 #include "sidbuilder.h"
 #include "sidemu.h"
