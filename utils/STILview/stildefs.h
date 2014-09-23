@@ -82,12 +82,6 @@
 #  define SLASH '\\'
 #endif
 
-// Unused, will be removed in future version
-#define STIL_MAX_LINE_SIZE 91
-
-// Unused, will be removed in future version
-#define STIL_MAX_ENTRY_SIZE STIL_MAX_LINE_SIZE*100
-
 // HVSC path to STIL.
 const char DEFAULT_PATH_TO_STIL[]="/DOCUMENTS/STIL.txt";
 
