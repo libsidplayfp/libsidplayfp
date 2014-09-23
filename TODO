@@ -1,7 +1,7 @@
 2.0:
 * support non-ascii paths on Windows (SidTune, SidDatabase, STIL)
-* wrap internal classes into a library namespace
-* support 3rd SID
+* wrap internal classes into a library namespace (WIP)
+* support 3rd SID (Done)
 
 3.0
 * move mixer client side
@@ -9,7 +9,7 @@
 * wrap everything into a library namespace (?)
 
 
-someday:
+someday/maybe:
 
 * relocate only psid tunes (?)
 * add SIDid support
