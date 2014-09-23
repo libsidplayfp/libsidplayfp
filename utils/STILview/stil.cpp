@@ -76,6 +76,23 @@ const char *STIL::STIL_ERROR_STR[] =
     "No STIL sections were found in BUGlist.txt!"
 };
 
+/**
+ * Converts slashes to the one the OS uses to access files.
+ *
+ * @param
+ *      str - what to convert
+ */
+void convertSlashes(std::string &str) { std::replace(str.begin(), str.end(), '/', SLASH); }
+
+/**
+ * Converts OS specific dir separators to slashes.
+ *
+ * @param
+ *      str - what to convert
+ */
+void convertToSlashes(std::string &str) { std::replace(str.begin(), str.end(), SLASH, '/'); }
+
+
 // CONSTRUCTOR
 STIL::STIL(const char *stilPath, const char *bugsPath) :
     STIL_DEBUG(false),

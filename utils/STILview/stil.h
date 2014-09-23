@@ -415,23 +415,6 @@ private:
      * @param line   - char array to put the line into
      */
     void getStilLine(std::ifstream &infile, std::string &line);
-
-private:
-    /**
-     * Converts slashes to the one the OS uses to access files.
-     *
-     * @param
-     *      str - what to convert
-     */
-    static void convertSlashes(std::string &str) { std::replace(str.begin(), str.end(), '/', SLASH); }
-
-    /**
-     * Converts OS specific dir separators to slashes.
-     *
-     * @param
-     *      str - what to convert
-     */
-    static void convertToSlashes(std::string &str) { std::replace(str.begin(), str.end(), SLASH, '/'); }
 };
 
 #endif // STIL_H
