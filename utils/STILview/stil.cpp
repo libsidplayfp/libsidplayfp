@@ -1020,7 +1020,6 @@ STIL::getField(string &result, const char *buffer, int tuneNo, STILField field)
 
                 CERR_STIL_DEBUG << "getField() invalid parameter combo: multitune, tuneNo=" << tuneNo << ", field=" << field << endl;
                 return false;
-                break;
             }
         }
 
