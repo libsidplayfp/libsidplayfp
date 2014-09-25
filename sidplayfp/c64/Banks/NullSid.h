@@ -24,6 +24,8 @@
 
 #include "c64/c64sid.h"
 
+#include "sidcxx11.h"
+
 namespace libsidplayfp
 {
 
@@ -46,10 +48,10 @@ public:
         return &nullsid;
     }
 
-    void reset(uint8_t) {}
+    void reset(uint8_t) override {}
 
-    void write(uint_least8_t, uint8_t) {}
-    uint8_t read(uint_least8_t) { return 0xff; }
+    void write(uint_least8_t, uint8_t) override {}
+    uint8_t read(uint_least8_t) override { return 0xff; }
 };
 
 }
