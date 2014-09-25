@@ -36,18 +36,19 @@ class sidbuilder;
 class EventContext;
 
 /**
- * Buffer size. 5000 is roughly 5 ms at 96 kHz
- */
-enum
-{
-    OUTPUTBUFFERSIZE = 5000
-};
-
-/**
  * Inherit this class to create a new SID emulation.
  */
 class sidemu : public libsidplayfp::c64sid
 {
+public:
+    /**
+     * Buffer size. 5000 is roughly 5 ms at 96 kHz
+     */
+    enum
+    {
+        OUTPUTBUFFERSIZE = 5000
+    };
+
 private:
     sidbuilder* const m_builder;
 

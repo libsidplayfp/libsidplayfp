@@ -184,7 +184,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         {
             while (m_isPlaying && m_mixer.notFinished())
             {
-                for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                for (int i = 0; i < sidemu::OUTPUTBUFFERSIZE; i++)
                     m_c64.getEventScheduler()->clock();
 
                 m_mixer.clockChips();
@@ -197,7 +197,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
             int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
             while (m_isPlaying && --size)
             {
-                for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+                for (int i = 0; i < sidemu::OUTPUTBUFFERSIZE; i++)
                     m_c64.getEventScheduler()->clock();
 
                 m_mixer.clockChips();
@@ -210,7 +210,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
         while (m_isPlaying && --size)
         {
-            for (int i=0; i<OUTPUTBUFFERSIZE; i++)
+            for (int i = 0; i < sidemu::OUTPUTBUFFERSIZE; i++)
                 m_c64.getEventScheduler()->clock();
         }
     }
