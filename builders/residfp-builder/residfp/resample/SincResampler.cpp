@@ -51,7 +51,15 @@ const double I0E = 1e-6;
 
 const int BITS = 16;
 
-double SincResampler::I0(double x)
+/**
+ * I0() computes the 0th order modified Bessel function of the first kind.
+ * This function is originally from resample-1.5/filterkit.c by J. O. Smith.
+ * It is used to build the Kaiser window for resampling.
+ *
+ * @param x evaluate I0 at x
+ * @return value of I0 at x.
+ */
+double I0(double x)
 {
     double sum = 1., u = 1., n = 1.;
     const double halfx = x / 2.;
@@ -68,7 +76,15 @@ double SincResampler::I0(double x)
     return sum;
 }
 
-int SincResampler::convolve(const short* a, const short* b, int bLength)
+/**
+ * Calculate convolution with sample and sinc.
+ *
+ * @param a sample buffer input
+ * @param b sinc
+ * @param bLength length of the sinc buffer
+ * @return convolved result
+ */
+int convolve(const short* a, const short* b, int bLength)
 {
 #ifdef HAVE_MMINTRIN_H
     __m64 acc = _mm_setzero_si64();
