@@ -69,26 +69,6 @@ private:
     short sample[RINGSIZE * 2];
 
 private:
-    /**
-     * I0() computes the 0th order modified Bessel function of the first kind.
-     * This function is originally from resample-1.5/filterkit.c by J. O. Smith.
-     * It is used to build the Kaiser window for resampling.
-     *
-     * @param x evaluate I0 at x
-     * @return value of I0 at x.
-     */
-    static double I0(double x);
-
-    /**
-     * Calculate convolution with sample and sinc.
-     *
-     * @param a sample buffer input
-     * @param b sinc
-     * @param bLength length of the sinc buffer
-     * @return convolved result
-     */
-    static int convolve(const short* a, const short* b, int bLength);
-
     int fir(int subcycle);
 
 public:

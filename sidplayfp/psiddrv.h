@@ -48,11 +48,6 @@ private:
      */
     uint8_t iomap(uint_least16_t addr) const;
 
-    /**
-     * Copy power on pattern in memory.
-     */
-    void copyPoweronPattern(sidmemory *mem) const;
-
 public:
     psiddrv(const SidTuneInfo *tuneInfo) :
         m_tuneInfo(tuneInfo),
