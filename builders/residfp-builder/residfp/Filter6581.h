@@ -320,20 +320,6 @@ class Integrator;
 class Filter6581 : public Filter
 {
 private:
-    /// Filter highpass state.
-    int Vhp;
-
-    /// Filter bandpass state.
-    int Vbp;
-
-    /// Filter lowpass state.
-    int Vlp;
-
-    /// Filter external input.
-    int ve;
-
-    const int voiceScaleS14, voiceDC;
-
     /// Current volume amplifier setting.
     unsigned short* currentGain;
 
@@ -346,36 +332,51 @@ private:
     /// Filter resonance value.
     unsigned short* currentResonance;
 
-    /// VCR + associated capacitor connected to highpass output.
-    std::auto_ptr<Integrator> hpIntegrator;
-
-    /// VCR + associated capacitor connected to lowpass output.
-    std::auto_ptr<Integrator> bpIntegrator;
-
     const unsigned short* f0_dac;
 
     unsigned short** mixer;
     unsigned short** summer;
     unsigned short** gain;
 
+    /// Filter highpass state.
+    int Vhp;
+
+    /// Filter bandpass state.
+    int Vbp;
+
+    /// Filter lowpass state.
+    int Vlp;
+
+    /// Filter external input.
+    int ve;
+
+    const int voiceScaleS14;
+    const int voiceDC;
+
+    /// VCR + associated capacitor connected to highpass output.
+    std::auto_ptr<Integrator> hpIntegrator;
+
+    /// VCR + associated capacitor connected to lowpass output.
+    std::auto_ptr<Integrator> bpIntegrator;
+
 public:
     Filter6581() :
+        currentGain(0),
+        currentMixer(0),
+        currentSummer(0),
+        currentResonance(0),
+        f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
+        mixer(FilterModelConfig::getInstance()->getMixer()),
+        summer(FilterModelConfig::getInstance()->getSummer()),
+        gain(FilterModelConfig::getInstance()->getGain()),
         Vhp(0),
         Vbp(0),
         Vlp(0),
         ve(0),
         voiceScaleS14(FilterModelConfig::getInstance()->getVoiceScaleS14()),
         voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
-        currentGain(0),
-        currentMixer(0),
-        currentSummer(0),
-        currentResonance(0),
         hpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
-        f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
-        mixer(FilterModelConfig::getInstance()->getMixer()),
-        summer(FilterModelConfig::getInstance()->getSummer()),
-        gain(FilterModelConfig::getInstance()->getGain())
+        bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator())
     {
         input(0);
     }

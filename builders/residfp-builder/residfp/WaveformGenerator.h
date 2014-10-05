@@ -88,6 +88,8 @@ class WaveformGenerator
 private:
     matrix_t* model_wave;
 
+    short* wave;
+
     // PWout = (PWn/40.95)%
     int pw;
 
@@ -110,8 +112,6 @@ private:
     int waveform;
 
     int floating_output_ttl;
-
-    short* wave;
 
     int waveform_output;
 
@@ -173,6 +173,7 @@ public:
      */
     WaveformGenerator() :
         model_wave(0),
+        wave(0),
         pw(0),
         shift_register(0),
         shift_register_reset(0),
@@ -185,7 +186,6 @@ public:
         pulse_output(0),
         waveform(0),
         floating_output_ttl(0),
-        wave(0),
         waveform_output(0),
         accumulator(0),
         freq(0),

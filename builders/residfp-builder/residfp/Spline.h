@@ -51,15 +51,11 @@ public:
     } Param;
 
 private:
-    const int paramsLength;
+    /// Interpolation parameters
     Param *params;
     Param *c;
 
-private:
-    /**
-     * Calculate the slope of the line crossing the given points.
-     */
-    inline double slope(const Point &a, const Point &b);
+    const int paramsLength;
 
 public:
     Spline(const Point input[], int inputLength);
@@ -68,7 +64,7 @@ public:
     /**
      * Evaluate y and its derivative at given point x.
      */
-    void evaluate(double x, Point &out);
+    Point evaluate(double x);
 };
 
 } // namespace reSIDfp

@@ -38,7 +38,7 @@
 #include <sstream>
 #include <utility>
 
-#include "sidplayfp/stringutils.h"
+#include "stringutils.h"
 
 using namespace std;
 

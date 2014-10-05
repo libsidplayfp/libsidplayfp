@@ -125,9 +125,7 @@ FilterModelConfig::FilterModelConfig() :
 
     for (int x = 0; x < (1 << 16); x++)
     {
-        Spline::Point out;
-
-        s.evaluate(x, out);
+        Spline::Point out = s.evaluate(x);
         if (out.x < 0.) out.x = 0.;
         assert(out.x < 65535.5);
         opamp_rev[x] = (unsigned short)(out.x + 0.5);

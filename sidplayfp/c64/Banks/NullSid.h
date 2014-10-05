@@ -22,7 +22,7 @@
 #ifndef NULLSID_H
 #define NULLSID_H
 
-#include "sidplayfp/c64/c64sid.h"
+#include "c64/c64sid.h"
 
 /**
  * SID chip placeholder which does nothing and returns 0xff on reading.

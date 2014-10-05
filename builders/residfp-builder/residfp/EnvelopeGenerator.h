@@ -51,6 +51,7 @@ private:
         ATTACK, DECAY_SUSTAIN, RELEASE
     };
 
+private:
     /// XOR shift register for ADSR prescaling.
     int lfsr;
 
@@ -102,6 +103,7 @@ private:
      */
     short dac[256];
 
+private:
     /**
      * Lookup table to convert from attack, decay, or release value to rate
      * counter period.

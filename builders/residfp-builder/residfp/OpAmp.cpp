@@ -49,9 +49,7 @@ double OpAmp::solve(double n, double vi)
 
         // Calculate f and df.
 
-        Spline::Point out;
-
-        opamp->evaluate(x, out);
+        Spline::Point out = opamp->evaluate(x);
         const double vo = out.x;
         const double dvo = out.y;
 
@@ -71,7 +69,7 @@ double OpAmp::solve(double n, double vi)
 
         if (unlikely(fabs(x - xk) < EPSILON))
         {
-            opamp->evaluate(x, out);
+            out = opamp->evaluate(x);
             return out.x;
         }
 

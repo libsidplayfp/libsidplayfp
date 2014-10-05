@@ -31,13 +31,6 @@ namespace reSIDfp
  */
 class Filter
 {
-private:
-    /// Filter enabled.
-    bool enabled;
-
-    /// Selects which inputs to route through filter.
-    unsigned char filt;
-
 protected:
     /// Current clock frequency.
     double clockFrequency;
@@ -60,6 +53,13 @@ protected:
     /// Highpass, bandpass, and lowpass filter modes.
     bool hp, bp, lp;
 
+private:
+    /// Filter enabled.
+    bool enabled;
+
+    /// Selects which inputs to route through filter.
+    unsigned char filt;
+
 protected:
     /**
      * Set filter cutoff frequency.
@@ -78,8 +78,6 @@ protected:
 
 public:
     Filter() :
-        enabled(true),
-        filt(0),
         clockFrequency(0.),
         fc(0),
         res(0),
@@ -91,7 +89,9 @@ public:
         voice3off(false),
         hp(false),
         bp(false),
-        lp(false) {}
+        lp(false),
+        enabled(true),
+        filt(0) {}
 
     virtual ~Filter() {}
 

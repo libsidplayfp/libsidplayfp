@@ -28,15 +28,18 @@
 namespace reSIDfp
 {
 
-double Spline::slope(const Point &a, const Point &b)
+/**
+ * Calculate the slope of the line crossing the given points.
+ */
+double slope(const Spline::Point &a, const Spline::Point &b)
 {
     return (b.y - a.y) / (b.x - a.x);
 }
 
 Spline::Spline(const Point input[], int inputLength) :
-    paramsLength(inputLength),
-    params(new Param[paramsLength]),
-    c(&params[0])
+    params(new Param[inputLength]),
+    c(&params[0]),
+    paramsLength(inputLength)
 {
     assert(inputLength > 2);
 
@@ -91,7 +94,7 @@ Spline::Spline(const Point input[], int inputLength) :
     params[inputLength - 2].x2 = std::numeric_limits<double>::max();
 }
 
-void Spline::evaluate(double x, Point &out)
+Spline::Point Spline::evaluate(double x)
 {
     if (x < c->x1 || x > c->x2)
     {
@@ -108,11 +111,15 @@ void Spline::evaluate(double x, Point &out)
     // Interpolate
     const double diff = x - c->x1;
 
+    Point out;
+
     // y = a*x^3 + b*x^2 + c*x + d
     out.x =  ((c->a * diff + c->b) * diff + c->c) * diff + c->d;
 
     // dy = 3*a*x^2 + 2*b*x + c
     out.y = (3.0 * c->a * diff + 2.0 * c->b) * diff + c->c;
+
+    return out;
 }
 
 } // namespace reSIDfp
