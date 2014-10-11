@@ -1,3 +1,14 @@
+1.6.0 2014-10-11
+* Make PSID loader adhere to spec when handling 2nd SID address
+* Improve PAL/NTSC switch handling
+* Reset rom descriptions if rom is not loaded
+* Fix a memory leak due to deleting auto_ptr to incomplete type (bug #13)
+* Fix Drean TOD frequency
+* Rework lightpen emulation based on VICE's code
+* Internal code refactoring
+
+
+
 1.5.3 2014-09-06
 * Copy poweron pattern in memory only if real c64 compatibility is needed, fixes /MUSICIANS/B/Brennan_Neil/Super_Pac-Man.sid
 

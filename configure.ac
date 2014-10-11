@@ -1,6 +1,6 @@
 m4_define([lib_major], [1])
 m4_define([lib_minor], [6])
-m4_define([lib_level], [0alpha])
+m4_define([lib_level], [0])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
@@ -91,13 +91,13 @@ dnl libtool-style version-info number
 #     value and # reset both “older interface age” and ”interface revision”
 #     to zero.
 
-LIBSIDPLAYCUR=3
-LIBSIDPLAYREV=15
-LIBSIDPLAYAGE=0
+LIBSIDPLAYCUR=4
+LIBSIDPLAYREV=0
+LIBSIDPLAYAGE=1
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
 LIBSTILVIEWCUR=0
-LIBSTILVIEWREV=1
+LIBSTILVIEWREV=2
 LIBSTILVIEWAGE=0
 LIBSTILVIEWVERSION=$LIBSTILVIEWCUR:$LIBSTILVIEWREV:$LIBSTILVIEWAGE
 
