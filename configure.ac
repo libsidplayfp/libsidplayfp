@@ -6,7 +6,7 @@ m4_define([lib_version], [lib_major.lib_minor.lib_level])
 AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([sidplayfp/sidplayfp/sidplayfp.cpp])
+AC_CONFIG_SRCDIR([src/sidplayfp/sidplayfp.cpp])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
 
@@ -231,9 +231,9 @@ AC_CONFIG_FILES([
 Makefile
 libsidplayfp.pc
 libstilview.pc
-sidplayfp/sidversion.h
-sidplayfp/builders/residfp-builder/residfp/siddefs-fp.h
-sidplayfp/builders/resid-builder/resid/siddefs.h
+src/sidversion.h
+src/builders/residfp-builder/residfp/siddefs-fp.h
+src/builders/resid-builder/resid/siddefs.h
 ])
 
 AC_OUTPUT
