@@ -232,8 +232,8 @@ Makefile
 libsidplayfp.pc
 libstilview.pc
 sidplayfp/sidversion.h
-builders/residfp-builder/residfp/siddefs-fp.h
-builders/resid-builder/resid/siddefs.h
+sidplayfp/builders/residfp-builder/residfp/siddefs-fp.h
+sidplayfp/builders/resid-builder/resid/siddefs.h
 ])
 
 AC_OUTPUT

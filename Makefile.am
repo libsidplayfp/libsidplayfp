@@ -12,10 +12,10 @@ if HAVE_VISIBILITY
   AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
-AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
--I $(top_builddir)/builders/residfp-builder/residfp \
--I $(top_builddir)/builders/resid-builder \
--I $(top_builddir)/builders/resid-builder/resid \
+AM_CPPFLAGS = -I $(top_builddir)/sidplayfp/builders/residfp-builder \
+-I $(top_builddir)/sidplayfp/builders/residfp-builder/residfp \
+-I $(top_builddir)/sidplayfp/builders/resid-builder \
+-I $(top_builddir)/sidplayfp/builders/resid-builder/resid \
 -I $(top_builddir)/sidplayfp \
 -I $(top_srcdir)/sidplayfp \
 @debug_flags@
@@ -24,20 +24,20 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 EXTRA_DIST = \
 docs/mainpage.dox \
 sidplayfp/psiddrv.a65 \
-builders/residfp-builder/residfp/AUTHORS \
-builders/residfp-builder/residfp/COPYING \
-builders/residfp-builder/residfp/README \
-builders/resid-builder/resid/AUTHORS \
-builders/resid-builder/resid/ChangeLog \
-builders/resid-builder/resid/COPYING \
-builders/resid-builder/resid/configure.in \
-builders/resid-builder/resid/INSTALL \
-builders/resid-builder/resid/Makefile.am \
-builders/resid-builder/resid/NEWS \
-builders/resid-builder/resid/README \
-builders/resid-builder/resid/README.VICE \
-builders/resid-builder/resid/THANKS \
-builders/resid-builder/resid/TODO \
+sidplayfp/builders/residfp-builder/residfp/AUTHORS \
+sidplayfp/builders/residfp-builder/residfp/COPYING \
+sidplayfp/builders/residfp-builder/residfp/README \
+sidplayfp/builders/resid-builder/resid/AUTHORS \
+sidplayfp/builders/resid-builder/resid/ChangeLog \
+sidplayfp/builders/resid-builder/resid/COPYING \
+sidplayfp/builders/resid-builder/resid/configure.in \
+sidplayfp/builders/resid-builder/resid/INSTALL \
+sidplayfp/builders/resid-builder/resid/Makefile.am \
+sidplayfp/builders/resid-builder/resid/NEWS \
+sidplayfp/builders/resid-builder/resid/README \
+sidplayfp/builders/resid-builder/resid/README.VICE \
+sidplayfp/builders/resid-builder/resid/THANKS \
+sidplayfp/builders/resid-builder/resid/TODO \
 $(noinst_DATA) \
 $(noinst_SCRIPTS)
 
@@ -48,13 +48,13 @@ sidplayfp/libsidplayfp.la \
 sidplayfp/libstilview.la
 
 noinst_LTLIBRARIES = \
-builders/residfp-builder/residfp/libresidfp.la \
-builders/resid-builder/resid/libresid.la \
-builders/residfp-builder/libsidplayfp-residfp.la \
-builders/resid-builder/libsidplayfp-resid.la
+sidplayfp/builders/residfp-builder/residfp/libresidfp.la \
+sidplayfp/builders/resid-builder/resid/libresid.la \
+sidplayfp/builders/residfp-builder/libsidplayfp-residfp.la \
+sidplayfp/builders/resid-builder/libsidplayfp-resid.la
 
 if HARDSID
-  noinst_LTLIBRARIES += builders/hardsid-builder/libsidplayfp-hardsid.la
+  noinst_LTLIBRARIES += sidplayfp/builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
 #=========================================================
@@ -175,12 +175,12 @@ nodist_sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/sidversion.h
 
 sidplayfp_libsidplayfp_la_LIBADD = \
-builders/residfp-builder/libsidplayfp-residfp.la \
-builders/resid-builder/libsidplayfp-resid.la \
+sidplayfp/builders/residfp-builder/libsidplayfp-residfp.la \
+sidplayfp/builders/resid-builder/libsidplayfp-resid.la \
 $(LIBGCRYPT_LIBS)
 
 if HARDSID
-  sidplayfp_libsidplayfp_la_LIBADD += builders/hardsid-builder/libsidplayfp-hardsid.la
+  sidplayfp_libsidplayfp_la_LIBADD += sidplayfp/builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
 sidplayfp_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
@@ -188,127 +188,127 @@ sidplayfp_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
 #=========================================================
 # residfp
 
-builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
-builders/residfp-builder/residfp/array.h \
-builders/residfp-builder/residfp/Dac.cpp \
-builders/residfp-builder/residfp/Dac.h \
-builders/residfp-builder/residfp/Integrator.cpp \
-builders/residfp-builder/residfp/Integrator.h \
-builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
-builders/residfp-builder/residfp/EnvelopeGenerator.h \
-builders/residfp-builder/residfp/ExternalFilter.cpp \
-builders/residfp-builder/residfp/ExternalFilter.h \
-builders/residfp-builder/residfp/FilterModelConfig.cpp \
-builders/residfp-builder/residfp/FilterModelConfig.h \
-builders/residfp-builder/residfp/Filter.cpp \
-builders/residfp-builder/residfp/Filter.h \
-builders/residfp-builder/residfp/Filter8580.cpp \
-builders/residfp-builder/residfp/Filter8580.h \
-builders/residfp-builder/residfp/Filter6581.cpp \
-builders/residfp-builder/residfp/Filter6581.h \
-builders/residfp-builder/residfp/OpAmp.cpp \
-builders/residfp-builder/residfp/OpAmp.h \
-builders/residfp-builder/residfp/Potentiometer.h \
-builders/residfp-builder/residfp/SID.cpp \
-builders/residfp-builder/residfp/SID.h \
-builders/residfp-builder/residfp/Spline.cpp \
-builders/residfp-builder/residfp/Spline.h \
-builders/residfp-builder/residfp/Voice.h \
-builders/residfp-builder/residfp/WaveformCalculator.cpp \
-builders/residfp-builder/residfp/WaveformCalculator.h \
-builders/residfp-builder/residfp/WaveformGenerator.cpp \
-builders/residfp-builder/residfp/WaveformGenerator.h \
-builders/residfp-builder/residfp/resample/Resampler.h \
-builders/residfp-builder/residfp/resample/ZeroOrderResampler.h \
-builders/residfp-builder/residfp/resample/SincResampler.cpp \
-builders/residfp-builder/residfp/resample/SincResampler.h \
-builders/residfp-builder/residfp/resample/TwoPassSincResampler.h \
-builders/residfp-builder/residfp/version.cc
+sidplayfp_builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
+sidplayfp/builders/residfp-builder/residfp/array.h \
+sidplayfp/builders/residfp-builder/residfp/Dac.cpp \
+sidplayfp/builders/residfp-builder/residfp/Dac.h \
+sidplayfp/builders/residfp-builder/residfp/Integrator.cpp \
+sidplayfp/builders/residfp-builder/residfp/Integrator.h \
+sidplayfp/builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
+sidplayfp/builders/residfp-builder/residfp/EnvelopeGenerator.h \
+sidplayfp/builders/residfp-builder/residfp/ExternalFilter.cpp \
+sidplayfp/builders/residfp-builder/residfp/ExternalFilter.h \
+sidplayfp/builders/residfp-builder/residfp/FilterModelConfig.cpp \
+sidplayfp/builders/residfp-builder/residfp/FilterModelConfig.h \
+sidplayfp/builders/residfp-builder/residfp/Filter.cpp \
+sidplayfp/builders/residfp-builder/residfp/Filter.h \
+sidplayfp/builders/residfp-builder/residfp/Filter8580.cpp \
+sidplayfp/builders/residfp-builder/residfp/Filter8580.h \
+sidplayfp/builders/residfp-builder/residfp/Filter6581.cpp \
+sidplayfp/builders/residfp-builder/residfp/Filter6581.h \
+sidplayfp/builders/residfp-builder/residfp/OpAmp.cpp \
+sidplayfp/builders/residfp-builder/residfp/OpAmp.h \
+sidplayfp/builders/residfp-builder/residfp/Potentiometer.h \
+sidplayfp/builders/residfp-builder/residfp/SID.cpp \
+sidplayfp/builders/residfp-builder/residfp/SID.h \
+sidplayfp/builders/residfp-builder/residfp/Spline.cpp \
+sidplayfp/builders/residfp-builder/residfp/Spline.h \
+sidplayfp/builders/residfp-builder/residfp/Voice.h \
+sidplayfp/builders/residfp-builder/residfp/WaveformCalculator.cpp \
+sidplayfp/builders/residfp-builder/residfp/WaveformCalculator.h \
+sidplayfp/builders/residfp-builder/residfp/WaveformGenerator.cpp \
+sidplayfp/builders/residfp-builder/residfp/WaveformGenerator.h \
+sidplayfp/builders/residfp-builder/residfp/resample/Resampler.h \
+sidplayfp/builders/residfp-builder/residfp/resample/ZeroOrderResampler.h \
+sidplayfp/builders/residfp-builder/residfp/resample/SincResampler.cpp \
+sidplayfp/builders/residfp-builder/residfp/resample/SincResampler.h \
+sidplayfp/builders/residfp-builder/residfp/resample/TwoPassSincResampler.h \
+sidplayfp/builders/residfp-builder/residfp/version.cc
 
 #=========================================================
 # resid
 
 BUILT_SOURCES = $(noinst_DATA:.dat=.h)
 
-builders_resid_builder_resid_libresid_la_SOURCES = \
-builders/resid-builder/resid/dac.h \
-builders/resid-builder/resid/sid.h \
-builders/resid-builder/resid/voice.h \
-builders/resid-builder/resid/wave.h \
-builders/resid-builder/resid/envelope.h \
-builders/resid-builder/resid/filter.h \
-builders/resid-builder/resid/extfilt.h \
-builders/resid-builder/resid/pot.h \
-builders/resid-builder/resid/spline.h \
-builders/resid-builder/resid/dac.cc \
-builders/resid-builder/resid/sid.cc \
-builders/resid-builder/resid/voice.cc \
-builders/resid-builder/resid/wave.cc \
-builders/resid-builder/resid/envelope.cc \
-builders/resid-builder/resid/filter.cc \
-builders/resid-builder/resid/extfilt.cc \
-builders/resid-builder/resid/pot.cc \
-builders/resid-builder/resid/resid-config.h \
-builders/resid-builder/resid/version.cc \
+sidplayfp_builders_resid_builder_resid_libresid_la_SOURCES = \
+sidplayfp/builders/resid-builder/resid/dac.h \
+sidplayfp/builders/resid-builder/resid/sid.h \
+sidplayfp/builders/resid-builder/resid/voice.h \
+sidplayfp/builders/resid-builder/resid/wave.h \
+sidplayfp/builders/resid-builder/resid/envelope.h \
+sidplayfp/builders/resid-builder/resid/filter.h \
+sidplayfp/builders/resid-builder/resid/extfilt.h \
+sidplayfp/builders/resid-builder/resid/pot.h \
+sidplayfp/builders/resid-builder/resid/spline.h \
+sidplayfp/builders/resid-builder/resid/dac.cc \
+sidplayfp/builders/resid-builder/resid/sid.cc \
+sidplayfp/builders/resid-builder/resid/voice.cc \
+sidplayfp/builders/resid-builder/resid/wave.cc \
+sidplayfp/builders/resid-builder/resid/envelope.cc \
+sidplayfp/builders/resid-builder/resid/filter.cc \
+sidplayfp/builders/resid-builder/resid/extfilt.cc \
+sidplayfp/builders/resid-builder/resid/pot.cc \
+sidplayfp/builders/resid-builder/resid/resid-config.h \
+sidplayfp/builders/resid-builder/resid/version.cc \
 $(noinst_DATA:.dat=.h)
 
 noinst_DATA = \
-builders/resid-builder/resid/wave6581_PST.dat \
-builders/resid-builder/resid/wave6581_PS_.dat \
-builders/resid-builder/resid/wave6581_P_T.dat \
-builders/resid-builder/resid/wave6581__ST.dat \
-builders/resid-builder/resid/wave8580_PST.dat \
-builders/resid-builder/resid/wave8580_PS_.dat \
-builders/resid-builder/resid/wave8580_P_T.dat \
-builders/resid-builder/resid/wave8580__ST.dat
+sidplayfp/builders/resid-builder/resid/wave6581_PST.dat \
+sidplayfp/builders/resid-builder/resid/wave6581_PS_.dat \
+sidplayfp/builders/resid-builder/resid/wave6581_P_T.dat \
+sidplayfp/builders/resid-builder/resid/wave6581__ST.dat \
+sidplayfp/builders/resid-builder/resid/wave8580_PST.dat \
+sidplayfp/builders/resid-builder/resid/wave8580_PS_.dat \
+sidplayfp/builders/resid-builder/resid/wave8580_P_T.dat \
+sidplayfp/builders/resid-builder/resid/wave8580__ST.dat
 
-noinst_SCRIPTS = builders/resid-builder/resid/samp2src.pl
+noinst_SCRIPTS = sidplayfp/builders/resid-builder/resid/samp2src.pl
 
 #.dat.h:
 #	$(PERL) $(srcdir)/samp2src.pl $* $< $(srcdir)/$@
 
 #=========================================================
 # builders
-builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
-builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
-builders/residfp-builder/residfp.h
+sidplayfp_builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
+sidplayfp_builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
+sidplayfp/builders/residfp-builder/residfp.h
 
-builders_residfp_builder_libsidplayfp_residfp_la_SOURCES = \
-builders/residfp-builder/residfp-builder.cpp \
-builders/residfp-builder/residfp-emu.cpp \
-builders/residfp-builder/residfp-emu.h
+sidplayfp_builders_residfp_builder_libsidplayfp_residfp_la_SOURCES = \
+sidplayfp/builders/residfp-builder/residfp-builder.cpp \
+sidplayfp/builders/residfp-builder/residfp-emu.cpp \
+sidplayfp/builders/residfp-builder/residfp-emu.h
 
-builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
-builders/residfp-builder/residfp/libresidfp.la
+sidplayfp_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
+sidplayfp/builders/residfp-builder/residfp/libresidfp.la
 
 
-builders_resid_builder_libsidplayfp_resid_ladir = $(includedir)/sidplayfp/builders
-builders_resid_builder_libsidplayfp_resid_la_HEADERS = \
-builders/resid-builder/resid.h
+sidplayfp_builders_resid_builder_libsidplayfp_resid_ladir = $(includedir)/sidplayfp/builders
+sidplayfp_builders_resid_builder_libsidplayfp_resid_la_HEADERS = \
+sidplayfp/builders/resid-builder/resid.h
 
-builders_resid_builder_libsidplayfp_resid_la_SOURCES = \
-builders/resid-builder/resid-builder.cpp \
-builders/resid-builder/resid-emu.cpp \
-builders/resid-builder/resid-emu.h
+sidplayfp_builders_resid_builder_libsidplayfp_resid_la_SOURCES = \
+sidplayfp/builders/resid-builder/resid-builder.cpp \
+sidplayfp/builders/resid-builder/resid-emu.cpp \
+sidplayfp/builders/resid-builder/resid-emu.h
 
 builders_resid_builder_libsidplayfp_resid_la_LIBADD = \
-builders/resid-builder/resid/libresid.la
+sidplayfp/builders/resid-builder/resid/libresid.la
 
 if HARDSID
-builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
-builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
-builders/hardsid-builder/hardsid.h
+sidplayfp_builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
+sidplayfp_builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
+sidplayfp/builders/hardsid-builder/hardsid.h
 
 if MINGW32
-  hardsid_src = builders/hardsid-builder/hardsid-emu-win.cpp
+  hardsid_src = sidplayfp/builders/hardsid-builder/hardsid-emu-win.cpp
 else
-  hardsid_src = builders/hardsid-builder/hardsid-emu-unix.cpp
+  hardsid_src = sidplayfp/builders/hardsid-builder/hardsid-emu-unix.cpp
 endif
 
-builders_hardsid_builder_libsidplayfp_hardsid_la_SOURCES = \
+sidplayfp_builders_hardsid_builder_libsidplayfp_hardsid_la_SOURCES = \
 $(hardsid_src) \
-builders/hardsid-builder/hardsid-builder.cpp  \
-builders/hardsid-builder/hardsid-emu.h
+sidplayfp/builders/hardsid-builder/hardsid-builder.cpp  \
+sidplayfp/builders/hardsid-builder/hardsid-emu.h
 endif
 
 #=========================================================
@@ -340,7 +340,7 @@ if TESTSUITE
 noinst_PROGRAMS = \
 test/demo \
 test/test \
-builders/residfp-builder/residfp/resample/test
+sidplayfp/builders/residfp-builder/residfp/resample/test
 
 test_demo_SOURCES = test/demo.cpp 
 
@@ -350,9 +350,9 @@ test_test_SOURCES = test/test.cpp
 
 test_test_LDADD = sidplayfp/libsidplayfp.la
 
-builders_residfp_builder_residfp_resample_test_SOURCES = builders/residfp-builder/residfp/resample/test.cpp
+sidplayfp_builders_residfp_builder_residfp_resample_test_SOURCES = sidplayfp/builders/residfp-builder/residfp/resample/test.cpp
 
-builders_residfp_builder_residfp_resample_test_LDADD = builders/residfp-builder/residfp/resample/SincResampler.lo
+sidplayfp_builders_residfp_builder_residfp_resample_test_LDADD = sidplayfp/builders/residfp-builder/residfp/resample/SincResampler.lo
 endif
 
 #=========================================================
