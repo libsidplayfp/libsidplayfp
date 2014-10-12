@@ -25,9 +25,10 @@
 
 #include "SidDatabase.h"
 
-#include "iniParser.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/SidTuneInfo.h"
+
+#include "iniParser.h"
 
 #include "sidcxx11.h"
 

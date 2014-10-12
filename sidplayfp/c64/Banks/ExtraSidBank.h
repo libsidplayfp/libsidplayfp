@@ -22,10 +22,10 @@
 #define EXTRASIDBANK_H
 
 #include "Bank.h"
-#include "c64/c64sid.h"
-
 #include <vector>
 #include <algorithm>
+
+#include "c64/c64sid.h"
 
 #include "sidcxx11.h"
 

@@ -23,7 +23,7 @@
 #ifndef EVENTSCHEDULER_H
 #define EVENTSCHEDULER_H
 
-#include "event.h"
+#include "sidplayfp/event.h"
 
 #include "sidcxx11.h"
 

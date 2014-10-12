@@ -26,7 +26,7 @@
 
 #include "iMd5.h"
 
-#include  "sidcxx11.h"
+#include "sidcxx11.h"
 
 #include <gcrypt.h>
 

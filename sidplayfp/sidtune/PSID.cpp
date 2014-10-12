@@ -27,6 +27,7 @@
 #include <memory>
 
 #include "sidplayfp/SidTuneInfo.h"
+
 #include "sidendian.h"
 #include "sidmd5.h"
 

@@ -25,9 +25,10 @@
 
 #include <string>
 
-#include "SidConfig.h"
-#include "siddefs.h"
-#include "event.h"
+#include "sidplayfp/SidConfig.h"
+#include "sidplayfp/siddefs.h"
+#include "sidplayfp/event.h"
+
 #include "c64/c64sid.h"
 
 #include "sidcxx11.h"

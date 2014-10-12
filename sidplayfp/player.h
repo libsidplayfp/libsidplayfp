@@ -27,9 +27,10 @@
 #include <stdint.h>
 #include <cstdio>
 
-#include "siddefs.h"
-#include "SidConfig.h"
-#include "SidTuneInfo.h"
+#include "sidplayfp/siddefs.h"
+#include "sidplayfp/SidConfig.h"
+#include "sidplayfp/SidTuneInfo.h"
+
 #include "SidInfoImpl.h"
 #include "mixer.h"
 #include "event.h"

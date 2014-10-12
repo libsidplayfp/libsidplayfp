@@ -27,9 +27,10 @@
 #include <cctype>
 #include <memory>
 
+#include "sidplayfp/SidTuneInfo.h"
+
 #include "SmartPtr.h"
 #include "SidTuneTools.h"
-#include "sidplayfp/SidTuneInfo.h"
 
 #include "sidcxx11.h"
 

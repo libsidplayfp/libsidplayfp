@@ -24,8 +24,9 @@
 
 #include <memory>
 
-#include "SidTuneTools.h"
 #include "sidplayfp/SidTuneInfo.h"
+
+#include "SidTuneTools.h"
 #include "stringutils.h"
 
 #include "sidcxx11.h"
