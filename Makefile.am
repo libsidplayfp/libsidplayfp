@@ -84,14 +84,10 @@ sidplayfp/mixer.h \
 sidplayfp/poweron.bin \
 sidplayfp/reloc65.cpp \
 sidplayfp/reloc65.h \
-sidplayfp/sidbuilder.cpp \
-sidplayfp/SidConfig.cpp \
 sidplayfp/sidcxx11.h \
 sidplayfp/sidmd5.h \
 sidplayfp/sidmemory.h \
-sidplayfp/sidplayfp.cpp \
 sidplayfp/SidInfoImpl.h \
-sidplayfp/SidTune.cpp \
 sidplayfp/romCheck.h \
 sidplayfp/sidemu.cpp \
 sidplayfp/sidemu.h \
@@ -133,6 +129,10 @@ sidplayfp/c64/CIA/timer.cpp \
 sidplayfp/c64/CIA/timer.h \
 sidplayfp/c64/CIA/tod.cpp \
 sidplayfp/c64/CIA/tod.h \
+sidplayfp/sidplayfp/sidplayfp.cpp \
+sidplayfp/sidplayfp/sidbuilder.cpp \
+sidplayfp/sidplayfp/SidConfig.cpp \
+sidplayfp/sidplayfp/SidTune.cpp \
 sidplayfp/sidtune/MUS.cpp \
 sidplayfp/sidtune/MUS.h \
 sidplayfp/sidtune/p00.cpp \
@@ -161,14 +161,14 @@ sidplayfp_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDF
 sidplayfp_libsidplayfp_ladir = $(includedir)/sidplayfp
 
 sidplayfp_libsidplayfp_la_HEADERS = \
-sidplayfp/siddefs.h \
-sidplayfp/event.h \
-sidplayfp/SidConfig.h \
-sidplayfp/SidInfo.h \
-sidplayfp/SidTuneInfo.h \
-sidplayfp/sidbuilder.h \
-sidplayfp/sidplayfp.h \
-sidplayfp/SidTune.h \
+sidplayfp/sidplayfp/siddefs.h \
+sidplayfp/sidplayfp/event.h \
+sidplayfp/sidplayfp/SidConfig.h \
+sidplayfp/sidplayfp/SidInfo.h \
+sidplayfp/sidplayfp/SidTuneInfo.h \
+sidplayfp/sidplayfp/sidbuilder.h \
+sidplayfp/sidplayfp/sidplayfp.h \
+sidplayfp/sidplayfp/SidTune.h \
 sidplayfp/utils/SidDatabase.h
 
 nodist_sidplayfp_libsidplayfp_la_HEADERS = \
