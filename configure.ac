@@ -231,7 +231,7 @@ AC_CONFIG_FILES([
 Makefile
 libsidplayfp.pc
 libstilview.pc
-src/sidversion.h
+src/sidplayfp/sidversion.h
 src/builders/residfp-builder/residfp/siddefs-fp.h
 src/builders/resid-builder/resid/siddefs.h
 ])

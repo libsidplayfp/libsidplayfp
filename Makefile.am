@@ -172,7 +172,7 @@ src/sidplayfp/SidTune.h \
 src/utils/SidDatabase.h
 
 nodist_src_libsidplayfp_la_HEADERS = \
-src/sidversion.h
+src/sidplayfp/sidversion.h
 
 src_libsidplayfp_la_LIBADD = \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
