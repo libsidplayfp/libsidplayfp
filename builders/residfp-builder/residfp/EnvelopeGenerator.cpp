@@ -142,25 +142,29 @@ void EnvelopeGenerator::writeCONTROL_REG(unsigned char control)
 {
     const bool gate_next = (control & 0x01) != 0;
 
+    if (gate_next == gate)
+        return;
+
     // The rate counter is never reset, thus there will be a delay before the
     // envelope counter starts counting up (attack) or down (release).
 
-    // Gate bit on: Start attack, decay, sustain.
-    if (!gate && gate_next)
+    if (gate_next)
     {
+        // Gate bit on: Start attack, decay, sustain.
         state = ATTACK;
         rate = adsrtable[attack];
 
         // Switching to attack state unlocks the zero freeze and aborts any
         // pipelined envelope decrement.
         hold_zero = false;
+
         // FIXME: This is an assumption which should be checked using cycle exact
         // envelope sampling.
         envelope_pipeline = false;
     }
-    // Gate bit off: Start release.
-    else if (gate && !gate_next)
+    else
     {
+        // Gate bit off: Start release.
         state = RELEASE;
         rate = adsrtable[release];
     }

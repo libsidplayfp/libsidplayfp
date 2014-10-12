@@ -136,59 +136,66 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 {
     const unsigned int waveform_prev = waveform;
     const bool test_prev = test;
+
     waveform = (control >> 4) & 0x0f;
     test = (control & 0x08) != 0;
     sync = (control & 0x02) != 0;
 
-    // Set up waveform table.
-    wave = (*model_wave)[waveform & 0x7];
-
     // Substitution of accumulator MSB when sawtooth = 0, ring_mod = 1.
     ring_msb_mask = ((~control >> 5) & (control >> 2) & 0x1) << 23;
 
-    // no_noise and no_pulse are used in set_waveform_output() as bitmasks to
-    // only let the noise or pulse influence the output when the noise or pulse
-    // waveforms are selected.
-    no_noise = (waveform & 0x8) != 0 ? 0x000 : 0xfff;
-    no_noise_or_noise_output = no_noise | noise_output;
-    no_pulse = (waveform & 0x4) != 0 ? 0x000 : 0xfff;
-
-    if (!test_prev && test)
+    if (waveform != waveform_prev)
     {
-        // Reset accumulator.
-        accumulator = 0;
+        // Set up waveform table.
+        wave = (*model_wave)[waveform & 0x7];
 
-        // Flush shift pipeline.
-        shift_pipeline = 0;
+        // no_noise and no_pulse are used in set_waveform_output() as bitmasks to
+        // only let the noise or pulse influence the output when the noise or pulse
+        // waveforms are selected.
+        no_noise = (waveform & 0x8) != 0 ? 0x000 : 0xfff;
+        no_noise_or_noise_output = no_noise | noise_output;
+        no_pulse = (waveform & 0x4) != 0 ? 0x000 : 0xfff;
 
-        // Set reset time for shift register.
-        shift_register_reset = 0x8000;
-    }
-    else if (test_prev && !test)
-    {
-        // When the test bit is falling, the second phase of the shift is
-        // completed by enabling SRAM write.
+        if (waveform == 0)
+        {
+            // Change to floating DAC input.
+            // Reset fading time for floating DAC input.
 
-        // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
-        const unsigned int bit0 = (~shift_register >> 17) & 0x1;
-        shift_register = ((shift_register << 1) | bit0) & 0x7fffff;
-
-        // Set new noise waveform output.
-        set_noise_output();
+            // FIXME
+            // This value has been adjusted aleatorily from the original reSID value (0x4000)
+            // to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
+            // and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid
+            // see VICE Bug #290
+            // http://sourceforge.net/p/vice-emu/bugs/290/
+            floating_output_ttl = 0xF4240;
+        }
     }
 
-    if (waveform == 0 && waveform_prev != 0)
+    if (test != test_prev)
     {
-        // Change to floating DAC input.
-        // Reset fading time for floating DAC input.
+        if (test)
+        {
+            // Reset accumulator.
+            accumulator = 0;
 
-        // FIXME
-        // This value has been adjusted aleatorily from the original reSID value (0x4000)
-        // to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
-        // and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid
-        // see VICE Bug #290
-        // http://sourceforge.net/p/vice-emu/bugs/290/
-        floating_output_ttl = 0xF4240;
+            // Flush shift pipeline.
+            shift_pipeline = 0;
+
+            // Set reset time for shift register.
+            shift_register_reset = 0x8000;
+        }
+        else
+        {
+            // When the test bit is falling, the second phase of the shift is
+            // completed by enabling SRAM write.
+
+            // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
+            const unsigned int bit0 = (~shift_register >> 17) & 0x1;
+            shift_register = ((shift_register << 1) | bit0) & 0x7fffff;
+
+            // Set new noise waveform output.
+            set_noise_output();
+        }
     }
 }
 
