@@ -62,13 +62,13 @@ endif
 
 if LIBGCRYPT
    MD5SRC = \
-utils/md5Gcrypt.h
+sidplayfp/utils/md5Gcrypt.h
 else
    MD5SRC = \
-utils/md5Internal.h \
-utils/MD5/MD5.cpp \
-utils/MD5/MD5.h \
-utils/MD5/MD5_Defs.h
+sidplayfp/utils/md5Internal.h \
+sidplayfp/utils/MD5/MD5.cpp \
+sidplayfp/utils/MD5/MD5.h \
+sidplayfp/utils/MD5/MD5_Defs.h
 endif
 
 sidplayfp_libsidplayfp_la_SOURCES = \
@@ -149,11 +149,11 @@ sidplayfp/sidtune/SidTuneInfoImpl.h \
 sidplayfp/sidtune/SidTuneTools.cpp \
 sidplayfp/sidtune/SidTuneTools.h \
 sidplayfp/sidtune/SmartPtr.h \
-utils/iMd5.h \
-utils/iniParser.cpp \
-utils/iniParser.h \
-utils/md5Factory.h \
-utils/SidDatabase.cpp \
+sidplayfp/utils/iMd5.h \
+sidplayfp/utils/iniParser.cpp \
+sidplayfp/utils/iniParser.h \
+sidplayfp/utils/md5Factory.h \
+sidplayfp/utils/SidDatabase.cpp \
 $(MD5SRC)
 
 sidplayfp_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS)
@@ -169,7 +169,7 @@ sidplayfp/SidTuneInfo.h \
 sidplayfp/sidbuilder.h \
 sidplayfp/sidplayfp.h \
 sidplayfp/SidTune.h \
-utils/SidDatabase.h
+sidplayfp/utils/SidDatabase.h
 
 nodist_sidplayfp_libsidplayfp_la_HEADERS = \
 sidplayfp/sidversion.h
@@ -314,15 +314,15 @@ endif
 #=========================================================
 # libstilview
 sidplayfp_libstilview_la_SOURCES = \
-utils/STILview/stil.cpp
+sidplayfp/utils/STILview/stil.cpp
 
 sidplayfp_libstilview_la_LDFLAGS = -version-info $(LIBSTILVIEWVERSION) $(W32_LDFLAGS)
 
 sidplayfp_libstilview_ladir = $(includedir)/stilview
 
 sidplayfp_libstilview_la_HEADERS = \
-utils/STILview/stil.h \
-utils/STILview/stildefs.h
+sidplayfp/utils/STILview/stil.h \
+sidplayfp/utils/STILview/stildefs.h
 
 #=========================================================
 # docs
