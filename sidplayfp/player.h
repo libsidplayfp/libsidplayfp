@@ -27,13 +27,13 @@
 #include <stdint.h>
 #include <cstdio>
 
+#include "sidplayfp/event.h"
 #include "sidplayfp/siddefs.h"
 #include "sidplayfp/SidConfig.h"
 #include "sidplayfp/SidTuneInfo.h"
 
 #include "SidInfoImpl.h"
 #include "mixer.h"
-#include "event.h"
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
