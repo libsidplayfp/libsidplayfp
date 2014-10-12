@@ -70,31 +70,23 @@ Player::Player() :
     m_info.m_credits.push_back(m_c64.vicCredits());
 }
 
+template<class T>
+inline void checkRom(const uint8_t* rom, std::string &desc)
+{
+    if (rom != nullptr)
+    {
+        T romCheck(rom);
+        desc.assign(romCheck.info());
+    }
+    else
+        desc.clear();
+}
+
 void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {
-    if (kernal != nullptr)
-    {
-        kernalCheck k(kernal);
-        m_info.m_kernalDesc = k.info();
-    }
-    else
-        m_info.m_kernalDesc.clear();
-
-    if (basic != nullptr)
-    {
-        basicCheck b(basic);
-        m_info.m_basicDesc = b.info();
-    }
-    else
-        m_info.m_basicDesc.clear();
-
-    if (character != nullptr)
-    {
-        chargenCheck c(character);
-        m_info.m_chargenDesc = c.info();
-    }
-    else
-        m_info.m_chargenDesc.clear();
+    checkRom<kernalCheck>(kernal, m_info.m_kernalDesc);
+    checkRom<basicCheck>(basic, m_info.m_basicDesc);
+    checkRom<chargenCheck>(character, m_info.m_chargenDesc);
 
     m_c64.setRoms(kernal, basic, character);
 }
