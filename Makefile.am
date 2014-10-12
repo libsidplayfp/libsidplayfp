@@ -269,7 +269,7 @@ noinst_SCRIPTS = src/builders/resid-builder/resid/samp2src.pl
 
 #=========================================================
 # builders
-src_builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/src/builders
+src_builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
 src_builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
 src/builders/residfp-builder/residfp.h
 
@@ -282,7 +282,7 @@ src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 src/builders/residfp-builder/residfp/libresidfp.la
 
 
-src_builders_resid_builder_libsidplayfp_resid_ladir = $(includedir)/src/builders
+src_builders_resid_builder_libsidplayfp_resid_ladir = $(includedir)/sidplayfp/builders
 src_builders_resid_builder_libsidplayfp_resid_la_HEADERS = \
 src/builders/resid-builder/resid.h
 
@@ -291,11 +291,11 @@ src/builders/resid-builder/resid-builder.cpp \
 src/builders/resid-builder/resid-emu.cpp \
 src/builders/resid-builder/resid-emu.h
 
-builders_resid_builder_libsidplayfp_resid_la_LIBADD = \
+src_builders_resid_builder_libsidplayfp_resid_la_LIBADD = \
 src/builders/resid-builder/resid/libresid.la
 
 if HARDSID
-src_builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/src/builders
+src_builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
 src_builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
 src/builders/hardsid-builder/hardsid.h
 
