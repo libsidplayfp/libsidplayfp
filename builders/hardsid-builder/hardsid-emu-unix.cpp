@@ -215,7 +215,7 @@ void HardSID::event()
     else
     {
         m_accessClk += cycles;
-        ioctl(m_handle, HSID_IOCTL_DELAY, (uint) cycles);
+        ioctl(m_handle, HSID_IOCTL_DELAY, static_cast<uint>(cycles));
         m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
 }

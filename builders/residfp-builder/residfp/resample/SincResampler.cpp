@@ -143,7 +143,7 @@ int SincResampler::fir(int subcycle)
 
 SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
     sampleIndex(0),
-    cyclesPerSample((int)(clockFrequency / samplingFrequency * 1024.)),
+    cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.)),
     sampleOffset(0),
     outputValue(0)
 {

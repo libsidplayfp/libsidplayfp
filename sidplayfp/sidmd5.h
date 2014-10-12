@@ -78,7 +78,7 @@ public:
 
         for (int di = 0; di < 16; ++di)
         {
-            ss << std::setw(2) << (int) digest[di];
+            ss << std::setw(2) << static_cast<int>(digest[di]);
         }
 
         return ss.str();

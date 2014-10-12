@@ -76,7 +76,7 @@ main()
         myMD5.finish();
         cout << "MD5 (\"" << test[i] << "\") = ";
         for (int di = 0; di < 16; ++di)
-            cout << hex << setw(2) << setfill('0') << (int)myMD5.getDigest()[di];
+            cout << hex << setw(2) << setfill('0') << static_cast<int>(myMD5.getDigest()[di]);
         cout << endl;
     }
     return 0;

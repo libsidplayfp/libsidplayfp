@@ -640,7 +640,7 @@ STIL::determineEOL(ifstream &stilFile)
         return false;
     }
 
-    CERR_STIL_DEBUG << "detEOL() EOL1=0x" << hex << (int) STIL_EOL << " EOL2=0x" << hex << (int) STIL_EOL2 << dec << endl;
+    CERR_STIL_DEBUG << "detEOL() EOL1=0x" << hex << static_cast<int>(STIL_EOL) << " EOL2=0x" << hex << static_cast<int>(STIL_EOL2) << dec << endl;
 
     return true;
 }
