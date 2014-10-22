@@ -82,7 +82,7 @@ public:
         return read(endian_16lo8(address));
     }
 
-    void reset()
+    void reset() override
     {
         last_ta = 0;
         MOS6526::reset();
