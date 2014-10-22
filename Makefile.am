@@ -228,8 +228,6 @@ src/builders/residfp-builder/residfp/version.cc
 #=========================================================
 # resid
 
-BUILT_SOURCES = $(noinst_DATA:.dat=.h)
-
 src_builders_resid_builder_resid_libresid_la_SOURCES = \
 src/builders/resid-builder/resid/dac.h \
 src/builders/resid-builder/resid/sid.h \
@@ -264,8 +262,8 @@ src/builders/resid-builder/resid/wave8580__ST.dat
 
 noinst_SCRIPTS = src/builders/resid-builder/resid/samp2src.pl
 
-#.dat.h:
-#	$(PERL) $(srcdir)/samp2src.pl $* $< $(srcdir)/$@
+%.dat: %.h
+	$(PERL) $(srcdir)/src/builders/resid-builder/resid/samp2src.pl $* $< $@
 
 #=========================================================
 # builders
@@ -361,9 +359,18 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libsidplayfp.pc libstilview.pc
 
 #=========================================================
+
+BUILT_SOURCES = \
+$(noinst_DATA:.dat=.h) \
+src/psiddrv.bin
+
+#=========================================================
 # Recreate psiddrv.bin, needs xa65
 
-CLEANFILES = src/psiddrv.o65 src/psiddrv.bin
+CLEANFILES = \
+$(noinst_DATA) \
+src/psiddrv.o65 \
+src/psiddrv.bin
 
 src/psiddrv.o65:
 	xa -R -G $(srcdir)/src/psiddrv.a65 -o $@
