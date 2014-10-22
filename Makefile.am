@@ -3,6 +3,10 @@ ACLOCAL_AMFLAGS = -I m4
 
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
+SUBDIRS = tests
+
+DISTCHECK_CONFIGURE_FLAGS = --enable-tests
+
 
 if MINGW32
   W32_LDFLAGS = -no-undefined

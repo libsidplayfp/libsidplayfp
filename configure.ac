@@ -220,6 +220,23 @@ AS_IF([test "x$enable_testsuite" != xno],
 
 AM_CONDITIONAL([TESTSUITE], [test "x$enable_testsuite" != xno])
 
+AC_ARG_ENABLE([tests],
+  [AS_HELP_STRING([--enable-tests],
+    [enable unit tests [default=no]]
+  )],
+  [[echo Enabling unit tests]
+    AC_CHECK_HEADERS([UnitTest++/UnitTest++.h], [], AC_MSG_ERROR([UnitTest++.h header not found]))
+        AS_IF(
+                [test "x${ac_cv_header_UnitTestpp_UnitTestpp_h}" = xyes],
+                AC_CHECK_LIB([UnitTest++], [main], [], AC_MSG_ERROR([UnitTest++ library not found]))
+        )
+    [am_unittest=true]
+  ],
+  [am_unittest=false]
+)
+
+AM_CONDITIONAL([ENABLE_TEST], [test x$am_unittest = xtrue])
+
 AC_SUBST(RESID_HAVE_BOOL)
 AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)
@@ -234,6 +251,7 @@ libstilview.pc
 src/sidplayfp/sidversion.h
 src/builders/residfp-builder/residfp/siddefs-fp.h
 src/builders/resid-builder/resid/siddefs.h
+tests/Makefile
 ])
 
 AC_OUTPUT
