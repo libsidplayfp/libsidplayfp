@@ -55,7 +55,8 @@ const char *SidDatabase::parseTime(const char *str, long &result)
         throw parseError();
     }
 
-    const long seconds = strtol(++end, &end, 10);
+    end++;
+    const long seconds = strtol(end, &end, 10);
     result = (minutes * 60) + seconds;
 
     while (!isspace(*end))
