@@ -59,7 +59,7 @@ TEST(TestADSRDelayBug)
         generator.clock();
     }
 
-    CHECK_EQUAL(0, (int)generator.envelope_counter);
+    CHECK_EQUAL(0, (int)generator.readENV());
 }
 
 TEST(TestFlipFFto00)
@@ -80,7 +80,7 @@ TEST(TestFlipFFto00)
         generator.clock();
     }
 
-    CHECK_EQUAL(0xff, (int)generator.envelope_counter);
+    CHECK_EQUAL(0xff, (int)generator.readENV());
 
     generator.writeCONTROL_REG(0x00);
     generator.writeCONTROL_REG(0x01);
@@ -90,7 +90,7 @@ TEST(TestFlipFFto00)
         generator.clock();
     }
 
-    CHECK_EQUAL(0, (int)generator.envelope_counter);
+    CHECK_EQUAL(0, (int)generator.readENV());
     CHECK(generator.hold_zero);
 }
 
@@ -108,7 +108,7 @@ TEST(TestFlip00toFF)
 
     generator.hold_zero = false;
 
-    CHECK_EQUAL(0, (int)generator.envelope_counter);
+    CHECK_EQUAL(0, (int)generator.readENV());
 
     generator.writeCONTROL_REG(0x01);
     generator.writeCONTROL_REG(0x00);
@@ -117,7 +117,7 @@ TEST(TestFlip00toFF)
         generator.clock();
     }
 
-    CHECK_EQUAL(0xff, (int)generator.envelope_counter);
+    CHECK_EQUAL(0xff, (int)generator.readENV());
     CHECK(!generator.hold_zero);
 }
 
