@@ -85,4 +85,16 @@ TEST(TestMonotonicity)
     }
 }
 
+TEST(TestPoints)
+{
+    Spline s(opamp_voltage, OPAMP_SIZE);
+
+    for (int i = 0; i < OPAMP_SIZE; i++)
+    {
+        Spline::Point out = s.evaluate(opamp_voltage[i].x);
+
+        CHECK_EQUAL(opamp_voltage[i].y, out.x);
+    }
+}
+
 }
