@@ -50,9 +50,9 @@ public:
     void reset()
     {
         memset(ram, 0, 0x10000);
-        for (int i = 0x07c0; i < 0x10000; i += 128)
+        for (int i = 0x40; i < 0x10000; i += 128)
         {
-            memset(ram+i, 0xff, 64);
+            memset(ram+i, 0xff, 0x40);
         }
     }
 
