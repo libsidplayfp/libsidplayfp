@@ -28,6 +28,9 @@
 
 #include "sidmd5.h"
 
+namespace libsidplayfp
+{
+
 /**
  * Utility class to identify known ROMs through their md5 checksum.
  */
@@ -168,5 +171,7 @@ public:
         add("cf32a93c0a693ed359a4f483ef6db53d", "C64 character generator (Japanese)");
     }
 };
+
+}
 
 #endif // ROMCHECK_H

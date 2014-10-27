@@ -73,7 +73,7 @@ const char *SidDatabase::parseTime(const char *str, long &result)
 
 bool SidDatabase::open(const char *filename)
 {
-    m_parser.reset(new iniParser());
+    m_parser.reset(new libsidplayfp::iniParser());
 
     if (!m_parser->open(filename))
     {

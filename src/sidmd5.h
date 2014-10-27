@@ -30,6 +30,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * A wrapper around the md5 implementation that provides
  * an hex formatted digest
@@ -84,5 +87,7 @@ public:
         return ss.str();
     }
 };
+
+}
 
 #endif

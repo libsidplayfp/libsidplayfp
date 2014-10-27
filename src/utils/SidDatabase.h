@@ -29,7 +29,11 @@
 #include "sidplayfp/siddefs.h"
 
 class SidTune;
+
+namespace libsidplayfp
+{
 class iniParser;
+}
 
 /**
  * SidDatabase
@@ -43,7 +47,7 @@ private:
     static const char *parseTime(const char *str, long &result);
 
 private:
-    std::auto_ptr<iniParser> m_parser;
+    std::auto_ptr<libsidplayfp::iniParser> m_parser;
 
     const char *errorString;
 

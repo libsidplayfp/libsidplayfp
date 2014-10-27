@@ -21,6 +21,9 @@
 #ifndef IMD5_H
 #define IMD5_H
 
+namespace libsidplayfp
+{
+
 class iMd5
 {
 public:
@@ -32,5 +35,7 @@ public:
 };
 
 class md5Error {};
+
+}
 
 #endif // IMD5_H

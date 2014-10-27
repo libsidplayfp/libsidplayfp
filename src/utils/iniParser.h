@@ -23,6 +23,9 @@
 #include <map>
 #include <utility>
 
+namespace libsidplayfp
+{
+
 class iniParser
 {
 private:
@@ -48,5 +51,7 @@ public:
     bool setSection(const char *section);
     const char *getValue(const char *key);
 };
+
+}
 
 #endif // INIPARSER_H

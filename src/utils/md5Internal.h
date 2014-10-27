@@ -27,6 +27,9 @@
 
 #include  "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 class md5Internal : public iMd5
 {
 private:
@@ -41,5 +44,7 @@ public:
 
     void reset() override { hd.reset(); }
 };
+
+}
 
 #endif

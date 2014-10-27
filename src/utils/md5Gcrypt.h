@@ -30,6 +30,9 @@
 
 #include <gcrypt.h>
 
+namespace libsidplayfp
+{
+
 class md5Gcrypt : public iMd5
 {
 private:
@@ -63,5 +66,7 @@ public:
 
     void reset() override { gcry_md_reset(hd); }
 };
+
+}
 
 #endif

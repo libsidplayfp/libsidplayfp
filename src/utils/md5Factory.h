@@ -37,6 +37,9 @@
 #  include "md5Internal.h"
 #endif
 
+namespace libsidplayfp
+{
+
 namespace md5Factory
 {
     static std::unique_ptr<iMd5> get()
@@ -49,6 +52,8 @@ namespace md5Factory
 #endif
         );
     }
+}
+
 }
 
 #endif // MD5_FACTORY_H

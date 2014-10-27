@@ -22,6 +22,9 @@
 
 #include <fstream>
 
+namespace libsidplayfp
+{
+
 std::string iniParser::parseSection(const std::string &buffer)
 {
     const size_t pos = buffer.find(']');
@@ -116,4 +119,6 @@ const char *iniParser::getValue(const char *key)
 {
     keys_t::const_iterator keyIt = (*curSection).second.find(std::string(key));
     return (keyIt != (*curSection).second.end()) ? keyIt->second.c_str() : nullptr;
+}
+
 }
