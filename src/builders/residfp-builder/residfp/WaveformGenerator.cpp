@@ -29,6 +29,16 @@
 namespace reSIDfp
 {
 
+// FIXME
+// This value has been adjusted aleatorily from the original reSID value (0x4000)
+// to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
+// and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid
+// see VICE Bug #290
+// http://sourceforge.net/p/vice-emu/bugs/290/
+const int FLOATING_OUTPUT_TTL = 0xF4240;
+
+const int SHIFT_REGISTER_RESET = 0x8000;
+
 const int DAC_BITS = 12;
 
 void WaveformGenerator::clock_shift_register()
@@ -160,14 +170,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         {
             // Change to floating DAC input.
             // Reset fading time for floating DAC input.
-
-            // FIXME
-            // This value has been adjusted aleatorily from the original reSID value (0x4000)
-            // to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
-            // and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid
-            // see VICE Bug #290
-            // http://sourceforge.net/p/vice-emu/bugs/290/
-            floating_output_ttl = 0xF4240;
+            floating_output_ttl = FLOATING_OUTPUT_TTL;
         }
     }
 
@@ -182,7 +185,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             shift_pipeline = 0;
 
             // Set reset time for shift register.
-            shift_register_reset = 0x8000;
+            shift_register_reset = SHIFT_REGISTER_RESET;
         }
         else
         {
