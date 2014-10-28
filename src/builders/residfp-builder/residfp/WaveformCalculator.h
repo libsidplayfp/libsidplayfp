@@ -96,16 +96,6 @@ private:
 private:
     cw_cache_t CACHE;
 
-private:
-    /**
-     * Generate bitstate based on emulation of combined waves.
-     *
-     * @param config
-     * @param waveform the waveform to emulate, 1 .. 7
-     * @param accumulator the accumulator value
-     */
-    short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int accumulator) const;
-
     WaveformCalculator() {}
 
 public:

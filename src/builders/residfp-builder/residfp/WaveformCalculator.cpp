@@ -51,36 +51,14 @@ const CombinedWaveformConfig config[2][4] =
     },
 };
 
-matrix_t* WaveformCalculator::buildTable(ChipModel model)
-{
-    const CombinedWaveformConfig* cfgArray = config[model == MOS6581 ? 0 : 1];
-
-    cw_cache_t::iterator lb = CACHE.lower_bound(cfgArray);
-
-    if (lb != CACHE.end() && !(CACHE.key_comp()(cfgArray, lb->first)))
-    {
-        return &(lb->second);
-    }
-
-    matrix_t wftable(8, 4096);
-
-    for (unsigned int accumulator = 0; accumulator < 1 << 24; accumulator += 1 << 12)
-    {
-        const int unsigned idx = (accumulator >> 12);
-        wftable[0][idx] = 0xfff;
-        wftable[1][idx] = (short)((accumulator & 0x800000) == 0 ? idx << 1 : (idx ^ 0xfff) << 1);
-        wftable[2][idx] = (short) idx;
-        wftable[3][idx] = calculateCombinedWaveform(cfgArray[0], 3, accumulator);
-        wftable[4][idx] = 0xfff;
-        wftable[5][idx] = calculateCombinedWaveform(cfgArray[1], 5, accumulator);
-        wftable[6][idx] = calculateCombinedWaveform(cfgArray[2], 6, accumulator);
-        wftable[7][idx] = calculateCombinedWaveform(cfgArray[3], 7, accumulator);
-    }
-
-    return &(CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
-}
-
-short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int accumulator) const
+/**
+ * Generate bitstate based on emulation of combined waves.
+ *
+ * @param config
+ * @param waveform the waveform to emulate, 1 .. 7
+ * @param accumulator the accumulator value
+ */
+short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int accumulator)
 {
     float o[12];
 
@@ -169,6 +147,35 @@ short WaveformCalculator::calculateCombinedWaveform(CombinedWaveformConfig confi
     }
 
     return value;
+}
+
+matrix_t* WaveformCalculator::buildTable(ChipModel model)
+{
+    const CombinedWaveformConfig* cfgArray = config[model == MOS6581 ? 0 : 1];
+
+    cw_cache_t::iterator lb = CACHE.lower_bound(cfgArray);
+
+    if (lb != CACHE.end() && !(CACHE.key_comp()(cfgArray, lb->first)))
+    {
+        return &(lb->second);
+    }
+
+    matrix_t wftable(8, 4096);
+
+    for (unsigned int accumulator = 0; accumulator < 1 << 24; accumulator += 1 << 12)
+    {
+        const int unsigned idx = (accumulator >> 12);
+        wftable[0][idx] = 0xfff;
+        wftable[1][idx] = (short)((accumulator & 0x800000) == 0 ? idx << 1 : (idx ^ 0xfff) << 1);
+        wftable[2][idx] = (short) idx;
+        wftable[3][idx] = calculateCombinedWaveform(cfgArray[0], 3, accumulator);
+        wftable[4][idx] = 0xfff;
+        wftable[5][idx] = calculateCombinedWaveform(cfgArray[1], 5, accumulator);
+        wftable[6][idx] = calculateCombinedWaveform(cfgArray[2], 6, accumulator);
+        wftable[7][idx] = calculateCombinedWaveform(cfgArray[3], 7, accumulator);
+    }
+
+    return &(CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
 }
 
 } // namespace reSIDfp
