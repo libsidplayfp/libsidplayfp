@@ -111,7 +111,7 @@ void Player::initialise()
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
-    const uint_least32_t size = (uint_least32_t)tuneInfo->loadAddr() + tuneInfo->c64dataLen() - 1;
+    const uint_least32_t size = static_cast<uint_least32_t>(tuneInfo->loadAddr()) + tuneInfo->c64dataLen() - 1;
     if (size > 0xffff)
     {
         throw configError(ERR_UNSUPPORTED_SIZE);

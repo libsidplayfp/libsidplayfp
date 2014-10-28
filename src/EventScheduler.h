@@ -142,7 +142,7 @@ public:
         return getTime(phase) - clock;
     }
 
-    event_phase_t phase() const override { return (event_phase_t) (currentTime & 1); }
+    event_phase_t phase() const override { return static_cast<event_phase_t>(currentTime & 1); }
 };
 
 #endif // EVENTSCHEDULER_H
