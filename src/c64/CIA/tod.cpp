@@ -84,24 +84,44 @@ void Tod::write(uint_least8_t reg, uint8_t data)
         break;
     }
 
+    bool changed = false;
     if (crb & 0x80)
     {
         // set alarm
-        alarm[reg] = data;
+        if (alarm[reg] != data)
+        {
+            changed = true;
+            alarm[reg] = data;
+        }
     }
     else
     {
         // set time
         if (reg == TENTHS)
-            isStopped = false;
+        {
+            // apparently the tickcounter is reset to 0 when the clock
+            // is not running and then restarted by writing to the 10th
+            // seconds register.
+            if (isStopped)
+            {
+                cycles = 0;
+                isStopped = false;
+            }
+        }
         else if (reg == HOURS)
+        {
             isStopped = true;
+        }
 
-        clock[reg] = data;
+        if (clock[reg] != data)
+        {
+            changed = true;
+            clock[reg] = data;
+        }
     }
 
     // check alarm
-    if (!isStopped)
+    if (changed)
     {
         checkAlarm();
     }
