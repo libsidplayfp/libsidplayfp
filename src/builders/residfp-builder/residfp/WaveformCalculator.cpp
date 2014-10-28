@@ -165,8 +165,8 @@ matrix_t* WaveformCalculator::buildTable(ChipModel model)
     for (unsigned int idx = 0; idx < 1 << 12; idx++)
     {
         wftable[0][idx] = 0xfff;
-        wftable[1][idx] = (short)((idx & 0x800) == 0 ? idx << 1 : (idx ^ 0xfff) << 1);
-        wftable[2][idx] = (short) idx;
+        wftable[1][idx] = static_cast<short>((idx & 0x800) == 0 ? idx << 1 : (idx ^ 0xfff) << 1);
+        wftable[2][idx] = static_cast<short>(idx);
         wftable[3][idx] = calculateCombinedWaveform(cfgArray[0], 3, idx);
         wftable[4][idx] = 0xfff;
         wftable[5][idx] = calculateCombinedWaveform(cfgArray[1], 5, idx);
