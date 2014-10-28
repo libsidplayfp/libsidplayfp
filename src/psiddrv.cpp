@@ -52,17 +52,18 @@ const uint8_t POWERON[] =
 
 
 /**
- * Copy power on pattern in memory.
+ * Copy in power on settings. These were created by running
+ * the kernel reset routine and storing the useful values
+ * from $0000-$03ff. Format is:
+ * - offset byte (bit 7 indicates presence rle byte)
+ * - rle count byte (bit 7 indicates compression used)
+ * - data (single byte) or quantity represented by uncompressed count
+ * all counts and offsets are 1 less than they should be
  */
 void copyPoweronPattern(sidmemory *mem)
 {
-    // Copy in power on settings. These were created by running
-    // the kernel reset routine and storing the useful values
-    // from $0000-$03ff. Format is:
-    // - offset byte (bit 7 indicates presence rle byte)
-    // - rle count byte (bit 7 indicates compression used)
-    // - data (single byte) or quantity represented by uncompressed count
-    // all counts and offsets are 1 less than they should be
+    mem->fillRam(0, static_cast<uint8_t>(0), 0x3ff);
+
     uint_least16_t addr = 0;
     for (unsigned int i = 0; i < sizeof(POWERON);)
     {
