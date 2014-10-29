@@ -139,6 +139,7 @@ private:
 
 public:
     SID();
+    ~SID();
 
     /**
      * Set chip model.
