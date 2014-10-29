@@ -45,7 +45,7 @@ namespace reSIDfp
  *
  * [1]: http://noname.c64.org/csdb/forums/?roomid=11&topicid=29025&showallposts=1
  */
-const int BUS_TTL = 0x1000;
+const int BUS_TTL_6581 = 0x1000;
 
 SID::SID() :
     filter6581(new Filter6581()),
@@ -301,12 +301,12 @@ unsigned char SID::read(int offset)
     {
     case 0x19:
         value = potX->readPOT();
-        busValueTtl = BUS_TTL;
+        busValueTtl = BUS_TTL_6581;
         break;
 
     case 0x1a:
         value = potY->readPOT();
-        busValueTtl = BUS_TTL;
+        busValueTtl = BUS_TTL_6581;
         break;
 
     case 0x1b:
@@ -315,7 +315,7 @@ unsigned char SID::read(int offset)
 
     case 0x1c:
         value = voice[2]->envelope()->readENV();
-        busValueTtl = BUS_TTL;
+        busValueTtl = BUS_TTL_6581;
         break;
 
     default:
@@ -331,7 +331,7 @@ unsigned char SID::read(int offset)
 void SID::write(int offset, unsigned char value)
 {
     busValue = value;
-    busValueTtl = BUS_TTL;
+    busValueTtl = BUS_TTL_6581;
 
     if (model == MOS8580)
     {
