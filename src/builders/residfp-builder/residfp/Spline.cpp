@@ -21,25 +21,25 @@
 
 #include "Spline.h"
 
-#include <vector>
 #include <cassert>
 #include <limits>
 
 namespace reSIDfp
 {
 
-Spline::Spline(const Point input[], int inputLength) :
-    params(new Param[inputLength]),
-    c(&params[0]),
-    paramsLength(inputLength)
+Spline::Spline(const Point input[], size_t inputLength) :
+    params(inputLength),
+    c(&params[0])
 {
     assert(inputLength > 2);
 
-    std::vector<double> dxs(inputLength - 1);
-    std::vector<double> ms(inputLength - 1);
+    const size_t coeffLength = inputLength - 1;
+
+    std::vector<double> dxs(coeffLength);
+    std::vector<double> ms(coeffLength);
 
     // Get consecutive differences and slopes
-    for (int i = 0; i < inputLength - 1; i++)
+    for (size_t i = 0; i < coeffLength; i++)
     {
         assert(input[i].x < input[i + 1].x);
 
@@ -51,13 +51,16 @@ Spline::Spline(const Point input[], int inputLength) :
 
     // Get degree-1 coefficients
     params[0].c = ms[0];
-    for (int i = 1; i < inputLength - 1; i++)
+    for (size_t i = 1; i < coeffLength; i++)
     {
         const double m = ms[i - 1];
         const double mNext = ms[i];
-        if (m * mNext <= 0) {
+        if (m * mNext <= 0)
+        {
             params[i].c = 0.0;
-        } else {
+        }
+        else
+        {
             const double dx = dxs[i - 1];
             const double dxNext = dxs[i];
             const double common = dx + dxNext;
@@ -67,7 +70,7 @@ Spline::Spline(const Point input[], int inputLength) :
     params[inputLength - 1].c = ms[inputLength - 2];
 
     // Get degree-2 and degree-3 coefficients
-    for (int i = 0; i < inputLength - 1; i++)
+    for (size_t i = 0; i < coeffLength; i++)
     {
         params[i].x1 = input[i].x;
         params[i].x2 = input[i + 1].x;
@@ -83,14 +86,14 @@ Spline::Spline(const Point input[], int inputLength) :
 
     // Fix the value ranges, because we interpolate outside original bounds if necessary.
     params[0].x1 = std::numeric_limits<double>::min();
-    params[inputLength - 2].x2 = std::numeric_limits<double>::max();
+    params[coeffLength - 1].x2 = std::numeric_limits<double>::max();
 }
 
 Spline::Point Spline::evaluate(double x)
 {
     if (x < c->x1 || x > c->x2)
     {
-        for (int i = 0; i < paramsLength; i++)
+        for (size_t i = 0; i < params.size(); i++)
         {
             if (x <= params[i].x2)
             {

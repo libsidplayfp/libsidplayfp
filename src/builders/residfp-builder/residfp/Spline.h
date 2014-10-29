@@ -22,6 +22,9 @@
 #ifndef SPLINE_H
 #define SPLINE_H
 
+#include <cstddef>
+#include <vector>
+
 namespace reSIDfp
 {
 
@@ -52,18 +55,17 @@ private:
         double d;
     } Param;
 
+    typedef std::vector<Param> ParamVector;
+
 private:
     /// Interpolation parameters
-    Param *params;
+    ParamVector params;
 
     /// last used parameters, cached for speed up
-    Param *c;
-
-    const int paramsLength;
+    ParamVector::const_pointer c;
 
 public:
-    Spline(const Point input[], int inputLength);
-    ~Spline() { delete [] params; }
+    Spline(const Point input[], size_t inputLength);
 
     /**
      * Evaluate y and its derivative at given point x.
