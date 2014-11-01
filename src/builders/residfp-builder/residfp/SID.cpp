@@ -346,8 +346,6 @@ void SID::write(int offset, unsigned char value)
 
 void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency)
 {
-    filter6581->setClockFrequency(clockFrequency);
-    filter8580->setClockFrequency(clockFrequency);
     externalFilter->setClockFrequency(clockFrequency);
 
     switch (method)
