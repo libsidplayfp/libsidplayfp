@@ -21,8 +21,6 @@
 #include "UnitTest++/UnitTest++.h"
 #include "UnitTest++/TestReporter.h"
 
-#include <iostream>
-
 #define private public
 #define protected public
 #define class struct
@@ -34,15 +32,21 @@ using namespace UnitTest;
 SUITE(EnvelopeGenerator)
 {
 
-TEST(TestADSRDelayBug)
+struct TestFixture
+{
+    // Test setup
+    TestFixture() { generator.reset(); }
+
+    reSIDfp::EnvelopeGenerator generator;
+};
+
+TEST_FIXTURE(TestFixture, TestADSRDelayBug)
 {
     // If the rate counter comparison value is set below the current value of the
     // rate counter, the counter will continue counting up until it wraps around
     // to zero at 2^15 = 0x8000, and then count rate_period - 1 before the
     // envelope can constly be stepped.
 
-    reSIDfp::EnvelopeGenerator generator;
-    generator.reset();
     generator.writeCONTROL_REG(0x01);
 
     generator.writeATTACK_DECAY(0xf0);
@@ -62,15 +66,13 @@ TEST(TestADSRDelayBug)
     CHECK_EQUAL(0, (int)generator.readENV());
 }
 
-TEST(TestFlipFFto00)
+TEST_FIXTURE(TestFixture, TestFlipFFto00)
 {
     // The envelope counter can flip from 0xff to 0x00 by changing state to
     // release, then to attack. The envelope counter is then frozen at
     // zero; to unlock this situation the state must be changed to release,
     // then to attack.
 
-    reSIDfp::EnvelopeGenerator generator;
-    generator.reset();
     generator.writeCONTROL_REG(0x01);
 
     generator.writeATTACK_DECAY(0xff);
@@ -94,14 +96,11 @@ TEST(TestFlipFFto00)
     CHECK(generator.hold_zero);
 }
 
-TEST(TestFlip00toFF)
+TEST_FIXTURE(TestFixture, TestFlip00toFF)
 {
     // The envelope counter can flip from 0x00 to 0xff by changing state to
     // attack, then to release. The envelope counter will then continue
     // counting down in the release state.
-
-    reSIDfp::EnvelopeGenerator generator;
-    generator.reset();
 
     generator.writeATTACK_DECAY(0xff);
     generator.writeSUSTAIN_RELEASE(0xff);
