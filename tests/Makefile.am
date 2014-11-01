@@ -8,7 +8,8 @@ AM_CPPFLAGS = \
 
 TESTS = \
 TestEnvelopeGenerator \
-TestSpline
+TestSpline \
+TestDac
 
 check_PROGRAMS = $(TESTS)
 
@@ -24,5 +25,11 @@ Main.cpp \
 TestSpline.cpp 
 TestSpline_LDADD = -lUnitTest++\
 $(top_builddir)/src/builders/residfp-builder/residfp/Spline.o
+
+TestDac_SOURCES = \
+Main.cpp \
+TestDac.cpp 
+TestDac_LDADD = -lUnitTest++\
+$(top_builddir)/src/builders/residfp-builder/residfp/Dac.o
 
 endif
