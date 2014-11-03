@@ -194,38 +194,35 @@ public:
         msb_rising(false) {}
 
     /**
-     * Register functions.
+     * Write FREQ LO register.
      *
      * @param freq_lo low 8 bits of frequency
      */
     void writeFREQ_LO(unsigned char freq_lo) { freq = (freq & 0xff00) | (freq_lo & 0xff); }
 
     /**
-     * Register functions.
+     * Write FREQ HI register.
      *
      * @param freq_hi high 8 bits of frequency
      */
     void writeFREQ_HI(unsigned char freq_hi) { freq = (freq_hi << 8 & 0xff00) | (freq & 0xff); }
 
     /**
-     * Register functions.
-     *
-     * The original form was (acc >> 12) >= pw, where truth value is not affected by the contents of the low 12 bits.
-     * Therefore the lowest bits must be zero in the new formulation acc >= (pw << 12).
+     * Write PW LO register.
      *
      * @param pw_lo low 8 bits of pulse width
      */
     void writePW_LO(unsigned char pw_lo) { pw = (pw & 0xf00) | (pw_lo & 0x0ff); }
 
     /**
-     * Register functions.
+     * Write PW HI register.
      *
      * @param pw_hi high 8 bits of pulse width
      */
     void writePW_HI(unsigned char pw_hi) { pw = (pw_hi << 8 & 0xf00) | (pw & 0x0ff); }
 
     /**
-     * Register functions.
+     * Write CONTROL REGISTER register.
      *
      * @param control control register value
      */
@@ -237,7 +234,7 @@ public:
     void reset();
 
     /**
-     * 12-bit waveform output.
+     * Get the Waveform Generator output.
      * The output from SID 8580 is delayed one cycle compared to SID 6581;
      *
      * @param ringModulator The oscillator ring-modulating me.
