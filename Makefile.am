@@ -371,7 +371,7 @@ src/psiddrv.bin
 #=========================================================
 # Recreate psiddrv.bin, needs xa65
 
-CLEANFILES = \
+DISTCLEANFILES = \
 $(noinst_DATA) \
 src/psiddrv.o65 \
 src/psiddrv.bin
