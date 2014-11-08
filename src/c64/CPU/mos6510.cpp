@@ -784,7 +784,7 @@ void MOS6510::axa_instr()
 {
     Cycle_Data = Register_X & Register_Accumulator & (endian_16hi8(Cycle_EffectiveAddress) + 1);
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        Cycle_EffectiveAddress = endian_16(Cycle_Data, (uint8_t)Cycle_EffectiveAddress);
+        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
     PutEffAddrDataByte();
 }
 
@@ -817,7 +817,7 @@ void MOS6510::say_instr()
 {
     Cycle_Data = Register_Y & (endian_16hi8(Cycle_EffectiveAddress) + 1);
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        Cycle_EffectiveAddress = endian_16(Cycle_Data, (uint8_t)Cycle_EffectiveAddress);
+        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
     PutEffAddrDataByte();
 }
 
@@ -829,7 +829,7 @@ void MOS6510::xas_instr()
 {
     Cycle_Data = Register_X & (endian_16hi8(Cycle_EffectiveAddress) + 1);
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        Cycle_EffectiveAddress = endian_16(Cycle_Data, (uint8_t)Cycle_EffectiveAddress);
+        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
     PutEffAddrDataByte();
 }
 
@@ -972,8 +972,8 @@ void MOS6510::branch_instr(bool condition)
         // issue the spurious read for next insn here.
         cpuRead(Register_ProgramCounter);
 
-        Cycle_HighByteWrongEffectiveAddress = (Register_ProgramCounter & 0xff00) | ((Register_ProgramCounter + (int8_t) Cycle_Data) & 0xff);
-        Cycle_EffectiveAddress = Register_ProgramCounter + (int8_t) Cycle_Data;
+        Cycle_HighByteWrongEffectiveAddress = (Register_ProgramCounter & 0xff00) | ((Register_ProgramCounter + static_cast<int8_t>(Cycle_Data)) & 0xff);
+        Cycle_EffectiveAddress = Register_ProgramCounter + static_cast<int8_t>(Cycle_Data);
 
         // Check for page boundary crossing
         if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
@@ -1054,7 +1054,7 @@ void MOS6510::clv_instr()
 
 void MOS6510::cmp_instr()
 {
-    const uint_least16_t tmp = (uint_least16_t)Register_Accumulator - Cycle_Data;
+    const uint_least16_t tmp = static_cast<uint_least16_t>(Register_Accumulator) - Cycle_Data;
     flags.setNZ(tmp);
     flags.C = tmp < 0x100;
     interruptsAndNextOpcode();
@@ -1062,7 +1062,7 @@ void MOS6510::cmp_instr()
 
 void MOS6510::cpx_instr()
 {
-    const uint_least16_t tmp = (uint_least16_t)Register_X - Cycle_Data;
+    const uint_least16_t tmp = static_cast<uint_least16_t>(Register_X) - Cycle_Data;
     flags.setNZ(tmp);
     flags.C = tmp < 0x100;
     interruptsAndNextOpcode();
@@ -1070,7 +1070,7 @@ void MOS6510::cpx_instr()
 
 void MOS6510::cpy_instr()
 {
-    const uint_least16_t tmp = (uint_least16_t)Register_Y - Cycle_Data;
+    const uint_least16_t tmp = static_cast<uint_least16_t>(Register_Y) - Cycle_Data;
     flags.setNZ(tmp);
     flags.C = tmp < 0x100;
     interruptsAndNextOpcode();
@@ -1237,7 +1237,7 @@ void MOS6510::shs_instr()
     Register_StackPointer = Register_Accumulator & Register_X;
     Cycle_Data = (endian_16hi8(Cycle_EffectiveAddress) + 1) & Register_StackPointer;
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        Cycle_EffectiveAddress = endian_16(Cycle_Data, (uint8_t)Cycle_EffectiveAddress);
+        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
     PutEffAddrDataByte();
 }
 
@@ -1367,7 +1367,7 @@ void MOS6510::dcm_instr()
 {
     PutEffAddrDataByte();
     Cycle_Data--;
-    const uint_least16_t tmp = (uint_least16_t)Register_Accumulator - Cycle_Data;
+    const uint_least16_t tmp = static_cast<uint_least16_t>(Register_Accumulator) - Cycle_Data;
     flags.setNZ(tmp);
     flags.C = tmp < 0x100;
 }

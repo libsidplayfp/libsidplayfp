@@ -167,7 +167,7 @@ uint8_t HardSID::read(uint_least8_t addr)
     unsigned int packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 );
     ioctl(m_handle, HSID_IOCTL_READ, &packet);
 
-    return (uint8_t) (packet & 0xff);
+    return static_cast<uint8_t>(packet & 0xff);
 }
 
 void HardSID::write(uint_least8_t addr, uint8_t data)

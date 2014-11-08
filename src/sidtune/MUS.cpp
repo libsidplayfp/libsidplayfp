@@ -54,7 +54,7 @@ static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {
-    SmartPtr_sidtt<const uint8_t> spMus((const uint8_t*)buffer, bufLen);
+    SmartPtr_sidtt<const uint8_t> spMus(static_cast<const uint8_t*>(buffer), bufLen);
     // Skip load address and 3x length entry.
     uint_least32_t voice1Index = (2+3*2);
     // Add length of voice 1 data.
