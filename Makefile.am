@@ -371,13 +371,10 @@ src/psiddrv.bin
 #=========================================================
 # Recreate psiddrv.bin, needs xa65
 
-DISTCLEANFILES = \
-$(noinst_DATA) \
-src/psiddrv.o65 \
-src/psiddrv.bin
+DISTCLEANFILES = $(BUILT_SOURCES)
 
-src/psiddrv.o65:
-	xa -R -G $(srcdir)/src/psiddrv.a65 -o $@
-
-src/psiddrv.bin: src/psiddrv.o65
-	od -v -An -w8 -tx1 $< | sed -re 's/[[:alnum:]]+/0x&,/g' > src/psiddrv.bin
+.a65.bin:
+	o65file=`echo $@ | sed 's/bin/o65/'`;\
+	xa -R -G $< -o $$o65file &&\
+	od -v -An -w8 -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g' > $@ &&\
+	${RM} $$o65file
