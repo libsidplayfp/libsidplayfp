@@ -32,9 +32,6 @@ namespace reSIDfp
 class Filter
 {
 protected:
-    /// Current clock frequency.
-    double clockFrequency;
-
     /// Filter cutoff frequency.
     unsigned int fc;
 
@@ -78,7 +75,6 @@ protected:
 
 public:
     Filter() :
-        clockFrequency(0.),
         fc(0),
         res(0),
         vol(0),
@@ -111,8 +107,6 @@ public:
      * @param enable
      */
     void enable(bool enable);
-
-    void setClockFrequency(double clock);
 
     /**
      * SID reset.

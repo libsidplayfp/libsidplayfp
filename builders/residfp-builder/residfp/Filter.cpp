@@ -39,12 +39,6 @@ void Filter::enable(bool enable)
     }
 }
 
-void Filter::setClockFrequency(double clock)
-{
-    clockFrequency = clock;
-    updatedCenterFrequency();
-}
-
 void Filter::reset()
 {
     writeFC_LO(0);
