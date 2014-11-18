@@ -31,6 +31,8 @@
 #include "sidendian.h"
 #include "sidmd5.h"
 
+#include "sidcxx11.h"
+
 namespace libsidplayfp
 {
 
@@ -123,7 +125,7 @@ SidTuneBase* PSID::load(buffer_t& dataBuf)
         || ((endian_big32(&dataBuf[0]) != PSID_ID)
             && (endian_big32(&dataBuf[0]) != RSID_ID)))
     {
-        return 0;
+        return nullptr;
     }
 
     psidHeader pHeader;
