@@ -40,12 +40,15 @@ namespace reSIDfp
 /**
  * Bus value stays alive for some time after each operation.
  *
- * This value has been adjusted empirically from the original reSID value (0x9000)
- * according to the discussion "How do I reliably detect 6581/8580 sid?" on CSDb [1].
+ * This values has been adjusted empirically according to the discussion
+ * "How do I reliably detect 6581/8580 sid?" on CSDb [1].
  *
  * [1]: http://noname.c64.org/csdb/forums/?roomid=11&topicid=29025&showallposts=1
  */
+//@{
 const int BUS_TTL_6581 = 0x1000;
+const int BUS_TTL_8580 = 0xa2000;
+//@}
 
 SID::SID() :
     filter6581(new Filter6581()),
@@ -241,10 +244,12 @@ void SID::setChipModel(ChipModel model)
     {
     case MOS6581:
         filter = filter6581.get();
+        modelTTL = BUS_TTL_6581;
         break;
 
     case MOS8580:
         filter = filter8580.get();
+        modelTTL = BUS_TTL_8580;
         break;
 
     default:
@@ -301,12 +306,12 @@ unsigned char SID::read(int offset)
     {
     case 0x19:
         busValue = potX->readPOT();
-        busValueTtl = BUS_TTL_6581;
+        busValueTtl = modelTTL;
         break;
 
     case 0x1a:
         busValue = potY->readPOT();
-        busValueTtl = BUS_TTL_6581;
+        busValueTtl = modelTTL;
         break;
 
     case 0x1b:
@@ -315,7 +320,7 @@ unsigned char SID::read(int offset)
 
     case 0x1c:
         busValue = voice[2]->envelope()->readENV();
-        busValueTtl = BUS_TTL_6581;
+        busValueTtl = modelTTL;
         break;
 
     default:
@@ -329,7 +334,7 @@ unsigned char SID::read(int offset)
 void SID::write(int offset, unsigned char value)
 {
     busValue = value;
-    busValueTtl = BUS_TTL_6581;
+    busValueTtl = modelTTL;
 
     if (model == MOS8580)
     {

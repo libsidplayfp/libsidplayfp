@@ -88,6 +88,9 @@ private:
     /// Time to live for the last written value
     int busValueTtl;
 
+    /// Current chip model's bus value TTL
+    int modelTTL;
+
     /// Time until #voiceSync must be run.
     unsigned int nextVoiceSync;
 
