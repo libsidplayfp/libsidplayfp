@@ -295,37 +295,35 @@ void SID::input(int value)
 
 unsigned char SID::read(int offset)
 {
-    unsigned char value;
-
+    // FIXME: is bus TTL actually reset after read?
+    // FIXME: are read values actually latched?
     switch (offset)
     {
     case 0x19:
-        value = potX->readPOT();
+        busValue = potX->readPOT();
         busValueTtl = BUS_TTL_6581;
         break;
 
     case 0x1a:
-        value = potY->readPOT();
+        busValue = potY->readPOT();
         busValueTtl = BUS_TTL_6581;
         break;
 
     case 0x1b:
-        value = voice[2]->wave()->readOSC();
+        busValue = voice[2]->wave()->readOSC();
         break;
 
     case 0x1c:
-        value = voice[2]->envelope()->readENV();
+        busValue = voice[2]->envelope()->readENV();
         busValueTtl = BUS_TTL_6581;
         break;
 
     default:
-        value = busValue;
-        busValueTtl /= 2;
+        busValueTtl /= 2; // FIXME: what's this???
         break;
     }
 
-    busValue = value;
-    return value;
+    return busValue;
 }
 
 void SID::write(int offset, unsigned char value)
