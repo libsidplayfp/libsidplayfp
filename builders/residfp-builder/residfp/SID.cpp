@@ -36,10 +36,18 @@
 
 namespace reSIDfp
 {
-// This value has been adjusted empirically from the original reSID value (0x9000)
-// according to this discussion on CSDb:
-// http://noname.c64.org/csdb/forums/?roomid=11&topicid=29025&showallposts=1
-const int SID::BUS_TTL = 0x1000;
+/**
+ * Bus value stays alive for some time after each operation.
+ *
+ * This values has been adjusted empirically according to the discussion
+ * "How do I reliably detect 6581/8580 sid?" on CSDb [1].
+ *
+ * [1]: http://noname.c64.org/csdb/forums/?roomid=11&topicid=29025&showallposts=1
+ */
+//@{
+const int BUS_TTL_6581 = 0x1000;
+const int BUS_TTL_8580 = 0xa2000;
+//@}
 
 SID::SID() :
     filter6581(new Filter6581()),
@@ -243,10 +251,12 @@ void SID::setChipModel(ChipModel model)
     {
     case MOS6581:
         filter = filter6581;
+        modelTTL = BUS_TTL_6581;
         break;
 
     case MOS8580:
         filter = filter8580;
+        modelTTL = BUS_TTL_8580;
         break;
 
     default:
@@ -297,43 +307,41 @@ void SID::input(int value)
 
 unsigned char SID::read(int offset)
 {
-    unsigned char value;
-
+    // FIXME: is bus TTL actually reset after read?
+    // FIXME: are read values actually latched?
     switch (offset)
     {
     case 0x19:
-        value = potX->readPOT();
-        busValueTtl = BUS_TTL;
+        busValue = potX->readPOT();
+        busValueTtl = modelTTL;
         break;
 
     case 0x1a:
-        value = potY->readPOT();
-        busValueTtl = BUS_TTL;
+        busValue = potY->readPOT();
+        busValueTtl = modelTTL;
         break;
 
     case 0x1b:
-        value = voice[2]->wave()->readOSC();
+        busValue = voice[2]->wave()->readOSC();
         break;
 
     case 0x1c:
-        value = voice[2]->envelope()->readENV();
-        busValueTtl = BUS_TTL;
+        busValue = voice[2]->envelope()->readENV();
+        busValueTtl = modelTTL;
         break;
 
     default:
-        value = busValue;
-        busValueTtl /= 2;
+        busValueTtl /= 2; // FIXME: what's this???
         break;
     }
 
-    busValue = value;
-    return value;
+    return busValue;
 }
 
 void SID::write(int offset, unsigned char value)
 {
     busValue = value;
-    busValueTtl = BUS_TTL;
+    busValueTtl = modelTTL;
 
     if (model == MOS8580)
     {
