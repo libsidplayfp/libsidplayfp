@@ -162,7 +162,7 @@ public:
      *
      * @param val sprites bitmask
      */
-    bool isDma(unsigned int val)
+    bool isDma(unsigned int val) const
     {
         return dma & val;
     }
