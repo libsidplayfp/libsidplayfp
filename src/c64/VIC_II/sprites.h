@@ -164,7 +164,7 @@ public:
      */
     bool isDma(unsigned int val)
     {
-        return dma && val;
+        return dma & val;
     }
 };
 
