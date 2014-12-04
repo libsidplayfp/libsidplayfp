@@ -194,7 +194,7 @@ private:
     inline unsigned int oldRasterY()
     {
         const int prevRasterY = rasterY - 1;
-        return prevRasterY >= 0 ? prevRasterY : cyclesPerLine - 1;
+        return prevRasterY >= 0 ? prevRasterY : maxRasters - 1;
     }
 
     inline void sync()
