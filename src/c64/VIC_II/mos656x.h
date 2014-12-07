@@ -188,6 +188,14 @@ private:
      */
     bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
 
+    bool evaluateIsBadLine() const
+    {
+        return areBadLinesEnabled
+            && rasterY >= FIRST_DMA_LINE
+            && rasterY <= LAST_DMA_LINE
+            && (rasterY & 7) == yscroll;
+    }
+
     /**
      * Get previous value of Y raster
      */
@@ -235,6 +243,9 @@ private:
             rasterY++;
             rasterYIRQEdgeDetector();
         }
+
+        if (evaluateIsBadLine())
+            isBadLine = true;
     }
 
     /**
