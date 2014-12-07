@@ -179,13 +179,20 @@ private:
      */
     bool readDEN() const { return (regs[0x11] & 0x10) != 0; }
 
+    bool evaluateIsBadLine() const
+    {
+        return areBadLinesEnabled
+            && rasterY >= FIRST_DMA_LINE
+            && rasterY <= LAST_DMA_LINE
+            && (rasterY & 7) == yscroll;
+    }
+
     /**
      * Get previous value of Y raster
      */
-    inline unsigned int oldRasterY()
+    inline unsigned int oldRasterY() const
     {
-        const int prevRasterY = rasterY - 1;
-        return prevRasterY >= 0 ? prevRasterY : cyclesPerLine - 1;
+        return rasterY > 0 ? rasterY - 1 : maxRasters - 1;
     }
 
     inline void sync()
@@ -226,6 +233,9 @@ private:
             rasterY++;
             rasterYIRQEdgeDetector();
         }
+
+        if (evaluateIsBadLine())
+            isBadLine = true;
     }
 
     inline void vblank()
