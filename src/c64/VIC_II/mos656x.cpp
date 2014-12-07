@@ -154,7 +154,7 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
         const unsigned int oldYscroll = yscroll;
         yscroll = data & 0x7;
 
-        /* This is the funniest part... handle bad line tricks.  */
+        // This is the funniest part... handle bad line tricks.
         const bool wasBadLinesEnabled = areBadLinesEnabled;
 
         if (rasterY == FIRST_DMA_LINE && lineCycle == 0)
@@ -171,7 +171,7 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
             && rasterY >= FIRST_DMA_LINE
             && rasterY <= LAST_DMA_LINE)
         {
-            /* Check whether bad line state has changed.  */
+            // Check whether bad line state has changed.
             const bool wasBadLine = (wasBadLinesEnabled && (oldYscroll == (rasterY & 7)));
             const bool nowBadLine = (areBadLinesEnabled && (yscroll == (rasterY & 7)));
 
