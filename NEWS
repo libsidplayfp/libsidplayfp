@@ -1,3 +1,17 @@
+1.6.2 2014-12-08
+* Fix a typo that broke MUSICIANS/M/Mixer/Vicious_SID_2-15638Hz.sid
+* Fix a regression in badline handling. Restores correct timing in /MUSICIANS/S/Swallow/Wonderland_XII-Digi_part_?.sid
+* Other minor fixes in VIC II emulation
+
+
+
+1.6.1 2014-11-30
+* Fix an undefined behaviour in SidDatabase
+* Remove an unused variable in reSIDfp
+* Set different SID bus TTL value for 8580
+
+
+
 1.6.0 2014-10-11
 * Make PSID loader adhere to spec when handling 2nd SID address
 * Improve PAL/NTSC switch handling
