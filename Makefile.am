@@ -266,7 +266,7 @@ src/builders/resid-builder/resid/wave8580__ST.dat
 
 noinst_SCRIPTS = src/builders/resid-builder/resid/samp2src.pl
 
-%.dat: %.h
+.dat.h:
 	$(PERL) $(srcdir)/src/builders/resid-builder/resid/samp2src.pl $* $< $@
 
 #=========================================================
