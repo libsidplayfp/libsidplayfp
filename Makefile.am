@@ -214,8 +214,6 @@ builders/residfp-builder/residfp/version.cc
 #=========================================================
 # resid
 
-BUILT_SOURCES = $(noinst_DATA:.dat=.h)
-
 builders_resid_builder_resid_libresid_la_SOURCES = \
 builders/resid-builder/resid/dac.h \
 builders/resid-builder/resid/sid.h \
@@ -250,8 +248,8 @@ builders/resid-builder/resid/wave8580__ST.dat
 
 noinst_SCRIPTS = builders/resid-builder/resid/samp2src.pl
 
-#.dat.h:
-#	$(PERL) $(srcdir)/samp2src.pl $* $< $(srcdir)/$@
+.dat.h:
+	$(PERL) $(srcdir)/builders/resid-builder/resid/samp2src.pl $* $< $@
 
 #=========================================================
 # builders
@@ -347,12 +345,18 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libsidplayfp.pc libstilview.pc
 
 #=========================================================
+
+BUILT_SOURCES = \
+$(noinst_DATA:.dat=.h) \
+sidplayfp/psiddrv.bin
+
+#=========================================================
 # Recreate psiddrv.bin, needs xa65
 
-CLEANFILES = sidplayfp/psiddrv.o65 sidplayfp/psiddrv.bin
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
-sidplayfp/psiddrv.o65:
-	xa -R -G $(srcdir)/sidplayfp/psiddrv.a65 -o $@
-
-sidplayfp/psiddrv.bin: sidplayfp/psiddrv.o65
-	od -v -An -w8 -tx1 $< | sed -re 's/[[:alnum:]]+/0x&,/g' > sidplayfp/psiddrv.bin
+.a65.bin:
+	o65file=`echo $@ | sed 's/bin/o65/'`;\
+	xa -R -G $< -o $$o65file &&\
+	od -v -An -w8 -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g' > $@ &&\
+	${RM} $$o65file
