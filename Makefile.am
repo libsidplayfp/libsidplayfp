@@ -371,7 +371,7 @@ src/psiddrv.bin
 #=========================================================
 # Recreate psiddrv.bin, needs xa65
 
-DISTCLEANFILES = $(BUILT_SOURCES)
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
 .a65.bin:
 	o65file=`echo $@ | sed 's/bin/o65/'`;\
