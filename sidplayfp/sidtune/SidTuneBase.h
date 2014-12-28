@@ -118,6 +118,8 @@ public:  // ----------------------------------------------------------------
      */
     virtual const char *createMD5(char *md5 SID_UNUSED) { return 0; }
 
+    const uint_least8_t* c64Data() const { return &cache[fileOffset]; }
+
 protected:  // -------------------------------------------------------------
 
     std::auto_ptr<SidTuneInfoImpl> info;

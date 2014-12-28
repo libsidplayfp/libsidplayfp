@@ -124,3 +124,7 @@ const char* SidTune::createMD5(char *md5)
 {
     return tune.get()?tune->createMD5(md5):0;
 }
+const uint_least8_t* SidTune::c64Data() const
+{
+    return tune.get() ? tune->c64Data() : 0;
+}

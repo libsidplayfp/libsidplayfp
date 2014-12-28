@@ -160,6 +160,8 @@ public:  // ----------------------------------------------------------------
      */
     const char *createMD5(char *md5 = 0);
 
+    const uint_least8_t* c64Data() const;
+
 private:    // prevent copying
     SidTune(const SidTune&);
     SidTune& operator=(SidTune&);
