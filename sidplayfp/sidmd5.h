@@ -64,7 +64,7 @@ public:
 
         for (int di = 0; di < 16; ++di)
         {
-            ss << std::setw(2) << (int) m_md5.getDigest()[di];
+            ss << std::setw(2) << static_cast<int>(m_md5.getDigest()[di]);
         }
 
         return ss.str();

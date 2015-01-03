@@ -113,7 +113,7 @@ void EnvelopeGenerator::setChipModel(ChipModel chipModel)
             }
         }
 
-        dac[i] = (short)(dacValue + 0.5);
+        dac[i] = static_cast<short>(dacValue + 0.5);
     }
 }
 

@@ -128,7 +128,7 @@ FilterModelConfig::FilterModelConfig() :
         Spline::Point out = s.evaluate(x);
         if (out.x < 0.) out.x = 0.;
         assert(out.x < 65535.5);
-        opamp_rev[x] = (unsigned short)(out.x + 0.5);
+        opamp_rev[x] = static_cast<unsigned short>(out.x + 0.5);
     }
 
     // Create lookup tables for gains / summers.
@@ -155,7 +155,7 @@ FilterModelConfig::FilterModelConfig() :
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            summer[i][vi] = (unsigned short)(tmp + 0.5);
+            summer[i][vi] = static_cast<unsigned short>(tmp + 0.5);
         }
     }
 
@@ -177,7 +177,7 @@ FilterModelConfig::FilterModelConfig() :
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            mixer[i][vi] = (unsigned short)(tmp + 0.5);
+            mixer[i][vi] = static_cast<unsigned short>(tmp + 0.5);
         }
     }
 
@@ -198,7 +198,7 @@ FilterModelConfig::FilterModelConfig() :
             const double vin = vmin + vi / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            gain[n8][vi] = (unsigned short)(tmp + 0.5);
+            gain[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
         }
     }
 
@@ -219,7 +219,7 @@ FilterModelConfig::FilterModelConfig() :
         const double Vg = nkVddt - sqrt((double)(i << 16));
         const double tmp = k * Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
-        vcr_kVg[i] = (unsigned short)(tmp + 0.5);
+        vcr_kVg[i] = static_cast<unsigned short>(tmp + 0.5);
     }
 
     //  EKV model:
@@ -244,7 +244,7 @@ FilterModelConfig::FilterModelConfig() :
         // Scaled by m*2^15
         const double tmp = n_Is * log_term * log_term;
         assert(tmp > -0.5 && tmp < 65535.5);
-        vcr_n_Ids_term[kVg_Vx] = (unsigned short)(tmp + 0.5);
+        vcr_n_Ids_term[kVg_Vx] = static_cast<unsigned short>(tmp + 0.5);
     }
 }
 
@@ -286,7 +286,7 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
 
         const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
-        f0_dac[i] = (unsigned short)(tmp + 0.5);
+        f0_dac[i] = static_cast<unsigned short>(tmp + 0.5);
     }
 
     return f0_dac;
@@ -298,13 +298,13 @@ std::auto_ptr<Integrator> FilterModelConfig::buildIntegrator()
     // k*Vddt - x = (k*Vddt - t) - (x - t)
     double tmp = N16 * (kVddt - vmin);
     assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short nkVddt = (unsigned short)(tmp + 0.5);
+    const unsigned short nkVddt = static_cast<unsigned short>(tmp + 0.5);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     // Fit in 5 bits.
     tmp = denorm * (1 << 13) * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
     assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short n_snake = (unsigned short)(tmp + 0.5);
+    const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
 
     return std::auto_ptr<Integrator>(new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, nkVddt, n_snake));
 }

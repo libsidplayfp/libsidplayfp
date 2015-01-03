@@ -45,7 +45,7 @@ private:
 public:
     ZeroOrderResampler(double clockFrequency, double samplingFrequency) :
         cachedSample(0),
-        cyclesPerSample((int)(clockFrequency / samplingFrequency * 1024.)),
+        cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.)),
         sampleOffset(0),
         outputValue(0) {}
 

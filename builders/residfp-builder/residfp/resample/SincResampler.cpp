@@ -143,7 +143,7 @@ int SincResampler::fir(int subcycle)
 
 SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
     sampleIndex(0),
-    cyclesPerSample((int)(clockFrequency / samplingFrequency * 1024.)),
+    cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.)),
     sampleOffset(0),
     outputValue(0)
 {
@@ -165,20 +165,20 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         // N >= (96.33 - 7.95)/(2 * pi * 2.285 * (maxfreq - passbandfreq) >= 123
         // The filter order is equal to the number of zero crossings, i.e.
         // it should be an even number (sinc is symmetric about x = 0).
-        int N = (int)((A - 7.95) / (2.285 * dw) + 0.5);
+        int N = static_cast<int>((A - 7.95) / (2.285 * dw) + 0.5);
         N += N & 1;
 
         // The filter length is equal to the filter order + 1.
         // The filter length must be an odd number (sinc is symmetric about
         // x = 0).
-        firN = (int)(N * cyclesPerSampleD) + 1;
+        firN = static_cast<int>(N * cyclesPerSampleD) + 1;
         firN |= 1;
 
         // Check whether the sample ring buffer would overflow.
         assert(firN < RINGSIZE);
 
         // Error is bounded by err < 1.234 / L^2, so L = sqrt(1.234 / (2^-16)) = sqrt(1.234 * 2^16).
-        firRES = (int) ceil(sqrt(1.234 * (1 << BITS)) / cyclesPerSampleD);
+        firRES = static_cast<int>(ceil(sqrt(1.234 * (1 << BITS)) / cyclesPerSampleD));
 
         // firN*firRES represent the total resolution of the sinc sampling. JOS
         // recommends a length of 2^BITS, but we don't quite use that good a filter.
@@ -222,7 +222,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
                 const double wt = wc * x / cyclesPerSampleD;
                 const double sincWt = fabs(wt) >= 1e-8 ? sin(wt) / wt : 1.;
 
-                (*firTable)[i][j] = (short)(scale * sincWt * kaiserXt);
+                (*firTable)[i][j] = static_cast<short>(scale * sincWt * kaiserXt);
             }
         }
     }

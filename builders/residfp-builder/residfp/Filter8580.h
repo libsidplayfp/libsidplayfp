@@ -107,7 +107,7 @@ public:
     /**
      * Set filter cutoff frequency.
      */
-    void updatedCenterFrequency() { w0 = (float)(2. * M_PI * highFreq * fc / 2047. / 1e6); }
+    void updatedCenterFrequency() { w0 = static_cast<float>(2. * M_PI * highFreq * fc / 2047. / 1e6); }
 
     /**
      * Set filter resonance.
@@ -116,7 +116,7 @@ public:
      *
      * 1/Q = 2^(1/2)*2^(-x/8) = 2^(1/2 - x/8) = 2^((4 - x)/8)
      */
-    void updatedResonance() { _1_div_Q = (float)pow(2., (4 - res) / 8.); }
+    void updatedResonance() { _1_div_Q = static_cast<float>(pow(2., (4 - res) / 8.)); }
 
     void input(int input) { ve = input << 4; }
 
@@ -174,7 +174,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     assert(std::fpclassify(Vbp) != FP_SUBNORMAL);
     assert(std::fpclassify(Vhp) != FP_SUBNORMAL);
 
-    float Vof = (float)Vo;
+    float Vof = static_cast<float>(Vo);
 
     if (lp)
     {
@@ -191,7 +191,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
         Vof += Vhp;
     }
 
-    return (int) Vof * vol >> 4;
+    return static_cast<int>(Vof) * vol >> 4;
 }
 
 } // namespace reSIDfp

@@ -199,11 +199,11 @@ int Integrator::solve(int vi)
     const unsigned int Vgdt_2 = Vgdt * Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_snake = n_snake * (int(Vgst_2 - Vgdt_2) >> 15);
+    const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int kVg = (int)vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16];
+    const int kVg = static_cast<int>(vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
 
     // VCR voltages for EKV model table lookup.
     int Vgs = kVg - vx;
@@ -214,7 +214,7 @@ int Integrator::solve(int vi)
     assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const int n_I_vcr = (int)(vcr_n_Ids_term[Vgs] - vcr_n_Ids_term[Vgd]) << 15;
+    const int n_I_vcr = static_cast<int>(vcr_n_Ids_term[Vgs] - vcr_n_Ids_term[Vgd]) << 15;
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;
