@@ -1,3 +1,10 @@
+1.7.0 2015-01-xx
+* Add an interface to access tune data
+* Remove generated files only for maintainer-clean target (bug #14)
+* Rework Makefile rules for generated files
+
+
+
 1.6.2 2014-12-08
 * Fix a typo that broke MUSICIANS/M/Mixer/Vicious_SID_2-15638Hz.sid
 * Fix a regression in badline handling. Restores correct timing in /MUSICIANS/S/Swallow/Wonderland_XII-Digi_part_?.sid
