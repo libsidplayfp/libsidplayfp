@@ -98,6 +98,7 @@ private:
 
     static const CombinedWaveformConfig config[2][4];
 
+private:
     /**
      * Generate bitstate based on emulation of combined waves.
      *
