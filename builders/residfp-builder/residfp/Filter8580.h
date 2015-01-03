@@ -55,7 +55,7 @@ private:
      */
     static inline float reduce(uint32_t val)
     {
-        // FIXME
+        // FIXME may not be fully portable
         // This code assumes IEEE-754 floating point representation
         // and same endianness for integers and floats
         const uint32_t mantissa = val & 0x807F0000; // Keep only most significant bits
@@ -85,9 +85,24 @@ public:
 class Filter8580 : public Filter
 {
 private:
+    /// Cutoff frequency in Hertz
     double highFreq;
-    float Vlp, Vbp, Vhp;
-    float w0, _1_div_Q;
+
+    /// Lowpass filter voltage
+    float Vlp;
+
+    /// Bandpass filter voltage
+    float Vbp;
+
+    /// Highpass filter voltage
+    float Vhp;
+
+    float w0;
+
+    /// Resonance parameter
+    float _1_div_Q;
+
+    /// External input voltage
     int ve;
 
     antiDenormalNoise noise;
@@ -155,14 +170,8 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
 
     // NB! Voice 3 is not silenced by voice3off if it is routed
     // through the filter.
-    if (filt3)
-    {
-        Vi += voice3;
-    }
-    else if (!voice3off)
-    {
-        Vo += voice3;
-    }
+    if (filt3) Vi += voice3;
+    else if (!voice3off) Vo += voice3;
 
     (filtE ? Vi : Vo) += ve;
 

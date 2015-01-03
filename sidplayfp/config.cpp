@@ -141,6 +141,7 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
     {
         switch (clockSpeed)
         {
+        default:
         case SidTuneInfo::CLOCK_PAL:
             model = c64::PAL_B;
             videoSwitch = 1;
@@ -170,6 +171,8 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
         else
             m_info.m_speedString = TXT_NTSC_VBI;
         break;
+    default:
+        break;
     }
 
     return model;
@@ -197,6 +200,7 @@ SidConfig::sid_model_t Player::getModel(SidTuneInfo::model_t sidModel, SidConfig
 
     switch (tuneModel)
     {
+    default:
     case SidTuneInfo::SIDMODEL_6581:
         newModel = SidConfig::MOS6581;
         break;

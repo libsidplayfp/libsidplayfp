@@ -216,6 +216,8 @@ void PSID::tryLoad(buffer_t& dataBuf)
             if (flags & PSID_BASIC)
                 info->m_compatibility = SidTuneInfo::COMPATIBILITY_BASIC;
             break;
+        default:
+            break;
         }
 
         if ((flags & PSID_CLOCK_ANY) == PSID_CLOCK_ANY)

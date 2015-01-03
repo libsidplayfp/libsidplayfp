@@ -73,7 +73,7 @@ void Dac::kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term)
         dac[set_bit] = Vn;
     }
 
-    /* Normalize to integerish behavior */
+    // Normalize to integerish behavior
     double Vsum = 0.;
 
     for (int i = 0; i < dacLength; i ++)

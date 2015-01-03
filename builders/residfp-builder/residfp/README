@@ -10,10 +10,10 @@ It was then ported back to c++ and integrated with improvements from reSID 1.0 b
 
 Main differences from reSID:
 
-* combined waveforms are emulated by a parametrized model based on samplings from Kevtris
-* high quality resampling is done in two steps to allow computational savings using lower order filters
-* part of the calculations are don with floats instead of fixed point
-* Interpolation is accomplished with Fritsch-Carlson method to preserve monotonicity
+* combined waveforms are emulated by a parametrized model based on samplings from Kevtris;
+* high quality resampling is done in two steps to allow computational savings using lower order filters;
+* part of the calculations are don with floats instead of fixed point;
+* interpolation is accomplished with Fritsch-Carlson method to preserve monotonicity.
 
 
 reSIDfp is free software. See the file COPYING for copying permission.

@@ -47,10 +47,10 @@ namespace reSIDfp
 class ExternalFilter
 {
 private:
-    /// lowpass
+    /// Lowpass filter voltage
     int Vlp;
 
-    /// highpass
+    /// Highpass filter voltage
     int Vhp;
 
     int w0lp_1_s7;
