@@ -70,4 +70,3 @@ can be built by invoking "make doc".
 Known bugs/limitations:
 * mus data embedded in psid file is not supported
 * hardsid support is untested and possibly broken
-* No support for second SID outside the I/O ($Dxxx) area
