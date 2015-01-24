@@ -73,7 +73,7 @@ void Mixer::doMix()
     /* extract buffer info now that the SID is updated.
         * clock() may update bufferpos.
         * NB: if chip2 exists, its bufferpos is identical to chip1's. */
-    const int sampleCount = m_chips[0]->bufferpos();
+    const int sampleCount = m_chips.front()->bufferpos();
 
     int i = 0;
     while (i < sampleCount)

@@ -88,17 +88,17 @@ private:
     }
 
 protected:
-    void schedule(Event &event, event_clock_t cycles,
+    void schedule(Event &event, unsigned int cycles,
                    event_phase_t phase)
     {
         // this strange formulation always selects the next available slot regardless of specified phase.
-        event.triggerTime = (cycles << 1) + currentTime + ((currentTime & 1) ^ phase);
+        event.triggerTime = currentTime + ((currentTime & 1) ^ phase) + (cycles << 1);
         schedule(event);
     }
 
-    void schedule(Event &event, event_clock_t cycles)
+    void schedule(Event &event, unsigned int cycles)
     {
-        event.triggerTime = (cycles << 1) + currentTime;
+        event.triggerTime = currentTime + (cycles << 1);
         schedule(event);
     }
 
