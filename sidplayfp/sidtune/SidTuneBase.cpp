@@ -81,8 +81,6 @@ static const char CHR_tab[256] =
   0x2f,0x2d,0x2d,0x7c,0x7c,0x7c,0x7c,0x2d,0x2d,0x2d,0x2f,0x5c,0x5c,0x2f,0x2f,0x23
 };
 
-const unsigned int SidTuneBase::MAX_SONGS;
-
 SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
                  bool separatorIsSlash)
 {
@@ -446,9 +444,11 @@ void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo
 {
     // Create the speed/clock setting tables.
     //
-    // This routine implements the PSIDv2NG compliant speed conversion.  All tunes
+    // This routine implements the PSIDv2NG compliant speed conversion. All tunes
     // above 32 use the same song speed as tune 32
-    const unsigned int toDo = std::min(info->m_songs, MAX_SONGS);
+    // NOTE: The cast here is used to avoid undefined references
+    // as the std::min function takes it parameters by reference
+    const unsigned int toDo = std::min(info->m_songs, static_cast<unsigned int>(MAX_SONGS));
     for (unsigned int s = 0; s < toDo; s++)
     {
         clockSpeed[s] = clock;
