@@ -1,7 +1,11 @@
-1.7.0 2015-01-xx
+1.7.0 2015-01-25
 * Add an interface to access tune data
 * Remove generated files only for maintainer-clean target (bug #14)
 * Rework Makefile rules for generated files
+* Silence some warnings
+* Fix a Symbol not found error with LLVM/clang
+* Other minor changes in reSIDfp
+* Merge minor changes from zxtune fork
 
 
 
