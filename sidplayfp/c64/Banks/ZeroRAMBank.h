@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 #include <stdint.h>
 
 #include "Bank.h"
+#include "SystemRAMBank.h"
 
 #include "sidplayfp/event.h"
 
@@ -87,7 +88,7 @@ private:
     PLA* pla;
 
     /// C64 RAM area
-    Bank* ramBank;
+    SystemRAMBank* ramBank;
 
     /// Cycle that should invalidate the unused bits of the data port.
     //@{
@@ -145,7 +146,7 @@ private:
     ZeroRAMBank& operator=(const ZeroRAMBank&);
 
 public:
-    ZeroRAMBank(PLA* pla, Bank* ramBank) :
+    ZeroRAMBank(PLA* pla, SystemRAMBank* ramBank) :
         pla(pla),
         ramBank(ramBank) {}
 
