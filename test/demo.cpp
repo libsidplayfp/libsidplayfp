@@ -148,11 +148,13 @@ int main(int argc, char* argv[])
     int bufferSize;
     ioctl(handle, SNDCTL_DSP_GETBLKSIZE, &bufferSize);
 
+    int bufferSamples = bufferSize / sizeof(short);
+
     // Play
-    std::vector<short> buffer(bufferSize);
+    std::vector<short> buffer(bufferSamples);
     for (int i=0; i<1000; i++)
     {
-        m_engine.play(&buffer.front(), bufferSize/sizeof(short));
+        m_engine.play(&buffer.front(), bufferSamples);
         ::write(handle, &buffer.front(), bufferSize);
     }
 
