@@ -291,9 +291,11 @@ void WaveformGenerator::clock()
     else
     {
         // Calculate new accumulator value;
-        const unsigned int accumulator_next = (accumulator + freq) & 0xffffff;
-        const unsigned int accumulator_bits_set = ~accumulator & accumulator_next;
-        accumulator = accumulator_next;
+        const unsigned int accumulator_old = accumulator;
+        accumulator = (accumulator + freq) & 0xffffff;
+
+        // Check which bit have changed
+        const unsigned int accumulator_bits_set = ~accumulator_old & accumulator;
 
         // Check whether the MSB is set high. This is used for synchronization.
         msb_rising = (accumulator_bits_set & 0x800000) != 0;
