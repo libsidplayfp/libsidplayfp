@@ -122,6 +122,8 @@ public:  // ----------------------------------------------------------------
      */
     virtual const char *createMD5(char *) { return 0; }
 
+    const uint_least8_t* c64Data() const { return &cache[fileOffset]; }
+
 protected:  // -------------------------------------------------------------
 
     std::unique_ptr<SidTuneInfoImpl> info;
