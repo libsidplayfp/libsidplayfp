@@ -163,7 +163,7 @@ public:
 
     void stop();
 
-    uint_least32_t time() const { return (uint_least32_t)(m_c64.getEventScheduler().getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
+    uint_least32_t time() const { return static_cast<uint_least32_t>(m_c64.getEventScheduler().getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
 
     void debug(const bool enable, FILE *out) { m_c64.debug(enable, out); }
 
