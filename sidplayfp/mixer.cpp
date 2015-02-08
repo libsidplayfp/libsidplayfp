@@ -70,27 +70,27 @@ void Mixer::doMix()
 {
     short *buf = m_sampleBuffer + m_sampleIndex;
 
-    /* extract buffer info now that the SID is updated.
-        * clock() may update bufferpos.
-        * NB: if chip2 exists, its bufferpos is identical to chip1's. */
+    // extract buffer info now that the SID is updated.
+    // clock() may update bufferpos.
+    // NB: if chip2 exists, its bufferpos is identical to chip1's.
     const int sampleCount = m_chips.front()->bufferpos();
 
     int i = 0;
     while (i < sampleCount)
     {
-        /* Handle whatever output the sid has generated so far */
+        // Handle whatever output the sid has generated so far
         if (m_sampleIndex >= m_sampleCount)
         {
             break;
         }
-        /* Are there enough samples to generate the next one? */
+        // Are there enough samples to generate the next one?
         if (i + m_fastForwardFactor >= sampleCount)
         {
             break;
         }
 
-        /* This is a crude boxcar low-pass filter to
-            * reduce aliasing during fast forward. */
+        // This is a crude boxcar low-pass filter to
+        // reduce aliasing during fast forward.
         for (size_t k = 0; k < m_buffers.size(); k++)
         {
             int_least32_t sample = 0;
@@ -103,7 +103,7 @@ void Mixer::doMix()
             m_iSamples[k] = sample / m_fastForwardFactor;
         }
 
-        /* increment i to mark we ate some samples, finish the boxcar thing. */
+        // increment i to mark we ate some samples, finish the boxcar thing.
         i += m_fastForwardFactor;
 
         const int dither = triangularDithering();
@@ -116,7 +116,7 @@ void Mixer::doMix()
         }
     }
 
-    /* move the unhandled data to start of buffer, if any. */
+    // move the unhandled data to start of buffer, if any.
     const int samplesLeft = sampleCount - i;
     std::for_each(m_buffers.begin(), m_buffers.end(), bufferMove(i, samplesLeft));
     std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft - 1));
