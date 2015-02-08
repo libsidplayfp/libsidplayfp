@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -89,8 +89,6 @@ void Mixer::doMix()
             break;
         }
 
-        const int dither = triangularDithering();
-
         /* This is a crude boxcar low-pass filter to
             * reduce aliasing during fast forward. */
         for (size_t k = 0; k < m_buffers.size(); k++)
@@ -102,17 +100,18 @@ void Mixer::doMix()
                 sample += buffer[j];
             }
 
-            m_iSamples[k] = (sample * m_volume[k] + dither) / VOLUME_MAX;
-            m_iSamples[k] /= m_fastForwardFactor;
+            m_iSamples[k] = sample / m_fastForwardFactor;
         }
 
         /* increment i to mark we ate some samples, finish the boxcar thing. */
         i += m_fastForwardFactor;
 
+        const int dither = triangularDithering();
+
         const unsigned int channels = m_stereo ? 2 : 1;
-        for (unsigned int k = 0; k < channels; k++)
+        for (unsigned int ch = 0; ch < channels; ch++)
         {
-            *buf++ = (this->*(m_mix[k]))();
+            *buf++ = static_cast<short>(((this->*(m_mix[ch]))() * m_volume[ch] + dither) / VOLUME_MAX);
             m_sampleIndex++;
         }
     }

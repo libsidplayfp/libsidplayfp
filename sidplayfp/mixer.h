@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright (C) 2000 Simon White
  *
@@ -41,7 +41,7 @@ public:
     static const unsigned int MAX_SIDS = 2;
 
 private:
-    typedef short (Mixer::*mixer_func_t)() const;
+    typedef int_least32_t (Mixer::*mixer_func_t)() const;
 
 public:
     /**
@@ -78,11 +78,11 @@ private:
         return oldRandomValue - prevValue;
     }
 
-    short channel1MonoMix() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1]) / 2); }
-    short channel1StereoMix() const { return static_cast<short>(m_iSamples[0]); }
+    int_least32_t channel1MonoMix() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
+    int_least32_t channel1StereoMix() const { return m_iSamples[0]; }
 
-    short channel2FromMonoMix() const { return static_cast<short>(m_iSamples[0]); }
-    short channel2FromStereoMix() const { return static_cast<short>(m_iSamples[1]); }
+    int_least32_t channel2FromMonoMix() const { return m_iSamples[0]; }
+    int_least32_t channel2FromStereoMix() const { return m_iSamples[1]; }
 
 public:
     /**
