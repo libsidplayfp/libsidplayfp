@@ -25,6 +25,8 @@
 //     The MOS 6567/6569 video controller (VIC-II)
 //     and its application in the Commodore 64
 //     http://www.uni-mainz.de/~bauec002/VIC-Article.gz
+//
+// MOS 6572 info taken from http://solidstate.com.ar/wp/?p=200
 
 #include "mos656x.h"
 

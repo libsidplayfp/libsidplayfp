@@ -145,7 +145,7 @@ bool c64::addExtraSid(c64sid *s, int address)
     if (idx < 0x4 || (idx > 0x7 && idx < 0xe))
         return false;
 
-    //Add new SID bank
+    // Add new SID bank
     sidBankMap_t::iterator it = extraSidBanks.find(idx);
     if (it != extraSidBanks.end())
     {

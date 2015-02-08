@@ -447,7 +447,7 @@ void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo
     // This routine implements the PSIDv2NG compliant speed conversion. All tunes
     // above 32 use the same song speed as tune 32
     // NOTE: The cast here is used to avoid undefined references
-    // as the std::min function takes it parameters by reference
+    // as the std::min function takes its parameters by reference
     const unsigned int toDo = std::min(info->m_songs, static_cast<unsigned int>(MAX_SONGS));
     for (unsigned int s = 0; s < toDo; s++)
     {
