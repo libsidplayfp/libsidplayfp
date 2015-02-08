@@ -90,9 +90,10 @@ bool Player::config(const SidConfig &cfg)
         }
     }
 
-    m_info.m_channels = secondSidAddress ? 2 : 1;
+    const bool isStereo = cfg.playback == SidConfig::STEREO;
+    m_info.m_channels = isStereo ? 2 : 1;
 
-    m_mixer.setStereo(cfg.playback == SidConfig::STEREO);
+    m_mixer.setStereo(isStereo);
     m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
 
     // Update Configuration
