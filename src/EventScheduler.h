@@ -57,14 +57,10 @@ public:
 class EventScheduler: public EventContext
 {
 private:
-    /**
-     * The first event of the chain.
-     */
+    /// The first event of the chain.
     Event *firstEvent;
 
-    /**
-     * EventScheduler's current clock.
-     */
+    /// EventScheduler's current clock.
     event_clock_t currentTime;
 
 private:

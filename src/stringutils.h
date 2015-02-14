@@ -40,10 +40,15 @@
 
 namespace stringutils
 {
+    /**
+     * Compare two characters in a case insensitive way.
+     */
     inline bool casecompare(char c1, char c2) { return (tolower(c1) == tolower(c2)); }
 
     /**
-     * Compares two strings case insensitively and returns true if they are equal.
+     * Compare two strings in a case insensitive way. 
+     *
+     * @return true if strings are equal.
      */
     inline bool equal(const std::string& s1, const std::string& s2)
     {
@@ -52,7 +57,9 @@ namespace stringutils
     }
 
     /**
-     * Compares two strings case insensitively and returns true if they are equal.
+     * Compare two strings in a case insensitive way.
+     *
+     * @return true if strings are equal.
      */
     inline bool equal(const char* s1, const char* s2)
     {
@@ -81,7 +88,9 @@ namespace stringutils
     }
 
     /**
-     * Compares first n characters of two strings case insensitively and returns true if they are equal.
+     * Compare first n characters of two strings in a case insensitive way.
+     *
+     * @return true if strings are equal.
      */
     inline bool equal(const char* s1, const char* s2, size_t n)
     {

@@ -39,16 +39,14 @@ class sidemu;
 class Mixer
 {
 public:
-    /// Maximum number of supported SIDs (mono and stereo)
+    /// Maximum number of supported SIDs
     static const unsigned int MAX_SIDS = 2;
 
 private:
     typedef int_least32_t (Mixer::*mixer_func_t)() const;
 
 public:
-    /**
-     * Maximum allowed volume, must be a power of 2.
-     */
+    /// Maximum allowed volume, must be a power of 2.
     static const int_least32_t VOLUME_MAX = 1024;
 
 private:
@@ -97,8 +95,6 @@ private:
 public:
     /**
      * Create a new mixer.
-     *
-     * @param context event context
      */
     Mixer() :
         oldRandomValue(0),
@@ -115,7 +111,7 @@ public:
     void doMix();
 
     /**
-     * This clocks the SIDs to the present moment, if they aren't already.
+     * This clocks the SID chips to the present moment, if they aren't already.
      */
     void clockChips();
 
@@ -145,7 +141,7 @@ public:
     void addSid(sidemu *chip);
 
     /**
-     * Get a SID to the mixer.
+     * Get a SID from the mixer.
      *
      * @param i the number of the SID to get
      * @return a pointer to the requested sid emu or 0 if not found

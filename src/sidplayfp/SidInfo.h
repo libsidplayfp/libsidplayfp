@@ -57,7 +57,7 @@ public:
     /// Size of the driver in bytes
     uint_least16_t driverLength() const { return getDriverLength(); }
 
-    /// Power on delay
+    /// \deprecated Power on delay
     SID_DEPRECATED uint_least16_t powerOnDelay() const { return 0; }
 
     /// Describes the speed current song is running at

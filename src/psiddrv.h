@@ -56,6 +56,8 @@ public:
 
     /**
      * Relocate the driver.
+     *
+     * @return false if something's wrong, check #errorString for error details
      */
     bool drvReloc();
 

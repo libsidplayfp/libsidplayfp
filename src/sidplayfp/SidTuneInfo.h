@@ -110,6 +110,7 @@ public:
     //@}
 
     /**
+     * \deprecated
      * Whether sidtune uses two SID chips.
      */
     SID_DEPRECATED bool isStereo() const { return getSidChips() > 1; }

@@ -66,7 +66,10 @@ protected:
 
     event_clock_t m_accessClk;
 
+    /// The sample buffer
     short *m_buffer;
+
+    /// Current position in buffer
     int m_bufferpos;
 
     bool m_status;
@@ -85,27 +88,64 @@ public:
         m_error("N/A") {}
     virtual ~sidemu() {}
 
+    /**
+     * Clock the SID chip.
+     */
     virtual void clock() = 0;
 
-    /// Set execution environment and lock sid to it
+    /**
+     * Set execution environment and lock sid to it.
+     */
     virtual bool lock(EventContext *env);
 
-    /// Unlock sid
+    /**
+     * Unlock sid.
+     */d
     virtual void unlock();
 
     // Standard SID functions
+    
+    /**
+     * Mute/unmute voice.
+     */
     virtual void voice(unsigned int num, bool mute) = 0;
+
+    /**
+     * Set SID model.
+     */
     virtual void model(SidConfig::sid_model_t model) = 0;
 
+    /**
+     * Set the sampling method.
+     *
+     * @param systemfreq
+     * @param outputfreq
+     * @param method
+     * @param fast
+     */
     virtual void sampling(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED,
         SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED) {}
 
+    /**
+     * Get a detailed error message.
+     */
     const char* error() const { return m_error.c_str(); }
 
     sidbuilder* builder() const { return m_builder; }
 
+    /**
+     * Get the current position in buffer.
+     */
     int bufferpos() const { return m_bufferpos; }
+
+    /**
+     * Set the position in buffer.
+     */
     void bufferpos(int pos) { m_bufferpos = pos; }
+
+    /**
+     * Get the buffer.
+     */
     short *buffer() const { return m_buffer; }
 };
 
