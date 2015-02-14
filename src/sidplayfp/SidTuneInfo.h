@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2014 Leandro Nini
+ *  Copyright 2011-2015 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -112,7 +112,12 @@ public:
     /**
      * Whether sidtune uses two SID chips.
      */
-    bool isStereo() const { return getIsStereo(); }
+    SID_DEPRECATED bool isStereo() const { return getSidChips() > 1; }
+
+     /**
+     * The number of SID chips required by the tune.
+     */
+    int sidChips() const { return getSidChips(); }
 
     /**
      * Intended speed.
@@ -225,7 +230,7 @@ private:
 
     virtual uint_least16_t getSidChipBase(unsigned int i) const =0;
 
-    virtual bool getIsStereo() const =0;
+    virtual int getSidChips() const =0;
 
     virtual int getSongSpeed() const =0;
 

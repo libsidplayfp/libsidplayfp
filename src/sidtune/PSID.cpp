@@ -217,11 +217,7 @@ void PSID::tryLoad(const psidHeader &pHeader)
     info->m_playAddr       = pHeader.play;
     info->m_songs          = pHeader.songs;
     info->m_startSong      = pHeader.start;
-    info->m_sidChipBase1   = 0xd400;
-    info->m_sidChipBase2   = 0;
     info->m_compatibility  = compatibility;
-    info->m_sidModel1      = SidTuneInfo::SIDMODEL_UNKNOWN;
-    info->m_sidModel2      = SidTuneInfo::SIDMODEL_UNKNOWN;
     info->m_relocPages     = 0;
     info->m_relocStartPage = 0;
 
@@ -270,11 +266,11 @@ void PSID::tryLoad(const psidHeader &pHeader)
         info->m_clockSpeed = clock;
 
         if ((flags & PSID_SIDMODEL1_ANY) == PSID_SIDMODEL1_ANY)
-            info->m_sidModel1 = SidTuneInfo::SIDMODEL_ANY;
+            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_ANY;
         else if (flags & PSID_SIDMODEL1_6581)
-            info->m_sidModel1 = SidTuneInfo::SIDMODEL_6581;
+            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_6581;
         else if (flags & PSID_SIDMODEL1_8580)
-            info->m_sidModel1 = SidTuneInfo::SIDMODEL_8580;
+            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_8580;
 
         info->m_relocStartPage = pHeader.relocStartPage;
         info->m_relocPages     = pHeader.relocPages;
@@ -284,22 +280,18 @@ void PSID::tryLoad(const psidHeader &pHeader)
             // Only even values are valid. Ranges $00-$41 ($D000-$D410) and
             // $80-$DF ($D800-$DDF0) are invalid. Any invalid value means that no second SID
             // is used, like $00.
-            if (pHeader.sidChipBase2 & 1
-                || (pHeader.sidChipBase2 >= 0x00 && pHeader.sidChipBase2 <= 0x41)
-                || (pHeader.sidChipBase2 >= 0x80 && pHeader.sidChipBase2 <= 0xdf))
+            if (pHeader.sidChipBase2 & 1 == 0
+                && ((pHeader.sidChipBase2 > 0x41 && pHeader.sidChipBase2 < 0x80)
+                    || pHeader.sidChipBase2 > 0xdf))
             {
-                info->m_sidChipBase2 = 0;
-            }
-            else
-            {
-                info->m_sidChipBase2 = 0xd000 | (pHeader.sidChipBase2 << 4);
+                info->m_sidChipAddresses.push_back(0xd000 | (pHeader.sidChipBase2 << 4));
 
                 if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
-                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_ANY;
+                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_ANY);
                 else if (flags & PSID_SIDMODEL2_6581)
-                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_6581;
+                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_6581);
                 else if (flags & PSID_SIDMODEL2_8580)
-                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_8580;
+                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_8580);
             }
         }
     }

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -48,7 +48,6 @@ const char ERR_SIZE_EXCEEDED[]     = "SIDTUNE ERROR: Total file size too large";
 static const uint_least16_t SIDTUNE_MUS_HLT_CMD = 0x14F;
 
 static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
-static const uint_least16_t SIDTUNE_SID1_BASE_ADDR = 0xd400;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
 bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
@@ -71,7 +70,7 @@ bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
 
 void MUS::setPlayerAddress()
 {
-    if (info->m_sidChipBase2 == 0)
+    if (info->getSidChips() > 1)
     {
         // Player #1.
         info->m_initAddr = 0xec60;
@@ -113,7 +112,7 @@ bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
         throw loadError(ERR_SIZE_EXCEEDED);
     }
 
-    if (!strBuf.empty() && info->m_sidChipBase2 != 0)
+    if (!strBuf.empty() && info->getSidChips() > 1)
     {
         // Install MUS data #2 _NOT_ including load address.
         musBuf.insert(musBuf.end(), strBuf.begin(), strBuf.end());
@@ -136,7 +135,7 @@ void MUS::installPlayer(sidmemory *mem)
         mem->writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+2)&0xFF);
         mem->writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+2)>>8);
 
-        if (info->m_sidChipBase2 != 0)
+        if (info->getSidChips() > 1)
         {
             // Install MUS player #2.
             dest = endian_16(sidplayer2[1], sidplayer2[0]);
@@ -204,7 +203,6 @@ void MUS::tryLoad(buffer_t& musBuf,
 
     musDataLen = musBuf.size();
     info->m_loadAddr = SIDTUNE_MUS_DATA_ADDR;
-    info->m_sidChipBase1 = SIDTUNE_SID1_BASE_ADDR;
 
     // Voice3Index now is offset to text lines (uppercase Pet-strings).
     spPet += voice3Index;
@@ -254,12 +252,11 @@ void MUS::tryLoad(buffer_t& musBuf,
             info->m_commentString.push_back(converter.convert(spPet));
         }
 
-        info->m_sidChipBase2 = SIDTUNE_SID2_BASE_ADDR;
+        info->m_sidChipAddresses.push_back(SIDTUNE_SID2_BASE_ADDR);
         info->m_formatString = TXT_FORMAT_STR;
     }
     else
     {
-        info->m_sidChipBase2 = 0;
         info->m_formatString = TXT_FORMAT_MUS;
     }
 
