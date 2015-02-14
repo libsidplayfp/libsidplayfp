@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -91,18 +91,10 @@ enum
 
 enum
 {
-    PSID_SIDMODEL1_UNKNOWN = 0,
-    PSID_SIDMODEL1_6581    = 1 << 4,
-    PSID_SIDMODEL1_8580    = 1 << 5,
-    PSID_SIDMODEL1_ANY     = PSID_SIDMODEL1_6581 | PSID_SIDMODEL1_8580
-};
-
-enum
-{
-    PSID_SIDMODEL2_UNKNOWN = 0,
-    PSID_SIDMODEL2_6581    = 1 << 6,
-    PSID_SIDMODEL2_8580    = 1 << 7,
-    PSID_SIDMODEL2_ANY     = PSID_SIDMODEL2_6581 | PSID_SIDMODEL2_8580
+    PSID_SIDMODEL_UNKNOWN = 0,
+    PSID_SIDMODEL_6581    = 1,
+    PSID_SIDMODEL_8580    = 2,
+    PSID_SIDMODEL_ANY     = PSID_SIDMODEL_6581 | PSID_SIDMODEL_8580
 };
 
 // Format strings
@@ -117,6 +109,18 @@ const int psidv2_headerSize = psid_headerSize + 6;
 // Magic fields
 const uint32_t PSID_ID = 0x50534944;
 const uint32_t RSID_ID = 0x52534944;
+
+SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
+{
+    if ((modelFlag & PSID_SIDMODEL_ANY) == PSID_SIDMODEL_ANY)
+        return SidTuneInfo::SIDMODEL_ANY;
+
+    if (modelFlag & PSID_SIDMODEL_6581)
+        return SidTuneInfo::SIDMODEL_6581;
+
+    if (modelFlag & PSID_SIDMODEL_8580)
+        return SidTuneInfo::SIDMODEL_8580;
+}
 
 SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
@@ -265,12 +269,7 @@ void PSID::tryLoad(const psidHeader &pHeader)
 
         info->m_clockSpeed = clock;
 
-        if ((flags & PSID_SIDMODEL1_ANY) == PSID_SIDMODEL1_ANY)
-            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_ANY;
-        else if (flags & PSID_SIDMODEL1_6581)
-            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_6581;
-        else if (flags & PSID_SIDMODEL1_8580)
-            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_8580;
+        info->m_sidModels[0] = getSidModel(flags >> 4);
 
         info->m_relocStartPage = pHeader.relocStartPage;
         info->m_relocPages     = pHeader.relocPages;
@@ -286,12 +285,7 @@ void PSID::tryLoad(const psidHeader &pHeader)
             {
                 info->m_sidChipAddresses.push_back(0xd000 | (pHeader.sidChipBase2 << 4));
 
-                if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
-                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_ANY);
-                else if (flags & PSID_SIDMODEL2_6581)
-                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_6581);
-                else if (flags & PSID_SIDMODEL2_8580)
-                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_8580);
+                info->m_sidModels.push_back(getSidModel(flags >> 6));
             }
         }
     }
