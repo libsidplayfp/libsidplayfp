@@ -100,7 +100,7 @@ public:
 
     /**
      * Unlock sid.
-     */d
+     */
     virtual void unlock();
 
     // Standard SID functions
