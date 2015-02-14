@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -78,21 +78,19 @@ void Mixer::doMix()
     int i = 0;
     while (i < sampleCount)
     {
-        /* Handle whatever output the sid has generated so far */
+        // Handle whatever output the sid has generated so far
         if (m_sampleIndex >= m_sampleCount)
         {
             break;
         }
-        /* Are there enough samples to generate the next one? */
+        // Are there enough samples to generate the next one?
         if (i + m_fastForwardFactor >= sampleCount)
         {
             break;
         }
 
-        const int dither = triangularDithering();
-
-        /* This is a crude boxcar low-pass filter to
-         * reduce aliasing during fast forward. */
+        // This is a crude boxcar low-pass filter to
+        // reduce aliasing during fast forward.
         for (size_t k = 0; k < m_buffers.size(); k++)
         {
             int_least32_t sample = 0;
@@ -102,22 +100,23 @@ void Mixer::doMix()
                 sample += buffer[j];
             }
 
-            m_iSamples[k] = (sample * m_volume[k] + dither) / VOLUME_MAX;
-            m_iSamples[k] /= m_fastForwardFactor;
+            m_iSamples[k] = sample / m_fastForwardFactor;
         }
 
-        /* increment i to mark we ate some samples, finish the boxcar thing. */
+        // increment i to mark we ate some samples, finish the boxcar thing.
         i += m_fastForwardFactor;
 
+        const int dither = triangularDithering();
+
         const unsigned int channels = m_stereo ? 2 : 1;
-        for (unsigned int k = 0; k < channels; k++)
+        for (unsigned int ch = 0; ch < channels; ch++)
         {
-            *buf++ = (this->*(m_mix[k]))();
+            *buf++ = static_cast<short>(((this->*(m_mix[ch]))() * m_volume[ch] + dither) / VOLUME_MAX);
             m_sampleIndex++;
         }
     }
 
-    /* move the unhandled data to start of buffer, if any. */
+    // move the unhandled data to start of buffer, if any.
     const int samplesLeft = sampleCount - i;
     std::for_each(m_buffers.begin(), m_buffers.end(), bufferMove(i, samplesLeft));
     std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft - 1));

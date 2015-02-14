@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright (C) 2000 Simon White
  *
@@ -43,7 +43,7 @@ public:
     static const unsigned int MAX_SIDS = 2;
 
 private:
-    typedef short (Mixer::*mixer_func_t)() const;
+    typedef int_least32_t (Mixer::*mixer_func_t)() const;
 
 public:
     /**
@@ -81,18 +81,18 @@ private:
     }
 
     // Mono mixing
-    short mono_OneChip() const { return static_cast<short>(m_iSamples[0]); }
-    short mono_TwoChips() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1]) / 2); }
-    short mono_ThreeChips() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1] + m_iSamples[2]) / 3); }
+    int_least32_t mono_OneChip() const { return m_iSamples[0]; }
+    int_least32_t mono_TwoChips() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
+    int_least32_t mono_ThreeChips() const { return (m_iSamples[0] + m_iSamples[1] + m_iSamples[2]) / 3; }
 
     // Stereo mixing
-    short stereo_OneChip() const { return static_cast<short>(m_iSamples[0]); }
+    int_least32_t stereo_OneChip() const { return m_iSamples[0]; }
 
-    short stereo_ch1_TwoChips() const { return static_cast<short>(m_iSamples[0]); }
-    short stereo_ch2_TwoChips() const { return static_cast<short>(m_iSamples[1]); }
+    int_least32_t stereo_ch1_TwoChips() const { return m_iSamples[0]; }
+    int_least32_t stereo_ch2_TwoChips() const { return m_iSamples[1]; }
 
-    short stereo_ch1_ThreeChips() const { return static_cast<short>((m_iSamples[0] + m_iSamples[1]) / 2); }
-    short stereo_ch2_ThreeChips() const { return static_cast<short>((m_iSamples[1] + m_iSamples[2]) / 2); }
+    int_least32_t stereo_ch1_ThreeChips() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
+    int_least32_t stereo_ch2_ThreeChips() const { return (m_iSamples[1] + m_iSamples[2]) / 2; }
 
 public:
     /**
