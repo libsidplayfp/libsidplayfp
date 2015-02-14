@@ -99,10 +99,11 @@ public:
     bool load(SidTune *tune);
 
     /**
-     * Produce samples to play.
+     * Run the emulation and produce samples to play if a buffer is given.
      *
      * @param buffer pointer to the buffer to fill with samples.
-     * @param count the size of the buffer measured in 16 bit samples.
+     * @param count the size of the buffer measured in 16 bit samples
+     *              or 0 if no output is needed (e.g. Hardsid)
      * @return the number of produced samples.
      */
     uint_least32_t play(short *buffer, uint_least32_t count);
@@ -114,7 +115,9 @@ public:
      */
     bool isPlaying() const;
 
-    /** Stop the engine. */
+    /**
+     * Stop the engine.
+     */
     void stop();
 
     /**
@@ -137,15 +140,14 @@ public:
     void mute(unsigned int sidNum, unsigned int voice, bool enable);
 
     /**
-     * Get the current playing time with respect to resolution returned by timebase.
+     * Get the current playing time.
      *
-     * @return the current playing time.
+     * @return the current playing time measured in seconds.
      */
     uint_least32_t time() const;
 
     /**
-     * Set ROMs.
-     * The ROMs are validate against known ones.
+     * Set ROM images.
      *
      * @param kernal pointer to Kernal ROM.
      * @param basic pointer to Basic ROM, generally needed only for BASIC tunes.
@@ -154,6 +156,7 @@ public:
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
 
     /**
+     * \deprecated
      * Get the event scheduler.
      *
      * @return pointer to the scheduler.
