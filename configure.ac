@@ -49,6 +49,7 @@ AM_CONDITIONAL([HAVE_VISIBILITY], [test "x$has_visibility" = xyes])
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 
+AC_CHECK_SIZEOF(short, 2)
 AC_CHECK_SIZEOF(int, 4)
 
 AS_IF([test $ac_cv_sizeof_int -lt 4],
