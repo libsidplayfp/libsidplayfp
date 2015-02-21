@@ -40,7 +40,7 @@ class Mixer
 {
 public:
     /// Maximum number of supported SIDs
-    static const unsigned int MAX_SIDS = 2;
+    static const unsigned int MAX_SIDS = 3;
 
 private:
     typedef int_least32_t (Mixer::*mixer_func_t)() const;
