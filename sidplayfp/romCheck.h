@@ -29,7 +29,7 @@
 #include "sidmd5.h"
 
 /**
- * Utility class to identify known ROMs through their md5 checksum.
+ * Utility class to identify known ROM images through their md5 checksum.
  */
 class romCheck
 {
