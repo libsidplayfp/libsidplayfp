@@ -110,6 +110,9 @@ const int psidv2_headerSize = psid_headerSize + 6;
 const uint32_t PSID_ID = 0x50534944;
 const uint32_t RSID_ID = 0x52534944;
 
+/**
+ * Decode SID model flags.
+ */
 SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
 {
     if ((modelFlag & PSID_SIDMODEL_ANY) == PSID_SIDMODEL_ANY)
@@ -122,13 +125,16 @@ SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
         return SidTuneInfo::SIDMODEL_8580;
 }
 
+/**
+ * Check if extra SID addres is valid for PSID specs.
+ */
 bool validateAddress(uint_least8_t address)
 {
     // Only even values are valid.
     if (address & 1)
         return false;
 
-    // Ranges $00-$41 ($D000-$D410) and/ $80-$DF ($D800-$DDF0) are invalid.
+    // Ranges $00-$41 ($D000-$D410) and $80-$DF ($D800-$DDF0) are invalid.
     // Any invalid value means that no second SID is used, like $00.
     if (address <= 0x41
             || (address >= 0x80 && address <= 0xdf))
