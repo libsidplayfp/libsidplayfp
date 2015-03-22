@@ -130,12 +130,12 @@ void Player::initialise()
     m_info.m_driverLength = driver.driverLength();
     m_info.m_powerOnDelay = powerOnDelay;
 
+    driver.install(m_c64.getMemInterface(), videoSwitch);
+
     if (!m_tune->placeSidTuneInC64mem(m_c64.getMemInterface()))
     {
         throw configError(m_tune->statusString());
     }
-
-    driver.install(m_c64.getMemInterface(), videoSwitch);
 
     m_c64.resetCpu();
 }
