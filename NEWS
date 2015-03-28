@@ -1,3 +1,10 @@
+1.7.1 2015-03-28
+* Fix reported number of channels
+* Install psid driver before placing tune, fixes BASIC tunes and /MUSICIANS/L/Legg_Stephen/Steigar.sid
+* Apply volume to channels, not to chips output
+
+
+
 1.7.0 2015-01-25
 * Add an interface to access tune data
 * Remove generated files only for maintainer-clean target (bug #14)
