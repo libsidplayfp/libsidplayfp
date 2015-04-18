@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -248,25 +248,27 @@ bool Player::config(const SidConfig &cfg)
         return false;
     }
 
-    uint_least16_t secondSidAddress = cfg.secondSidAddress;
-
     // Only do these if we have a loaded tune
     if (m_tune != nullptr)
     {
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
-
-        if (tuneInfo->sidChipBase(1) != 0)
-            secondSidAddress = tuneInfo->sidChipBase(1);
 
         try
         {
             sidRelease();
 
             std::vector<unsigned int> addresses;
+            const uint_least16_t secondSidAddress = tuneInfo->sidChipBase(1) != 0 ?
+                tuneInfo->sidChipBase(1) :
+                cfg.secondSidAddress;
             if (secondSidAddress != 0)
                 addresses.push_back(secondSidAddress);
-            if (cfg.thirdSidAddress != 0)
-                addresses.push_back(cfg.thirdSidAddress);
+
+            const uint_least16_t thirdSidAddress = tuneInfo->sidChipBase(2) != 0 ?
+                tuneInfo->sidChipBase(2) :
+                cfg.thirdSidAddress;
+            if (thirdSidAddress != 0)
+                addresses.push_back(thirdSidAddress);
 
             // SID emulation setup (must be performed before the
             // environment setup call)
