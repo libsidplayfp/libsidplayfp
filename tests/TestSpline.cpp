@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2014 Leandro Nini
+ *  Copyright (C) 2014-2015 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include "UnitTest++/TestReporter.h"
 
 #include <limits>
+#include <iostream>
 
 #include "../src/builders/residfp-builder/residfp/Spline.h"
 
@@ -95,6 +96,27 @@ TEST(TestPoints)
 
         CHECK_EQUAL(opamp_voltage[i].y, out.x);
     }
+}
+
+TEST(TestInterpolateOutsideBounds)
+{
+    const Spline::Point values[5] = {
+        { 5, 10 },
+        { 10, 20 },
+        { 15, 30 },
+        { 20, 40 },
+        { 25, 50 },
+    };
+
+    Spline s(values, 5);
+
+    Spline::Point out;
+
+    out = s.evaluate(0);
+    CHECK_EQUAL(0, out.x);
+
+    out = s.evaluate(30);
+    CHECK_EQUAL(60, out.x);
 }
 
 }
