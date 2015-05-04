@@ -83,6 +83,9 @@ Spline::Spline(const Point input[], size_t inputLength) :
         params[i].b = (m - c1 - common) * invDx;
         params[i].a = common * invDx * invDx;
     }
+
+    // Fix the upper range, because we interpolate outside original bounds if necessary.
+    params[coeffLength - 1].x2 = std::numeric_limits<double>::max();
 }
 
 Spline::Point Spline::evaluate(double x)
