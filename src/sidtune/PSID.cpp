@@ -251,11 +251,6 @@ void PSID::tryLoad(const psidHeader &pHeader)
     uint_least32_t speed = pHeader.speed;
     SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
 
-    if (info->m_songs > MAX_SONGS)
-    {
-        info->m_songs = MAX_SONGS;
-    }
-
     bool musPlayer = false;
 
     if (pHeader.version >= 2)
