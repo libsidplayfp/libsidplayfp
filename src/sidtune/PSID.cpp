@@ -308,7 +308,8 @@ void PSID::tryLoad(const psidHeader &pHeader)
 
             if (pHeader.version >= 4)
             {
-                if (validateAddress(pHeader.sidChipBase3))
+                if (pHeader.sidChipBase3 != pHeader.sidChipBase2
+                    && validateAddress(pHeader.sidChipBase3))
                 {
                     info->m_sidChipAddresses.push_back(0xd000 | (pHeader.sidChipBase3 << 4));
 
