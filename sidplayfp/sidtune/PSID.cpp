@@ -188,11 +188,6 @@ void PSID::tryLoad(buffer_t& dataBuf)
     uint_least32_t speed = endian_big32(pHeader->speed);
     SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
 
-    if (info->m_songs > MAX_SONGS)
-    {
-        info->m_songs = MAX_SONGS;
-    }
-
     bool musPlayer = false;
 
     if (endian_big16(pHeader->version) >= 2)
