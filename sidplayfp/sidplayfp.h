@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -156,11 +156,12 @@ public:
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
 
     /**
+     * \deprecated
      * Get the event scheduler.
      *
      * @return pointer to the scheduler.
      */
-    EventContext *getEventContext();
+    SID_DEPRECATED EventContext *getEventContext();
 
     /**
      * Get the CIA 1 Timer A programmed value.

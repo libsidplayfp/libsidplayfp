@@ -84,18 +84,10 @@ enum
 
 enum
 {
-    PSID_SIDMODEL1_UNKNOWN = 0,
-    PSID_SIDMODEL1_6581    = 1 << 4,
-    PSID_SIDMODEL1_8580    = 1 << 5,
-    PSID_SIDMODEL1_ANY     = PSID_SIDMODEL1_6581 | PSID_SIDMODEL1_8580
-};
-
-enum
-{
-    PSID_SIDMODEL2_UNKNOWN = 0,
-    PSID_SIDMODEL2_6581    = 1 << 6,
-    PSID_SIDMODEL2_8580    = 1 << 7,
-    PSID_SIDMODEL2_ANY     = PSID_SIDMODEL2_6581 | PSID_SIDMODEL2_8580
+    PSID_SIDMODEL_UNKNOWN = 0,
+    PSID_SIDMODEL_6581    = 1,
+    PSID_SIDMODEL_8580    = 2,
+    PSID_SIDMODEL_ANY     = PSID_SIDMODEL_6581 | PSID_SIDMODEL_8580
 };
 
 const char TXT_FORMAT_PSID[]  = "PlaySID one-file format (PSID)";
@@ -108,6 +100,18 @@ const char ERR_INVALID[]      = "ERROR: File contains invalid data";
 
 static const int psid_maxStrLen = 32;
 
+
+SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
+{
+    if ((modelFlag & PSID_SIDMODEL_ANY) == PSID_SIDMODEL_ANY)
+        return SidTuneInfo::SIDMODEL_ANY;
+
+    if (modelFlag & PSID_SIDMODEL_6581)
+        return SidTuneInfo::SIDMODEL_6581;
+
+    if (modelFlag & PSID_SIDMODEL_8580)
+        return SidTuneInfo::SIDMODEL_8580;
+}
 
 SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
@@ -220,12 +224,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
 
         info->m_clockSpeed = clock;
 
-        if ((flags & PSID_SIDMODEL1_ANY) == PSID_SIDMODEL1_ANY)
-            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_ANY;
-        else if (flags & PSID_SIDMODEL1_6581)
-            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_6581;
-        else if (flags & PSID_SIDMODEL1_8580)
-            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_8580;
+        info->m_sidModels[0] = getSidModel(flags >> 4);
 
         info->m_relocStartPage = pHeader->relocStartPage;
         info->m_relocPages     = pHeader->relocPages;
@@ -243,12 +242,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
             {
                 info->m_sidChipAddresses.push_back(0xd000 | (sidChipBase2 << 4));
 
-                if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
-                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_ANY);
-                else if (flags & PSID_SIDMODEL2_6581)
-                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_6581);
-                else if (flags & PSID_SIDMODEL2_8580)
-                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_8580);
+                info->m_sidModels.push_back(getSidModel(flags >> 6));
             }
         }
     }
