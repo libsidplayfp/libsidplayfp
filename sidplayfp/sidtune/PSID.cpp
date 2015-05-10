@@ -113,6 +113,21 @@ SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
         return SidTuneInfo::SIDMODEL_8580;
 }
 
+bool validateAddress(uint_least8_t address)
+{
+    // Only even values are valid.
+    if (address & 1)
+        return false;
+
+    // Ranges $00-$41 ($D000-$D410) and/ $80-$DF ($D800-$DDF0) are invalid.
+    // Any invalid value means that no second SID is used, like $00.
+    if (address <= 0x41
+            || (address >= 0x80 && address <= 0xdf))
+        return false;
+
+    return true;
+}
+
 SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
     // File format check
@@ -233,12 +248,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
         {
             const uint8_t sidChipBase2 = pHeader->sidChipBase2;
 
-            // Only even values are valid. Ranges $00-$41 ($D000-$D410) and
-            // $80-$DF ($D800-$DDF0) are invalid. Any invalid value means that no second SID
-            // is used, like $00.
-            if (sidChipBase2 & 1 == 0
-                && ((sidChipBase2 > 0x41 && sidChipBase2 < 0x80)
-                    || sidChipBase2 > 0xdf))
+            if (validateAddress(sidChipBase2))
             {
                 info->m_sidChipAddresses.push_back(0xd000 | (sidChipBase2 << 4));
 
