@@ -35,7 +35,7 @@
 // Header has been extended for 'RSID' format
 // The following changes are present:
 //     id = 'RSID'
-//     version = 2 and 3 only
+//     version = 2, 3 or 4
 //     play, load and speed reserved 0
 //     psidspecific flag is called C64BASIC flag
 //     init cannot be under ROMS/IO memory area
@@ -45,7 +45,7 @@
 struct psidHeader           // all values are big-endian
 {
     uint32_t id;                   // 'PSID' or 'RSID' (ASCII)
-    uint16_t version;              // 1, 2 or 3 only
+    uint16_t version;              // 1, 2, 3 or 4
     uint16_t data;                 // 16-bit offset to binary data in file
     uint16_t load;                 // 16-bit C64 address to load file to
     uint16_t init;                 // 16-bit C64 address of init subroutine
@@ -62,7 +62,7 @@ struct psidHeader           // all values are big-endian
     uint8_t relocStartPage;        // only version >= 2ng
     uint8_t relocPages;            // only version >= 2ng
     uint8_t sidChipBase2;          // only version >= 3
-    uint8_t reserved;              // only version >= 2
+    uint8_t sidChipBase3;          // only version >= 4
 };
 
 enum
@@ -106,6 +106,9 @@ const int psidv2_headerSize = psid_headerSize + 6;
 const uint32_t PSID_ID = 0x50534944;
 const uint32_t RSID_ID = 0x52534944;
 
+/**
+ * Decode SID model flags.
+ */
 SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
 {
     if ((modelFlag & PSID_SIDMODEL_ANY) == PSID_SIDMODEL_ANY)
@@ -118,13 +121,16 @@ SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
         return SidTuneInfo::SIDMODEL_8580;
 }
 
+/**
+ * Check if extra SID addres is valid for PSID specs.
+ */
 bool validateAddress(uint_least8_t address)
 {
     // Only even values are valid.
     if (address & 1)
         return false;
 
-    // Ranges $00-$41 ($D000-$D410) and/ $80-$DF ($D800-$DDF0) are invalid.
+    // Ranges $00-$41 ($D000-$D410) and $80-$DF ($D800-$DDF0) are invalid.
     // Any invalid value means that no second SID is used, like $00.
     if (address <= 0x41
             || (address >= 0x80 && address <= 0xdf))
@@ -183,12 +189,12 @@ void PSID::readHeader(const buffer_t &dataBuf, psidHeader &hdr)
             throw loadError(ERR_TRUNCATED);
         }
 
-        // Read v2/3 fields
+        // Read v2/3/4 fields
         hdr.flags            = endian_big16(&dataBuf[118]);
         hdr.relocStartPage   = dataBuf[120];
         hdr.relocPages       = dataBuf[121];
         hdr.sidChipBase2     = dataBuf[122];
-        hdr.reserved         = dataBuf[123];
+        hdr.sidChipBase3     = dataBuf[123];
     }
 }
 
@@ -206,6 +212,7 @@ void PSID::tryLoad(const psidHeader &pHeader)
            break;
        case 2:
        case 3:
+       case 4:
            break;
        default:
            throw loadError(TXT_UNKNOWN_PSID);
@@ -218,6 +225,7 @@ void PSID::tryLoad(const psidHeader &pHeader)
        {
        case 2:
        case 3:
+       case 4:
            break;
        default:
            throw loadError(TXT_UNKNOWN_RSID);
@@ -289,6 +297,16 @@ void PSID::tryLoad(const psidHeader &pHeader)
                 info->m_sidChipAddresses.push_back(0xd000 | (sidChipBase2 << 4));
 
                 info->m_sidModels.push_back(getSidModel(flags >> 6));
+            }
+
+            if (pHeader.version >= 4)
+            {
+                if (validateAddress(pHeader.sidChipBase3))
+                {
+                    info->m_sidChipAddresses.push_back(0xd000 | (pHeader.sidChipBase3 << 4));
+
+                    info->m_sidModels.push_back(getSidModel(flags >> 8));
+                }
             }
         }
     }
