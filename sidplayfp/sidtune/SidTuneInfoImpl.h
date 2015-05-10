@@ -117,14 +117,14 @@ public:
     uint_least16_t sidChipBase1() const { return m_sidChipAddresses[0]; }
     uint_least16_t sidChipBase2() const { return m_sidChipAddresses.size() > 1 ? m_sidChipAddresses[1] : SIDMODEL_UNKNOWN; }
 
-    uint_least16_t getSidChipBase(unsigned int i) const
+    uint_least16_t sidChipBase(unsigned int i) const
     {
         return i < m_sidChipAddresses.size() ? m_sidChipAddresses[i] : 0;
     }
 
     bool isStereo() const { return m_sidChipAddresses.size() > 1; }
 
-    int getSidChips() const  { return m_sidChipAddresses.size(); }
+    int sidChips() const  { return m_sidChipAddresses.size(); }
 
     int songSpeed() const { return m_songSpeed; }
 
@@ -135,7 +135,7 @@ public:
     model_t sidModel1() const { return m_sidModels[0]; }
     model_t sidModel2() const { return m_sidModels.size() > 1 ? m_sidModels[1] : SIDMODEL_UNKNOWN; }
 
-    model_t getSidModel(unsigned int i) const
+    model_t sidModel(unsigned int i) const
     {
         return i < m_sidModels.size() ? m_sidModels[i] : SIDMODEL_UNKNOWN;
     }

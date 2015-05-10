@@ -66,7 +66,7 @@ bool MUS::detect(const uint_least8_t* buffer, uint_least32_t bufLen,
 
 void MUS::setPlayerAddress()
 {
-    if (info->getSidChips() > 1)
+    if (info->sidChips() > 1)
     {
         // Player #1.
         info->m_initAddr = 0xec60;
@@ -109,7 +109,7 @@ bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
         throw loadError(ERR_SIZE_EXCEEDED);
     }
 
-    if (!strBuf.empty() && info->getSidChips() > 1)
+    if (!strBuf.empty() && info->sidChips() > 1)
     {
         // Install MUS data #2 _NOT_ including load address.
         musBuf.insert(musBuf.end(), strBuf.begin(), strBuf.end());
@@ -131,7 +131,7 @@ void MUS::installPlayer(sidmemory *mem)
         mem->writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+2)&0xFF);
         mem->writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+2)>>8);
 
-        if (info->getSidChips() > 1)
+        if (info->sidChips() > 1)
         {
             // Install MUS player #2.
             dest = endian_16(sidplayer2[1], sidplayer2[0]);

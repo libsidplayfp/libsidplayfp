@@ -32,6 +32,7 @@ SidConfig::SidConfig() :
     playback(MONO),
     frequency(DEFAULT_SAMPLING_FREQ),
     secondSidAddress(0),
+    thirdSidAddress(0),
     sidEmulation(0),
     leftVolume(Mixer::VOLUME_MAX),
     rightVolume(Mixer::VOLUME_MAX),

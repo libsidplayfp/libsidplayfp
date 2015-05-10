@@ -95,9 +95,12 @@ public:
     uint_least32_t frequency;
 
     /**
-     * Install a second SID chip at this address.
+     * Extra SID chips addresses.
      */
+    //@{
     uint_least16_t secondSidAddress;
+    uint_least16_t thirdSidAddress;
+    //@}
 
     /**
      * Pointer to selected emulation,
