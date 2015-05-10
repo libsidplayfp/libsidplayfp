@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,13 +27,27 @@
 
 #include "sidplayfp/SidTune.h"
 
+struct psidHeader;
+
 class PSID : public SidTuneBase
 {
 private:
     char m_md5[SidTune::MD5_LENGTH+1];
 
 private:
-    void tryLoad(buffer_t& dataBuf);
+    /**
+     * Load PSID file.
+     *
+     * @throw loadError
+     */
+    void tryLoad(const psidHeader &pHeader);
+
+    /**
+     * Read PSID file header.
+     *
+     * @throw loadError
+     */
+    static void readHeader(const buffer_t &dataBuf, psidHeader &hdr);
 
 protected:
     PSID() {}
@@ -41,6 +55,10 @@ protected:
 public:
     virtual ~PSID() {}
 
+    /**
+     * @return pointer to a SidTune or 0 if not a PSID file
+     * @throw loadError if PSID file is corrupt
+     */
     static SidTuneBase* load(buffer_t& dataBuf);
 
     virtual const char *createMD5(char *md5);

@@ -28,16 +28,18 @@
 #include "sidplayfp/SidTuneInfo.h"
 #include "stringutils.h"
 
+// Format strings
 const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 
+// Error strings
 const char ERR_TRUNCATED[]  = "ERROR: File is most likely truncated";
 
 
 SidTuneBase* prg::load(const char *fileName, buffer_t& dataBuf)
 {
     const char *ext = SidTuneTools::fileExtOfPath(fileName);
-    if ( (!stringutils::equal(ext, ".prg")) &&
-         (!stringutils::equal(ext, ".c64")) )
+    if ((!stringutils::equal(ext, ".prg")) &&
+         (!stringutils::equal(ext, ".c64")))
     {
         return 0;
     }

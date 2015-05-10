@@ -22,6 +22,7 @@
 
 #include "PSID.h"
 
+#include <cstring>
 #include <string>
 #include <memory>
 
@@ -29,8 +30,7 @@
 #include "sidendian.h"
 #include "sidmd5.h"
 
-#define PSID_ID 0x50534944
-#define RSID_ID 0x52534944
+#define PSID_MAXSTRLEN 32
 
 // Header has been extended for 'RSID' format
 // The following changes are present:
@@ -44,25 +44,25 @@
 
 struct psidHeader           // all values are big-endian
 {
-    uint8_t id[4];          // 'PSID' or 'RSID' (ASCII)
-    uint8_t version[2];     // 1, 2 or 3
-    uint8_t data[2];        // 16-bit offset to binary data in file
-    uint8_t load[2];        // 16-bit C64 address to load file to
-    uint8_t init[2];        // 16-bit C64 address of init subroutine
-    uint8_t play[2];        // 16-bit C64 address of play subroutine
-    uint8_t songs[2];       // number of songs
-    uint8_t start[2];       // start song out of [1..256]
-    uint8_t speed[4];       // 32-bit speed info
-                            // bit: 0=50 Hz, 1=CIA 1 Timer A (default: 60 Hz)
-    char name[32];          // ASCII strings, 31 characters long and
-    char author[32];        // terminated by a trailing zero
-    char released[32];      //
+    uint32_t id;                   // 'PSID' or 'RSID' (ASCII)
+    uint16_t version;              // 1, 2 or 3 only
+    uint16_t data;                 // 16-bit offset to binary data in file
+    uint16_t load;                 // 16-bit C64 address to load file to
+    uint16_t init;                 // 16-bit C64 address of init subroutine
+    uint16_t play;                 // 16-bit C64 address of play subroutine
+    uint16_t songs;                // number of songs
+    uint16_t start;                // start song out of [1..256]
+    uint32_t speed;                // 32-bit speed info
+                                   // bit: 0=50 Hz, 1=CIA 1 Timer A (default: 60 Hz)
+    char name[PSID_MAXSTRLEN];     // ASCII strings, 31 characters long and
+    char author[PSID_MAXSTRLEN];   // terminated by a trailing zero
+    char released[PSID_MAXSTRLEN]; //
 
-    uint8_t flags[2];       // only version >= 2
-    uint8_t relocStartPage; // only version >= 2NG
-    uint8_t relocPages;     // only version >= 2NG
-    uint8_t sidChipBase2;   // only version >= 3
-    uint8_t reserved;       // only version >= 2
+    uint16_t flags;                // only version >= 2
+    uint8_t relocStartPage;        // only version >= 2ng
+    uint8_t relocPages;            // only version >= 2ng
+    uint8_t sidChipBase2;          // only version >= 3
+    uint8_t reserved;              // only version >= 2
 };
 
 enum
@@ -90,16 +90,21 @@ enum
     PSID_SIDMODEL_ANY     = PSID_SIDMODEL_6581 | PSID_SIDMODEL_8580
 };
 
+// Format strings
 const char TXT_FORMAT_PSID[]  = "PlaySID one-file format (PSID)";
 const char TXT_FORMAT_RSID[]  = "Real C64 one-file format (RSID)";
 const char TXT_UNKNOWN_PSID[] = "Unsupported PSID version";
 const char TXT_UNKNOWN_RSID[] = "Unsupported RSID version";
 
+// Error strings
 const char ERR_TRUNCATED[]    = "ERROR: File is most likely truncated";
 const char ERR_INVALID[]      = "ERROR: File contains invalid data";
 
-static const int psid_maxStrLen = 32;
+const int psid_headerSize = 118;
+const int psidv2_headerSize = psid_headerSize + 6;
 
+const uint32_t PSID_ID = 0x50534944;
+const uint32_t RSID_ID = 0x52534944;
 
 SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
 {
@@ -133,37 +138,68 @@ SidTuneBase* PSID::load(buffer_t& dataBuf)
     // File format check
     if (dataBuf.size() < 4
         || ((endian_big32(&dataBuf[0]) != PSID_ID)
-        && (endian_big32(&dataBuf[0]) != RSID_ID)))
+            && (endian_big32(&dataBuf[0]) != RSID_ID)))
     {
         return 0;
     }
 
+    psidHeader pHeader;
+    readHeader(dataBuf, pHeader);
+
     std::auto_ptr<PSID> tune(new PSID());
-    tune->tryLoad(dataBuf);
+    tune->tryLoad(pHeader);
 
     return tune.release();
 }
 
-void PSID::tryLoad(buffer_t& dataBuf)
+void PSID::readHeader(const buffer_t &dataBuf, psidHeader &hdr)
 {
     // Due to security concerns, input must be at least as long as version 1
     // header plus 16-bit C64 load address. That is the area which will be
     // accessed.
-    const buffer_t::size_type bufLen = dataBuf.size();
-    if (bufLen < (sizeof(psidHeader) - 6 + 2))
+    if (dataBuf.size() < (psid_headerSize + 2))
     {
         throw loadError(ERR_TRUNCATED);
     }
 
+    // Read v1 fields
+    hdr.id               = endian_big32(&dataBuf[0]);
+    hdr.version          = endian_big16(&dataBuf[4]);
+    hdr.data             = endian_big16(&dataBuf[6]);
+    hdr.load             = endian_big16(&dataBuf[8]);
+    hdr.init             = endian_big16(&dataBuf[10]);
+    hdr.play             = endian_big16(&dataBuf[12]);
+    hdr.songs            = endian_big16(&dataBuf[14]);
+    hdr.start            = endian_big16(&dataBuf[16]);
+    hdr.speed            = endian_big32(&dataBuf[18]);
+    memcpy(hdr.name,     &dataBuf[22], PSID_MAXSTRLEN);
+    memcpy(hdr.author,   &dataBuf[54], PSID_MAXSTRLEN);
+    memcpy(hdr.released, &dataBuf[86], PSID_MAXSTRLEN);
+
+    if (hdr.version >= 2)
+    {
+        if (dataBuf.size() < (psidv2_headerSize + 2))
+        {
+            throw loadError(ERR_TRUNCATED);
+        }
+
+        // Read v2/3 fields
+        hdr.flags            = endian_big16(&dataBuf[118]);
+        hdr.relocStartPage   = dataBuf[120];
+        hdr.relocPages       = dataBuf[121];
+        hdr.sidChipBase2     = dataBuf[122];
+        hdr.reserved         = dataBuf[123];
+    }
+}
+
+void PSID::tryLoad(const psidHeader &pHeader)
+{
     SidTuneInfo::compatibility_t compatibility = SidTuneInfo::COMPATIBILITY_C64;
 
     // Require a valid ID and version number.
-    // FIXME not entirely safe due to possible struct padding
-    const psidHeader* pHeader = reinterpret_cast<const psidHeader*>(&dataBuf[0]);
-
-    if (endian_big32(pHeader->id) == PSID_ID)
+    if (pHeader.id == PSID_ID)
     {
-       switch (endian_big16(pHeader->version))
+       switch (pHeader.version)
        {
        case 1:
            compatibility = SidTuneInfo::COMPATIBILITY_PSID;
@@ -176,9 +212,9 @@ void PSID::tryLoad(buffer_t& dataBuf)
        }
        info->m_formatString = TXT_FORMAT_PSID;
     }
-    else if (endian_big32(pHeader->id) == RSID_ID)
+    else if (pHeader.id == RSID_ID)
     {
-       switch (endian_big16(pHeader->version))
+       switch (pHeader.version)
        {
        case 2:
        case 3:
@@ -190,24 +226,24 @@ void PSID::tryLoad(buffer_t& dataBuf)
        compatibility = SidTuneInfo::COMPATIBILITY_R64;
     }
 
-    fileOffset             = endian_big16(pHeader->data);
-    info->m_loadAddr       = endian_big16(pHeader->load);
-    info->m_initAddr       = endian_big16(pHeader->init);
-    info->m_playAddr       = endian_big16(pHeader->play);
-    info->m_songs          = endian_big16(pHeader->songs);
-    info->m_startSong      = endian_big16(pHeader->start);
+    fileOffset             = pHeader.data;
+    info->m_loadAddr       = pHeader.load;
+    info->m_initAddr       = pHeader.init;
+    info->m_playAddr       = pHeader.play;
+    info->m_songs          = pHeader.songs;
+    info->m_startSong      = pHeader.start;
     info->m_compatibility  = compatibility;
     info->m_relocPages     = 0;
     info->m_relocStartPage = 0;
 
-    uint_least32_t speed = endian_big32(pHeader->speed);
+    uint_least32_t speed = pHeader.speed;
     SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_UNKNOWN;
 
     bool musPlayer = false;
 
-    if (endian_big16(pHeader->version) >= 2)
+    if (pHeader.version >= 2)
     {
-        const uint_least16_t flags = endian_big16(pHeader->flags);
+        const uint_least16_t flags = pHeader.flags;
         if (flags & PSID_MUS)
         {   // MUS tunes run at any speed
             clock = SidTuneInfo::CLOCK_ANY;
@@ -241,12 +277,12 @@ void PSID::tryLoad(buffer_t& dataBuf)
 
         info->m_sidModels[0] = getSidModel(flags >> 4);
 
-        info->m_relocStartPage = pHeader->relocStartPage;
-        info->m_relocPages     = pHeader->relocPages;
+        info->m_relocStartPage = pHeader.relocStartPage;
+        info->m_relocPages     = pHeader.relocPages;
 
-        if (endian_big16(pHeader->version) >= 3)
+        if (pHeader.version >= 3)
         {
-            const uint8_t sidChipBase2 = pHeader->sidChipBase2;
+            const uint8_t sidChipBase2 = pHeader.sidChipBase2;
 
             if (validateAddress(sidChipBase2))
             {
@@ -276,9 +312,9 @@ void PSID::tryLoad(buffer_t& dataBuf)
     convertOldStyleSpeedToTables(speed, clock);
 
     // Copy info strings.
-    info->m_infoString.push_back(std::string(pHeader->name, psid_maxStrLen));
-    info->m_infoString.push_back(std::string(pHeader->author, psid_maxStrLen));
-    info->m_infoString.push_back(std::string(pHeader->released, psid_maxStrLen));
+    info->m_infoString.push_back(std::string(pHeader.name, PSID_MAXSTRLEN));
+    info->m_infoString.push_back(std::string(pHeader.author, PSID_MAXSTRLEN));
+    info->m_infoString.push_back(std::string(pHeader.released, PSID_MAXSTRLEN));
 
     if (musPlayer)
         throw loadError("Compute!'s Sidplayer MUS data is not supported yet"); // TODO
