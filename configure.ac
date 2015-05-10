@@ -19,12 +19,12 @@ AC_SUBST([LIB_LEVEL])
 
 AC_CANONICAL_HOST
 case "$host" in
-    *linux*|*-k*bsd*-gnu|*mingw*)
+    *linux*|*-k*bsd*-gnu|*mingw*|*cygwin* )
         hardsid=yes
         ;;
 esac
 case "$host" in
-    *mingw32* )
+    *mingw32*|*cygwin* )
         MINGW32=yes
         ;;
 esac
