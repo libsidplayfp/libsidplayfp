@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2012 Leandro Nini
+ *  Copyright 2011-2015 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -24,6 +24,8 @@
 #define SIDTUNEINFO_H
 
 #include <stdint.h>
+
+#include "sidplayfp/siddefs.h"
 
 /**
  * This interface is used to get values from SidTune objects.
@@ -100,14 +102,21 @@ public:
      * The SID chip base address(es) used by the sidtune.
      */
     //@{
-    virtual uint_least16_t sidChipBase1() const =0;    ///< 0xD400 (normal, 1st SID)
-    virtual uint_least16_t sidChipBase2() const =0;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID)
+    virtual SID_DEPRECATED uint_least16_t sidChipBase1() const =0;    ///< 0xD400 (normal, 1st SID) \deprecated use #getSidChipBase(0)
+    virtual SID_DEPRECATED uint_least16_t sidChipBase2() const =0;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID) \deprecated use #getSidChipBase(1)
+    virtual uint_least16_t getSidChipBase(unsigned int i) const =0;   /// \since 1.8
     //@}
 
     /**
      * Whether sidtune uses two SID chips.
+     * \deprecated use #getSidChips()
      */
-    virtual bool isStereo() const=0;
+    virtual SID_DEPRECATED bool isStereo() const=0;
+
+    /**
+     * Get the number of SID chips required by the tune.
+     */
+    virtual int getSidChips() const =0;
 
     /**
      * Intended speed.
@@ -129,8 +138,9 @@ public:
      * The SID chip model(s) requested by the sidtune.
      */
     //@{
-    virtual model_t sidModel1() const =0;    ///< first SID
-    virtual model_t sidModel2() const =0;    ///< second SID
+    virtual SID_DEPRECATED model_t sidModel1() const =0;    ///< first SID \deprecated use #getSidModel(0)
+    virtual SID_DEPRECATED model_t sidModel2() const =0;    ///< second SID \deprecated use #getSidModel(1)
+    virtual model_t getSidModel(unsigned int i) const =0;   /// \since 1.8
     //@}
 
     /**

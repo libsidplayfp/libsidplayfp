@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -177,11 +177,7 @@ void PSID::tryLoad(buffer_t& dataBuf)
     info->m_playAddr       = endian_big16(pHeader->play);
     info->m_songs          = endian_big16(pHeader->songs);
     info->m_startSong      = endian_big16(pHeader->start);
-    info->m_sidChipBase1   = 0xd400;
-    info->m_sidChipBase2   = 0;
     info->m_compatibility  = compatibility;
-    info->m_sidModel1      = SidTuneInfo::SIDMODEL_UNKNOWN;
-    info->m_sidModel2      = SidTuneInfo::SIDMODEL_UNKNOWN;
     info->m_relocPages     = 0;
     info->m_relocStartPage = 0;
 
@@ -225,11 +221,11 @@ void PSID::tryLoad(buffer_t& dataBuf)
         info->m_clockSpeed = clock;
 
         if ((flags & PSID_SIDMODEL1_ANY) == PSID_SIDMODEL1_ANY)
-            info->m_sidModel1 = SidTuneInfo::SIDMODEL_ANY;
+            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_ANY;
         else if (flags & PSID_SIDMODEL1_6581)
-            info->m_sidModel1 = SidTuneInfo::SIDMODEL_6581;
+            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_6581;
         else if (flags & PSID_SIDMODEL1_8580)
-            info->m_sidModel1 = SidTuneInfo::SIDMODEL_8580;
+            info->m_sidModels[0] = SidTuneInfo::SIDMODEL_8580;
 
         info->m_relocStartPage = pHeader->relocStartPage;
         info->m_relocPages     = pHeader->relocPages;
@@ -241,22 +237,18 @@ void PSID::tryLoad(buffer_t& dataBuf)
             // Only even values are valid. Ranges $00-$41 ($D000-$D410) and
             // $80-$DF ($D800-$DDF0) are invalid. Any invalid value means that no second SID
             // is used, like $00.
-            if (sidChipBase2 & 1 
-                || (sidChipBase2 >= 0x00 && sidChipBase2 <= 0x41)
-                || (sidChipBase2 >= 0x80 && sidChipBase2 <= 0xdf))
+            if (sidChipBase2 & 1 == 0
+                && ((sidChipBase2 > 0x41 && sidChipBase2 < 0x80)
+                    || sidChipBase2 > 0xdf))
             {
-                info->m_sidChipBase2 = 0;
-            }
-            else
-            {
-                info->m_sidChipBase2 = 0xd000 | (sidChipBase2 << 4);
+                info->m_sidChipAddresses.push_back(0xd000 | (sidChipBase2 << 4));
 
                 if ((flags & PSID_SIDMODEL2_ANY) == PSID_SIDMODEL2_ANY)
-                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_ANY;
+                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_ANY);
                 else if (flags & PSID_SIDMODEL2_6581)
-                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_6581;
+                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_6581);
                 else if (flags & PSID_SIDMODEL2_8580)
-                    info->m_sidModel2 = SidTuneInfo::SIDMODEL_8580;
+                    info->m_sidModels.push_back(SidTuneInfo::SIDMODEL_8580);
             }
         }
     }

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2012 Leandro Nini
+ *  Copyright 2011-2015 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -45,9 +45,6 @@ public:
 
     clock_t m_clockSpeed;
     
-    model_t m_sidModel1;
-    model_t m_sidModel2;
-    
     compatibility_t m_compatibility;
 
     uint_least32_t m_dataFileLen;
@@ -58,9 +55,6 @@ public:
     uint_least16_t m_initAddr;
     uint_least16_t m_playAddr;
 
-    uint_least16_t m_sidChipBase1;
-    uint_least16_t m_sidChipBase2;
-
     uint_least8_t m_relocStartPage;
 
     uint_least8_t m_relocPages;
@@ -70,6 +64,10 @@ public:
     std::string m_dataFileName;
 
     std::string m_infoFileName;
+
+    std::vector<model_t> m_sidModels;
+
+    std::vector<uint_least16_t> m_sidChipAddresses;
 
     std::vector<std::string> m_infoString;
 
@@ -89,19 +87,20 @@ public:
         m_currentSong(0),
         m_songSpeed(SPEED_VBI),
         m_clockSpeed(CLOCK_UNKNOWN),
-        m_sidModel1(SIDMODEL_UNKNOWN),
-        m_sidModel2(SIDMODEL_UNKNOWN),
         m_compatibility(COMPATIBILITY_C64),
         m_dataFileLen(0),
         m_c64dataLen(0),
         m_loadAddr(0),
         m_initAddr(0),
         m_playAddr(0),
-        m_sidChipBase1(0xd400),
-        m_sidChipBase2(0),
         m_relocStartPage(0),
         m_relocPages(0),
-        m_fixLoad(false) {}
+        m_fixLoad(false)
+    {
+        m_sidModels.push_back(SIDMODEL_UNKNOWN);
+        m_sidChipAddresses.push_back(0xd400);
+        
+    }
 
     uint_least16_t loadAddr() const { return m_loadAddr; }
 
@@ -115,10 +114,17 @@ public:
 
     unsigned int currentSong() const { return m_currentSong; }
 
-    uint_least16_t sidChipBase1() const { return m_sidChipBase1; }
-    uint_least16_t sidChipBase2() const { return m_sidChipBase2; }
+    uint_least16_t sidChipBase1() const { return m_sidChipAddresses[0]; }
+    uint_least16_t sidChipBase2() const { return m_sidChipAddresses.size() > 1 ? m_sidChipAddresses[1] : SIDMODEL_UNKNOWN; }
 
-    bool isStereo() const { return (m_sidChipBase1!=0 && m_sidChipBase2!=0); }
+    uint_least16_t getSidChipBase(unsigned int i) const
+    {
+        return i < m_sidChipAddresses.size() ? m_sidChipAddresses[i] : 0;
+    }
+
+    bool isStereo() const { return m_sidChipAddresses.size() > 1; }
+
+    int getSidChips() const  { return m_sidChipAddresses.size(); }
 
     int songSpeed() const { return m_songSpeed; }
 
@@ -126,8 +132,13 @@ public:
 
     uint_least8_t relocPages() const { return m_relocPages; }
 
-    model_t sidModel1() const { return m_sidModel1; }
-    model_t sidModel2() const { return m_sidModel2; }
+    model_t sidModel1() const { return m_sidModels[0]; }
+    model_t sidModel2() const { return m_sidModels.size() > 1 ? m_sidModels[1] : SIDMODEL_UNKNOWN; }
+
+    model_t getSidModel(unsigned int i) const
+    {
+        return i < m_sidModels.size() ? m_sidModels[i] : SIDMODEL_UNKNOWN;
+    }
 
     compatibility_t compatibility() const { return m_compatibility; }
 
