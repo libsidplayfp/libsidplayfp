@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -60,9 +60,9 @@ const uint8_t POWERON[] =
  * - data (single byte) or quantity represented by uncompressed count
  * all counts and offsets are 1 less than they should be
  */
-void copyPoweronPattern(sidmemory *mem)
+void copyPoweronPattern(sidmemory& mem)
 {
-    mem->fillRam(0, static_cast<uint8_t>(0), 0x3ff);
+    mem.fillRam(0, static_cast<uint8_t>(0), 0x3ff);
 
     uint_least16_t addr = 0;
     for (unsigned int i = 0; i < sizeof(POWERON);)
@@ -95,7 +95,7 @@ void copyPoweronPattern(sidmemory *mem)
             const uint8_t data = POWERON[i++];
             while (count-- > 0)
             {
-                mem->writeMemByte(addr++, data);
+                mem.writeMemByte(addr++, data);
             }
         }
         // Extract uncompressed data
@@ -103,7 +103,7 @@ void copyPoweronPattern(sidmemory *mem)
         {
             while (count-- > 0)
             {
-                mem->writeMemByte(addr++, POWERON[i++]);
+                mem.writeMemByte(addr++, POWERON[i++]);
             }
         }
     }
@@ -203,87 +203,87 @@ bool psiddrv::drvReloc()
     return true;
 }
 
-void psiddrv::install(sidmemory *mem, uint8_t video) const
+void psiddrv::install(sidmemory& mem, uint8_t video) const
 {
     if (m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64)
     {
         copyPoweronPattern(mem);
     }
 
-    mem->writeMemByte(0x02a6, video);
+    mem.writeMemByte(0x02a6, video);
 
-    mem->installResetHook(endian_little16(reloc_driver));
+    mem.installResetHook(endian_little16(reloc_driver));
 
     // If not a basic tune then the psiddrv must install
     // interrupt hooks and trap programs trying to restart basic
     if (m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC)
     {
         // Install hook to set subtune number for basic
-        mem->setBasicSubtune((uint8_t)(m_tuneInfo->currentSong() - 1));
-        mem->installBasicTrap(0xbf53);
+        mem.setBasicSubtune((uint8_t)(m_tuneInfo->currentSong() - 1));
+        mem.installBasicTrap(0xbf53);
     }
     else
     {
         // Only install irq handle for RSID tunes
-        mem->fillRam(0x0314, &reloc_driver[2], m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64 ? 2 : 6);
+        mem.fillRam(0x0314, &reloc_driver[2], m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_R64 ? 2 : 6);
 
         // Experimental restart basic trap
         const uint_least16_t addr = endian_little16(&reloc_driver[8]);
-        mem->installBasicTrap(0xffe1);
-        mem->writeMemWord(0x0328, addr);
+        mem.installBasicTrap(0xffe1);
+        mem.writeMemWord(0x0328, addr);
     }
 
     int pos = m_driverAddr;
 
     // Install driver to ram
-    mem->fillRam(pos, &reloc_driver[10], reloc_size);
+    mem.fillRam(pos, &reloc_driver[10], reloc_size);
 
     // Set song number
-    mem->writeMemByte(pos, (uint8_t) (m_tuneInfo->currentSong() - 1));
+    mem.writeMemByte(pos, (uint8_t) (m_tuneInfo->currentSong() - 1));
     pos++;
 
     // Set speed flag
-    mem->writeMemByte(pos, m_tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
+    mem.writeMemByte(pos, m_tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
     pos++;
 
     // Set init address
-    mem->writeMemWord(pos, m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC ?
+    mem.writeMemWord(pos, m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC ?
                      0xbf55 : m_tuneInfo->initAddr());
     pos += 2;
 
     // Set play address
-    mem->writeMemWord(pos, m_tuneInfo->playAddr());
+    mem.writeMemWord(pos, m_tuneInfo->playAddr());
     pos += 2;
 
     // Set init address io bank value
-    mem->writeMemByte(pos, iomap(m_tuneInfo->initAddr()));
+    mem.writeMemByte(pos, iomap(m_tuneInfo->initAddr()));
     pos++;
 
     // Set play address io bank value
-    mem->writeMemByte(pos, iomap(m_tuneInfo->playAddr()));
+    mem.writeMemByte(pos, iomap(m_tuneInfo->playAddr()));
     pos++;
 
     // Set PAL/NTSC flag
-    mem->writeMemByte(pos, video);
+    mem.writeMemByte(pos, video);
     pos++;
 
     // Add the required tune speed
     switch (m_tuneInfo->clockSpeed())
     {
     case SidTuneInfo::CLOCK_PAL:
-        mem->writeMemByte(pos, 1);
+        mem.writeMemByte(pos, 1);
         break;
     case SidTuneInfo::CLOCK_NTSC:
-        mem->writeMemByte(pos, 0);
+        mem.writeMemByte(pos, 0);
         break;
     default: // UNKNOWN or ANY
-        mem->writeMemByte(pos, video);
+        mem.writeMemByte(pos, video);
         break;
     }
     pos++;
 
     // Set default processor register flags on calling init
-    mem->writeMemByte(pos, m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
+    mem.writeMemByte(pos, m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64 ? 0 : 1 << MOS6510::SR_INTERRUPT);
 }
 
 }

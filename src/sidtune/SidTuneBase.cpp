@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -165,26 +165,20 @@ unsigned int SidTuneBase::selectSong(unsigned int selectedSong)
 
 // ------------------------------------------------- private member functions
 
-bool SidTuneBase::placeSidTuneInC64mem(sidmemory* mem)
+void SidTuneBase::placeSidTuneInC64mem(sidmemory& mem)
 {
-    if (mem != nullptr)
-    {
-        // The Basic ROM sets these values on loading a file.
-        // Program end address
-        const uint_least16_t start = info->m_loadAddr;
-        const uint_least16_t end   = start + info->m_c64dataLen;
-        mem->writeMemWord(0x2d, end); // Variables start
-        mem->writeMemWord(0x2f, end); // Arrays start
-        mem->writeMemWord(0x31, end); // Strings start
-        mem->writeMemWord(0xac, start);
-        mem->writeMemWord(0xae, end);
+    // The Basic ROM sets these values on loading a file.
+    // Program end address
+    const uint_least16_t start = info->m_loadAddr;
+    const uint_least16_t end   = start + info->m_c64dataLen;
+    mem.writeMemWord(0x2d, end); // Variables start
+    mem.writeMemWord(0x2f, end); // Arrays start
+    mem.writeMemWord(0x31, end); // Strings start
+    mem.writeMemWord(0xac, start);
+    mem.writeMemWord(0xae, end);
 
-        // Copy data from cache to the correct destination.
-        mem->fillRam(info->m_loadAddr, &cache[fileOffset], info->m_c64dataLen);
-
-        return true;
-    }
-    return false;
+    // Copy data from cache to the correct destination.
+    mem.fillRam(info->m_loadAddr, &cache[fileOffset], info->m_c64dataLen);
 }
 
 void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)

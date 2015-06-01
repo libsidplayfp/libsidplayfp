@@ -91,14 +91,10 @@ void MUS::acceptSidTune(const char* dataFileName, const char* infoFileName,
     SidTuneBase::acceptSidTune(dataFileName, infoFileName, buf, isSlashedFileName);
 }
 
-bool MUS::placeSidTuneInC64mem(sidmemory* mem)
+void MUS::placeSidTuneInC64mem(sidmemory& mem)
 {
-    if (SidTuneBase::placeSidTuneInC64mem(mem))
-    {
-        installPlayer(mem);
-        return true;
-    }
-    return false;
+    SidTuneBase::placeSidTuneInC64mem(mem);
+    installPlayer(mem);
 }
 
 bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
@@ -123,27 +119,24 @@ bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
     return true;
 }
 
-void MUS::installPlayer(sidmemory *mem)
+void MUS::installPlayer(sidmemory& mem)
 {
-    if (mem != nullptr)
+    // Install MUS player #1.
+    uint_least16_t dest = endian_16(sidplayer1[1], sidplayer1[0]);
+
+    mem.fillRam(dest, sidplayer1 + 2, sizeof(sidplayer1) - 2);
+    // Point player #1 to data #1.
+    mem.writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+2)&0xFF);
+    mem.writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+2)>>8);
+
+    if (info->getSidChips() > 1)
     {
-        // Install MUS player #1.
-        uint_least16_t dest = endian_16(sidplayer1[1], sidplayer1[0]);
-
-        mem->fillRam(dest, sidplayer1 + 2, sizeof(sidplayer1) - 2);
-        // Point player #1 to data #1.
-        mem->writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+2)&0xFF);
-        mem->writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+2)>>8);
-
-        if (info->getSidChips() > 1)
-        {
-            // Install MUS player #2.
-            dest = endian_16(sidplayer2[1], sidplayer2[0]);
-            mem->fillRam(dest, sidplayer2 + 2, sizeof(sidplayer2) - 2);
-            // Point player #2 to data #2.
-            mem->writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) & 0xFF);
-            mem->writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) >> 8);
-        }
+        // Install MUS player #2.
+        dest = endian_16(sidplayer2[1], sidplayer2[0]);
+        mem.fillRam(dest, sidplayer2 + 2, sizeof(sidplayer2) - 2);
+        // Point player #2 to data #2.
+        mem.writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) & 0xFF);
+        mem.writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) >> 8);
     }
 }
 

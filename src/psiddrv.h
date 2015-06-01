@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ public:
      * @param mem the c64 memory interface
      * @param video the PAL/NTSC switch value, 0: NTSC, 1: PAL
      */
-    void install(sidmemory *mem, uint8_t video) const;
+    void install(sidmemory& mem, uint8_t video) const;
 
     /**
      * Get a detailed error message.

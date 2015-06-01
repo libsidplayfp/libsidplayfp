@@ -1,7 +1,7 @@
  /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -119,9 +119,13 @@ bool SidTune::getStatus() const { return m_status; }
 
 const char* SidTune::statusString() const { return m_statusString; }
 
-bool SidTune::placeSidTuneInC64mem(sidmemory* mem)
+bool SidTune::placeSidTuneInC64mem(sidmemory& mem)
 {
-    return tune.get() ? tune->placeSidTuneInC64mem(mem) : false;
+    if (tune.get() == nullptr)
+        return false;
+
+    tune->placeSidTuneInC64mem(mem);
+    return true;
 }
 
 const char* SidTune::createMD5(char *md5)

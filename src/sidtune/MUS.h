@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 #include <stdint.h>
 
 #include "SidTuneBase.h"
+
+#include "sidcxx11.h"
 
 class sidmemory;
 template <class T> class SmartPtr_sidtt;
@@ -49,7 +51,7 @@ private:
 protected:
     MUS() {}
 
-    void installPlayer(sidmemory *mem);
+    void installPlayer(sidmemory& mem);
 
     void setPlayerAddress();
 
@@ -65,7 +67,7 @@ public:
                                 uint_least32_t fileOffset,
                                 bool init = false);
 
-    virtual bool placeSidTuneInC64mem(sidmemory* mem);
+    virtual void placeSidTuneInC64mem(sidmemory& mem) override;
 
 private:
     // prevent copying
