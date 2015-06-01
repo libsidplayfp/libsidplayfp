@@ -31,7 +31,7 @@
 #  include "config.h"
 #endif
 
-#ifdef HAVE_LIBGCRYPT
+#ifdef GCRYPT_WITH_MD5
 #  include "md5Gcrypt.h"
 #else
 #  include "md5Internal.h"
@@ -45,7 +45,7 @@ namespace md5Factory
     static std::unique_ptr<iMd5> get()
     {
         return std::unique_ptr<iMd5>(
-#ifdef HAVE_LIBGCRYPT
+#ifdef GCRYPT_WITH_MD5
             new md5Gcrypt()
 #else
             new md5Internal()

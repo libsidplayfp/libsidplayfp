@@ -181,13 +181,13 @@ src/sidplayfp/sidversion.h
 src_libsidplayfp_la_LIBADD = \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
 src/builders/resid-builder/libsidplayfp-resid.la \
-$(LIBGCRYPT_LIBS)
+$(GCRYPT_LIBS)
 
 if HARDSID
   src_libsidplayfp_la_LIBADD += src/builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
-src_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
+src_libsidplayfp_la_CPPFLAGS = $(GCRYPT_CFLAGS) $(AM_CPPFLAGS)
 
 #=========================================================
 # residfp

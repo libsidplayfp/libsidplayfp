@@ -80,12 +80,9 @@ AC_CHECK_DECL(
     )]
 )
 
-AM_PATH_LIBGCRYPT(, [have_libgcrypt="yes"])
+AX_LIB_GCRYPT([auto])
 
-if test "x$have_libgcrypt" = "xyes" ; then
-    AC_DEFINE([HAVE_LIBGCRYPT], [1], [Define to 1 if you have libgcrypt])
-fi
-AM_CONDITIONAL([LIBGCRYPT], [test "x$have_libgcrypt" = "xyes"])
+AM_CONDITIONAL([LIBGCRYPT], [test "x$LIBGCRYPT_TRUE" = "x"])
 
 
 dnl libtool-style version-info number
