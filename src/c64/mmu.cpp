@@ -27,13 +27,13 @@ namespace libsidplayfp
 
 class Bank;
 
-MMU::MMU(EventContext *context, IOBank* ioBank) :
-    context(*context),
+MMU::MMU(EventContext &context, IOBank* ioBank) :
+    context(context),
     loram(false),
     hiram(false),
     charen(false),
     ioBank(ioBank),
-    zeroRAMBank(this, &ramBank)
+    zeroRAMBank(*this, ramBank)
 {
     cpuReadMap[0] = &zeroRAMBank;
     cpuWriteMap[0] = &zeroRAMBank;

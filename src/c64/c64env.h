@@ -43,8 +43,8 @@ private:
     EventContext &m_context;
 
 public:
-    c64env(EventContext *context) :
-        m_context(*context) {}
+    c64env(EventContext &context) :
+        m_context(context) {}
 
     EventContext &context() const { return m_context; }
 

@@ -46,7 +46,7 @@ public:
     virtual event_clock_t getPhi2Time() const =0;
 
 protected:
-    ~PLA();
+    ~PLA() {}
 };
 
 /**
@@ -95,10 +95,10 @@ private:
     static const bool tape_sense = false;
 
 private:
-    PLA* pla;
+    PLA &pla;
 
     /// C64 RAM area
-    SystemRAMBank* ramBank;
+    SystemRAMBank &ramBank;
 
     /// Cycle that should invalidate the unused bits of the data port.
     //@{
@@ -138,7 +138,7 @@ private:
 
         dataRead = (data | ~dir) & (procPortPins | 0x17);
 
-        pla->setCpuPort((data | ~dir) & 0x07);
+        pla.setCpuPort((data | ~dir) & 0x07);
 
         if ((dir & 0x20) == 0)
         {
@@ -156,7 +156,7 @@ private:
     ZeroRAMBank& operator=(const ZeroRAMBank&);
 
 public:
-    ZeroRAMBank(PLA* pla, SystemRAMBank* ramBank) :
+    ZeroRAMBank(PLA &pla, SystemRAMBank &ramBank) :
         pla(pla),
         ramBank(ramBank) {}
 
@@ -196,7 +196,7 @@ public:
             // discharge the "capacitor"
             if (dataFalloffBit6 || dataFalloffBit7)
             {
-                const event_clock_t phi2time = pla->getPhi2Time();
+                const event_clock_t phi2time = pla.getPhi2Time();
 
                 // set real value of read bit 6
                 if (dataFalloffBit6 && dataSetClkBit6 < phi2time)
@@ -234,7 +234,7 @@ public:
             return retval;
         }
         default:
-            return ramBank->peek(address);
+            return ramBank.peek(address);
         }
     }
 
@@ -250,7 +250,7 @@ public:
             // check if bit 6 has flipped from 1 to 0
             if ((dir & 0x40) && !(value & 0x40))
             {
-                dataSetClkBit6 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataSetClkBit6 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
                 dataSetBit6 = data & 0x40;
                 dataFalloffBit6 = true;
             }
@@ -258,7 +258,7 @@ public:
             // check if bit 7 has flipped from 1 to 0
             if ((dir & 0x80) && !(value & 0x80))
             {
-                dataSetClkBit7 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataSetClkBit7 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
                 dataSetBit7 = data & 0x80;
                 dataFalloffBit7 = true;
             }
@@ -268,7 +268,7 @@ public:
                 dir = value;
                 updateCpuPort();
             }
-            value = pla->getLastReadByte();
+            value = pla.getLastReadByte();
             break;
         case 1:
             // when writing to an unused bit that is output, charge the "capacitor",
@@ -277,14 +277,14 @@ public:
             if (dir & 0x40)
             {
                 dataSetBit6 = value & 0x40;
-                dataSetClkBit6 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataSetClkBit6 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
                 dataFalloffBit6 = true;
             }
 
             if (dir & 0x80)
             {
                 dataSetBit7 = value & 0x80;
-                dataSetClkBit7 = pla->getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+                dataSetClkBit7 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
                 dataFalloffBit7 = true;
             }
 
@@ -293,13 +293,13 @@ public:
                 data = value;
                 updateCpuPort();
             }
-            value = pla->getLastReadByte();
+            value = pla.getLastReadByte();
             break;
         default:
             break;
         }
 
-        ramBank->poke(address, value);
+        ramBank.poke(address, value);
     }
 };
 

@@ -278,7 +278,7 @@ private:
     inline void doJSR();
 
 protected:
-    MOS6510(EventContext *context);
+    MOS6510(EventContext &context);
     ~MOS6510() {}
 
 public:

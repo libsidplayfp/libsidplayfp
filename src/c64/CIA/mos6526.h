@@ -60,7 +60,7 @@ public:
     /**
      * Create timer A.
      */
-    TimerA(EventContext *context, MOS6526* parent) :
+    TimerA(EventContext &context, MOS6526 &parent) :
         Timer("CIA Timer A", context, parent) {}
 };
 
@@ -79,7 +79,7 @@ public:
     /**
      * Create timer B.
      */
-    TimerB(EventContext *context, MOS6526* parent) :
+    TimerB(EventContext &context, MOS6526 &parent) :
         Timer("CIA Timer B", context, parent) {}
 
     /**
@@ -215,7 +215,7 @@ protected:
      *
      * @param context the event context
      */
-    MOS6526(EventContext *context);
+    MOS6526(EventContext &context);
     ~MOS6526() {}
 
     /**

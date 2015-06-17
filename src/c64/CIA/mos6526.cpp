@@ -64,17 +64,17 @@ enum
 
 void TimerA::underFlow()
 {
-    parent->underflowA();
+    parent.underflowA();
 }
 
 void TimerA::serialPort()
 {
-    parent->serialPort();
+    parent.serialPort();
 }
 
 void TimerB::underFlow()
 {
-    parent->underflowB();
+    parent.underflowB();
 }
 
 const char *MOS6526::credit =
@@ -86,15 +86,15 @@ const char *MOS6526::credit =
     "\tCopyright (C) 2011-2014 Leandro Nini\n"
 };
 
-MOS6526::MOS6526(EventContext *context) :
-    event_context(*context),
+MOS6526::MOS6526(EventContext &context) :
+    event_context(context),
     pra(regs[PRA]),
     prb(regs[PRB]),
     ddra(regs[DDRA]),
     ddrb(regs[DDRB]),
-    timerA(context, this),
-    timerB(context, this),
-    tod(context, this, regs),
+    timerA(context, *this),
+    timerB(context, *this),
+    tod(context, *this, regs),
     idr(0),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick),
     triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger)

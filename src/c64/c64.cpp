@@ -66,13 +66,13 @@ double c64::getCpuFreq(model_t model)
 }
 
 c64::c64() :
-    c64env(&m_scheduler),
+    c64env(m_scheduler),
     m_cpuFreq(getCpuFreq(PAL_B)),
-    cpu(this),
-    cia1(this),
-    cia2(this),
-    vic(this),
-    mmu(&m_scheduler, &ioBank)
+    cpu(*this),
+    cia1(*this),
+    cia2(*this),
+    vic(*this),
+    mmu(m_scheduler, &ioBank)
 {
     resetIoBank();
 }

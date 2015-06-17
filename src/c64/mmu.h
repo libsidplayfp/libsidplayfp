@@ -85,7 +85,7 @@ private:
     void updateMappingPHI2();
 
 public:
-    MMU(EventContext *context, IOBank* ioBank);
+    MMU(EventContext &context, IOBank* ioBank);
     ~MMU() {}
 
     void reset();

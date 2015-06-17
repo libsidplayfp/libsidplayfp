@@ -216,7 +216,7 @@ void Tod::checkAlarm()
 {
     if (!memcmp(alarm, clock, sizeof(alarm)))
     {
-        parent->todInterrupt();
+        parent.todInterrupt();
     }
 }
 

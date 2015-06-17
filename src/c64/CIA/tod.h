@@ -52,7 +52,7 @@ private:
     EventContext &event_context;
 
     /// Pointer to the MOS6526 which this Timer belongs to.
-    MOS6526* const parent;
+    MOS6526 &parent;
 
     event_clock_t cycles;
     event_clock_t period;
@@ -73,9 +73,9 @@ private:
     void event();
 
 public:
-    Tod(EventContext *context, MOS6526* parent, uint8_t regs[0x10]) :
+    Tod(EventContext &context, MOS6526 &parent, uint8_t regs[0x10]) :
         Event("CIA Time of Day"),
-        event_context(*context),
+        event_context(context),
         parent(parent),
         period(~0), // Dummy
         cra(regs[0x0e]),

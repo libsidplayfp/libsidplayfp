@@ -90,7 +90,7 @@ private:
 
 protected:
     /// Pointer to the MOS6526 which this Timer belongs to.
-    MOS6526* const parent;
+    MOS6526 &parent;
 
     /// CRA/CRB control register / state.
     int_least32_t state;
@@ -136,10 +136,10 @@ protected:
      * @param context event context
      * @param parent the MOS6526 which this Timer belongs to
      */
-    Timer(const char* name, EventContext *context, MOS6526* parent) :
+    Timer(const char* name, EventContext &context, MOS6526 &parent) :
         Event(name),
         m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
-        event_context(*context),
+        event_context(context),
         timer(0),
         latch(0),
         pbToggle(false),

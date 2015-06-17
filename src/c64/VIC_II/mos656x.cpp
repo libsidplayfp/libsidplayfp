@@ -60,9 +60,9 @@ const char *MOS656X::credit =
 };
 
 
-MOS656X::MOS656X(EventContext *context) :
+MOS656X::MOS656X(EventContext &context) :
     Event("VIC Raster"),
-    event_context(*context),
+    event_context(context),
     sprites(regs),
     badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange),
     rasterYIRQEdgeDetectorEvent("RasterY changed", *this, &MOS656X::rasterYIRQEdgeDetector)

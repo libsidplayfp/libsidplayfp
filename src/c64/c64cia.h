@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -43,7 +43,7 @@ namespace libsidplayfp
  *
  * Located at $DC00-$DCFF
  */
-class c64cia1: public MOS6526, public Bank
+class c64cia1 : public MOS6526, public Bank
 {
 private:
     c64env &m_env;
@@ -61,9 +61,9 @@ protected:
     }
 
 public:
-    c64cia1(c64env *env) :
-        MOS6526(&(env->context())),
-        m_env(*env) {}
+    c64cia1(c64env &env) :
+        MOS6526(env.context()),
+        m_env(env) {}
 
     void poke(uint_least16_t address, uint8_t value) override
     {
@@ -98,7 +98,7 @@ public:
  *
  * Located at $DD00-$DDFF
  */
-class c64cia2: public MOS6526, public Bank
+class c64cia2 : public MOS6526, public Bank
 {
 private:
     c64env &m_env;
@@ -111,9 +111,9 @@ protected:
     }
 
 public:
-    c64cia2(c64env *env) :
-        MOS6526(&(env->context())),
-        m_env(*env) {}
+    c64cia2(c64env &env) :
+        MOS6526(env.context()),
+        m_env(env) {}
 
     void poke(uint_least16_t address, uint8_t value) override
     {

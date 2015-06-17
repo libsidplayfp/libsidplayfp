@@ -1465,8 +1465,8 @@ void MOS6510::rra_instr()
  * @param context
  *            The Event Context
  */
-MOS6510::MOS6510(EventContext *context) :
-    eventContext(*context),
+MOS6510::MOS6510(EventContext &context) :
+    eventContext(context),
 #ifdef DEBUG
     m_fdbg(stdout),
 #endif

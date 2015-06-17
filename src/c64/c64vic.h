@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -41,7 +41,7 @@ namespace libsidplayfp
  *
  * Located at $D000-$D3FF
  */
-class c64vic: public MOS656X, public Bank
+class c64vic : public MOS656X, public Bank
 {
 private:
     c64env &m_env;
@@ -58,9 +58,9 @@ protected:
     }
 
 public:
-    c64vic(c64env *env) :
-        MOS656X(&(env->context())),
-        m_env(*env) {}
+    c64vic(c64env &env) :
+        MOS656X(env.context()),
+        m_env(env) {}
 
     void poke(uint_least16_t address, uint8_t value) override
     {
