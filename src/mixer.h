@@ -79,9 +79,14 @@ private:
     }
 
     // Mono mixing
-    int_least32_t mono_OneChip() const { return m_iSamples[0]; }
-    int_least32_t mono_TwoChips() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
-    int_least32_t mono_ThreeChips() const { return (m_iSamples[0] + m_iSamples[1] + m_iSamples[2]) / 3; }
+    template <int Chips>
+    int_least32_t mono() const
+    {
+        int_least32_t res = 0;
+        for (int i = 0; i < Chips; i++)
+            res += m_iSamples[i];
+        return res /= Chips;
+    }
 
     // Stereo mixing
     int_least32_t stereo_OneChip() const { return m_iSamples[0]; }
@@ -102,7 +107,7 @@ public:
         m_sampleCount(0),
         m_stereo(false)
     {
-        m_mix.push_back(&Mixer::mono_OneChip);
+        m_mix.push_back(&Mixer::mono<1>);
     }
 
     /**

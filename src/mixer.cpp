@@ -134,15 +134,15 @@ void Mixer::updateParams()
     switch (m_buffers.size())
     {
     case 1:
-        m_mix[0] = m_stereo ? &Mixer::stereo_OneChip : &Mixer::mono_OneChip;
+        m_mix[0] = m_stereo ? &Mixer::stereo_OneChip : &Mixer::mono<1>;
         if (m_stereo) m_mix[1] = &Mixer::stereo_OneChip;
         break;
     case 2:
-        m_mix[0] = m_stereo ? &Mixer::stereo_ch1_TwoChips : &Mixer::mono_TwoChips;
+        m_mix[0] = m_stereo ? &Mixer::stereo_ch1_TwoChips : &Mixer::mono<2>;
         if (m_stereo) m_mix[1] = &Mixer::stereo_ch2_TwoChips;
         break;
     case 3:
-        m_mix[0] = m_stereo ? &Mixer::stereo_ch1_ThreeChips : &Mixer::mono_ThreeChips;
+        m_mix[0] = m_stereo ? &Mixer::stereo_ch1_ThreeChips : &Mixer::mono<3>;
         if (m_stereo) m_mix[1] = &Mixer::stereo_ch2_ThreeChips;
         break;
      }
