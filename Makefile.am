@@ -127,6 +127,7 @@ src/c64/CPU/mos6510.h \
 src/c64/CPU/mos6510debug.cpp \
 src/c64/CPU/mos6510debug.h \
 src/c64/CPU/opcodes.h \
+src/c64/CIA/interrupt.h \
 src/c64/CIA/mos6526.cpp \
 src/c64/CIA/mos6526.h \
 src/c64/CIA/timer.cpp \
