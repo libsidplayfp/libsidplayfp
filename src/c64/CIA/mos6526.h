@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -24,8 +24,11 @@
 #ifndef MOS6526_H
 #define MOS6526_H
 
+#include <memory>
+
 #include <stdint.h>
 
+#include "interrupt.h"
 #include "timer.h"
 #include "tod.h"
 #include "EventScheduler.h"
@@ -102,6 +105,65 @@ public:
 };
 
 /**
+ * InterruptSource that acts like new CIA
+ */
+class InterruptSource6526A : public InterruptSource
+{
+public:
+    InterruptSource6526A(EventContext &context, MOS6526 &parent) :
+        InterruptSource(context, parent)
+    {}
+
+    void trigger(uint8_t interruptMask) override;
+
+    uint8_t clear() override;
+
+    void event() override
+    {
+        throw "6526A event called unexpectedly";
+    }
+};
+
+/**
+ * InterruptSource that acts like old CIA
+ */
+class InterruptSource6526 : public InterruptSource
+{
+private:
+    /// Have we already scheduled CIA->CPU interrupt transition?
+    bool scheduled;
+
+private:
+    /**
+     * Schedules an IRQ asserting state transition for next cycle.
+     */
+    void schedule()
+    {
+        if (!scheduled)
+        {
+            event_context.schedule(*this, 1, EVENT_CLOCK_PHI1);
+            scheduled = true;
+        }
+    }
+
+public:
+    InterruptSource6526(EventContext &context, MOS6526 &parent) :
+        InterruptSource(context, parent)
+    {}
+
+    void trigger(uint8_t interruptMask) override;
+
+    uint8_t clear() override;
+
+    /**
+     * Signal interrupt to CPU.
+     */
+    void event() override;
+
+    void reset() override;
+};
+
+/**
  * This class is heavily based on the ciacore/ciatimer source code from VICE.
  * The CIA state machine is lifted as-is. Big thanks to VICE project!
  *
@@ -109,6 +171,8 @@ public:
  */
 class MOS6526 : public component
 {
+    friend class InterruptSource6526;
+    friend class InterruptSource6526A;
     friend class TimerA;
     friend class TimerB;
     friend class Tod;
@@ -134,6 +198,9 @@ protected:
     TimerB timerB;
     //@}
 
+    /// Interrupt Source
+    std::unique_ptr<InterruptSource> interruptSource;
+
     /// TOD
     Tod tod;
 
@@ -144,19 +211,12 @@ protected:
     int     sdr_count;
     //@}
 
-    /// Interrupt control register
-    uint8_t icr;
-
-    /// Interrupt data register
-    uint8_t idr;
-
     /// Have we already scheduled CIA->CPU interrupt transition?
     bool triggerScheduled;
 
     /// Events
     //@{
     EventCallback<MOS6526> bTickEvent;
-    EventCallback<MOS6526> triggerEvent;
     //@}
 
 private:
@@ -180,29 +240,12 @@ private:
     void bTick();
 
     /**
-     * Signal interrupt to CPU.
-     */
-    void trigger();
-
-    /**
      * Timer A underflow.
      */
     void underflowA();
 
     /** Timer B underflow. */
     void underflowB();
-
-    /**
-     * Trigger an interrupt.
-     *
-     * @param interruptMask Interrupt flag number
-     */
-    void trigger(uint8_t interruptMask);
-
-    /**
-     * Clear interrupt state.
-     */
-    void clear();
 
     /**
      * Handle the serial port.

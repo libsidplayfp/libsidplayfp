@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -29,17 +29,6 @@
 
 namespace libsidplayfp
 {
-
-enum
-{
-    INTERRUPT_NONE         = 0,
-    INTERRUPT_UNDERFLOW_A  = 1 << 0,
-    INTERRUPT_UNDERFLOW_B  = 1 << 1,
-    INTERRUPT_ALARM        = 1 << 2,
-    INTERRUPT_SP           = 1 << 3,
-    INTERRUPT_FLAG         = 1 << 4,
-    INTERRUPT_REQUEST      = 1 << 7
-};
 
 enum
 {
@@ -77,13 +66,75 @@ void TimerB::underFlow()
     parent.underflowB();
 }
 
+void InterruptSource6526A::trigger(uint8_t interruptMask)
+{
+    InterruptSource::trigger(interruptMask);
+
+    if (interruptMasked() && interruptTriggered())
+    {
+        triggerInterrupt();
+        parent.interrupt(true);
+    }
+}
+
+uint8_t InterruptSource6526A::clear()
+{
+    if (!interruptTriggered())
+    {
+        parent.interrupt(false);
+    }
+
+    return InterruptSource::clear();
+}
+
+void InterruptSource6526::trigger(uint8_t interruptMask)
+{
+    InterruptSource::trigger(interruptMask);
+
+    if (interruptMasked() && interruptTriggered())
+    {
+        schedule();
+    }
+}
+
+uint8_t InterruptSource6526::clear()
+{
+    if (scheduled)
+    {
+        event_context.cancel(*this);
+        scheduled = false;
+    }
+
+    if (!interruptTriggered())
+    {
+        parent.interrupt(false);
+    }
+
+    return InterruptSource::clear();
+}
+
+void InterruptSource6526::event()
+{
+    triggerInterrupt();
+    parent.interrupt(true);
+
+    scheduled = false;
+}
+
+void InterruptSource6526::reset()
+{
+    InterruptSource::reset();
+
+    scheduled = false;
+}
+
 const char *MOS6526::credit =
 {
     "MOS6526 (CIA) Emulation:\n"
     "\tCopyright (C) 2001-2004 Simon White\n"
     "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
     "\tCopyright (C) 2009-2014 VICE Project\n"
-    "\tCopyright (C) 2011-2014 Leandro Nini\n"
+    "\tCopyright (C) 2011-2015 Leandro Nini\n"
 };
 
 MOS6526::MOS6526(EventContext &context) :
@@ -94,10 +145,9 @@ MOS6526::MOS6526(EventContext &context) :
     ddrb(regs[DDRB]),
     timerA(context, *this),
     timerB(context, *this),
+    interruptSource(new InterruptSource6526(context, *this)),
     tod(context, *this, regs),
-    idr(0),
-    bTickEvent("CIA B counts A", *this, &MOS6526::bTick),
-    triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger)
+    bTickEvent("CIA B counts A", *this, &MOS6526::bTick)
 {
     reset();
 }
@@ -110,7 +160,7 @@ void MOS6526::serialPort()
         {
             if (--sdr_count == 0)
             {
-                trigger(INTERRUPT_SP);
+                interruptSource->trigger(InterruptSource::INTERRUPT_SP);
             }
         }
         if (sdr_count == 0 && sdr_buffered)
@@ -123,27 +173,20 @@ void MOS6526::serialPort()
     }
 }
 
-void MOS6526::clear()
-{
-    if (idr & INTERRUPT_REQUEST)
-        interrupt(false);
-    idr = 0;
-}
-
-
 void MOS6526::reset()
 {
     sdr_out = 0;
     sdr_count = 0;
     sdr_buffered = false;
-    // Clear off any IRQs
-    clear();
-    icr = idr = 0;
+
     memset(regs, 0, sizeof(regs));
 
     // Reset timers
     timerA.reset();
     timerB.reset();
+
+    // Reset interruptSource
+    interruptSource->reset();
 
     // Reset tod
     tod.reset();
@@ -151,7 +194,6 @@ void MOS6526::reset()
     triggerScheduled = false;
 
     event_context.cancel(bTickEvent);
-    event_context.cancel(triggerEvent);
 }
 
 uint8_t MOS6526::read(uint_least8_t addr)
@@ -196,17 +238,8 @@ uint8_t MOS6526::read(uint_least8_t addr)
     case TOD_MIN:
     case TOD_HR:
         return tod.read(addr - TOD_TEN);
-    case IDR:{
-        if (triggerScheduled)
-        {
-            event_context.cancel(triggerEvent);
-            triggerScheduled = false;
-        }
-        // Clear IRQs, and return interrupt
-        // data register
-        const uint8_t ret = idr;
-        clear();
-        return ret;}
+    case IDR:
+        return interruptSource->clear();
     case CRA:
         return (regs[CRA] & 0xee) | (timerA.getState() & 1);
     case CRB:
@@ -259,15 +292,7 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
             sdr_buffered = true;
         break;
     case ICR:
-        if (data & 0x80)
-        {
-            icr |= data & ~INTERRUPT_REQUEST;
-            trigger(INTERRUPT_NONE);
-        }
-        else
-        {
-            icr &= ~data;
-        }
+        interruptSource->set(data);
         break;
     case CRA:{
         if ((data & 1) && !(oldData & 1))
@@ -291,27 +316,6 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
     timerB.wakeUpAfterSyncWithCpu();
 }
 
-void MOS6526::trigger()
-{
-    idr |= INTERRUPT_REQUEST;
-    interrupt(true);
-    triggerScheduled = false;
-}
-
-void MOS6526::trigger(uint8_t interruptMask)
-{
-    idr |= interruptMask;
-    if ((icr & idr) && !(idr & INTERRUPT_REQUEST))
-    {
-        if (!triggerScheduled)
-        {
-            // Schedules an IRQ asserting state transition for next cycle.
-            event_context.schedule(triggerEvent, 1, EVENT_CLOCK_PHI1);
-            triggerScheduled = true;
-        }
-    }
-}
-
 void MOS6526::bTick()
 {
     timerB.cascade();
@@ -319,7 +323,8 @@ void MOS6526::bTick()
 
 void MOS6526::underflowA()
 {
-    trigger(INTERRUPT_UNDERFLOW_A);
+    interruptSource->trigger(InterruptSource::INTERRUPT_UNDERFLOW_A);
+
     if ((regs[CRB] & 0x41) == 0x41)
     {
         if (timerB.started())
@@ -331,12 +336,12 @@ void MOS6526::underflowA()
 
 void MOS6526::underflowB()
 {
-    trigger(INTERRUPT_UNDERFLOW_B);
+    interruptSource->trigger(InterruptSource::INTERRUPT_UNDERFLOW_B);
 }
 
 void MOS6526::todInterrupt()
 {
-    trigger(INTERRUPT_ALARM);
+    interruptSource->trigger(InterruptSource::INTERRUPT_ALARM);
 }
 
 }
