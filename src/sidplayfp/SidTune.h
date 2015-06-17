@@ -29,11 +29,11 @@
 #include "sidplayfp/siddefs.h"
 
 class SidTuneInfo;
-class sidmemory;
 
 namespace libsidplayfp
 {
 class SidTuneBase;
+class sidmemory;
 }
 
 /**
@@ -153,7 +153,7 @@ public:  // ----------------------------------------------------------------
     /**
      * Copy sidtune into C64 memory (64 KB).
      */
-    bool placeSidTuneInC64mem(sidmemory& mem);
+    bool placeSidTuneInC64mem(libsidplayfp::sidmemory& mem);
 
     /**
      * Calculates the MD5 hash of the tune.

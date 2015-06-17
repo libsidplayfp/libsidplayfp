@@ -48,12 +48,11 @@
 #  include "config.h"
 #endif
 
-class sidmemory;
-
 namespace libsidplayfp
 {
 
 class c64sid;
+class sidmemory;
 
 #ifdef PC64_TESTSUITE
 class testEnv

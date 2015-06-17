@@ -24,10 +24,11 @@
 #include <stdint.h>
 
 class SidTuneInfo;
-class sidmemory;
 
 namespace libsidplayfp
 {
+
+class sidmemory;
 
 class psiddrv
 {

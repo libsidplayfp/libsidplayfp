@@ -23,6 +23,9 @@
 
 #include <stdint.h>
 
+namespace libsidplayfp
+{
+
 /**
  * An interface that allows access to c64 memory
  * for loading tunes and apply sid specific hacks.
@@ -102,5 +105,7 @@ public:
 protected:
     ~sidmemory() {}
 };
+
+}
 
 #endif
