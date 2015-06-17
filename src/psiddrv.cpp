@@ -41,7 +41,8 @@ namespace libsidplayfp
 const char ERR_PSIDDRV_NO_SPACE[]  = "ERROR: No space to install psid driver in C64 ram";
 const char ERR_PSIDDRV_RELOC[]     = "ERROR: Failed whilst relocating psid driver";
 
-uint8_t psid_driver[] = {
+uint8_t psid_driver[] =
+{
 #  include "psiddrv.bin"
 };
 
@@ -89,18 +90,18 @@ void copyPoweronPattern(sidmemory& mem)
         count++;
         addr += off;
 
-        // Extract compressed data
         if (compressed)
         {
+            // Extract compressed data
             const uint8_t data = POWERON[i++];
             while (count-- > 0)
             {
                 mem.writeMemByte(addr++, data);
             }
         }
-        // Extract uncompressed data
         else
         {
+            // Extract uncompressed data
             while (count-- > 0)
             {
                 mem.writeMemByte(addr++, POWERON[i++]);
@@ -116,10 +117,16 @@ uint8_t psiddrv::iomap(uint_least16_t addr) const
         || m_tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_BASIC
         || addr == 0)
     {
-        // Special case, converted to 0x37 by the psid driver
+        // Special case, set to 0x37 by the psid driver
         return 0;
     }
 
+    /*
+     * $34 for init/play in $d000 - $dfff
+     * $35 for init/play in $e000 - $ffff
+     * $36 for load end/play in $a000 - $ffff
+     * $37 for the rest
+     */
     if (addr < 0xa000)
         return 0x37;  // Basic-ROM, Kernal-ROM, I/O
     if (addr < 0xd000)
@@ -155,7 +162,8 @@ bool psiddrv::drvReloc()
     {
         relocPages = 0;
         // find area where to dump the driver in.
-        // It's only 1 block long, so any free block we can find will do.
+        // It's only 1 block long, so any free block we can find
+        // between $0400 and $d000 will do.
         for (int i = 4; i < 0xd0; i ++)
         {
             if (i >= startlp && i <= endlp)
@@ -210,6 +218,7 @@ void psiddrv::install(sidmemory& mem, uint8_t video) const
         copyPoweronPattern(mem);
     }
 
+    // Set PAL/NTSC switch
     mem.writeMemByte(0x02a6, video);
 
     mem.installResetHook(endian_little16(reloc_driver));
@@ -242,7 +251,7 @@ void psiddrv::install(sidmemory& mem, uint8_t video) const
     mem.writeMemByte(pos, (uint8_t) (m_tuneInfo->currentSong() - 1));
     pos++;
 
-    // Set speed flag
+    // Set tunes speed (VIC/CIA)
     mem.writeMemByte(pos, m_tuneInfo->songSpeed() == SidTuneInfo::SPEED_VBI ? 0 : 1);
     pos++;
 
@@ -267,19 +276,21 @@ void psiddrv::install(sidmemory& mem, uint8_t video) const
     mem.writeMemByte(pos, video);
     pos++;
 
-    // Add the required tune speed
+    // Set the required tune clock speed
+    uint8_t clockSpeed;
     switch (m_tuneInfo->clockSpeed())
     {
     case SidTuneInfo::CLOCK_PAL:
-        mem.writeMemByte(pos, 1);
+        clockSpeed = 1;
         break;
     case SidTuneInfo::CLOCK_NTSC:
-        mem.writeMemByte(pos, 0);
+        clockSpeed = 0;
         break;
     default: // UNKNOWN or ANY
-        mem.writeMemByte(pos, video);
+        clockSpeed = video;
         break;
     }
+    mem.writeMemByte(pos, clockSpeed);
     pos++;
 
     // Set default processor register flags on calling init
