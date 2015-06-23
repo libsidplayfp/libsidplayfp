@@ -9,6 +9,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-tests
 
 
 if MINGW32
+  W32_CPPFLAGS = -DWIN32_LEAN_AND_MEAN
   W32_LDFLAGS = -no-undefined
 endif
 
@@ -22,6 +23,7 @@ AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_builddir)/src/builders/resid-builder/resid \
 -I $(top_builddir)/src \
 -I $(top_srcdir)/src \
+${W32_CPPFLAGS} \
 @debug_flags@
 
 #=========================================================
