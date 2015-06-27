@@ -5,6 +5,7 @@ AUTOMAKE_OPTIONS = foreign subdir-objects
 
 
 if MINGW32
+  W32_CPPFLAGS = -DWIN32_LEAN_AND_MEAN
   W32_LDFLAGS = -no-undefined
 endif
 
@@ -18,6 +19,7 @@ AM_CPPFLAGS = -I $(top_builddir)/builders/residfp-builder \
 -I $(top_builddir)/builders/resid-builder/resid \
 -I $(top_builddir)/sidplayfp \
 -I $(top_srcdir)/sidplayfp \
+${W32_CPPFLAGS} \
 @debug_flags@
 
 #=========================================================

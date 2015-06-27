@@ -112,12 +112,12 @@ public:
     {
         if (!isTriggered)
         {
-            isTriggered = true;
-
             // don't trigger on the last line, except on the first cycle
             if ((rasterY == lastLine) && (lineCycle > 0)) {
                 return false;
             }
+
+            isTriggered = true;
 
             // Latch current coordinates
             lpx = (lineCycle << 2) + 2;
