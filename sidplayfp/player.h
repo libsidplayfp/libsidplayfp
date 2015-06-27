@@ -92,7 +92,7 @@ private:
     void initialise();
     void sidRelease();
     void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
-                    bool forced, const unsigned int secondSidAddresses);
+                    bool forced, const std::vector<unsigned int> &extraSidAddresses);
     void sidParams(double cpuFreq, int frequency,
                     SidConfig::sampling_method_t sampling, bool fastSampling);
 
