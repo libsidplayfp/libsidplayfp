@@ -102,9 +102,9 @@ public:
      * The SID chip base address(es) used by the sidtune.
      */
     //@{
-    virtual SID_DEPRECATED uint_least16_t sidChipBase1() const =0;    ///< 0xD400 (normal, 1st SID) \deprecated use #getSidChipBase(0)
-    virtual SID_DEPRECATED uint_least16_t sidChipBase2() const =0;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID) \deprecated use #getSidChipBase(1)
-    virtual uint_least16_t sidChipBase(unsigned int i) const =0;   /// \since 1.8
+    virtual SID_DEPRECATED uint_least16_t sidChipBase1() const =0;    ///< 0xD400 (normal, 1st SID) \deprecated use #sidChipBase(0)
+    virtual SID_DEPRECATED uint_least16_t sidChipBase2() const =0;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID) \deprecated use #sidChipBase(1)
+    virtual uint_least16_t sidChipBase(unsigned int i) const =0;   ///< \since 1.8
     //@}
 
     /**
@@ -138,9 +138,9 @@ public:
      * The SID chip model(s) requested by the sidtune.
      */
     //@{
-    virtual SID_DEPRECATED model_t sidModel1() const =0;    ///< first SID \deprecated use #getSidModel(0)
-    virtual SID_DEPRECATED model_t sidModel2() const =0;    ///< second SID \deprecated use #getSidModel(1)
-    virtual model_t sidModel(unsigned int i) const =0;   /// \since 1.8
+    virtual SID_DEPRECATED model_t sidModel1() const =0;    ///< first SID \deprecated use #sidModel(0)
+    virtual SID_DEPRECATED model_t sidModel2() const =0;    ///< second SID \deprecated use #sidModel(1)
+    virtual model_t sidModel(unsigned int i) const =0;   ///< \since 1.8
     //@}
 
     /**
