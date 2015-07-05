@@ -76,11 +76,20 @@ private:
         return oldRandomValue - prevValue;
     }
 
-    int_least32_t channel1MonoMix() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
-    int_least32_t channel1StereoMix() const { return m_iSamples[0]; }
+    // Mono mixing
+    int_least32_t mono_OneChip() const { return m_iSamples[0]; }
+    int_least32_t mono_TwoChips() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
+    int_least32_t mono_ThreeChips() const { return (m_iSamples[0] + m_iSamples[1] + m_iSamples[2]) / 3; }
 
-    int_least32_t channel2FromMonoMix() const { return m_iSamples[0]; }
-    int_least32_t channel2FromStereoMix() const { return m_iSamples[1]; }
+    // Stereo mixing
+    int_least32_t stereo_OneChip() const { return m_iSamples[0]; }
+
+    int_least32_t stereo_ch1_TwoChips() const { return m_iSamples[0]; }
+    int_least32_t stereo_ch2_TwoChips() const { return m_iSamples[1]; }
+
+    int_least32_t stereo_ch1_ThreeChips() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
+    int_least32_t stereo_ch2_ThreeChips() const { return (m_iSamples[1] + m_iSamples[2]) / 2; }
+
 
 public:
     /**
@@ -92,7 +101,7 @@ public:
         m_sampleCount(0),
         m_stereo(false)
     {
-        m_mix.push_back(&Mixer::channel1MonoMix);
+        m_mix.push_back(&Mixer::mono_OneChip);
     }
 
     /**

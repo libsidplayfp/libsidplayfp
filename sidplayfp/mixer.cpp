@@ -72,7 +72,7 @@ void Mixer::doMix()
 
     // extract buffer info now that the SID is updated.
     // clock() may update bufferpos.
-    // NB: if chip2 exists, its bufferpos is identical to chip1's.
+    //  NB: if more than one chip exists, their bufferpos is identical to first chip's.
     const int sampleCount = m_chips.front()->bufferpos();
 
     int i = 0;
@@ -131,9 +131,20 @@ void Mixer::begin(short *buffer, uint_least32_t count)
 
 void Mixer::updateParams()
 {
-    m_mix[0] = (!m_stereo && m_buffers.size() > 1) ? &Mixer::channel1MonoMix : &Mixer::channel1StereoMix;
-    if (m_stereo)
-        m_mix[1] = (m_buffers.size() > 1) ? &Mixer::channel2FromStereoMix : &Mixer::channel2FromMonoMix;
+    switch (m_buffers.size())
+    {
+    case 1:
+        m_mix[0] = m_stereo ? &Mixer::stereo_OneChip : &Mixer::mono_OneChip;
+        if (m_stereo) m_mix[1] = &Mixer::stereo_OneChip;
+        break;
+    case 2:
+        m_mix[0] = m_stereo ? &Mixer::stereo_ch1_TwoChips : &Mixer::mono_TwoChips;
+        if (m_stereo) m_mix[1] = &Mixer::stereo_ch2_TwoChips;
+        break;
+    case 3:
+        m_mix[0] = m_stereo ? &Mixer::stereo_ch1_ThreeChips : &Mixer::mono_ThreeChips;
+        if (m_stereo) m_mix[1] = &Mixer::stereo_ch2_ThreeChips;
+    }
 }
 
 void Mixer::clearSids()
