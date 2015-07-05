@@ -291,7 +291,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
         // Setup base SID
-        const SidConfig::sid_model_t userModel = getModel(tuneInfo->sidModel1(), defaultModel, forced);
+        const SidConfig::sid_model_t userModel = getModel(tuneInfo->sidModel(0), defaultModel, forced);
         sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
         if (!builder->getStatus())
         {
