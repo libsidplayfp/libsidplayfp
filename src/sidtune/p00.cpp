@@ -52,7 +52,7 @@ namespace libsidplayfp
 // as the filename becomes <= 8.  The removal of characters
 // occurs in three passes, the first removes all '_', then
 // vowels and finally numerics.  If the filename is still
-// greater than 8 it is trucated.
+// greater than 8 it is truncated.
 
 struct X00Header
 {
