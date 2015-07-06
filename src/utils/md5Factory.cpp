@@ -18,22 +18,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef MD5_FACTORY_H
-#define MD5_FACTORY_H
+#include "md5Factory.h"
 
-#include <memory>
+#include "iMd5.h"
 
-#include "sidcxx11.h"
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
+#ifdef GCRYPT_WITH_MD5
+#  include "md5Gcrypt.h"
+#else
+#  include "md5Internal.h"
+#endif
 
 namespace libsidplayfp
 {
-class iMd5;
 
-namespace md5Factory
+std::unique_ptr<iMd5> md5Factory::get()
 {
-    std::unique_ptr<iMd5> get();
+    return std::unique_ptr<iMd5>(
+#ifdef GCRYPT_WITH_MD5
+        new md5Gcrypt()
+#else
+        new md5Internal()
+#endif
+    );
 }
 
 }
-
-#endif // MD5_FACTORY_H

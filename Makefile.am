@@ -159,6 +159,7 @@ src/sidtune/SmartPtr.h \
 src/utils/iMd5.h \
 src/utils/iniParser.cpp \
 src/utils/iniParser.h \
+src/utils/md5Factory.cpp \
 src/utils/md5Factory.h \
 src/utils/SidDatabase.cpp \
 $(MD5SRC)
