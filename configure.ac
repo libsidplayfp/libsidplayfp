@@ -81,8 +81,7 @@ AC_CHECK_DECL(
 )
 
 AX_LIB_GCRYPT([auto])
-
-AM_CONDITIONAL([LIBGCRYPT], [test "x$LIBGCRYPT_TRUE" = "x"])
+AM_CONDITIONAL([LIBGCRYPT], [test "x$have_libgcrypt" = "xyes"])
 
 
 dnl libtool-style version-info number
