@@ -1,3 +1,12 @@
+1.8.0 2015-07-09
+* Rework and clean tune loading to be more portable
+* Add support for 3SID files (PSID v4)
+* Check if lightpen is really triggered before changing state
+* Define WIN32_LEAN_AND_MEAN when compiling on MinGW
+* Other minor fixes and improvements
+
+
+
 1.7.2 2015-05-10
 * Fix interpolation outside bounds in reSIDfp
 * Remove redundant code in PSID loader

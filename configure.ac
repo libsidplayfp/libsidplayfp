@@ -1,6 +1,6 @@
 m4_define([lib_major], [1])
 m4_define([lib_minor], [8])
-m4_define([lib_level], [0alpha])
+m4_define([lib_level], [0])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
@@ -80,20 +80,16 @@ AC_CHECK_DECL(
 
 dnl libtool-style version-info number
 #
-# http://blog.flameeyes.eu/2009/04/22/shared-object-version
+# https://autotools.io/libtool/version.html
 #
-# if you don’t change the interface at all just increase the
-#     “interface revision” value;
-# if you make backward-compatible changes (like adding interfaces),
-#     increase the “current interface” value and the “older interface age”
-#     value, reset “interface revision” to zero;
-# if you make backward-incompatible changes, breaking ABI
-#     (removing interfaces for instance), increase the “current interface”
-#     value and # reset both “older interface age” and ”interface revision”
-#     to zero.
+# Always increase the revision value. 
+#
+# Increase the current value whenever an interface has been added, removed or changed. 
+#
+# Increase the age value only if the changes made to the ABI are backward compatible.
 
-LIBSIDPLAYCUR=5
-LIBSIDPLAYREV=2
+LIBSIDPLAYCUR=6
+LIBSIDPLAYREV=3
 LIBSIDPLAYAGE=2
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
