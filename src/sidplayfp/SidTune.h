@@ -78,7 +78,7 @@ public:  // ----------------------------------------------------------------
 
     /**
      * Load a single-file sidtune from a memory buffer.
-     * Currently supported: PSID format.
+     * Currently supported: PSID and MUS formats.
      *
      * @param oneFileFormatSidtune the buffer that contains song data
      * @param sidtuneLength length of the buffer
