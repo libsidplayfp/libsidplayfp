@@ -11,7 +11,8 @@ TESTS = \
 TestEnvelopeGenerator \
 TestSpline \
 TestDac \
-TestPSID
+TestPSID \
+TestMUS
 
 check_PROGRAMS = $(TESTS)
 
@@ -38,5 +39,10 @@ TestPSID_SOURCES = \
 Main.cpp \
 TestPSID.cpp
 TestPSID_LDADD = $(top_builddir)/src/libsidplayfp.la
+
+TestMUS_SOURCES = \
+Main.cpp \
+TestMUS.cpp
+TestMUS_LDADD = $(top_builddir)/src/libsidplayfp.la
 
 endif

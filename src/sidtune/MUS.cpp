@@ -70,7 +70,7 @@ bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
 
 void MUS::setPlayerAddress()
 {
-    if (info->getSidChips() > 1)
+    if (info->getSidChips() == 1)
     {
         // Player #1.
         info->m_initAddr = 0xec60;
