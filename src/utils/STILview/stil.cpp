@@ -2,7 +2,7 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 1998, 2002 by LaLa <LaLa@C64.org>
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,7 +112,7 @@ void STIL::setVersionString()
     ss << fixed << setw(4) << setprecision(2);
     ss << "STILView v" << VERSION_NO << endl;
     ss << "\tCopyright (C) 1998, 2002 by LaLa (LaLa@C64.org)" << endl;
-    ss << "\tCopyright (C) 2012 by Leandro Nini <drfiemost@users.sourceforge.net>" << endl;
+    ss << "\tCopyright (C) 2012-2015 by Leandro Nini <drfiemost@users.sourceforge.net>" << endl;
     versionString = ss.str();
 }
 
@@ -364,7 +364,7 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         if (positionToEntry(relPathToEntry, stilFile, stilDirs) == false)
         {
             // Copy the entry's name to the buffer.
-            entrybuf.append(relPathToEntry).append("\n");
+            entrybuf.assign(relPathToEntry).append("\n");
             CERR_STIL_DEBUG << "getEntry() posToEntry() failed" << endl;
             lastError = NOT_IN_STIL;
         }
@@ -464,7 +464,7 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         if (positionToEntry(relPathToEntry, bugFile, bugDirs) == false)
         {
             // Copy the entry's name to the buffer.
-            bugbuf.append(relPathToEntry).append("\n");
+            bugbuf.assign(relPathToEntry).append("\n");
             CERR_STIL_DEBUG << "getBug() posToEntry() failed" << endl;
             lastError = NOT_IN_BUG;
         }
@@ -566,7 +566,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
         if (positionToEntry(dir.c_str(), stilFile, stilDirs) == false)
         {
             // Copy the dirname to the buffer.
-            globalbuf.append(dir).append("\n");
+            globalbuf.assign(dir).append("\n");
             CERR_STIL_DEBUG << "getGC() posToEntry() failed" << endl;
             lastError = NOT_IN_STIL;
         }
