@@ -63,7 +63,6 @@ namespace stringutils
      */
     inline bool equal(const char* s1, const char* s2)
     {
-
 #if defined(HAVE_STRCASECMP)
         return strcasecmp(s1, s2) == 0;
 #elif defined(HAVE_STRICMP)
@@ -94,7 +93,6 @@ namespace stringutils
      */
     inline bool equal(const char* s1, const char* s2, size_t n)
     {
-
 #if defined(HAVE_STRNCASECMP)
         return strncasecmp(s1, s2, n) == 0;
 #elif defined(HAVE_STRNICMP)
