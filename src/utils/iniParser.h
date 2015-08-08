@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2013 Leandro Nini
+ *  Copyright (C) 2010-2015 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ private:
 private:
     std::string parseSection(const std::string &buffer);
 
-    std::pair<std::string, std::string> parseKey(const std::string &buffer);
+    keys_t::value_type parseKey(const std::string &buffer);
 
 public:
     bool open(const char *fName);

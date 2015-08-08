@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2013 Leandro Nini
+ *  Copyright (C) 2010-2015 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ std::string iniParser::parseSection(const std::string &buffer)
     return buffer.substr(1, pos-1);
 }
 
-std::pair<std::string, std::string> iniParser::parseKey(const std::string &buffer)
+iniParser::keys_t::value_type iniParser::parseKey(const std::string &buffer)
 {
     const size_t pos = buffer.find('=');
 
