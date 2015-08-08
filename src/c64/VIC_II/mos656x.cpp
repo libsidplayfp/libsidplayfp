@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
@@ -56,7 +56,7 @@ const char *MOS656X::credit =
     "\tCopyright (C) 2001 Simon White\n"
     "\tCopyright (C) 2007-2010 Antti Lankila\n"
     "\tCopyright (C) 2009-2014 VICE Project\n"
-    "\tCopyright (C) 2011-2014 Leandro Nini\n"
+    "\tCopyright (C) 2011-2015 Leandro Nini\n"
 };
 
 
@@ -179,25 +179,28 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
 
             const bool oldBadLine = isBadLine;
 
-            if (wasBadLine && !nowBadLine)
+            if (nowBadLine != wasBadLine)
             {
-                if (lineCycle < VICII_FETCH_CYCLE)
+                if (wasBadLine)
                 {
-                    isBadLine = false;
+                    if (lineCycle < VICII_FETCH_CYCLE)
+                    {
+                        isBadLine = false;
+                    }
                 }
-            }
-            else if (!wasBadLine && nowBadLine)
-            {
-                if (lineCycle >= VICII_FETCH_CYCLE
-                    && lineCycle < VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 3)
+                else
                 {
-                    isBadLine = true;
-                }
-                else if (lineCycle <= VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 6)
-                {
-                    // Bad line has been generated after fetch interval, but
-                    // before the raster counter is incremented.
-                    isBadLine = true;
+                    if (lineCycle >= VICII_FETCH_CYCLE
+                        && lineCycle < VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 3)
+                    {
+                        isBadLine = true;
+                    }
+                    else if (lineCycle <= VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 6)
+                    {
+                        // Bad line has been generated after fetch interval, but
+                        // before the raster counter is incremented.
+                        isBadLine = true;
+                    }
                 }
             }
 
