@@ -16,3 +16,5 @@ someday/maybe:
 * implement support for mus data embedded in psid files
 * test hardsid support
 * raise an error on HLT instructions execution
+
+* fix building on Cygwin
