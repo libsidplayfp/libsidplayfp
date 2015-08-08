@@ -78,7 +78,7 @@ public:
  * - Basic ROM 2364
  * - Kernal ROM 2364
  */
-class c64: private c64env
+class c64 final : private c64env
 {
 public:
     typedef enum

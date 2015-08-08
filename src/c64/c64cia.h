@@ -43,7 +43,7 @@ namespace libsidplayfp
  *
  * Located at $DC00-$DCFF
  */
-class c64cia1 : public MOS6526, public Bank
+class c64cia1 final : public MOS6526, public Bank
 {
 private:
     c64env &m_env;

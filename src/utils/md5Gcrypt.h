@@ -33,7 +33,7 @@
 namespace libsidplayfp
 {
 
-class md5Gcrypt : public iMd5
+class md5Gcrypt final : public iMd5
 {
 private:
     gcry_md_hd_t hd;

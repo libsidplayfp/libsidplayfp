@@ -38,7 +38,7 @@ namespace libsidplayfp
  *
  * @author Antti Lankila
  */
-class IOBank : public Bank
+class IOBank final : public Bank
 {
 private:
     Bank* map[16];

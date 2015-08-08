@@ -39,7 +39,7 @@ namespace libsidplayfp
  *
  * Located at $D800-$DBFF (last 24 bytes are unused)
  */
-class ColorRAMBank : public Bank
+class ColorRAMBank final : public Bank
 {
 private:
     uint8_t ram[0x400];

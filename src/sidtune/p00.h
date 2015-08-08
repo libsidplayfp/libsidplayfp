@@ -28,7 +28,7 @@ namespace libsidplayfp
 
 struct X00Header;
 
-class p00 : public SidTuneBase
+class p00 final : public SidTuneBase
 {
 protected:
     p00() {}

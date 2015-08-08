@@ -49,7 +49,7 @@
 /**
  * The implementation of the SidInfo interface.
  */
-class SidInfoImpl : public SidInfo
+class SidInfoImpl final : public SidInfo
 {
 public:
     const std::string m_name;

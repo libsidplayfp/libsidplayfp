@@ -33,7 +33,7 @@ template <class T> class SmartPtr_sidtt;
 namespace libsidplayfp
 {
 
-class MUS : public SidTuneBase
+class MUS final : public SidTuneBase
 {
 private:
     /// Needed for MUS/STR player installation.

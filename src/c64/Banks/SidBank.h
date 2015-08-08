@@ -37,7 +37,7 @@ namespace libsidplayfp
  *
  * Located at $D400-$D7FF, mirrored each 32 bytes
  */
-class SidBank : public Bank
+class SidBank final : public Bank
 {
 private:
     /// SID chip

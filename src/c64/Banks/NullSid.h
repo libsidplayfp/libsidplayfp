@@ -32,7 +32,7 @@ namespace libsidplayfp
 /**
  * SID chip placeholder which does nothing and returns 0xff on reading.
  */
-class NullSid : public c64sid
+class NullSid final : public c64sid
 {
 private:
     NullSid() {}

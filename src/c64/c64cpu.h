@@ -33,7 +33,7 @@
 namespace libsidplayfp
 {
 
-class c64cpu : public MOS6510
+class c64cpu final : public MOS6510
 {
 private:
     c64env &m_env;

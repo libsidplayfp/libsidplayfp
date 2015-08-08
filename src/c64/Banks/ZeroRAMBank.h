@@ -63,7 +63,7 @@ protected:
  *
  * @author Antti Lankila
  */
-class ZeroRAMBank : public Bank
+class ZeroRAMBank final : public Bank
 {
 private:
     /**

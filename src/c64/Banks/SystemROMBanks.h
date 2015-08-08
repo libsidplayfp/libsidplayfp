@@ -79,7 +79,7 @@ public:
  *
  * Located at $E000-$FFFF
  */
-class KernalRomBank : public romBank<0x2000>
+class KernalRomBank final : public romBank<0x2000>
 {
 private:
     uint8_t resetVectorLo;  // 0xfffc
@@ -143,7 +143,7 @@ public:
  *
  * Located at $A000-$BFFF
  */
-class BasicRomBank : public romBank<0x2000>
+class BasicRomBank final : public romBank<0x2000>
 {
 private:
     uint8_t trap[3];
@@ -201,7 +201,7 @@ public:
  *
  * Located at $D000-$DFFF
  */
-class CharacterRomBank : public romBank<0x1000> {};
+class CharacterRomBank final : public romBank<0x1000> {};
 
 }
 

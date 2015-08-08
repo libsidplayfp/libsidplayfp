@@ -45,7 +45,7 @@ namespace libsidplayfp
 /**
  * The C64 MMU chip.
  */
-class MMU : public PLA, public sidmemory
+class MMU final : public PLA, public sidmemory
 {
 private:
     EventContext &context;

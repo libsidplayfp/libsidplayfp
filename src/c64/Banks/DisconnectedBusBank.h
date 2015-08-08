@@ -38,7 +38,7 @@ namespace libsidplayfp
  *
  * I/O Area #2 located at $DF00-$DFFF
  */
-class DisconnectedBusBank : public Bank
+class DisconnectedBusBank final : public Bank
 {
     /**
      * No device is connected so this is a no-op.

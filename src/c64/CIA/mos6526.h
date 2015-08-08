@@ -49,7 +49,7 @@ class MOS6526;
  * @author Ken Händel
  *
  */
-class TimerA : public Timer
+class TimerA final : public Timer
 {
 private:
     /**
@@ -73,7 +73,7 @@ public:
  * @author Ken Händel
  *
  */
-class TimerB : public Timer
+class TimerB final : public Timer
 {
 private:
     void underFlow() override;
@@ -107,7 +107,7 @@ public:
 /**
  * InterruptSource that acts like new CIA
  */
-class InterruptSource6526A : public InterruptSource
+class InterruptSource6526A final : public InterruptSource
 {
 public:
     InterruptSource6526A(EventContext &context, MOS6526 &parent) :
@@ -127,7 +127,7 @@ public:
 /**
  * InterruptSource that acts like old CIA
  */
-class InterruptSource6526 : public InterruptSource
+class InterruptSource6526 final : public InterruptSource
 {
 private:
     /// Have we already scheduled CIA->CPU interrupt transition?

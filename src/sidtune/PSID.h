@@ -34,7 +34,7 @@ namespace libsidplayfp
 
 struct psidHeader;
 
-class PSID : public SidTuneBase
+class PSID final : public SidTuneBase
 {
 private:
     char m_md5[SidTune::MD5_LENGTH+1];

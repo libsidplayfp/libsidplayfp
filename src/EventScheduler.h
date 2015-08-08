@@ -29,7 +29,7 @@
 
 
 template< class This >
-class EventCallback: public Event
+class EventCallback final : public Event
 {
 private:
     typedef void (This::*Callback) ();
@@ -54,7 +54,7 @@ public:
  *
  * @author Antti S. Lankila
  */
-class EventScheduler: public EventContext
+class EventScheduler final : public EventContext
 {
 private:
     /// The first event of the chain.

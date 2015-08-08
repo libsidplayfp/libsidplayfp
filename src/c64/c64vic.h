@@ -41,7 +41,7 @@ namespace libsidplayfp
  *
  * Located at $D000-$D3FF
  */
-class c64vic : public MOS656X, public Bank
+class c64vic final : public MOS656X, public Bank
 {
 private:
     c64env &m_env;

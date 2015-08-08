@@ -3,6 +3,8 @@
 #ifndef SMARTPTR_H
 #define SMARTPTR_H
 
+#include "sidcxx11.h"
+
 typedef unsigned long int ulint_smartpt;
 
 template <class T>
@@ -192,7 +194,7 @@ class SmartPtrBase_sidtt
 
 
 template <class T>
-class SmartPtr_sidtt : public SmartPtrBase_sidtt<T>
+class SmartPtr_sidtt final : public SmartPtrBase_sidtt<T>
 {
  public:
 	/* --- constructors --- */

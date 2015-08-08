@@ -26,7 +26,7 @@
 namespace libsidplayfp
 {
 
-class prg : public SidTuneBase
+class prg final : public SidTuneBase
 {
 protected:
     prg() {}

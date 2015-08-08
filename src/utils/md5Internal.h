@@ -30,7 +30,7 @@
 namespace libsidplayfp
 {
 
-class md5Internal : public iMd5
+class md5Internal final : public iMd5
 {
 private:
     MD5 hd;

@@ -37,7 +37,7 @@ namespace libsidplayfp
  *
  * @author Antti Lankila
  */
-class SystemRAMBank : public Bank
+class SystemRAMBank final : public Bank
 {
     friend class MMU;
 
