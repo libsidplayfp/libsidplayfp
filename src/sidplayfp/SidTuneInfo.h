@@ -115,7 +115,7 @@ public:
      */
     SID_DEPRECATED bool isStereo() const { return getSidChips() > 1; }
 
-     /**
+    /**
      * The number of SID chips required by the tune.
      */
     int sidChips() const { return getSidChips(); }
@@ -158,9 +158,9 @@ public:
      * - 2 = Released
      */
     //@{
-    unsigned int numberOfInfoStrings() const     ///< the number of available text info lines
+    unsigned int numberOfInfoStrings() const     ///< The number of available text info lines
     { return getNumberOfInfoStrings(); }
-    const char* infoString(unsigned int i) const ///< text info from the format headers etc.
+    const char* infoString(unsigned int i) const ///< Text info from the format headers etc.
     { return getInfoString(i); }
     //@}
 
@@ -171,7 +171,7 @@ public:
     //@{
     unsigned int numberOfCommentStrings() const     ///< Number of comments
     { return getNumberOfCommentStrings(); }
-    const char* commentString(unsigned int i) const ///<  Used to stash the MUS comment somewhere.
+    const char* commentString(unsigned int i) const ///< Used to stash the MUS comment somewhere.
     { return getCommentString(i); }
     //@}
 
