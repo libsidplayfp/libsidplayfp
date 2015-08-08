@@ -102,14 +102,14 @@ public:
      * The SID chip base address(es) used by the sidtune.
      */
     //@{
-    virtual SID_DEPRECATED uint_least16_t sidChipBase1() const =0;    ///< 0xD400 (normal, 1st SID) \deprecated use #sidChipBase(0)
-    virtual SID_DEPRECATED uint_least16_t sidChipBase2() const =0;    ///< 0xD?00 (2nd SID) or 0 (no 2nd SID) \deprecated use #sidChipBase(1)
+    virtual SID_DEPRECATED uint_least16_t sidChipBase1() const =0;    ///< 0xD400 (normal, 1st SID) \deprecated use #sidChipBase() with i=0
+    virtual SID_DEPRECATED uint_least16_t sidChipBase2() const =0;    ///< 0xD??0 (2nd SID) or 0 (no 2nd SID) \deprecated use #sidChipBase() with i=1
     virtual uint_least16_t sidChipBase(unsigned int i) const =0;   ///< \since 1.8
     //@}
 
     /**
      * Whether sidtune uses two SID chips.
-     * \deprecated use #getSidChips()
+     * \deprecated use #sidChips()
      */
     virtual SID_DEPRECATED bool isStereo() const=0;
 
