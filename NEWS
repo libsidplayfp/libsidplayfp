@@ -1,3 +1,9 @@
+1.8.1 2015-08-09
+* Fix a regresion in MUS loader introduced in 1.8.0
+* Fix a regresion in STIL
+
+
+
 1.8.0 2015-07-09
 * Rework and clean tune loading to be more portable
 * Add support for 3SID files (PSID v4)
