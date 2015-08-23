@@ -177,10 +177,10 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
             const bool wasBadLine = (wasBadLinesEnabled && (oldYscroll == (rasterY & 7)));
             const bool nowBadLine = (areBadLinesEnabled && (yscroll == (rasterY & 7)));
 
-            const bool oldBadLine = isBadLine;
-
             if (nowBadLine != wasBadLine)
             {
+                const bool oldBadLine = isBadLine;
+
                 if (wasBadLine)
                 {
                     if (lineCycle < VICII_FETCH_CYCLE)
@@ -202,10 +202,10 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
                         isBadLine = true;
                     }
                 }
-            }
 
-            if (isBadLine != oldBadLine)
-                event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+                if (isBadLine != oldBadLine)
+                        event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+            }
         }
     }
         // fall-through
