@@ -52,6 +52,10 @@ AC_C_BIGENDIAN
 AC_CHECK_SIZEOF(short, 2)
 AC_CHECK_SIZEOF(int, 4)
 
+AS_IF([test $ac_cv_sizeof_short -ne 2],
+  [AC_MSG_ERROR([size of short must be 2])]
+)
+
 AS_IF([test $ac_cv_sizeof_int -lt 4],
   [AC_MSG_ERROR([only 32 bit or better CPUs are supported])]
 )
