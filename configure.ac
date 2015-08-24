@@ -24,7 +24,7 @@ case "$host" in
         ;;
 esac
 case "$host" in
-    *mingw32*|*cygwin* )
+    *mingw32* )
         MINGW32=yes
         ;;
 esac
