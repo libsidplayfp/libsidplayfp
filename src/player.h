@@ -60,20 +60,6 @@ class Player
 #endif
 {
 private:
-    /**
-     * Configuration error exception.
-     */
-    class configError
-    {
-    private:
-        const char* m_msg;
-
-    public:
-        configError(const char* msg) : m_msg(msg) {}
-        const char* message() const { return m_msg; }
-    };
-
-private:
     /// Commodore 64 emulator
     c64 m_c64;
 

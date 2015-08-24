@@ -52,6 +52,19 @@ const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID addres
 const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
 const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
 
+/**
+ * Configuration error exception.
+ */
+class configError
+{
+private:
+    const char* m_msg;
+
+public:
+    configError(const char* msg) : m_msg(msg) {}
+    const char* message() const { return m_msg; }
+};
+
 Player::Player() :
     // Set default settings for system
     m_tune(nullptr),
