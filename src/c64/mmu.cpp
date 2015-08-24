@@ -78,6 +78,10 @@ void MMU::reset()
     kernalRomBank.reset();
     basicRomBank.reset();
 
+    loram = false;
+    hiram = false;
+    charen = false;
+
     updateMappingPHI2();
 }
 
