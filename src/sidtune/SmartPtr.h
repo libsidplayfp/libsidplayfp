@@ -5,6 +5,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 typedef unsigned long int ulint_smartpt;
 
 template <class T>
@@ -229,5 +232,7 @@ class SmartPtr_sidtt final : public SmartPtrBase_sidtt<T>
 		}
 	}
 };
+
+}
 
 #endif  /* SMARTPTR_H */

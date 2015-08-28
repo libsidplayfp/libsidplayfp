@@ -37,12 +37,11 @@
 
 #include "sidcxx11.h"
 
-template <class T> class SmartPtr_sidtt;
-
 namespace libsidplayfp
 {
 
 class sidmemory;
+template <class T> class SmartPtr_sidtt;
 
 /**
  * loadError
