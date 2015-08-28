@@ -35,7 +35,7 @@
  *        const SidTuneInfo* tuneInfo = SidTune.getInfo();
  *        const SidTuneInfo* tuneInfo = SidTune.getInfo(songNumber);
  */
-class SidTuneInfo
+class SID_EXTERN SidTuneInfo
 {
 public:
     typedef enum {
@@ -70,32 +70,32 @@ public:
     /**
      * Load Address.
      */
-    uint_least16_t loadAddr() const { return getLoadAddr(); }
+    uint_least16_t loadAddr() const;
 
     /**
      * Init Address.
      */
-    uint_least16_t initAddr() const { return getInitAddr(); }
+    uint_least16_t initAddr() const;
 
     /**
      * Play Address.
      */
-    uint_least16_t playAddr() const { return getPlayAddr(); }
+    uint_least16_t playAddr() const;
 
     /**
      * The number of songs.
      */
-    unsigned int songs() const  { return getSongs(); }
+    unsigned int songs() const;
 
     /**
      * The default starting song.
      */
-    unsigned int startSong() const { return getStartSong(); }
+    unsigned int startSong() const;
 
     /**
      * The tune that has been initialized.
      */
-    unsigned int currentSong() const { return getCurrentSong(); }
+    unsigned int currentSong() const;
 
     /**
      * @name Base addresses
@@ -104,51 +104,51 @@ public:
      * - 0 if the nth SID is not required
      */
     //@{
-    SID_DEPRECATED uint_least16_t sidChipBase1() const { return getSidChipBase(0); }
-    SID_DEPRECATED uint_least16_t sidChipBase2() const { return getSidChipBase(1); }
-    uint_least16_t sidChipBase(unsigned int i) const { return getSidChipBase(i); }
+    SID_DEPRECATED uint_least16_t sidChipBase1() const;
+    SID_DEPRECATED uint_least16_t sidChipBase2() const;
+    uint_least16_t sidChipBase(unsigned int i) const;
     //@}
 
     /**
      * \deprecated
      * Whether sidtune uses two SID chips.
      */
-    SID_DEPRECATED bool isStereo() const { return getSidChips() > 1; }
+    SID_DEPRECATED bool isStereo() const;
 
     /**
      * The number of SID chips required by the tune.
      */
-    int sidChips() const { return getSidChips(); }
+    int sidChips() const;
 
     /**
      * Intended speed.
      */
-    int songSpeed() const { return getSongSpeed(); }
+    int songSpeed() const;
 
     /**
      * First available page for relocation.
      */
-    uint_least8_t relocStartPage() const { return getRelocStartPage(); }
+    uint_least8_t relocStartPage() const;
 
     /**
      * Number of pages available for relocation.
      */
-    uint_least8_t relocPages() const { return getRelocPages(); }
+    uint_least8_t relocPages() const;
 
     /**
      * @name SID model
      * The SID chip model(s) requested by the sidtune.
      */
     //@{
-    SID_DEPRECATED model_t sidModel1() const { return getSidModel(0); }
-    SID_DEPRECATED model_t sidModel2() const { return getSidModel(1); }
-    model_t sidModel(unsigned int i) const { return getSidModel(i); }
+    SID_DEPRECATED model_t sidModel1() const;
+    SID_DEPRECATED model_t sidModel2() const;
+    model_t sidModel(unsigned int i) const;
     //@}
 
     /**
      * Compatibility requirements.
      */
-    compatibility_t compatibility() const { return getCompatibility(); }
+    compatibility_t compatibility() const;
 
     /**
      * @name Tune infos
@@ -158,10 +158,8 @@ public:
      * - 2 = Released
      */
     //@{
-    unsigned int numberOfInfoStrings() const     ///< The number of available text info lines
-    { return getNumberOfInfoStrings(); }
-    const char* infoString(unsigned int i) const ///< Text info from the format headers etc.
-    { return getInfoString(i); }
+    unsigned int numberOfInfoStrings() const;     ///< The number of available text info lines
+    const char* infoString(unsigned int i) const; ///< Text info from the format headers etc.
     //@}
 
     /**
@@ -169,52 +167,50 @@ public:
      * MUS comments.
      */
     //@{
-    unsigned int numberOfCommentStrings() const     ///< Number of comments
-    { return getNumberOfCommentStrings(); }
-    const char* commentString(unsigned int i) const ///< Used to stash the MUS comment somewhere.
-    { return getCommentString(i); }
+    unsigned int numberOfCommentStrings() const;     ///< Number of comments
+    const char* commentString(unsigned int i) const; ///< Used to stash the MUS comment somewhere
     //@}
 
     /**
      * Length of single-file sidtune file.
      */
-    uint_least32_t dataFileLen() const { return getDataFileLen(); }
+    uint_least32_t dataFileLen() const;
 
     /**
      * Length of raw C64 data without load address.
      */
-    uint_least32_t c64dataLen() const { return getC64dataLen(); }
+    uint_least32_t c64dataLen() const;
 
     /**
      * The tune clock speed.
      */
-    clock_t clockSpeed() const { return getClockSpeed(); }
+    clock_t clockSpeed() const;
 
     /**
      * The name of the identified file format.
      */
-    const char* formatString() const { return getFormatString(); }
+    const char* formatString() const;
 
     /**
      * Whether load address might be duplicate.
      */
-    bool fixLoad() const { return getFixLoad(); }
+    bool fixLoad() const;
 
     /**
      * Path to sidtune files.
      */
-    const char* path() const { return getPath(); }
+    const char* path() const;
 
     /**
      * A first file: e.g. "foo.sid" or "foo.mus".
      */
-    const char* dataFileName() const { return getDataFileName(); }
+    const char* dataFileName() const;
 
     /**
      * A second file: e.g. "foo.str".
      * Returns 0 if none.
      */
-    const char* infoFileName() const { return getInfoFileName(); }
+    const char* infoFileName() const;
 
 private:
     virtual uint_least16_t getLoadAddr() const =0;

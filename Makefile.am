@@ -140,6 +140,7 @@ src/sidplayfp/sidplayfp.cpp \
 src/sidplayfp/sidbuilder.cpp \
 src/sidplayfp/SidConfig.cpp \
 src/sidplayfp/SidTune.cpp \
+src/sidplayfp/SidTuneInfo.cpp \
 src/sidtune/MUS.cpp \
 src/sidtune/MUS.h \
 src/sidtune/p00.cpp \
