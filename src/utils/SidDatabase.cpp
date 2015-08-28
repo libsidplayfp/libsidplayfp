@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -38,6 +38,8 @@ const char ERR_NO_SELECTED_SONG[]        = "SID DATABASE ERROR: No song selected
 const char ERR_MEM_ALLOC[]               = "SID DATABASE ERROR: Memory Allocation Failure.";
 const char ERR_UNABLE_TO_LOAD_DATABASE[] = "SID DATABASE ERROR: Unable to load the songlegnth database.";
 
+class parseError {};
+
 SidDatabase::SidDatabase() :
     m_parser(0),
     errorString(ERR_NO_DATABASE_LOADED)
@@ -48,7 +50,7 @@ SidDatabase::~SidDatabase()
     // Needed to delete auto_ptr with complete type
 }
 
-const char *SidDatabase::parseTime(const char *str, long &result)
+const char *parseTime(const char *str, long &result)
 {
     char *end;
     const long minutes = strtol(str, &end, 10);
