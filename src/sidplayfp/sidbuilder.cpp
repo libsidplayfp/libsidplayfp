@@ -26,6 +26,8 @@
 
 #include "sidemu.h"
 
+#include "sidcxx11.h"
+
 libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidConfig::sid_model_t model)
 {
     m_status = true;
@@ -43,7 +45,7 @@ libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidCon
     // Unable to locate free SID
     m_status = false;
     m_errorBuffer.assign(name()).append("ERROR: No available SIDs to lock");
-    return 0;
+    return nullptr;
 }
 
 void sidbuilder::unlock(libsidplayfp::sidemu *device)
