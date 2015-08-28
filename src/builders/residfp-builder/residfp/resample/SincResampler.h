@@ -53,7 +53,7 @@ namespace reSIDfp
 class SincResampler final : public Resampler
 {
 private:
-    /// Size of the ring buffer
+    /// Size of the ring buffer, must be a power of 2
     static const int RINGSIZE = 2048;
 
 private:

@@ -222,7 +222,7 @@ void EnvelopeGenerator::clock()
     // envelope can constly be stepped.
     // This has been verified by sampling ENV3.
     //
-    // Envelope is now implemented like in the real machine with a shift register
+    // Note: Envelope is now implemented like in the real machine with a shift register
     // so the ADSR delay bug should be correcly modeled
 
     // check to see if LFSR matches table value
@@ -240,7 +240,6 @@ void EnvelopeGenerator::clock()
 
     // The first envelope step in the attack state also resets the exponential
     // counter. This has been verified by sampling ENV3.
-    //
     if (state == ATTACK || ++exponential_counter == exponential_counter_period)
     {
         // likely (~50%)
@@ -259,7 +258,6 @@ void EnvelopeGenerator::clock()
             // release, then to attack. The envelope counter is then frozen at
             // zero; to unlock this situation the state must be changed to release,
             // then to attack. This has been verified by sampling ENV3.
-            //
             ++envelope_counter;
 
             if (unlikely(envelope_counter == 0xff))
@@ -271,7 +269,6 @@ void EnvelopeGenerator::clock()
             break;
 
         case DECAY_SUSTAIN:
-
             // From the sustain levels it follows that both the low and high 4 bits
             // of the envelope counter are compared to the 4-bit sustain value.
             // This has been verified by sampling ENV3.
@@ -286,13 +283,11 @@ void EnvelopeGenerator::clock()
             // fall-through
 
         case RELEASE:
-
             // The envelope counter can flip from 0x00 to 0xff by changing state to
             // attack, then to release. The envelope counter will then continue
             // counting down in the release state.
             // This has been verified by sampling ENV3.
             // NB! The operation below requires two's complement integer.
-            //
             if (unlikely(exponential_counter_period != 1))
             {
                 // The decrement is delayed one cycle.

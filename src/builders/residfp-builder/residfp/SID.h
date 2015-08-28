@@ -234,6 +234,7 @@ public:
      * @param method sampling method to use
      * @param samplingFrequency Desired output sampling rate
      * @param highestAccurateFrequency
+     * @throw SIDError
      */
     void setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency);
 
@@ -339,12 +340,12 @@ int SID::clock(unsigned int cycles, short* buf)
 
             for (unsigned int i = 0; i < delta_t; i++)
             {
-                /* clock waveform generators */
+                // clock waveform generators
                 voice[0]->wave()->clock();
                 voice[1]->wave()->clock();
                 voice[2]->wave()->clock();
 
-                /* clock envelope generators */
+                // clock envelope generators
                 voice[0]->envelope()->clock();
                 voice[1]->envelope()->clock();
                 voice[2]->envelope()->clock();

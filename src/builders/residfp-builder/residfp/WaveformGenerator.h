@@ -59,8 +59,7 @@ namespace reSIDfp
  * The upper 12 bits of the accumulator are used.
  * These bits are compared to the pulse width register by a 12 bit digital
  * comparator; output is either all one or all zero bits.
- * The pulse setting is delayed one cycle after the compare; this is only
- * modeled for single cycle clocking.
+ * The pulse setting is delayed one cycle after the compare.
  * The test bit, when set to one, holds the pulse waveform output at 0xfff
  * regardless of the pulse width setting.
  *
@@ -68,8 +67,7 @@ namespace reSIDfp
  * - Noise:
  * The noise output is taken from intermediate bits of a 23-bit shift register
  * which is clocked by bit 19 of the accumulator.
- * The shift is delayed 2 cycles after bit 19 is set high; this is only
- * modeled for single cycle clocking.
+ * The shift is delayed 2 cycles after bit 19 is set high.
  *
  * Operation: Calculate EOR result, shift register, set bit 0 = result.
  *
@@ -236,11 +234,11 @@ public:
     void reset();
 
     /**
-     * Get the Waveform Generator output.
+     * 12-bit waveform output as an analogue float value.
      * The output from SID 8580 is delayed one cycle compared to SID 6581;
      *
-     * @param ringModulator The oscillator ring-modulating me.
-     * @return output from waveform generator
+     * @param ringModulator The oscillator ring-modulating current one.
+     * @return output the waveform generator output
      */
     float output(const WaveformGenerator* ringModulator);
 

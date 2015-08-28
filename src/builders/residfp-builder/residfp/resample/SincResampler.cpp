@@ -117,11 +117,11 @@ int convolve(const short* a, const short* b, int bLength)
 
 int SincResampler::fir(int subcycle)
 {
-    // find the first of the nearest fir tables close to the phase
+    // Find the first of the nearest fir tables close to the phase
     int firTableFirst = (subcycle * firRES >> 10);
     const int firTableOffset = (subcycle * firRES) & 0x3ff;
 
-    // find firN most recent samples, plus one extra in case the FIR wraps.
+    // Find firN most recent samples, plus one extra in case the FIR wraps.
     int sampleStart = sampleIndex - firN + RINGSIZE - 1;
 
     const int v1 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
@@ -164,12 +164,12 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         // The filter order will maximally be 124 with the current constraints.
         // N >= (96.33 - 7.95)/(2 * pi * 2.285 * (maxfreq - passbandfreq) >= 123
         // The filter order is equal to the number of zero crossings, i.e.
-        // it should be an even number (sinc is symmetric about x = 0).
+        // it should be an even number (sinc is symmetric with respect to x = 0).
         int N = static_cast<int>((A - 7.95) / (2.285 * dw) + 0.5);
         N += N & 1;
 
         // The filter length is equal to the filter order + 1.
-        // The filter length must be an odd number (sinc is symmetric about
+        // The filter length must be an odd number (sinc is symmetric with respect to
         // x = 0).
         firN = static_cast<int>(N * cyclesPerSampleD) + 1;
         firN |= 1;
@@ -182,9 +182,10 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
 
         // firN*firRES represent the total resolution of the sinc sampling. JOS
         // recommends a length of 2^BITS, but we don't quite use that good a filter.
-        // The filter test program indicates that the filter performs well, though. */
+        // The filter test program indicates that the filter performs well, though.
     }
 
+    // Create the map key
     std::ostringstream o;
     o << firN << "," << firRES << "," << cyclesPerSampleD;
     const std::string firKey = o.str();

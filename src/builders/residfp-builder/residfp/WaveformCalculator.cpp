@@ -54,7 +54,7 @@ const CombinedWaveformConfig config[2][4] =
 /**
  * Generate bitstate based on emulation of combined waves.
  *
- * @param config
+ * @param config model parameters matrix
  * @param waveform the waveform to emulate, 1 .. 7
  * @param accumulator the high bits of the accumulator value
  */
@@ -62,13 +62,13 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
 {
     float o[12];
 
-    /* S with strong top bit for 6581 */
+    // S with strong top bit for 6581
     for (int i = 0; i < 12; i++)
     {
         o[i] = (accumulator & (1 << i)) != 0 ? 1.f : 0.f;
     }
 
-    /* convert to T */
+    // convert to T
     if ((waveform & 3) == 1)
     {
         const bool top = (accumulator & 0x800) != 0;
@@ -81,10 +81,10 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
         o[0] = 0.f;
     }
 
-    /* convert to ST */
+    // convert to ST
     if ((waveform & 3) == 3)
     {
-        /* bottom bit is grounded via T waveform selector */
+        // bottom bit is grounded via T waveform selector
         o[0] *= config.stmix;
 
         for (int i = 1; i < 12; i++)
@@ -95,7 +95,7 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
 
     o[11] *= config.topbit;
 
-    /* ST, P* waveform? */
+    // ST, P* waveform?
     if (waveform == 3 || waveform > 4)
     {
         float distancetable[12 * 2 + 1];
@@ -119,7 +119,7 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
                 n += weight;
             }
 
-            /* pulse control bit */
+            // pulse control bit
             if (waveform > 4)
             {
                 const float weight = distancetable[i - 12 + 12];

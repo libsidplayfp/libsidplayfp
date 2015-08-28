@@ -50,6 +50,7 @@ private:
     {}
 
 public:
+    // Named constructor
     static TwoPassSincResampler* create(double clockFrequency, double samplingFrequency, double highestAccurateFrequency)
     {
         // Calculation according to Laurent Ganier. It evaluates to about 120 kHz at typical settings.
