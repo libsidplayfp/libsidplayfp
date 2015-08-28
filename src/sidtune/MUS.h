@@ -27,9 +27,6 @@
 
 #include "sidcxx11.h"
 
-class sidmemory;
-template <class T> class SmartPtr_sidtt;
-
 namespace libsidplayfp
 {
 
