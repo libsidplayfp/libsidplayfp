@@ -98,7 +98,7 @@ STIL::STIL(const char *stilPath, const char *bugsPath) :
     STIL_DEBUG(false),
     PATH_TO_STIL(stilPath),
     PATH_TO_BUGLIST(bugsPath),
-    STILVersion(0.0),
+    STILVersion(0.0f),
     STIL_EOL('\n'),
     STIL_EOL2('\0'),
     lastError(NO_STIL_ERROR)
