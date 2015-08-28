@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ namespace reSIDfp
 
 const double EPSILON = 1e-8;
 
-double OpAmp::solve(double n, double vi)
+double OpAmp::solve(double n, double vi) const
 {
     // Start off with an estimate of x and a root bracket [ak, bk].
     // f is decreasing, so that f(ak) > 0 and f(bk) < 0.

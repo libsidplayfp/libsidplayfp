@@ -69,7 +69,7 @@ class OpAmp
 {
 private:
     /// Current root position (cached as guess to speed up next iteration)
-    double x;
+    mutable double x;
 
     const double kVddt, vmin, vmax;
 
@@ -102,7 +102,7 @@ public:
      * @param vi input
      * @return vo
      */
-    double solve(double n, double vi);
+    double solve(double n, double vi) const;
 };
 
 } // namespace reSIDfp

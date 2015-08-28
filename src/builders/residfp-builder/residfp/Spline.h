@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,7 +62,7 @@ private:
     ParamVector params;
 
     /// last used parameters, cached for speed up
-    ParamVector::const_pointer c;
+    mutable ParamVector::const_pointer c;
 
 public:
     Spline(const Point input[], size_t inputLength);
@@ -70,7 +70,7 @@ public:
     /**
      * Evaluate y and its derivative at given point x.
      */
-    Point evaluate(double x);
+    Point evaluate(double x) const;
 };
 
 } // namespace reSIDfp

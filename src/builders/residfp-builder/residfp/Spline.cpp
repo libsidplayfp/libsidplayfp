@@ -88,7 +88,7 @@ Spline::Spline(const Point input[], size_t inputLength) :
     params[coeffLength - 1].x2 = std::numeric_limits<double>::max();
 }
 
-Spline::Point Spline::evaluate(double x)
+Spline::Point Spline::evaluate(double x) const
 {
     if (x < c->x1 || x > c->x2)
     {
