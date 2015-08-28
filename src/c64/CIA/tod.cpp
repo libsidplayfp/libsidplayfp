@@ -42,7 +42,7 @@ void Tod::reset()
     isLatched = false;
     isStopped = true;
 
-    event_context.schedule(*this, 0, EVENT_CLOCK_PHI1);
+    eventScheduler.schedule(*this, 0, EVENT_CLOCK_PHI1);
 }
 
 uint8_t Tod::read(uint_least8_t reg)
@@ -134,7 +134,7 @@ void Tod::event()
     cycles += period * (cra & 0x80 ? 5 : 6);
 
     // Fixed precision 25.7
-    event_context.schedule(*this, cycles >> 7);
+    eventScheduler.schedule(*this, cycles >> 7);
     cycles &= 0x7F; // Just keep the decimal part
 
     if (!isStopped)

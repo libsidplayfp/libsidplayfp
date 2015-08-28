@@ -27,8 +27,8 @@ namespace libsidplayfp
 
 class Bank;
 
-MMU::MMU(EventContext &context, IOBank* ioBank) :
-    context(context),
+MMU::MMU(EventScheduler &scheduler, IOBank* ioBank) :
+    eventScheduler(scheduler),
     loram(false),
     hiram(false),
     charen(false),

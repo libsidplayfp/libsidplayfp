@@ -25,9 +25,9 @@
 
 #include <stdint.h>
 
-#include "sidplayfp/event.h"
 #include "sidendian.h"
 #include "sidmemory.h"
+#include "EventScheduler.h"
 
 #include "Banks/Bank.h"
 #include "Banks/IOBank.h"
@@ -48,7 +48,7 @@ namespace libsidplayfp
 class MMU final : public PLA, public sidmemory
 {
 private:
-    EventContext &context;
+    EventScheduler &eventScheduler;
 
     /// CPU port signals
     bool loram, hiram, charen;
@@ -80,12 +80,12 @@ private:
 private:
     void setCpuPort(int state) override;
     uint8_t getLastReadByte() const override { return 0; }
-    event_clock_t getPhi2Time() const override { return context.getTime(EVENT_CLOCK_PHI2); }
+    event_clock_t getPhi2Time() const override { return eventScheduler.getTime(EVENT_CLOCK_PHI2); }
 
     void updateMappingPHI2();
 
 public:
-    MMU(EventContext &context, IOBank* ioBank);
+    MMU(EventScheduler &eventScheduler, IOBank* ioBank);
     ~MMU() {}
 
     void reset();

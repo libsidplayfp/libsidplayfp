@@ -66,13 +66,13 @@ double c64::getCpuFreq(model_t model)
 }
 
 c64::c64() :
-    c64env(m_scheduler),
+    c64env(eventScheduler),
     m_cpuFreq(getCpuFreq(PAL_B)),
     cpu(*this),
     cia1(*this),
     cia2(*this),
     vic(*this),
-    mmu(m_scheduler, &ioBank)
+    mmu(eventScheduler, &ioBank)
 {
     resetIoBank();
 }
@@ -103,7 +103,7 @@ void resetSID(T &e) { e.second->reset(); }
 
 void c64::reset()
 {
-    m_scheduler.reset();
+    eventScheduler.reset();
 
     //cpu.reset();
     cia1.reset();

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -158,8 +158,6 @@ public:
     const char *error() const { return m_errorString; }
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character);
-
-    EventContext *getEventScheduler() { return m_c64.getEventScheduler(); }
 
     uint_least16_t getCia1TimerA() const { return m_c64.getCia1TimerA(); }
 };

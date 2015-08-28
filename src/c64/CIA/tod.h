@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -26,7 +26,7 @@
 
 #include <stdint.h>
 
-#include "sidplayfp/event.h"
+#include "EventScheduler.h"
 
 namespace libsidplayfp
 {
@@ -48,8 +48,8 @@ private:
     };
 
 private:
-    /// Event context.
-    EventContext &event_context;
+    /// Event scheduler.
+    EventScheduler &eventScheduler;
 
     /// Pointer to the MOS6526 which this Timer belongs to.
     MOS6526 &parent;
@@ -73,9 +73,9 @@ private:
     void event();
 
 public:
-    Tod(EventContext &context, MOS6526 &parent, uint8_t regs[0x10]) :
+    Tod(EventScheduler &scheduler, MOS6526 &parent, uint8_t regs[0x10]) :
         Event("CIA Time of Day"),
-        event_context(context),
+        eventScheduler(scheduler),
         parent(parent),
         period(~0), // Dummy
         cra(regs[0x0e]),

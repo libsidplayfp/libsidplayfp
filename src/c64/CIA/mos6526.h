@@ -63,8 +63,8 @@ public:
     /**
      * Create timer A.
      */
-    TimerA(EventContext &context, MOS6526 &parent) :
-        Timer("CIA Timer A", context, parent) {}
+    TimerA(EventScheduler &scheduler, MOS6526 &parent) :
+        Timer("CIA Timer A", scheduler, parent) {}
 };
 
 /**
@@ -82,8 +82,8 @@ public:
     /**
      * Create timer B.
      */
-    TimerB(EventContext &context, MOS6526 &parent) :
-        Timer("CIA Timer B", context, parent) {}
+    TimerB(EventScheduler &scheduler, MOS6526 &parent) :
+        Timer("CIA Timer B", scheduler, parent) {}
 
     /**
      * Receive an underflow from Timer A.
@@ -110,8 +110,8 @@ public:
 class InterruptSource6526A final : public InterruptSource
 {
 public:
-    InterruptSource6526A(EventContext &context, MOS6526 &parent) :
-        InterruptSource(context, parent)
+    InterruptSource6526A(EventScheduler &scheduler, MOS6526 &parent) :
+        InterruptSource(scheduler, parent)
     {}
 
     void trigger(uint8_t interruptMask) override;
@@ -141,14 +141,14 @@ private:
     {
         if (!scheduled)
         {
-            event_context.schedule(*this, 1, EVENT_CLOCK_PHI1);
+            eventScheduler.schedule(*this, 1, EVENT_CLOCK_PHI1);
             scheduled = true;
         }
     }
 
 public:
-    InterruptSource6526(EventContext &context, MOS6526 &parent) :
-        InterruptSource(context, parent)
+    InterruptSource6526(EventScheduler &scheduler, MOS6526 &parent) :
+        InterruptSource(scheduler, parent)
     {}
 
     void trigger(uint8_t interruptMask) override;
@@ -182,7 +182,7 @@ private:
 
 protected:
     /// Event context.
-    EventContext &event_context;
+    EventScheduler &eventScheduler;
 
     /// These are all CIA registers.
     uint8_t regs[0x10];
@@ -258,7 +258,7 @@ protected:
      *
      * @param context the event context
      */
-    MOS6526(EventContext &context);
+    MOS6526(EventScheduler &scheduler);
     ~MOS6526() {}
 
     /**

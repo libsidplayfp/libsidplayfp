@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -23,7 +23,7 @@
 #ifndef C64ENV_H
 #define C64ENV_H
 
-#include "sidplayfp/event.h"
+#include "EventScheduler.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -40,13 +40,13 @@ namespace libsidplayfp
 class c64env
 {
 private:
-    EventContext &m_context;
+    EventScheduler &eventScheduler;
 
 public:
-    c64env(EventContext &context) :
-        m_context(context) {}
+    c64env(EventScheduler &scheduler) :
+        eventScheduler(scheduler) {}
 
-    EventContext &context() const { return m_context; }
+    EventScheduler &scheduler() const { return eventScheduler; }
 
     virtual uint8_t cpuRead(uint_least16_t addr) =0;
     virtual void cpuWrite(uint_least16_t addr, uint8_t data) =0;

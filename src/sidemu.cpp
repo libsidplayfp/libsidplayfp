@@ -28,13 +28,13 @@ const char sidemu::ERR_UNSUPPORTED_FREQ[] = "Unable to set desired output freque
 const char sidemu::ERR_INVALID_SAMPLING[] = "Invalid sampling method.";
 const char sidemu::ERR_INVALID_CHIP[]     = "Invalid chip model.";
 
-bool sidemu::lock(EventContext *env)
+bool sidemu::lock(EventScheduler *scheduler)
 {
     if (m_locked)
         return false;
 
     m_locked  = true;
-    m_context = env;
+    eventScheduler = scheduler;
 
     return true;
 }
@@ -42,5 +42,5 @@ bool sidemu::lock(EventContext *env)
 void sidemu::unlock()
 {
     m_locked  = false;
-    m_context = nullptr;
+    eventScheduler = nullptr;
 }

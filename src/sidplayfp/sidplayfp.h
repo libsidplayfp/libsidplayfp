@@ -157,9 +157,9 @@ public:
 
     /**
      * \deprecated
-     * Get the event scheduler.
+     * Do not use, will be removed.
      *
-     * @return pointer to the scheduler.
+     * @return null pointer.
      */
     SID_DEPRECATED EventContext *getEventContext();
 

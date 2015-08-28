@@ -103,7 +103,7 @@ private:
     bool oldBAState;
 
     /// System event context
-    EventScheduler m_scheduler;
+    EventScheduler eventScheduler;
 
     /// CPU
     c64cpu cpu;
@@ -215,8 +215,8 @@ public:
      * @return the scheduler
      */
     //@{
-    EventScheduler *getEventScheduler() { return &m_scheduler; }
-    const EventScheduler &getEventScheduler() const { return m_scheduler; }
+    EventScheduler *getEventScheduler() { return &eventScheduler; }
+    const EventScheduler &getEventScheduler() const { return eventScheduler; }
     //@}
 
     void debug(bool enable, FILE *out) { cpu.debug(enable, out); }

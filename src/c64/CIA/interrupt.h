@@ -57,7 +57,7 @@ protected:
     MOS6526 &parent;
 
     /// Event context.
-    EventContext &event_context;
+    EventScheduler &eventScheduler;
 
 private:
     /// Interrupt control register
@@ -80,10 +80,10 @@ protected:
      * @param context event context
      * @param underflowEvent the MOS6526 underflow event callback
      */
-    InterruptSource(EventContext &context, MOS6526 &parent) :
+    InterruptSource(EventScheduler &scheduler, MOS6526 &parent) :
         Event("CIA Interrupt"),
         parent(parent),
-        event_context(context),
+        eventScheduler(scheduler),
         icr(0),
         idr(0)
     {}
@@ -116,7 +116,7 @@ public:
     {
         icr = 0;
         idr = 0;
-        event_context.cancel(*this);
+        eventScheduler.cancel(*this);
     }
 
     /**

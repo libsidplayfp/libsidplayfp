@@ -101,7 +101,7 @@ uint8_t InterruptSource6526::clear()
 {
     if (scheduled)
     {
-        event_context.cancel(*this);
+        eventScheduler.cancel(*this);
         scheduled = false;
     }
 
@@ -137,16 +137,16 @@ const char *MOS6526::credit =
     "\tCopyright (C) 2011-2015 Leandro Nini\n"
 };
 
-MOS6526::MOS6526(EventContext &context) :
-    event_context(context),
+MOS6526::MOS6526(EventScheduler &scheduler) :
+    eventScheduler(scheduler),
     pra(regs[PRA]),
     prb(regs[PRB]),
     ddra(regs[DDRA]),
     ddrb(regs[DDRB]),
-    timerA(context, *this),
-    timerB(context, *this),
-    interruptSource(new InterruptSource6526(context, *this)),
-    tod(context, *this, regs),
+    timerA(scheduler, *this),
+    timerB(scheduler, *this),
+    interruptSource(new InterruptSource6526(scheduler, *this)),
+    tod(scheduler, *this, regs),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick)
 {
     reset();
@@ -193,7 +193,7 @@ void MOS6526::reset()
 
     triggerScheduled = false;
 
-    event_context.cancel(bTickEvent);
+    eventScheduler.cancel(bTickEvent);
 }
 
 uint8_t MOS6526::read(uint_least8_t addr)
@@ -329,7 +329,7 @@ void MOS6526::underflowA()
     {
         if (timerB.started())
         {
-            event_context.schedule(bTickEvent, 0, EVENT_CLOCK_PHI2);
+            eventScheduler.schedule(bTickEvent, 0, EVENT_CLOCK_PHI2);
         }
     }
 }

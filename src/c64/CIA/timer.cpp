@@ -38,8 +38,8 @@ void Timer::syncWithCpu()
 {
     if (ciaEventPauseTime > 0)
     {
-        event_context.cancel(m_cycleSkippingEvent);
-        const event_clock_t elapsed = event_context.getTime(EVENT_CLOCK_PHI2) - ciaEventPauseTime;
+        eventScheduler.cancel(m_cycleSkippingEvent);
+        const event_clock_t elapsed = eventScheduler.getTime(EVENT_CLOCK_PHI2) - ciaEventPauseTime;
 
         // It's possible for CIA to determine that it wants to go to sleep starting from the next
         // cycle, and then have its plans aborted by CPU. Thus, we must avoid modifying
@@ -52,7 +52,7 @@ void Timer::syncWithCpu()
     }
     if (ciaEventPauseTime == 0)
     {
-        event_context.cancel(*this);
+        eventScheduler.cancel(*this);
     }
     ciaEventPauseTime = -1;
 }
@@ -60,7 +60,7 @@ void Timer::syncWithCpu()
 void Timer::wakeUpAfterSyncWithCpu()
 {
     ciaEventPauseTime = 0;
-    event_context.schedule(*this, 0, EVENT_CLOCK_PHI1);
+    eventScheduler.schedule(*this, 0, EVENT_CLOCK_PHI1);
 }
 
 void Timer::event()
@@ -71,7 +71,7 @@ void Timer::event()
 
 void Timer::cycleSkippingEvent()
 {
-    const event_clock_t elapsed = event_context.getTime(EVENT_CLOCK_PHI1) - ciaEventPauseTime;
+    const event_clock_t elapsed = eventScheduler.getTime(EVENT_CLOCK_PHI1) - ciaEventPauseTime;
     ciaEventPauseTime = 0;
     timer -= elapsed;
     event();
@@ -130,13 +130,13 @@ void Timer::clock()
 
 void Timer::reset()
 {
-    event_context.cancel(*this);
+    eventScheduler.cancel(*this);
     timer = latch = 0xffff;
     pbToggle = false;
     state = 0;
     lastControlValue = 0;
     ciaEventPauseTime = 0;
-    event_context.schedule(*this, 1, EVENT_CLOCK_PHI1);
+    eventScheduler.schedule(*this, 1, EVENT_CLOCK_PHI1);
 }
 
 void Timer::latchLo(uint8_t data)

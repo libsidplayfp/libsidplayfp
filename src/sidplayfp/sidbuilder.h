@@ -29,7 +29,7 @@
 #include "sidplayfp/SidConfig.h"
 
 class sidemu;
-class EventContext;
+class EventScheduler;
 
 /**
  * Base class for sid builders.
@@ -102,7 +102,7 @@ public:
      * @param model the required sid model
      * @return pointer to the locked sid emu
      */
-    sidemu *lock(EventContext *env, SidConfig::sid_model_t model);
+    sidemu *lock(EventScheduler *scheduler, SidConfig::sid_model_t model);
 
     /**
      * Release this SID.

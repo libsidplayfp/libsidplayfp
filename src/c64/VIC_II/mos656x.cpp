@@ -60,9 +60,9 @@ const char *MOS656X::credit =
 };
 
 
-MOS656X::MOS656X(EventContext &context) :
+MOS656X::MOS656X(EventScheduler &scheduler) :
     Event("VIC Raster"),
-    event_context(context),
+    eventScheduler(scheduler),
     sprites(regs),
     badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange),
     rasterYIRQEdgeDetectorEvent("RasterY changed", *this, &MOS656X::rasterYIRQEdgeDetector)
@@ -89,8 +89,8 @@ void MOS656X::reset()
     lp.reset();
     sprites.reset();
 
-    event_context.cancel(*this);
-    event_context.schedule(*this, 0, EVENT_CLOCK_PHI1);
+    eventScheduler.cancel(*this);
+    eventScheduler.schedule(*this, 0, EVENT_CLOCK_PHI1);
 }
 
 void MOS656X::chip(model_t model)
@@ -204,7 +204,7 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
                 }
 
                 if (isBadLine != oldBadLine)
-                        event_context.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+                        eventScheduler.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
             }
         }
     }
@@ -212,7 +212,7 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
 
     case 0x12: // Raster counter
         // check raster Y irq condition changes at the next PHI1
-        event_context.schedule(rasterYIRQEdgeDetectorEvent, 0, EVENT_CLOCK_PHI1);
+        eventScheduler.schedule(rasterYIRQEdgeDetectorEvent, 0, EVENT_CLOCK_PHI1);
         break;
 
     case 0x17:
@@ -253,7 +253,7 @@ void MOS656X::handleIrqState()
 
 void MOS656X::event()
 {
-    const event_clock_t cycles = event_context.getTime(rasterClk, event_context.phase());
+    const event_clock_t cycles = eventScheduler.getTime(rasterClk, eventScheduler.phase());
 
     event_clock_t delay;
 
@@ -269,7 +269,7 @@ void MOS656X::event()
     else
         delay = 1;
 
-    event_context.schedule(*this, delay - event_context.phase(), EVENT_CLOCK_PHI1);
+    eventScheduler.schedule(*this, delay - eventScheduler.phase(), EVENT_CLOCK_PHI1);
 }
 
 event_clock_t MOS656X::clockPAL()

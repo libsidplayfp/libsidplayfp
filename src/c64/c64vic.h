@@ -59,7 +59,7 @@ protected:
 
 public:
     c64vic(c64env &env) :
-        MOS656X(env.context()),
+        MOS656X(env.scheduler()),
         m_env(env) {}
 
     void poke(uint_least16_t address, uint8_t value) override

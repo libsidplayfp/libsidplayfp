@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -93,8 +93,8 @@ private:
     };
 
 private:
-    /// Our event context copy. */
-    EventContext &eventContext;
+    /// Event scheduler
+    EventScheduler &eventScheduler;
 
     /// Current instruction and subcycle within instruction
     int cycleCount;
@@ -279,7 +279,7 @@ private:
     inline void doJSR();
 
 protected:
-    MOS6510(EventContext &context);
+    MOS6510(EventScheduler &scheduler);
     ~MOS6510() {}
 
 public:

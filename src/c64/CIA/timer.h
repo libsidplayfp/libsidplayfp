@@ -65,7 +65,7 @@ private:
     EventCallback<Timer> m_cycleSkippingEvent;
 
     /// Event context.
-    EventContext &event_context;
+    EventScheduler &eventScheduler;
 
     /**
      * This is a tri-state:
@@ -137,10 +137,10 @@ protected:
      * @param context event context
      * @param parent the MOS6526 which this Timer belongs to
      */
-    Timer(const char* name, EventContext &context, MOS6526 &parent) :
+    Timer(const char* name, EventScheduler &scheduler, MOS6526 &parent) :
         Event(name),
         m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
-        event_context(context),
+        eventScheduler(scheduler),
         timer(0),
         latch(0),
         pbToggle(false),
@@ -236,7 +236,7 @@ void Timer::reschedule()
     const int_least32_t unwanted = CIAT_OUT | CIAT_CR_FLOAD | CIAT_LOAD1 | CIAT_LOAD;
     if ((state & unwanted) != 0)
     {
-        event_context.schedule(*this, 1);
+        eventScheduler.schedule(*this, 1);
         return;
     }
 
@@ -251,14 +251,14 @@ void Timer::reschedule()
             /* we executed this cycle, therefore the pauseTime is +1. If we are called
              * to execute on the very next clock, we need to get 0 because there's
              * another timer-- in it. */
-            ciaEventPauseTime = event_context.getTime(EVENT_CLOCK_PHI1) + 1;
+            ciaEventPauseTime = eventScheduler.getTime(EVENT_CLOCK_PHI1) + 1;
             /* execute event slightly before the next underflow. */
-            event_context.schedule(m_cycleSkippingEvent, timer - 1);
+            eventScheduler.schedule(m_cycleSkippingEvent, timer - 1);
             return;
         }
 
         /* play safe, keep on ticking. */
-        event_context.schedule(*this, 1);
+        eventScheduler.schedule(*this, 1);
     }
     else
     {
@@ -270,7 +270,7 @@ void Timer::reschedule()
         if ((state & unwanted1) == unwanted1
             || (state & unwanted2) == unwanted2)
         {
-            event_context.schedule(*this, 1);
+            eventScheduler.schedule(*this, 1);
             return;
         }
 

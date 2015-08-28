@@ -144,7 +144,7 @@ public:
     void filter(bool enable);
 
     // Must lock the SID before using the standard functions.
-    bool lock(EventContext *env) override;
+    bool lock(EventScheduler *env) override;
     void unlock() override;
 
 private:

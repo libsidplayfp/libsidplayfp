@@ -40,7 +40,7 @@ private:
 
 public:
     c64cpu (c64env &env) :
-        MOS6510(env.context()),
+        MOS6510(env.scheduler()),
         m_env(env) {}
 
     uint8_t cpuRead(uint_least16_t addr) override { return m_env.cpuRead(addr); }

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -28,6 +28,7 @@
 #include "sidplayfp/SidConfig.h"
 #include "sidplayfp/siddefs.h"
 #include "sidplayfp/event.h"
+#include "EventScheduler.h"
 
 #include "c64/c64sid.h"
 
@@ -62,7 +63,7 @@ protected:
     static const char ERR_INVALID_CHIP[];
 
 protected:
-    EventContext *m_context;
+    EventScheduler *eventScheduler;
 
     event_clock_t m_accessClk;
 
@@ -80,7 +81,7 @@ protected:
 public:
     sidemu(sidbuilder *builder) :
         m_builder(builder),
-        m_context(nullptr),
+        eventScheduler(nullptr),
         m_buffer(nullptr),
         m_bufferpos(0),
         m_status(true),
@@ -96,7 +97,7 @@ public:
     /**
      * Set execution environment and lock sid to it.
      */
-    virtual bool lock(EventContext *env);
+    virtual bool lock(EventScheduler *scheduler);
 
     /**
      * Unlock sid.

@@ -128,8 +128,8 @@ void HardSID::reset(uint8_t volume)
         muted[i] = false;
     ioctl(m_handle, HSID_IOCTL_RESET, volume);
     m_accessClk = 0;
-    if (m_context != 0)
-        m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+    if (eventScheduler != 0)
+        eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 
 void HardSID::clock()
@@ -137,7 +137,7 @@ void HardSID::clock()
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while (cycles > 0xffff)
@@ -154,7 +154,7 @@ uint8_t HardSID::read(uint_least8_t addr)
     if (!m_handle)
         return 0;
 
-    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while ( cycles > 0xffff )
@@ -175,7 +175,7 @@ void HardSID::write(uint_least8_t addr, uint8_t data)
     if (!m_handle)
         return;
 
-    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
     while (cycles > 0xffff)
@@ -206,17 +206,17 @@ void HardSID::voice(unsigned int num, bool mute)
 
 void HardSID::event()
 {
-    event_clock_t cycles = m_context->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     if (cycles < HARDSID_DELAY_CYCLES)
     {
-        m_context->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
+        eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
                   EVENT_CLOCK_PHI1);
     }
     else
     {
         m_accessClk += cycles;
         ioctl(m_handle, HSID_IOCTL_DELAY, static_cast<uint>(cycles));
-        m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+        eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
 }
 
@@ -230,16 +230,16 @@ void HardSID::flush()
     ioctl(m_handle, HSID_IOCTL_FLUSH);
 }
 
-bool HardSID::lock(EventContext* env)
+bool HardSID::lock(EventScheduler* env)
 {
     sidemu::lock(env);
-    m_context->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
+    eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 
     return true;
 }
 
 void HardSID::unlock()
 {
-    m_context->cancel(*this);
+    eventScheduler->cancel(*this);
     sidemu::unlock();
 }

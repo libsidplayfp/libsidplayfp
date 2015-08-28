@@ -87,7 +87,7 @@ private:
     event_clock_t rasterClk;
 
     /// CPU's event context.
-    EventContext &event_context;
+    EventScheduler &eventScheduler;
 
     /// Number of cycles per line.
     unsigned int cyclesPerLine;
@@ -209,7 +209,7 @@ private:
 
     inline void sync()
     {
-        event_context.cancel(*this);
+        eventScheduler.cancel(*this);
         event();
     }
 
@@ -298,7 +298,7 @@ private:
     }
 
 protected:
-    MOS656X(EventContext &context);
+    MOS656X(EventScheduler &scheduler);
     ~MOS656X() {}
 
     // Environment Interface

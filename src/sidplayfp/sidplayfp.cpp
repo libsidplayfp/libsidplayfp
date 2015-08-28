@@ -108,7 +108,7 @@ void sidplayfp::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8
 
 EventContext *sidplayfp::getEventContext()
 {
-    return sidplayer.getEventScheduler();
+    return 0;
 }
 
 uint_least16_t sidplayfp::getCia1TimerA() const

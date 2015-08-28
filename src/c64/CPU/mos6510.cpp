@@ -91,7 +91,7 @@ void MOS6510::eventWithoutSteals()
 {
     const ProcessorCycle &instr = instrTable[cycleCount++];
     (this->*(instr.func)) ();
-    eventContext.schedule(m_nosteal, 1);
+    eventScheduler.schedule(m_nosteal, 1);
 }
 
 /**
@@ -103,7 +103,7 @@ void MOS6510::eventWithSteals()
     {
         const ProcessorCycle &instr = instrTable[cycleCount++];
         (this->*(instr.func)) ();
-        eventContext.schedule(m_steal, 1);
+        eventScheduler.schedule(m_steal, 1);
     }
     else
     {
@@ -129,13 +129,13 @@ void MOS6510::setRDY(bool newRDY)
 
     if (rdy)
     {
-        eventContext.cancel(m_steal);
-        eventContext.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
+        eventScheduler.cancel(m_steal);
+        eventScheduler.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
     }
     else
     {
-        eventContext.cancel(m_nosteal);
-        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+        eventScheduler.cancel(m_nosteal);
+        eventScheduler.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
 }
 
@@ -200,8 +200,8 @@ void MOS6510::triggerNMI()
     /* maybe process 1 clock of interrupt delay. */
     if (!rdy)
     {
-        eventContext.cancel(m_steal);
-        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+        eventScheduler.cancel(m_steal);
+        eventScheduler.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
 }
 
@@ -216,8 +216,8 @@ void MOS6510::triggerIRQ()
     /* maybe process 1 clock of interrupt delay. */
     if (!rdy && interruptCycle == cycleCount)
     {
-        eventContext.cancel(m_steal);
-        eventContext.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
+        eventScheduler.cancel(m_steal);
+        eventScheduler.schedule(m_steal, 0, EVENT_CLOCK_PHI2);
     }
 }
 
@@ -1465,8 +1465,8 @@ void MOS6510::rra_instr()
  * @param context
  *            The Event Context
  */
-MOS6510::MOS6510(EventContext &context) :
-    eventContext(context),
+MOS6510::MOS6510(EventScheduler &scheduler) :
+    eventScheduler(scheduler),
 #ifdef DEBUG
     m_fdbg(stdout),
 #endif
@@ -2150,7 +2150,7 @@ void MOS6510::Initialise()
     // Signals
     rdy = true;
 
-    eventContext.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
+    eventScheduler.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
 }
 
 /**
