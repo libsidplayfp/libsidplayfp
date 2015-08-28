@@ -31,8 +31,6 @@
 #include "sidendian.h"
 #include "sidmd5.h"
 
-#include "sidcxx11.h"
-
 namespace libsidplayfp
 {
 

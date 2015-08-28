@@ -30,8 +30,6 @@
 #include "sidendian.h"
 #include "sidmemory.h"
 
-#include "sidcxx11.h"
-
 #include "sidplayer.bin"
 
 namespace libsidplayfp

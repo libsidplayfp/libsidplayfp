@@ -37,8 +37,6 @@
 #include "sidmemory.h"
 #include "stringutils.h"
 
-#include "sidcxx11.h"
-
 #include "MUS.h"
 #include "p00.h"
 #include "prg.h"
