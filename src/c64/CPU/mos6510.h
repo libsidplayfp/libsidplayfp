@@ -27,6 +27,7 @@
 #include <cstdio>
 
 #include "flags.h"
+#include "EventCallback.h"
 #include "EventScheduler.h"
 
 #ifdef HAVE_CONFIG_H

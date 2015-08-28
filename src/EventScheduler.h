@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2011-2014 Leandro Nini
+ *  Copyright (C) 2011-2015 Leandro Nini
  *  Copyright (C) 2009 Antti S. Lankila
  *  Copyright (C) 2001 Simon White
  *
@@ -26,27 +26,6 @@
 #include "sidplayfp/event.h"
 
 #include "sidcxx11.h"
-
-
-template< class This >
-class EventCallback final : public Event
-{
-private:
-    typedef void (This::*Callback) ();
-
-private:
-    This &m_this;
-    Callback const m_callback;
-
-private:
-    void event() override { (m_this.*m_callback)(); }
-
-public:
-    EventCallback(const char * const name, This &_this, Callback callback) :
-        Event(name),
-        m_this(_this),
-        m_callback(callback) {}
-};
 
 
 /**

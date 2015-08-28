@@ -78,6 +78,7 @@ src/utils/MD5/MD5_Defs.h
 endif
 
 src_libsidplayfp_la_SOURCES = \
+src/EventCallback.h \
 src/EventScheduler.cpp \
 src/EventScheduler.h \
 src/player.cpp \

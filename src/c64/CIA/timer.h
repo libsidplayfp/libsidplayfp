@@ -26,6 +26,7 @@
 #include <stdint.h>
 
 #include "sidplayfp/event.h"
+#include "EventCallback.h"
 #include "EventScheduler.h"
 
 #include "sidcxx11.h"

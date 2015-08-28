@@ -31,6 +31,7 @@
 #include "lightpen.h"
 #include "sprites.h"
 #include "c64/component.h"
+#include "EventCallback.h"
 #include "EventScheduler.h"
 
 #include "sidcxx11.h"
