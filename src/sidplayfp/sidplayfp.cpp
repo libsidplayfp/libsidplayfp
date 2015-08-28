@@ -38,7 +38,7 @@ sidplayfp::sidplayfp() :
 
 sidplayfp::~sidplayfp()
 {
-    if (&sidplayer) delete &sidplayer;
+    delete &sidplayer;
 }
 
 bool sidplayfp::config(const SidConfig &cfg)
