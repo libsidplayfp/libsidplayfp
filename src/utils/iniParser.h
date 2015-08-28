@@ -32,8 +32,6 @@ private:
     typedef std::map<std::string, std::string> keys_t;
     typedef std::map<std::string, keys_t> sections_t;
 
-    class parseError {};
-
 private:
     sections_t sections;
 

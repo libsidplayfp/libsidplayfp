@@ -25,6 +25,8 @@
 namespace libsidplayfp
 {
 
+class parseError {};
+
 std::string iniParser::parseSection(const std::string &buffer)
 {
     const size_t pos = buffer.find(']');
