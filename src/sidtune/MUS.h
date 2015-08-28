@@ -56,7 +56,7 @@ protected:
     void setPlayerAddress();
 
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
-                                buffer_t& buf, bool isSlashedFileName);
+                                buffer_t& buf, bool isSlashedFileName) override;
 
 public:
     virtual ~MUS() {}
