@@ -29,7 +29,6 @@
 
 #include "lightpen.h"
 #include "sprites.h"
-#include "c64/component.h"
 #include "Event.h"
 #include "EventCallback.h"
 #include "EventScheduler.h"
@@ -43,7 +42,7 @@ namespace libsidplayfp
  * MOS 6567/6569/6572 emulation.
  * Non cycle exact but good enough for SID playback.
  */
-class MOS656X: public component, private Event
+class MOS656X : private Event
 {
 public:
     typedef enum
@@ -313,7 +312,7 @@ protected:
      * @param addr
      *            Register to read.
      */
-    uint8_t read(uint_least8_t addr) override;
+    uint8_t read(uint_least8_t addr);
 
     /**
      * Write to VIC register.
@@ -323,7 +322,7 @@ protected:
      * @param data
      *            Data byte to write.
      */
-    void write(uint_least8_t addr, uint8_t data) override;
+    void write(uint_least8_t addr, uint8_t data);
 
 public:
     void event() override;
@@ -343,8 +342,10 @@ public:
      */
     void clearLightpen();
 
-    // Component Standard Calls
-    void reset() override;
+    /**
+     * Reset VIC II.
+     */
+    void reset();
 
     static const char *credits() { return credit; }
 };

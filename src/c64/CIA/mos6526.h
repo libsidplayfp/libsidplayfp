@@ -32,7 +32,6 @@
 #include "timer.h"
 #include "tod.h"
 #include "EventScheduler.h"
-#include "c64/component.h"
 
 #include "sidcxx11.h"
 
@@ -169,7 +168,7 @@ public:
  *
  * @author alankila
  */
-class MOS6526 : public component
+class MOS6526
 {
     friend class InterruptSource6526;
     friend class InterruptSource6526A;
@@ -278,7 +277,7 @@ protected:
      * @param addr
      *            register address to read (lowest 4 bits)
      */
-    uint8_t read(uint_least8_t addr) override;
+    uint8_t read(uint_least8_t addr);
 
     /**
      * Write CIA register.
@@ -288,13 +287,13 @@ protected:
      * @param data
      *            value to write
      */
-    void write(uint_least8_t addr, uint8_t data) override;
+    void write(uint_least8_t addr, uint8_t data);
 
 public:
     /**
      * Reset CIA.
      */
-    virtual void reset() override;
+    virtual void reset();
 
     /**
      * Get the credits.

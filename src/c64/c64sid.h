@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2013-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2013-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 #ifndef C64SID_H
 #define C64SID_H
 
-#include "component.h"
 #include "Banks/Bank.h"
 
 #include "sidcxx11.h"
@@ -34,15 +33,18 @@ namespace libsidplayfp
 /**
  * SID interface.
  */
-class c64sid : public Bank, public component
+class c64sid : public Bank
 {
 protected:
     virtual ~c64sid() {}
 
+    virtual uint8_t read(uint_least8_t addr) = 0;
+    virtual void write(uint_least8_t addr, uint8_t data) = 0;
+
 public:
     virtual void reset(uint8_t volume) = 0;
 
-    void reset() override { reset(0); }
+    void reset() { reset(0); }
 
     // Bank functions
     void poke(uint_least16_t address, uint8_t value) override { write(address & 0x1f, value); }

@@ -109,7 +109,6 @@ src/c64/c64sid.h \
 src/c64/c64vic.h \
 src/c64/c64.cpp \
 src/c64/c64.h \
-src/c64/component.h \
 src/c64/mmu.cpp \
 src/c64/mmu.h \
 src/c64/Banks/ColorRAMBank.h \
