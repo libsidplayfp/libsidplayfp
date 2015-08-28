@@ -23,7 +23,7 @@
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
 
-#include "sidplayfp/event.h"
+#include "Event.h"
 #include "EventScheduler.h"
 
 #include <stdint.h>

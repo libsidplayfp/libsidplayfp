@@ -27,7 +27,7 @@
 
 #include "sidplayfp/SidConfig.h"
 #include "sidplayfp/siddefs.h"
-#include "sidplayfp/event.h"
+#include "Event.h"
 #include "EventScheduler.h"
 
 #include "c64/c64sid.h"

@@ -27,7 +27,6 @@
 #include <stdint.h>
 #include <cstdio>
 
-#include "sidplayfp/event.h"
 #include "sidplayfp/siddefs.h"
 #include "sidplayfp/SidConfig.h"
 #include "sidplayfp/SidTuneInfo.h"

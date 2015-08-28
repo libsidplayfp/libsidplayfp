@@ -78,6 +78,7 @@ src/utils/MD5/MD5_Defs.h
 endif
 
 src_libsidplayfp_la_SOURCES = \
+src/Event.h \
 src/EventCallback.h \
 src/EventScheduler.cpp \
 src/EventScheduler.h \
@@ -172,7 +173,6 @@ src_libsidplayfp_ladir = $(includedir)/sidplayfp
 
 src_libsidplayfp_la_HEADERS = \
 src/sidplayfp/siddefs.h \
-src/sidplayfp/event.h \
 src/sidplayfp/SidConfig.h \
 src/sidplayfp/SidInfo.h \
 src/sidplayfp/SidTuneInfo.h \

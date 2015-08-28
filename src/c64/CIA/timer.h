@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include "sidplayfp/event.h"
+#include "Event.h"
 #include "EventCallback.h"
 #include "EventScheduler.h"
 
@@ -38,8 +38,6 @@ class MOS6526;
 
 /**
  * This is the base class for the MOS6526 timers.
- *
- * @author Ken Händel
  */
 class Timer : private Event
 {

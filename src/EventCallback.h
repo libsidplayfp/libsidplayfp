@@ -23,7 +23,7 @@
 #ifndef EVENTCALLBACK_H
 #define EVENTCALLBACK_H
 
-#include "sidplayfp/event.h"
+#include "Event.h"
 
 #include "sidcxx11.h"
 

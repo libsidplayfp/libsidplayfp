@@ -26,11 +26,11 @@
 
 #include <stdint.h>
 
-#include "sidplayfp/event.h"
 
 #include "lightpen.h"
 #include "sprites.h"
 #include "c64/component.h"
+#include "Event.h"
 #include "EventCallback.h"
 #include "EventScheduler.h"
 

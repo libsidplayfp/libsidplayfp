@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001-2002 by Jarno Paananen
  * Copyright 2000-2002 Simon White
@@ -24,8 +24,8 @@
 #ifndef HARDSID_EMU_H
 #define HARDSID_EMU_H
 
-#include "sidplayfp/event.h"
 #include "sidemu.h"
+#include "Event.h"
 #include "EventScheduler.h"
 #include "sidplayfp/siddefs.h"
 
