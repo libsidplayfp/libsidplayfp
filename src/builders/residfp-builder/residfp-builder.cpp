@@ -47,7 +47,7 @@ unsigned int ReSIDfpBuilder::create(unsigned int sids)
     {
         try
         {
-            sidobjs.insert(new ReSIDfp(this));
+            sidobjs.insert(new libsidplayfp::ReSIDfp(this));
         }
         // Memory alloc failed?
         catch (std::bad_alloc const &)
@@ -63,20 +63,20 @@ unsigned int ReSIDfpBuilder::create(unsigned int sids)
 
 const char *ReSIDfpBuilder::credits() const
 {
-    return ReSIDfp::getCredits();
+    return libsidplayfp::ReSIDfp::getCredits();
 }
 
 void ReSIDfpBuilder::filter(bool enable)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, bool>(&ReSIDfp::filter, enable));
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSIDfp, bool>(&libsidplayfp::ReSIDfp::filter, enable));
 }
 
 void ReSIDfpBuilder::filter6581Curve(double filterCurve)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter6581Curve, filterCurve));
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSIDfp, double>(&libsidplayfp::ReSIDfp::filter6581Curve, filterCurve));
 }
 
 void ReSIDfpBuilder::filter8580Curve(double filterCurve)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSIDfp, double>(&ReSIDfp::filter8580Curve, filterCurve));
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSIDfp, double>(&libsidplayfp::ReSIDfp::filter8580Curve, filterCurve));
 }

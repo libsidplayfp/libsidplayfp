@@ -30,6 +30,9 @@
 #include "resid/siddefs.h"
 #include "resid/spline.h"
 
+namespace libsidplayfp
+{
+
 const char* ReSID::getCredits()
 {
     if (m_credit.empty())
@@ -161,4 +164,6 @@ void ReSID::model(SidConfig::sid_model_t model)
 
     m_sid.set_chip_model(chipModel);
     m_status = true;
+}
+
 }

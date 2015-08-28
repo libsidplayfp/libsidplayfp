@@ -28,6 +28,9 @@
 #include "sidcxx11.h"
 
 
+namespace libsidplayfp
+{
+
 /**
  * C64 system runs actions at system clock high and low
  * states. The PHI1 corresponds to the auxiliary chip activity
@@ -180,5 +183,7 @@ public:
      */
     event_phase_t phase() const { return static_cast<event_phase_t>(currentTime & 1); }
 };
+
+}
 
 #endif // EVENTSCHEDULER_H

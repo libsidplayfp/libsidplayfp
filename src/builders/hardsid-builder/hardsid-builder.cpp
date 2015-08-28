@@ -87,7 +87,7 @@ unsigned int HardSIDBuilder::create(unsigned int sids)
     {
         try
         {
-            std::unique_ptr<HardSID> sid(new HardSID(this));
+            std::unique_ptr<libsidplayfp::HardSID> sid(new libsidplayfp::HardSID(this));
 
             // SID init failed?
             if (!sid->getStatus())
@@ -126,18 +126,18 @@ unsigned int HardSIDBuilder::availDevices() const
 
 const char *HardSIDBuilder::credits() const
 {
-    return HardSID::getCredits();
+    return libsidplayfp::HardSID::getCredits();
 }
 
 void HardSIDBuilder::flush()
 {
     for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-        static_cast<HardSID*>(*it)->flush();
+        static_cast<libsidplayfp::HardSID*>(*it)->flush();
 }
 
 void HardSIDBuilder::filter(bool enable)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<HardSID, bool>(&HardSID::filter, enable));
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::HardSID, bool>(&libsidplayfp::HardSID::filter, enable));
 }
 
 #ifdef _WIN32

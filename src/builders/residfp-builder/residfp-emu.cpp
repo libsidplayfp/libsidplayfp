@@ -33,6 +33,9 @@
 #  include "config.h"
 #endif
 
+namespace libsidplayfp
+{
+
 const char* ReSIDfp::getCredits()
 {
     if (m_credit.empty())
@@ -160,4 +163,6 @@ void ReSIDfp::model(SidConfig::sid_model_t model)
 
     m_sid.setChipModel(chipModel);
     m_status = true;
+}
+
 }

@@ -25,20 +25,15 @@
 
 #include <stdint.h>
 
-#include "sidplayfp/siddefs.h"
 
+namespace libsidplayfp
+{
 
 typedef int_fast64_t event_clock_t;
 
 
 /**
- * Event scheduler (based on alarm from Vice). Created in 2001 by Simon A.
- * White.
- *
- * Optimized EventScheduler and corresponding Event class by Antti S. Lankila
- * in 2009.
- *
- * @author Antti Lankila
+ * An Event object that can be inserted in the Event Scheduler.
  */
 class Event
 {
@@ -74,5 +69,7 @@ public:
 protected:
     ~Event() {}
 };
+
+}
 
 #endif // EVENT_H

@@ -67,6 +67,9 @@ typedef void (CALLBACK* HsidDLL2_Reset2_t)  (BYTE deviceID, BYTE volume);
 // Version 2.07 Extensions
 typedef void (CALLBACK* HsidDLL2_Mute2_t)   (BYTE deviceID, BYTE channel, BOOL mute, BOOL manual);
 
+namespace libsidplayfp
+{
+
 struct HsidDLL2
 {
     HINSTANCE          Instance;
@@ -87,7 +90,12 @@ struct HsidDLL2
     WORD               Version;
 };
 
+}
+
 #endif // _WIN32
+
+namespace libsidplayfp
+{
 
 #define HARDSID_VOICES 3
 // Approx 60ms
@@ -153,5 +161,7 @@ private:
     // writes to SID.
     void event() override;
 };
+
+}
 
 #endif // HARDSID_EMU_H

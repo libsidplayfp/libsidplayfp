@@ -31,6 +31,9 @@
 
 #include <vector>
 
+namespace libsidplayfp
+{
+
 class sidemu;
 
 /**
@@ -186,5 +189,7 @@ public:
      */
     uint_least32_t samplesGenerated() const { return m_sampleIndex; }
 };
+
+}
 
 #endif // MIXER_H

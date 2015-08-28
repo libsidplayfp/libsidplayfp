@@ -34,7 +34,12 @@
 
 #include "sidcxx11.h"
 
+
 class sidbuilder;
+
+namespace libsidplayfp
+{
+
 class EventContext;
 
 /**
@@ -149,5 +154,7 @@ public:
      */
     short *buffer() const { return m_buffer; }
 };
+
+}
 
 #endif // SIDEMU_H

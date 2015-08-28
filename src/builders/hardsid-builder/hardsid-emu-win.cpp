@@ -38,7 +38,11 @@ Created from Jarnos original
 Sidplay2 patch
 ***************************************************************************/
 
-extern HsidDLL2 hsid2;
+extern HsidDLL2 libsidplayfp::hsid2;
+
+namespace libsidplayfp
+{
+
 const  unsigned int HardSID::voices = HARDSID_VOICES;
 unsigned int HardSID::sid = 0;
 
@@ -186,4 +190,6 @@ void HardSID::filter(bool enable)
 void HardSID::flush()
 {
     hsid2.Flush((BYTE) m_instance);
+}
+
 }

@@ -22,6 +22,9 @@
 
 #include "sidemu.h"
 
+namespace libsidplayfp
+{
+
 std::string sidemu::m_credit;
 
 const char sidemu::ERR_UNSUPPORTED_FREQ[] = "Unable to set desired output frequency.";
@@ -43,4 +46,6 @@ void sidemu::unlock()
 {
     m_locked  = false;
     eventScheduler = nullptr;
+}
+
 }

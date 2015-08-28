@@ -34,6 +34,9 @@
 #  include "config.h"
 #endif
 
+namespace libsidplayfp
+{
+
 // Move these to common header file
 #define HSID_IOCTL_RESET     _IOW('S', 0, int)
 #define HSID_IOCTL_FIFOSIZE  _IOR('S', 1, int)
@@ -242,4 +245,6 @@ void HardSID::unlock()
 {
     eventScheduler->cancel(*this);
     sidemu::unlock();
+}
+
 }

@@ -45,6 +45,9 @@
 #   define RESID_NS
 #endif
 
+namespace libsidplayfp
+{
+
 class ReSID: public sidemu
 {
 private:
@@ -83,5 +86,7 @@ public:
     void bias(double dac_bias);
     void filter(bool enable);
 };
+
+}
 
 #endif // RESID_EMU_H

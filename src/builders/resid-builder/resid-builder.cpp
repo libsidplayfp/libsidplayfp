@@ -47,7 +47,7 @@ unsigned int ReSIDBuilder::create(unsigned int sids)
     {
         try
         {
-            sidobjs.insert(new ReSID(this));
+            sidobjs.insert(new libsidplayfp::ReSID(this));
         }
         // Memory alloc failed?
         catch (std::bad_alloc const &)
@@ -62,15 +62,15 @@ unsigned int ReSIDBuilder::create(unsigned int sids)
 
 const char *ReSIDBuilder::credits() const
 {
-    return ReSID::getCredits();
+    return libsidplayfp::ReSID::getCredits();
 }
 
 void ReSIDBuilder::filter(bool enable)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, bool>(&ReSID::filter, enable));
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSID, bool>(&libsidplayfp::ReSID::filter, enable));
 }
 
 void ReSIDBuilder::bias(double dac_bias)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<ReSID, double>(&ReSID::bias, dac_bias));
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSID, double>(&libsidplayfp::ReSID::bias, dac_bias));
 }

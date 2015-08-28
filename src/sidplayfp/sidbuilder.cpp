@@ -26,13 +26,13 @@
 
 #include "sidemu.h"
 
-sidemu *sidbuilder::lock(EventScheduler *env, SidConfig::sid_model_t model)
+libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidConfig::sid_model_t model)
 {
     m_status = true;
 
     for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
     {
-        sidemu *sid = (*it);
+        libsidplayfp::sidemu *sid = (*it);
         if (sid->lock(env))
         {
             sid->model(model);
@@ -46,7 +46,7 @@ sidemu *sidbuilder::lock(EventScheduler *env, SidConfig::sid_model_t model)
     return 0;
 }
 
-void sidbuilder::unlock(sidemu *device)
+void sidbuilder::unlock(libsidplayfp::sidemu *device)
 {
     emuset_t::iterator it = sidobjs.find(device);
     if (it != sidobjs.end())

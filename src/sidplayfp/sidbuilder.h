@@ -28,8 +28,11 @@
 
 #include "sidplayfp/SidConfig.h"
 
+namespace libsidplayfp
+{
 class sidemu;
 class EventScheduler;
+}
 
 /**
  * Base class for sid builders.
@@ -37,7 +40,7 @@ class EventScheduler;
 class sidbuilder
 {
 protected:
-    typedef std::set<sidemu*> emuset_t;
+    typedef std::set<libsidplayfp::sidemu*> emuset_t;
 
 private:
     const char * const m_name;
@@ -64,7 +67,7 @@ protected:
         applyParameter(void (Temu::*method)(Tparam), Tparam param) :
             m_param(param),
             m_method(method) {}
-        void operator() (sidemu *e) { (static_cast<Temu*>(e)->*m_method)(m_param); }
+        void operator() (libsidplayfp::sidemu *e) { (static_cast<Temu*>(e)->*m_method)(m_param); }
     };
 
 public:
@@ -102,14 +105,14 @@ public:
      * @param model the required sid model
      * @return pointer to the locked sid emu
      */
-    sidemu *lock(EventScheduler *scheduler, SidConfig::sid_model_t model);
+    libsidplayfp::sidemu *lock(libsidplayfp::EventScheduler *scheduler, SidConfig::sid_model_t model);
 
     /**
      * Release this SID.
      *
      * @param device the sid emu to unlock
      */
-    void unlock(sidemu *device);
+    void unlock(libsidplayfp::sidemu *device);
 
     /** Remove all SID emulations. */
     void remove();

@@ -26,6 +26,10 @@
 
 #include "sidemu.h"
 
+
+namespace libsidplayfp
+{
+
 void clockChip(sidemu *s) { s->clock(); }
 
 class bufferPos
@@ -194,4 +198,6 @@ void Mixer::setVolume(int_least32_t left, int_least32_t right)
     m_volume.clear();
     m_volume.push_back(left);
     m_volume.push_back(right);
+}
+
 }

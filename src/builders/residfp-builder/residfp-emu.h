@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -32,7 +32,11 @@
 
 #include "sidcxx11.h"
 
+
 class sidbuilder;
+
+namespace libsidplayfp
+{
 
 #define RESID_NAMESPACE reSIDfp
 
@@ -74,5 +78,7 @@ public:
     void filter6581Curve(double filterCurve);
     void filter8580Curve(double filterCurve);
 };
+
+}
 
 #endif // RESIDFP_EMU_H
