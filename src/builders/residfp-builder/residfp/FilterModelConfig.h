@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -27,6 +27,8 @@
 
 #include "Spline.h"
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
@@ -41,9 +43,9 @@ private:
     static const unsigned int DAC_BITS = 11;
 
 private:
-    static std::auto_ptr<FilterModelConfig> instance;
+    static std::unique_ptr<FilterModelConfig> instance;
     // This allows access to the private constructor
-    friend class std::auto_ptr<FilterModelConfig>;
+    friend std::unique_ptr<FilterModelConfig>::deleter_type;
 
     const double voice_voltage_range;
     const double voice_DC_voltage;
@@ -136,7 +138,7 @@ public:
      *
      * @return the integrator
      */
-    std::auto_ptr<Integrator> buildIntegrator();
+    std::unique_ptr<Integrator> buildIntegrator();
 };
 
 } // namespace reSIDfp

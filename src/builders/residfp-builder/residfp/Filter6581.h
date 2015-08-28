@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -29,6 +29,8 @@
 
 #include "Filter.h"
 #include "FilterModelConfig.h"
+
+#include "sidcxx11.h"
 
 namespace reSIDfp
 {
@@ -317,7 +319,7 @@ class Integrator;
  * terminals are pairwise common), which implies that we can model the two
  * transistors as one.
  */
-class Filter6581 : public Filter
+class Filter6581 final : public Filter
 {
 private:
     /// Current volume amplifier setting.
@@ -354,17 +356,17 @@ private:
     const int voiceDC;
 
     /// VCR + associated capacitor connected to highpass output.
-    std::auto_ptr<Integrator> const hpIntegrator;
+    std::unique_ptr<Integrator> const hpIntegrator;
 
     /// VCR + associated capacitor connected to lowpass output.
-    std::auto_ptr<Integrator> const bpIntegrator;
+    std::unique_ptr<Integrator> const bpIntegrator;
 
 public:
     Filter6581() :
-        currentGain(0),
-        currentMixer(0),
-        currentSummer(0),
-        currentResonance(0),
+        currentGain(nullptr),
+        currentMixer(nullptr),
+        currentSummer(nullptr),
+        currentResonance(nullptr),
         f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
         mixer(FilterModelConfig::getInstance()->getMixer()),
         summer(FilterModelConfig::getInstance()->getSummer()),
@@ -383,23 +385,23 @@ public:
 
     ~Filter6581();
 
-    int clock(int voice1, int voice2, int voice3);
+    int clock(int voice1, int voice2, int voice3) override;
 
-    void input(int sample) { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
+    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
 
     /**
      * Set filter cutoff frequency.
      */
-    void updatedCenterFrequency();
+    void updatedCenterFrequency() override;
 
     /**
      * Set filter resonance.
      *
      * In the MOS 6581, 1/Q is controlled linearly by res.
      */
-    void updatedResonance() { currentResonance = gain[~res & 0xf]; }
+    void updatedResonance() override { currentResonance = gain[~res & 0xf]; }
 
-    void updatedMixing();
+    void updatedMixing() override;
 
 public:
     /**

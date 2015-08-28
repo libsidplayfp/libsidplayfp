@@ -30,6 +30,8 @@
 
 #include "../array.h"
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
@@ -48,7 +50,7 @@ namespace reSIDfp
  * filter convolutions, without any loss of accuracy.
  * The filter convolutions are also vectorizable on current hardware.
  */
-class SincResampler : public Resampler
+class SincResampler final : public Resampler
 {
 private:
     /// Size of the ring buffer
@@ -100,11 +102,11 @@ public:
      */
     SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency);
 
-    bool input(int input);
+    bool input(int input) override;
 
-    int output() const { return outputValue; }
+    int output() const override { return outputValue; }
 
-    void reset();
+    void reset() override;
 };
 
 } // namespace reSIDfp

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -26,6 +26,8 @@
 #include <memory>
 
 #include "siddefs-fp.h"
+
+#include "sidcxx11.h"
 
 namespace reSIDfp
 {
@@ -62,28 +64,28 @@ private:
     Filter* filter;
 
     /// Filter used, if model is set to 6581
-    std::auto_ptr<Filter6581> const filter6581;
+    std::unique_ptr<Filter6581> const filter6581;
 
     /// Filter used, if model is set to 8580
-    std::auto_ptr<Filter8580> const filter8580;
+    std::unique_ptr<Filter8580> const filter8580;
 
     /**
      * External filter that provides high-pass and low-pass filtering
      * to adjust sound tone slightly.
      */
-    std::auto_ptr<ExternalFilter> const externalFilter;
+    std::unique_ptr<ExternalFilter> const externalFilter;
 
     /// Resampler used by audio generation code.
-    std::auto_ptr<Resampler> resampler;
+    std::unique_ptr<Resampler> resampler;
 
     /// Paddle X register support
-    std::auto_ptr<Potentiometer> const potX;
+    std::unique_ptr<Potentiometer> const potX;
 
     /// Paddle Y register support
-    std::auto_ptr<Potentiometer> const potY;
+    std::unique_ptr<Potentiometer> const potY;
 
     /// SID voices
-    std::auto_ptr<Voice> voice[3];
+    std::unique_ptr<Voice> voice[3];
 
     /// Time to live for the last written value
     int busValueTtl;

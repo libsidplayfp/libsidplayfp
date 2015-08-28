@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -29,6 +29,8 @@
 #include "WaveformGenerator.h"
 #include "EnvelopeGenerator.h"
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
@@ -38,9 +40,9 @@ namespace reSIDfp
 class Voice
 {
 private:
-    std::auto_ptr<WaveformGenerator> const waveformGenerator;
+    std::unique_ptr<WaveformGenerator> const waveformGenerator;
 
-    std::auto_ptr<EnvelopeGenerator> const envelopeGenerator;
+    std::unique_ptr<EnvelopeGenerator> const envelopeGenerator;
 
 public:
     /**

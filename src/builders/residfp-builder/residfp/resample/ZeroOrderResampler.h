@@ -24,6 +24,8 @@
 
 #include "Resampler.h"
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
@@ -32,7 +34,7 @@ namespace reSIDfp
  *
  * @author Antti Lankila
  */
-class ZeroOrderResampler : public Resampler
+class ZeroOrderResampler final : public Resampler
 {
 
 private:
@@ -54,7 +56,7 @@ public:
         sampleOffset(0),
         outputValue(0) {}
 
-    bool input(int sample)
+    bool input(int sample) override
     {
         bool ready = false;
 
@@ -72,9 +74,9 @@ public:
         return ready;
     }
 
-    int output() const { return outputValue; }
+    int output() const override { return outputValue; }
 
-    void reset()
+    void reset() override
     {
         sampleOffset = 0;
         cachedSample = 0;

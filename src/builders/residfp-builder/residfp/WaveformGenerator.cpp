@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -214,7 +214,7 @@ void WaveformGenerator::reset()
     test = false;
     sync = false;
 
-    wave = model_wave ? (*model_wave)[0] : 0;
+    wave = model_wave ? (*model_wave)[0] : nullptr;
 
     ring_msb_mask = 0;
     no_noise = 0xfff;

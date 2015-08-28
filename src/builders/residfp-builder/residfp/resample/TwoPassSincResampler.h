@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -29,17 +29,19 @@
 #include "Resampler.h"
 #include "SincResampler.h"
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
 /**
  * Compose a more efficient SINC from chaining two other SINCs.
  */
-class TwoPassSincResampler : public Resampler
+class TwoPassSincResampler final : public Resampler
 {
 private:
-    std::auto_ptr<SincResampler> const s1;
-    std::auto_ptr<SincResampler> const s2;
+    std::unique_ptr<SincResampler> const s1;
+    std::unique_ptr<SincResampler> const s2;
 
 private:
     TwoPassSincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency, double intermediateFrequency) :
@@ -58,17 +60,17 @@ public:
         return new TwoPassSincResampler(clockFrequency, samplingFrequency, highestAccurateFrequency, intermediateFrequency);
     }
 
-    bool input(int sample)
+    bool input(int sample) override
     {
         return s1->input(sample) && s2->input(s1->output());
     }
 
-    int output() const
+    int output() const override
     {
         return s2->output();
     }
 
-    void reset()
+    void reset() override
     {
         s1->reset();
         s2->reset();

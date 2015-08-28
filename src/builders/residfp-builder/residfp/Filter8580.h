@@ -32,6 +32,8 @@
 
 #include "Filter.h"
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
@@ -82,7 +84,7 @@ public:
  * Filter for 8580 chip based on simple linear approximation
  * of the FC control.
  */
-class Filter8580 : public Filter
+class Filter8580 final : public Filter
 {
 private:
     /// Cutoff frequency in Hertz
@@ -117,12 +119,12 @@ public:
         _1_div_Q(0.f),
         ve(0) {}
 
-    int clock(int voice1, int voice2, int voice3);
+    int clock(int voice1, int voice2, int voice3) override;
 
     /**
      * Set filter cutoff frequency.
      */
-    void updatedCenterFrequency() { w0 = static_cast<float>(2. * M_PI * highFreq * fc / 2047. / 1e6); }
+    void updatedCenterFrequency() override { w0 = static_cast<float>(2. * M_PI * highFreq * fc / 2047. / 1e6); }
 
     /**
      * Set filter resonance.
@@ -131,11 +133,11 @@ public:
      *
      * 1/Q = 2^(1/2)*2^(-x/8) = 2^(1/2 - x/8) = 2^((4 - x)/8)
      */
-    void updatedResonance() { _1_div_Q = static_cast<float>(pow(2., (4 - res) / 8.)); }
+    void updatedResonance() override { _1_div_Q = static_cast<float>(pow(2., (4 - res) / 8.)); }
 
-    void input(int input) { ve = input << 4; }
+    void input(int input) override { ve = input << 4; }
 
-    void updatedMixing() {}
+    void updatedMixing() override {}
 
     /**
      * Set filter curve type based on single parameter.
