@@ -31,7 +31,6 @@
 #include "sidplayfp/SidTuneInfo.h"
 #include "sidplayfp/siddefs.h"
 
-#include "SidTuneCfg.h"
 #include "SmartPtr.h"
 #include "SidTuneInfoImpl.h"
 

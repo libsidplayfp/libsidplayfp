@@ -7,17 +7,6 @@
 #  include "config.h"
 #endif
 
-// Minimum load address for real c64 only tunes
-#define SIDTUNE_R64_MIN_LOAD_ADDR 0x07e8
-
-
-// --------------------------------------------------------------------------
-// Don't touch these!
-// --------------------------------------------------------------------------
-#undef SIDTUNE_NO_STDIN_LOADER
-#undef SIDTUNE_REJECT_UNKNOWN_FIELDS
-
-
 // Define the file/path separator(s) that your filesystem uses:
 // SID_FS_IS_COLON_AND_BACKSLASH, SID_FS_IS_COLON_AND_SLASH,
 // SID_FS_IS_BACKSLASH, SID_FS_IS_COLON, SID_FS_IS_SLASH
