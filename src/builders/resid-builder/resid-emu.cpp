@@ -35,18 +35,20 @@ namespace libsidplayfp
 
 const char* ReSID::getCredits()
 {
-    if (m_credit.empty())
+    static std::string credits;
+
+    if (credits.empty())
     {
         // Setup credits
         std::ostringstream ss;
         ss << "ReSID V" << VERSION << " Engine:\n";
         ss << "\t(C) 1999-2002 Simon White\n";
         ss << "MOS6581 (SID) Emulation (ReSID V" << resid_version_string << "):\n";
-        ss << "\t(C) 1999-2002 Dag Lem\n";
-        m_credit = ss.str();
+        ss << "\t(C) 1999-2010 Dag Lem\n";
+        credits = ss.str();
     }
 
-    return m_credit.c_str();
+    return credits.c_str();
 }
 
 ReSID::ReSID(sidbuilder *builder) :

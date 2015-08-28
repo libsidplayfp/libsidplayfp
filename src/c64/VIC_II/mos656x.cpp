@@ -50,14 +50,15 @@ const MOS656X::model_data_t MOS656X::modelData[] =
     {312, 65, &MOS656X::clockNTSC},     // PAL-N    (MOS6572)
 };
 
-const char *MOS656X::credit =
+const char *MOS656X::credits()
 {
-    "MOS6567/6569/6572 (VIC II) Emulation:\n"
-    "\tCopyright (C) 2001 Simon White\n"
-    "\tCopyright (C) 2007-2010 Antti Lankila\n"
-    "\tCopyright (C) 2009-2014 VICE Project\n"
-    "\tCopyright (C) 2011-2015 Leandro Nini\n"
-};
+    return
+            "MOS6567/6569/6572 (VIC II) Emulation:\n"
+            "\tCopyright (C) 2001 Simon White\n"
+            "\tCopyright (C) 2007-2010 Antti Lankila\n"
+            "\tCopyright (C) 2009-2014 VICE Project\n"
+            "\tCopyright (C) 2011-2015 Leandro Nini\n";
+}
 
 
 MOS656X::MOS656X(EventScheduler &scheduler) :

@@ -64,8 +64,6 @@ private:
     } model_data_t;
 
 private:
-    static const char *credit;
-
     static const model_data_t modelData[];
 
     /// raster IRQ flag
@@ -347,7 +345,7 @@ public:
      */
     void reset();
 
-    static const char *credits() { return credit; }
+    static const char *credits();
 };
 
 // Template specializations

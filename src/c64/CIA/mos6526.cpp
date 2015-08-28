@@ -128,14 +128,15 @@ void InterruptSource6526::reset()
     scheduled = false;
 }
 
-const char *MOS6526::credit =
+const char *MOS6526::credits()
 {
-    "MOS6526 (CIA) Emulation:\n"
-    "\tCopyright (C) 2001-2004 Simon White\n"
-    "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
-    "\tCopyright (C) 2009-2014 VICE Project\n"
-    "\tCopyright (C) 2011-2015 Leandro Nini\n"
-};
+    return
+            "MOS6526/6526A (CIA) Emulation:\n"
+            "\tCopyright (C) 2001-2004 Simon White\n"
+            "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
+            "\tCopyright (C) 2009-2014 VICE Project\n"
+            "\tCopyright (C) 2011-2015 Leandro Nini\n";
+}
 
 MOS6526::MOS6526(EventScheduler &scheduler) :
     eventScheduler(scheduler),

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -38,7 +38,9 @@ namespace libsidplayfp
 
 const char* ReSIDfp::getCredits()
 {
-    if (m_credit.empty())
+    static std::string credits;
+
+    if (credits.empty())
     {
         // Setup credits
         std::ostringstream ss;
@@ -47,10 +49,11 @@ const char* ReSIDfp::getCredits()
         ss << "MOS6581 (SID) Emulation (ReSIDfp V" << residfp_version_string << "):\n";
         ss << "\t(C) 1999-2002 Dag Lem\n";
         ss << "\t(C) 2005-2011 Antti S. Lankila\n";
-        m_credit = ss.str();
+        ss << "\t(C) 2010-2015 Leandro Nini\n";
+        credits = ss.str();
     }
 
-    return m_credit.c_str();
+    return credits.c_str();
 }
 
 ReSIDfp::ReSIDfp(sidbuilder *builder) :

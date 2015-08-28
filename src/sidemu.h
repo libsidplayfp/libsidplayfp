@@ -58,9 +58,6 @@ private:
     sidbuilder* const m_builder;
 
 protected:
-    static std::string m_credit;
-
-protected:
     static const char ERR_UNSUPPORTED_FREQ[];
     static const char ERR_INVALID_SAMPLING[];
     static const char ERR_INVALID_CHIP[];

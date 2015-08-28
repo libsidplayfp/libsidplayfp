@@ -300,7 +300,7 @@ public:
      *
      * @return the credits
      */
-    static const char *credits() { return credit; }
+    static const char *credits();
 
     /**
      * Set day-of-time event occurence of rate.

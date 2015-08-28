@@ -65,9 +65,6 @@ class MOS6510
 #endif
 
 private:
-    static const char *credit;
-
-private:
     /**
      * IRQ/NMI magic limit values.
      * Need to be larger than about 0x103 << 3,
@@ -305,7 +302,7 @@ public:
 
     void reset();
 
-    static const char *credits() { return credit; }
+    static const char *credits();
 
     void debug(bool enable, FILE *out);
     void setRDY(bool newRDY);
