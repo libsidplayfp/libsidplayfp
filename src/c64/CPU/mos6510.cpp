@@ -2188,14 +2188,14 @@ void MOS6510::reset()
 /**
  * Module Credits.
  */
-const char *credits()
+const char *MOS6510::credits()
 {
     return
         "MOS6510 Cycle Exact Emulation\n"
         "\t(C) 2000 Simon A. White\n"
         "\t(C) 2008-2010 Antti S. Lankila\n"
         "\t(C) 2011-2015 Leandro Nini\n";
-};
+}
 
 void MOS6510::debug(bool enable, FILE *out)
 {
