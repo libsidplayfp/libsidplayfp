@@ -1086,7 +1086,6 @@ STIL::getOneField(string &result, const char *start, const char *end, STILField 
     case all:
         result.append(start, end - start);
         return true;
-        break;
 
     case name:
         temp = strstr(start, _NAME_STR);
