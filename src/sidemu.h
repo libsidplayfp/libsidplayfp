@@ -40,12 +40,10 @@ class sidbuilder;
 namespace libsidplayfp
 {
 
-class EventContext;
-
 /**
  * Inherit this class to create a new SID emulation.
  */
-class sidemu : public libsidplayfp::c64sid
+class sidemu : public c64sid
 {
 public:
     /**
