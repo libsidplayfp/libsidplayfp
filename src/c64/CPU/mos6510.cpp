@@ -784,18 +784,53 @@ void MOS6510::sty_instr()
 void MOS6510::hlt_instr() {}
 #endif
 
+/*
+ * When a DMA is going on (the CPU is halted by the VIC-II)
+ * while the instruction sha/shx/shy executes then the last part
+ * (endian_16hi8(Cycle_EffectiveAddress) + 1) drops off.
+ *
+ * http://sourceforge.net/p/vice-emu/bugs/578/
+ *
+ * This is currently not emulated.
+ */
+
 /**
  * Undocumented - This opcode stores the result of A AND X AND the high
  * byte of the target address of the operand +1 in memory.
- * When a DMA is going on while the instruction executes
- * (the CPU is halted by the VIC-II) then the last part drops
- * off and the instruction becomes addr = A & X
  * When the addressing/indexing causes a page boundary crossing
  * the highbyte of the target address may become equal to the value stored.
  */
 void MOS6510::axa_instr()
 {
     Cycle_Data = Register_X & Register_Accumulator & (endian_16hi8(Cycle_EffectiveAddress) + 1);
+    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
+        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
+    PutEffAddrDataByte();
+}
+
+/**
+ * Undocumented - This opcode ANDs the contents of the Y register with <ab+1> and stores the
+ * result in memory.
+ * When the addressing/indexing causes a page boundary crossing
+ * the highbyte of the target address may become equal to the value stored.
+ */
+void MOS6510::say_instr()
+{
+    Cycle_Data = Register_Y & (endian_16hi8(Cycle_EffectiveAddress) + 1);
+    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
+        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
+    PutEffAddrDataByte();
+}
+
+/**
+ * Undocumented - This opcode ANDs the contents of the X register with <ab+1> and stores the
+ * result in memory.
+ * When the addressing/indexing causes a page boundary crossing
+ * the highbyte of the target address may become equal to the value stored.
+ */
+void MOS6510::xas_instr()
+{
+    Cycle_Data = Register_X & (endian_16hi8(Cycle_EffectiveAddress) + 1);
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
         Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
     PutEffAddrDataByte();
@@ -809,30 +844,6 @@ void MOS6510::axa_instr()
 void MOS6510::axs_instr()
 {
     Cycle_Data = Register_Accumulator & Register_X;
-    PutEffAddrDataByte();
-}
-
-/**
- * Undocumented - This opcode ANDs the contents of the Y register with <ab+1> and stores the
- * result in memory.
- */
-void MOS6510::say_instr()
-{
-    Cycle_Data = Register_Y & (endian_16hi8(Cycle_EffectiveAddress) + 1);
-    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
-    PutEffAddrDataByte();
-}
-
-/**
- * Undocumented - This opcode ANDs the contents of the X register with <ab+1> and stores the
- * result in memory.
- */
-void MOS6510::xas_instr()
-{
-    Cycle_Data = Register_X & (endian_16hi8(Cycle_EffectiveAddress) + 1);
-    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        Cycle_EffectiveAddress = endian_16(Cycle_Data, endian_16lo8(Cycle_EffectiveAddress));
     PutEffAddrDataByte();
 }
 
@@ -911,7 +922,7 @@ void MOS6510::doSBC()
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 // Generic Instruction Addressing Routines                                 //
-//-------------------------------------------------------------------------/
+//-------------------------------------------------------------------------//
 
 
 //-------------------------------------------------------------------------//
@@ -1652,7 +1663,7 @@ MOS6510::MOS6510(EventScheduler &scheduler) :
             instrTable[buildCycle++].func = &MOS6510::FetchLowEffAddr;
             instrTable[buildCycle++].func = &MOS6510::FetchHighEffAddrY;
             instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
-d            break;
+            break;
 
         default:
             legalMode = false;
