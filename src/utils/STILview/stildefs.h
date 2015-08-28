@@ -2,7 +2,7 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 1998, 2002 by LaLa <LaLa@C64.org>
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,18 +74,18 @@
 
 #ifdef UNIX
 #  define SLASH '/'
-#elif MAC
+#elif defined MAC
 #  define SLASH ':'
-#elif AMIGA
+#elif defined AMIGA
 #  define SLASH '/'
 #else // WinDoze
 #  define SLASH '\\'
 #endif
 
-// HVSC path to STIL.
+// Default HVSC path to STIL.
 const char DEFAULT_PATH_TO_STIL[]="/DOCUMENTS/STIL.txt";
 
-// HVSC path to BUGlist.
+// Default HVSC path to BUGlist.
 const char DEFAULT_PATH_TO_BUGLIST[]="/DOCUMENTS/BUGlist.txt";
 
 #endif // STILDEFS_H
