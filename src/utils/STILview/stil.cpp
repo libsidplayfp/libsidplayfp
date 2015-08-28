@@ -42,7 +42,7 @@
 
 using namespace std;
 
-#define STILopenFlags (ios::in | ios::binary)
+const ios_base::openmode STILopenFlags= (ios::in | ios::binary);
 
 const float VERSION_NO = 3.0;
 
