@@ -48,7 +48,7 @@
 namespace libsidplayfp
 {
 
-class ReSID: public sidemu
+class ReSID final : public sidemu
 {
 private:
     RESID_NS::SID &m_sid;

@@ -104,7 +104,7 @@ namespace libsidplayfp
 /***************************************************************************
  * HardSID SID Specialisation
  ***************************************************************************/
-class HardSID : public sidemu, private Event
+class HardSID final : public sidemu, private Event
 {
 private:
     friend class HardSIDBuilder;

@@ -40,7 +40,7 @@ namespace libsidplayfp
 
 #define RESID_NAMESPACE reSIDfp
 
-class ReSIDfp: public sidemu
+class ReSIDfp final : public sidemu
 {
 private:
     RESID_NAMESPACE::SID &m_sid;
