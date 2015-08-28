@@ -36,7 +36,7 @@
 #  include "config.h"
 #endif
 
-//FIXME
+// FIXME
 #define RESID_NAMESPACE reSID
 
 #ifdef RESID_NAMESPACE

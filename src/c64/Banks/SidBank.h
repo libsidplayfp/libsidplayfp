@@ -66,7 +66,7 @@ public:
     /**
      * Set SID emulation.
      *
-     * @param s the emulation
+     * @param s the emulation, nullptr to remove current sid
      */
     void setSID(c64sid *s) { sid = (s != nullptr) ? s : NullSid::getInstance(); }
 };

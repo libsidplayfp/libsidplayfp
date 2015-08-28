@@ -112,6 +112,9 @@ public:
 
     /**
      * Calculate sprite DMA.
+     *
+     * @rasterY y raster position
+     * @regs the VIC registers
      */
     void checkDma(unsigned int rasterY, uint8_t regs[0x40])
     {
@@ -158,9 +161,9 @@ public:
     }
 
     /**
-     * Check if dma is active for selectod sprites.
+     * Check if dma is active for sprites.
      *
-     * @param val sprites bitmask
+     * @param val bitmask for selected sprites
      */
     bool isDma(unsigned int val) const
     {

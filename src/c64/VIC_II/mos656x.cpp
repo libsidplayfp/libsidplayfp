@@ -44,10 +44,10 @@ const unsigned int VICII_SCREEN_TEXTCOLS = 40;
 
 const MOS656X::model_data_t MOS656X::modelData[] =
 {
-    {262, 64, &MOS656X::clockOldNTSC},  // Old NTSC
-    {263, 65, &MOS656X::clockNTSC},     // NTSC-M
-    {312, 63, &MOS656X::clockPAL},      // PAL-B
-    {312, 65, &MOS656X::clockNTSC},     // PAL-N
+    {262, 64, &MOS656X::clockOldNTSC},  // Old NTSC (MOS6567R56A)
+    {263, 65, &MOS656X::clockNTSC},     // NTSC-M   (MOS6567R8)
+    {312, 63, &MOS656X::clockPAL},      // PAL-B    (MOS6569R1, MOS6569R3)
+    {312, 65, &MOS656X::clockNTSC},     // PAL-N    (MOS6572)
 };
 
 const char *MOS656X::credit =
@@ -130,12 +130,13 @@ uint8_t MOS656X::read(uint_least8_t addr)
         // Interrupt Mask Register
         return irqMask | 0xf0;
     default:
-        // for addresses < $20 read from register directly, when < $2f set
-        // bits of high nibble to 1, for >= $2f return $ff
+        // for addresses < $20 read from register directly
         if (addr < 0x20)
             return regs[addr];
+        // for addresses < $2f set bits of high nibble to 1
         if (addr < 0x2f)
             return regs[addr] | 0xf0;
+        // for addresses >= $2f return $ff
         return 0xff;
     }
 }
@@ -360,8 +361,8 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 55:
-        sprites.checkDma(rasterY, regs);
-        sprites.checkExp();
+        sprites.checkDma(rasterY, regs);    // Phi1
+        sprites.checkExp();                 // Phi2
         startDma<0>();
         break;
 
@@ -488,8 +489,8 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 55:
-        sprites.checkDma(rasterY, regs);
-        sprites.checkExp();
+        sprites.checkDma(rasterY, regs);    // Phi1
+        sprites.checkExp();                 // Phi2
         startDma<0>();
         break;
 
@@ -624,8 +625,8 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 55:
-        sprites.checkDma(rasterY, regs);
-        sprites.checkExp();
+        sprites.checkDma(rasterY, regs);    // Phi1
+        sprites.checkExp();                 // Phi2
         startDma<0>();
         break;
 
@@ -638,6 +639,7 @@ event_clock_t MOS656X::clockOldNTSC()
         sprites.checkDisplay();
         startDma<1>();
 
+        // No sprites before next compulsory cycle
         delay = (!sprites.isDma(0x1f)) ? 7 : 2;
         break;
 

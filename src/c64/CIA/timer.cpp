@@ -149,7 +149,8 @@ void Timer::latchLo(uint8_t data)
 void Timer::latchHi(uint8_t data)
 {
     endian_16hi8(latch, data);
-    if ((state & CIAT_LOAD) || !(state & CIAT_CR_START)) // Reload timer if stopped
+    // Reload timer if stopped
+    if ((state & CIAT_LOAD) || !(state & CIAT_CR_START))
         timer = latch;
 }
 

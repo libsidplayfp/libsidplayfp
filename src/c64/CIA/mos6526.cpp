@@ -209,7 +209,8 @@ uint8_t MOS6526::read(uint_least8_t addr)
     {
     case PRA: // Simulate a serial port
         return (regs[PRA] | ~regs[DDRA]);
-    case PRB:{
+    case PRB:
+    {
         uint8_t data = regs[PRB] | ~regs[DDRB];
         // Timers can appear on the port
         if (regs[CRA] & 0x02)
@@ -224,7 +225,8 @@ uint8_t MOS6526::read(uint_least8_t addr)
             if (timerB.getPb(regs[CRB]))
                 data |= 0x80;
         }
-        return data;}
+        return data;
+    }
     case TAL:
         return endian_16lo8(timerA.getTimer());
     case TAH:
@@ -294,22 +296,22 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
     case ICR:
         interruptSource->set(data);
         break;
-    case CRA:{
+    case CRA:
         if ((data & 1) && !(oldData & 1))
         {
             // Reset the underflow flipflop for the data port
             timerA.setPbToggle(true);
         }
         timerA.setControlRegister(data);
-        break;}
-    case CRB:{
+        break;
+    case CRB:
         if ((data & 1) && !(oldData & 1))
         {
             // Reset the underflow flipflop for the data port
             timerB.setPbToggle(true);
         }
         timerB.setControlRegister(data | (data & 0x40) >> 1);
-        break;}
+        break;
     }
 
     timerA.wakeUpAfterSyncWithCpu();

@@ -82,11 +82,13 @@ private:
     static const unsigned int LAST_DMA_LINE = 0xf7;
 
 private:
+    /// Current model clock function.
     ClockFunc clock;
 
+    /// Current raster clock.
     event_clock_t rasterClk;
 
-    /// CPU's event context.
+    /// System's event scheduler.
     EventScheduler &eventScheduler;
 
     /// Number of cycles per line.
@@ -125,7 +127,7 @@ private:
     /// masks for the IRQ flags
     uint8_t irqMask;
 
-    /// Light pen coordinates
+    /// Light pen
     Lightpen lp;
 
     /// the 8 sprites data
@@ -133,6 +135,10 @@ private:
 
     /// memory for chip registers
     uint8_t regs[0x40];
+
+    EventCallback<MOS656X> badLineStateChangeEvent;
+
+    EventCallback<MOS656X> rasterYIRQEdgeDetectorEvent;
 
 private:
     event_clock_t clockPAL();
@@ -144,14 +150,10 @@ private:
      */
     void handleIrqState();
 
-    EventCallback<MOS656X> badLineStateChangeEvent;
-
     /**
      * AEC state was updated.
      */
     void badLineStateChange() { setBA(!isBadLine); }
-
-    EventCallback<MOS656X> rasterYIRQEdgeDetectorEvent;
 
     /**
      * RasterY IRQ edge detector.
@@ -326,6 +328,9 @@ protected:
 public:
     void event() override;
 
+    /**
+     * Set chip model.
+     */
     void chip(model_t model);
 
     /**

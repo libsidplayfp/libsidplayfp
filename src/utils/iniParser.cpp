@@ -78,9 +78,7 @@ bool iniParser::open(const char *fName)
         case '#':
             // skip comments
             break;
-
         case '[':
-        {
             try
             {
                 const std::string section = parseSection(buffer);
@@ -89,16 +87,13 @@ bool iniParser::open(const char *fName)
                 mIt = it.first;
             }
             catch (parseError const &) {};
-        }
-        break;
-
+            break;
         default:
             try
             {
                 (*mIt).second.insert(parseKey(buffer));
             }
             catch (parseError const &) {};
-
             break;
         }
     }

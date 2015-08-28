@@ -70,7 +70,7 @@ private:
      *
      * - when -1: cia is completely stopped
      * - when 0: cia 1-clock events are ticking.
-     * - otherwise: cycleskipevent is ticking, and the value is the first
+     * - otherwise: cycle skip event is ticking, and the value is the first
      *   phi1 clock of skipping.
      */
     event_clock_t ciaEventPauseTime;
@@ -118,8 +118,8 @@ private:
     void event() override;
 
     /**
-    * Signal timer underflow.
-    */
+     * Signal timer underflow.
+     */
     virtual void underFlow() =0;
 
     /**
@@ -222,15 +222,14 @@ public:
 
 void Timer::reschedule()
 {
-    /* There are only two subcases to consider.
-     *
-     * - are we counting, and if so, are we going to
-     *   continue counting?
-     * - have we stopped, and are there no conditions to force a new beginning?
-     *
-     * Additionally, there are numerous flags that are present only in passing manner,
-     * but which we need to let cycle through the CIA state machine.
-     */
+    // There are only two subcases to consider.
+    //
+    // - are we counting, and if so, are we going to
+    //   continue counting?
+    // - have we stopped, and are there no conditions to force a new beginning?
+    //
+    // Additionally, there are numerous flags that are present only in passing manner,
+    // but which we need to let cycle through the CIA state machine.
     const int_least32_t unwanted = CIAT_OUT | CIAT_CR_FLOAD | CIAT_LOAD1 | CIAT_LOAD;
     if ((state & unwanted) != 0)
     {
@@ -240,28 +239,28 @@ void Timer::reschedule()
 
     if ((state & CIAT_COUNT3) != 0)
     {
-        /* Test the conditions that keep COUNT2 and thus COUNT3 alive, and also
-         * ensure that all of them are set indicating steady state operation. */
+        // Test the conditions that keep COUNT2 and thus COUNT3 alive, and also
+        // ensure that all of them are set indicating steady state operation.
 
         const int_least32_t wanted = CIAT_CR_START | CIAT_PHI2IN | CIAT_COUNT2 | CIAT_COUNT3;
         if (timer > 2 && (state & wanted) == wanted)
         {
-            /* we executed this cycle, therefore the pauseTime is +1. If we are called
-             * to execute on the very next clock, we need to get 0 because there's
-             * another timer-- in it. */
+            // we executed this cycle, therefore the pauseTime is +1. If we are called
+            // to execute on the very next clock, we need to get 0 because there's
+            // another timer-- in it.
             ciaEventPauseTime = eventScheduler.getTime(EVENT_CLOCK_PHI1) + 1;
-            /* execute event slightly before the next underflow. */
+            // execute event slightly before the next underflow.
             eventScheduler.schedule(m_cycleSkippingEvent, timer - 1);
             return;
         }
 
-        /* play safe, keep on ticking. */
+        // play safe, keep on ticking.
         eventScheduler.schedule(*this, 1);
     }
     else
     {
-        /* Test conditions that result in CIA activity in next clocks.
-         * If none, stop. */
+        // Test conditions that result in CIA activity in next clocks.
+        // If none, stop.
         const int_least32_t unwanted1 = CIAT_CR_START | CIAT_PHI2IN;
         const int_least32_t unwanted2 = CIAT_CR_START | CIAT_STEP;
 

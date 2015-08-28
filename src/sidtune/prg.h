@@ -37,6 +37,10 @@ private:
     void load();
 
 public:
+    /**
+     * @return pointer to a SidTune or 0 if not a prg file
+     * @throw loadError if prg file is corrupt
+     */
     static SidTuneBase* load(const char *fileName, buffer_t& dataBuf);
 
     virtual ~prg() {}

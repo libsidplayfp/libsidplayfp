@@ -56,7 +56,7 @@ protected:
     /// Pointer to the MOS6526 which this Interrupt belongs to.
     MOS6526 &parent;
 
-    /// Event context.
+    /// Event scheduler.
     EventScheduler &eventScheduler;
 
 private:
@@ -77,8 +77,8 @@ protected:
     /**
      * Create a new InterruptSource.
      *
-     * @param context event context
-     * @param underflowEvent the MOS6526 underflow event callback
+     * @param scheduler event scheduler
+     * @param parent the MOS6526 which this Interrupt belongs to
      */
     InterruptSource(EventScheduler &scheduler, MOS6526 &parent) :
         Event("CIA Interrupt"),

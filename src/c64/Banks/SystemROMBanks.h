@@ -71,6 +71,9 @@ public:
      */
     void poke(uint_least16_t, uint8_t) override {}
 
+    /**
+     * Read from ROM.
+     */
     uint8_t peek(uint_least16_t address) override { return rom[address & (N-1)]; }
 };
 

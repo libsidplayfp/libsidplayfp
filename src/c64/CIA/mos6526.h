@@ -90,7 +90,7 @@ public:
      */
     void cascade()
     {
-        /* we pretend that we are CPU doing a write to ctrl register */
+        // we pretend that we are CPU doing a write to ctrl register
         syncWithCpu();
         state |= CIAT_STEP;
         wakeUpAfterSyncWithCpu();
@@ -221,7 +221,7 @@ protected:
 
 private:
     /**
-     * TOD alarm interrupt.
+     * Trigger an interrupt from TOD.
      */
     void todInterrupt();
 
