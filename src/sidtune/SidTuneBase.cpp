@@ -61,13 +61,11 @@ const char SidTuneBase::ERR_TRUNCATED[] = "SIDTUNE ERROR: File is most likely tr
 const char SidTuneBase::ERR_INVALID[]   = "SIDTUNE ERROR: File contains invalid data";
 
 /**
- * Petscii to Ascii conversion table.
- *
- * CHR$ conversion table (0x01 = no output)
+ * Petscii to Ascii conversion table (0x01 = no output).
  */
-static const char CHR_tab[256] =
+const char CHR_tab[256] =
 {
-  0x00,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01, 0xd,0x01,0x01,
+  0x00,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x0d,0x01,0x01,
   0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,
   0x20,0x21,0x01,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,
   0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,
@@ -90,6 +88,7 @@ static const char CHR_tab[256] =
 /// C64KB + LOAD + PSID
 const uint_least32_t MAX_FILELEN = 65536 + 2 + 0x7C;
 
+/// The Commodore 64 memory size
 const uint_least32_t MAX_MEMORY = 65536;
 
 /// Minimum load address for real c64 only tunes
@@ -98,7 +97,7 @@ const uint_least16_t SIDTUNE_R64_MIN_LOAD_ADDR = 0x07e8;
 SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
                  bool separatorIsSlash)
 {
-    if (!fileName)
+    if (fileName == nullptr)
         return nullptr;
 
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
@@ -152,14 +151,14 @@ unsigned int SidTuneBase::selectSong(unsigned int selectedSong)
         // sidtunes, which have been converted from .SID format and vice versa.
         // The .SID format does the bit-wise/song-wise evaluation of the SPEED
         // value correctly, like it is described in the PlaySID documentation.
-        info->m_songSpeed = songSpeed[(song-1)&31];
+        info->m_songSpeed = songSpeed[(song - 1) & 31];
         break;
     default:
-        info->m_songSpeed = songSpeed[song-1];
+        info->m_songSpeed = songSpeed[song - 1];
         break;
     }
 
-    info->m_clockSpeed = clockSpeed[song-1];
+    info->m_clockSpeed = clockSpeed[song - 1];
 
     return info->m_currentSong;
 }
@@ -266,7 +265,7 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
         throw loadError(ERR_FILE_TOO_LONG);
     }
 
-    buffer_t buf1(buffer, buffer+bufferLen);
+    buffer_t buf1(buffer, buffer + bufferLen);
 
     // Here test for the possible single file formats.
     std::unique_ptr<SidTuneBase> s(PSID::load(buf1));
@@ -432,7 +431,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                 n++;
             }
 
-            s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
+            s->acceptSidTune(fileName, nullptr, fileBuf1, separatorIsSlash);
             return s.release();
         }
     }
@@ -441,7 +440,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
 
     if (s.get() != nullptr)
     {
-        s->acceptSidTune(fileName, 0, fileBuf1, separatorIsSlash);
+        s->acceptSidTune(fileName, nullptr, fileBuf1, separatorIsSlash);
         return s.release();
     }
 
@@ -553,7 +552,7 @@ void SidTuneBase::resolveAddrs(const uint_least8_t *c64data)
 
 bool SidTuneBase::checkCompatibility()
 {
-    if  (info->m_compatibility == SidTuneInfo::COMPATIBILITY_R64)
+    if (info->m_compatibility == SidTuneInfo::COMPATIBILITY_R64)
     {
         // Check valid init address
         switch (info->m_initAddr >> 12)
