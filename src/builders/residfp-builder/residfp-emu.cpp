@@ -58,7 +58,7 @@ const char* ReSIDfp::getCredits()
 
 ReSIDfp::ReSIDfp(sidbuilder *builder) :
     sidemu(builder),
-    m_sid(*(new RESID_NAMESPACE::SID))
+    m_sid(*(new reSIDfp::SID))
 {
     m_buffer = new short[OUTPUTBUFFERSIZE];
     reset(0);
@@ -136,7 +136,7 @@ void ReSIDfp::sampling(float systemclock, float freq,
         const int halfFreq = 5000*((static_cast<int>(freq)+5000)/10000);
         m_sid.setSamplingParameters(systemclock, sampleMethod, freq, std::min(halfFreq, 20000));
     }
-    catch (RESID_NAMESPACE::SIDError const &)
+    catch (reSIDfp::SIDError const &)
     {
         m_status = false;
         m_error = ERR_UNSUPPORTED_FREQ;

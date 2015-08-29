@@ -38,12 +38,10 @@ class sidbuilder;
 namespace libsidplayfp
 {
 
-#define RESID_NAMESPACE reSIDfp
-
 class ReSIDfp final : public sidemu
 {
 private:
-    RESID_NAMESPACE::SID &m_sid;
+    reSIDfp::SID &m_sid;
 
 public:
     static const char* getCredits();

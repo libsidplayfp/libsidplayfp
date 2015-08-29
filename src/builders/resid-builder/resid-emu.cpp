@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -53,7 +53,7 @@ const char* ReSID::getCredits()
 
 ReSID::ReSID(sidbuilder *builder) :
     sidemu(builder),
-    m_sid(*(new RESID_NS::SID)),
+    m_sid(*(new reSID::SID)),
     m_voiceMask(0x07)
 {
     m_buffer = new short[OUTPUTBUFFERSIZE];
@@ -93,7 +93,7 @@ void ReSID::write(uint_least8_t addr, uint8_t data)
 
 void ReSID::clock()
 {
-    RESID_NS::cycle_count cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    reSID::cycle_count cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
     m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
 }
@@ -106,14 +106,14 @@ void ReSID::filter(bool enable)
 void ReSID::sampling(float systemclock, float freq,
         SidConfig::sampling_method_t method, bool fast)
 {
-    RESID_NS::sampling_method sampleMethod;
+    reSID::sampling_method sampleMethod;
     switch (method)
     {
     case SidConfig::INTERPOLATE:
-        sampleMethod = fast ? RESID_NS::SAMPLE_FAST : RESID_NS::SAMPLE_INTERPOLATE;
+        sampleMethod = fast ? reSID::SAMPLE_FAST : reSID::SAMPLE_INTERPOLATE;
         break;
     case SidConfig::RESAMPLE_INTERPOLATE:
-        sampleMethod = fast ? RESID_NS::SAMPLE_RESAMPLE_FASTMEM : RESID_NS::SAMPLE_RESAMPLE;
+        sampleMethod = fast ? reSID::SAMPLE_RESAMPLE_FASTMEM : reSID::SAMPLE_RESAMPLE;
         break;
     default:
         m_status = false;
@@ -144,14 +144,14 @@ void ReSID::voice(unsigned int num, bool mute)
 // Set the emulated SID model
 void ReSID::model(SidConfig::sid_model_t model)
 {
-    RESID_NS::chip_model chipModel;
+    reSID::chip_model chipModel;
     switch (model)
     {
         case SidConfig::MOS6581:
-            chipModel = RESID_NS::MOS6581;
+            chipModel = reSID::MOS6581;
             break;
         case SidConfig::MOS8580:
-            chipModel = RESID_NS::MOS8580;
+            chipModel = reSID::MOS8580;
             break;
         /* MOS8580 + digi boost
         *      chipModel = (RESID_NS::MOS8580);

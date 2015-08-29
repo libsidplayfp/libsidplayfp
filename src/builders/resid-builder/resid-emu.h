@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -36,14 +36,6 @@
 #  include "config.h"
 #endif
 
-// FIXME
-#define RESID_NAMESPACE reSID
-
-#ifdef RESID_NAMESPACE
-#   define RESID_NS ::RESID_NAMESPACE
-#else
-#   define RESID_NS
-#endif
 
 namespace libsidplayfp
 {
@@ -51,7 +43,7 @@ namespace libsidplayfp
 class ReSID final : public sidemu
 {
 private:
-    RESID_NS::SID &m_sid;
+    reSID::SID   &m_sid;
     uint8_t       m_voiceMask;
 
 public:
