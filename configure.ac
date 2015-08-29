@@ -229,7 +229,7 @@ AC_ARG_ENABLE([tests],
     AC_CHECK_HEADERS([UnitTest++/UnitTest++.h], [], AC_MSG_ERROR([UnitTest++.h header not found]))
         AS_IF(
                 [test "x${ac_cv_header_UnitTestpp_UnitTestpp_h}" = xyes],
-                AC_CHECK_LIB([UnitTest++], [main], [], AC_MSG_ERROR([UnitTest++ library not found]))
+                AC_CHECK_LIB([UnitTest++], [main], [unittest_libs=-lUnitTest++], AC_MSG_ERROR([UnitTest++ library not found]))
         )
     [am_unittest=true]
   ],
@@ -237,6 +237,7 @@ AC_ARG_ENABLE([tests],
 )
 
 AM_CONDITIONAL([ENABLE_TEST], [test x$am_unittest = xtrue])
+AC_SUBST([unittest_libs])
 
 AC_SUBST(RESID_HAVE_BOOL)
 AC_SUBST(RESID_INLINING)
