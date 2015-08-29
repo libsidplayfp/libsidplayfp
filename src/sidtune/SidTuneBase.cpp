@@ -557,11 +557,11 @@ bool SidTuneBase::checkCompatibility()
         // Check valid init address
         switch (info->m_initAddr >> 12)
         {
-        case 0x0F:
-        case 0x0E:
-        case 0x0D:
-        case 0x0B:
         case 0x0A:
+        case 0x0B:
+        case 0x0D:
+        case 0x0E:
+        case 0x0F:
             return false;
         default:
             if ((info->m_initAddr < info->m_loadAddr)
