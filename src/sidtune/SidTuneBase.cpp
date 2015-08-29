@@ -314,16 +314,13 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
     else if (info->m_songs == 0)
     {
-        info->m_songs++;
+        info->m_songs = 1;
     }
 
-    if (info->m_startSong > info->m_songs)
+    if (info->m_startSong == 0
+        || info->m_startSong > info->m_songs)
     {
         info->m_startSong = 1;
-    }
-    else if (info->m_startSong == 0)
-    {
-        info->m_startSong++;
     }
 
     info->m_dataFileLen = buf.size();
