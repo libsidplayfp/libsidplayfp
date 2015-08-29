@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
@@ -203,7 +203,7 @@ private:
      */
     inline unsigned int oldRasterY() const
     {
-        return rasterY > 0 ? rasterY - 1 : maxRasters - 1;
+        return (rasterY > 0 ? rasterY : maxRasters) - 1;
     }
 
     inline void sync()

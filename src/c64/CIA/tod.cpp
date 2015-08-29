@@ -68,12 +68,12 @@ void Tod::write(uint_least8_t reg, uint8_t data)
     {
     case TENTHS: // Time Of Day clock 1/10 s
         data &= 0x0f;
-            break;
+        break;
     case SECONDS: // Time Of Day clock sec
         // deliberate run on
     case MINUTES: // Time Of Day clock min
         data &= 0x7f;
-            break;
+        break;
     case HOURS:  // Time Of Day clock hour
         // force bits 6-5 = 0
         data &= 0x9f;
@@ -81,7 +81,7 @@ void Tod::write(uint_least8_t reg, uint8_t data)
         // Flip AM/PM only when writing time, not when writing alarm
         if ((data & 0x1f) == 0x12 && !(crb & 0x80))
             data ^= 0x80;
-            break;
+        break;
     }
 
     bool changed = false;
@@ -183,7 +183,7 @@ void Tod::event()
                                     pm ^= 0x80;
                                 }
                                 // wrap 12h -> 1h (FIXME: when hour became x3 ?)
-                                if (t5 == 3)
+                                else if (t5 == 3)
                                 {
                                     t5 = 1;
                                     t6 = 0;

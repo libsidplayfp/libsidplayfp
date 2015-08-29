@@ -275,6 +275,8 @@ private:
 
     inline void doJSR();
 
+    inline void buildInstructionTable();
+
 protected:
     MOS6510(EventScheduler &scheduler);
     ~MOS6510() {}

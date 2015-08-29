@@ -248,7 +248,9 @@ void MOS6510::interruptsAndNextOpcode()
         cycleCount = BRKn << 3;
         flags.B = false;
         interruptCycle = MAX;
-    } else {
+    }
+    else
+    {
         fetchNextOpcode();
     }
 }
@@ -676,14 +678,14 @@ void MOS6510::doJSR()
         switch (ch)
         {
         case 0:
-                break;
+            break;
         case 1:
             fprintf(stderr, " ");
-                 break;
+            break;
         case 0xd:
             fprintf(stderr, "\n");
             filepos = 0;
-                break;
+            break;
         default:
             filetmp[filepos++] = ch;
             fprintf(stderr, "%c", ch);
@@ -774,7 +776,9 @@ void MOS6510::sty_instr()
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
 
-#if 0 // Not required - Operation performed By another method
+#if 0
+// Not required - Operation performed By another method
+//
 // Undocumented - HLT crashes the microprocessor.  When this opcode is executed, program
 // execution ceases.  No hardware interrupts will execute either.  The author
 // has characterized this instruction as a halt instruction since this is the
@@ -984,8 +988,8 @@ void MOS6510::branch_instr(bool condition)
         // issue the spurious read for next insn here.
         cpuRead(Register_ProgramCounter);
 
-        Cycle_HighByteWrongEffectiveAddress = (Register_ProgramCounter & 0xff00) | ((Register_ProgramCounter + static_cast<int8_t>(Cycle_Data)) & 0xff);
         Cycle_EffectiveAddress = Register_ProgramCounter + static_cast<int8_t>(Cycle_Data);
+        Cycle_HighByteWrongEffectiveAddress = (Register_ProgramCounter & 0xff00) | (Cycle_EffectiveAddress & 0xff);
 
         // Check for page boundary crossing
         if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
@@ -1452,7 +1456,8 @@ void MOS6510::rla_instr()
     const uint8_t newC = Cycle_Data & 0x80;
     PutEffAddrDataByte();
     Cycle_Data = Cycle_Data << 1;
-    if (flags.C) Cycle_Data |= 0x01;
+    if (flags.C)
+        Cycle_Data |= 0x01;
     flags.C = newC;
     flags.setNZ(Register_Accumulator &= Cycle_Data);
 }
@@ -1466,7 +1471,8 @@ void MOS6510::rra_instr()
     const uint8_t newC = Cycle_Data & 0x01;
     PutEffAddrDataByte();
     Cycle_Data >>= 1;
-    if (flags.C) Cycle_Data |= 0x80;
+    if (flags.C)
+        Cycle_Data |= 0x80;
     flags.C = newC;
     doADC();
 }
@@ -1487,9 +1493,27 @@ MOS6510::MOS6510(EventScheduler &scheduler) :
     m_nosteal("CPU-nosteal", *this, &MOS6510::eventWithoutSteals),
     m_steal("CPU-steal", *this, &MOS6510::eventWithSteals)
 {
-    //----------------------------------------------------------------------
-    // Build up the processor instruction table
-    for (int i = 0; i < 0x100; i++)
+    buildInstructionTable();
+
+    // Intialise Processor Registers
+    Register_Accumulator   = 0;
+    Register_X             = 0;
+    Register_Y             = 0;
+
+    Cycle_EffectiveAddress = 0;
+    Cycle_Data             = 0;
+    #ifdef DEBUG
+    dodump = false;
+    #endif
+    Initialise();
+}
+
+/**
+ * Build up the processor instruction table.
+ */
+void MOS6510::buildInstructionTable()
+{
+    for (unsigned int i = 0; i < 0x100; i++)
     {
 #if DEBUG > 1
         printf("Building Command %d[%02x]... ", i, i);
@@ -1505,7 +1529,7 @@ MOS6510::MOS6510(EventScheduler &scheduler) :
          *   if any, are at the end for most instructions.
          */
 
-        int buildCycle = i << 3;
+        unsigned int buildCycle = i << 3;
 
         typedef enum { WRITE, READ } AccessMode;
         AccessMode access = WRITE;
@@ -2123,18 +2147,6 @@ MOS6510::MOS6510(EventScheduler &scheduler) :
         printf("Done [%d Cycles]\n", buildCycle - (i << 3));
 #endif
     }
-
-    // Intialise Processor Registers
-    Register_Accumulator   = 0;
-    Register_X             = 0;
-    Register_Y             = 0;
-
-    Cycle_EffectiveAddress = 0;
-    Cycle_Data             = 0;
-#ifdef DEBUG
-    dodump = false;
-#endif
-    Initialise();
 }
 
 /**

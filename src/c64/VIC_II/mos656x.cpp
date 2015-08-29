@@ -246,10 +246,13 @@ void MOS656X::handleIrqState()
             irqFlags |= 0x80;
         }
     }
-    else if ((irqFlags & 0x80) != 0)
+    else
     {
-        interrupt(false);
-        irqFlags &= 0x7f;
+        if ((irqFlags & 0x80) != 0)
+        {
+            interrupt(false);
+            irqFlags &= 0x7f;
+        }
     }
 }
 
