@@ -28,7 +28,7 @@
 #include "Bank.h"
 #include "SystemRAMBank.h"
 
-#include "sidplayfp/event.h"
+#include "Event.h"
 
 #include "sidcxx11.h"
 
