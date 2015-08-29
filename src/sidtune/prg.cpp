@@ -38,8 +38,8 @@ const char TXT_FORMAT_PRG[] = "Tape image file (PRG)";
 SidTuneBase* prg::load(const char *fileName, buffer_t& dataBuf)
 {
     const char *ext = SidTuneTools::fileExtOfPath(fileName);
-    if ((!stringutils::equal(ext, ".prg")) &&
-        (!stringutils::equal(ext, ".c64")))
+    if ((!stringutils::equal(ext, ".prg"))
+        && (!stringutils::equal(ext, ".c64")))
     {
         return nullptr;
     }

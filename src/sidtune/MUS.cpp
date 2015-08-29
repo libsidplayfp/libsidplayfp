@@ -53,16 +53,16 @@ bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
 {
     SmartPtr_sidtt<const uint8_t> spMus(static_cast<const uint8_t*>(buffer), bufLen);
     // Skip load address and 3x length entry.
-    uint_least32_t voice1Index = (2+3*2);
+    uint_least32_t voice1Index = 2 + 3 * 2;
     // Add length of voice 1 data.
     voice1Index += endian_16(spMus[3], spMus[2]);
     // Add length of voice 2 data.
     uint_least32_t voice2Index = voice1Index + endian_16(spMus[5], spMus[4]);
     // Add length of voice 3 data.
     voice3Index = voice2Index + endian_16(spMus[7], spMus[6]);
-    return ((endian_16(spMus[voice1Index-2], spMus[voice1Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(spMus[voice2Index-2], spMus[voice2Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(spMus[voice3Index-2], spMus[voice3Index+1-2]) == SIDTUNE_MUS_HLT_CMD)
+    return ((endian_16(spMus[voice1Index - 2], spMus[voice1Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_16(spMus[voice2Index - 2], spMus[voice2Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_16(spMus[voice3Index - 2], spMus[voice3Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
             && spMus);
 }
 
@@ -124,8 +124,8 @@ void MUS::installPlayer(sidmemory& mem)
 
     mem.fillRam(dest, sidplayer1 + 2, sizeof(sidplayer1) - 2);
     // Point player #1 to data #1.
-    mem.writeMemByte(dest+0xc6e, (SIDTUNE_MUS_DATA_ADDR+2)&0xFF);
-    mem.writeMemByte(dest+0xc70, (SIDTUNE_MUS_DATA_ADDR+2)>>8);
+    mem.writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + 2) & 0xFF);
+    mem.writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + 2) >> 8);
 
     if (info->getSidChips() > 1)
     {
@@ -169,7 +169,8 @@ void MUS::tryLoad(buffer_t& musBuf,
 {
     if (init)
     {
-        info->m_songs = (info->m_startSong = 1);
+        info->m_songs = 1;
+        info->m_startSong = 1;
 
         songSpeed[0]  = SidTuneInfo::SPEED_CIA_1A;
         clockSpeed[0] = SidTuneInfo::CLOCK_ANY;
@@ -177,7 +178,8 @@ void MUS::tryLoad(buffer_t& musBuf,
 
     // Check setting compatibility for MUS playback
     if ((info->m_compatibility != SidTuneInfo::COMPATIBILITY_C64)
-        || (info->m_relocStartPage != 0) || (info->m_relocPages != 0))
+        || (info->m_relocStartPage != 0)
+        || (info->m_relocPages != 0))
     {
         throw loadError(ERR_INVALID);
     }

@@ -77,7 +77,7 @@ const char TXT_FORMAT_USR[] = "Unsupported USR file (USR)";
 const char TXT_FORMAT_REL[] = "Unsupported tape image file (REL)";
 
 // Magic field
-const char P00_ID[]         = "C64File";
+const char P00_ID[] = "C64File";
 
 
 SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
@@ -126,8 +126,8 @@ SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
         return nullptr;
 
     X00Header pHeader;
-    memcpy(pHeader.id,     &dataBuf[0], X00_ID_LEN);
-    memcpy(pHeader.name,   &dataBuf[X00_ID_LEN], X00_NAME_LEN);
+    memcpy(pHeader.id, &dataBuf[0], X00_ID_LEN);
+    memcpy(pHeader.name, &dataBuf[X00_ID_LEN], X00_NAME_LEN);
     pHeader.length = dataBuf[X00_ID_LEN + X00_NAME_LEN];
 
     if (strcmp(pHeader.id, P00_ID))
