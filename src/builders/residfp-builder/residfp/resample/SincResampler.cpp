@@ -252,7 +252,7 @@ bool SincResampler::input(int input)
 
 void SincResampler::reset()
 {
-    memset(sample, 0, RINGSIZE * 2 * sizeof(sample[0]));
+    memset(sample, 0, sizeof(sample));
     sampleOffset = 0;
 }
 

@@ -51,7 +51,7 @@ public:
      */
     void reset()
     {
-        memset(ram, 0, 0x10000);
+        memset(ram, 0, sizeof(ram));
         for (int i = 0x40; i < 0x10000; i += 0x80)
         {
             memset(ram+i, 0xff, 0x40);

@@ -47,7 +47,7 @@ private:
 public:
     void reset()
     {
-         memset(ram, 0, 0x400);
+         memset(ram, 0, sizeof(ram));
     }
 
     void poke(uint_least16_t address, uint8_t value) override

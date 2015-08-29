@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -158,17 +158,17 @@ public:
         romBank<0x2000>::set(basic);
 
         // Backup BASIC Warm Start
-        memcpy(trap, getPtr(0xa7ae), 3);
+        memcpy(trap, getPtr(0xa7ae), sizeof(trap));
 
-        memcpy(subTune, getPtr(0xbf53), 11);
+        memcpy(subTune, getPtr(0xbf53), sizeof(subTune));
     }
 
     void reset()
     {
         // Restore original BASIC Warm Start
-        memcpy(getPtr(0xa7ae), trap, 3);
+        memcpy(getPtr(0xa7ae), trap, sizeof(trap));
 
-        memcpy(getPtr(0xbf53), subTune, 11);
+        memcpy(getPtr(0xbf53), subTune, sizeof(subTune));
     }
 
     /**
