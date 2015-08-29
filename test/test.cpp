@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 
     if (!m_engine.load(tune.get()))
     {
-        std::cerr <<  m_engine.error() << std::endl;
+        std::cerr << m_engine.error() << std::endl;
         return -1;
     }
 
