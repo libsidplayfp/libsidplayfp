@@ -102,17 +102,17 @@ void SidTune::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
 
 unsigned int SidTune::selectSong(unsigned int songNum)
 {
-    return tune.get() ? tune->selectSong(songNum) : 0;
+    return tune.get() != nullptr ? tune->selectSong(songNum) : 0;
 }
 
 const SidTuneInfo* SidTune::getInfo() const
 {
-    return tune.get() ? tune->getInfo() : nullptr;
+    return tune.get() != nullptr ? tune->getInfo() : nullptr;
 }
 
 const SidTuneInfo* SidTune::getInfo(unsigned int songNum)
 {
-    return tune.get() ? tune->getInfo(songNum) : nullptr;
+    return tune.get() != nullptr ? tune->getInfo(songNum) : nullptr;
 }
 
 bool SidTune::getStatus() const { return m_status; }
@@ -130,9 +130,9 @@ bool SidTune::placeSidTuneInC64mem(sidmemory& mem)
 
 const char* SidTune::createMD5(char *md5)
 {
-    return tune.get() ? tune->createMD5(md5) : nullptr;
+    return tune.get() != nullptr ? tune->createMD5(md5) : nullptr;
 }
 const uint_least8_t* SidTune::c64Data() const
 {
-    return tune.get() ? tune->c64Data() : 0;
+    return tune.get() != nullptr ? tune->c64Data() : nullptr;
 }
