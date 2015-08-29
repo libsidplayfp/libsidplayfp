@@ -417,7 +417,10 @@ const char *PSID::createMD5(char *md5)
         myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
         md5[SidTune::MD5_LENGTH] ='\0';
     }
-    catch (md5Error const &) {}
+    catch (md5Error const &)
+    {
+        return nullptr;
+    }
 
     return md5;
 }
