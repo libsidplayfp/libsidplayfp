@@ -144,9 +144,14 @@ bool validateAddress(uint_least8_t address)
 SidTuneBase* PSID::load(buffer_t& dataBuf)
 {
     // File format check
-    if (dataBuf.size() < 4
-        || ((endian_big32(&dataBuf[0]) != PSID_ID)
-            && (endian_big32(&dataBuf[0]) != RSID_ID)))
+    if (dataBuf.size() < 4)
+    {
+        return nullptr;
+    }
+
+    const uint32_t magic = endian_big32(&dataBuf[0]);
+    if ((magic != PSID_ID)
+        && (magic != RSID_ID))
     {
         return nullptr;
     }
@@ -254,13 +259,32 @@ void PSID::tryLoad(const psidHeader &pHeader)
     if (pHeader.version >= 2)
     {
         const uint_least16_t flags = pHeader.flags;
+
+        // Check clock
         if (flags & PSID_MUS)
         {   // MUS tunes run at any speed
             clock = SidTuneInfo::CLOCK_ANY;
             musPlayer = true;
         }
+        else
+        {
+            switch (flags & PSID_CLOCK)
+            {
+            case PSID_CLOCK_ANY:
+                clock = SidTuneInfo::CLOCK_ANY;
+                break;
+            case PSID_CLOCK_PAL:
+                clock = SidTuneInfo::CLOCK_PAL;
+                break;
+            case PSID_CLOCK_NTSC:
+                clock = SidTuneInfo::CLOCK_NTSC;
+                break;
+            default:
+                break;
+            }
+        }
 
-        // This flags is only available for the appropriate
+        // These flags are only available for the appropriate
         // file formats
         switch (compatibility)
         {
@@ -275,13 +299,6 @@ void PSID::tryLoad(const psidHeader &pHeader)
         default:
             break;
         }
-
-        if ((flags & PSID_CLOCK_ANY) == PSID_CLOCK_ANY)
-            clock = SidTuneInfo::CLOCK_ANY;
-        else if (flags & PSID_CLOCK_PAL)
-            clock = SidTuneInfo::CLOCK_PAL;
-        else if (flags & PSID_CLOCK_NTSC)
-            clock = SidTuneInfo::CLOCK_NTSC;
 
         info->m_clockSpeed = clock;
 
@@ -354,25 +371,25 @@ const char *PSID::createMD5(char *md5)
         myMD5.append(&cache[fileOffset], info->m_c64dataLen);
 
         // Include INIT and PLAY address.
-        endian_little16(tmp,info->m_initAddr);
-        myMD5.append(tmp,sizeof(tmp));
-        endian_little16(tmp,info->m_playAddr);
-        myMD5.append(tmp,sizeof(tmp));
+        endian_little16(tmp, info->m_initAddr);
+        myMD5.append(tmp, sizeof(tmp));
+        endian_little16(tmp, info->m_playAddr);
+        myMD5.append(tmp, sizeof(tmp));
 
         // Include number of songs.
-        endian_little16(tmp,info->m_songs);
-        myMD5.append(tmp,sizeof(tmp));
+        endian_little16(tmp, info->m_songs);
+        myMD5.append(tmp, sizeof(tmp));
 
         {   // Include song speed for each song.
             const unsigned int currentSong = info->m_currentSong;
             for (unsigned int s = 1; s <= info->m_songs; s++)
             {
                 selectSong (s);
-                const uint_least8_t songSpeed = (uint_least8_t)info->m_songSpeed;
+                const uint_least8_t songSpeed = static_cast<int_least8_t>(info->m_songSpeed);
                 myMD5.append (&songSpeed,sizeof(songSpeed));
             }
             // Restore old song
-            selectSong (currentSong);
+            selectSong(currentSong);
         }
 
         // Deal with PSID v2NG clock speed flags: Let only NTSC
