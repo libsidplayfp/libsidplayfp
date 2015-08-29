@@ -38,7 +38,7 @@ Created from Jarnos original
 Sidplay2 patch
 ***************************************************************************/
 
-extern HsidDLL2 libsidplayfp::hsid2;
+extern libsidplayfp::HsidDLL2 hsid2;
 
 namespace libsidplayfp
 {
@@ -142,7 +142,7 @@ void HardSID::voice(unsigned int num, bool mute)
 }
 
 // Set execution environment and lock sid to it
-bool HardSID::lock(EventContext *env)
+bool HardSID::lock(EventScheduler *env)
 {
     if (hsid2.Version >= HSID_VERSION_204)
     {

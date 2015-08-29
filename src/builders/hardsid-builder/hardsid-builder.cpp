@@ -43,7 +43,7 @@
 // Version 1 Interface
 typedef BYTE (CALLBACK* HsidDLL1_InitMapper_t) ();
 
-HsidDLL2 hsid2 = {0};
+libsidplayfp::HsidDLL2 hsid2 = {0};
 #endif
 
 bool HardSIDBuilder::m_initialised = false;
