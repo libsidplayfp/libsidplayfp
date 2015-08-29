@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -25,19 +25,19 @@
 
 /* DLL building support on win32 hosts */
 #ifndef SID_EXTERN
-#   ifdef DLL_EXPORT      /* defined by libtool (if required) */
-#       define SID_EXTERN __declspec(dllexport)
-#   endif
-#   ifdef SID_DLL_IMPORT  /* define if linking with this dll */
-#       define SID_EXTERN __declspec(dllimport)
-#   endif
-#   ifndef SID_EXTERN     /* static linking or !_WIN32 */
-#     if defined(__GNUC__) && (__GNUC__ >= 4)
-#       define SID_EXTERN __attribute__ ((visibility("default")))
-#     else
-#       define SID_EXTERN
-#     endif
-#   endif
+#  ifdef DLL_EXPORT      /* defined by libtool (if required) */
+#    define SID_EXTERN __declspec(dllexport)
+#  endif
+#  ifdef SID_DLL_IMPORT  /* define if linking with this dll */
+#    define SID_EXTERN __declspec(dllimport)
+#  endif
+#  ifndef SID_EXTERN     /* static linking or !_WIN32 */
+#    if defined(__GNUC__) && (__GNUC__ >= 4)
+#      define SID_EXTERN __attribute__ ((visibility("default")))
+#    else
+#      define SID_EXTERN
+#    endif
+#  endif
 #endif
 
 /* Deprecated attributes */

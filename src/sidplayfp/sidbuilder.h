@@ -95,6 +95,7 @@ public:
      * Create the sid emu.
      *
      * @param sids the number of required sid emu
+     * @return the number of actually created sid emus
      */
     virtual unsigned int create(unsigned int sids) = 0;
 
@@ -114,7 +115,9 @@ public:
      */
     void unlock(libsidplayfp::sidemu *device);
 
-    /** Remove all SID emulations. */
+    /**
+     * Remove all SID emulations.
+     */
     void remove();
 
     /**
