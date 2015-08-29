@@ -44,7 +44,7 @@ using namespace std;
 
 const ios_base::openmode STILopenFlags= (ios::in | ios::binary);
 
-const float VERSION_NO = 3.0;
+const float VERSION_NO = 3.0f;
 
 #define CERR_STIL_DEBUG if (STIL_DEBUG) cerr << "Line #" << __LINE__ << " STIL::"
 
