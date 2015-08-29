@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -63,7 +63,7 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
     float o[12];
 
     // S with strong top bit for 6581
-    for (int i = 0; i < 12; i++)
+    for (unsigned int i = 0; i < 12; i++)
     {
         o[i] = (accumulator & (1 << i)) != 0 ? 1.f : 0.f;
     }
@@ -138,7 +138,7 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
 
     short value = 0;
 
-    for (int i = 0; i < 12; i++)
+    for (unsigned int i = 0; i < 12; i++)
     {
         if (o[i] > config.bias)
         {

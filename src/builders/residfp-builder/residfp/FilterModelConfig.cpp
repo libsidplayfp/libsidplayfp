@@ -275,11 +275,11 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
 
     unsigned short* f0_dac = new unsigned short[1 << DAC_BITS];
 
-    for (int i = 0; i < (1 << DAC_BITS); i++)
+    for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         double fcd = 0.;
 
-        for (unsigned int j = 0; j < DAC_BITS; j ++)
+        for (unsigned int j = 0; j < DAC_BITS; j++)
         {
             if ((i & (1 << j)) != 0)
             {
