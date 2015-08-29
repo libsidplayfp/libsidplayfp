@@ -51,7 +51,7 @@ private:
 public:
     SIDError(const char* msg) :
         message(msg) {}
-    const char* getMessage() { return message; }
+    const char* getMessage() const { return message; }
 };
 
 /**

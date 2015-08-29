@@ -90,7 +90,7 @@ public:
         vmax(opamp[opamplength - 1].x),
         opamp(new Spline(opamp, opamplength)) {}
 
-    void reset()
+    void reset() const
     {
         x = vmin;
     }
