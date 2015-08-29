@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
@@ -29,6 +29,7 @@ namespace libsidplayfp
 
 /**
  * Lightpen emulation.
+ * Does not reflect model differences.
  */
 class Lightpen
 {
@@ -50,7 +51,7 @@ private:
 
 public:
     /**
-     * Set Vic screen size.
+     * Set VIC screen size.
      *
      * @param height number of raster lines
      * @param width number of cycles per line
