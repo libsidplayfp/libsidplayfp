@@ -127,10 +127,11 @@ FilterModelConfig::FilterModelConfig() :
 
     for (int x = 0; x < (1 << 16); x++)
     {
-        Spline::Point out = s.evaluate(x);
-        if (out.x < 0.) out.x = 0.;
-        assert(out.x < 65535.5);
-        opamp_rev[x] = static_cast<unsigned short>(out.x + 0.5);
+        const Spline::Point out = s.evaluate(x);
+        double tmp = out.x;
+        if (tmp < 0.) tmp = 0.;
+        assert(tmp < 65535.5);
+        opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
     }
 
     // Create lookup tables for gains / summers.

@@ -150,6 +150,7 @@ public:
      * Set chip model.
      *
      * @param model chip model to use
+     * @throw SIDError
      */
     void setChipModel(ChipModel model);
 

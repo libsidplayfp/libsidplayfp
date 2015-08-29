@@ -253,7 +253,7 @@ void SID::setChipModel(ChipModel model)
         break;
 
     default:
-        throw SIDError("Unknown chip type\n");
+        throw SIDError("Unknown chip type");
     }
 
     this->model = model;
@@ -362,7 +362,7 @@ void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, do
         break;
 
     default:
-        throw SIDError("Unknown sampling method\n");
+        throw SIDError("Unknown sampling method");
     }
 }
 

@@ -67,7 +67,7 @@ Spline::Spline(const Point input[], size_t inputLength) :
             params[i].c = 3.0 * common / ((common + dxNext) / m + (common + dx) / mNext);
         }
     }
-    params[inputLength - 1].c = ms[inputLength - 2];
+    params[coeffLength].c = ms[coeffLength - 1];
 
     // Get degree-2 and degree-3 coefficients
     for (size_t i = 0; i < coeffLength; i++)

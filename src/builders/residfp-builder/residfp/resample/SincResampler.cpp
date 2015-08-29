@@ -52,7 +52,7 @@ const double I0E = 1e-6;
 const int BITS = 16;
 
 /**
- * I0() computes the 0th order modified Bessel function of the first kind.
+ * Compute the 0th order modified Bessel function of the first kind.
  * This function is originally from resample-1.5/filterkit.c by J. O. Smith.
  * It is used to build the Kaiser window for resampling.
  *
@@ -61,7 +61,9 @@ const int BITS = 16;
  */
 double I0(double x)
 {
-    double sum = 1., u = 1., n = 1.;
+    double sum = 1.;
+    double u = 1.;
+    double n = 1.;
     const double halfx = x / 2.;
 
     do
@@ -80,7 +82,7 @@ double I0(double x)
  * Calculate convolution with sample and sinc.
  *
  * @param a sample buffer input
- * @param b sinc
+ * @param b sinc buffer
  * @param bLength length of the sinc buffer
  * @return convolved result
  */

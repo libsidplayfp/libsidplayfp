@@ -71,7 +71,9 @@ private:
     /// Current root position (cached as guess to speed up next iteration)
     mutable double x;
 
-    const double kVddt, vmin, vmax;
+    const double kVddt;
+    const double vmin;
+    const double vmax;
 
     std::unique_ptr<Spline> const opamp;
 

@@ -61,7 +61,7 @@ private:
     /// Interpolation parameters
     ParamVector params;
 
-    /// last used parameters, cached for speed up
+    /// Last used parameters, cached for speed up
     mutable ParamVector::const_pointer c;
 
 public:

@@ -76,14 +76,14 @@ void Dac::kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term)
     // Normalize to integerish behavior
     double Vsum = 0.;
 
-    for (int i = 0; i < dacLength; i ++)
+    for (int i = 0; i < dacLength; i++)
     {
         Vsum += dac[i];
     }
 
     Vsum /= 1 << dacLength;
 
-    for (int i = 0; i < dacLength; i ++)
+    for (int i = 0; i < dacLength; i++)
     {
         dac[i] /= Vsum;
     }
