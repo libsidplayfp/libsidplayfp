@@ -31,6 +31,9 @@
 
 #include "sidcxx11.h"
 
+namespace libsidplayfp
+{
+
 /**
  * The implementation of the SidTuneInfo interface.
  */
@@ -136,10 +139,10 @@ public:
     compatibility_t getCompatibility() const override { return m_compatibility; }
 
     unsigned int getNumberOfInfoStrings() const override { return m_infoString.size(); }
-    const char* getInfoString(unsigned int i) const override { return i<getNumberOfInfoStrings()?m_infoString[i].c_str():""; }
+    const char* getInfoString(unsigned int i) const override { return i<getNumberOfInfoStrings() ? m_infoString[i].c_str() : ""; }
 
     unsigned int getNumberOfCommentStrings() const override { return m_commentString.size(); }
-    const char* getCommentString(unsigned int i) const override { return i<getNumberOfCommentStrings()?m_commentString[i].c_str():""; }
+    const char* getCommentString(unsigned int i) const override { return i<getNumberOfCommentStrings() ? m_commentString[i].c_str() : ""; }
 
     uint_least32_t getDataFileLen() const override { return m_dataFileLen; }
 
@@ -155,7 +158,9 @@ public:
 
     const char* getDataFileName() const override { return m_dataFileName.c_str(); }
 
-    const char* getInfoFileName() const override { return !m_infoFileName.empty()?m_infoFileName.c_str():0; }
+    const char* getInfoFileName() const override { return !m_infoFileName.empty() ? m_infoFileName.c_str() : nullptr; }
 };
+
+}
 
 #endif  /* SIDTUNEINFOIMPL_H */
