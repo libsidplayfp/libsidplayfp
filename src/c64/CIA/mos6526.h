@@ -183,13 +183,13 @@ protected:
     /// Event context.
     EventScheduler &eventScheduler;
 
-    /// These are all CIA registers.
-    uint8_t regs[0x10];
-
     /// Ports
     //@{
     uint8_t &pra, &prb, &ddra, &ddrb;
     //@}
+
+    /// These are all CIA registers.
+    uint8_t regs[0x10];
 
     /// Timers A and B.
     //@{
@@ -205,9 +205,9 @@ protected:
 
     /// Serial Data Registers
     //@{
-    uint8_t sdr_out;
-    bool    sdr_buffered;
     int     sdr_count;
+    bool    sdr_buffered;
+    uint8_t sdr_out;
     //@}
 
     /// Have we already scheduled CIA->CPU interrupt transition?
