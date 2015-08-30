@@ -41,8 +41,8 @@ public:
 
     /// Library credits
     //@{
-    unsigned int numberOfCredits() const  { return getNumberOfCredits(); }
-    const char *credits(unsigned int i) const { return  getCredits(i); }
+    unsigned int numberOfCredits() const { return getNumberOfCredits(); }
+    const char *credits(unsigned int i) const { return getCredits(i); }
     //@}
 
     /// Number of SIDs supported by this library
