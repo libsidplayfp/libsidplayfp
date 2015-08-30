@@ -34,7 +34,7 @@
 namespace libsidplayfp
 {
 
-#define PSID_MAXSTRLEN 32
+const int PSID_MAXSTRLEN = 32;
 
 
 // Header has been extended for 'RSID' format
