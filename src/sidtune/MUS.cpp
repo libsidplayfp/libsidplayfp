@@ -225,10 +225,10 @@ void MUS::tryLoad(buffer_t& musBuf,
         // For MUS + STR via stdin the files come combined
         if (spPet.good())
         {
-            const uint_least16_t pos = (uint_least16_t)spPet.tellPos();
+            const ulint_smartpt pos = spPet.tellPos();
             if (detect(&spPet[0], spPet.tellLength() - pos, voice3Index))
             {
-                musDataLen = pos;
+                musDataLen = static_cast<uint_least16_t>(pos);
                 stereo = true;
             }
         }
