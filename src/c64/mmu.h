@@ -78,7 +78,7 @@ private:
     ZeroRAMBank zeroRAMBank;
 
 private:
-    void setCpuPort(int state) override;
+    void setCpuPort(uint8_t state) override;
     uint8_t getLastReadByte() const override { return 0; }
     event_clock_t getPhi2Time() const override { return eventScheduler.getTime(EVENT_CLOCK_PHI2); }
 

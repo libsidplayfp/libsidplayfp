@@ -45,11 +45,12 @@ MMU::MMU(EventScheduler &scheduler, IOBank* ioBank) :
     }
 }
 
-void MMU::setCpuPort(int state)
+void MMU::setCpuPort(uint8_t state)
 {
     loram = (state & 1) != 0;
     hiram = (state & 2) != 0;
     charen = (state & 4) != 0;
+
     updateMappingPHI2();
 }
 
