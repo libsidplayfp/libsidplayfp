@@ -405,7 +405,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                         if (stringutils::equal(fileNameExtensions[n], ".mus"))
                         {
                             std::unique_ptr<SidTuneBase> s2(MUS::load(fileBuf2, fileBuf1, 0, true));
-                            if (s2.get())
+                            if (s2.get() != nullptr)
                             {
                                 s2->acceptSidTune(fileName2.c_str(), fileName, fileBuf2, separatorIsSlash);
                                 return s2.release();
