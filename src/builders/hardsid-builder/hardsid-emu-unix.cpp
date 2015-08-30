@@ -116,7 +116,7 @@ HardSID::HardSID (sidbuilder *builder) :
     }
 
     m_status = true;
-    reset();
+    sidemu::reset();
 }
 
 HardSID::~HardSID()

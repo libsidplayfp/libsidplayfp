@@ -131,9 +131,6 @@ public:
 
     bool getStatus() const { return m_status; }
 
-    // Standard component functions
-    void reset() { sidemu::reset(); }
-
     uint8_t read(uint_least8_t addr) override;
     void write(uint_least8_t addr, uint8_t data) override;
 
