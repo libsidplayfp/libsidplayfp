@@ -94,7 +94,7 @@ private:
 
 private:
     /// System clock frequency
-    double m_cpuFreq;
+    double cpuFrequency;
 
     /// Number of sources asserting IRQ
     int irqCount;
@@ -239,7 +239,7 @@ public:
      *
      * @return the speed in Hertz
      */
-    double getMainCpuSpeed() const { return m_cpuFreq; }
+    double getMainCpuSpeed() const { return cpuFrequency; }
 
     /**
      * Set the base SID.

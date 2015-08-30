@@ -67,7 +67,7 @@ double c64::getCpuFreq(model_t model)
 
 c64::c64() :
     c64env(eventScheduler),
-    m_cpuFreq(getCpuFreq(PAL_B)),
+    cpuFrequency(getCpuFreq(PAL_B)),
     cpu(*this),
     cia1(*this),
     cia2(*this),
@@ -121,10 +121,10 @@ void c64::reset()
 
 void c64::setModel(model_t model)
 {
-    m_cpuFreq = getCpuFreq(model);
+    cpuFrequency = getCpuFreq(model);
     vic.chip(modelData[model].vicModel);
 
-    const unsigned int rate = m_cpuFreq / modelData[model].powerFreq;
+    const unsigned int rate = cpuFrequency / modelData[model].powerFreq;
     cia1.setDayOfTimeRate(rate);
     cia2.setDayOfTimeRate(rate);
 }
