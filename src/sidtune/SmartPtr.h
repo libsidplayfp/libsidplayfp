@@ -10,16 +10,15 @@ namespace libsidplayfp
 
 typedef unsigned long int ulint_smartpt;
 
-template <class T>
+template<class T>
 class SmartPtrBase_sidtt
 {
- public:
-	/* --- constructors --- */
-	
-	SmartPtrBase_sidtt(T* buffer, ulint_smartpt bufferLen, bool bufOwner = false) : dummy(0)
+public:
+    SmartPtrBase_sidtt(T* buffer, ulint_smartpt bufferLen, bool bufOwner = false) :
+        dummy(0)
 	{
 		doFree = bufOwner;
-		if ( bufferLen )
+        if (bufferLen)
 		{
 			bufBegin = buffer;
 			pBufCurrent = buffer;
@@ -29,25 +28,19 @@ class SmartPtrBase_sidtt
 		}
 		else
 		{
-			bufBegin = 0;
-			pBufCurrent = 0;
-			bufEnd = 0;
+            bufBegin = nullptr;
+            pBufCurrent = nullptr;
+            bufEnd = nullptr;
 			bufLen = 0;
 			status = false;
 		}
 	}
 
-	/* --- destructor --- */
-
 	virtual ~SmartPtrBase_sidtt()
 	{
-		if ( doFree && bufBegin )
-		{
-#ifndef SID_HAVE_BAD_COMPILER
-			delete[] bufBegin;
-#else
-			delete[] (void*)bufBegin;
-#endif
+        if (doFree && bufBegin != nullptr)
+        {
+            delete[] bufBegin;
 		}
 	}
 
@@ -55,16 +48,16 @@ class SmartPtrBase_sidtt
 
 	virtual T* tellBegin() const { return bufBegin; }
 	virtual ulint_smartpt tellLength() const { return bufLen; }
-	virtual ulint_smartpt tellPos() const { return (ulint_smartpt)(pBufCurrent-bufBegin); }
+    virtual ulint_smartpt tellPos() const { return static_cast<ulint_smartpt>(pBufCurrent - bufBegin); }
 
-	virtual bool checkIndex(ulint_smartpt index)
+    virtual bool checkIndex(ulint_smartpt index) const
 	{
-		return ((pBufCurrent+index)<bufEnd);
+        return (pBufCurrent + index) < bufEnd;
 	}
 
 	virtual bool reset()
 	{
-		if ( bufLen )
+        if (bufLen)
 		{
 			pBufCurrent = bufBegin;
 			return (status = true);
@@ -75,19 +68,19 @@ class SmartPtrBase_sidtt
 		}
 	}
 
-	virtual bool good()
+    virtual bool good() const
 	{
-		return (pBufCurrent<bufEnd);
+        return pBufCurrent < bufEnd;
 	}
 
-	virtual bool fail()
+    virtual bool fail() const
 	{
-		return (pBufCurrent==bufEnd);
+        return pBufCurrent == bufEnd;
 	}
 
 	virtual void operator ++()
 	{
-		if ( good() )
+        if (good())
 		{
 			pBufCurrent++;
 		}
@@ -99,7 +92,7 @@ class SmartPtrBase_sidtt
 
 	virtual void operator ++(int)
 	{
-		if ( good() )
+        if (good())
 		{
 			pBufCurrent++;
 		}
@@ -111,7 +104,7 @@ class SmartPtrBase_sidtt
 
 	virtual void operator --()
 	{
-		if ( !fail() )
+        if (!fail())
 		{
 			pBufCurrent--;
 		}
@@ -123,7 +116,7 @@ class SmartPtrBase_sidtt
 
 	virtual void operator --(int)
 	{
-		if ( !fail() )
+        if (!fail())
 		{
 			pBufCurrent--;
 		}
@@ -159,7 +152,7 @@ class SmartPtrBase_sidtt
 
 	virtual T operator*()
 	{
-		if ( good() )
+        if (good())
 		{
 			return *pBufCurrent;
 		}
@@ -183,7 +176,7 @@ class SmartPtrBase_sidtt
 		}
 	}
 
-	virtual operator bool()  { return status; }
+    virtual operator bool() { return status; }
 
  protected:
 	T* bufBegin;
@@ -196,25 +189,21 @@ class SmartPtrBase_sidtt
 };
 
 
-template <class T>
+template<class T>
 class SmartPtr_sidtt final : public SmartPtrBase_sidtt<T>
 {
- public:
-	/* --- constructors --- */
+public:
+    SmartPtr_sidtt(T* buffer, ulint_smartpt bufferLen, bool bufOwner = false) :
+        SmartPtrBase_sidtt<T>(buffer, bufferLen, bufOwner)
+    {}
 
-	SmartPtr_sidtt(T* buffer, ulint_smartpt bufferLen, bool bufOwner = false)
-		: SmartPtrBase_sidtt<T>(buffer, bufferLen, bufOwner)
-	{
-	}
-
-	SmartPtr_sidtt()
-		: SmartPtrBase_sidtt<T>(0,0)
-	{
-	}
+    SmartPtr_sidtt() :
+        SmartPtrBase_sidtt<T>(0, 0)
+    {}
 
 	void setBuffer(T* buffer, ulint_smartpt bufferLen)
 	{
-		if ( bufferLen )
+        if (bufferLen)
 		{
 			this->bufBegin = buffer;
 			this->pBufCurrent = buffer;
@@ -224,9 +213,9 @@ class SmartPtr_sidtt final : public SmartPtrBase_sidtt<T>
 		}
 		else
 		{
-			this->bufBegin = 0;
-			this->pBufCurrent = 0;
-			this->bufEnd = 0;
+            this->bufBegin = nullptr;
+            this->pBufCurrent = nullptr;
+            this->bufEnd = nullptr;
 			this->bufLen = 0;
 			this->status = false;
 		}
