@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2014 Leandro Nini
+ *  Copyright 2011-2015 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -30,44 +30,44 @@
 /**
  * This interface is used to get sid engine informations.
  */
-class SidInfo
+class SID_EXTERN SidInfo
 {
 public:
     /// Library name
-    const char *name() const { return getName(); }
+    const char *name() const;
 
     /// Library version
-    const char *version() const { return getVersion(); }
+    const char *version() const;
 
     /// Library credits
     //@{
-    unsigned int numberOfCredits() const { return getNumberOfCredits(); }
-    const char *credits(unsigned int i) const { return getCredits(i); }
+    unsigned int numberOfCredits() const;
+    const char *credits(unsigned int i) const;
     //@}
 
     /// Number of SIDs supported by this library
-    unsigned int maxsids() const { return getMaxsids(); }
+    unsigned int maxsids() const;
 
     /// Number of output channels (1-mono, 2-stereo)
-    unsigned int channels() const { return getChannels(); }
+    unsigned int channels() const;
 
     /// Address of the driver
-    uint_least16_t driverAddr() const { return getDriverAddr(); }
+    uint_least16_t driverAddr() const;
 
     /// Size of the driver in bytes
-    uint_least16_t driverLength() const { return getDriverLength(); }
+    uint_least16_t driverLength() const;
 
     /// \deprecated Power on delay
-    SID_DEPRECATED uint_least16_t powerOnDelay() const { return 0; }
+    SID_DEPRECATED uint_least16_t powerOnDelay() const;
 
     /// Describes the speed current song is running at
-    const char *speedString() const { return getSpeedString(); }
+    const char *speedString() const;
 
     /// Description of the laoded ROM images
     //@{
-    const char *kernalDesc() const { return getKernalDesc(); }
-    const char *basicDesc() const { return getBasicDesc(); }
-    const char *chargenDesc() const { return getChargenDesc(); }
+    const char *kernalDesc() const;
+    const char *basicDesc() const;
+    const char *chargenDesc() const;
     //@}
 
 private:

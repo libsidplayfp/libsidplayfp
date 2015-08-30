@@ -140,6 +140,7 @@ src/c64/CIA/tod.h \
 src/sidplayfp/sidplayfp.cpp \
 src/sidplayfp/sidbuilder.cpp \
 src/sidplayfp/SidConfig.cpp \
+src/sidplayfp/SidInfo.cpp \
 src/sidplayfp/SidTune.cpp \
 src/sidplayfp/SidTuneInfo.cpp \
 src/sidtune/MUS.cpp \
