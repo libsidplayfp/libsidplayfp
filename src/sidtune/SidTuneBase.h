@@ -86,7 +86,8 @@ public:  // ----------------------------------------------------------------
      * @param fileName
      * @param fileNameExt
      * @param separatorIsSlash
-     * @return
+     * @return the sid tune
+     * @throw loadError
      */
     static SidTuneBase* load(const char* fileName, const char **fileNameExt, bool separatorIsSlash);
 
@@ -96,7 +97,8 @@ public:  // ----------------------------------------------------------------
      *
      * @param sourceBuffer
      * @param bufferLen
-     * @return
+     * @return the sid tune
+     * @throw loadError
      */
     static SidTuneBase* read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen);
 
@@ -105,7 +107,7 @@ public:  // ----------------------------------------------------------------
      * and return active song number out of [1,2,..,SIDTUNE_MAX_SONGS].
      *
      * @param songNum
-     * @return
+     * @return the active song
      */
     unsigned int selectSong(unsigned int songNum);
 
@@ -119,7 +121,6 @@ public:  // ----------------------------------------------------------------
      * and retrieve active song information.
      *
      * @param songNum
-     * @return
      */
     const SidTuneInfo* getInfo(unsigned int songNum);
 
@@ -139,6 +140,9 @@ public:  // ----------------------------------------------------------------
      */
     virtual const char *createMD5(char *) { return nullptr; }
 
+    /**
+     * Get the pointer to the tune data.
+     */
     const uint_least8_t* c64Data() const { return &cache[fileOffset]; }
 
 protected:  // -------------------------------------------------------------
@@ -162,8 +166,9 @@ protected:
      *
      * @param fileName
      * @param bufferRef
+     * @throw loadError
      */
-    static void loadFile(const char* fileName,buffer_t& bufferRef);
+    static void loadFile(const char* fileName, buffer_t& bufferRef);
 
     /**
      * Convert 32-bit PSID-style speed word to internal tables.
@@ -175,7 +180,7 @@ protected:
          SidTuneInfo::clock_t clock = SidTuneInfo::CLOCK_PAL);
 
     /**
-     * Check compatibility details are sensible.
+     * Check if compatibility constraints are fulfilled.
      */
     bool checkCompatibility();
 
@@ -206,11 +211,6 @@ protected:
      * correctly.
      * You do not need these extra functions if your systems file
      * separator is the forward slash.
-     *
-     * @param dataFileName
-     * @param infoFileName
-     * @param buf
-     * @param isSlashedFileName
      * @throw loadError
      */
     virtual void acceptSidTune(const char* dataFileName, const char* infoFileName,
@@ -239,6 +239,13 @@ private:  // ---------------------------------------------------------------
      */
     static SidTuneBase* getFromBuffer(const uint_least8_t* const buffer, uint_least32_t bufferLen);
 
+    /**
+     * Get new file name with specified extension.
+     *
+     * @param destString destinaton string
+     * @param sourceName original file name
+     * @param sourceExt new extension
+     */
     static void createNewFileName(std::string& destString,
                            const char* sourceName, const char* sourceExt);
 
