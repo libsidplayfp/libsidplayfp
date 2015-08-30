@@ -48,10 +48,10 @@ static const uint_least16_t SIDTUNE_MUS_HLT_CMD = 0x14F;
 static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
 
-bool detect(const uint_least8_t* buffer, uint_least32_t bufLen,
+bool detect(const uint8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
 {
-    SmartPtr_sidtt<const uint8_t> spMus(static_cast<const uint8_t*>(buffer), bufLen);
+    SmartPtr_sidtt<const uint8_t> spMus(buffer, bufLen);
     // Skip load address and 3x length entry.
     uint_least32_t voice1Index = 2 + 3 * 2;
     // Add length of voice 1 data.
@@ -150,7 +150,7 @@ SidTuneBase* MUS::load(buffer_t& musBuf,
                             bool init)
 {
     uint_least32_t voice3Index;
-    SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size()-fileOffset);
+    SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size() - fileOffset);
     if (!detect(&spPet[0], spPet.tellLength(), voice3Index))
         return nullptr;
 
@@ -184,7 +184,8 @@ void MUS::tryLoad(buffer_t& musBuf,
         throw loadError(ERR_INVALID);
     }
 
-    {   // All subtunes should be CIA
+    {
+        // All subtunes should be CIA
         for (uint_least16_t i = 0; i < info->m_songs; i++)
         {
             if (songSpeed[i] != SidTuneInfo::SPEED_CIA_1A)
@@ -225,7 +226,7 @@ void MUS::tryLoad(buffer_t& musBuf,
         if (spPet.good())
         {
             const uint_least16_t pos = (uint_least16_t)spPet.tellPos();
-            if ( detect(&spPet[0], spPet.tellLength()-pos, voice3Index) )
+            if (detect(&spPet[0], spPet.tellLength() - pos, voice3Index))
             {
                 musDataLen = pos;
                 stereo = true;

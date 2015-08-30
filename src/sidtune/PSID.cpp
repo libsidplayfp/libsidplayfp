@@ -367,9 +367,9 @@ const char *PSID::createMD5(char *md5)
     {
         // Include C64 data.
         sidmd5 myMD5;
-        uint8_t tmp[2];
         myMD5.append(&cache[fileOffset], info->m_c64dataLen);
 
+        uint8_t tmp[2];
         // Include INIT and PLAY address.
         endian_little16(tmp, info->m_initAddr);
         myMD5.append(tmp, sizeof(tmp));
@@ -380,13 +380,14 @@ const char *PSID::createMD5(char *md5)
         endian_little16(tmp, info->m_songs);
         myMD5.append(tmp, sizeof(tmp));
 
-        {   // Include song speed for each song.
+        {
+            // Include song speed for each song.
             const unsigned int currentSong = info->m_currentSong;
             for (unsigned int s = 1; s <= info->m_songs; s++)
             {
-                selectSong (s);
-                const uint_least8_t songSpeed = static_cast<int_least8_t>(info->m_songSpeed);
-                myMD5.append (&songSpeed,sizeof(songSpeed));
+                selectSong(s);
+                const uint8_t songSpeed = static_cast<uint8_t>(info->m_songSpeed);
+                myMD5.append(&songSpeed, sizeof(songSpeed));
             }
             // Restore old song
             selectSong(currentSong);
@@ -398,8 +399,8 @@ const char *PSID::createMD5(char *md5)
         // PSID v2NG format is the same.
         if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
         {
-            const uint_least8_t ntsc_val = 2;
-            myMD5.append (&ntsc_val,sizeof(ntsc_val));
+            const uint8_t ntsc_val = 2;
+            myMD5.append(&ntsc_val, sizeof(ntsc_val));
         }
 
         // NB! If the fingerprint is used as an index into a
@@ -415,7 +416,7 @@ const char *PSID::createMD5(char *md5)
 
         // Get fingerprint.
         myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
-        md5[SidTune::MD5_LENGTH] ='\0';
+        md5[SidTune::MD5_LENGTH] = '\0';
     }
     catch (md5Error const &)
     {
