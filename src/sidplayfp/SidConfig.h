@@ -39,18 +39,21 @@ class sidbuilder;
 class SID_EXTERN SidConfig
 {
 public:
+    /// Playback mode
     typedef enum
     {
         MONO = 1,
         STEREO
     } playback_t;
 
+    /// SID chip model
     typedef enum
     {
         MOS6581,
         MOS8580
     } sid_model_t;
 
+    /// C64 model
     typedef enum
     {
         PAL,
@@ -59,6 +62,7 @@ public:
         DREAN
     } c64_model_t;
 
+    /// Sampling method
     typedef enum
     {
         INTERPOLATE,
@@ -71,8 +75,8 @@ public:
      * - Delays <= MAX produce constant results
      * - Delays >  MAX produce random results
      */
-    static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
-    static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
+    SID_DEPRECATED static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
+    SID_DEPRECATED static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
 
     static const uint_least32_t DEFAULT_SAMPLING_FREQ  = 44100;
 
@@ -142,7 +146,7 @@ public:
     /**
      * Power on delay cycles.
      */
-    uint_least16_t powerOnDelay;
+    SID_DEPRECATED uint_least16_t powerOnDelay;
 
     /**
      * Sampling method.
