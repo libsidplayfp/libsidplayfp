@@ -70,6 +70,20 @@ private:
      */
     unsigned int exponential_counter_period;
 
+    /// Current envelope state
+    State state;
+
+    /// Whether hold is enabled. Only switching to ATTACK can release envelope.
+    bool hold_zero;
+
+    bool envelope_pipeline;
+
+    /// Gate bit
+    bool gate;
+
+    /// The current digital value of envelope output.
+    unsigned char envelope_counter;
+
     /// Attack register
     unsigned char attack;
 
@@ -81,20 +95,6 @@ private:
 
     /// Release register
     unsigned char release;
-
-    /// The current digital value of envelope output.
-    unsigned char envelope_counter;
-
-    /// Current envelope state
-    State state;
-
-    /// Whether hold is enabled. Only switching to ATTACK can release envelope.
-    bool hold_zero;
-
-    bool envelope_pipeline;
-
-    /// Gate bit
-    bool gate;
 
     /**
      * Emulated nonlinearity of the envelope DAC.
@@ -150,15 +150,15 @@ public:
         rate(0),
         exponential_counter(0),
         exponential_counter_period(1),
-        attack(0),
-        decay(0),
-        sustain(0),
-        release(0),
-        envelope_counter(0),
         state(RELEASE),
         hold_zero(true),
         envelope_pipeline(false),
-        gate(false) {}
+        gate(false),
+        envelope_counter(0),
+        attack(0),
+        decay(0),
+        sustain(0),
+        release(0) {}
 
     /**
      * SID reset.

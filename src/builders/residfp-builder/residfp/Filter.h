@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -35,12 +35,6 @@ protected:
     /// Filter cutoff frequency.
     unsigned int fc;
 
-    /// Filter resonance.
-    unsigned char res;
-
-    /// Current volume.
-    unsigned char vol;
-
     /// Routing to filter or outside filter
     bool filt1, filt2, filt3, filtE;
 
@@ -49,6 +43,12 @@ protected:
 
     /// Highpass, bandpass, and lowpass filter modes.
     bool hp, bp, lp;
+
+    /// Filter resonance.
+    unsigned char res;
+
+    /// Current volume.
+    unsigned char vol;
 
 private:
     /// Filter enabled.
@@ -76,8 +76,6 @@ protected:
 public:
     Filter() :
         fc(0),
-        res(0),
-        vol(0),
         filt1(false),
         filt2(false),
         filt3(false),
@@ -86,6 +84,8 @@ public:
         hp(false),
         bp(false),
         lp(false),
+        res(0),
+        vol(0),
         enabled(true),
         filt(0) {}
 
