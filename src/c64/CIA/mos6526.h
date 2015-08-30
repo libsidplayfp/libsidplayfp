@@ -31,6 +31,7 @@
 #include "interrupt.h"
 #include "timer.h"
 #include "tod.h"
+#include "SerialPort.h"
 #include "EventScheduler.h"
 
 #include "sidcxx11.h"
@@ -204,11 +205,7 @@ protected:
     Tod tod;
 
     /// Serial Data Registers
-    //@{
-    int     sdr_count;
-    bool    sdr_buffered;
-    uint8_t sdr_out;
-    //@}
+    SerialPort serialPort;
 
     /// Have we already scheduled CIA->CPU interrupt transition?
     bool triggerScheduled;
@@ -249,7 +246,7 @@ private:
     /**
      * Handle the serial port.
      */
-    void serialPort();
+    void handleSerialPort();
 
 protected:
     /**

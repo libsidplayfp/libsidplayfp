@@ -133,6 +133,7 @@ src/c64/CPU/opcodes.h \
 src/c64/CIA/interrupt.h \
 src/c64/CIA/mos6526.cpp \
 src/c64/CIA/mos6526.h \
+src/c64/CIA/SerialPort.h \
 src/c64/CIA/timer.cpp \
 src/c64/CIA/timer.h \
 src/c64/CIA/tod.cpp \

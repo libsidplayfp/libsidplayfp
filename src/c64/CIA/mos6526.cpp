@@ -58,7 +58,7 @@ void TimerA::underFlow()
 
 void TimerA::serialPort()
 {
-    parent.serialPort();
+    parent.handleSerialPort();
 }
 
 void TimerB::underFlow()
@@ -148,39 +148,25 @@ MOS6526::MOS6526(EventScheduler &scheduler) :
     timerB(scheduler, *this),
     interruptSource(new InterruptSource6526(scheduler, *this)),
     tod(scheduler, *this, regs),
+    serialPort(interruptSource.get()),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick)
 {
     reset();
 }
 
-void MOS6526::serialPort()
+void MOS6526::handleSerialPort()
 {
     if (regs[CRA] & 0x40)
     {
-        if (sdr_count)
-        {
-            if (--sdr_count == 0)
-            {
-                interruptSource->trigger(InterruptSource::INTERRUPT_SP);
-            }
-        }
-        if (sdr_count == 0 && sdr_buffered)
-        {
-            sdr_out = regs[SDR];
-            sdr_buffered = false;
-            sdr_count = 16;
-            // Output rate 8 bits at ta / 2
-        }
+        serialPort.handle(regs[SDR]);
     }
 }
 
 void MOS6526::reset()
 {
-    sdr_out = 0;
-    sdr_count = 0;
-    sdr_buffered = false;
-
     memset(regs, 0, sizeof(regs));
+
+    serialPort.reset();
 
     // Reset timers
     timerA.reset();
@@ -292,7 +278,7 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
         break;
     case SDR:
         if (regs[CRA] & 0x40)
-            sdr_buffered = true;
+            serialPort.setBuffered();
         break;
     case ICR:
         interruptSource->set(data);
