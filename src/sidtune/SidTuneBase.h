@@ -219,13 +219,7 @@ protected:
     /**
      * Petscii to Ascii converter.
      */
-    class PetsciiToAscii
-    {
-    private:
-        std::string buffer;
-    public:
-        const char* convert(SmartPtr_sidtt<const uint_least8_t>& spPet);
-    };
+    std::string petsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet);
 
 private:  // ---------------------------------------------------------------
 

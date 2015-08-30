@@ -578,8 +578,10 @@ bool SidTuneBase::checkCompatibility()
     return true;
 }
 
-const char* SidTuneBase::PetsciiToAscii::convert(SmartPtr_sidtt<const uint8_t>& spPet)
+std::string SidTuneBase::petsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet)
 {
+    std::string buffer;
+
     char c;
     do
     {
@@ -597,7 +599,7 @@ const char* SidTuneBase::PetsciiToAscii::convert(SmartPtr_sidtt<const uint8_t>& 
     }
     while (!((c == 0x0D) || (c == 0x00) || spPet.fail()));
 
-    return buffer.c_str();
+    return buffer;
 }
 
 }

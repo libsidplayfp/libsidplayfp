@@ -151,9 +151,8 @@ void p00::load(const char* format, const X00Header* pHeader)
     info->m_formatString = format;
 
     {   // Decode file name
-        PetsciiToAscii converter;
         SmartPtr_sidtt<const uint8_t> spPet(pHeader->name, X00_NAME_LEN);
-        info->m_infoString.push_back(converter.convert(spPet));
+        info->m_infoString.push_back(petsciiToAscii(spPet));
     }
 
     // Automatic settings

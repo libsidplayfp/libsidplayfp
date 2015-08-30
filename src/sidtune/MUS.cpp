@@ -204,8 +204,7 @@ void MUS::tryLoad(buffer_t& musBuf,
     // Extract credits
     while (spPet[0])
     {
-        PetsciiToAscii converter;
-        info->m_commentString.push_back(converter.convert(spPet));
+        info->m_commentString.push_back(petsciiToAscii(spPet));
     }
 
     spPet++;
@@ -242,8 +241,7 @@ void MUS::tryLoad(buffer_t& musBuf,
         // Extract credits
         while (spPet[0])
         {
-            PetsciiToAscii converter;
-            info->m_commentString.push_back(converter.convert(spPet));
+            info->m_commentString.push_back(petsciiToAscii(spPet));
         }
 
         info->m_sidChipAddresses.push_back(SIDTUNE_SID2_BASE_ADDR);
