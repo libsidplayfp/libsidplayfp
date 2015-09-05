@@ -241,7 +241,7 @@ void MOS6510::interruptsAndNextOpcode()
 #ifdef DEBUG
         if (dodump)
         {
-            const event_clock_t cycles = eventContext.getTime(EVENT_CLOCK_PHI2);
+            const event_clock_t cycles = eventScheduler.getTime(EVENT_CLOCK_PHI2);
             fprintf(m_fdbg, "****************************************************\n");
             fprintf(m_fdbg, " interrupt (%d)\n", static_cast<int>(cycles));
             fprintf(m_fdbg, "****************************************************\n");
@@ -264,7 +264,7 @@ void MOS6510::fetchNextOpcode()
 #ifdef DEBUG
     if (dodump)
     {
-        MOS6510Debug::DumpState(eventContext.getTime(EVENT_CLOCK_PHI2), *this);
+        MOS6510Debug::DumpState(eventScheduler.getTime(EVENT_CLOCK_PHI2), *this);
     }
 
     instrStartPC = Register_ProgramCounter;
