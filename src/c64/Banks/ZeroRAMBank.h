@@ -2,7 +2,7 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
- * Copyright 2009-2014 VICE project
+ * Copyright 2009-2014 VICE Project
  * Copyright 2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,20 +50,22 @@ protected:
 };
 
 /**
- * Area backed by RAM, including cpu port addresses 0 and 1.
+ * Unused data port bits emulation, as investigated by groepaz:
  *
- * This is bit of a fake. We know that the CPU port is an internal
- * detail of the CPU, and therefore CPU should simply pay the price
- * for reading/writing to 0/1.
- *
- * However, that would slow down all accesses, which is suboptimal. Therefore
- * we install this little hook to the 4k 0 region to deal with this.
- *
- * Implementation based on VICE code.
- *
- * @author Antti Lankila
+ *  - There are 2 different unused bits, 1) the output bits, 2) the input bits
+ *  - The output bits can be (re)set when the data-direction is set to output
+ *    for those bits and the output bits will not drop-off to 0.
+ *  - When the data-direction for the unused bits is set to output then the
+ *    unused input bits can be (re)set by writing to them, when set to 1 the
+ *    drop-off timer will start which will cause the unused input bits to drop
+ *    down to 0 in a certain amount of time.
+ *  - When an unused input bit already had the drop-off timer running, and is
+ *    set to 1 again, the drop-off timer will restart.
+ *  - when a an unused bit changes from output to input, and the current output
+ *    bit is 1, the drop-off timer will restart again
  */
-class ZeroRAMBank final : public Bank
+template <int Bit>
+class dataBit
 {
 private:
     /**
@@ -75,12 +77,12 @@ private:
      *        always work and we can only tweak them based on testcases. (unless we
      *        want to make it configurable or emulate temperature over time =))
      *
-     *      it probably makes sense to tweak the values for a warmed up CPU, since
-     *      this is likely how (old) programs were coded and tested :)
+     *        it probably makes sense to tweak the values for a warmed up CPU, since
+     *        this is likely how (old) programs were coded and tested :)
      *
      *  NOTE: the unused bits of the 6510 seem to be much more temperature dependant
-     *         and the fall-off time decreases quicker and more drastically than on a
-     *         8500
+     *        and the fall-off time decreases quicker and more drastically than on a
+     *        8500
      *
      * cpuports.prg from the lorenz testsuite will fail when the falloff takes more
      * than 1373 cycles. this suggests that he tested on a well warmed up c64 :)
@@ -88,11 +90,63 @@ private:
      * even was aware of what happens.
      */
     //@{
-    static const event_clock_t C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES = 350000;
-    static const event_clock_t C64_CPU8500_DATA_PORT_FALL_OFF_CYCLES = 1500000; // Curently unused
+    static event_clock_t const C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES = 350000;
+    static event_clock_t const C64_CPU8500_DATA_PORT_FALL_OFF_CYCLES = 1500000; // Curently unused
     //@}
 
-    static const bool tape_sense = false;
+private:
+    /// Cycle that should invalidate the bit.
+    event_clock_t dataSetClk;
+
+    /// Indicates if the bit is in the process of falling off.
+    bool isFallingOff;
+
+    /// Value of the bit.
+    uint8_t dataSet;
+
+public:
+    void reset()
+    {
+        isFallingOff = false;
+        dataSet = 0;
+    }
+
+    uint8_t readBit(event_clock_t phi2time)
+    {
+        // discharge the "capacitor"
+        if (isFallingOff && dataSetClk < phi2time)
+        {
+            isFallingOff = false;
+            dataSet = 0;
+        }
+        return dataSet;
+    }
+
+    void writeBit(event_clock_t phi2time, uint8_t value)
+    {
+        dataSetClk = phi2time + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
+        dataSet = value & (1 << Bit);
+        isFallingOff = true;
+    }
+};
+
+/**
+ * Area backed by RAM, including cpu port addresses 0 and 1.
+ *
+ * This is bit of a fake. We know that the CPU port is an internal
+ * detail of the CPU, and therefore CPU should simply pay the price
+ * for reading/writing to $00/$01.
+ *
+ * However, that would slow down all accesses, which is suboptimal. Therefore
+ * we install this little hook to the 4k 0 region to deal with this.
+ *
+ * Implementation based on VICE code.
+ */
+class ZeroRAMBank final : public Bank
+{
+private:
+    // not emulated
+    static bool const tape_sense = false;
 
 private:
     PLA &pla;
@@ -100,22 +154,10 @@ private:
     /// C64 RAM area
     SystemRAMBank &ramBank;
 
-    /// Cycle that should invalidate the unused bits of the data port.
+    /// Unused bits of the data port.
     //@{
-    event_clock_t dataSetClkBit6;
-    event_clock_t dataSetClkBit7;
-    //@}
-
-    /// Indicates if the unused bits of the data port are in the process of falling off.
-    //@{
-    bool dataFalloffBit6;
-    bool dataFalloffBit7;
-    //@}
-
-    /// Value of the unused bit of the processor port.
-    //@{
-    uint8_t dataSetBit6;
-    uint8_t dataSetBit7;
+    dataBit<6> dataBit6;
+    dataBit<7> dataBit7;
     //@}
 
     /// Value written to processor port.
@@ -150,40 +192,24 @@ private:
         }
     }
 
-private:
-    // prevent copying
-    ZeroRAMBank(const ZeroRAMBank&);
-    ZeroRAMBank& operator=(const ZeroRAMBank&);
-
 public:
     ZeroRAMBank(PLA &pla, SystemRAMBank &ramBank) :
         pla(pla),
-        ramBank(ramBank) {}
+        ramBank(ramBank)
+    {}
 
     void reset()
     {
-        dataFalloffBit6 = false;
-        dataFalloffBit7 = false;
+        dataBit6.reset();
+        dataBit7.reset();
+
         dir = 0;
         data = 0x3f;
         dataRead = 0x3f;
         procPortPins = 0x3f;
+
         updateCpuPort();
     }
-
-    // $00/$01 unused bits emulation, as investigated by groepaz:
-    //
-    // - There are 2 different unused bits, 1) the output bits, 2) the input bits
-    // - The output bits can be (re)set when the data-direction is set to output
-    //   for those bits and the output bits will not drop-off to 0.
-    // - When the data-direction for the unused bits is set to output then the
-    //   unused input bits can be (re)set by writing to them, when set to 1 the
-    //   drop-off timer will start which will cause the unused input bits to drop
-    //   down to 0 in a certain amount of time.
-    // - When an unused input bit already had the drop-off timer running, and is
-    //   set to 1 again, the drop-off timer will restart.
-    // - when a an unused bit changes from output to input, and the current output
-    //   bit is 1, the drop-off timer will restart again
 
     uint8_t peek(uint_least16_t address) override
     {
@@ -193,26 +219,6 @@ public:
             return dir;
         case 1:
         {
-            // discharge the "capacitor"
-            if (dataFalloffBit6 || dataFalloffBit7)
-            {
-                const event_clock_t phi2time = pla.getPhi2Time();
-
-                // set real value of read bit 6
-                if (dataFalloffBit6 && dataSetClkBit6 < phi2time)
-                {
-                    dataFalloffBit6 = false;
-                    dataSetBit6 = 0;
-                }
-
-                // set real value of read bit 7
-                if (dataFalloffBit7 && dataSetClkBit7 < phi2time)
-                {
-                    dataFalloffBit7 = false;
-                    dataSetBit7 = 0;
-                }
-            }
-
             uint8_t retval = dataRead;
 
             // for unused bits in input mode, the value comes from the "capacitor"
@@ -221,14 +227,14 @@ public:
             if (!(dir & 0x40))
             {
                 retval &= ~0x40;
-                retval |= dataSetBit6;
+                retval |= dataBit6.readBit(pla.getPhi2Time());
             }
 
             // set real value of bit 7
             if (!(dir & 0x80))
             {
                 retval &= ~0x80;
-                retval |= dataSetBit7;
+                retval |= dataBit7.readBit(pla.getPhi2Time());
             }
 
             return retval;
@@ -251,23 +257,16 @@ public:
             {
                 // check if bit 6 has flipped from 1 to 0
                 if ((dir & 0x40) && !(value & 0x40))
-                {
-                    dataSetClkBit6 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
-                    dataSetBit6 = data & 0x40;
-                    dataFalloffBit6 = true;
-                }
+                    dataBit6.writeBit(pla.getPhi2Time(), data);
 
                 // check if bit 7 has flipped from 1 to 0
                 if ((dir & 0x80) && !(value & 0x80))
-                {
-                    dataSetClkBit7 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
-                    dataSetBit7 = data & 0x80;
-                    dataFalloffBit7 = true;
-                }
+                    dataBit7.writeBit(pla.getPhi2Time(), data);
 
                 dir = value;
                 updateCpuPort();
             }
+
             value = pla.getLastReadByte();
             break;
         case 1:
@@ -275,24 +274,17 @@ public:
             // otherwise don't touch it
 
             if (dir & 0x40)
-            {
-                dataSetBit6 = value & 0x40;
-                dataSetClkBit6 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
-                dataFalloffBit6 = true;
-            }
+                dataBit6.writeBit(pla.getPhi2Time(), value);
 
             if (dir & 0x80)
-            {
-                dataSetBit7 = value & 0x80;
-                dataSetClkBit7 = pla.getPhi2Time() + C64_CPU6510_DATA_PORT_FALL_OFF_CYCLES;
-                dataFalloffBit7 = true;
-            }
+                dataBit7.writeBit(pla.getPhi2Time(), value);
 
             if (data != value)
             {
                 data = value;
                 updateCpuPort();
             }
+
             value = pla.getLastReadByte();
             break;
         default:
