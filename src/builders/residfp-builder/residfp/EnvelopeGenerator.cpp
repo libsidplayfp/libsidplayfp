@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -189,7 +189,14 @@ void EnvelopeGenerator::writeATTACK_DECAY(unsigned char attack_decay)
 
 void EnvelopeGenerator::writeSUSTAIN_RELEASE(unsigned char sustain_release)
 {
-    sustain = (sustain_release >> 4) & 0x0f;
+    // From the sustain levels it follows that both the low and high 4 bits
+    // of the envelope counter are compared to the 4-bit sustain value.
+    // This has been verified by sampling ENV3.
+    //
+    // For a detailed description see:
+    // http://ploguechipsounds.blogspot.it/2010/11/new-research-on-sid-adsr.html
+    sustain = (sustain_release & 0xf0) | ((sustain_release >> 4) & 0x0f);
+
     release = sustain_release & 0x0f;
 
     if (state == RELEASE)
