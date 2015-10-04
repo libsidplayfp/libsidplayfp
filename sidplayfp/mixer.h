@@ -40,6 +40,10 @@ public:
     /// Maximum number of supported SIDs
     static const unsigned int MAX_SIDS = 3;
 
+    static const int_least32_t SCALE_FACTOR = 1 << 16;
+    static const int_least32_t C1 = static_cast<int_least32_t>(1.0 / (1.0 + 0.7071067812) * SCALE_FACTOR);
+    static const int_least32_t C2 = static_cast<int_least32_t>(0.7071067812 / (1.0 + 0.7071067812) * SCALE_FACTOR);
+
 private:
     typedef int_least32_t (Mixer::*mixer_func_t)() const;
 
@@ -76,6 +80,22 @@ private:
         return oldRandomValue - prevValue;
     }
 
+    /*
+     * Channel matrix
+     *
+     *   C1
+     * L 1.0
+     * R 1.0
+     *
+     *   C1   C2
+     * L 1.0  0.0
+     * R 0.0  1.0
+     *
+     *   C1       C2           C3
+     * L 1/1.707  0.707/1.707  0.0
+     * R 0.0      0.707/1.707  1/1.707
+     */
+
     // Mono mixing
     int_least32_t mono_OneChip() const { return m_iSamples[0]; }
     int_least32_t mono_TwoChips() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
@@ -87,8 +107,8 @@ private:
     int_least32_t stereo_ch1_TwoChips() const { return m_iSamples[0]; }
     int_least32_t stereo_ch2_TwoChips() const { return m_iSamples[1]; }
 
-    int_least32_t stereo_ch1_ThreeChips() const { return (m_iSamples[0] + m_iSamples[1]) / 2; }
-    int_least32_t stereo_ch2_ThreeChips() const { return (m_iSamples[1] + m_iSamples[2]) / 2; }
+    int_least32_t stereo_ch1_ThreeChips() const { return (C1*m_iSamples[0] + C2*m_iSamples[1]) / SCALE_FACTOR; }
+    int_least32_t stereo_ch2_ThreeChips() const { return (C2*m_iSamples[1] + C1*m_iSamples[2]) / SCALE_FACTOR; }
 
 
 public:
