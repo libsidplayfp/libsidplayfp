@@ -63,8 +63,6 @@ const uint8_t POWERON[] =
  */
 void copyPoweronPattern(sidmemory& mem)
 {
-    mem.fillRam(0, static_cast<uint8_t>(0), 0x3ff);
-
     uint_least16_t addr = 0;
     for (unsigned int i = 0; i < sizeof(POWERON);)
     {
@@ -213,6 +211,8 @@ bool psiddrv::drvReloc()
 
 void psiddrv::install(sidmemory& mem, uint8_t video) const
 {
+    mem.fillRam(0, static_cast<uint8_t>(0), 0x3ff);
+
     if (m_tuneInfo->compatibility() >= SidTuneInfo::COMPATIBILITY_R64)
     {
         copyPoweronPattern(mem);
