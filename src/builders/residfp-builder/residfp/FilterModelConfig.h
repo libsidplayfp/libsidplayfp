@@ -45,7 +45,11 @@ private:
 private:
     static std::unique_ptr<FilterModelConfig> instance;
     // This allows access to the private constructor
+#ifdef HAVE_CXX11
     friend std::unique_ptr<FilterModelConfig>::deleter_type;
+#else
+    friend class std::auto_ptr<FilterModelConfig>;
+#endif
 
     const double voice_voltage_range;
     const double voice_DC_voltage;

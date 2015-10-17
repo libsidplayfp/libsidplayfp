@@ -47,8 +47,13 @@ public:
     static const unsigned int MAX_SIDS = 3;
 
     static const int_least32_t SCALE_FACTOR = 1 << 16;
+#ifdef HAVE_CXX11
     static const int_least32_t C1 = static_cast<int_least32_t>(1.0 / (1.0 + sqrt(0.5)) * SCALE_FACTOR);
     static const int_least32_t C2 = static_cast<int_least32_t>(sqrt(0.5) / (1.0 + sqrt(0.5)) * SCALE_FACTOR);
+#else
+    static const int_least32_t C1 = static_cast<int_least32_t>(1.0 / (1.0 + 0.7071067812) * SCALE_FACTOR);
+    static const int_least32_t C2 = static_cast<int_least32_t>(0.7071067812 / (1.0 + 0.7071067812) * SCALE_FACTOR);
+#endif
 
 private:
     typedef int_least32_t (Mixer::*mixer_func_t)() const;
