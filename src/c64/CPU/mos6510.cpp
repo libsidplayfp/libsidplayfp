@@ -810,7 +810,7 @@ void MOS6510::hlt_instr() {}
  */
 void MOS6510::axa_instr()
 {
-    Cycle_Data = Register_X & Register_Accumulator & (endian_16hi8(Cycle_EffectiveAddress) + 1);
+    Cycle_Data = Register_X & Register_Accumulator & (endian_16hi8(Cycle_EffectiveAddress - Register_Y) + 1);
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
         endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
     PutEffAddrDataByte();
@@ -824,7 +824,7 @@ void MOS6510::axa_instr()
  */
 void MOS6510::say_instr()
 {
-    Cycle_Data = Register_Y & (endian_16hi8(Cycle_EffectiveAddress) + 1);
+    Cycle_Data = Register_Y & (endian_16hi8(Cycle_EffectiveAddress - Register_X) + 1);
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
         endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
     PutEffAddrDataByte();
@@ -838,7 +838,7 @@ void MOS6510::say_instr()
  */
 void MOS6510::xas_instr()
 {
-    Cycle_Data = Register_X & (endian_16hi8(Cycle_EffectiveAddress) + 1);
+    Cycle_Data = Register_X & (endian_16hi8(Cycle_EffectiveAddress - Register_Y) + 1);
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
         endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
     PutEffAddrDataByte();
@@ -1257,7 +1257,7 @@ void MOS6510::sec_instr()
 void MOS6510::shs_instr()
 {
     Register_StackPointer = Register_Accumulator & Register_X;
-    Cycle_Data = (endian_16hi8(Cycle_EffectiveAddress) + 1) & Register_StackPointer;
+    Cycle_Data = (endian_16hi8(Cycle_EffectiveAddress - Register_Y) + 1) & Register_StackPointer;
     if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
         endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
     PutEffAddrDataByte();
