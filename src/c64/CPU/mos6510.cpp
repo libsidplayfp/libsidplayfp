@@ -422,7 +422,7 @@ void MOS6510::FetchHighAddrX()
 }
 
 /**
- * Same as #FetchHighAddrX except dosen't worry about page crossing.
+ * Same as #FetchHighAddrX except doesn't worry about page crossing.
  */
 void MOS6510::FetchHighAddrX2()
 {
@@ -446,7 +446,7 @@ void MOS6510::FetchHighAddrY()
 }
 
 /**
- * Same as #FetchHighAddrY except dosen't worry about page crossing.
+ * Same as #FetchHighAddrY except doesn't worry about page crossing.
  */
 void MOS6510::FetchHighAddrY2()
 {
@@ -540,7 +540,7 @@ void MOS6510::FetchHighEffAddrY()
 
 
 /**
- * Same as #FetchHighEffAddrY except dosen't worry about page crossing.
+ * Same as #FetchHighEffAddrY except doesn't worry about page crossing.
  */
 void MOS6510::FetchHighEffAddrY2()
 {
