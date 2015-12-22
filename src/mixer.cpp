@@ -22,6 +22,7 @@
 
 #include "mixer.h"
 
+#include <cassert>
 #include <algorithm>
 
 #include "sidemu.h"
@@ -115,7 +116,9 @@ void Mixer::doMix()
         const unsigned int channels = m_stereo ? 2 : 1;
         for (unsigned int ch = 0; ch < channels; ch++)
         {
-            *buf++ = static_cast<short>(((this->*(m_mix[ch]))() * m_volume[ch] + dither) / VOLUME_MAX);
+            const int_least32_t tmp = ((this->*(m_mix[ch]))() * m_volume[ch] + dither) / VOLUME_MAX;
+            assert(tmp >= -32768 && tmp <= 32767);
+            *buf++ = static_cast<short>(tmp);
             m_sampleIndex++;
         }
     }
