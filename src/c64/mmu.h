@@ -29,8 +29,6 @@
 #include "sidmemory.h"
 #include "EventScheduler.h"
 
-#include "Banks/Bank.h"
-#include "Banks/IOBank.h"
 #include "Banks/SystemRAMBank.h"
 #include "Banks/SystemROMBanks.h"
 #include "Banks/ZeroRAMBank.h"
@@ -41,6 +39,9 @@
 
 namespace libsidplayfp
 {
+
+class Bank;
+class IOBank;
 
 /**
  * The C64 MMU chip.

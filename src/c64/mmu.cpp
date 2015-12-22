@@ -22,6 +22,9 @@
 
 #include "mmu.h"
 
+#include "Banks/Bank.h"
+#include "Banks/IOBank.h"
+
 namespace libsidplayfp
 {
 
