@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -27,6 +27,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <limits>
 
 #include "siddefs-fp.h"
 
@@ -231,6 +232,12 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
 bool SincResampler::input(int input)
 {
     bool ready = false;
+
+    // Hard clip input to avoid overflows (/MUSICIANS/L/Linus/64_Forever.sid)
+    // TODO maybe we should change the convolve function to work on 32 bit ints
+    //      and leave the clipping only at the output stage
+    if (input < std::numeric_limits<short>::min()) input = std::numeric_limits<short>::min();
+    if (input > std::numeric_limits<short>::max()) input = std::numeric_limits<short>::max();
 
     sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = input;
     sampleIndex = (sampleIndex + 1) & (RINGSIZE - 1);
