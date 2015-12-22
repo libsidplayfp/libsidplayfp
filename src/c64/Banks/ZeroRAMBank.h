@@ -113,11 +113,10 @@ public:
 
     uint8_t readBit(event_clock_t phi2time)
     {
-        // discharge the "capacitor"
         if (isFallingOff && dataSetClk < phi2time)
         {
-            isFallingOff = false;
-            dataSet = 0;
+            // discharge the "capacitor"
+            reset();
         }
         return dataSet;
     }
