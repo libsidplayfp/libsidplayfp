@@ -56,7 +56,7 @@ public:
     {
         int value = output();
 
-        // Clip signed integer value into the -32768,32767 range.
+        // Clip signed integer value into the [-32768,32767] range.
         if (value < -32768) value = -32768;
         if (value > 32767) value = 32767;
 

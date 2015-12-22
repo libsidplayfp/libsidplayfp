@@ -44,11 +44,11 @@ public:
         if (gcry_check_version(GCRYPT_VERSION) == 0)
             throw md5Error();
 
-        /* Disable secure memory. */
+        // Disable secure memory.
         if (gcry_control(GCRYCTL_DISABLE_SECMEM, 0) != 0)
             throw md5Error();
 
-        /* Tell Libgcrypt that initialization has completed. */
+        // Tell Libgcrypt that initialization has completed.
         if (gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0) != 0)
             throw md5Error();
 

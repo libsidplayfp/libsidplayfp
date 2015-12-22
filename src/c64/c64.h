@@ -114,7 +114,7 @@ private:
     /// CIA2
     c64cia2 cia2;
 
-    /// VIC
+    /// VIC II
     c64vic vic;
 
     /// Color RAM

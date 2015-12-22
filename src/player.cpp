@@ -188,6 +188,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     {
         if (count && buffer != nullptr)
         {
+            // Clock chips and mix into output buffer
             while (m_isPlaying && m_mixer.notFinished())
             {
                 for (int i = 0; i < sidemu::OUTPUTBUFFERSIZE; i++)
@@ -200,6 +201,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         }
         else
         {
+            // Clock chips and discard buffers
             int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
             while (m_isPlaying && --size)
             {
@@ -213,6 +215,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     }
     else
     {
+        // Clock the machine
         int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
         while (m_isPlaying && --size)
         {

@@ -81,7 +81,7 @@ public:  // ----------------------------------------------------------------
      * contructor. Please note, that if the specified "sidTuneFileName"
      * does exist and the loader is able to determine its file format,
      * this function does not try to append any file name extension.
-     * See "sidtune.cpp" for the default list of file name extensions.
+     * See "SidTune.cpp" for the default list of file name extensions.
      *
      * @param fileName
      * @param fileNameExt
