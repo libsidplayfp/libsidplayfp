@@ -74,7 +74,7 @@ protected:
     int m_bufferpos;
 
     bool m_status;
-    bool m_locked;
+    bool isLocked;
 
     std::string m_error;
 
@@ -85,7 +85,7 @@ public:
         m_buffer(nullptr),
         m_bufferpos(0),
         m_status(true),
-        m_locked(false),
+        isLocked(false),
         m_error("N/A") {}
     virtual ~sidemu() {}
 

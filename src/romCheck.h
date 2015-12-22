@@ -103,7 +103,7 @@ public:
     const char* info() const
     {
         md5map::const_iterator res = m_checksums.find(checksum());
-        return (res != m_checksums.end())?res->second:"Unknown Rom";
+        return (res != m_checksums.end()) ? res->second : "Unknown Rom";
     }
 };
 

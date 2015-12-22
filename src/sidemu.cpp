@@ -31,10 +31,10 @@ const char sidemu::ERR_INVALID_CHIP[]     = "Invalid chip model.";
 
 bool sidemu::lock(EventScheduler *scheduler)
 {
-    if (m_locked)
+    if (isLocked)
         return false;
 
-    m_locked  = true;
+    isLocked  = true;
     eventScheduler = scheduler;
 
     return true;
@@ -42,7 +42,7 @@ bool sidemu::lock(EventScheduler *scheduler)
 
 void sidemu::unlock()
 {
-    m_locked  = false;
+    isLocked  = false;
     eventScheduler = nullptr;
 }
 

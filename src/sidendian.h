@@ -26,14 +26,6 @@
 #  include "config.h"
 #endif
 
-// NOTE: The optimisations in this file rely on the structure of memory
-// e.g. 2 shorts being contained in 1 long.  Although these sizes are
-// checked to make sure the optimisation is ok, gcc 2.96 (and above)
-// introduced better optimisations.  This results in caching of values
-// in internal registers and therefore writes to ram through the aliases
-// not being reflected in the CPU regs.  The use of the volatile keyword
-// fixes this.
-
 #include <stdint.h>
 
 /*
@@ -94,13 +86,13 @@ inline uint_least16_t endian_16 (uint8_t hi, uint8_t lo)
 /// Convert high-byte and low-byte to 16-bit little endian word.
 inline void endian_16 (uint8_t ptr[2], uint_least16_t word)
 {
-#   if defined(WORDS_BIGENDIAN)
+#if defined(WORDS_BIGENDIAN)
     ptr[0] = endian_16hi8 (word);
     ptr[1] = endian_16lo8 (word);
-#   else
+#else
     ptr[0] = endian_16lo8 (word);
     ptr[1] = endian_16hi8 (word);
-#   endif
+#endif
 }
 
 inline void endian_16 (char ptr[2], uint_least16_t word)

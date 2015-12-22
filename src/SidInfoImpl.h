@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2014 Leandro Nini
+ *  Copyright 2011-2015 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -39,11 +39,11 @@
 #endif
 
 #ifndef PACKAGE_NAME
-#   define PACKAGE_NAME PACKAGE
+#  define PACKAGE_NAME PACKAGE
 #endif
 
 #ifndef PACKAGE_VERSION
-#   define PACKAGE_VERSION VERSION
+#  define PACKAGE_VERSION VERSION
 #endif
 
 /**
@@ -86,7 +86,7 @@ public:
         m_credits.push_back(PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\n"
             "\tCopyright (C) 2000 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
-            "\tCopyright (C) 2010-2014 Leandro Nini\n"
+            "\tCopyright (C) 2010-2015 Leandro Nini\n"
             "\t" PACKAGE_URL "\n");
     }
 
