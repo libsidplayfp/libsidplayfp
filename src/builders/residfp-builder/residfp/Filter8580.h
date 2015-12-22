@@ -159,10 +159,6 @@ namespace reSIDfp
 RESID_INLINE
 int Filter8580::clock(int voice1, int voice2, int voice3)
 {
-    voice1 >>= 7;
-    voice2 >>= 7;
-    voice3 >>= 7;
-
     int Vi = 0;
     int Vo = 0;
 
@@ -178,13 +174,13 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
 
     Vlp -= w0 * Vbp;
     Vbp -= w0 * Vhp;
-    Vhp = (Vbp * _1_div_Q) - Vlp - Vi + noise.get();
+    Vhp = (Vbp * _1_div_Q) - Vlp - static_cast<float>(Vi >> 7) + noise.get();
 
     assert(std::fpclassify(Vlp) != FP_SUBNORMAL);
     assert(std::fpclassify(Vbp) != FP_SUBNORMAL);
     assert(std::fpclassify(Vhp) != FP_SUBNORMAL);
 
-    float Vof = static_cast<float>(Vo);
+    float Vof = static_cast<float>(Vo >> 7);
 
     if (lp) Vof += Vlp;
     if (bp) Vof += Vbp;
