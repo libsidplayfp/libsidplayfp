@@ -1258,10 +1258,8 @@ void MOS6510::sec_instr()
 void MOS6510::shs_instr()
 {
     Register_StackPointer = Register_Accumulator & Register_X;
-    Cycle_Data = (endian_16hi8(Cycle_EffectiveAddress - Register_Y) + 1) & Register_StackPointer;
-    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
-    PutEffAddrDataByte();
+    Cycle_Data = Register_StackPointer;
+    sh_instr(Register_Y);
 }
 
 void MOS6510::tax_instr()
