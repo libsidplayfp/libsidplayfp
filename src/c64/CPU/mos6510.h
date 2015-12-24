@@ -111,13 +111,15 @@ private:
     /// RDY pin state (stop CPU on read)
     bool rdy;
 
+    /// Address Low summer carry
+    bool adl_carry;
+
     /// Status register
     Flags flags;
 
     // Data regarding current instruction
     uint_least16_t Register_ProgramCounter;
     uint_least16_t Cycle_EffectiveAddress;
-    uint_least16_t Cycle_HighByteWrongEffectiveAddress;
     uint_least16_t Cycle_Pointer;
 
     uint8_t Cycle_Data;
@@ -207,6 +209,7 @@ private:
     inline void bmi_instr();
     inline void bne_instr();
     inline void branch_instr(bool condition);
+    inline void fix_branch();
     inline void bpl_instr();
     inline void brk_instr();
     inline void bvc_instr();

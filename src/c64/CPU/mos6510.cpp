@@ -318,11 +318,14 @@ void MOS6510::throwAwayFetch()
 }
 
 /**
- * Issue throw-away read. Some people use these to ACK CIA IRQs.
+ * Issue throw-away read and fix address.
+ * Some people use these to ACK CIA IRQs.
  */
 void MOS6510::throwAwayRead()
 {
-    cpuRead(Cycle_HighByteWrongEffectiveAddress);
+    cpuRead(Cycle_EffectiveAddress);
+    if (adl_carry)
+        Cycle_EffectiveAddress += 0x100;
 }
 
 /**
@@ -416,9 +419,9 @@ void MOS6510::FetchHighAddr()
  */
 void MOS6510::FetchHighAddrX()
 {
-    FetchHighAddr();
-    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress & 0xff00) | ((Cycle_EffectiveAddress + Register_X) & 0xff);
     Cycle_EffectiveAddress += Register_X;
+    adl_carry = Cycle_EffectiveAddress > 0xff;
+    FetchHighAddr();
 }
 
 /**
@@ -427,7 +430,7 @@ void MOS6510::FetchHighAddrX()
 void MOS6510::FetchHighAddrX2()
 {
     FetchHighAddrX();
-    if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
+    if (!adl_carry)
         cycleCount++;
 }
 
@@ -440,9 +443,9 @@ void MOS6510::FetchHighAddrX2()
  */
 void MOS6510::FetchHighAddrY()
 {
-    FetchHighAddr();
-    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress & 0xff00) | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
     Cycle_EffectiveAddress += Register_Y;
+    adl_carry = Cycle_EffectiveAddress > 0xff;
+    FetchHighAddr();
 }
 
 /**
@@ -451,7 +454,7 @@ void MOS6510::FetchHighAddrY()
 void MOS6510::FetchHighAddrY2()
 {
     FetchHighAddrY();
-    if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
+    if (!adl_carry)
         cycleCount++;
 }
 
@@ -533,9 +536,9 @@ void MOS6510::FetchHighEffAddr()
  */
 void MOS6510::FetchHighEffAddrY()
 {
-    FetchHighEffAddr();
-    Cycle_HighByteWrongEffectiveAddress = (Cycle_EffectiveAddress & 0xff00) | ((Cycle_EffectiveAddress + Register_Y) & 0xff);
     Cycle_EffectiveAddress += Register_Y;
+    adl_carry = Cycle_EffectiveAddress > 0xff;
+    FetchHighEffAddr();
 }
 
 
@@ -545,7 +548,7 @@ void MOS6510::FetchHighEffAddrY()
 void MOS6510::FetchHighEffAddrY2()
 {
     FetchHighEffAddrY();
-    if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
+    if (!adl_carry)
         cycleCount++;
 }
 
@@ -804,7 +807,7 @@ void MOS6510::hlt_instr() {}
 void MOS6510::sh_instr(uint8_t offset)
 {
     Cycle_Data &= (endian_16hi8(Cycle_EffectiveAddress - offset) + 1);
-    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
+    if (adl_carry)
         endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
     PutEffAddrDataByte();
 }
@@ -977,6 +980,18 @@ void MOS6510::asla_instr()
     interruptsAndNextOpcode();
 }
 
+void MOS6510::fix_branch()
+{
+    // Throw away read
+    cpuRead(Cycle_EffectiveAddress);
+
+    // Fix address
+    if (Cycle_Data < 0x80)
+        Register_ProgramCounter += 0x100;
+    else
+        Register_ProgramCounter -= 0x100;
+}
+
 void MOS6510::branch_instr(bool condition)
 {
     // 2 cycles spent before arriving here. spend 0 - 2 cycles here;
@@ -993,11 +1008,15 @@ void MOS6510::branch_instr(bool condition)
         // issue the spurious read for next insn here.
         cpuRead(Register_ProgramCounter);
 
-        Cycle_EffectiveAddress = Register_ProgramCounter + static_cast<int8_t>(Cycle_Data);
-        Cycle_HighByteWrongEffectiveAddress = (Register_ProgramCounter & 0xff00) | (Cycle_EffectiveAddress & 0xff);
+        Cycle_EffectiveAddress = endian_16lo8(Register_ProgramCounter);
+        Cycle_EffectiveAddress += Cycle_Data;
+        adl_carry = (Cycle_EffectiveAddress > 0xff) ^ (Cycle_Data > 0x7f);
+        endian_16hi8(Cycle_EffectiveAddress, endian_16hi8(Register_ProgramCounter));
+
+        Register_ProgramCounter = Cycle_EffectiveAddress;
 
         // Check for page boundary crossing
-        if (Cycle_EffectiveAddress == Cycle_HighByteWrongEffectiveAddress)
+        if (!adl_carry)
         {
             // Skip next throw away read
             cycleCount++;
@@ -1006,7 +1025,6 @@ void MOS6510::branch_instr(bool condition)
             if (interruptCycle >> 3 == cycleCount >> 3)
                 interruptCycle += 2;
         }
-        Register_ProgramCounter = Cycle_EffectiveAddress;
     }
     else
     {
@@ -1746,17 +1764,17 @@ void MOS6510::buildInstructionTable()
 
         case BCCr:
             instrTable[buildCycle++].func = &MOS6510::bcc_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case BCSr:
             instrTable[buildCycle++].func = &MOS6510::bcs_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case BEQr:
             instrTable[buildCycle++].func = &MOS6510::beq_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case BITz: case BITa:
@@ -1765,17 +1783,17 @@ void MOS6510::buildInstructionTable()
 
         case BMIr:
             instrTable[buildCycle++].func = &MOS6510::bmi_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case BNEr:
             instrTable[buildCycle++].func = &MOS6510::bne_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case BPLr:
             instrTable[buildCycle++].func = &MOS6510::bpl_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case BRKn:
@@ -1792,12 +1810,12 @@ void MOS6510::buildInstructionTable()
 
         case BVCr:
             instrTable[buildCycle++].func = &MOS6510::bvc_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case BVSr:
             instrTable[buildCycle++].func = &MOS6510::bvs_instr;
-            instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
+            instrTable[buildCycle++].func = &MOS6510::fix_branch;
             break;
 
         case CLCn:
