@@ -49,11 +49,11 @@ AM_CONDITIONAL([HAVE_VISIBILITY], [test "x$has_visibility" = xyes])
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 
-AC_CHECK_SIZEOF(short, 2)
-AC_CHECK_SIZEOF(int, 4)
+AC_CHECK_SIZEOF([short])
+AC_CHECK_SIZEOF([int])
 
 AS_IF([test $ac_cv_sizeof_short -ne 2],
-  [AC_MSG_ERROR([size of short must be 2])]
+  [AC_MSG_ERROR([size of short must be 16 bit])]
 )
 
 AS_IF([test $ac_cv_sizeof_int -lt 4],
@@ -221,6 +221,7 @@ AS_IF([test "x$enable_testsuite" != xno],
 
 AM_CONDITIONAL([TESTSUITE], [test "x$enable_testsuite" != xno])
 
+# FIXME use pkgconfig
 AC_ARG_ENABLE([tests],
   [AS_HELP_STRING([--enable-tests],
     [enable unit tests [default=no]]
