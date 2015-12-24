@@ -795,12 +795,19 @@ void MOS6510::hlt_instr() {}
 /*
  * When a DMA is going on (the CPU is halted by the VIC-II)
  * while the instruction sha/shx/shy executes then the last part
- * (endian_16hi8(Cycle_EffectiveAddress) + 1) drops off.
+ * (endian_16hi8(Cycle_EffectiveAddress - offset) + 1) drops off.
  *
  * http://sourceforge.net/p/vice-emu/bugs/578/
  *
  * This is currently not emulated.
  */
+void MOS6510::sh_instr(uint8_t offset)
+{
+    Cycle_Data &= (endian_16hi8(Cycle_EffectiveAddress - offset) + 1);
+    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
+        endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
+    PutEffAddrDataByte();
+}
 
 /**
  * Undocumented - This opcode stores the result of A AND X AND the high
@@ -810,10 +817,8 @@ void MOS6510::hlt_instr() {}
  */
 void MOS6510::axa_instr()
 {
-    Cycle_Data = Register_X & Register_Accumulator & (endian_16hi8(Cycle_EffectiveAddress - Register_Y) + 1);
-    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
-    PutEffAddrDataByte();
+    Cycle_Data = Register_X & Register_Accumulator;
+    sh_instr(Register_Y);
 }
 
 /**
@@ -824,10 +829,8 @@ void MOS6510::axa_instr()
  */
 void MOS6510::say_instr()
 {
-    Cycle_Data = Register_Y & (endian_16hi8(Cycle_EffectiveAddress - Register_X) + 1);
-    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
-    PutEffAddrDataByte();
+    Cycle_Data = Register_Y;
+    sh_instr(Register_X);
 }
 
 /**
@@ -838,10 +841,8 @@ void MOS6510::say_instr()
  */
 void MOS6510::xas_instr()
 {
-    Cycle_Data = Register_X & (endian_16hi8(Cycle_EffectiveAddress - Register_Y) + 1);
-    if (Cycle_HighByteWrongEffectiveAddress != Cycle_EffectiveAddress)
-        endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
-    PutEffAddrDataByte();
+    Cycle_Data = Register_X;
+    sh_instr(Register_Y);
 }
 
 /**
