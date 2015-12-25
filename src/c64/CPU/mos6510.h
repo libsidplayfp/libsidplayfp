@@ -48,6 +48,14 @@ namespace MOS6510Debug
 }
 #endif
 
+/*
+ * Define this to get correct emulation of SHA/SHX/SHY/SHS instructions
+ * (see VICE CPU tests).
+ * This will slow down the emulation a bit with no real benefit
+ * for SID playing so we keep it disabled.
+ */
+//#define CORRECT_SH_INSTRUCTIONS
+
 
 /**
  * Cycle-exact 6502/6510 emulation core.
@@ -113,6 +121,11 @@ private:
 
     /// Address Low summer carry
     bool adl_carry;
+
+#ifdef CORRECT_SH_INSTRUCTIONS
+    /// The RDY pin state during last throw away read.
+    bool rdyOnThrowAwayRead;
+#endif
 
     /// Status register
     Flags flags;

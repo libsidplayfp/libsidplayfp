@@ -111,6 +111,13 @@ void MOS6510::eventWithSteals()
     }
     else
     {
+#ifdef CORRECT_SH_INSTRUCTIONS
+        // Save rdy state for SH* instructions
+        if (instrTable[cycleCount].func == &MOS6510::throwAwayRead)
+        {
+            rdyOnThrowAwayRead = false;
+        }
+#endif
         // Even while stalled, the CPU can still process first clock of
         // interrupt delay, but only the first one.
         if (interruptCycle == cycleCount)
@@ -270,6 +277,9 @@ void MOS6510::fetchNextOpcode()
     instrStartPC = Register_ProgramCounter;
 #endif
 
+#ifdef CORRECT_SH_INSTRUCTIONS
+    rdyOnThrowAwayRead = true;
+#endif
     cycleCount = cpuRead(Register_ProgramCounter) << 3;
     Register_ProgramCounter++;
 
@@ -795,28 +805,40 @@ void MOS6510::sty_instr()
 void MOS6510::hlt_instr() {}
 #endif
 
-/*
- * When a DMA is going on (the CPU is halted by the VIC-II)
- * while the instruction sha/shx/shy executes then the last part
- * (endian_16hi8(Cycle_EffectiveAddress - offset) + 1) drops off.
+/**
+ * Perform the SH* instructions.
  *
- * http://sourceforge.net/p/vice-emu/bugs/578/
- *
- * This is currently not emulated.
+ * @param offset the index added to the address
  */
 void MOS6510::sh_instr(uint8_t offset)
 {
-    Cycle_Data &= (endian_16hi8(Cycle_EffectiveAddress - offset) + 1);
+    const uint8_t tmp = Cycle_Data & (endian_16hi8(Cycle_EffectiveAddress - offset) + 1);
+
+#ifdef CORRECT_SH_INSTRUCTIONS
+    /*
+     * When a DMA is going on (the CPU is halted by the VIC-II)
+     * while the instruction sha/shx/shy executes then the last
+     * term of the ANDing (ADH+1) drops off.
+     *
+     * http://sourceforge.net/p/vice-emu/bugs/578/
+     */
+    if (rdyOnThrowAwayRead)
+    {
+        Cycle_Data = tmp;
+    }
+#endif
+
+    /*
+     * When the addressing/indexing causes a page boundary crossing
+     * the highbyte of the target address becomes equal to the value stored.
+     */
     if (adl_carry)
-        endian_16hi8(Cycle_EffectiveAddress, Cycle_Data);
+        endian_16hi8(Cycle_EffectiveAddress, tmp);
     PutEffAddrDataByte();
 }
 
 /**
- * Undocumented - This opcode stores the result of A AND X AND the high
- * byte of the target address of the operand +1 in memory.
- * When the addressing/indexing causes a page boundary crossing
- * the highbyte of the target address may become equal to the value stored.
+ * Undocumented - This opcode stores the result of A AND X AND ADH+1 in memory.
  */
 void MOS6510::axa_instr()
 {
@@ -825,10 +847,8 @@ void MOS6510::axa_instr()
 }
 
 /**
- * Undocumented - This opcode ANDs the contents of the Y register with <ab+1> and stores the
+ * Undocumented - This opcode ANDs the contents of the Y register with ADH+1 and stores the
  * result in memory.
- * When the addressing/indexing causes a page boundary crossing
- * the highbyte of the target address may become equal to the value stored.
  */
 void MOS6510::say_instr()
 {
@@ -837,10 +857,8 @@ void MOS6510::say_instr()
 }
 
 /**
- * Undocumented - This opcode ANDs the contents of the X register with <ab+1> and stores the
+ * Undocumented - This opcode ANDs the contents of the X register with ADH+1 and stores the
  * result in memory.
- * When the addressing/indexing causes a page boundary crossing
- * the highbyte of the target address may become equal to the value stored.
  */
 void MOS6510::xas_instr()
 {
