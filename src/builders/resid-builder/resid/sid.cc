@@ -19,6 +19,11 @@
 
 #define RESID_SID_CC
 
+#ifdef _M_ARM
+#undef _ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE
+#define _ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE 1
+#endif
+
 #include "sid.h"
 #include <math.h>
 
@@ -152,13 +157,23 @@ void SID::write(reg8 offset, reg8 value)
 {
   write_address = offset;
   bus_value = value;
-  bus_value_ttl = 0x4000;
+  /*
+    results from real C64 (testprogs/SID/bitfade/delayfrq0.prg):
 
+    (new SID) (250469/8580R5) (250469/8580R5)
+    delayfrq0    ~7a000        ~108000
+
+    (old SID) (250407/6581)
+    delayfrq0    ~01d00
+
+   */
   if (sid_model == MOS8580) {
+    bus_value_ttl = 0xa2000;
     // One cycle pipeline delay on the MOS8580; delay write.
     write_pipeline = 1;
   }
   else {
+    bus_value_ttl = 0x1d00;
     // No pipeline delay on the MOS6581; write immediately.
     write();
   }
