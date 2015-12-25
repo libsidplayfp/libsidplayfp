@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2010 Dag Lem
  *
@@ -243,7 +243,7 @@ FilterModelConfig::FilterModelConfig() :
     // I.e. if k != 1.0, Vg must be scaled accordingly.
     for (int kVg_Vx = 0; kVg_Vx < (1 << 16); kVg_Vx++)
     {
-        const double log_term = log(1. + exp((kVg_Vx / N16 - kVt) / (2. * Ut)));
+        const double log_term = log1p(exp((kVg_Vx / N16 - kVt) / (2. * Ut)));
         // Scaled by m*2^15
         const double tmp = n_Is * log_term * log_term;
         assert(tmp > -0.5 && tmp < 65535.5);

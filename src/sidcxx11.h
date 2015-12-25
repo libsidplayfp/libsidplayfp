@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2014 Leandro Nini
+ *  Copyright 2014-2015 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 #  define override
 #  define final
 #  define unique_ptr auto_ptr
+#  define log1p(x) log(1. + x)
 #endif
 
 #endif
