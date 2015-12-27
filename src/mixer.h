@@ -28,7 +28,6 @@
 
 #include <stdint.h>
 #include <cstdlib>
-#include <cmath>
 
 #include <vector>
 
@@ -48,12 +47,12 @@ public:
 
     static const int_least32_t SCALE_FACTOR = 1 << 16;
 #ifdef HAVE_CXX11
-    static const int_least32_t C1 = static_cast<int_least32_t>(1.0 / (1.0 + sqrt(0.5)) * SCALE_FACTOR);
-    static const int_least32_t C2 = static_cast<int_least32_t>(sqrt(0.5) / (1.0 + sqrt(0.5)) * SCALE_FACTOR);
+    static constexpr double SQRT_0_5 = 0.70710678118654746;
 #else
-    static const int_least32_t C1 = static_cast<int_least32_t>(1.0 / (1.0 + 0.7071067812) * SCALE_FACTOR);
-    static const int_least32_t C2 = static_cast<int_least32_t>(0.7071067812 / (1.0 + 0.7071067812) * SCALE_FACTOR);
+#  define SQRT_0_5 0.70710678118654746
 #endif
+    static const int_least32_t C1 = static_cast<int_least32_t>(1.0 / (1.0 + SQRT_0_5) * SCALE_FACTOR);
+    static const int_least32_t C2 = static_cast<int_least32_t>(SQRT_0_5 / (1.0 + SQRT_0_5) * SCALE_FACTOR);
 
 private:
     typedef int_least32_t (Mixer::*mixer_func_t)() const;
