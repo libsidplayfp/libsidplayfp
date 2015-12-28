@@ -151,11 +151,9 @@ int HardSIDBuilder::init()
         return 0;
 
     m_status = false;
-#ifdef UNICODE
-    dll = LoadLibrary(L"HARDSID.DLL");
-#else
-    dll = LoadLibrary("HARDSID.DLL");
-#endif
+
+    dll = LoadLibrary(TEXT("HARDSID.DLL"));
+
     if (!dll)
     {
         DWORD err = GetLastError();
