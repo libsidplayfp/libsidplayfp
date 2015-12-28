@@ -122,6 +122,9 @@ private:
     bool           muted[HARDSID_VOICES];
     unsigned int   m_instance;
 
+private:
+    event_clock_t delay();
+
 public:
     static const char* getCredits();
 

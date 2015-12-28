@@ -137,11 +137,8 @@ void HardSID::reset(uint8_t volume)
         eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 
-void HardSID::clock()
+event_clock_t HardSID::delay()
 {
-    if (!m_handle)
-        return;
-
     event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
     m_accessClk += cycles;
 
@@ -150,6 +147,17 @@ void HardSID::clock()
         ioctl(m_handle, HSID_IOCTL_DELAY, 0xffff);
         cycles -= 0xffff;
     }
+
+    return cycles;
+}
+
+void HardSID::clock()
+{
+    if (!m_handle)
+        return;
+
+    const event_clock_t cycles = delay();
+
     if (cycles)
         ioctl(m_handle, HSID_IOCTL_DELAY, cycles);
 }
@@ -159,15 +167,7 @@ uint8_t HardSID::read(uint_least8_t addr)
     if (!m_handle)
         return 0;
 
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
-    m_accessClk += cycles;
-
-    while ( cycles > 0xffff )
-    {
-        /* delay */
-        ioctl(m_handle, HSID_IOCTL_DELAY, 0xffff);
-        cycles -= 0xffff;
-    }
+    const event_clock_t cycles = delay();
 
     unsigned int packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 );
     ioctl(m_handle, HSID_IOCTL_READ, &packet);
@@ -180,15 +180,7 @@ void HardSID::write(uint_least8_t addr, uint8_t data)
     if (!m_handle)
         return;
 
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
-    m_accessClk += cycles;
-
-    while (cycles > 0xffff)
-    {
-        /* delay */
-        ioctl(m_handle, HSID_IOCTL_DELAY, 0xffff);
-        cycles -= 0xffff;
-    }
+    const event_clock_t cycles = delay();
 
     unsigned int packet = (( cycles & 0xffff ) << 16 ) | (( addr & 0x1f ) << 8 )
         | (data & 0xff);

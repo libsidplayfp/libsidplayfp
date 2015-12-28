@@ -83,6 +83,20 @@ HardSID::~HardSID()
     sid--;
 }
 
+event_clock_t HardSID::delay()
+{
+    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    m_accessClk += cycles;
+
+    while (cycles > 0xFFFF)
+    {
+        hsid2.Delay((BYTE) m_instance, 0xFFFF);
+        cycles -= 0xFFFF;
+    }
+
+    return cycles;
+}
+
 void HardSID::clock()
 {
     return;
@@ -90,14 +104,7 @@ void HardSID::clock()
 
 uint8_t HardSID::read(uint_least8_t addr)
 {
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
-    m_accessClk += cycles;
-
-    while (cycles > 0xFFFF)
-    {
-        hsid2.Delay((BYTE) m_instance, 0xFFFF);
-        cycles -= 0xFFFF;
-    }
+    const event_clock_t cycles = delay();
 
     return hsid2.Read((BYTE) m_instance, (WORD) cycles,
                        (BYTE) addr);
@@ -105,14 +112,7 @@ uint8_t HardSID::read(uint_least8_t addr)
 
 void HardSID::write(uint_least8_t addr, uint8_t data)
 {
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
-    m_accessClk += cycles;
-
-    while (cycles > 0xFFFF)
-    {
-        hsid2.Delay((BYTE) m_instance, 0xFFFF);
-        cycles -= 0xFFFF;
-    }
+    const event_clock_t cycles = delay();
 
     hsid2.Write((BYTE) m_instance, (WORD) cycles,
                  (BYTE) addr, (BYTE) data);
