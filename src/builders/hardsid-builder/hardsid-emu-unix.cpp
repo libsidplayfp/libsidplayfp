@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001-2001 by Jarno Paananen
  *
@@ -78,9 +78,9 @@ HardSID::HardSID (sidbuilder *builder) :
     unsigned int num = 16;
     for ( unsigned int i = 0; i < 16; i++ )
     {
-        if(m_sidFree[i] == 0)
+        if(m_sidFree[i] == false)
         {
-            m_sidFree[i] = 1;
+            m_sidFree[i] = true;
             num = i;
             break;
         }
@@ -122,7 +122,7 @@ HardSID::HardSID (sidbuilder *builder) :
 HardSID::~HardSID()
 {
     sid--;
-    m_sidFree[m_instance] = 0;
+    m_sidFree[m_instance] = false;
     if (m_handle)
         close(m_handle);
 }
@@ -133,7 +133,7 @@ void HardSID::reset(uint8_t volume)
         muted[i] = false;
     ioctl(m_handle, HSID_IOCTL_RESET, volume);
     m_accessClk = 0;
-    if (eventScheduler != 0)
+    if (eventScheduler != nullptr)
         eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
 }
 
