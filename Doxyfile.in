@@ -733,9 +733,7 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @srcdir@/sidplayfp \
-                         @srcdir@/utils \
-                         @srcdir@/builders \
+INPUT                  = @srcdir@/src \
                          @srcdir@/docs
 
 # This tag can be used to specify the character encoding of the source files
