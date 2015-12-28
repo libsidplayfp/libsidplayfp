@@ -99,6 +99,7 @@ void EnvelopeGenerator::set_exponential_counter()
 void EnvelopeGenerator::setChipModel(ChipModel chipModel)
 {
     double dacBits[DAC_BITS];
+    // FIXME why is 2R/R 2.30 instead of 2.20 for 6581?
     Dac::kinkedDac(dacBits, DAC_BITS, chipModel == MOS6581 ? 2.30 : 2.00, chipModel == MOS8580);
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
