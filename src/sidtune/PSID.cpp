@@ -121,6 +121,8 @@ SidTuneInfo::model_t getSidModel(uint_least16_t modelFlag)
 
     if (modelFlag & PSID_SIDMODEL_8580)
         return SidTuneInfo::SIDMODEL_8580;
+
+    return SidTuneInfo::SIDMODEL_UNKNOWN;
 }
 
 /**
