@@ -67,7 +67,7 @@ HardSID::HardSID(sidbuilder *builder) :
     Event("HardSID Delay"),
     m_instance(sid++)
 {
-    if (m_instance >= hsid2.Devices ())
+    if (m_instance >= hsid2.Devices())
     {
         m_error = "HARDSID WARNING: System dosen't have enough SID chips.";
         return;
@@ -106,16 +106,14 @@ uint8_t HardSID::read(uint_least8_t addr)
 {
     const event_clock_t cycles = delay();
 
-    return hsid2.Read((BYTE) m_instance, (WORD) cycles,
-                       (BYTE) addr);
+    return hsid2.Read((BYTE) m_instance, (WORD) cycles, (BYTE) addr);
 }
 
 void HardSID::write(uint_least8_t addr, uint8_t data)
 {
     const event_clock_t cycles = delay();
 
-    hsid2.Write((BYTE) m_instance, (WORD) cycles,
-                 (BYTE) addr, (BYTE) data);
+    hsid2.Write((BYTE) m_instance, (WORD) cycles, (BYTE) addr, (BYTE) data);
 }
 
 void HardSID::reset(uint8_t volume)
@@ -178,8 +176,7 @@ void HardSID::event()
     {
         m_accessClk += cycles;
         hsid2.Delay((BYTE) m_instance, (WORD) cycles);
-        eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES,
-                                EVENT_CLOCK_PHI1);
+        eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
 }
 
