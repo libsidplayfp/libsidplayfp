@@ -229,17 +229,26 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     }
 }
 
+template<typename I, typename O>
+inline O clip(I input)
+{
+    if (input < std::numeric_limits<O>::min()) input = std::numeric_limits<O>::min();
+    if (input > std::numeric_limits<O>::max()) input = std::numeric_limits<O>::max();
+    return static_cast<O>(input);
+}
+
 bool SincResampler::input(int input)
 {
     bool ready = false;
 
-    // Hard clip input to avoid overflows (/MUSICIANS/L/Linus/64_Forever.sid)
-    // TODO maybe we should change the convolve function to work on 32 bit ints
-    //      and leave the clipping only at the output stage
-    if (input < std::numeric_limits<short>::min()) input = std::numeric_limits<short>::min();
-    if (input > std::numeric_limits<short>::max()) input = std::numeric_limits<short>::max();
-
-    sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = input;
+    /*
+     * Clip the input as it may overflow the 16 bit range.
+     *
+     * Approximate measured input ranges:
+     * 6581: ]-20000,+20000[
+     * 8580: ]-33000,+33000[
+     */
+    sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = clip<int, short>(input);
     sampleIndex = (sampleIndex + 1) & (RINGSIZE - 1);
 
     if (sampleOffset < 1024)

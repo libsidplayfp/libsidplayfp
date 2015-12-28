@@ -52,5 +52,6 @@ const char* residfp_version_string = "@PACKAGE_VERSION@";
 // Inlining on/off.
 #define RESID_INLINING @RESID_INLINING@
 #define RESID_INLINE @RESID_INLINE@
+#define RESID_HAVE_LOG1P @RESID_HAVE_LOG1P@
 
 #endif // SIDDEFS_FP_H
