@@ -11,6 +11,7 @@ It was then ported back to c++ and integrated with improvements from reSID 1.0 b
 Main differences from reSID:
 
 * combined waveforms are emulated by a parametrized model based on samplings from Kevtris;
+* envelope generator is implemented like in the real machine with a shift register;
 * high quality resampling is done in two steps to allow computational savings using lower order filters;
 * part of the calculations are done with floats instead of fixed point;
 * interpolation is accomplished with Fritsch-Carlson method to preserve monotonicity.
