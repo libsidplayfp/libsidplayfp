@@ -1,3 +1,10 @@
+1.8.3 2015-12-28
+* Fix an overflow in resid/residfp for 8580 output, noticed in /MUSICIANS/L/Linus/64_Forever.sid
+* Use log1p in resid/residfp for improved precision of 6581 filter parameter calculation
+* Fix a warning in PSID model checking
+
+
+
 1.8.2 2015-10-10
 * Fix running with -b parameter
 * Attenuate second chip output by 3dB in 3SID mode as it is mixed in both channels
