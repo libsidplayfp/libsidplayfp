@@ -63,8 +63,7 @@ void Filter::writeRES_FILT(unsigned char res_filt)
 {
     filt = res_filt;
 
-    res = (res_filt >> 4) & 0x0f;
-    updatedResonance();
+    updateResonance((res_filt >> 4) & 0x0f);
 
     if (enabled)
     {

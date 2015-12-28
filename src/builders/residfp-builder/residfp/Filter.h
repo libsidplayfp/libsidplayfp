@@ -44,9 +44,6 @@ protected:
     /// Highpass, bandpass, and lowpass filter modes.
     bool hp, bp, lp;
 
-    /// Filter resonance.
-    unsigned char res;
-
     /// Current volume.
     unsigned char vol;
 
@@ -66,7 +63,7 @@ protected:
     /**
      * Set filter resonance.
      */
-    virtual void updatedResonance() = 0;
+    virtual void updateResonance(unsigned char res) = 0;
 
     /**
      * Mixing configuration modified (offsets change)
@@ -84,7 +81,6 @@ public:
         hp(false),
         bp(false),
         lp(false),
-        res(0),
         vol(0),
         enabled(true),
         filt(0) {}

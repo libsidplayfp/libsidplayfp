@@ -132,8 +132,10 @@ public:
      * The following function for 1/Q has been modeled in the MOS 8580:
      *
      * 1/Q = 2^(1/2)*2^(-x/8) = 2^(1/2 - x/8) = 2^((4 - x)/8)
+     *
+     * @param res the new resonance value
      */
-    void updatedResonance() override { _1_div_Q = static_cast<float>(pow(2., (4 - res) / 8.)); }
+    void updateResonance(unsigned char res) override { _1_div_Q = static_cast<float>(pow(2., (4 - res) / 8.)); }
 
     void input(int input) override { ve = input << 4; }
 
