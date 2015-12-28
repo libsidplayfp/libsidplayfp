@@ -30,7 +30,6 @@
 #  define override
 #  define final
 #  define unique_ptr auto_ptr
-#  define log1p(x) log(1. + x)
 #endif
 
 #endif
