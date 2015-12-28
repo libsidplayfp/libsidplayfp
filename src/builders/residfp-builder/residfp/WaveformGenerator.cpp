@@ -29,14 +29,23 @@
 namespace reSIDfp
 {
 
-// FIXME
-// This value has been adjusted aleatorily from the original reSID value (0x4000)
-// to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
-// and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid
-// see VICE Bug #290
-// http://sourceforge.net/p/vice-emu/bugs/290/
+/**
+ * Number of cycles after which the waveform output fades to 0 when setting
+ * the waveform register to 0.
+ *
+ * FIXME
+ * This value has been adjusted aleatorily to ~1 sec
+ * from the original reSID value (0x4000)
+ * to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
+ * and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid;
+ * see [VICE Bug #290](http://sourceforge.net/p/vice-emu/bugs/290/)
+ */
 const int FLOATING_OUTPUT_TTL = 0xF4240;
 
+/**
+ * Number of cycles after which the shift register is reset
+ * when the test bit is set.
+ */
 const int SHIFT_REGISTER_RESET = 0x8000;
 
 const int DAC_BITS = 12;
