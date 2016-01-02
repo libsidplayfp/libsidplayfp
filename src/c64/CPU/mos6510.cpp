@@ -1028,7 +1028,7 @@ void MOS6510::branch_instr(bool condition)
 
         Cycle_EffectiveAddress = endian_16lo8(Register_ProgramCounter);
         Cycle_EffectiveAddress += Cycle_Data;
-        adl_carry = (Cycle_EffectiveAddress > 0xff) ^ (Cycle_Data > 0x7f);
+        adl_carry = (Cycle_EffectiveAddress > 0xff) != (Cycle_Data > 0x7f);
         endian_16hi8(Cycle_EffectiveAddress, endian_16hi8(Register_ProgramCounter));
 
         Register_ProgramCounter = Cycle_EffectiveAddress;
