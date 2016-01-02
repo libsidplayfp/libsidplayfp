@@ -53,8 +53,8 @@ const int DAC_BITS = 12;
 void WaveformGenerator::clock_shift_register()
 {
     // bit0 = (bit22 | test) ^ bit17
-    const unsigned int bit0 = ((shift_register >> 22) ^ (shift_register >> 17)) & 0x1;
-    shift_register = ((shift_register << 1) | bit0) & 0x7fffff;
+    const unsigned int bit0 = ((shift_register << 22) ^ (shift_register << 17)) & (1 << 22);
+    shift_register = (shift_register >> 1) | bit0;
 
     // New noise waveform output.
     set_noise_output();
@@ -69,15 +69,15 @@ void WaveformGenerator::write_shift_register()
     // neighboring bits are affected.
 
     shift_register &=
-        ~((1 << 20) | (1 << 18) | (1 << 14) | (1 << 11) | (1 << 9) | (1 << 5) | (1 << 2) | (1 << 0)) |
-        ((waveform_output & 0x800) << 9) |  // Bit 11 -> bit 20
-        ((waveform_output & 0x400) << 8) |  // Bit 10 -> bit 18
-        ((waveform_output & 0x200) << 5) |  // Bit  9 -> bit 14
-        ((waveform_output & 0x100) << 3) |  // Bit  8 -> bit 11
-        ((waveform_output & 0x080) << 2) |  // Bit  7 -> bit  9
-        ((waveform_output & 0x040) >> 1) |  // Bit  6 -> bit  5
-        ((waveform_output & 0x020) >> 3) |  // Bit  5 -> bit  2
-        ((waveform_output & 0x010) >> 4);   // Bit  4 -> bit  0
+        ~((1 << 2) | (1 << 4) | (1 << 8) | (1 << 11) | (1 << 13) | (1 << 17) | (1 << 20) | (1 << 22)) |
+        ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
+        ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
+        ((waveform_output & (1 <<  9)) <<  1) |  // Bit  9 -> bit 14
+        ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
+        ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
+        ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
+        ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
+        ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
 
     noise_output &= waveform_output;
     no_noise_or_noise_output = no_noise | noise_output;
@@ -95,14 +95,14 @@ void WaveformGenerator::reset_shift_register()
 void WaveformGenerator::set_noise_output()
 {
     noise_output =
-        ((shift_register & 0x100000) >> 9) |
-        ((shift_register & 0x040000) >> 8) |
-        ((shift_register & 0x004000) >> 5) |
-        ((shift_register & 0x000800) >> 3) |
-        ((shift_register & 0x000200) >> 2) |
-        ((shift_register & 0x000020) << 1) |
-        ((shift_register & 0x000004) << 3) |
-        ((shift_register & 0x000001) << 4);
+        ((shift_register & (1 <<  2)) <<  9) |  // Bit 20 -> bit 11
+        ((shift_register & (1 <<  4)) <<  6) |  // Bit 18 -> bit 10
+        ((shift_register & (1 <<  8)) <<  1) |  // Bit 14 -> bit  9
+        ((shift_register & (1 << 11)) >>  3) |  // Bit 11 -> bit  8
+        ((shift_register & (1 << 13)) >>  6) |  // Bit  9 -> bit  7
+        ((shift_register & (1 << 17)) >> 11) |  // Bit  5 -> bit  6
+        ((shift_register & (1 << 20)) >> 15) |  // Bit  2 -> bit  5
+        ((shift_register & (1 << 22)) >> 18);   // Bit  0 -> bit  4
 
     no_noise_or_noise_output = no_noise | noise_output;
 }
@@ -202,8 +202,8 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             // completed by enabling SRAM write.
 
             // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
-            const unsigned int bit0 = (~shift_register >> 17) & 0x1;
-            shift_register = ((shift_register << 1) | bit0) & 0x7fffff;
+            const unsigned int bit0 = (~shift_register << 17) & (1 << 22);
+            shift_register = (shift_register >> 1) | bit0;
 
             // Set new noise waveform output.
             set_noise_output();
