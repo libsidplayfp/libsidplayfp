@@ -157,7 +157,7 @@ public:
 
 private:
     // Fixed interval timer delay to prevent sidplay2
-    // shoot to 100% CPU usage when song nolonger
+    // shoot to 100% CPU usage when song no longer
     // writes to SID.
     void event() override;
 };
