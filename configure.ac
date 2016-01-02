@@ -19,16 +19,10 @@ AC_SUBST([LIB_LEVEL])
 
 AC_CANONICAL_HOST
 case "$host" in
-    *linux*|*-k*bsd*-gnu|*mingw*|*cygwin* )
-        hardsid=yes
-        ;;
-esac
-case "$host" in
     *mingw32* )
         MINGW32=yes
         ;;
 esac
-AM_CONDITIONAL([HARDSID], [test "x$hardsid" = "xyes"])
 AM_CONDITIONAL([MINGW32], [test "x$MINGW32" = "xyes"])
 
 dnl Initialize libtool.
@@ -125,6 +119,12 @@ AS_IF([test "x$enable_debug" = "xno"],
 )
 
 AC_SUBST([debug_flags])
+
+AC_ARG_ENABLE([hardsid],
+  AS_HELP_STRING([--enable-hardsid],[enable hardsid builder [default=no]])
+)
+
+AM_CONDITIONAL([HARDSID], [test "x$enable_hardsid" = "xyes"])
 
 
 AC_ARG_ENABLE([inline],
