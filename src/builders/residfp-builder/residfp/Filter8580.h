@@ -188,7 +188,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     if (bp) Vof += Vbp;
     if (hp) Vof += Vhp;
 
-    return static_cast<int>(Vof) * vol >> 4;
+    return static_cast<int>(floor(Vof + 0.5f)) * vol >> 4;
 }
 
 } // namespace reSIDfp
