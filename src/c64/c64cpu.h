@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2012-2015 Leandro Nini
+ *  Copyright (C) 2012-2016 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,13 +38,14 @@ class c64cpu final : public MOS6510
 private:
     c64env &m_env;
 
+protected:
+    uint8_t cpuRead(uint_least16_t addr) override { return m_env.cpuRead(addr); }
+    void cpuWrite(uint_least16_t addr, uint8_t data) override { m_env.cpuWrite(addr, data); }
+
 public:
     c64cpu (c64env &env) :
         MOS6510(env.scheduler()),
         m_env(env) {}
-
-    uint8_t cpuRead(uint_least16_t addr) override { return m_env.cpuRead(addr); }
-    void cpuWrite(uint_least16_t addr, uint8_t data) override { m_env.cpuWrite(addr, data); }
 
 #ifdef PC64_TESTSUITE
     void loadFile(const char *file) override { m_env.loadFile(file); }
