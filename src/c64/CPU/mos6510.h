@@ -164,7 +164,7 @@ private:
     void eventWithoutSteals();
     void eventWithSteals();
 
-    void Initialise();
+    inline void Initialise();
 
     // Declare Interrupt Routines
     inline void IRQLoRequest();
@@ -284,7 +284,7 @@ private:
     inline void xas_instr();
     inline void sh_instr(uint8_t offset);
 
-    void  illegal_instr();
+    void illegal_instr();
 
     // Declare Arithmetic Operations
     inline void doADC();
