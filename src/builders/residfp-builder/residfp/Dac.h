@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -22,6 +22,8 @@
 
 #ifndef DAC_H
 #define DAC_H
+
+#include "siddefs-fp.h"
 
 namespace reSIDfp
 {
@@ -51,16 +53,39 @@ namespace reSIDfp
  * These DACs include the correct termination resistor, and also seem to have
  * very accurately matched R and 2R resistors (2R/R = 2.00).
  */
-namespace Dac
+class Dac
 {
+private:
+    /// analog values
+    double * const dac;
+
+    /// the dac array length
+    const unsigned int dacLength;
+
+public:
     /**
-     * @param dac an array to be filled with the resulting analog values
-     * @param dacLength the dac array length
-     * @param _2R_div_R nonlinearity parameter, 1.0 for perfect linearity.
-     * @param term is the dac terminated by a 2R resistor? (6581 DACs are not)
+     * Initialize DAC model.
+     *
+     * @param bits the number of input bits
      */
-    void kinkedDac(double* dac, int dacLength, double _2R_div_R, bool term);
-}
+    Dac(unsigned int bits);
+    ~Dac();
+
+    /**
+     * Build DAC model for specific chip.
+     *
+     * @param chipModel 6581 or 8580
+     */
+    void kinkedDac(ChipModel chipModel);
+
+    /**
+     * Get the Vo output for a  given combination of input bits.
+     *
+     * @param input the digital input
+     * @return the analog output value
+     */
+    double getOutput(unsigned int input) const;
+};
 
 } // namespace reSIDfp
 

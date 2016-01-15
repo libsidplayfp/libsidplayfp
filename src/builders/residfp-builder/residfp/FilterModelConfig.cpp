@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2010 Dag Lem
  *
@@ -25,7 +25,6 @@
 #include <cmath>
 #include <cassert>
 
-#include "Dac.h"
 #include "Integrator.h"
 #include "OpAmp.h"
 
@@ -120,11 +119,12 @@ FilterModelConfig::FilterModelConfig() :
     vmax(kVddt < opamp_voltage[0].y ? opamp_voltage[0].y : kVddt),
     denorm(vmax - vmin),
     norm(1.0 / denorm),
-    N16(norm * ((1 << 16) - 1))
+    N16(norm * ((1 << 16) - 1)),
+    dac(DAC_BITS)
 {
-    // Convert op-amp voltage transfer to 16 bit values.
+    dac.kinkedDac(MOS6581);
 
-    Dac::kinkedDac(dac, DAC_BITS, 2.2, false);
+    // Convert op-amp voltage transfer to 16 bit values.
 
     Spline::Point scaled_voltage[OPAMP_SIZE];
 
@@ -290,16 +290,7 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
-        double fcd = 0.;
-
-        for (unsigned int j = 0; j < DAC_BITS; j++)
-        {
-            if ((i & (1 << j)) != 0)
-            {
-                fcd += dac[j];
-            }
-        }
-
+        const double fcd = dac.getOutput(i);
         const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
         f0_dac[i] = static_cast<unsigned short>(tmp + 0.5);

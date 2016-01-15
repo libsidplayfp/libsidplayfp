@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -114,29 +114,15 @@ void WaveformGenerator::setWaveformModels(matrix_t* models)
 
 void WaveformGenerator::setChipModel(ChipModel chipModel)
 {
-    double dacBits[DAC_BITS];
-    Dac::kinkedDac(dacBits, DAC_BITS, chipModel == MOS6581 ? 2.20 : 2.00, chipModel == MOS8580);
+    Dac dacBuilder(DAC_BITS);
+    dacBuilder.kinkedDac(chipModel);
+
+    const float offset = dacBuilder.getOutput(chipModel == MOS6581 ? 0x380 : 0x800);
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
-        double dacValue = 0.;
-
-        for (unsigned int j = 0; j < DAC_BITS; j ++)
-        {
-            if ((i & (1 << j)) != 0)
-            {
-                dacValue += dacBits[j];
-            }
-        }
-
-        dac[i] = static_cast<float>(dacValue);
-    }
-
-    const float offset = dac[chipModel == MOS6581 ? 0x380 : 0x800];
-
-    for (unsigned int i = 0; i < (1 << DAC_BITS); i ++)
-    {
-        dac[i] -= offset;
+        const double dacValue = dacBuilder.getOutput(i);
+        dac[i] = static_cast<float>(dacValue - offset);
     }
 }
 
