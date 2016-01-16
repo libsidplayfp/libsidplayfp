@@ -56,7 +56,7 @@ static inline void _xSwrite(const unsigned char *buff, int size)
 }
 
 /**
- * Write routine to send data to the device. BLOCKING.
+ * Read routine to get data from the device. BLOCKING.
  * @param buff pointer to a byte array that will be filled with read data
  * @param size number of bytes to read
  */
@@ -270,8 +270,6 @@ void exSID_polldelay(uint_fast32_t cycles)
 
 	// deal with remainder
 	exSID_delay(delta);
-	
-	return;
 }
 
 /**
