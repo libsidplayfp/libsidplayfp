@@ -409,7 +409,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 		//adj = (clkdrift < XS_MAXADJ*XS_ADJMLT ? clkdrift : XS_MAXADJ*XS_ADJMLT);
 		adj /= XS_ADJMLT;
 		clkdrift -= adj*XS_ADJMLT;
-		addr = (char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
+		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
 		//dbg("adj: %d, addr: %.2hhx\n", adj, (char)(addr | (adj << 5)));
 	}
 
