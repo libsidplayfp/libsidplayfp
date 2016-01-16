@@ -25,7 +25,6 @@ static long accdrift = 0;
 static long acccycle = 0;
 #endif
 
-static int devopen = 0;
 static struct ftdi_context *ftdi = 0;
 static struct ftdi_version_info version;
 static int ftdi_status;
@@ -106,7 +105,7 @@ static void _xSoutb(uint8_t byte, int flush)
  */
 int exSID_init(void)
 {
-	if (devopen) {
+	if (ftdi) {
 		error("Device already open!");
 		return -1;
 	}
@@ -128,7 +127,6 @@ int exSID_init(void)
 
 	// success - device with device description "exSIDUSB" is open
 	dbg("Device opened\n");
-	devopen = 1;
 
 	ftdi_status = ftdi_set_baudrate(ftdi, XS_BDRATE);
 	if (ftdi_status < 0)
@@ -178,7 +176,6 @@ void exSID_exit(void)
 	accdrift = acccycle = 0;
 #endif
 
-	devopen = 0;
 	clkdrift = 0;
 }
 
