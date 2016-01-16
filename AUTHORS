@@ -6,7 +6,7 @@ system in order to play SID music better.
 
 Copyright (c) 2000 Simon White
 Copyright (c) 2007-2010 Antti Lankila
-Copyright (c) 2010-2015 Leandro Nini
+Copyright (c) 2010-2016 Leandro Nini
 
 This version of the freely available libsidplayfp emulator engine source code
 contains the following contributed or derived work. In the order they first
@@ -22,6 +22,8 @@ supplied contributions or code was derived from their work:
                         backporting from jsidplay2
     LaLa              - stilview
     André Fachat      - reloc65
+    Jarno Paananen    - HardSID UNIX builder
+    Thibaut VARENE    - exSID driver and builder
 
 VIC II, CIA and cpu-port emulation is based on VICE code.
 
