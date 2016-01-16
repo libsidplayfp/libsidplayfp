@@ -254,6 +254,16 @@ AC_SUBST(RESID_INLINE)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
 
+# exSID addition
+PKG_CHECK_MODULES([FTDI],
+    [libftdi1 >= 1.0],
+    [AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have libftdi1 (-lftdi1).])],
+    [AC_MSG_WARN([$FTDI_PKG_ERRORS])]
+)
+
+AM_CONDITIONAL([EXSID_SUPPORT], [ test "x${pkg_cv_FTDI_CFLAGS}" != x ])
+
+
 
 AC_CONFIG_FILES([
 Makefile

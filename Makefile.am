@@ -22,14 +22,18 @@ AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_builddir)/src/builders/resid-builder \
 -I $(top_builddir)/src/builders/resid-builder/resid \
 -I $(top_builddir)/src \
+-I $(top_builddir)/src/sidtune \
 -I $(top_srcdir)/src \
 ${W32_CPPFLAGS} \
+$(FTDI_CFLAGS) \
 @debug_flags@
 
 #=========================================================
 EXTRA_DIST = \
 docs/mainpage.dox \
 src/psiddrv.a65 \
+src/sidtune/sidplayer1.a65 \
+src/sidtune/sidplayer2.a65 \
 src/builders/residfp-builder/residfp/AUTHORS \
 src/builders/residfp-builder/residfp/COPYING \
 src/builders/residfp-builder/residfp/README \
@@ -61,6 +65,10 @@ src/builders/resid-builder/libsidplayfp-resid.la
 
 if HARDSID
   noinst_LTLIBRARIES += src/builders/hardsid-builder/libsidplayfp-hardsid.la
+endif
+
+if EXSID_SUPPORT
+  noinst_LTLIBRARIES += src/builders/exsid-builder/libsidplayfp-exsid.la
 endif
 
 #=========================================================
@@ -152,7 +160,8 @@ src/sidtune/prg.cpp \
 src/sidtune/prg.h \
 src/sidtune/PSID.cpp \
 src/sidtune/PSID.h \
-src/sidtune/sidplayer.bin \
+src/sidtune/sidplayer1.bin \
+src/sidtune/sidplayer2.bin \
 src/sidtune/SidTuneBase.cpp \
 src/sidtune/SidTuneBase.h \
 src/sidtune/SidTuneCfg.h \
@@ -192,6 +201,11 @@ $(GCRYPT_LIBS)
 
 if HARDSID
   src_libsidplayfp_la_LIBADD += src/builders/hardsid-builder/libsidplayfp-hardsid.la
+endif
+
+if EXSID_SUPPORT
+  src_libsidplayfp_la_LIBADD += src/builders/exsid-builder/libsidplayfp-exsid.la \
+  $(FTDI_LIBS)
 endif
 
 src_libsidplayfp_la_CPPFLAGS = $(GCRYPT_CFLAGS) $(AM_CPPFLAGS)
@@ -320,6 +334,20 @@ src/builders/hardsid-builder/hardsid-builder.cpp  \
 src/builders/hardsid-builder/hardsid-emu.h
 endif
 
+
+if EXSID_SUPPORT
+src_builders_exsid_builder_libsidplayfp_exsid_ladir = $(includedir)/sidplayfp/builders
+src_builders_exsid_builder_libsidplayfp_exsid_la_HEADERS = \
+src/builders/exsid-builder/exsid.h
+
+src_builders_exsid_builder_libsidplayfp_exsid_la_SOURCES = \
+src/builders/exsid-builder/exsid-builder.cpp  \
+src/builders/exsid-builder/exsid-emu.cpp \
+src/builders/exsid-builder/exsid-emu.h \
+src/builders/exsid-builder/driver/exSID.c \
+src/builders/exsid-builder/driver/exSID.h
+endif
+
 #=========================================================
 # libstilview
 src_libstilview_la_SOURCES = \
@@ -373,7 +401,9 @@ pkgconfig_DATA = libsidplayfp.pc libstilview.pc
 
 BUILT_SOURCES = \
 $(noinst_DATA:.dat=.h) \
-src/psiddrv.bin
+src/psiddrv.bin \
+src/sidtune/sidplayer1.bin \
+src/sidtune/sidplayer2.bin
 
 #=========================================================
 # Recreate psiddrv.bin, needs xa65
