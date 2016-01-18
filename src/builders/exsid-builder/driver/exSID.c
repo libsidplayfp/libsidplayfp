@@ -2,7 +2,7 @@
 //  exSID.c
 //	A simple I/O library for exSID USB
 //
-//  (C) 2015 Thibaut VARENE
+//  (C) 2015-2016 Thibaut VARENE
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
 //
 //  Builds with -lftdi1
@@ -11,8 +11,8 @@
  * @file
  * exSID USB I/O library
  * @author Thibaut VARENE
- * @date 2015
- * @version 1.0
+ * @date 2015-2016
+ * @version 1.1
  */
 
 #include "exSID.h"
@@ -25,10 +25,10 @@ static long accdrift = 0;
 static long acccycle = 0;
 #endif
 
-static struct ftdi_context *ftdi = 0;
+static struct ftdi_context *ftdi = NULL;
 static struct ftdi_version_info version;
 static int ftdi_status;
-static int_fast32_t clkdrift = 0;	// cycles is uint_fast32_t. Technically, clkdrift should be uint_fast64_t
+static int_fast32_t clkdrift = 0;	// cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t
 									// negative values mean we're lagging, positive mean we're ahead
 									// See it as a number of SID clocks queued to be spent
 
@@ -78,7 +78,9 @@ static inline void _xSread(unsigned char *buff, int size)
 /**
  * Single byte output routine.
  * Fills a static buffer with bytes to send to the device until the buffer is
- * full or a forced write is triggered.
+ * full or a forced write is triggered. Compensates for drift if XS_BDRATE isn't
+ * a multiple of of XS_SIDCLK.
+ * @note No drift compensation is performed on read operations.
  * @param byte byte to send
  * @param flush force write flush if non-zero
  */
@@ -89,7 +91,16 @@ static void _xSoutb(uint8_t byte, int flush)
 
 	bufchar[i++] = (unsigned char)byte;
 
-	if (unlikely(!flush && (i < XS_BUFFSZ)))
+	/* if XS_BDRATE isn't a multiple of XS_SIDCLK we will drift:
+	   every XS_BDRATE/(remainder of XS_SIDCLK/XS_BDRATE) we lose one SID cycle.
+	   Compensate here */
+	if (XS_SIDCLK % XS_BDRATE) {
+		if (!(i % (XS_BDRATE/(XS_SIDCLK%XS_BDRATE))))
+			clkdrift--;
+	}
+
+
+	if (likely(!flush && (i < XS_BUFFSZ)))
 		return;
 
 	_xSwrite(bufchar, i);
@@ -111,8 +122,7 @@ int exSID_init(void)
 	}
 
 	ftdi = ftdi_new();
-	if (ftdi == 0)
-	{
+	if (ftdi == NULL) {
 		error("ftdi_new failed\n");
 		return -1;
 	}
@@ -121,7 +131,7 @@ int exSID_init(void)
 	if (ftdi_status < 0) {
 		error("Failed to open device: %d (%s)\n", ftdi_status, ftdi_get_error_string(ftdi));
 		ftdi_free(ftdi);
-		ftdi = 0;
+		ftdi = NULL;
 		return -1;
 	}
 
@@ -160,7 +170,7 @@ int exSID_init(void)
  */
 void exSID_exit(void)
 {
-	if (ftdi == 0)
+	if (ftdi == NULL)
 		return;
 
 	exSID_reset(0);
@@ -169,7 +179,7 @@ void exSID_exit(void)
 	if ((ftdi_status = ftdi_usb_close(ftdi)) < 0)
 		error("unable to close ftdi device: %d (%s)\n", ftdi_status, ftdi_get_error_string(ftdi));
 	ftdi_free(ftdi);
-	ftdi = 0;
+	ftdi = NULL;
 
 #ifdef	DEBUG
 	printf("mean drift: %d over %ld cycles\n", (accdrift/acccycle), acccycle);
@@ -326,8 +336,8 @@ static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush)
 void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 {
 	static int adj = 0;
-	
-	if (addr > 0x18) {
+
+	if (unlikely(addr > 0x18)) {
 		// FIXME this loses the delay
 		error("Invalid write: %.2hxx\n", addr);
 		return;

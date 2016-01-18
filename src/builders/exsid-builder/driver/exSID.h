@@ -2,7 +2,7 @@
 //  exSID.h
 //	A simple I/O library for exSID USB - header file
 //
-//  (C) 2015 Thibaut VARENE
+//  (C) 2015-2016 Thibaut VARENE
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
 //
 
@@ -16,22 +16,15 @@ extern "C" {
 
 #undef DEBUG
 //#define DEBUG
-#undef	__TARGET_16F88X			///< define if targetting the 16F88X PIC family
 
-#define	XS_VERSION	"1.0"
+#define	XS_VERSION	"1.1"
 
 // CLOCK_FREQ_NTSC = 1022727.14;
 // CLOCK_FREQ_PAL  = 985248.4;
 
-#ifdef	__TARGET_16F88X
-#define	XS_BDRATE	1000000		///< 1Mpbs
-#define	XS_BUFFSZ	1024		///< ~10ms buffer @1Mbps, multiple of 64. Penalty if too big (introduces delay in libsidplay) or too small (controller can't keep up)
-#define XS_ADJMLT	1			///< 1-to-1 cycle adjustement (max resolution: 1 cycle)
-#else
 #define	XS_BDRATE	750000		///< 750kpbs
 #define	XS_BUFFSZ	768			///< ~10ms buffer @750kbps, multiple of 64. Penalty if too big (introduces delay in libsidplay) or too small (controller can't keep up)
 #define	XS_ADJMLT	2			///< 2-to-1 cycle adjustement (max resolution: 2 cycles).
-#endif
 
 #define	XS_SIDCLK	1000000		///< 1MHz (for computation only, currently hardcoded in hardware)
 #define	XS_CYCCHR	XS_SIDCLK/(XS_BDRATE/10)	///< SID cycles between two consecutive chars
