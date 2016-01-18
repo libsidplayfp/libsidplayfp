@@ -22,7 +22,6 @@ AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_builddir)/src/builders/resid-builder \
 -I $(top_builddir)/src/builders/resid-builder/resid \
 -I $(top_builddir)/src \
--I $(top_builddir)/src/sidtune \
 -I $(top_srcdir)/src \
 ${W32_CPPFLAGS} \
 $(FTDI_CFLAGS) \
@@ -32,8 +31,6 @@ $(FTDI_CFLAGS) \
 EXTRA_DIST = \
 docs/mainpage.dox \
 src/psiddrv.a65 \
-src/sidtune/sidplayer1.a65 \
-src/sidtune/sidplayer2.a65 \
 src/builders/residfp-builder/residfp/AUTHORS \
 src/builders/residfp-builder/residfp/COPYING \
 src/builders/residfp-builder/residfp/README \
@@ -160,8 +157,7 @@ src/sidtune/prg.cpp \
 src/sidtune/prg.h \
 src/sidtune/PSID.cpp \
 src/sidtune/PSID.h \
-src/sidtune/sidplayer1.bin \
-src/sidtune/sidplayer2.bin \
+src/sidtune/sidplayer.bin \
 src/sidtune/SidTuneBase.cpp \
 src/sidtune/SidTuneBase.h \
 src/sidtune/SidTuneCfg.h \
@@ -401,9 +397,7 @@ pkgconfig_DATA = libsidplayfp.pc libstilview.pc
 
 BUILT_SOURCES = \
 $(noinst_DATA:.dat=.h) \
-src/psiddrv.bin \
-src/sidtune/sidplayer1.bin \
-src/sidtune/sidplayer2.bin
+src/psiddrv.bin
 
 #=========================================================
 # Recreate psiddrv.bin, needs xa65
