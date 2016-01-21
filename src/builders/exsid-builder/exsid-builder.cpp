@@ -54,7 +54,7 @@ unsigned int exSIDBuilder::create(unsigned int sids)
     unsigned int count = availDevices();
     if (count == 0)
     {
-        m_errorBuffer = "exSID ERROR: No devices found";
+        m_errorBuffer.assign(name()).append(" ERROR: No devices found");
         goto exSIDBuilder_create_error;
     }
 
@@ -83,10 +83,10 @@ unsigned int exSIDBuilder::create(unsigned int sids)
             goto exSIDBuilder_create_error;
         }
     }
-    return count;
 
 exSIDBuilder_create_error:
-    m_status = false;
+    if (count == 0)
+        m_status = false;
     return count;
 }
 
