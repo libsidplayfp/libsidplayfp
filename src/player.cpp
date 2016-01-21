@@ -173,6 +173,12 @@ void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
         s->voice(voice, enable);
 }
 
+void Player::run(unsigned int events)
+{
+    for (int i = 0; i < events; i++)
+        m_c64.getEventScheduler()->clock();
+}
+
 uint_least32_t Player::play(short *buffer, uint_least32_t count)
 {
     // Make sure a tune is loaded
@@ -191,8 +197,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
             // Clock chips and mix into output buffer
             while (m_isPlaying && m_mixer.notFinished())
             {
-                for (int i = 0; i < sidemu::OUTPUTBUFFERSIZE; i++)
-                    m_c64.getEventScheduler()->clock();
+                run(sidemu::OUTPUTBUFFERSIZE);
 
                 m_mixer.clockChips();
                 m_mixer.doMix();
@@ -205,8 +210,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
             int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
             while (m_isPlaying && --size)
             {
-                for (int i = 0; i < sidemu::OUTPUTBUFFERSIZE; i++)
-                    m_c64.getEventScheduler()->clock();
+                run(sidemu::OUTPUTBUFFERSIZE);
 
                 m_mixer.clockChips();
                 m_mixer.resetBufs();
@@ -219,8 +223,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
         while (m_isPlaying && --size)
         {
-            for (int i = 0; i < sidemu::OUTPUTBUFFERSIZE; i++)
-                m_c64.getEventScheduler()->clock();
+            run(sidemu::OUTPUTBUFFERSIZE);
         }
     }
 
