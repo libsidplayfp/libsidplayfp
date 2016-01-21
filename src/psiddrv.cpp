@@ -201,7 +201,7 @@ bool psiddrv::drvReloc()
     reloc_size -= 10;
 
     m_driverAddr   = relocAddr;
-    m_driverLength = (uint_least16_t)reloc_size;
+    m_driverLength = static_cast<uint_least16_t>(reloc_size);
     // Round length to end of page
     m_driverLength += 0xff;
     m_driverLength &= 0xff00;
