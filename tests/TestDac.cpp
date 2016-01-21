@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2014 Leandro Nini
+ *  Copyright (C) 2014-2016 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,31 +31,21 @@ using namespace reSIDfp;
 SUITE(Dac)
 {
 
-void getDac(float dac[], double _2R_div_R, bool term)
+void buildDac(float dac[], ChipModel chipModel)
 {
-    double dacBits[DAC_BITS];
-    Dac::kinkedDac(dacBits, DAC_BITS, _2R_div_R, term);
+    Dac dacBuilder(DAC_BITS);
+    dacBuilder.kinkedDac(chipModel);
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
-        double dacValue = 0.;
-
-        for (unsigned int j = 0; j < DAC_BITS; j++)
-        {
-            if ((i & (1 << j)) != 0)
-            {
-                dacValue += dacBits[j];
-            }
-        }
-
-        dac[i] = static_cast<float>(dacValue);
+        dac[i] = dacBuilder.getOutput(i);
     }
 }
 
-bool isDacLinear(double _2R_div_R, bool term)
+bool isDacLinear(ChipModel chipModel)
 {
     float dac[1 << DAC_BITS];
-    getDac(dac, _2R_div_R, term);
+    buildDac(dac, chipModel);
 
     for (int i = 1; i < (1 << DAC_BITS); i++)
     {
@@ -70,14 +60,14 @@ TEST(TestDac6581)
 {
     // Test the non-linearity of the 6581 DACs
 
-    CHECK(!isDacLinear(2.2, false));
+    CHECK(!isDacLinear(MOS6581));
 }
 
 TEST(TestDac8580)
 {
     // Test the linearity of the 8580 DACs
 
-    CHECK(isDacLinear(2.0, true));
+    CHECK(isDacLinear(MOS8580));
 }
 
 }
