@@ -44,8 +44,7 @@ static inline void _xSwrite(const unsigned char *buff, int size)
 	ftdi_status = ftdi_write_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-		//error(ftdi_get_error_string(ftdi));
-		error("Error ftdi_write_data(%d)\n", ftdi_status);
+        error("Error ftdi_write_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
 		error("ftdi_write_data only wrote %d (of %d) bytes\n",
@@ -65,7 +64,7 @@ static inline void _xSread(unsigned char *buff, int size)
 	ftdi_status = ftdi_read_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-		error("Error ftdi_read_data(%d)\n", ftdi_status);
+        error("Error ftdi_read_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
 		error("ftdi_read_data only read %d (of %d) bytes\n",
