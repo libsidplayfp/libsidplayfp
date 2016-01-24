@@ -391,7 +391,7 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
  * are less than XS_CYCIO apart and leftover delay is <= 7 SID clock cycles.
  * Read result will only be available after a full XS_CYCIO, giving clkdread() the same
  * run time as clkdwrite().
- * @param cycles how many SID clocks to wait before the actual data write.
+ * @param cycles how many SID clocks to wait before the actual data read.
  * @param addr target address.
  * @return data read from address.
  */
