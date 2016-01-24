@@ -337,8 +337,8 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 	static int adj = 0;
 
 	if (unlikely(addr > 0x18)) {
-        dbg("Invalid write: %.2hxx\n", addr);
-        exSID_delay(cycles);
+		dbg("Invalid write: %.2hxx\n", addr);
+		exSID_delay(cycles);
 		return;
 	}
 
@@ -400,8 +400,8 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 	static int adj = 0;
 
 	if ((addr < 0x19) || (addr > 0x1C)) {
-        dbg("Invalid read: %.2hxx\n", addr);
-        exSID_delay(cycles);
+		dbg("Invalid read: %.2hxx\n", addr);
+		exSID_delay(cycles);
 		return 0xFF;
 	}
 
