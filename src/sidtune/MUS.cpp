@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -30,7 +30,15 @@
 #include "sidendian.h"
 #include "sidmemory.h"
 
-#include "sidplayer.bin"
+static const uint8_t sidplayer1[] =
+{
+#  include "sidplayer1.bin"
+};
+
+static const uint8_t sidplayer2[] =
+{
+#  include "sidplayer2.bin"
+};
 
 namespace libsidplayfp
 {
@@ -47,6 +55,12 @@ static const uint_least16_t SIDTUNE_MUS_HLT_CMD = 0x14F;
 
 static const uint_least16_t SIDTUNE_MUS_DATA_ADDR  = 0x0900;
 static const uint_least16_t SIDTUNE_SID2_BASE_ADDR = 0xd500;
+
+const int o65headersize = 27;
+const uint8_t* player1 = sidplayer1 + o65headersize;
+const uint8_t* player2 = sidplayer2 + o65headersize;
+const size_t player1size = sizeof(sidplayer1) - o65headersize;
+const size_t player2size = sizeof(sidplayer2) - o65headersize;
 
 bool detect(const uint8_t* buffer, uint_least32_t bufLen,
                          uint_least32_t& voice3Index)
@@ -100,7 +114,7 @@ bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
     const uint_least32_t mergeLen = musBuf.size() + strBuf.size();
 
     // Sanity check. I do not trust those MUS/STR files around.
-    const uint_least32_t freeSpace = endian_16(sidplayer1[1], sidplayer1[0]) - SIDTUNE_MUS_DATA_ADDR;
+    const uint_least32_t freeSpace = endian_16(player1[1], player1[0]) - SIDTUNE_MUS_DATA_ADDR;
     if ((mergeLen - 4) > freeSpace)
     {
         throw loadError(ERR_SIZE_EXCEEDED);
@@ -120,9 +134,9 @@ bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
 void MUS::installPlayer(sidmemory& mem)
 {
     // Install MUS player #1.
-    uint_least16_t dest = endian_16(sidplayer1[1], sidplayer1[0]);
+    uint_least16_t dest = endian_16(player1[1], player1[0]);
 
-    mem.fillRam(dest, sidplayer1 + 2, sizeof(sidplayer1) - 2);
+    mem.fillRam(dest, player1 + 2, player1size - 2);
     // Point player #1 to data #1.
     mem.writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + 2) & 0xFF);
     mem.writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + 2) >> 8);
@@ -130,8 +144,8 @@ void MUS::installPlayer(sidmemory& mem)
     if (info->getSidChips() > 1)
     {
         // Install MUS player #2.
-        dest = endian_16(sidplayer2[1], sidplayer2[0]);
-        mem.fillRam(dest, sidplayer2 + 2, sizeof(sidplayer2) - 2);
+        dest = endian_16(player2[1], player2[0]);
+        mem.fillRam(dest, player2 + 2, player2size - 2);
         // Point player #2 to data #2.
         mem.writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) & 0xFF);
         mem.writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) >> 8);
