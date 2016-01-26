@@ -336,11 +336,13 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 {
 	static int adj = 0;
 
+#ifdef	DEBUG
 	if (unlikely(addr > 0x18)) {
 		dbg("Invalid write: %.2hxx\n", addr);
 		exSID_delay(cycles);
 		return;
 	}
+#endif
 
 	// actual write will cost XS_CYCIO. Delay for cycles - XS_CYCIO then account for the write
 	clkdrift += cycles;
@@ -399,11 +401,13 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 {
 	static int adj = 0;
 
+#ifdef	DEBUG
 	if (unlikely((addr < 0x19) || (addr > 0x1C))) {
 		dbg("Invalid read: %.2hxx\n", addr);
 		exSID_delay(cycles);
 		return 0xFF;
 	}
+#endif
 
 	// actual read will cost XS_MINDEL. Delay for cycles - XS_MINDEL then account for the read
 	clkdrift += cycles;

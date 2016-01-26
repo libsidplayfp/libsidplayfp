@@ -93,18 +93,20 @@ void exSID::clock()
 
 uint8_t exSID::read(uint_least8_t addr)
 {
-    const unsigned int cycles = delay();
+    if ((addr < 0x19) || (addr > 0x1C))
+        return 0xff;
 
-    //printf("in read, cycles: %d, addr: %hhx\n", cycles, addr);
+    const unsigned int cycles = delay();
 
     return exSID_clkdread(cycles, addr);
 }
 
 void exSID::write(uint_least8_t addr, uint8_t data)
 {
+    if (addr > 0x18)
+        return;
     const unsigned int cycles = delay();
 
-    //printf("in write, cycles: %d, addr: %hhx, data: %hhx\n", cycles, addr, data);
     exSID_clkdwrite(cycles, addr, data);
 }
 
