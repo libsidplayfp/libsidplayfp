@@ -44,7 +44,7 @@ static inline void _xSwrite(const unsigned char *buff, int size)
 	ftdi_status = ftdi_write_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-        error("Error ftdi_write_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
+		error("Error ftdi_write_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
 		error("ftdi_write_data only wrote %d (of %d) bytes\n",
@@ -64,7 +64,7 @@ static inline void _xSread(unsigned char *buff, int size)
 	ftdi_status = ftdi_read_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-        error("Error ftdi_read_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
+	        error("Error ftdi_read_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
 		error("ftdi_read_data only read %d (of %d) bytes\n",
@@ -177,6 +177,7 @@ void exSID_exit(void)
 	ftdi_status = ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 	if ((ftdi_status = ftdi_usb_close(ftdi)) < 0)
 		error("unable to close ftdi device: %d (%s)\n", ftdi_status, ftdi_get_error_string(ftdi));
+
 	ftdi_free(ftdi);
 	ftdi = NULL;
 
@@ -284,7 +285,7 @@ void exSID_polldelay(uint_fast32_t cycles)
 /**
  * Private delay loop.
  * @note will block every time a device write is triggered, blocking time will be
- *       equal to the number of bytes written times XS_CYCCHR.
+ * equal to the number of bytes written times XS_MINDEL.
  * @param cycles how many SID clocks to loop for.
  */
 static inline void _xSdelay(uint_fast32_t cycles)
@@ -321,7 +322,6 @@ static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush)
 {
 	_xSoutb((unsigned char)addr, 0);
 	_xSoutb((unsigned char)data, flush);
-	//dbg("addr: %.2hhx, data: %.2hhx\n", addr, data);
 }
 
 /**
@@ -399,7 +399,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 {
 	static int adj = 0;
 
-	if ((addr < 0x19) || (addr > 0x1C)) {
+	if (unlikely((addr < 0x19) || (addr > 0x1C))) {
 		dbg("Invalid read: %.2hxx\n", addr);
 		exSID_delay(cycles);
 		return 0xFF;
