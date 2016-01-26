@@ -57,6 +57,8 @@ private:
     bool m_locked;
     uint_least8_t m_optimisation;
 
+    bool readflag;
+
 private:
     unsigned int delay();
 

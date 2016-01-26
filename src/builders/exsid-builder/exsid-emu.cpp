@@ -48,7 +48,8 @@ exSID::exSID(sidbuilder *builder) :
     m_instance(sid++),
     m_status(false),
     m_locked(false),
-    m_optimisation(0)
+    m_optimisation(0),
+    readflag(false)
 {
     if (exSID_init() < 0)
         return;
@@ -67,6 +68,7 @@ void exSID::reset(uint8_t volume)
 {
     exSID_reset(volume);
     m_accessClk = 0;
+    readflag = false;
 }
 
 unsigned int exSID::delay()
@@ -95,6 +97,12 @@ uint8_t exSID::read(uint_least8_t addr)
 {
     if ((addr < 0x19) || (addr > 0x1C))
         return 0xff;
+
+    if (!readflag)
+    {
+        printf("WARNING: Read support is limited. This file may not play correctly!\n");
+        readflag = true;
+    }
 
     const unsigned int cycles = delay();
 
