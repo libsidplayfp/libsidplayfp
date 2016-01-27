@@ -16,7 +16,6 @@
  */
 
 #include "exSID.h"
-#include <ftdi.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -27,9 +26,33 @@ static long accdelay = 0;
 static long acccycle = 0;
 #endif
 
-static struct ftdi_context *ftdi = NULL;
-static struct ftdi_version_info version;
 static int ftdi_status;
+#if defined HAVE_FTDI
+ #include <ftdi.h>
+ static struct ftdi_context *ftdi = NULL;
+#elif defined HAVE_FTD2XX
+ #include <ftd2xx.h>
+ // DWORD == unsigned int
+ static FT_HANDLE ftdi = NULL;		// static void *
+ static unsigned int dummysize = 0;	// DWORD in unsigned int
+ #define BITS_8				FT_BITS_8
+ #define STOP_BIT_1			FT_STOP_BITS_1
+ #define NONE				FT_PARITY_NONE
+ #define SIO_DISABLE_FLOW_CTRL		FT_FLOW_NONE
+ #define ftdi_usb_open_desc(a, b, c, d, e) -FT_OpenEx(d, FT_OPEN_BY_DESCRIPTION, &a)
+ #define ftdi_write_data(a, b, c)	-FT_Write(a, (LPVOID)b, c, &dummysize)
+ #define ftdi_read_data(a, b, c)	-FT_Read(a, (LPVOID)b, c, &dummysize)
+ #define ftdi_set_baudrate(a, b)	-FT_SetBaudRate(a, b)
+ #define ftdi_set_line_property(a, b, c, d) -FT_SetDataCharacteristics(a, b, c, d)
+ #define ftdi_setflowctrl(a, b)		-FT_SetFlowControl(a, b, 0, 0)
+ #define ftdi_set_latency_timer(a, b)	-FT_SetLatencyTimer(a, b)
+ #define ftdi_usb_purge_buffers(a)	-FT_Purge(a, FT_PURGE_RX | FT_PURGE_TX)
+ #define ftdi_usb_close(a)		-FT_Close(a)
+ #define ftdi_get_error_string(a)	"error"
+#else
+ #error No known method to access FTDI chip
+#endif
+
 /**
  * cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t though
  * overflow should not happen under normal conditions.
@@ -52,6 +75,9 @@ static inline void _xSwrite(const unsigned char *buff, int size)
 	if (unlikely(ftdi_status < 0)) {
 		error("Error ftdi_write_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
 	}
+#ifdef	HAVE_FTD2XX
+	ftdi_status = dummysize;
+#endif
 	if (unlikely(ftdi_status != size)) {
 		error("ftdi_write_data only wrote %d (of %d) bytes\n",
 			   ftdi_status,
@@ -72,6 +98,9 @@ static inline void _xSread(unsigned char *buff, int size)
 	if (unlikely(ftdi_status < 0)) {
 	        error("Error ftdi_read_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
 	}
+#ifdef	HAVE_FTD2XX
+	ftdi_status = dummysize;
+#endif
 	if (unlikely(ftdi_status != size)) {
 		error("ftdi_read_data only read %d (of %d) bytes\n",
 			   ftdi_status,
@@ -126,16 +155,20 @@ int exSID_init(void)
 		return -1;
 	}
 
+#ifdef	HAVE_FTDI
 	ftdi = ftdi_new();
-	if (ftdi == NULL) {
+	if (!ftdi) {
 		error("ftdi_new failed\n");
 		return -1;
 	}
+#endif
 
 	ftdi_status = ftdi_usb_open_desc(ftdi, 0x0403, 0x6001, "exSIDUSB", NULL);
 	if (ftdi_status < 0) {
 		error("Failed to open device: %d (%s)\n", ftdi_status, ftdi_get_error_string(ftdi));
+#ifdef	HAVE_FTDI
 		ftdi_free(ftdi);
+#endif
 		ftdi = NULL;
 		return -1;
 	}
@@ -163,7 +196,7 @@ int exSID_init(void)
 	exSID_version();
 #endif
 	
-	ftdi_status = ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
+	ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 
 	return 0;
 }
@@ -180,11 +213,14 @@ void exSID_exit(void)
 
 	exSID_reset(0);
 
-	ftdi_status = ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
-	if ((ftdi_status = ftdi_usb_close(ftdi)) < 0)
+	ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
+	ftdi_status = ftdi_usb_close(ftdi);
+	if (ftdi_status < 0)
 		error("unable to close ftdi device: %d (%s)\n", ftdi_status, ftdi_get_error_string(ftdi));
 
+#ifdef	HAVE_FTDI
 	ftdi_free(ftdi);
+#endif
 	ftdi = NULL;
 
 #ifdef	DEBUG

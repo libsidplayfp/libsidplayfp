@@ -14,6 +14,10 @@ extern "C" {
 
 #include <stdint.h>
 
+#ifdef HAVE_CONFIG_H
+#  include "config.h"
+#endif
+
 #undef DEBUG
 //#define DEBUG
 
