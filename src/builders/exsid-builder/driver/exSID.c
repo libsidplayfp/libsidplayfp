@@ -22,15 +22,21 @@
 
 #ifdef	DEBUG
 static long accdrift = 0;
+static long accioops = 0;
+static long accdelay = 0;
 static long acccycle = 0;
 #endif
 
 static struct ftdi_context *ftdi = NULL;
 static struct ftdi_version_info version;
 static int ftdi_status;
-static int_fast32_t clkdrift = 0;	// cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t
-									// negative values mean we're lagging, positive mean we're ahead
-									// See it as a number of SID clocks queued to be spent
+/**
+ * cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t though
+ * overflow should not happen under normal conditions.
+ * negative values mean we're lagging, positive mean we're ahead.
+ * See it as a number of SID clocks queued to be spent.
+ */
+static int_fast32_t clkdrift = 0;
 
 static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
 
@@ -182,8 +188,9 @@ void exSID_exit(void)
 	ftdi = NULL;
 
 #ifdef	DEBUG
-	printf("mean drift: %d over %ld cycles\n", (accdrift/acccycle), acccycle);
-	accdrift = acccycle = 0;
+	printf("mean drift: %d cycles over %ld I/O ops\n", (accdrift/accioops), accioops);
+	printf("time spent in delays: %d%% (approx)\n", (accdelay*100/acccycle));
+	accdrift = accioops = accdelay = acccycle = 0;
 #endif
 
 	clkdrift = 0;
@@ -280,6 +287,11 @@ void exSID_polldelay(uint_fast32_t cycles)
 
 	// deal with remainder
 	exSID_delay(delta);
+
+#ifdef	DEBUG
+	acccycle += (cycles - delta);
+	accdelay += (cycles - delta);
+#endif
 }
 
 /**
@@ -290,6 +302,10 @@ void exSID_polldelay(uint_fast32_t cycles)
  */
 static inline void _xSdelay(uint_fast32_t cycles)
 {
+#ifdef	DEBUG
+	accdelay += cycles;
+#endif
+
 	while (likely(cycles >= XS_MINDEL)) {
 		_xSoutb(XS_AD_IOCTD1, 0);
 		cycles -= XS_MINDEL;
@@ -306,7 +322,11 @@ void exSID_delay(uint_fast32_t cycles)
 {
 	clkdrift += cycles;
 
-	if (unlikely(clkdrift < XS_CYCIO))	// never delay for less than a full write would need
+#ifdef	DEBUG
+	acccycle += cycles;
+#endif
+
+	if (unlikely(clkdrift <= XS_CYCIO))	// never delay for less than a full write would need
 		return;	// too short
 
 	_xSdelay(clkdrift - XS_CYCIO);
@@ -362,8 +382,9 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 	}
 
 #ifdef	DEBUG
+	acccycle += cycles;
 	accdrift += clkdrift;
-	acccycle++;
+	accioops++;
 #endif
 
 	//dbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
@@ -427,8 +448,9 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 	}
 
 #ifdef	DEBUG
+	acccycle += cycles;
 	accdrift += clkdrift;
-	acccycle++;
+	accioops++;
 #endif
 
 	//dbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
