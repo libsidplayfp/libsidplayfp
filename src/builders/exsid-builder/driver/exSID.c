@@ -133,7 +133,6 @@ static void _xSoutb(uint8_t byte, int flush)
 			clkdrift--;
 	}
 
-
 	if (likely(!flush && (i < XS_BUFFSZ)))
 		return;
 
@@ -194,6 +193,8 @@ int exSID_init(void)
 
 #ifdef	DEBUG
 	exSID_version();
+	dbg("XS_CYCCHR: %d, XS_CYCIO: %d, backtick compensation every %d cycle(s)\n",
+		XS_CYCCHR, XS_CYCIO, (XS_SIDCLK % XS_BDRATE) ? (XS_BDRATE/(XS_SIDCLK%XS_BDRATE)) : 0);
 #endif
 	
 	ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
@@ -224,8 +225,8 @@ void exSID_exit(void)
 	ftdi = NULL;
 
 #ifdef	DEBUG
-	printf("mean drift: %d cycles over %ld I/O ops\n", (accdrift/accioops), accioops);
-	printf("time spent in delays: %d%% (approx)\n", (accdelay*100/acccycle));
+	dbg("mean drift: %ld cycles over %ld I/O ops\n", (accdrift/accioops), accioops);
+	dbg("time spent in delays: %ld%% (approx)\n", (accdelay*100/acccycle));
 	accdrift = accioops = accdelay = acccycle = 0;
 #endif
 
@@ -341,7 +342,6 @@ static inline void _xSdelay(uint_fast32_t cycles)
 #ifdef	DEBUG
 	accdelay += cycles;
 #endif
-
 	while (likely(cycles >= XS_MINDEL)) {
 		_xSoutb(XS_AD_IOCTD1, 0);
 		cycles -= XS_MINDEL;
@@ -383,7 +383,7 @@ static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush)
 /**
  * Timed write routine, attempts cycle-accurate writes.
  * This function will be cycle-accurate provided that no two consecutive reads or writes
- * are less than XS_CYCIO apart and the leftover delay is <= 7 SID clock cycles.
+ * are less than XS_CYCIO apart and the leftover delay is <= XS_MAXADJ*XS_ADJMLT SID clock cycles.
  * @param cycles how many SID clocks to wait before the actual data write.
  * @param addr target address.
  * @param data data to write at that address.
@@ -394,7 +394,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (unlikely(addr > 0x18)) {
-		dbg("Invalid write: %.2hxx\n", addr);
+		dbg("Invalid write: %.2hhx\n", addr);
 		exSID_delay(cycles);
 		return;
 	}
@@ -412,14 +412,15 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 		adj = clkdrift % (XS_MAXADJ*XS_ADJMLT+1);	// modulo gives much better results by spreading/evening jitter
 		//adj = (clkdrift < XS_MAXADJ*XS_ADJMLT ? clkdrift : XS_MAXADJ*XS_ADJMLT);
 		adj /= XS_ADJMLT;
-		clkdrift -= adj*XS_ADJMLT;
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
+#ifdef	DEBUG
+		accdrift += (clkdrift - adj*XS_ADJMLT);
+#endif
 		//dbg("adj: %d, addr: %.2hhx, data: %.2hhx\n", adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
 	}
 
 #ifdef	DEBUG
 	acccycle += cycles;
-	accdrift += clkdrift;
 	accioops++;
 #endif
 
@@ -447,7 +448,7 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
 /**
  * Timed read routine, attempts cycle-accurate reads. BLOCKING.
  * This function will be cycle-accurate provided that no two consecutive reads or writes
- * are less than XS_CYCIO apart and leftover delay is <= 7 SID clock cycles.
+ * are less than XS_CYCIO apart and leftover delay is <= XS_MAXADJ*XS_ADJMLT SID clock cycles.
  * Read result will only be available after a full XS_CYCIO, giving clkdread() the same
  * run time as clkdwrite().
  * @param cycles how many SID clocks to wait before the actual data read.
@@ -460,34 +461,38 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (unlikely((addr < 0x19) || (addr > 0x1C))) {
-		dbg("Invalid read: %.2hxx\n", addr);
+		dbg("Invalid read: %.2hhx\n", addr);
 		exSID_delay(cycles);
 		return 0xFF;
 	}
 #endif
 
-	// actual read will cost XS_MINDEL. Delay for cycles - XS_MINDEL then account for the read
+	// actual read will happen after XS_CYCCHR. Delay for cycles - XS_CYCCHR then account for the read
 	clkdrift += cycles;
-	if (clkdrift > XS_MINDEL)
-		_xSdelay(clkdrift - XS_MINDEL);
+	if (clkdrift > XS_CYCCHR)
+		_xSdelay(clkdrift - XS_CYCCHR);
 
-	clkdrift -= XS_MINDEL;	// read is going to consume XS_MINDEL clock ticks
+	clkdrift -= XS_CYCCHR;	// read request is going to consume XS_CYCCHR clock ticks
 
 	// if we are still going to be early, delay actual read by up to XS_MAXADJ ticks
 	if (clkdrift > 0) {
 		adj = clkdrift % (XS_MAXADJ*XS_ADJMLT+1);	// modulo gives much better results by spreading/evening jitter
 		//adj = (clkdrift < XS_MAXADJ*XS_ADJMLT ? clkdrift : XS_MAXADJ*XS_ADJMLT);
 		adj /= XS_ADJMLT;
-		clkdrift -= adj*XS_ADJMLT;
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
+#ifdef	DEBUG
+		accdrift += (clkdrift - adj*XS_ADJMLT);
+#endif
 		//dbg("adj: %d, addr: %.2hhx\n", adj, (char)(addr | (adj << 5)));
 	}
 
 #ifdef	DEBUG
 	acccycle += cycles;
-	accdrift += clkdrift;
 	accioops++;
 #endif
+
+	// after read has completed, at least another XS_CYCCHR will have been spent
+	clkdrift -= XS_CYCCHR;
 
 	//dbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
 	return _exSID_read(addr, 1);
