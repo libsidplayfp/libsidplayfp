@@ -226,7 +226,7 @@ void exSID_exit(void)
 
 #ifdef	DEBUG
 	dbg("mean drift: %ld cycles over %ld I/O ops\n", (accdrift/accioops), accioops);
-	dbg("time spent in delays: %ld%% (approx)\n", (accdelay*100/acccycle));
+	dbg("bandwidth used for I/O ops: %ld%% (approx)\n", 100-(accdelay*100/acccycle));
 	accdrift = accioops = accdelay = acccycle = 0;
 #endif
 
