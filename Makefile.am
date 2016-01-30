@@ -25,6 +25,7 @@ AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_builddir)/src/sidtune \
 -I $(top_srcdir)/src \
 ${W32_CPPFLAGS} \
+$(EXSID_CFLAGS) \
 $(FTDI_CFLAGS) \
 @debug_flags@
 
@@ -205,6 +206,7 @@ endif
 
 if EXSID_SUPPORT
   src_libsidplayfp_la_LIBADD += src/builders/exsid-builder/libsidplayfp-exsid.la \
+  $(EXSID_LIBS) \
   $(FTDI_LIBS)
 endif
 
@@ -336,6 +338,13 @@ endif
 
 
 if EXSID_SUPPORT
+
+if EXSID_DRIVER
+  exsid_src = \
+src/builders/exsid-builder/driver/exSID.c \
+src/builders/exsid-builder/driver/exSID.h
+endif
+
 src_builders_exsid_builder_libsidplayfp_exsid_ladir = $(includedir)/sidplayfp/builders
 src_builders_exsid_builder_libsidplayfp_exsid_la_HEADERS = \
 src/builders/exsid-builder/exsid.h
@@ -344,8 +353,7 @@ src_builders_exsid_builder_libsidplayfp_exsid_la_SOURCES = \
 src/builders/exsid-builder/exsid-builder.cpp  \
 src/builders/exsid-builder/exsid-emu.cpp \
 src/builders/exsid-builder/exsid-emu.h \
-src/builders/exsid-builder/driver/exSID.c \
-src/builders/exsid-builder/driver/exSID.h
+$(exsid_src)
 endif
 
 #=========================================================
