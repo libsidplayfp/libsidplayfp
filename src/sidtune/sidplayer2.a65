@@ -492,10 +492,25 @@ lf3e9	ldy lf01a
 	ldy lf02e
 	stx $dc04
 	sty $dc05
-	lda $d51b
-	sta lf0be
-	lda $d51c
-	sta lf0bf
+
+; replaced unused reads with nops
+;	lda $d51b
+;	sta lf0be
+;	lda $d51c
+;	sta lf0bf
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+
 	ldx #$00
 lf415	lda lf000
 	and lf162,x

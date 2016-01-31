@@ -495,10 +495,25 @@ le3e9	ldy le01a
 	ldy le02e
 	stx $dc04
 	sty $dc05
-	lda $d41b
-	sta le0be
-	lda $d41c
-	sta le0bf
+
+; replaced unused reads with nops
+;	lda $d41b
+;	sta le0be
+;	lda $d41c
+;	sta le0bf
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+
 	ldx #$00
 le415	lda le000
 	and le162,x
