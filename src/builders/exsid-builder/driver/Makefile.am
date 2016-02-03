@@ -18,6 +18,9 @@ exSID.c
 libexsid_la_HEADERS = \
 exSID.h
 
+noinst_HEADERS = \
+	exSID_defs.h
+
 libexsid_ladir = $(includedir)
 
 libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION)

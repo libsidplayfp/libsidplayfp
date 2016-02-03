@@ -1,4 +1,4 @@
-AC_INIT([libexsid], [1.1], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
+AC_INIT([libexsid], [1.2pre], [], [], [http://hacks.slashdirt.org/hw/exsid/#libexsid])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([exSID.c])

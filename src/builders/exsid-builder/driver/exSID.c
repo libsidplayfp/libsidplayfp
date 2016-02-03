@@ -4,18 +4,17 @@
 //
 //  (C) 2015-2016 Thibaut VARENE
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
-//
-//  Builds with -lftdi1
 
 /**
  * @file
  * exSID USB I/O library
  * @author Thibaut VARENE
  * @date 2015-2016
- * @version 1.1
+ * @version 1.2
  */
 
 #include "exSID.h"
+#include "exSID_defs.h"
 #include <stdio.h>
 #include <unistd.h>
 
@@ -128,11 +127,10 @@ static void _xSoutb(uint8_t byte, int flush)
 	/* if XS_BDRATE isn't a multiple of XS_SIDCLK we will drift:
 	   every XS_BDRATE/(remainder of XS_SIDCLK/XS_BDRATE) we lose one SID cycle.
 	   Compensate here */
-	if (XS_SIDCLK % XS_BDRATE) {
-		if (!(i % (XS_BDRATE/(XS_SIDCLK%XS_BDRATE))))
-			clkdrift--;
-	}
-
+#if (XS_SIDCLK % XS_RSBCLK)
+	if (!(i % (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK))))
+		clkdrift--;
+#endif
 	if (likely(!flush && (i < XS_BUFFSZ)))
 		return;
 
@@ -193,8 +191,8 @@ int exSID_init(void)
 
 #ifdef	DEBUG
 	exSID_version();
-	dbg("XS_CYCCHR: %d, XS_CYCIO: %d, backtick compensation every %d cycle(s)\n",
-		XS_CYCCHR, XS_CYCIO, (XS_SIDCLK % XS_BDRATE) ? (XS_BDRATE/(XS_SIDCLK%XS_BDRATE)) : 0);
+	dbg("XS_CYCCHR: %d, XS_CYCIO: %d, compensation every %d cycle(s)\n",
+		XS_CYCCHR, XS_CYCIO, (XS_SIDCLK % XS_RSBCLK) ? (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK)) : 0);
 #endif
 	
 	ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
@@ -225,7 +223,7 @@ void exSID_exit(void)
 	ftdi = NULL;
 
 #ifdef	DEBUG
-	dbg("mean drift: %ld cycles over %ld I/O ops\n", (accdrift/accioops), accioops);
+	dbg("mean jitter: %.1f cycle(s) over %ld I/O ops\n", ((float)accdrift/accioops), accioops);
 	dbg("bandwidth used for I/O ops: %ld%% (approx)\n", 100-(accdelay*100/acccycle));
 	accdrift = accioops = accdelay = acccycle = 0;
 #endif
@@ -256,11 +254,13 @@ void exSID_reset(uint_least8_t volume)
 /**
  * SID chipselect routine.
  * Selects which SID will play the tunes. If neither CHIP0 or CHIP1 is chosen,
- * both SIDs will operate together.
+ * both SIDs will operate together. Accounts for elapsed cycles.
  * @param chip SID selector value, see exSID.h.
  */
-void exSID_chipselect(int chip)
+void exSID_chipselect(exSID_chip_t chip)
 {
+	clkdrift -= XS_CYCCHR;
+
 	if (XS_CS_CHIP0 == chip)
 		_xSoutb(XS_AD_IOCTS0, 0);
 	else if (XS_CS_CHIP1 == chip)
@@ -275,6 +275,7 @@ void exSID_chipselect(int chip)
  * and returns both in the form of a 16bit integer: MSB is an ASCII
  * character representing the hardware revision (e.g. 0x42 = "B"), and LSB
  * is a number representing the firmware version x10 in decimal (e.g. 10 = "1.0").
+ * Does NOT account for elapsed cycles.
  * @return version information as described above.
  */
 uint16_t exSID_version(void)
@@ -313,8 +314,10 @@ void exSID_polldelay(uint_fast32_t cycles)
 
 	//dbg("ldelay: %d, multiple: %d, delta: %d\n", cycles, multiple, delta);
 
+#ifdef	DEBUG
 	if (unlikely((multiple <=0) || (multiple > 255)))
 		error("Wrong delay!\n");
+#endif
 
 	// send delay command and flush queue
 	_exSID_write(XS_AD_IOCTLD, (unsigned char)multiple, 1);
@@ -347,6 +350,9 @@ static inline void _xSdelay(uint_fast32_t cycles)
 		cycles -= XS_MINDEL;
 		clkdrift -= XS_MINDEL;
 	}
+#ifdef	DEBUG
+	accdelay -= cycles;
+#endif
 }
 
 /**
@@ -394,7 +400,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (unlikely(addr > 0x18)) {
-		dbg("Invalid write: %.2hhx\n", addr);
+		error("Invalid write: %.2hhx\n", addr);
 		exSID_delay(cycles);
 		return;
 	}
@@ -407,16 +413,29 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 	clkdrift -= XS_CYCIO;	// write is going to consume XS_CYCIO clock ticks
 
-	// if we are still going to be early, delay actual write by up to XS_MAXADJ ticks
-	if (clkdrift > 0) {
-		adj = clkdrift % (XS_MAXADJ*XS_ADJMLT+1);	// modulo gives much better results by spreading/evening jitter
-		//adj = (clkdrift < XS_MAXADJ*XS_ADJMLT ? clkdrift : XS_MAXADJ*XS_ADJMLT);
+#ifdef	DEBUG
+	if (clkdrift > XS_CYCCHR)
+		error("Impossible drift adjustment! %ld cycles\n", clkdrift);
+	else if (clkdrift < 0)
+		accdrift += clkdrift;
+#endif
+
+	/* if we are still going to be early, delay actual write by up to XS_MAXAD*XS_ADJMLT ticks
+	At this point it is guaranted that clkdrift will be <= XS_MINDEL == XS_CYCCHR. */
+	if (likely(clkdrift >= 0)) {
+		adj = clkdrift % (XS_MAXADJ*XS_ADJMLT+1);
+		/* if XS_MAXADJ*XS_ADJMLT is >= clkdrift, modulo will give the same results
+		   as the correct test:
+		   adj = (clkdrift < XS_MAXADJ*XS_ADJMLT ? clkdrift : XS_MAXADJ*XS_ADJMLT)
+		   but without an extra conditional branch. If is is < clkdrift, then it
+		   seems to provide better results by evening jitter accross writes. So
+		   it's the preferred solution for all cases. */
 		adj /= XS_ADJMLT;
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
 #ifdef	DEBUG
 		accdrift += (clkdrift - adj*XS_ADJMLT);
 #endif
-		//dbg("adj: %d, addr: %.2hhx, data: %.2hhx\n", adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
+		//dbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
 	}
 
 #ifdef	DEBUG
@@ -461,7 +480,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (unlikely((addr < 0x19) || (addr > 0x1C))) {
-		dbg("Invalid read: %.2hhx\n", addr);
+		error("Invalid read: %.2hhx\n", addr);
 		exSID_delay(cycles);
 		return 0xFF;
 	}
@@ -474,16 +493,24 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 	clkdrift -= XS_CYCCHR;	// read request is going to consume XS_CYCCHR clock ticks
 
-	// if we are still going to be early, delay actual read by up to XS_MAXADJ ticks
-	if (clkdrift > 0) {
-		adj = clkdrift % (XS_MAXADJ*XS_ADJMLT+1);	// modulo gives much better results by spreading/evening jitter
-		//adj = (clkdrift < XS_MAXADJ*XS_ADJMLT ? clkdrift : XS_MAXADJ*XS_ADJMLT);
+#ifdef	DEBUG
+	if (clkdrift > XS_CYCCHR)
+		error("Impossible drift adjustment! %ld cycles\n", clkdrift);
+	else if (clkdrift < 0) {
+		accdrift += clkdrift;
+		dbg("Late read request! %ld cycles\n", clkdrift);
+	}
+#endif
+
+	// if we are still going to be early, delay actual read by up to XS_MAXADJ*XS_ADJMLT ticks
+	if (likely(clkdrift >= 0)) {
+		adj = clkdrift % (XS_MAXADJ*XS_ADJMLT+1);	// see clkdwrite()
 		adj /= XS_ADJMLT;
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
 #ifdef	DEBUG
 		accdrift += (clkdrift - adj*XS_ADJMLT);
 #endif
-		//dbg("adj: %d, addr: %.2hhx\n", adj, (char)(addr | (adj << 5)));
+		//dbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
 	}
 
 #ifdef	DEBUG

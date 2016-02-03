@@ -1,6 +1,6 @@
 //
 //  exSID.h
-//	A simple I/O library for exSID USB - header file
+//	A simple I/O library for exSID USB - interface header file
 //
 //  (C) 2015-2016 Thibaut VARENE
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,70 +14,23 @@ extern "C" {
 
 #include <stdint.h>
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+#define	XS_VERSION	"1.2pre"
 
-#undef DEBUG
-//#define DEBUG
+/* Chip selection values for exSID_chipselect() */
+typedef enum {
+	XS_CS_CHIP0,	///< 6581
+	XS_CS_CHIP1,	///< 8580
+	XS_CS_BOTH,
+} exSID_chip_t;
 
-#define	XS_VERSION	"1.1"
-
-// CLOCK_FREQ_NTSC = 1022727.14;
-// CLOCK_FREQ_PAL  = 985248.4;
-
-#define	XS_BDRATE	750000		///< 750kpbs
-#define	XS_BUFFSZ	768		///< ~10ms buffer @750kbps, multiple of 64. Penalty if too big (introduces delay in libsidplay) or too small (controller can't keep up)
-#define	XS_ADJMLT	2		///< 2-to-1 cycle adjustement (max resolution: 2 cycles).
-
-#define	XS_SIDCLK	1000000		///< 1MHz (for computation only, currently hardcoded in hardware)
-#define XS_RSBCLK	(XS_BDRATE/10)	///< RS232 byte clock. Each RS232 byte is 10 bits long due to start and stop bits
-#define	XS_CYCCHR	XS_SIDCLK/(XS_RSBCLK)	///< SID cycles between two consecutive chars
-//#define	XS_CYCCHR	((XS_SIDCLK+XS_RSBCLK-1)/XS_RSBCLK)
-#define XS_USBLAT	2		///< FTDI latency: 2-255ms in 1ms increments
-
-#define XS_MINDEL	(XS_CYCCHR)	///< Smallest possible delay (with IOCTD1).
-#define	XS_CYCIO	(2*XS_CYCCHR)	///< minimum cycles between two consecutive I/Os
-#define	XS_MAXADJ	7		///< maximum post write clock adjustment: must fit on 3 bits
-
-/* IOCTLS */
-#define XS_AD_IOCTD1	0x9D	///< shortest delay (XS_MINDEL SID cycles)
-#define	XS_AD_IOCTLD	0x9E	///< polled delay, amount of SID cycles to wait must be given in data
-
-#define	XS_AD_IOCTS0	0xBD	///< select chip 0
-#define XS_AD_IOCTS1	0xBE	///< select chip 1
-#define XS_AD_IOCTSB	0xBF	///< select both (invalid for reads, only chip 0 will be read from)
-
-#define	XS_AD_IOCTFV	0xFD	///< Firmware version query
-#define	XS_AD_IOCTHV	0xFE	///< Hardware version query
-#define XS_AD_IOCTRS	0xFF	///< SID reset
-
-#define	XS_CS_CHIP0	0	///< 6581
-#define	XS_CS_CHIP1	1	///< 8580
-#define	XS_CS_BOTH	2
-
-#ifdef DEBUG
- #define dbg(format, ...)	printf("(%s) " format, __func__, ## __VA_ARGS__)
-#else
- #define dbg(format, ...)	/* nothing */
-#endif
-
-#define	error(format, ...)	printf("(%s) ERROR " format, __func__, ## __VA_ARGS__)
-
-#ifdef C_HAS_BUILTIN_EXPECT
- #define likely(x)       __builtin_expect(!!(x), 1)
- #define unlikely(x)     __builtin_expect(!!(x), 0)
-#else
- #define likely(x)      (x)
- #define unlikely(x)    (x)
-#endif
+exSID_chip_t exSID_chip;
 
 // public interface
 int exSID_init(void);
 void exSID_exit(void);
 void exSID_reset(uint_least8_t volume);
 uint16_t exSID_version(void);
-void exSID_chipselect(int chip);
+void exSID_chipselect(exSID_chip_t chip);
 void exSID_delay(uint_fast32_t cycles);
 void exSID_polldelay(uint_fast32_t cycles);
 void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data);
