@@ -20,7 +20,11 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "driver/exSID.h"
+#ifdef HAVE_EXSID
+#  include <exSID.h>
+#else
+#  include "driver/exSID.h"
+#endif
 
 namespace libsidplayfp
 {

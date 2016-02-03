@@ -257,7 +257,7 @@ AC_SUBST(LIBSTILVIEWVERSION)
 # exSID supoort requires either libexsid or libfdti1
 PKG_CHECK_MODULES([EXSID],
 	[libexsid >= 1.0],
-	[],
+	[AC_DEFINE([HAVE_EXSID], 1, [Define to 1 if you have libexsid (-lexsid).])],
 	[AC_MSG_WARN([$EXSID_PKG_ERRORS])
 	PKG_CHECK_MODULES([FTDI],
 		[libftdi1 >= 1.0],
