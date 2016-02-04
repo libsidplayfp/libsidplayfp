@@ -17,20 +17,18 @@ extern "C" {
 #define	XS_VERSION	"1.2pre"
 
 /* Chip selection values for exSID_chipselect() */
-typedef enum {
+enum {
 	XS_CS_CHIP0,	///< 6581
 	XS_CS_CHIP1,	///< 8580
 	XS_CS_BOTH,
-} exSID_chip_t;
-
-exSID_chip_t exSID_chip;
+};
 
 // public interface
 int exSID_init(void);
 void exSID_exit(void);
 void exSID_reset(uint_least8_t volume);
 uint16_t exSID_hwversion(void);
-void exSID_chipselect(exSID_chip_t chip);
+void exSID_chipselect(int chip);
 void exSID_delay(uint_fast32_t cycles);
 void exSID_polldelay(uint_fast32_t cycles);
 void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data);

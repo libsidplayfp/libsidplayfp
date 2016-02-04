@@ -258,7 +258,7 @@ void exSID_reset(uint_least8_t volume)
  * both SIDs will operate together. Accounts for elapsed cycles.
  * @param chip SID selector value, see exSID.h.
  */
-void exSID_chipselect(exSID_chip_t chip)
+void exSID_chipselect(int chip)
 {
 	clkdrift -= XS_CYCCHR;
 

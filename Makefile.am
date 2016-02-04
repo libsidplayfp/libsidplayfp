@@ -342,7 +342,8 @@ if EXSID_SUPPORT
 if EXSID_DRIVER
   exsid_src = \
 src/builders/exsid-builder/driver/exSID.c \
-src/builders/exsid-builder/driver/exSID.h
+src/builders/exsid-builder/driver/exSID.h \
+src/builders/exsid-builder/driver/exSID_defs.h
 endif
 
 src_builders_exsid_builder_libsidplayfp_exsid_ladir = $(includedir)/sidplayfp/builders
