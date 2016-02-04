@@ -23,7 +23,7 @@ noinst_HEADERS = \
 
 libexsid_ladir = $(includedir)
 
-libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION)
+libexsid_la_LDFLAGS = $(FTDI_LIBS) -version-info $(LIBEXSIDVERSION)
 
 #=========================================================
 
