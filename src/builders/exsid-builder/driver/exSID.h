@@ -29,7 +29,7 @@ exSID_chip_t exSID_chip;
 int exSID_init(void);
 void exSID_exit(void);
 void exSID_reset(uint_least8_t volume);
-uint16_t exSID_version(void);
+uint16_t exSID_hwversion(void);
 void exSID_chipselect(exSID_chip_t chip);
 void exSID_delay(uint_fast32_t cycles);
 void exSID_polldelay(uint_fast32_t cycles);

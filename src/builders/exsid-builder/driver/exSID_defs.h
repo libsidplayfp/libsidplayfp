@@ -24,20 +24,20 @@ extern "C" {
    will cause the device to operate unpredictably or not at all. */
 
 #if 0
-#define	XS_BDRATE	1000000		///< 1Mpbs
-#define	XS_BUFFSZ	1024		///< ~10ms buffer @1Mbps, multiple of 64. Penalty if too big (introduces delay in libsidplay) or too small (controller can't keep up)
-#define	XS_ADJMLT	2		///< 2-to-1 cycle adjustement (max resolution: 2 cycles).
+#define	XS_BDRATE	2000000		///< 2Mpbs
+#define	XS_ADJMLT	1		///< 1-to-1 cycle adjustement (max resolution: 1 cycle).
 #else
 #define	XS_BDRATE	750000		///< 750kpbs
-#define	XS_BUFFSZ	768		///< ~10ms buffer @750kbps, multiple of 64. Penalty if too big (introduces delay in libsidplay) or too small (controller can't keep up)
 #define	XS_ADJMLT	2		///< 2-to-1 cycle adjustement (max resolution: 2 cycles).
 #endif
 
+#define	XS_BUFFMS	10		///< ~10ms buffer seems to give best results. Penalty if too big (introduces delay in libsidplay) or too small (controller can't keep up)
 #define	XS_SIDCLK	1000000		///< 1MHz (for computation only, currently hardcoded in hardware)
 #define XS_RSBCLK	(XS_BDRATE/10)	///< RS232 byte clock. Each RS232 byte is 10 bits long due to start and stop bits
 #define	XS_CYCCHR	(XS_SIDCLK/XS_RSBCLK)	///< SID cycles between two consecutive chars
 //#define	XS_CYCCHR	((XS_SIDCLK+XS_RSBCLK-1)/XS_RSBCLK)	// ceiling
-#define XS_USBLAT	2		///< FTDI latency: 2-255ms in 1ms increments
+#define XS_USBLAT	1		///< FTDI latency: 1-255ms in 1ms increments
+#define	XS_BUFFSZ	((((XS_RSBCLK/1000)*XS_BUFFMS)/62)*62)	///< Must be multiple of _62_ or USB won't be happy.
 
 #define XS_MINDEL	(XS_CYCCHR)	///< Smallest possible delay (with IOCTD1).
 #define	XS_CYCIO	(2*XS_CYCCHR)	///< minimum cycles between two consecutive I/Os

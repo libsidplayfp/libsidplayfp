@@ -175,11 +175,11 @@ int exSID_init(void)
 
 	ftdi_status = ftdi_set_baudrate(ftdi, XS_BDRATE);
 	if (ftdi_status < 0)
-		error("BR error\n");
+		error("SBR error\n");
 
 	ftdi_status = ftdi_set_line_property(ftdi, BITS_8 , STOP_BIT_1, NONE);
 	if (ftdi_status < 0)
-		error("SDC error\n");
+		error("SLP error\n");
 
 	ftdi_status = ftdi_setflowctrl(ftdi, SIO_DISABLE_FLOW_CTRL);
 	if (ftdi_status < 0)
@@ -190,7 +190,8 @@ int exSID_init(void)
 		error("SLT error\n");
 
 #ifdef	DEBUG
-	exSID_version();
+	exSID_hwversion();
+	dbg("XS_BDRATE: %dkpbs, XS_BUFFSZ: %d bytes\n", XS_BDRATE/1000, XS_BUFFSZ);
 	dbg("XS_CYCCHR: %d, XS_CYCIO: %d, compensation every %d cycle(s)\n",
 		XS_CYCCHR, XS_CYCIO, (XS_SIDCLK % XS_RSBCLK) ? (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK)) : 0);
 #endif
@@ -244,8 +245,8 @@ void exSID_reset(uint_least8_t volume)
 {
 	dbg("rvol: %hhx\n", volume);
 
-	_xSoutb(XS_AD_IOCTRS, 0);
-	_exSID_write(0x18, volume, 1);
+	_xSoutb(XS_AD_IOCTRS, 0);	// this will take more than XS_CYCCHR
+	_exSID_write(0x18, volume, 1);	// this only needs 2 bytes which matches the input buffer of the PIC so all is well
 
 	clkdrift = 0;
 	usleep(1000);	// sleep for 1ms
@@ -278,7 +279,7 @@ void exSID_chipselect(exSID_chip_t chip)
  * Does NOT account for elapsed cycles.
  * @return version information as described above.
  */
-uint16_t exSID_version(void)
+uint16_t exSID_hwversion(void)
 {
 	unsigned char inbuf[2];
 	uint16_t out = 0;
