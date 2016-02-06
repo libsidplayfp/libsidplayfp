@@ -59,6 +59,8 @@ private:
 
     bool readflag;
 
+    uint8_t busValue;
+
 private:
     unsigned int delay();
 
