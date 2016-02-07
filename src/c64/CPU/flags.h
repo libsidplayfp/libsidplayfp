@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -29,11 +29,11 @@ namespace libsidplayfp
 {
 
 /**
- * Processor status flag.
+ * Processor Status Register
  */
 class Flags
 {
-public:
+private:
     bool C; ///< Carry
     bool Z; ///< Zero
     bool I; ///< Interrupt disabled
@@ -43,7 +43,7 @@ public:
     bool N; ///< Negative
 
 public:
-    void reset()
+    inline void reset()
     {
         C = Z = I = D = V = N = false;
         B = true;
@@ -54,7 +54,7 @@ public:
      *
      * @param value to set flags from
      */
-    void setNZ(uint8_t value)
+    inline void setNZ(uint8_t value)
     {
         Z = value == 0;
         N = value & 0x80;
@@ -63,7 +63,7 @@ public:
     /**
      * Get status register value.
      */
-    uint8_t get()
+    inline uint8_t get()
     {
         uint8_t sr = 0x20;
 
@@ -81,7 +81,7 @@ public:
     /**
      * Set status register value.
      */
-    void set(uint8_t sr)
+    inline void set(uint8_t sr)
     {
         C = sr & 0x01;
         Z = sr & 0x02;
@@ -91,6 +91,22 @@ public:
         V = sr & 0x40;
         N = sr & 0x80;
     }
+
+    inline bool getN() const { return N; }
+    inline bool getC() const { return C; }
+    inline bool getD() const { return D; }
+    inline bool getZ() const { return Z; }
+    inline bool getV() const { return V; }
+    inline bool getI() const { return I; }
+    inline bool getB() const { return B; }
+
+    inline void setN(bool f) { N = f; }
+    inline void setC(bool f) { C = f; }
+    inline void setD(bool f) { D = f; }
+    inline void setZ(bool f) { Z = f; }
+    inline void setV(bool f) { V = f; }
+    inline void setI(bool f) { I = f; }
+    inline void setB(bool f) { B = f; }
 };
 
 }
