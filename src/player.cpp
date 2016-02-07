@@ -498,9 +498,10 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                 const SidConfig::sid_model_t userModel = getSidModel(tuneInfo->sidModel(i+1), defaultModel, forced);
 
                 sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
-
-                if (s == nullptr)
+                if (!builder->getStatus())
+                {
                     throw configError(builder->error());
+                }
 
                 if (!m_c64.addExtraSid(s, extraSidAddresses[i]))
                     throw configError(ERR_UNSUPPORTED_SID_ADDR);
