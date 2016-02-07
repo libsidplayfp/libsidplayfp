@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -39,15 +39,24 @@ namespace reSIDfp
 
 /**
  * Bus value stays alive for some time after each operation.
+ * Values differs between chip models, the timings used here
+ * are taken from VICE [1].
+ * See also the discussion "How do I reliably detect 6581/8580 sid?" on CSDb [2].
  *
- * This values has been adjusted empirically according to the discussion
- * "How do I reliably detect 6581/8580 sid?" on CSDb [1].
+ *   Results from real C64 (testprogs/SID/bitfade/delayfrq0.prg):
  *
- * [1]: http://noname.c64.org/csdb/forums/?roomid=11&topicid=29025&showallposts=1
+ *   (new SID) (250469/8580R5) (250469/8580R5)
+ *   delayfrq0    ~7a000        ~108000
+ *
+ *   (old SID) (250407/6581)
+ *   delayfrq0    ~01d00
+ *
+ * [1]: http://sourceforge.net/p/vice-emu/patches/99/
+ * [2]: http://noname.c64.org/csdb/forums/?roomid=11&topicid=29025&showallposts=1
  */
-//@{
-const int BUS_TTL_6581 = 0x1000;
-const int BUS_TTL_8580 = 0xa2000;
+ //@{
+int constexpr BUS_TTL_6581 = 0x01d00;
+int constexpr BUS_TTL_8580 = 0xa2000;
 //@}
 
 SID::SID() :
