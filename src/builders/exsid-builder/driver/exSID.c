@@ -15,6 +15,7 @@
 
 #include "exSID.h"
 #include "exSID_defs.h"
+#include "exSID_ftdiwrap.h"
 #include <stdio.h>
 #include <unistd.h>
 
@@ -26,31 +27,7 @@ static long acccycle = 0;
 #endif
 
 static int ftdi_status;
-#if defined HAVE_FTDI
- #include <ftdi.h>
- static struct ftdi_context *ftdi = NULL;
-#elif defined HAVE_FTD2XX
- #include <ftd2xx.h>
- // DWORD == unsigned int
- static FT_HANDLE ftdi = NULL;		// static void *
- static unsigned int dummysize = 0;	// DWORD in unsigned int
- #define BITS_8				FT_BITS_8
- #define STOP_BIT_1			FT_STOP_BITS_1
- #define NONE				FT_PARITY_NONE
- #define SIO_DISABLE_FLOW_CTRL		FT_FLOW_NONE
- #define ftdi_usb_open_desc(a, b, c, d, e) -FT_OpenEx(d, FT_OPEN_BY_DESCRIPTION, &a)
- #define ftdi_write_data(a, b, c)	-FT_Write(a, (LPVOID)b, c, &dummysize)
- #define ftdi_read_data(a, b, c)	-FT_Read(a, (LPVOID)b, c, &dummysize)
- #define ftdi_set_baudrate(a, b)	-FT_SetBaudRate(a, b)
- #define ftdi_set_line_property(a, b, c, d) -FT_SetDataCharacteristics(a, b, c, d)
- #define ftdi_setflowctrl(a, b)		-FT_SetFlowControl(a, b, 0, 0)
- #define ftdi_set_latency_timer(a, b)	-FT_SetLatencyTimer(a, b)
- #define ftdi_usb_purge_buffers(a)	-FT_Purge(a, FT_PURGE_RX | FT_PURGE_TX)
- #define ftdi_usb_close(a)		-FT_Close(a)
- #define ftdi_get_error_string(a)	"error"
-#else
- #error No known method to access FTDI chip
-#endif
+static void *ftdi = NULL;
 
 /**
  * cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t though
@@ -69,16 +46,13 @@ static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
  */
 static inline void _xSwrite(const unsigned char *buff, int size)
 {
-	ftdi_status = ftdi_write_data(ftdi, buff, size);
+	ftdi_status = xSfw_write_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-		error("Error ftdi_write_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
+		xserror("Error ftdi_write_data(%d): %s\n", ftdi_status, xSfw_get_error_string(ftdi));
 	}
-#ifdef	HAVE_FTD2XX
-	ftdi_status = dummysize;
-#endif
 	if (unlikely(ftdi_status != size)) {
-		error("ftdi_write_data only wrote %d (of %d) bytes\n",
+		xserror("ftdi_write_data only wrote %d (of %d) bytes\n",
 			   ftdi_status,
 			   size);
 	}
@@ -92,16 +66,13 @@ static inline void _xSwrite(const unsigned char *buff, int size)
  */
 static inline void _xSread(unsigned char *buff, int size)
 {
-	ftdi_status = ftdi_read_data(ftdi, buff, size);
+	ftdi_status = xSfw_read_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-	        error("Error ftdi_read_data(%d): %s\n", ftdi_status, ftdi_get_error_string(ftdi));
+	        xserror("Error ftdi_read_data(%d): %s\n", ftdi_status, xSfw_get_error_string(ftdi));
 	}
-#ifdef	HAVE_FTD2XX
-	ftdi_status = dummysize;
-#endif
 	if (unlikely(ftdi_status != size)) {
-		error("ftdi_read_data only read %d (of %d) bytes\n",
+		xserror("ftdi_read_data only read %d (of %d) bytes\n",
 			   ftdi_status,
 			   size);
 	}
@@ -148,55 +119,49 @@ static void _xSoutb(uint8_t byte, int flush)
 int exSID_init(void)
 {
 	if (ftdi) {
-		error("Device already open!");
+		xserror("Device already open!\n");
 		return -1;
 	}
 
-#ifdef	HAVE_FTDI
-	ftdi = ftdi_new();
-	if (!ftdi) {
-		error("ftdi_new failed\n");
+	if (xSfw_dlopen()) {
+		xserror("dl error\n");
 		return -1;
 	}
-#endif
 
-	ftdi_status = ftdi_usb_open_desc(ftdi, 0x0403, 0x6001, "exSIDUSB", NULL);
+	if (xSfw_new) {
+		ftdi = xSfw_new();
+		if (!ftdi) {
+			xserror("ftdi_new failed\n");
+			return -1;
+		}
+	}
+
+	ftdi_status = xSfw_usb_open_desc(&ftdi, XS_USBVID, XS_USBPID, XS_USBDSC, NULL);
 	if (ftdi_status < 0) {
-		error("Failed to open device: %d (%s)\n", ftdi_status, ftdi_get_error_string(ftdi));
-#ifdef	HAVE_FTDI
-		ftdi_free(ftdi);
-#endif
+		xserror("Failed to open device: %d (%s)\n", ftdi_status, xSfw_get_error_string(ftdi));
+		if (xSfw_free)
+			xSfw_free(ftdi);
 		ftdi = NULL;
+		return -1;
+	}
+	ftdi_status = xSfw_usb_setup(ftdi, XS_BDRATE, XS_USBLAT);
+	if (ftdi_status < 0) {
+		xserror("Failed to setup device\n");
 		return -1;
 	}
 
 	// success - device with device description "exSIDUSB" is open
-	dbg("Device opened\n");
+	xsdbg("Device opened\n");
 
-	ftdi_status = ftdi_set_baudrate(ftdi, XS_BDRATE);
-	if (ftdi_status < 0)
-		error("SBR error\n");
-
-	ftdi_status = ftdi_set_line_property(ftdi, BITS_8 , STOP_BIT_1, NONE);
-	if (ftdi_status < 0)
-		error("SLP error\n");
-
-	ftdi_status = ftdi_setflowctrl(ftdi, SIO_DISABLE_FLOW_CTRL);
-	if (ftdi_status < 0)
-		error("SFC error\n");
-
-	ftdi_status = ftdi_set_latency_timer(ftdi, XS_USBLAT);
-	if (ftdi_status < 0)
-		error("SLT error\n");
 
 #ifdef	DEBUG
 	exSID_hwversion();
-	dbg("XS_BDRATE: %dkpbs, XS_BUFFSZ: %d bytes\n", XS_BDRATE/1000, XS_BUFFSZ);
-	dbg("XS_CYCCHR: %d, XS_CYCIO: %d, compensation every %d cycle(s)\n",
+	xsdbg("XS_BDRATE: %dkpbs, XS_BUFFSZ: %d bytes\n", XS_BDRATE/1000, XS_BUFFSZ);
+	xsdbg("XS_CYCCHR: %d, XS_CYCIO: %d, compensation every %d cycle(s)\n",
 		XS_CYCCHR, XS_CYCIO, (XS_SIDCLK % XS_RSBCLK) ? (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK)) : 0);
 #endif
 	
-	ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
+	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 
 	return 0;
 }
@@ -213,23 +178,23 @@ void exSID_exit(void)
 
 	exSID_reset(0);
 
-	ftdi_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
-	ftdi_status = ftdi_usb_close(ftdi);
+	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
+	ftdi_status = xSfw_usb_close(ftdi);
 	if (ftdi_status < 0)
-		error("unable to close ftdi device: %d (%s)\n", ftdi_status, ftdi_get_error_string(ftdi));
+		xserror("unable to close ftdi device: %d (%s)\n", ftdi_status, xSfw_get_error_string(ftdi));
 
-#ifdef	HAVE_FTDI
-	ftdi_free(ftdi);
-#endif
+	if (xSfw_free)
+		xSfw_free(ftdi);
 	ftdi = NULL;
 
 #ifdef	DEBUG
-	dbg("mean jitter: %.1f cycle(s) over %ld I/O ops\n", ((float)accdrift/accioops), accioops);
-	dbg("bandwidth used for I/O ops: %ld%% (approx)\n", 100-(accdelay*100/acccycle));
+	xsdbg("mean jitter: %.1f cycle(s) over %ld I/O ops\n", ((float)accdrift/accioops), accioops);
+	xsdbg("bandwidth used for I/O ops: %ld%% (approx)\n", 100-(accdelay*100/acccycle));
 	accdrift = accioops = accdelay = acccycle = 0;
 #endif
 
 	clkdrift = 0;
+	xSfw_dlclose();
 }
 
 
@@ -243,7 +208,7 @@ void exSID_exit(void)
  */
 void exSID_reset(uint_least8_t volume)
 {
-	dbg("rvol: %hhx\n", volume);
+	xsdbg("rvol: %hhx\n", volume);
 
 	_xSoutb(XS_AD_IOCTRS, 0);	// this will take more than XS_CYCCHR
 	_exSID_write(0x18, volume, 1);	// this only needs 2 bytes which matches the input buffer of the PIC so all is well
@@ -289,7 +254,7 @@ uint16_t exSID_hwversion(void)
 	_xSread(inbuf, 2);
 	out = inbuf[0] << 8 | inbuf[1];	// ensure proper order regardless of endianness
 
-	dbg("HV: %c, FV: %hhd\n", inbuf[0], inbuf[1]);
+	xsdbg("HV: %c, FV: %hhd\n", inbuf[0], inbuf[1]);
 
 	return out;
 }
@@ -313,11 +278,11 @@ void exSID_polldelay(uint_fast32_t cycles)
 	delta = multiple % SBPDMULT;
 	multiple /= SBPDMULT;
 
-	//dbg("ldelay: %d, multiple: %d, delta: %d\n", cycles, multiple, delta);
+	//xsdbg("ldelay: %d, multiple: %d, delta: %d\n", cycles, multiple, delta);
 
 #ifdef	DEBUG
 	if (unlikely((multiple <=0) || (multiple > 255)))
-		error("Wrong delay!\n");
+		xserror("Wrong delay!\n");
 #endif
 
 	// send delay command and flush queue
@@ -401,7 +366,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (unlikely(addr > 0x18)) {
-		error("Invalid write: %.2hhx\n", addr);
+		xserror("Invalid write: %.2hhx\n", addr);
 		exSID_delay(cycles);
 		return;
 	}
@@ -416,7 +381,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (clkdrift > XS_CYCCHR)
-		error("Impossible drift adjustment! %ld cycles\n", clkdrift);
+		xserror("Impossible drift adjustment! %d cycles\n", clkdrift);
 	else if (clkdrift < 0)
 		accdrift += clkdrift;
 #endif
@@ -436,7 +401,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 #ifdef	DEBUG
 		accdrift += (clkdrift - adj*XS_ADJMLT);
 #endif
-		//dbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
+		//xsdbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
 	}
 
 #ifdef	DEBUG
@@ -444,7 +409,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 	accioops++;
 #endif
 
-	//dbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
+	//xsdbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
 	_exSID_write(addr, data, 0);
 }
 
@@ -461,7 +426,7 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
 	_xSoutb(addr, flush);	// XXX
 	_xSread(&data, flush);	// blocking
 
-	dbg("addr: %.2hhx, data: %.2hhx\n", addr, data);
+	xsdbg("addr: %.2hhx, data: %.2hhx\n", addr, data);
 	return data;
 }
 
@@ -481,7 +446,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (unlikely((addr < 0x19) || (addr > 0x1C))) {
-		error("Invalid read: %.2hhx\n", addr);
+		xserror("Invalid read: %.2hhx\n", addr);
 		exSID_delay(cycles);
 		return 0xFF;
 	}
@@ -496,10 +461,10 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (clkdrift > XS_CYCCHR)
-		error("Impossible drift adjustment! %ld cycles\n", clkdrift);
+		xserror("Impossible drift adjustment! %d cycles\n", clkdrift);
 	else if (clkdrift < 0) {
 		accdrift += clkdrift;
-		dbg("Late read request! %ld cycles\n", clkdrift);
+		xsdbg("Late read request! %d cycles\n", clkdrift);
 	}
 #endif
 
@@ -511,7 +476,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 #ifdef	DEBUG
 		accdrift += (clkdrift - adj*XS_ADJMLT);
 #endif
-		//dbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
+		//xsdbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
 	}
 
 #ifdef	DEBUG
@@ -522,6 +487,6 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 	// after read has completed, at least another XS_CYCCHR will have been spent
 	clkdrift -= XS_CYCCHR;
 
-	//dbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
+	//xsdbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
 	return _exSID_read(addr, 1);
 }

@@ -24,25 +24,23 @@ AC_SUBST([debug_flags])
 
 
 # check for libraries
-AC_ARG_WITH([ftd2xx],
-    AS_HELP_STRING([--with-ftd2xx], [Enable use of ftd2xx]))
+dnl The dlopen() function is in the C library for *BSD and in
+dnl libdl on GLIBC-based systems
+AC_SEARCH_LIBS([dlopen], [dl dld], [], [
+  AC_MSG_ERROR([unable to find the dlopen() function])
+])
 
-AS_IF([test "x$with_ftd2xx" = "xyes"],
-      [AC_CHECK_HEADERS([ftd2xx.h])
-	AS_IF(
-		[test "x${ac_cv_header_ftd2xx_h}" = xyes],
-		AC_CHECK_LIB([ftd2xx], [FT_Open])
-	)]
-)
+AC_CHECK_HEADERS([ftd2xx.h],
+	[AC_DEFINE([HAVE_FTD2XX], 1, [Define to 1 if you have ftd2xx.h])],
+	[AC_MSG_WARN([ftd2xx.h not found, support will not be available])]
+	)
 
-AS_IF([test "x$ac_cv_lib_ftd2xx_FT_Open" = "xyes"],
-	[AC_DEFINE([HAVE_FTD2XX], 1, [Define to 1 if you have libftd2xx (-lftd2xx).])],
-	[PKG_CHECK_MODULES([FTDI],
+# XXX TODO: I only want the CFLAGS here, not the LDFLAGS/LIBS
+PKG_CHECK_MODULES([FTDI],
 		[libftdi1 >= 1.0],
-		[AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have libftdi1 (-lftdi1).])],
-		[AC_MSG_WARN([$FTDI_PKG_ERRORS])]
-	)]
-)
+		[AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have ftdi.h])],
+		[AC_MSG_WARN([$FTDI_PKG_ERRORS] [- support will not be available])]
+	)
 
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
   [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
@@ -50,7 +48,7 @@ AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
 )
 
 AS_IF([test "$exsid_cv_builtin_expect" = yes],
-  [AC_DEFINE([C_HAS_BUILTIN_EXPECT], 1, [Define to 1 if you have builtin_expect.])]
+  [AC_DEFINE([HAVE_BUILTIN_EXPECT], 1, [Define to 1 if you have builtin_expect.])]
 )
 
 

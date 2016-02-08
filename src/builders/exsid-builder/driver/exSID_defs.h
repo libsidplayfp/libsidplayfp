@@ -8,9 +8,6 @@
 
 #ifndef exSID_defs_h
 #define exSID_defs_h
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -55,16 +52,19 @@ extern "C" {
 #define	XS_AD_IOCTHV	0xFE	///< Hardware version query
 #define XS_AD_IOCTRS	0xFF	///< SID reset
 
+#define	XS_USBVID	0x0403
+#define XS_USBPID	0x6001
+#define XS_USBDSC	"exSID USB"
 
 #ifdef DEBUG
- #define dbg(format, ...)       printf("(%s) " format, __func__, ## __VA_ARGS__)
+ #define xsdbg(format, ...)       printf("(%s) " format, __func__, ## __VA_ARGS__)
 #else
- #define dbg(format, ...)       /* nothing */
+ #define xsdbg(format, ...)       /* nothing */
 #endif
 
-#define error(format, ...)      printf("(%s) ERROR " format, __func__, ## __VA_ARGS__)
+#define xserror(format, ...)      printf("(%s) ERROR " format, __func__, ## __VA_ARGS__)
 
-#ifdef C_HAS_BUILTIN_EXPECT
+#ifdef HAVE_BUILTIN_EXPECT
  #define likely(x)       __builtin_expect(!!(x), 1)
  #define unlikely(x)     __builtin_expect(!!(x), 0)
 #else
@@ -72,7 +72,4 @@ extern "C" {
  #define unlikely(x)    (x)
 #endif
 
-#ifdef __cplusplus
-}
-#endif
 #endif /* exSID_defs_h */

@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: libexsid
 Description: exSID driver.
 Version: @PACKAGE_VERSION@
-Libs.private: @LIBS@ @FTDI_LIBS@
+Libs.private: @LIBS@
 Libs: -L${libdir} -lexsid
 Cflags: -I${includedir}

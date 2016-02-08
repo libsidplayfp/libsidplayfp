@@ -13,17 +13,14 @@ docs/mainpage.dox
 lib_LTLIBRARIES = libexsid.la
 
 libexsid_la_SOURCES = \
-exSID.c
+exSID.c exSID_defs.h exSID_ftdiwrap.h exSID_ftdiwrap.c
 
 libexsid_la_HEADERS = \
 exSID.h
 
-noinst_HEADERS = \
-	exSID_defs.h
-
 libexsid_ladir = $(includedir)
 
-libexsid_la_LDFLAGS = $(FTDI_LIBS) -version-info $(LIBEXSIDVERSION)
+libexsid_la_LDFLAGS = -ldl -version-info $(LIBEXSIDVERSION)
 
 #=========================================================
 
