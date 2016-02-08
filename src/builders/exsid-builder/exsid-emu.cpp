@@ -99,10 +99,12 @@ void exSID::clock()
 
 uint8_t exSID::read(uint_least8_t addr)
 {
-    if ((addr < 0x19) || (addr > 0x1C))
+    if (addr < 0x19)        // write-only addresses
     {
-        return busValue;
+        return sidWRegs[addr];
     }
+    else if (addr > 0x1C)   // invalid address
+	return 0xFF;
 
     if (!readflag)
     {
@@ -117,10 +119,10 @@ uint8_t exSID::read(uint_least8_t addr)
 
 void exSID::write(uint_least8_t addr, uint8_t data)
 {
-    busValue = data;
-
     if (addr > 0x18)
         return;
+
+    sidWRegs[addr] = data;
 
     const unsigned int cycles = delay();
 
