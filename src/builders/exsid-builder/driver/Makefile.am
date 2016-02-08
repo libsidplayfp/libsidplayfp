@@ -20,7 +20,7 @@ exSID.h
 
 libexsid_ladir = $(includedir)
 
-libexsid_la_LDFLAGS = -ldl -version-info $(LIBEXSIDVERSION)
+libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION)
 
 #=========================================================
 
