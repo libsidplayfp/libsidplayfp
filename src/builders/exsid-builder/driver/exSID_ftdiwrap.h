@@ -13,7 +13,7 @@
 typedef void * (* xSfw_new_p)(void);
 
 /** Free ftdi handle. */
-typedef void (* xSfw_free_p)(void *ftdi);
+typedef void (* xSfw_free_p)(void * ftdi);
 
 /**
  * Write data to FTDI.
@@ -22,7 +22,7 @@ typedef void (* xSfw_free_p)(void *ftdi);
  * @param size number of bytes to write.
  * @note there are performance constrains on the size of the buffer, see documentation.
  */
-typedef int (* xSfw_write_data_p)(void *ftdi, const unsigned char *buf, int size);
+typedef int (* xSfw_write_data_p)(void * ftdi, const unsigned char * buf, int size);
 
 /**
  * Read data from FTDI.
@@ -31,7 +31,7 @@ typedef int (* xSfw_write_data_p)(void *ftdi, const unsigned char *buf, int size
  * @param size number of bytes to read.
  * @note there are performance constrains on the size of the buffer, see documentation.
  */
-typedef int (* xSfw_read_data_p)(void *ftdi, unsigned char *buf, int size);
+typedef int (* xSfw_read_data_p)(void * ftdi, unsigned char * buf, int size);
 
 /**
  * Open device by description.
@@ -43,20 +43,20 @@ typedef int (* xSfw_read_data_p)(void *ftdi, unsigned char *buf, int size);
  * @warning This is the only function to use a pointer to ftdi handle, this is
  *	rendered necessary because of libftd2xx silly way of doing things.
  */
-typedef int (* xSfw_usb_open_desc_p)(void **ftdi, int vid, int pid, const char *desc, const char *serial);
+typedef int (* xSfw_usb_open_desc_p)(void ** ftdi, int vid, int pid, const char * desc, const char * serial);
 
 /** Purge FTDI buffers. */
-typedef int (* xSfw_usb_purge_buffers_p)(void *ftdi);
+typedef int (* xSfw_usb_purge_buffers_p)(void * ftdi);
 
 /** Close FTDI device. */
-typedef int (* xSfw_usb_close_p)(void *ftdi);
+typedef int (* xSfw_usb_close_p)(void * ftdi);
 
 /**
  * Get error string.
  * @param ftdi ftdi handle.
  * @note only supported with libftdi.
  */
-typedef char * (* xSfw_get_error_string_p)(void *ftdi);
+typedef char * (* xSfw_get_error_string_p)(void * ftdi);
 
 #ifndef	XSFW_WRAPDECL
 #define XSFW_EXTERN extern

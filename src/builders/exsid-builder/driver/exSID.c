@@ -27,7 +27,7 @@ static long acccycle = 0;
 #endif
 
 static int ftdi_status;
-static void *ftdi = NULL;
+static void * ftdi = NULL;
 
 /**
  * cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t though
@@ -44,17 +44,17 @@ static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
  * @param buff pointer to a byte array of data to send
  * @param size number of bytes to send
  */
-static inline void _xSwrite(const unsigned char *buff, int size)
+static inline void _xSwrite(const unsigned char * buff, int size)
 {
 	ftdi_status = xSfw_write_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-		xserror("Error ftdi_write_data(%d): %s\n", ftdi_status, xSfw_get_error_string(ftdi));
+		xserror("Error ftdi_write_data(%d): %s\n",
+			ftdi_status, xSfw_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
 		xserror("ftdi_write_data only wrote %d (of %d) bytes\n",
-			   ftdi_status,
-			   size);
+			ftdi_status, size);
 	}
 #endif
 }
@@ -64,17 +64,17 @@ static inline void _xSwrite(const unsigned char *buff, int size)
  * @param buff pointer to a byte array that will be filled with read data
  * @param size number of bytes to read
  */
-static inline void _xSread(unsigned char *buff, int size)
+static inline void _xSread(unsigned char * buff, int size)
 {
 	ftdi_status = xSfw_read_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-	        xserror("Error ftdi_read_data(%d): %s\n", ftdi_status, xSfw_get_error_string(ftdi));
+	        xserror("Error ftdi_read_data(%d): %s\n",
+			ftdi_status, xSfw_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
 		xserror("ftdi_read_data only read %d (of %d) bytes\n",
-			   ftdi_status,
-			   size);
+			ftdi_status, size);
 	}
 #endif
 }
@@ -102,7 +102,7 @@ static void _xSoutb(uint8_t byte, int flush)
 	if (!(i % (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK))))
 		clkdrift--;
 #endif
-	if (likely(!flush && (i < XS_BUFFSZ)))
+	if (likely((i < XS_BUFFSZ) && !flush))
 		return;
 
 	_xSwrite(bufchar, i);
@@ -138,7 +138,8 @@ int exSID_init(void)
 
 	ftdi_status = xSfw_usb_open_desc(&ftdi, XS_USBVID, XS_USBPID, XS_USBDSC, NULL);
 	if (ftdi_status < 0) {
-		xserror("Failed to open device: %d (%s)\n", ftdi_status, xSfw_get_error_string(ftdi));
+		xserror("Failed to open device: %d (%s)\n",
+			ftdi_status, xSfw_get_error_string(ftdi));
 		if (xSfw_free)
 			xSfw_free(ftdi);
 		ftdi = NULL;
@@ -173,7 +174,7 @@ int exSID_init(void)
  */
 void exSID_exit(void)
 {
-	if (ftdi == NULL)
+	if (!ftdi)
 		return;
 
 	exSID_reset(0);
@@ -181,15 +182,18 @@ void exSID_exit(void)
 	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 	ftdi_status = xSfw_usb_close(ftdi);
 	if (ftdi_status < 0)
-		xserror("unable to close ftdi device: %d (%s)\n", ftdi_status, xSfw_get_error_string(ftdi));
+		xserror("unable to close ftdi device: %d (%s)\n",
+			ftdi_status, xSfw_get_error_string(ftdi));
 
 	if (xSfw_free)
 		xSfw_free(ftdi);
 	ftdi = NULL;
 
 #ifdef	DEBUG
-	xsdbg("mean jitter: %.1f cycle(s) over %ld I/O ops\n", ((float)accdrift/accioops), accioops);
-	xsdbg("bandwidth used for I/O ops: %ld%% (approx)\n", 100-(accdelay*100/acccycle));
+	xsdbg("mean jitter: %.1f cycle(s) over %ld I/O ops\n",
+		((float)accdrift/accioops), accioops);
+	xsdbg("bandwidth used for I/O ops: %ld%% (approx)\n",
+		100-(accdelay*100/acccycle));
 	accdrift = accioops = accdelay = acccycle = 0;
 #endif
 

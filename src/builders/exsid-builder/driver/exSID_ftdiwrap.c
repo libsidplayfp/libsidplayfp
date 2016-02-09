@@ -71,10 +71,10 @@ typedef enum {
 static libtype_t libtype = XS_LIBNONE;
 
 // private functions
-static int (* _xSfw_set_baudrate)(void *ftdi, int baudrate);
-static int (* _xSfw_set_line_property)(void *ftdi, int bits, int sbit, int parity);
-static int (* _xSfw_setflowctrl)(void *, int flowctrl);
-static int (* _xSfw_set_latency_timer)(void *, unsigned char latency);
+static int (* _xSfw_set_baudrate)(void * ftdi, int baudrate);
+static int (* _xSfw_set_line_property)(void * ftdi, int bits, int sbit, int parity);
+static int (* _xSfw_setflowctrl)(void * ftdi, int flowctrl);
+static int (* _xSfw_set_latency_timer)(void * ftdi, unsigned char latency);
 
 // pointers for ftdi calls
 #ifdef	HAVE_FTDI
@@ -96,7 +96,7 @@ static int (*_FT_Close)(void *);
 
 // wrappers for ftdi
 #ifdef	HAVE_FTDI
-static int _xSfwftdi_usb_open_desc(void **ftdi, int vid, int pid, const char *desc, const char *serial)
+static int _xSfwftdi_usb_open_desc(void ** ftdi, int vid, int pid, const char * desc, const char * serial)
 {
 	return _ftdi_usb_open_desc(*ftdi, vid, pid, desc, serial);
 }
@@ -104,7 +104,7 @@ static int _xSfwftdi_usb_open_desc(void **ftdi, int vid, int pid, const char *de
 
 // wrappers for FTD2XX
 #ifdef	HAVE_FTD2XX
-static int _xSfwFT_write_data(void *ftdi, const unsigned char *buf, int size)
+static int _xSfwFT_write_data(void * ftdi, const unsigned char * buf, int size)
 {
 	static int rval;
 	if(rval = _FT_Write(ftdi, (LPVOID)buf, size, &dummysize))
@@ -113,7 +113,7 @@ static int _xSfwFT_write_data(void *ftdi, const unsigned char *buf, int size)
 		return dummysize;
 }
 
-static int _xSfwFT_read_data(void *ftdi, unsigned char *buf, int size)
+static int _xSfwFT_read_data(void * ftdi, unsigned char * buf, int size)
 {
 	static int rval;
 	if (rval = _FT_Read(ftdi, (LPVOID)buf, size, &dummysize))
@@ -122,22 +122,22 @@ static int _xSfwFT_read_data(void *ftdi, unsigned char *buf, int size)
 		return dummysize;
 }
 
-static int _xSfwFT_usb_open_desc(void **ftdi, int vid, int pid, const char *desc, const char *serial)
+static int _xSfwFT_usb_open_desc(void ** ftdi, int vid, int pid, const char * desc, const char * serial)
 {
 	return -_FT_OpenEx(desc, FT_OPEN_BY_DESCRIPTION, ftdi);
 }
 
-static int _xSfwFT_usb_purge_buffers(void *ftdi)
+static int _xSfwFT_usb_purge_buffers(void * ftdi)
 {
 	return -_FT_Purge(ftdi, FT_PURGE_RX | FT_PURGE_TX);
 }
 
-static int _xSfwFT_usb_close(void *ftdi)
+static int _xSfwFT_usb_close(void * ftdi)
 {
 	return -_FT_Close(ftdi);
 }
 
-static char * _xSfwFT_get_error_string(void *ftdi)
+static char * _xSfwFT_get_error_string(void * ftdi)
 {
 	return "FTD2XX error";
 }
