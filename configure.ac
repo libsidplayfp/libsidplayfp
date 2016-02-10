@@ -254,20 +254,31 @@ AC_SUBST(RESID_INLINE)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
 
-# exSID supoort requires either libexsid or libfdti1
+# exSID support requires either libexsid or libfdti1
 PKG_CHECK_MODULES([EXSID],
 	[libexsid >= 1.0],
-	[AC_DEFINE([HAVE_EXSID], 1, [Define to 1 if you have libexsid (-lexsid).])],
+        [AC_DEFINE([HAVE_EXSID], 1, [Define to 1 if you have libexsid (-lexsid).])
+        build_exsid_builder=yes],
 	[AC_MSG_WARN([$EXSID_PKG_ERRORS] [- using internal driver])
-	PKG_CHECK_MODULES([FTDI],
-		[libftdi1 >= 1.0],
-		[AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have libftdi1 (-lftdi1).])],
-		[AC_MSG_WARN([$FTDI_PKG_ERRORS])]
-	)]
+            AC_SEARCH_LIBS([dlopen], [dl dld], [], [
+              AC_MSG_ERROR([unable to find the dlopen() function])
+            ])
+            AC_MSG_CHECKING([for libftdi1])
+            PKG_CHECK_EXISTS([libftdi1 >= 1.0],
+                        [AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have ftdi.h])
+                        build_exsid_builder=yes
+                        build_exsid_driver=yes
+                        FTDI_CFLAGS=`$PKG_CONFIG --cflags libftdi1`
+                        AC_MSG_RESULT([yes])],
+                        [AC_MSG_WARN([libftdi1 not found, support will not be available])]
+                )]
 )
+AC_SUBST([FTDI_CFLAGS])
 
-AM_CONDITIONAL([EXSID_SUPPORT], [ test "x${pkg_cv_FTDI_CFLAGS}" != x -o "x${pkg_cv_EXSID_CFLAGS}" != x])
-AM_CONDITIONAL([EXSID_DRIVER], [ test "x${pkg_cv_FTDI_CFLAGS}" != x])
+AM_CONDITIONAL([EXSID_SUPPORT], [ test "x${build_exsid_builder}" = xyes])
+AM_CONDITIONAL([EXSID_DRIVER], [ test "x${build_exsid_driver}" = xyes])
+
+AC_DEFINE_UNQUOTED([SHLIBEXT], ["${shrext_cmds}"], [Shared library extension])
 
 
 

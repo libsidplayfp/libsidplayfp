@@ -206,8 +206,7 @@ endif
 
 if EXSID_SUPPORT
   src_libsidplayfp_la_LIBADD += src/builders/exsid-builder/libsidplayfp-exsid.la \
-  $(EXSID_LIBS) \
-  $(FTDI_LIBS)
+  $(EXSID_LIBS)
 endif
 
 src_libsidplayfp_la_CPPFLAGS = $(GCRYPT_CFLAGS) $(AM_CPPFLAGS)
