@@ -254,7 +254,7 @@ AC_SUBST(RESID_INLINE)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
 
-# exSID support requires either libexsid or libfdti1
+# exSID support requires either libexsid or one of libfdti1 or libftd2xx
 PKG_CHECK_MODULES([EXSID],
 	[libexsid >= 1.0],
         [AC_DEFINE([HAVE_EXSID], 1, [Define to 1 if you have libexsid (-lexsid).])
@@ -262,6 +262,12 @@ PKG_CHECK_MODULES([EXSID],
 	[AC_MSG_WARN([$EXSID_PKG_ERRORS] [- using internal driver])
             AC_SEARCH_LIBS([dlopen], [dl dld], [], [
               AC_MSG_ERROR([unable to find the dlopen() function])
+            ])
+            AC_CHECK_HEADERS([ftd2xx.h],
+                    [AC_DEFINE([HAVE_FTD2XX], 1, [Define to 1 if you have ftd2xx.h])
+                    build_exsid_builder=yes
+                    build_exsid_driver=yes],
+                    [AC_MSG_WARN([ftd2xx.h not found, support will not be available])
             ])
             AC_MSG_CHECKING([for libftdi1])
             PKG_CHECK_EXISTS([libftdi1 >= 1.0],
