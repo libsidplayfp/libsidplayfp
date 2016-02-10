@@ -52,13 +52,6 @@
 
 #define EXSID_INTERFACES "libftdi, libftd2xx"	// XXX TODO Should be set by configure
 
-// XXX TODO this is stuff for autoconf
-#if defined(__APPLE__) && defined(__MACH__)
-#define	SHLIBEXT ".dylib"
-#else
-#define SHLIBEXT ".so"
-#endif
-
 static unsigned int dummysize = 0;	// DWORD in unsigned int
 
 static void * dlhandle = NULL;
