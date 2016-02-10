@@ -12,7 +12,12 @@
  * exSID USB FTDI access wrapper
  * @author Thibaut VARENE
  * @date 2016
- * @note Primary target is libftdi, adaptations are made for others.
+ * @note Primary target is libftdi (cleaner API), adaptations are made for others.
+ *	Sadly, libftdi's implementation of read() is unreliable (it doesn't seem
+ *	to honour the usb timeout value and doesn't properly block long enough).
+ *	This is why libftd2xx is prefered (tried first) for now. Unfortunately,
+ *	using libftd2xx comes with a significant performance penalty since
+ *	the code is tailored for libftdi.
  */
 
 
@@ -50,11 +55,13 @@
 #define	XSFW_WRAPDECL
 #include "exSID_ftdiwrap.h"
 
-#define EXSID_INTERFACES "libftdi, libftd2xx"	// XXX TODO Should be set by configure
+#define EXSID_INTERFACES "libftd2xx, libftdi"	// XXX TODO Should be set by configure
 
 static unsigned int dummysize = 0;	// DWORD in unsigned int
 
 static void * dlhandle = NULL;
+
+/** Flag to signal which of the supported libraries is in use */
 typedef enum {
 	XS_LIBNONE,
 	XS_LIBFTDI,
@@ -69,12 +76,12 @@ static int (* _xSfw_set_line_property)(void * ftdi, int bits, int sbit, int pari
 static int (* _xSfw_setflowctrl)(void * ftdi, int flowctrl);
 static int (* _xSfw_set_latency_timer)(void * ftdi, unsigned char latency);
 
-// pointers for ftdi calls
+// callbacks for ftdi
 #ifdef	HAVE_FTDI
 static int (* _ftdi_usb_open_desc)(void *, int, int, const char *, const char *);
 #endif
 
-// pointers for FTD2XX calls
+// callbacks for FTD2XX
 #ifdef	HAVE_FTD2XX
 static int (*_FT_Write)(void *, LPVOID, int, unsigned int *);
 static int (*_FT_Read)(void *, LPVOID, int, unsigned int *);
@@ -100,7 +107,7 @@ static int _xSfwftdi_usb_open_desc(void ** ftdi, int vid, int pid, const char * 
 static int _xSfwFT_write_data(void * ftdi, const unsigned char * buf, int size)
 {
 	static int rval;
-	if(rval = _FT_Write(ftdi, (LPVOID)buf, size, &dummysize))
+	if(unlikely(rval = _FT_Write(ftdi, (LPVOID)buf, size, &dummysize)))
 		return -rval;
 	else
 		return dummysize;
@@ -109,7 +116,7 @@ static int _xSfwFT_write_data(void * ftdi, const unsigned char * buf, int size)
 static int _xSfwFT_read_data(void * ftdi, unsigned char * buf, int size)
 {
 	static int rval;
-	if (rval = _FT_Read(ftdi, (LPVOID)buf, size, &dummysize))
+	if (unlikely(rval = _FT_Read(ftdi, (LPVOID)buf, size, &dummysize)))
 		return -rval;
 	else
 		return dummysize;
@@ -138,7 +145,7 @@ static char * _xSfwFT_get_error_string(void * ftdi)
 
 /**
  * Attempt to dlopen a known working library to access FTDI chip.
- * Will try libftdi first, then libftd2xx.
+ * Will try libftd2xx first, then libftdi.
  * @return 0 on success, -1 on error.
  */
 int xSfw_dlopen()
@@ -150,30 +157,8 @@ int xSfw_dlopen()
 
 	char * dlerrorstr = NULL;
 
-	// try libftdi1 first - XXX TODO version check
-#ifdef	HAVE_FTDI
-	if ((dlhandle = dlopen("libftdi1" SHLIBEXT, RTLD_NOW|RTLD_LOCAL))) {
-		dlerror();	// clear dlerror
-		XSFW_DLSYM(xSfw_new, "ftdi_new");
-		XSFW_DLSYM(xSfw_free, "ftdi_free");
-		XSFW_DLSYM(xSfw_write_data, "ftdi_write_data");
-		XSFW_DLSYM(xSfw_read_data, "ftdi_read_data");
-		XSFW_DLSYM(_ftdi_usb_open_desc, "ftdi_usb_open_desc");
-		xSfw_usb_open_desc = _xSfwftdi_usb_open_desc;
-		XSFW_DLSYM(_xSfw_set_baudrate, "ftdi_set_baudrate");
-		XSFW_DLSYM(_xSfw_set_line_property, "ftdi_set_line_property");
-		XSFW_DLSYM(_xSfw_setflowctrl, "ftdi_setflowctrl");
-		XSFW_DLSYM(_xSfw_set_latency_timer, "ftdi_set_latency_timer");
-		XSFW_DLSYM(xSfw_usb_purge_buffers, "ftdi_usb_purge_buffers");
-		XSFW_DLSYM(xSfw_usb_close, "ftdi_usb_close");
-		XSFW_DLSYM(xSfw_get_error_string, "ftdi_get_error_string");
-		libtype = XS_LIBFTDI;
-		xsdbg("Using libftdi\n");
-	}
-	// otherwise try libftd2xx - XXX TODO version check
-	else
-#endif
 #ifdef	HAVE_FTD2XX
+	// try libftd2xx first - XXX TODO version check
 	if ((dlhandle = dlopen("libftd2xx" SHLIBEXT, RTLD_NOW|RTLD_LOCAL))) {
 		dlerror();	// clear dlerror
 		xSfw_new = NULL;
@@ -196,9 +181,31 @@ int xSfw_dlopen()
 		libtype = XS_LIBFTD2XX;
 		xsdbg("Using libftd2xx\n");
 	}
-	// if none worked, fail.
 	else
 #endif
+#ifdef	HAVE_FTDI
+	// otherwise try libftdi1 - XXX TODO version check
+	if ((dlhandle = dlopen("libftdi1" SHLIBEXT, RTLD_NOW|RTLD_LOCAL))) {
+		dlerror();	// clear dlerror
+		XSFW_DLSYM(xSfw_new, "ftdi_new");
+		XSFW_DLSYM(xSfw_free, "ftdi_free");
+		XSFW_DLSYM(xSfw_write_data, "ftdi_write_data");
+		XSFW_DLSYM(xSfw_read_data, "ftdi_read_data");
+		XSFW_DLSYM(_ftdi_usb_open_desc, "ftdi_usb_open_desc");
+		xSfw_usb_open_desc = _xSfwftdi_usb_open_desc;
+		XSFW_DLSYM(_xSfw_set_baudrate, "ftdi_set_baudrate");
+		XSFW_DLSYM(_xSfw_set_line_property, "ftdi_set_line_property");
+		XSFW_DLSYM(_xSfw_setflowctrl, "ftdi_setflowctrl");
+		XSFW_DLSYM(_xSfw_set_latency_timer, "ftdi_set_latency_timer");
+		XSFW_DLSYM(xSfw_usb_purge_buffers, "ftdi_usb_purge_buffers");
+		XSFW_DLSYM(xSfw_usb_close, "ftdi_usb_close");
+		XSFW_DLSYM(xSfw_get_error_string, "ftdi_get_error_string");
+		libtype = XS_LIBFTDI;
+		xsdbg("Using libftdi\n");
+	}
+	else
+#endif
+	// if none worked, fail.
 	{
 		xserror("No method found to access FTDI interface.\n"
 			"Are any of the following libraries installed?\n"
@@ -220,6 +227,7 @@ dlfail:
  * @param ftdi ftdi handle
  * @param baudrate Target baudrate
  * @param latency Target latency
+ * @return 0 on success, rval on error.
  */
 int xSfw_usb_setup(void * ftdi, int baudrate, int latency)
 {

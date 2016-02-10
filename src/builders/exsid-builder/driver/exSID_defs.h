@@ -6,6 +6,14 @@
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
 //
 
+/** 
+ * @file 
+ * libexsid private definitions header file.
+ * @note These defines are closely related to the exSID firmware.
+ * Any modification that does not correspond to a related change in firmware
+ * will cause the device to operate unpredictably or not at all.
+ */
+
 #ifndef exSID_defs_h
 #define exSID_defs_h
 
@@ -15,10 +23,6 @@
 
 // CLOCK_FREQ_NTSC = 1022727.14;
 // CLOCK_FREQ_PAL  = 985248.4;
-
-/* NOTE: these defines are closely related to the exSID firmware.
-   Any modification that does not correspond to a related change in firmware
-   will cause the device to operate unpredictably or not at all. */
 
 #if 0
 #define	XS_BDRATE	2000000		///< 2Mpbs
@@ -46,14 +50,14 @@
 
 #define	XS_AD_IOCTS0	0xBD	///< select chip 0
 #define XS_AD_IOCTS1	0xBE	///< select chip 1
-#define XS_AD_IOCTSB	0xBF	///< select both (invalid for reads, only chip 0 will be read from)
+#define XS_AD_IOCTSB	0xBF	///< select both chips. @warning Invalid for reads: unknown behaviour!
 
 #define	XS_AD_IOCTFV	0xFD	///< Firmware version query
 #define	XS_AD_IOCTHV	0xFE	///< Hardware version query
 #define XS_AD_IOCTRS	0xFF	///< SID reset
 
-#define	XS_USBVID	0x0403
-#define XS_USBPID	0x6001
+#define	XS_USBVID	0x0403	///< Default FTDI VID
+#define XS_USBPID	0x6001	///< Default FTDI PID
 #define XS_USBDSC	"exSID USB"
 
 #ifdef DEBUG

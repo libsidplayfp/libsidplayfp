@@ -18,12 +18,13 @@
 #include "exSID_ftdiwrap.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 #ifdef	DEBUG
 static long accdrift = 0;
-static long accioops = 0;
-static long accdelay = 0;
-static long acccycle = 0;
+static unsigned long accioops = 0;
+static unsigned long accdelay = 0;
+static unsigned long acccycle = 0;
 #endif
 
 static int ftdi_status;
@@ -170,7 +171,8 @@ int exSID_init(void)
 /**
  * Device exit routine.
  * Must be called to release the device.
- * Resets the SIDs and clears RX/TX buffers.
+ * Resets the SIDs and clears RX/TX buffers, releases all resources allocated
+ * in exSID_init().
  */
 void exSID_exit(void)
 {
@@ -180,6 +182,7 @@ void exSID_exit(void)
 	exSID_reset(0);
 
 	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
+
 	ftdi_status = xSfw_usb_close(ftdi);
 	if (ftdi_status < 0)
 		xserror("unable to close ftdi device: %d (%s)\n",
@@ -190,9 +193,9 @@ void exSID_exit(void)
 	ftdi = NULL;
 
 #ifdef	DEBUG
-	xsdbg("mean jitter: %.1f cycle(s) over %ld I/O ops\n",
+	xsdbg("mean jitter: %.1f cycle(s) over %lu I/O ops\n",
 		((float)accdrift/accioops), accioops);
-	xsdbg("bandwidth used for I/O ops: %ld%% (approx)\n",
+	xsdbg("bandwidth used for I/O ops: %lu%% (approx)\n",
 		100-(accdelay*100/acccycle));
 	accdrift = accioops = accdelay = acccycle = 0;
 #endif
@@ -212,7 +215,7 @@ void exSID_exit(void)
  */
 void exSID_reset(uint_least8_t volume)
 {
-	xsdbg("rvol: %hhx\n", volume);
+	xsdbg("rvol: %" PRIxLEAST8 "\n", volume);
 
 	_xSoutb(XS_AD_IOCTRS, 0);	// this will take more than XS_CYCCHR
 	_exSID_write(0x18, volume, 1);	// this only needs 2 bytes which matches the input buffer of the PIC so all is well
@@ -258,7 +261,7 @@ uint16_t exSID_hwversion(void)
 	_xSread(inbuf, 2);
 	out = inbuf[0] << 8 | inbuf[1];	// ensure proper order regardless of endianness
 
-	xsdbg("HV: %c, FV: %hhd\n", inbuf[0], inbuf[1]);
+	xsdbg("HV: %c, FV: %hhu\n", inbuf[0], inbuf[1]);
 
 	return out;
 }
@@ -370,7 +373,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (unlikely(addr > 0x18)) {
-		xserror("Invalid write: %.2hhx\n", addr);
+		xserror("Invalid write: %.2" PRIxLEAST8 "\n", addr);
 		exSID_delay(cycles);
 		return;
 	}
@@ -385,7 +388,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (clkdrift > XS_CYCCHR)
-		xserror("Impossible drift adjustment! %d cycles\n", clkdrift);
+		xserror("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
 	else if (clkdrift < 0)
 		accdrift += clkdrift;
 #endif
@@ -430,16 +433,18 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
 	_xSoutb(addr, flush);	// XXX
 	_xSread(&data, flush);	// blocking
 
-	xsdbg("addr: %.2hhx, data: %.2hhx\n", addr, data);
+	xsdbg("addr: %.2" PRIxLEAST8 ", data: %.2hhx\n", addr, data);
 	return data;
 }
 
 /**
- * Timed read routine, attempts cycle-accurate reads. BLOCKING.
+ * BLOCKING Timed read routine, attempts cycle-accurate reads.
  * This function will be cycle-accurate provided that no two consecutive reads or writes
  * are less than XS_CYCIO apart and leftover delay is <= XS_MAXADJ*XS_ADJMLT SID clock cycles.
  * Read result will only be available after a full XS_CYCIO, giving clkdread() the same
- * run time as clkdwrite().
+ * run time as clkdwrite(). The actual time the read will take to complete depends
+ * on the USB bus activity and settings. It *should* complete in XS_USBLAT ms, but
+ * not less, meaning that read operations are bound to introduce timing inaccuracy.
  * @param cycles how many SID clocks to wait before the actual data read.
  * @param addr target address.
  * @return data read from address.
@@ -450,7 +455,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (unlikely((addr < 0x19) || (addr > 0x1C))) {
-		xserror("Invalid read: %.2hhx\n", addr);
+		xserror("Invalid read: %.2" PRIxLEAST8 "\n", addr);
 		exSID_delay(cycles);
 		return 0xFF;
 	}
@@ -465,10 +470,10 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (clkdrift > XS_CYCCHR)
-		xserror("Impossible drift adjustment! %d cycles\n", clkdrift);
+		xserror("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
 	else if (clkdrift < 0) {
 		accdrift += clkdrift;
-		xsdbg("Late read request! %d cycles\n", clkdrift);
+		xsdbg("Late read request! %" PRIdFAST32 " cycles\n", clkdrift);
 	}
 #endif
 

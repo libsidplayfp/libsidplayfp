@@ -6,6 +6,11 @@
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
 //
 
+/**
+ * @file
+ * libexsid interface header file.
+ */
+
 #ifndef exSID_h
 #define exSID_h
 #ifdef __cplusplus
@@ -20,7 +25,7 @@ extern "C" {
 enum {
 	XS_CS_CHIP0,	///< 6581
 	XS_CS_CHIP1,	///< 8580
-	XS_CS_BOTH,
+	XS_CS_BOTH,	///< Both chips. @warning Invalid for reads: unknown behaviour!
 };
 
 // public interface
