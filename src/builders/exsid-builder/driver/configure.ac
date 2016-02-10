@@ -35,12 +35,14 @@ AC_CHECK_HEADERS([ftd2xx.h],
 	[AC_MSG_WARN([ftd2xx.h not found, support will not be available])]
 	)
 
-# XXX TODO: I only want the CFLAGS here, not the LDFLAGS/LIBS
-PKG_CHECK_MODULES([FTDI],
-		[libftdi1 >= 1.0],
-		[AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have ftdi.h])],
-		[AC_MSG_WARN([$FTDI_PKG_ERRORS] [- support will not be available])]
+AC_MSG_CHECKING([for libftdi1])
+PKG_CHECK_EXISTS([libftdi1 >= 1.0],
+                [AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have ftdi.h])
+                FTDI_CFLAGS=`$PKG_CONFIG --cflags libftdi1`
+                AC_MSG_RESULT([yes])],
+                [AC_MSG_WARN([libftdi1 not found, support will not be available])]
 	)
+AC_SUBST([FTDI_CFLAGS])
 
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
   [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
