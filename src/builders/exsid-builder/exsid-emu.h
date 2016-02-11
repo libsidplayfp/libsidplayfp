@@ -59,8 +59,7 @@ private:
 
     bool readflag;
 
-    // buffer last written value. Note: non-previously written regs will have garbage value
-    uint8_t sidWRegs[0x18+1];	// XXX TODO replace 0x18 with proper define if available
+    uint8_t busValue;
 
 private:
     unsigned int delay();
