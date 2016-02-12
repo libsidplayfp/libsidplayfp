@@ -41,7 +41,8 @@ static int_fast32_t clkdrift = 0;
 static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
 
 /**
- * Write routine to send data to the device. BLOCKING.
+ * Write routine to send data to the device.
+ * @note BLOCKING.
  * @param buff pointer to a byte array of data to send
  * @param size number of bytes to send
  */
@@ -61,7 +62,8 @@ static inline void _xSwrite(const unsigned char * buff, int size)
 }
 
 /**
- * Read routine to get data from the device. BLOCKING.
+ * Read routine to get data from the device.
+ * @note BLOCKING.
  * @param buff pointer to a byte array that will be filled with read data
  * @param size number of bytes to read
  */
@@ -247,7 +249,7 @@ void exSID_chipselect(int chip)
  * Queries the device for the hardware revision and current firmware version
  * and returns both in the form of a 16bit integer: MSB is an ASCII
  * character representing the hardware revision (e.g. 0x42 = "B"), and LSB
- * is a number representing the firmware version x10 in decimal (e.g. 10 = "1.0").
+ * is a number representing the firmware version in decimal integer.
  * Does NOT account for elapsed cycles.
  * @return version information as described above.
  */
@@ -269,7 +271,9 @@ uint16_t exSID_hwversion(void)
 /**
  * Poll-based blocking (long) delay.
  * Calls to IOCTLD polled delay, for "very" long delays (thousands of SID clocks).
- * Total delay should be 3*CYCCHR + WAITCNT(500 + 1) (see PIC firmware).
+ * Total delay should be 3*CYCCHR + WAITCNT(500 + 1) (see PIC firmware), and for
+ * better performance, ideally the requested delay time should be close to a multiple
+ * of XS_USBLAT milliseconds.
  * @warning NOT CYCLE ACCURATE
  * @param cycles how many SID clocks to wait for.
  */
@@ -387,14 +391,14 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 	clkdrift -= XS_CYCIO;	// write is going to consume XS_CYCIO clock ticks
 
 #ifdef	DEBUG
-	if (clkdrift > XS_CYCCHR)
+	if (clkdrift >= XS_CYCCHR)
 		xserror("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
 	else if (clkdrift < 0)
 		accdrift += clkdrift;
 #endif
 
 	/* if we are still going to be early, delay actual write by up to XS_MAXAD*XS_ADJMLT ticks
-	At this point it is guaranted that clkdrift will be <= XS_MINDEL == XS_CYCCHR. */
+	At this point it is guaranted that clkdrift will be < XS_MINDEL (== XS_CYCCHR). */
 	if (likely(clkdrift >= 0)) {
 		adj = clkdrift % (XS_MAXADJ*XS_ADJMLT+1);
 		/* if XS_MAXADJ*XS_ADJMLT is >= clkdrift, modulo will give the same results
