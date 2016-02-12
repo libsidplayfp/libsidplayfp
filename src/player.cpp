@@ -260,6 +260,12 @@ void Player::stop()
 
 bool Player::config(const SidConfig &cfg)
 {
+    // Check if configuration have changed
+    if (!m_cfg.compare(cfg))
+    {
+        return true;
+    }
+
     // Check for base sampling frequency
     if (cfg.frequency < 8000)
     {

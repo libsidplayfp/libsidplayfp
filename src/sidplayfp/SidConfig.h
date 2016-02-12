@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -160,6 +160,13 @@ public:
      * available only for reSID.
      */
     bool fastSampling;
+
+    /**
+     * Compare two config objects.
+     *
+     * @return true if different
+     */
+    bool compare(const SidConfig &config);
 
 public:
     SidConfig();
