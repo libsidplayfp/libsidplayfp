@@ -156,7 +156,7 @@ bool Player::load(SidTune *tune)
     if (tune != nullptr)
     {
         // Must re-configure on fly for stereo support!
-        if (!config(m_cfg))
+        if (!config(m_cfg, true))
         {
             // Failed configuration with new tune, reject it
             m_tune = nullptr;
@@ -258,10 +258,10 @@ void Player::stop()
     }
 }
 
-bool Player::config(const SidConfig &cfg)
+bool Player::config(const SidConfig &cfg, bool force)
 {
-    // Check if configuration have changed
-    if (!m_cfg.compare(cfg))
+    // Check if configuration have been changed or forced
+    if (!force && !m_cfg.compare(cfg))
     {
         return true;
     }
