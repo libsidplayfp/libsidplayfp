@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -46,14 +46,14 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
     fprintf(cpu.m_fdbg, "%02x ",   cpu.cpuRead (0));
     fprintf(cpu.m_fdbg, "%02x ",   cpu.cpuRead (1));
 
-    fprintf(cpu.m_fdbg, cpu.flags.N ? "1" : "0");
-    fprintf(cpu.m_fdbg, cpu.flags.V ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.flags.getN() ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.flags.getV()  ? "1" : "0");
     fprintf(cpu.m_fdbg, "1");
-    fprintf(cpu.m_fdbg, cpu.flags.B ? "1" : "0");
-    fprintf(cpu.m_fdbg, cpu.flags.D ? "1" : "0");
-    fprintf(cpu.m_fdbg, cpu.flags.I ? "1" : "0");
-    fprintf(cpu.m_fdbg, cpu.flags.Z ? "1" : "0");
-    fprintf(cpu.m_fdbg, cpu.flags.C ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.flags.getB() ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.flags.getD() ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.flags.getI() ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.flags.getZ() ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.flags.getC() ? "1" : "0");
 
     const int opcode  = cpu.cpuRead(cpu.instrStartPC);
 
