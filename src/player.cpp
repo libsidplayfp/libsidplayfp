@@ -175,7 +175,7 @@ void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
 
 void Player::run(unsigned int events)
 {
-    for (int i = 0; i < events; i++)
+    for (int i = 0; m_isPlaying && i < events; i++)
         m_c64.getEventScheduler()->clock();
 }
 
@@ -185,10 +185,10 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     if (m_tune == nullptr)
         return 0;
 
-    m_mixer.begin(buffer, count);
-
     // Start the player loop
     m_isPlaying = true;
+
+    m_mixer.begin(buffer, count);
 
     if (m_mixer.getSid(0) != nullptr)
     {
@@ -240,21 +240,10 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
 }
 
 void Player::stop()
-{   // Re-start song
+{
     if (m_tune && m_isPlaying)
     {
-        if (m_mixer.notFinished())
-        {
-            m_isPlaying = false;
-        }
-        else
-        {
-            try
-            {
-                initialise();
-            }
-            catch (configError const &) {}
-        }
+        m_isPlaying = false;
     }
 }
 
