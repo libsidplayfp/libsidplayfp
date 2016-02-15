@@ -69,7 +69,7 @@ Player::Player() :
     // Set default settings for system
     m_tune(nullptr),
     m_errorString(ERR_NA),
-    m_isPlaying(false)
+    m_isPlaying(STOPPED)
 {
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
@@ -186,54 +186,58 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         return 0;
 
     // Start the player loop
-    m_isPlaying = true;
-
-    m_mixer.begin(buffer, count);
-
-    if (m_mixer.getSid(0) != nullptr)
+    switch (m_isPlaying)
     {
-        if (count && buffer != nullptr)
-        {
-            // Clock chips and mix into output buffer
-            while (m_isPlaying && m_mixer.notFinished())
-            {
-                run(sidemu::OUTPUTBUFFERSIZE);
+    case STOPPED:
+        m_isPlaying = PLAYING;
+        // fall thru
+    case PLAYING:
+        m_mixer.begin(buffer, count);
 
-                m_mixer.clockChips();
-                m_mixer.doMix();
+        if (m_mixer.getSid(0) != nullptr)
+        {
+            if (count && buffer != nullptr)
+            {
+                // Clock chips and mix into output buffer
+                while (m_isPlaying && m_mixer.notFinished())
+                {
+                    run(sidemu::OUTPUTBUFFERSIZE);
+
+                    m_mixer.clockChips();
+                    m_mixer.doMix();
+                }
+                count = m_mixer.samplesGenerated();
             }
-            count = m_mixer.samplesGenerated();
+            else
+            {
+                // Clock chips and discard buffers
+                int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
+                while (m_isPlaying && --size)
+                {
+                    run(sidemu::OUTPUTBUFFERSIZE);
+
+                    m_mixer.clockChips();
+                    m_mixer.resetBufs();
+                }
+            }
         }
         else
         {
-            // Clock chips and discard buffers
+            // Clock the machine
             int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
             while (m_isPlaying && --size)
             {
                 run(sidemu::OUTPUTBUFFERSIZE);
-
-                m_mixer.clockChips();
-                m_mixer.resetBufs();
             }
         }
-    }
-    else
-    {
-        // Clock the machine
-        int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
-        while (m_isPlaying && --size)
-        {
-            run(sidemu::OUTPUTBUFFERSIZE);
-        }
-    }
-
-    if (!m_isPlaying)
-    {
+        break;
+    case STOPPING:
         try
         {
             initialise();
         }
         catch (configError const &) {}
+        m_isPlaying = STOPPED;
     }
 
     return count;
@@ -241,9 +245,9 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
 
 void Player::stop()
 {
-    if (m_tune && m_isPlaying)
+    if (m_tune != nullptr && m_isPlaying == PLAYING)
     {
-        m_isPlaying = false;
+        m_isPlaying = STOPPING;
     }
 }
 

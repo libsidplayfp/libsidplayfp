@@ -59,6 +59,14 @@ class Player
 #endif
 {
 private:
+    typedef enum
+    {
+        STOPPED,
+        PLAYING,
+        STOPPING
+    } state_t;
+
+private:
     /// Commodore 64 emulator
     c64 m_c64;
 
@@ -146,7 +154,7 @@ public:
 
     uint_least32_t play(short *buffer, uint_least32_t samples);
 
-    bool isPlaying() const { return m_isPlaying; }
+    bool isPlaying() const { return m_isPlaying != STOPPED; }
 
     void stop();
 
