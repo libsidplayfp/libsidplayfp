@@ -446,9 +446,23 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
  * This function will be cycle-accurate provided that no two consecutive reads or writes
  * are less than XS_CYCIO apart and leftover delay is <= XS_MAXADJ*XS_ADJMLT SID clock cycles.
  * Read result will only be available after a full XS_CYCIO, giving clkdread() the same
- * run time as clkdwrite(). The actual time the read will take to complete depends
+ * run time as clkdwrite(). There's a 2-cycle negative adjustment in the code because
+ * that's the actual offset from the write calls ('/' denotes falling clock edge latch),
+ * which the following ASCII tries to illustrate: <br />
+ * Write looks like this in firmware:
+ * > ...|_/_|...
+ * ...end of data byte read | cycle during which write is enacted / next cycle | etc... <br />
+ * Read looks like this in firmware:
+ * > ...|_|_|_/_|_|...
+ * ...end of address byte read | 2 cycles for address processing | cycle during which SID is read /
+ *	then half a cycle later the CYCCHR-long data TX starts, cycle completes | another cycle | etc... <br />
+ * This explains why reads happen a relative 2-cycle later than then should with
+ * respect to writes.
+ * @note The actual time the read will take to complete depends
  * on the USB bus activity and settings. It *should* complete in XS_USBLAT ms, but
  * not less, meaning that read operations are bound to introduce timing inaccuracy.
+ * As such, this function is only really provided as a proof of concept but should
+ * better be avoided.
  * @param cycles how many SID clocks to wait before the actual data read.
  * @param addr target address.
  * @return data read from address.
@@ -466,6 +480,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 #endif
 
 	// actual read will happen after XS_CYCCHR. Delay for cycles - XS_CYCCHR then account for the read
+	clkdrift += -2;		// 2-cycle offset adjustement, see function documentation.
 	clkdrift += cycles;
 	if (clkdrift > XS_CYCCHR)
 		_xSdelay(clkdrift - XS_CYCCHR);
