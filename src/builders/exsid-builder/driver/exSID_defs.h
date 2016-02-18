@@ -24,7 +24,7 @@
 // CLOCK_FREQ_NTSC = 1022727.14;
 // CLOCK_FREQ_PAL  = 985248.4;
 
-#if 0
+#if 1
 #define	XS_BDRATE	2000000		///< 2Mpbs
 #define	XS_ADJMLT	1		///< 1-to-1 cycle adjustement (max resolution: 1 cycle).
 #else

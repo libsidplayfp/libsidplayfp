@@ -121,6 +121,8 @@ static void _xSoutb(uint8_t byte, int flush)
  */
 int exSID_init(void)
 {
+	unsigned char dummy;
+
 	if (ftdi) {
 		xserror("Device already open!\n");
 		return -1;
@@ -156,7 +158,15 @@ int exSID_init(void)
 
 	// success - device with device description "exSIDUSB" is open
 	xsdbg("Device opened\n");
+	
+	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 
+	// Wait for device ready by trying to read FV and wait for the answer
+	// XXX Broken with libftdi due to non-blocking read :-/
+	_xSoutb(XS_AD_IOCTFV, 1);
+	_xSread(&dummy, 1);
+
+	xsdbg("Rock'n'roll!\n");
 
 #ifdef	DEBUG
 	exSID_hwversion();
@@ -164,8 +174,6 @@ int exSID_init(void)
 	xsdbg("XS_CYCCHR: %d, XS_CYCIO: %d, compensation every %d cycle(s)\n",
 		XS_CYCCHR, XS_CYCIO, (XS_SIDCLK % XS_RSBCLK) ? (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK)) : 0);
 #endif
-	
-	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 
 	return 0;
 }
