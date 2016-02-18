@@ -52,7 +52,6 @@ exSID::exSID(sidbuilder *builder) :
     m_instance(sid++),
     m_status(false),
     m_locked(false),
-    m_optimisation(0),
     readflag(false)
 {
     if (exSID_init() < 0)
@@ -150,12 +149,5 @@ void exSID::unlock()
     sidemu::unlock();
 }
 
-// Set optimisation level
-void exSID::optimisation(uint_least8_t level)
-{
-    m_optimisation = level;
-    if (level)
-        printf("WARNING: Optimisation active, timing accuracy not guaranteed!\n");
-}
 
 }
