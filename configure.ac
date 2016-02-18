@@ -284,7 +284,8 @@ AC_SUBST([FTDI_CFLAGS])
 AM_CONDITIONAL([EXSID_SUPPORT], [ test "x${build_exsid_builder}" = xyes])
 AM_CONDITIONAL([EXSID_DRIVER], [ test "x${build_exsid_driver}" = xyes])
 
-AC_DEFINE_UNQUOTED([SHLIBEXT], ["${shrext_cmds}"], [Shared library extension])
+eval loadable_shrext=$shrext_cmds
+AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
 
 
 

@@ -44,7 +44,8 @@ PKG_CHECK_EXISTS([libftdi1 >= 1.0],
 	)
 AC_SUBST([FTDI_CFLAGS])
 
-AC_DEFINE_UNQUOTED([SHLIBEXT], ["${shrext_cmds}"])
+eval loadable_shrext=$shrext_cmds
+AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
 
 AC_CACHE_CHECK([for __builtin_expect], [exsid_cv_builtin_expect],
   [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
