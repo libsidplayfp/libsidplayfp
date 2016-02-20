@@ -27,10 +27,6 @@
 #  include "config.h"
 #endif
 
-#ifdef _WIN32
-#  error "SYSTEM NOT SUPPORTED"
-#endif // _WIN32
-
 namespace libsidplayfp
 {
 
