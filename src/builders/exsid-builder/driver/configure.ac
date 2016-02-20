@@ -9,6 +9,14 @@ LT_INIT([win32-dll])
 
 PKG_PROG_PKG_CONFIG
 
+AC_CANONICAL_HOST
+
+dnl The dlopen() function is in the C library for *BSD and in
+dnl libdl on GLIBC-based systems. Use native functions on MinGW.
+AS_CASE([$host_os],
+	[mingw*], [],
+	[AC_SEARCH_LIBS([dlopen], [dl dld], [], [AC_MSG_ERROR([unable to find the dlopen() function])])]
+)
 
 # debug options
 AC_MSG_CHECKING([for debugging])
@@ -24,11 +32,6 @@ AC_SUBST([debug_flags])
 
 
 # check for libraries
-dnl The dlopen() function is in the C library for *BSD and in
-dnl libdl on GLIBC-based systems
-AC_SEARCH_LIBS([dlopen], [dl dld], [], [
-  AC_MSG_ERROR([unable to find the dlopen() function])
-])
 
 AC_CHECK_HEADERS([ftd2xx.h],
 	[AC_DEFINE([HAVE_FTD2XX], 1, [Define to 1 if you have ftd2xx.h])],

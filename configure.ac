@@ -18,11 +18,11 @@ AC_SUBST([LIB_MINOR])
 AC_SUBST([LIB_LEVEL])
 
 AC_CANONICAL_HOST
-case "$host" in
-    *mingw32* )
-        MINGW32=yes
-        ;;
-esac
+
+AS_CASE([$host_os],
+        [mingw*], [MINGW32=yes],
+        [AC_SEARCH_LIBS([dlopen], [dl dld], [], [AC_MSG_ERROR([unable to find the dlopen() function])])]
+)
 AM_CONDITIONAL([MINGW32], [test "x$MINGW32" = "xyes"])
 
 dnl Initialize libtool.
