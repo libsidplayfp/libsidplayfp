@@ -186,12 +186,11 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         return 0;
 
     // Start the player loop
-    switch (m_isPlaying)
-    {
-    case STOPPED:
+    if (m_isPlaying == STOPPED)
         m_isPlaying = PLAYING;
-        // fall thru
-    case PLAYING:
+
+    if (m_isPlaying == PLAYING)
+    {
         m_mixer.begin(buffer, count);
 
         if (m_mixer.getSid(0) != nullptr)
@@ -230,8 +229,10 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
                 run(sidemu::OUTPUTBUFFERSIZE);
             }
         }
-        break;
-    case STOPPING:
+    }
+
+    if (m_isPlaying == STOPPING)
+    {
         try
         {
             initialise();
