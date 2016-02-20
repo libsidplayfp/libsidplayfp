@@ -30,9 +30,10 @@ namespace reSIDfp
 
 /**
  * The audio output stage in a Commodore 64 consists of two STC networks, a
- * low-pass filter with 3-dB frequency 16kHz followed by a high-pass filter with
- * 3-dB frequency 16Hz (the latter provided an audio equipment input impedance
- * of 1kOhm).
+ * low-pass filter with 3 dB frequency 16kHz followed by a DC-blocker which
+ * acts as a high-pass filter with a cutoff dependent on the attached audio
+ * equipment impedance. Here we suppose an impedance of 1kOhm resulting
+ * in a 3 dB attenuation at 16Hz.
  *
  * The STC networks are connected with a [BJT] supposedly meant to act
  * as a unity gain buffer, which is not really how it works.
