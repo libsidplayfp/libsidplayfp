@@ -85,7 +85,7 @@ private:
     /// Error message
     const char *m_errorString;
 
-    volatile bool m_isPlaying;
+    volatile state_t m_isPlaying;
 
     /// PAL/NTSC switch value
     uint8_t videoSwitch;

@@ -61,7 +61,7 @@ void Dac::kinkedDac(ChipModel chipModel)
     const bool term = chipModel == MOS8580;
 
     // Calculate voltage contribution by each individual bit in the R-2R ladder.
-    for (int set_bit = 0; set_bit < dacLength; set_bit++)
+    for (unsigned int set_bit = 0; set_bit < dacLength; set_bit++)
     {
         double Vn = 1.;                   // Normalized bit voltage.
         double R = 1.;                    // Normalized R
@@ -69,7 +69,7 @@ void Dac::kinkedDac(ChipModel chipModel)
         double Rn = term ?                // Rn = 2R for correct termination,
                     _2R : R_INFINITY;     // INFINITY for missing termination.
 
-        int bit;
+        unsigned int bit;
 
         // Calculate DAC "tail" resistance by repeated parallel substitution.
         for (bit = 0; bit < set_bit; bit++)
@@ -107,14 +107,14 @@ void Dac::kinkedDac(ChipModel chipModel)
     // Normalize to integerish behavior
     double Vsum = 0.;
 
-    for (int i = 0; i < dacLength; i++)
+    for (unsigned int i = 0; i < dacLength; i++)
     {
         Vsum += dac[i];
     }
 
     Vsum /= 1 << dacLength;
 
-    for (int i = 0; i < dacLength; i++)
+    for (unsigned int i = 0; i < dacLength; i++)
     {
         dac[i] /= Vsum;
     }

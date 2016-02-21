@@ -118,7 +118,7 @@ bool Player::fastForward(unsigned int percent)
 
 void Player::initialise()
 {
-    m_isPlaying = false;
+    m_isPlaying = STOPPED;
 
     m_c64.reset();
 
@@ -175,7 +175,7 @@ void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
 
 void Player::run(unsigned int events)
 {
-    for (int i = 0; m_isPlaying && i < events; i++)
+    for (unsigned int i = 0; m_isPlaying && i < events; i++)
         m_c64.getEventScheduler()->clock();
 }
 
