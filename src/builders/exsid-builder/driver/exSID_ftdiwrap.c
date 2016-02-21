@@ -328,3 +328,11 @@ int xSfw_usb_setup(void * ftdi, int baudrate, int latency)
 setupfail:
 	return rval;
 }
+
+/**
+ * Release dlopen'd library.
+ */
+void xSfw_dlclose()
+{
+	_xSfw_dlclose(dlhandle);
+}
