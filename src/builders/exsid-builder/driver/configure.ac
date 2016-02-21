@@ -14,9 +14,11 @@ AC_CANONICAL_HOST
 dnl The dlopen() function is in the C library for *BSD and in
 dnl libdl on GLIBC-based systems. Use native functions on MinGW.
 AS_CASE([$host_os],
-	[mingw*], [],
+        [mingw*], [MINGW32=yes],
 	[AC_SEARCH_LIBS([dlopen], [dl dld], [], [AC_MSG_ERROR([unable to find the dlopen() function])])]
 )
+
+AM_CONDITIONAL([MINGW32], [test "x$MINGW32" = "xyes"])
 
 # debug options
 AC_MSG_CHECKING([for debugging])

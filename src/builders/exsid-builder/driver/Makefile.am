@@ -3,8 +3,14 @@ ACLOCAL_AMFLAGS = -I m4
 
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
+if MINGW32
+  W32_CPPFLAGS = -DWIN32_LEAN_AND_MEAN
+  W32_LDFLAGS = -no-undefined
+endif
+
 AM_CPPFLAGS = \
 $(FTDI_CFLAGS) \
+${W32_CPPFLAGS} \
 @debug_flags@
 
 EXTRA_DIST = \
@@ -20,7 +26,7 @@ exSID.h
 
 libexsid_ladir = $(includedir)
 
-libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION)
+libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION) $(W32_LDFLAGS)
 
 #=========================================================
 
