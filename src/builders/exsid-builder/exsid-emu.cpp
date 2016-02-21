@@ -51,7 +51,6 @@ exSID::exSID(sidbuilder *builder) :
     sidemu(builder),
     m_instance(sid++),
     m_status(false),
-    m_locked(false),
     readflag(false)
 {
     if (exSID_init() < 0)

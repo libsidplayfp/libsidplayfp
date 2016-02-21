@@ -44,13 +44,10 @@ private:
     //friend class HardSIDBuilder;
 
     // exSID specific data
-    int m_handle;
-
     static unsigned int sid;
 
     unsigned int m_instance;
     bool m_status;
-    bool m_locked;
 
     bool readflag;
 
