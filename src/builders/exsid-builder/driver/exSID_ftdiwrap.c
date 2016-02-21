@@ -76,16 +76,16 @@ static unsigned int dummysize = 0;	// DWORD in unsigned int
 	char *_xSfw_dlerror() {
 		DWORD dwError = GetLastError();
 		char* lpMsgBuf = NULL; 
-	FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_ALLOCATE_BUFFER,
-		0,
-		dwError,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPSTR)&lpMsgBuf,
-		0,
-		NULL);
+		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_ALLOCATE_BUFFER,
+			0,
+			dwError,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPSTR)&lpMsgBuf,
+			0,
+			NULL);
 		return lpMsgBuf;
 	}
-	void xSfw_cleardlerror() {
+	void _xSfw_cleardlerror() {
 		SetLastError(0);
 	}
 #else
@@ -102,7 +102,7 @@ static unsigned int dummysize = 0;	// DWORD in unsigned int
 	char *_xSfw_dlerror() {
 		return dlerror();
 	}
-	void xSfw_cleardlerror() {
+	void _xSfw_cleardlerror() {
 		dlerror();
 	}
 #endif
@@ -207,7 +207,7 @@ int xSfw_dlopen()
 #ifdef	HAVE_FTD2XX
 	// try libftd2xx first - XXX TODO version check
 	if ((dlhandle = _xSfw_dlopen(TEXT("libftd2xx" SHLIBEXT)))) {
-		xSfw_cleardlerror();	// clear dlerror
+		_xSfw_cleardlerror();	// clear dlerror
 		xSfw_new = NULL;
 		xSfw_free = NULL;
 		XSFW_DLSYM(_FT_Write, "FT_Write");
@@ -233,7 +233,7 @@ int xSfw_dlopen()
 #ifdef	HAVE_FTDI
 	// otherwise try libftdi1 - XXX TODO version check
 	if ((dlhandle = _xSfw_dlopen(TEXT("libftdi1" SHLIBEXT)))) {
-		xSfw_cleardlerror();	// clear dlerror
+		_xSfw_cleardlerror();	// clear dlerror
 		XSFW_DLSYM(xSfw_new, "ftdi_new");
 		XSFW_DLSYM(xSfw_free, "ftdi_free");
 		XSFW_DLSYM(xSfw_write_data, "ftdi_write_data");
