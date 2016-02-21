@@ -75,7 +75,7 @@ static unsigned int dummysize = 0;	// DWORD in unsigned int
 	}
 	char *_xSfw_dlerror() {
 		DWORD dwError = GetLastError();
-		char* lpMsgBuf = NULL; 
+		char* lpMsgBuf = NULL;
 		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_ALLOCATE_BUFFER,
 			0,
 			dwError,
@@ -87,6 +87,9 @@ static unsigned int dummysize = 0;	// DWORD in unsigned int
 	}
 	void _xSfw_cleardlerror() {
 		SetLastError(0);
+	}
+	void _xSfw_free_error_string(char * error_string) {
+		LocalFree(error_string);
 	}
 #else
 	static void * dlhandle = NULL;
@@ -105,6 +108,7 @@ static unsigned int dummysize = 0;	// DWORD in unsigned int
 	void _xSfw_cleardlerror() {
 		dlerror();
 	}
+	void _xSfw_free_error_string(char * error_string) {}
 #endif
 
 
@@ -264,9 +268,7 @@ int xSfw_dlopen()
 
 dlfail:
 	xserror("dlsym error: %s\n", dlerrorstr);
-#ifdef _WIN32
-    LocalFree(dlerrorstr);
-#endif
+	_xSfw_free_error_string(dlerrorstr);
 	_xSfw_dlclose(dlhandle);
 	return -1;
 }
