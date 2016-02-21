@@ -1,3 +1,8 @@
+1.8.4 2016-02-21
+* Fix a possible crash when locking a sid device fails
+
+
+
 1.8.3 2015-12-28
 * Fix an overflow in resid/residfp for 8580 output, noticed in /MUSICIANS/L/Linus/64_Forever.sid
 * Use log1p in resid/residfp for improved precision of 6581 filter parameter calculation
