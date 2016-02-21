@@ -2,6 +2,7 @@ AC_INIT([libexsid], [1.2pre], [], [], [http://hacks.slashdirt.org/hw/exsid/#libe
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([exSID.c])
+AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
 
 dnl Initialize libtool.
