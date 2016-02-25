@@ -52,7 +52,7 @@
 #endif
 
 #ifndef XSFW_SUPPORT
-#error No known method to access FTDI chip
+ #error No known method to access FTDI chip
 #endif
 
 #define	XSFW_WRAPDECL
@@ -63,53 +63,35 @@
 static unsigned int dummysize = 0;	// DWORD in unsigned int
 
 #ifdef _WIN32
-	static HMODULE dlhandle = NULL;
-	HMODULE _xSfw_dlopen(LPCTSTR libName) {
-		return LoadLibrary(libName);
-	}
-	FARPROC _xSfw_dlsym(HMODULE hModule, LPCSTR lpProcName) {
-		return GetProcAddress(hModule, lpProcName);
-	}
-	BOOL _xSfw_dlclose(HMODULE hModule) {
-		return FreeLibrary(hModule);
-	}
-	char *_xSfw_dlerror() {
-		DWORD dwError = GetLastError();
-		char* lpMsgBuf = NULL;
-		FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_ALLOCATE_BUFFER,
-			0,
-			dwError,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPSTR)&lpMsgBuf,
-			0,
-			NULL);
-		return lpMsgBuf;
-	}
-	void _xSfw_cleardlerror() {
-		SetLastError(0);
-	}
-	void _xSfw_free_error_string(char * error_string) {
-		LocalFree(error_string);
-	}
-#else
-	static void * dlhandle = NULL;
-	void * _xSfw_dlopen(const char *filename) {
-		return dlopen(filename, RTLD_NOW|RTLD_LOCAL);
-	}
-	void *_xSfw_dlsym(void *handle, const char *symbol){
-		return dlsym(handle, symbol);
-	}
-	int _xSfw_dlclose(void *handle) {
-		return dlclose(handle);
-	}
-	char *_xSfw_dlerror() {
-		return dlerror();
-	}
-	void _xSfw_cleardlerror() {
-		dlerror();
-	}
-	void _xSfw_free_error_string(char * error_string) {}
-#endif
+ static HMODULE dlhandle = NULL;
+
+ static char *_xSfw_dlerror() {
+	DWORD dwError = GetLastError();
+	char* lpMsgBuf = NULL;
+	FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_ALLOCATE_BUFFER,
+		0,
+		dwError,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPSTR)&lpMsgBuf,
+		0,
+		NULL);
+	return lpMsgBuf;
+ }
+
+ #define _xSfw_dlopen(libName)		LoadLibrary(libName)
+ #define _xSfw_dlsym(hModule, lpProcName)	GetProcAddress(hModule, lpProcName)
+ #define _xSfw_dlclose(hModule)		FreeLibrary(hModule)
+ #define _xSfw_clear_dlerror()		SetLastError(0)
+ #define _xSfw_free_errstr(str)		LocalFree(str)
+#else	// ! _WIN32
+ static void * dlhandle = NULL;
+ #define _xSfw_dlopen(filename)		dlopen(filename, RTLD_NOW|RTLD_LOCAL)
+ #define _xSfw_dlsym(handle, symbol)	dlsym(handle, symbol)
+ #define _xSfw_dlclose(handle)		dlclose(handle)
+ #define _xSfw_dlerror()		dlerror()
+ #define _xSfw_clear_dlerror()		dlerror()
+ #define _xSfw_free_errstr(str)		/* nothing */
+#endif	// _WIN32
 
 
 /** Flag to signal which of the supported libraries is in use */
@@ -211,7 +193,7 @@ int xSfw_dlopen()
 #ifdef	HAVE_FTD2XX
 	// try libftd2xx first - XXX TODO version check
 	if ((dlhandle = _xSfw_dlopen(TEXT("libftd2xx" SHLIBEXT)))) {
-		_xSfw_cleardlerror();	// clear dlerror
+		_xSfw_clear_dlerror();	// clear dlerror
 		xSfw_new = NULL;
 		xSfw_free = NULL;
 		XSFW_DLSYM(_FT_Write, "FT_Write");
@@ -237,7 +219,7 @@ int xSfw_dlopen()
 #ifdef	HAVE_FTDI
 	// otherwise try libftdi1 - XXX TODO version check
 	if ((dlhandle = _xSfw_dlopen(TEXT("libftdi1" SHLIBEXT)))) {
-		_xSfw_cleardlerror();	// clear dlerror
+		_xSfw_clear_dlerror();	// clear dlerror
 		XSFW_DLSYM(xSfw_new, "ftdi_new");
 		XSFW_DLSYM(xSfw_free, "ftdi_free");
 		XSFW_DLSYM(xSfw_write_data, "ftdi_write_data");
@@ -268,7 +250,7 @@ int xSfw_dlopen()
 
 dlfail:
 	xserror("dlsym error: %s\n", dlerrorstr);
-	_xSfw_free_error_string(dlerrorstr);
+	_xSfw_free_errstr(dlerrorstr);
 	_xSfw_dlclose(dlhandle);
 	return -1;
 }
