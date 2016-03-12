@@ -142,6 +142,8 @@ void EnvelopeGenerator::writeCONTROL_REG(unsigned char control)
     {
         // Gate bit on: Start attack, decay, sustain.
         state = ATTACK;
+        // FIXME: there's a single cycle where SID is using the rate from 'decay' rather than attack
+        // http://csdb.dk/forums/?roomid=14&topicid=110119&showallposts=1
         rate = adsrtable[attack];
 
         // Switching to attack state unlocks the zero freeze and aborts any
