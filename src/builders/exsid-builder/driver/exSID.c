@@ -186,29 +186,28 @@ int exSID_init(void)
  */
 void exSID_exit(void)
 {
-	if (!ftdi)
-		return;
+	if (ftdi) {
+		exSID_reset(0);
 
-	exSID_reset(0);
+		xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 
-	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
+		ftdi_status = xSfw_usb_close(ftdi);
+		if (ftdi_status < 0)
+			xserror("unable to close ftdi device: %d (%s)\n",
+				ftdi_status, xSfw_get_error_string(ftdi));
 
-	ftdi_status = xSfw_usb_close(ftdi);
-	if (ftdi_status < 0)
-		xserror("unable to close ftdi device: %d (%s)\n",
-			ftdi_status, xSfw_get_error_string(ftdi));
-
-	if (xSfw_free)
-		xSfw_free(ftdi);
-	ftdi = NULL;
+		if (xSfw_free)
+			xSfw_free(ftdi);
+		ftdi = NULL;
 
 #ifdef	DEBUG
-	xsdbg("mean jitter: %.1f cycle(s) over %lu I/O ops\n",
-		((float)accdrift/accioops), accioops);
-	xsdbg("bandwidth used for I/O ops: %lu%% (approx)\n",
-		100-(accdelay*100/acccycle));
-	accdrift = accioops = accdelay = acccycle = 0;
+		xsdbg("mean jitter: %.1f cycle(s) over %lu I/O ops\n",
+			((float)accdrift/accioops), accioops);
+		xsdbg("bandwidth used for I/O ops: %lu%% (approx)\n",
+			100-(accdelay*100/acccycle));
+		accdrift = accioops = accdelay = acccycle = 0;
 #endif
+	}
 
 	clkdrift = 0;
 	xSfw_dlclose();
