@@ -185,8 +185,10 @@ int xSfw_dlopen()
 {
 #define XSFW_DLSYM(a, b)			\
 	*(void **)(&a) = _xSfw_dlsym(dlhandle, b);	\
-	if ((dlerrorstr = _xSfw_dlerror()))		\
-		goto dlfail
+	if (a == NULL) {	\
+		dlerrorstr = _xSfw_dlerror();	\
+		goto dlfail;	\
+	}
 
 	char * dlerrorstr = NULL;
 
