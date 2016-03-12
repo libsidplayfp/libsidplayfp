@@ -53,7 +53,11 @@ exSID::exSID(sidbuilder *builder) :
     readflag(false)
 {
     if (exSID_init() < 0)
+    {
+        //FIXME should get error message from the driver
+        m_error = "Error initializing exSID";
         return;
+    }
 
     m_status = true;
     sid++;
