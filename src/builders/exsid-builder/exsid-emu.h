@@ -46,7 +46,6 @@ private:
     // exSID specific data
     static unsigned int sid;
 
-    unsigned int m_instance;
     bool m_status;
 
     bool readflag;

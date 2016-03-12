@@ -49,7 +49,6 @@ const char* exSID::getCredits()
 
 exSID::exSID(sidbuilder *builder) :
     sidemu(builder),
-    m_instance(sid++),
     m_status(false),
     readflag(false)
 {
@@ -57,6 +56,7 @@ exSID::exSID(sidbuilder *builder) :
         return;
 
     m_status = true;
+    sid++;
     sidemu::reset();
 }
 
