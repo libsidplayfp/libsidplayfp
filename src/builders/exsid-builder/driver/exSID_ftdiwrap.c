@@ -193,8 +193,17 @@ int xSfw_dlopen()
 	char * dlerrorstr = NULL;
 
 #ifdef	HAVE_FTD2XX
+#ifdef _WIN32
+#ifdef _WIN64
+# define LIBFTD2XX "ftd2xx64"
+#else
+# define LIBFTD2XX "ftd2xx"
+#endif
+#else
+# define LIBFTD2XX "libftd2xx"
+#endif
 	// try libftd2xx first - XXX TODO version check
-	if ((dlhandle = _xSfw_dlopen(TEXT("libftd2xx" SHLIBEXT)))) {
+	if ((dlhandle = _xSfw_dlopen(TEXT(LIBFTD2XX SHLIBEXT)))) {
 		_xSfw_clear_dlerror();	// clear dlerror
 		xSfw_new = NULL;
 		xSfw_free = NULL;
