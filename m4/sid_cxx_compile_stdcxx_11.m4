@@ -78,14 +78,14 @@ AC_DEFUN([SID_CXX_COMPILE_STDCXX_11], [dnl
       cachevar=AS_TR_SH([ax_cv_cxx_compile_cxx11_-std=c++11])
       AC_CACHE_CHECK(whether $CXX supports C++11 features with -std=c++11,
                      $cachevar,
-        [ac_save_CXXFLAGS="$CXXFLAGS"
-         CXXFLAGS="$CXXFLAGS -std=c++11"
+        [ac_save_CXX="$CXX"
+         CXX="$CXX -std=c++11"
          AC_COMPILE_IFELSE([AC_LANG_SOURCE([_AX_CXX_COMPILE_STDCXX_11_testbody])],
           [eval $cachevar=yes],
           [eval $cachevar=no])
-         CXXFLAGS="$ac_save_CXXFLAGS"])
+         CXX="$ac_save_CXX"])
       if eval test x\$$cachevar = xyes; then
-        CXXFLAGS="$CXXFLAGS -std=c++11"
+        CXX="$CXX -std=c++11"
         ac_success=yes
         break
       fi
