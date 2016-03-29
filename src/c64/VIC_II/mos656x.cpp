@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
@@ -57,7 +57,7 @@ const char *MOS656X::credits()
             "\tCopyright (C) 2001 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"
-            "\tCopyright (C) 2011-2015 Leandro Nini\n";
+            "\tCopyright (C) 2011-2016 Leandro Nini\n";
 }
 
 
@@ -332,25 +332,24 @@ event_clock_t MOS656X::clockPAL()
         break;
 
     case 10:
-        sprites.updateMc();
         endDma<7>();
         break;
 
     case 11:
         startBadline();
 
-        delay = 4;
-        break;
-
-    case 12:
         delay = 3;
         break;
 
-    case 13:
+    case 12:
         delay = 2;
         break;
 
+    case 13:
+        break;
+
     case 14:
+        sprites.updateMc();
         break;
 
     case 15:
@@ -460,7 +459,6 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     case 9:
-        sprites.updateMc();
         endDma<7>();
 
         delay = 2;
@@ -472,18 +470,18 @@ event_clock_t MOS656X::clockNTSC()
     case 11:
         startBadline();
 
-        delay = 4;
-        break;
-
-    case 12:
         delay = 3;
         break;
 
-    case 13:
+    case 12:
         delay = 2;
         break;
 
+    case 13:
+        break;
+
     case 14:
+        sprites.updateMc();
         break;
 
     case 15:
@@ -601,25 +599,24 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     case 10:
-        sprites.updateMc();
         endDma<7>();
         break;
 
     case 11:
         startBadline();
 
-        delay = 4;
-        break;
-
-    case 12:
         delay = 3;
         break;
 
-    case 13:
+    case 12:
         delay = 2;
         break;
 
+    case 13:
+        break;
+
     case 14:
+        sprites.updateMc();
         break;
 
     case 15:
