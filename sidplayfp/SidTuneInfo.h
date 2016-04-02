@@ -138,8 +138,8 @@ public:
      * The SID chip model(s) requested by the sidtune.
      */
     //@{
-    virtual SID_DEPRECATED model_t sidModel1() const =0;    ///< first SID \deprecated use #sidModel(0)
-    virtual SID_DEPRECATED model_t sidModel2() const =0;    ///< second SID \deprecated use #sidModel(1)
+    virtual SID_DEPRECATED model_t sidModel1() const =0;    ///< first SID \deprecated use #sidModel() with i=0
+    virtual SID_DEPRECATED model_t sidModel2() const =0;    ///< second SID \deprecated use #sidModel() with i=1
     virtual model_t sidModel(unsigned int i) const =0;   ///< \since 1.8
     //@}
 
