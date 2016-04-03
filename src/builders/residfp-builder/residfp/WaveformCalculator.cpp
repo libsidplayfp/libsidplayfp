@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -21,6 +21,8 @@
 
 #include "WaveformCalculator.h"
 
+#include <cmath>
+
 namespace reSIDfp
 {
 
@@ -30,24 +32,30 @@ WaveformCalculator* WaveformCalculator::getInstance()
     return &instance;
 }
 
-/*
- * the "bits wrong" figures below are not directly comparable. 0 bits are very easy to predict,
- * and waveforms that are mostly zero have low scores. More comparable scores would be found by
- * dividing with the count of 1-bits, or something.
+/**
+ * Parameters derived with the Monte Carlo method based on
+ * samplings by kevtris. Code and data available in the project repository [1].
+ *
+ * The score here reported is the acoustic error
+ * calculated XORing the estimated and the sampled values.
+ * In parentheses the number of mispredicted bits
+ * on a total of 32768.
+ *
+ * [1] http://svn.code.sf.net/p/sidplay-residfp/code/trunk/combined-waveforms/
  */
 const CombinedWaveformConfig config[2][4] =
 {
-    { /* kevtris chip G (6581r2/r3) */
-        {0.880592f, 0.f,      0.f,       0.327589f,  0.611491f}, // error  1741
-        {0.892438f, 2.00995f, 1.00392f,  0.0298894f, 0.f      }, // error 11418
-        {0.874544f, 1.91885f, 1.12702f,  0.0312843f, 0.f      }, // error 21223
-        {0.930481f, 1.42322f, 0.f,       0.0481732f, 0.752611f}, // error    78
+    { // kevtris chip J (6581 R2)
+        {0.979544f,  0.f,       0.f,       3.98271f,  0.775023f},  // Error   148  (61)
+        {0.91186f,   1.78531f,  0.f,       1.10833f,  0.f      },  // Error  1562 (110)
+        {0.9f,       2.f,       0.f,       1.f,       0.f      },  // Error     0   (0)
+        {0.950095f,  1.48367f,  0.f,       1.079012f, 1.f      },  // Error     2   (2)
     },
-    { /* kevtris chip V (8580) */
-        {0.979807f, 0.f,      0.990736f, 9.23845f,   0.82445f},  // error  5371
-        {0.909646f, 2.03944f, 0.958471f, 0.175597f,  0.f     },  // error 18507
-        {0.918338f, 2.00243f, 0.949102f, 0.180793f,  0.f     },  // error 16763
-        {0.984532f, 1.53602f, 0.961933f, 3.46871f,   0.803955f}, // error  3199
+    { // kevtris chip V (8580 R5)
+        {0.954174f,  0.f,       0.977581f, 2.11887f,  0.971231f},  // Error  1595 (268)
+        {0.9017799f, 1.616059f,  0.f,      1.436651f, 0.f      },  // Error 19241 (784)
+        {0.912565f,  1.84866f,  0.965f,    1.41917f,  0.f      },  // Error 17839 (668)
+        {0.970001f,  0.955653f, 1.00323f,  1.97354f,  1.f      },  // Error  2671 (161)
     },
 };
 
@@ -82,7 +90,7 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
     }
 
     // convert to ST
-    if ((waveform & 3) == 3)
+    else if ((waveform & 3) == 3)
     {
         // bottom bit is grounded via T waveform selector
         o[0] *= config.stmix;
@@ -93,7 +101,11 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
         }
     }
 
-    o[11] *= config.topbit;
+    // topbit for Saw
+    if ((waveform & 2) == 2)
+    {
+        o[11] *= config.topbit;
+    }
 
     // ST, P* waveform?
     if (waveform == 3 || waveform > 4)
@@ -102,7 +114,7 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
 
         for (int i = 0; i <= 12; i++)
         {
-            distancetable[12 + i] = distancetable[12 - i] = 1.f / (1.f + i * i * config.distance);
+            distancetable[12 + i] = distancetable[12 - i] = 1.f / pow(config.distance, i);
         }
 
         float tmp[12];
