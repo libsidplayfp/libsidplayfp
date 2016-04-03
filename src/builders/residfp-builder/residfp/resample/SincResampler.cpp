@@ -158,7 +158,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
 
     // For calculation of beta and N see the reference for the kaiserord
     // function in the MATLAB Signal Processing Toolbox:
-    // http://www.mathworks.com/access/helpdesk/help/toolbox/signal/kaiserord.html
+    // http://www.mathworks.com/help/signal/ref/kaiserord.html
     const double beta = 0.1102 * (A - 8.7);
     const double I0beta = I0(beta);
     const double cyclesPerSampleD = clockFrequency / samplingFrequency;
