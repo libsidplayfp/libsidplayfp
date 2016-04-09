@@ -1,3 +1,9 @@
+1.8.5 2016-04-09
+* Fix a regression in VIC-II code
+* Improve combined waveforms emulation
+
+
+
 1.8.4 2016-02-21
 * Fix a possible crash when locking a sid device fails
 
