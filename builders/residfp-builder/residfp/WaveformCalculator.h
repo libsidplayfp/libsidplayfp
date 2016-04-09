@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,8 @@ typedef struct
     float bias;
     float pulsestrength;
     float topbit;
-    float distance;
+    float distance1;
+    float distance2;
     float stmix;
 } CombinedWaveformConfig;
 
