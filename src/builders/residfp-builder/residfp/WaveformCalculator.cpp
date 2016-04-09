@@ -45,17 +45,17 @@ WaveformCalculator* WaveformCalculator::getInstance()
  */
 const CombinedWaveformConfig config[2][4] =
 {
-    { // kevtris chip J (6581 R2)
-        {0.979544f,  0.f,       0.f,       3.98271f,  0.775023f},  // Error   148  (61)
-        {0.91186f,   1.78531f,  0.f,       1.10833f,  0.f      },  // Error  1562 (110)
-        {0.9f,       2.f,       0.f,       1.f,       0.f      },  // Error     0   (0)
-        {0.950095f,  1.48367f,  0.f,       1.079012f, 1.f      },  // Error     2   (2)
+    { /* kevtris chip J (6581 R2) */
+        {0.979544f, 0.f,       0.f,       3.98271f,   0.f,      0.775023f}, // error   148  (61)
+        {0.9079f,   1.72749f,  0.f,       1.12017f,   1.10793f, 0.f      }, // error  1540 (102)
+        {0.9f,      2.f,       0.f,       1.f,        1.f,      0.f      }, // error     0
+        {0.95248f,  1.51f,     0.f,       1.07153f,   1.09353f, 1.f      }, // error     0
     },
-    { // kevtris chip V (8580 R5)
-        {0.954174f,  0.f,       0.977581f, 2.11887f,  0.971231f},  // Error  1595 (268)
-        {0.9017799f, 1.616059f,  0.f,      1.436651f, 0.f      },  // Error 19241 (784)
-        {0.912565f,  1.84866f,  0.965f,    1.41917f,  0.f      },  // Error 17839 (668)
-        {0.970001f,  0.955653f, 1.00323f,  1.97354f,  1.f      },  // Error  2671 (161)
+    { /* kevtris chip V (8580 R5) */
+        {0.9632f,   0.f,       0.975f,    1.7467f,    2.36132f, 0.975395f}, // error  1380 (169)
+        {0.92886f,  1.67696f,  0.f,       1.1014f,    1.4352f,  0.f      }, // error  8007 (218)
+        {0.94043f,  1.7937f,   0.981f,    1.1213f,    1.4259f,  0.f      }, // error 11957 (362)
+        {0.96211f,  0.98695f,  1.00387f,  1.46499f,   1.98375f, 0.77777f }, // error  2369  (89)
     },
 };
 
@@ -70,13 +70,13 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
 {
     float o[12];
 
-    // S with strong top bit for 6581
+    // Saw
     for (unsigned int i = 0; i < 12; i++)
     {
         o[i] = (accumulator & (1 << i)) != 0 ? 1.f : 0.f;
     }
 
-    // convert to T
+    // convert to Triangle
     if ((waveform & 3) == 1)
     {
         const bool top = (accumulator & 0x800) != 0;
@@ -89,7 +89,7 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
         o[0] = 0.f;
     }
 
-    // convert to ST
+    // or to Saw+Triangle
     else if ((waveform & 3) == 3)
     {
         // bottom bit is grounded via T waveform selector
@@ -97,6 +97,14 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
 
         for (int i = 1; i < 12; i++)
         {
+            /*
+             * Enabling the S waveform pulls the XOR circuit selector transistor down
+             * (which would normally make the descending ramp of the triangle waveform),
+             * so ST does not actually have a sawtooth and triangle waveform combined,
+             * but merely combines two sawtooths, one rising double the speed the other.
+             *
+             * http://www.lemon64.com/forum/viewtopic.php?t=25442&postdays=0&postorder=asc&start=165
+             */
             o[i] = o[i - 1] * (1.f - config.stmix) + o[i] * config.stmix;
         }
     }
@@ -107,14 +115,15 @@ short calculateCombinedWaveform(CombinedWaveformConfig config, int waveform, int
         o[11] *= config.topbit;
     }
 
-    // ST, P* waveform?
+    // ST, P* waveforms
     if (waveform == 3 || waveform > 4)
     {
         float distancetable[12 * 2 + 1];
-
-        for (int i = 0; i <= 12; i++)
+        distancetable[12] = 1.f;
+        for (int i = 12; i > 0; i--)
         {
-            distancetable[12 + i] = distancetable[12 - i] = 1.f / pow(config.distance, i);
+            distancetable[12-i] = 1.0f / pow(config.distance1, i);
+            distancetable[12+i] = 1.0f / pow(config.distance2, i);
         }
 
         float tmp[12];
