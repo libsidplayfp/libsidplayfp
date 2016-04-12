@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -126,7 +126,7 @@ void Mixer::doMix()
     // move the unhandled data to start of buffer, if any.
     const int samplesLeft = sampleCount - i;
     std::for_each(m_buffers.begin(), m_buffers.end(), bufferMove(i, samplesLeft));
-    std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft - 1));
+    std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft));
 }
 
 void Mixer::begin(short *buffer, uint_least32_t count)
