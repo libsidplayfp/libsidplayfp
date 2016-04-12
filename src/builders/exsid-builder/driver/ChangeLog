@@ -1,4 +1,4 @@
-1.2pre
+1.2
 	* Use dynamic loading to access FTDI chip
 	* Enable ftd2xx support
 	* More timing fixes
@@ -6,6 +6,8 @@
 	* Account for negative drift in jitter calculation
 	* Split headers, code cleanup, more suitable for public library
 	* Switch to "exSID USB" description string
+	* Support Windows (via MinGW)
+	* Switch to 2Mpbs interface
 
 1.1
 	* Fix time drifting for 750kbps playback
