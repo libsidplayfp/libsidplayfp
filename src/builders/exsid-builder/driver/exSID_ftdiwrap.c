@@ -262,7 +262,7 @@ int xSfw_dlopen()
 dlfail:
 	xserror("dlsym error: %s\n", dlerrorstr);
 	_xSfw_free_errstr(dlerrorstr);
-	_xSfw_dlclose(dlhandle);
+	xSfw_dlclose(dlhandle);
 	return -1;
 }
 
@@ -329,5 +329,8 @@ setupfail:
  */
 void xSfw_dlclose()
 {
-	_xSfw_dlclose(dlhandle);
+	if (dlhandle != NULL) {
+		_xSfw_dlclose(dlhandle);
+		dlhandle = NULL;
+	}
 }
