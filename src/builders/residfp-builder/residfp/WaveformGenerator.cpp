@@ -50,10 +50,8 @@ const int SHIFT_REGISTER_RESET = 0x8000;
 
 const int DAC_BITS = 12;
 
-void WaveformGenerator::clock_shift_register()
+void WaveformGenerator::clock_shift_register(unsigned int bit0)
 {
-    // bit0 = (bit22 | test) ^ bit17
-    const unsigned int bit0 = ((shift_register << 22) ^ (shift_register << 17)) & (1 << 22);
     shift_register = (shift_register >> 1) | bit0;
 
     // New noise waveform output.
@@ -188,11 +186,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             // completed by enabling SRAM write.
 
             // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
-            const unsigned int bit0 = (~shift_register << 17) & (1 << 22);
-            shift_register = (shift_register >> 1) | bit0;
-
-            // Set new noise waveform output.
-            set_noise_output();
+            clock_shift_register((~shift_register << 17) & (1 << 22));
         }
     }
 }

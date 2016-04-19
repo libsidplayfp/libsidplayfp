@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -133,7 +133,7 @@ private:
     float dac[4096];
 
 private:
-    void clock_shift_register();
+    void clock_shift_register(unsigned int bit0);
 
     void write_shift_register();
 
@@ -309,7 +309,8 @@ void WaveformGenerator::clock()
         }
         else if (unlikely(shift_pipeline) != 0 && --shift_pipeline == 0)
         {
-            clock_shift_register();
+            // bit0 = (bit22 | test) ^ bit17
+            clock_shift_register(((shift_register << 22) ^ (shift_register << 17)) & (1 << 22));
         }
     }
 }
