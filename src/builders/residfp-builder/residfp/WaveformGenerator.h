@@ -325,13 +325,6 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         // calculation of the output value.
         const unsigned int ix = (accumulator ^ (ringModulator->accumulator & ring_msb_mask)) >> 12;
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
-
-        if (unlikely(waveform > 0x8))
-        {
-            // Combined waveforms that include noise
-            // write to the shift register.
-            write_shift_register();
-        }
     }
     else
     {

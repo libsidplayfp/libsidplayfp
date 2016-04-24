@@ -52,6 +52,16 @@ const int DAC_BITS = 12;
 
 void WaveformGenerator::clock_shift_register(unsigned int bit0)
 {
+    if (unlikely(waveform > 0x8))
+    {
+        // Combined waveforms that include noise
+        // write back to the shift register.
+        // It seems that the write happens only on register clocking
+        // during the shifting, as shown by the following test:
+        // ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
+        write_shift_register();
+    }
+
     shift_register = (shift_register >> 1) | bit0;
 
     // New noise waveform output.
