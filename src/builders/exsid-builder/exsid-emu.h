@@ -52,6 +52,8 @@ private:
 
     uint8_t busValue;
 
+    bool muted[3];
+
 private:
     unsigned int delay();
 
