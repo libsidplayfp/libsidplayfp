@@ -75,7 +75,16 @@ void WaveformGenerator::write_shift_register()
         // neighboring bits are affected.
 
         shift_register &=
-            ~((1 << 2) | (1 << 4) | (1 << 8) | (1 << 11) | (1 << 13) | (1 << 17) | (1 << 20) | (1 << 22)) |
+            ~(
+                (1 <<  2) |  // Bit 20
+                (1 <<  4) |  // Bit 18
+                (1 <<  8) |  // Bit 14
+                (1 << 11) |  // Bit 11
+                (1 << 13) |  // Bit  9
+                (1 << 17) |  // Bit  5
+                (1 << 20) |  // Bit  2
+                (1 << 22)    // Bit  0
+            ) |
             ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
             ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
             ((waveform_output & (1 <<  9)) <<  1) |  // Bit  9 -> bit 14
