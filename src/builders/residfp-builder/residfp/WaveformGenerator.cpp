@@ -52,15 +52,7 @@ const int DAC_BITS = 12;
 
 void WaveformGenerator::clock_shift_register(unsigned int bit0)
 {
-    if (unlikely(waveform > 0x8))
-    {
-        // Combined waveforms that include noise
-        // write back to the shift register.
-        // It seems that the write happens only on register clocking
-        // during the shifting, as shown by the following test:
-        // ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
-        write_shift_register();
-    }
+    write_shift_register();
 
     shift_register = (shift_register >> 1) | bit0;
 
@@ -70,34 +62,38 @@ void WaveformGenerator::clock_shift_register(unsigned int bit0)
 
 void WaveformGenerator::write_shift_register()
 {
-    // Write changes to the shift register output caused by combined waveforms
-    // back into the shift register.
-    // A bit once set to zero cannot be changed, hence the and'ing.
-    // FIXME: Write test program to check the effect of 1 bits and whether
-    // neighboring bits are affected.
+    if (unlikely(waveform > 0x8))
+    {
+        // Write changes to the shift register output caused by combined waveforms
+        // back into the shift register. This happens only when the register is clocked
+        // (see $D1+$81_wave_test [1]) or when the test bit is set.
+        // A bit once set to zero cannot be changed, hence the and'ing.
+        //
+        // [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
+        //
+        // FIXME: Write test program to check the effect of 1 bits and whether
+        // neighboring bits are affected.
 
-    shift_register &=
-        ~((1 << 2) | (1 << 4) | (1 << 8) | (1 << 11) | (1 << 13) | (1 << 17) | (1 << 20) | (1 << 22)) |
-        ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
-        ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
-        ((waveform_output & (1 <<  9)) <<  1) |  // Bit  9 -> bit 14
-        ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
-        ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
-        ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
-        ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
-        ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
+        shift_register &=
+            ~((1 << 2) | (1 << 4) | (1 << 8) | (1 << 11) | (1 << 13) | (1 << 17) | (1 << 20) | (1 << 22)) |
+            ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
+            ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
+            ((waveform_output & (1 <<  9)) <<  1) |  // Bit  9 -> bit 14
+            ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
+            ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
+            ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
+            ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
+            ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
 
-    noise_output &= waveform_output;
-    no_noise_or_noise_output = no_noise | noise_output;
+        noise_output &= waveform_output;
+        no_noise_or_noise_output = no_noise | noise_output;
+    }
 }
 
 void WaveformGenerator::reset_shift_register()
 {
     shift_register = 0x7fffff;
     shift_register_reset = 0;
-
-    // New noise waveform output.
-    set_noise_output();
 }
 
 void WaveformGenerator::set_noise_output()
@@ -189,6 +185,12 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
             // Set reset time for shift register.
             shift_register_reset = SHIFT_REGISTER_RESET;
+
+            // Write back to the shift register.
+            write_shift_register();
+
+            // New noise waveform output.
+            set_noise_output();
         }
         else
         {
@@ -221,6 +223,7 @@ void WaveformGenerator::reset()
     pulse_output = 0xfff;
 
     reset_shift_register();
+    set_noise_output();
     shift_pipeline = 0;
 
     waveform_output = 0;

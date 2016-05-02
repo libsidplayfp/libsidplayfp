@@ -283,6 +283,11 @@ void WaveformGenerator::clock()
         if (unlikely(shift_register_reset != 0) && unlikely(--shift_register_reset == 0))
         {
             reset_shift_register();
+
+            write_shift_register();
+
+            // New noise waveform output.
+            set_noise_output();
         }
 
         // The test bit sets pulse high.
