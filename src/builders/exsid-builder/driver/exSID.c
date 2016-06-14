@@ -20,6 +20,12 @@
 #include <unistd.h>
 #include <inttypes.h>
 
+#undef EXSID_THREADED
+
+#ifdef	EXSID_THREADED
+#include "c11threads.h"
+#endif
+
 #ifdef	DEBUG
 static long accdrift = 0;
 static unsigned long accioops = 0;
@@ -30,6 +36,17 @@ static unsigned long acccycle = 0;
 static int ftdi_status;
 static void * ftdi = NULL;
 
+#ifdef EXSID_THREADED
+// flip buffering
+static unsigned char bufchar0[XS_BUFFSZ];
+static unsigned char bufchar1[XS_BUFFSZ];
+static unsigned char * frontbuf = bufchar0, * backbuf = bufchar1;
+static int frontbuf_idx = 0, backbuf_idx = 0;
+static mtx_t frontbuf_ready_mtx;
+static cnd_t frontbuf_ready_cnd;
+static thrd_t threadout;
+#endif
+
 /**
  * cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t though
  * overflow should not happen under normal conditions.
@@ -39,6 +56,7 @@ static void * ftdi = NULL;
 static int_fast32_t clkdrift = 0;
 
 static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
+
 
 /**
  * Write routine to send data to the device.
@@ -72,7 +90,7 @@ static inline void _xSread(unsigned char * buff, int size)
 	ftdi_status = xSfw_read_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-	        xserror("Error ftdi_read_data(%d): %s\n",
+		xserror("Error ftdi_read_data(%d): %s\n",
 			ftdi_status, xSfw_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
@@ -81,6 +99,78 @@ static inline void _xSread(unsigned char * buff, int size)
 	}
 #endif
 }
+
+
+#ifdef EXSID_THREADED
+/**
+ * Writer thread. ** consummer **
+ * This thread consumes buffer prepared in _xSoutb().
+ * Since writes to the FTDI subsystem are blocking, this thread blocks when it's
+ * writing to the chip, and also while it's waiting for the front buffer to be ready.
+ * This ensures execution time consistency as _xSoutb() periodically wait for 
+ * the front buffer to be ready before flipping buffers.
+ * @note BLOCKING.
+ * @param arg ignored
+ * @return DOES NOT RETURN, exits when frontbuf_idx is negative.
+ */
+static int _exSID_threadout(void *arg)
+{
+	xsdbg("started thread\n");
+	while (1) {
+		mtx_lock(&frontbuf_ready_mtx);
+		if (unlikely(frontbuf_idx < 0))		// exit condition
+			thrd_exit(0);
+		else if (frontbuf_idx == 0)		// frontbuf empty
+			cnd_wait(&frontbuf_ready_cnd, &frontbuf_ready_mtx);
+
+		_xSwrite(frontbuf, frontbuf_idx);
+		frontbuf_idx = 0;
+		mtx_unlock(&frontbuf_ready_mtx);
+	}
+}
+
+/**
+ * Single byte output routine. ** producer **
+ * Fills a static buffer with bytes to send to the device until the buffer is
+ * full or a forced write is triggered. Compensates for drift if XS_BDRATE isn't
+ * a multiple of of XS_SIDCLK.
+ * @note No drift compensation is performed on read operations.
+ * @param byte byte to send
+ * @param flush force write flush if non-zero
+ */
+static void _xSoutb(uint8_t byte, int flush)
+{
+	unsigned char * bufptr = NULL;
+
+	backbuf[backbuf_idx++] = (unsigned char)byte;
+
+	/* if XS_BDRATE isn't a multiple of XS_SIDCLK we will drift:
+	 every XS_BDRATE/(remainder of XS_SIDCLK/XS_BDRATE) we lose one SID cycle.
+	 Compensate here */
+#if (XS_SIDCLK % XS_RSBCLK)
+	if (!(backbuf_idx % (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK))))
+		clkdrift--;
+#endif
+	if (likely((backbuf_idx < XS_BUFFSZ) && !flush))
+		return;
+
+	// flip buffers
+	mtx_lock(&frontbuf_ready_mtx);
+	if (unlikely(flush < 0))
+		frontbuf_idx = -1;
+	else {
+		bufptr = frontbuf;
+		frontbuf = backbuf;
+		frontbuf_idx = backbuf_idx;
+		backbuf = bufptr;
+		backbuf_idx = 0;
+	}
+	cnd_signal(&frontbuf_ready_cnd);
+	mtx_unlock(&frontbuf_ready_mtx);
+}
+
+
+#else // !EXSID_THREADED
 
 /**
  * Single byte output routine.
@@ -111,6 +201,8 @@ static void _xSoutb(uint8_t byte, int flush)
 	_xSwrite(bufchar, i);
 	i = 0;
 }
+
+#endif	// EXSID_THREADED
 
 /**
  * Device init routine.
@@ -159,6 +251,14 @@ int exSID_init(void)
 	// success - device with device description "exSIDUSB" is open
 	xsdbg("Device opened\n");
 	
+
+#ifdef	EXSID_THREADED
+	xsdbg("Thread setup\n");
+	mtx_init(&frontbuf_ready_mtx, mtx_plain);
+	cnd_init(&frontbuf_ready_cnd);
+	thrd_create(&threadout, _exSID_threadout, NULL);
+#endif
+
 	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 
 	// Wait for device ready by trying to read FV and wait for the answer
@@ -188,6 +288,13 @@ void exSID_exit(void)
 {
 	if (ftdi) {
 		exSID_reset(0);
+
+#ifdef	EXSID_THREADED
+		_xSoutb(XS_AD_IOCTFV, -1);	// signal end of thread
+		cnd_destroy(&frontbuf_ready_cnd);
+		mtx_destroy(&frontbuf_ready_mtx);
+		thrd_join(threadout, NULL);
+#endif
 
 		xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 

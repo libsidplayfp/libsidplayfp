@@ -1,3 +1,6 @@
+1.3pre
+	* Switch to threaded output for better playback performance
+
 1.2
 	* Use dynamic loading to access FTDI chip
 	* Enable ftd2xx support
