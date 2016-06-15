@@ -284,6 +284,7 @@ int exSID_init(void)
 	mtx_init(&frontbuf_mtx, mtx_plain);
 	cnd_init(&frontbuf_ready_cnd);
 	cnd_init(&frontbuf_done_cnd);
+	backbuf_idx = frontbuf_idx = 0;
 	thrd_create(&thread_output, _exSID_thread_output, NULL);
 #endif
 
