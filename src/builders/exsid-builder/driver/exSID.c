@@ -23,7 +23,11 @@
 #undef EXSID_THREADED
 
 #ifdef	EXSID_THREADED
-#include "c11threads.h"
+ #ifdef HAVE_THREADS_H
+  #include <threads.h>
+ #else // pthreads
+  #include "c11threads.h"
+ #endif
 #endif
 
 #ifdef	DEBUG
@@ -42,9 +46,9 @@ static unsigned char bufchar0[XS_BUFFSZ];
 static unsigned char bufchar1[XS_BUFFSZ];
 static unsigned char * frontbuf = bufchar0, * backbuf = bufchar1;
 static int frontbuf_idx = 0, backbuf_idx = 0;
-static mtx_t frontbuf_ready_mtx;
-static cnd_t frontbuf_ready_cnd;
-static thrd_t threadout;
+static mtx_t frontbuf_mtx;
+static cnd_t frontbuf_ready_cnd, frontbuf_done_cnd;
+static thrd_t thread_output;
 #endif
 
 /**
@@ -87,7 +91,16 @@ static inline void _xSwrite(const unsigned char * buff, int size)
  */
 static inline void _xSread(unsigned char * buff, int size)
 {
+#ifdef	EXSID_THREADED
+	mtx_lock(&frontbuf_mtx);
+	while (frontbuf_idx)
+		cnd_wait(&frontbuf_done_cnd, &frontbuf_mtx);
+#endif
 	ftdi_status = xSfw_read_data(ftdi, buff, size);
+#ifdef	EXSID_THREADED
+	mtx_unlock(&frontbuf_mtx);
+#endif
+
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
 		xserror("Error ftdi_read_data(%d): %s\n",
@@ -113,19 +126,27 @@ static inline void _xSread(unsigned char * buff, int size)
  * @param arg ignored
  * @return DOES NOT RETURN, exits when frontbuf_idx is negative.
  */
-static int _exSID_threadout(void *arg)
+static int _exSID_thread_output(void *arg)
 {
-	xsdbg("started thread\n");
+	xsdbg("thread started\n");
 	while (1) {
-		mtx_lock(&frontbuf_ready_mtx);
-		if (unlikely(frontbuf_idx < 0))		// exit condition
+		mtx_lock(&frontbuf_mtx);
+
+		// wait for frontbuf ready (not empty)
+		while (!frontbuf_idx)
+			cnd_wait(&frontbuf_ready_cnd, &frontbuf_mtx);
+
+		if (unlikely(frontbuf_idx < 0))	{	// exit condition
+			xsdbg("thread exiting!\n");
+			mtx_unlock(&frontbuf_mtx);
 			thrd_exit(0);
-		else if (frontbuf_idx == 0)		// frontbuf empty
-			cnd_wait(&frontbuf_ready_cnd, &frontbuf_ready_mtx);
+		}
 
 		_xSwrite(frontbuf, frontbuf_idx);
 		frontbuf_idx = 0;
-		mtx_unlock(&frontbuf_ready_mtx);
+
+		cnd_signal(&frontbuf_done_cnd);
+		mtx_unlock(&frontbuf_mtx);
 	}
 }
 
@@ -154,19 +175,25 @@ static void _xSoutb(uint8_t byte, int flush)
 	if (likely((backbuf_idx < XS_BUFFSZ) && !flush))
 		return;
 
-	// flip buffers
-	mtx_lock(&frontbuf_ready_mtx);
-	if (unlikely(flush < 0))
+	// buffer dance
+	mtx_lock(&frontbuf_mtx);
+
+	// wait for frontbuf available (empty)
+	while (frontbuf_idx)
+		cnd_wait(&frontbuf_done_cnd, &frontbuf_mtx);
+
+	if (unlikely(flush < 0))	// indicate exit request
 		frontbuf_idx = -1;
-	else {
+	else {				// flip buffers
 		bufptr = frontbuf;
 		frontbuf = backbuf;
 		frontbuf_idx = backbuf_idx;
 		backbuf = bufptr;
 		backbuf_idx = 0;
 	}
+
 	cnd_signal(&frontbuf_ready_cnd);
-	mtx_unlock(&frontbuf_ready_mtx);
+	mtx_unlock(&frontbuf_mtx);
 }
 
 
@@ -254,9 +281,10 @@ int exSID_init(void)
 
 #ifdef	EXSID_THREADED
 	xsdbg("Thread setup\n");
-	mtx_init(&frontbuf_ready_mtx, mtx_plain);
+	mtx_init(&frontbuf_mtx, mtx_plain);
 	cnd_init(&frontbuf_ready_cnd);
-	thrd_create(&threadout, _exSID_threadout, NULL);
+	cnd_init(&frontbuf_done_cnd);
+	thrd_create(&thread_output, _exSID_thread_output, NULL);
 #endif
 
 	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
@@ -292,8 +320,8 @@ void exSID_exit(void)
 #ifdef	EXSID_THREADED
 		_xSoutb(XS_AD_IOCTFV, -1);	// signal end of thread
 		cnd_destroy(&frontbuf_ready_cnd);
-		mtx_destroy(&frontbuf_ready_mtx);
-		thrd_join(threadout, NULL);
+		mtx_destroy(&frontbuf_mtx);
+		thrd_join(thread_output, NULL);
 #endif
 
 		xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers

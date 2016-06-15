@@ -19,7 +19,7 @@ docs/mainpage.dox
 lib_LTLIBRARIES = libexsid.la
 
 libexsid_la_SOURCES = \
-exSID.c exSID_defs.h exSID_ftdiwrap.h exSID_ftdiwrap.c
+exSID.c exSID_defs.h exSID_ftdiwrap.h exSID_ftdiwrap.c c11threads.h
 
 libexsid_la_HEADERS = \
 exSID.h
