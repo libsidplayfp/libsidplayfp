@@ -194,11 +194,7 @@ int xSfw_dlopen()
 
 #ifdef	HAVE_FTD2XX
 #ifdef _WIN32
-#ifdef _WIN64
-# define LIBFTD2XX "ftd2xx64"
-#else
 # define LIBFTD2XX "ftd2xx"
-#endif
 #else
 # define LIBFTD2XX "libftd2xx"
 #endif
