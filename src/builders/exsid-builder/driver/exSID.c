@@ -10,7 +10,7 @@
  * exSID USB I/O library
  * @author Thibaut VARENE
  * @date 2015-2016
- * @version 1.2
+ * @version 1.3
  */
 
 #include "exSID.h"
@@ -20,15 +20,15 @@
 #include <unistd.h>
 #include <inttypes.h>
 
-#undef EXSID_THREADED
-
 #ifdef	EXSID_THREADED
- #ifdef HAVE_THREADS_H
+ #if defined(HAVE_THREADS_H)	// Native C11 threads support
   #include <threads.h>
- #else // pthreads
+ #elif defined(HAVE_PTHREAD_H)	// Trivial C11 over pthreads support
   #include "c11threads.h"
+ #else
+  #error "No thread model available"
  #endif
-#endif
+#endif	// EXSID_TRHREADED
 
 #ifdef	DEBUG
 static long accdrift = 0;
@@ -40,16 +40,16 @@ static unsigned long acccycle = 0;
 static int ftdi_status;
 static void * ftdi = NULL;
 
-#ifdef EXSID_THREADED
-// flip buffering
+#ifdef	EXSID_THREADED
+// Global variables for flip buffering
 static unsigned char bufchar0[XS_BUFFSZ];
 static unsigned char bufchar1[XS_BUFFSZ];
 static unsigned char * frontbuf = bufchar0, * backbuf = bufchar1;
 static int frontbuf_idx = 0, backbuf_idx = 0;
-static mtx_t frontbuf_mtx;
+static mtx_t frontbuf_mtx;	///< mutex protecting access to frontbuf
 static cnd_t frontbuf_ready_cnd, frontbuf_done_cnd;
 static thrd_t thread_output;
-#endif
+#endif	// EXSID_THREADED
 
 /**
  * cycles is uint_fast32_t. Technically, clkdrift should be int_fast64_t though
@@ -114,7 +114,7 @@ static inline void _xSread(unsigned char * buff, int size)
 }
 
 
-#ifdef EXSID_THREADED
+#ifdef	EXSID_THREADED
 /**
  * Writer thread. ** consummer **
  * This thread consumes buffer prepared in _xSoutb().
@@ -149,6 +149,7 @@ static int _exSID_thread_output(void *arg)
 		mtx_unlock(&frontbuf_mtx);
 	}
 }
+#endif	// EXSID_THREADED
 
 /**
  * Single byte output routine. ** producer **
@@ -157,10 +158,14 @@ static int _exSID_thread_output(void *arg)
  * a multiple of of XS_SIDCLK.
  * @note No drift compensation is performed on read operations.
  * @param byte byte to send
- * @param flush force write flush if non-zero
+ * @param flush force write flush if positive, trigger thread exit if negative
  */
 static void _xSoutb(uint8_t byte, int flush)
 {
+#ifndef	EXSID_THREADED
+	static unsigned char backbuf[XS_BUFFSZ];
+	static int backbuf_idx = 0;
+#endif
 	unsigned char * bufptr = NULL;
 
 	backbuf[backbuf_idx++] = (unsigned char)byte;
@@ -175,6 +180,7 @@ static void _xSoutb(uint8_t byte, int flush)
 	if (likely((backbuf_idx < XS_BUFFSZ) && !flush))
 		return;
 
+#ifdef	EXSID_THREADED
 	// buffer dance
 	mtx_lock(&frontbuf_mtx);
 
@@ -194,42 +200,11 @@ static void _xSoutb(uint8_t byte, int flush)
 
 	cnd_signal(&frontbuf_ready_cnd);
 	mtx_unlock(&frontbuf_mtx);
-}
-
-
-#else // !EXSID_THREADED
-
-/**
- * Single byte output routine.
- * Fills a static buffer with bytes to send to the device until the buffer is
- * full or a forced write is triggered. Compensates for drift if XS_BDRATE isn't
- * a multiple of of XS_SIDCLK.
- * @note No drift compensation is performed on read operations.
- * @param byte byte to send
- * @param flush force write flush if non-zero
- */
-static void _xSoutb(uint8_t byte, int flush)
-{
-	static unsigned char bufchar[XS_BUFFSZ];
-	static int i = 0;
-
-	bufchar[i++] = (unsigned char)byte;
-
-	/* if XS_BDRATE isn't a multiple of XS_SIDCLK we will drift:
-	   every XS_BDRATE/(remainder of XS_SIDCLK/XS_BDRATE) we lose one SID cycle.
-	   Compensate here */
-#if (XS_SIDCLK % XS_RSBCLK)
-	if (!(i % (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK))))
-		clkdrift--;
+#else	// unthreaded
+	_xSwrite(backbuf, backbuf_idx);
+	backbuf_idx = 0;
 #endif
-	if (likely((i < XS_BUFFSZ) && !flush))
-		return;
-
-	_xSwrite(bufchar, i);
-	i = 0;
 }
-
-#endif	// EXSID_THREADED
 
 /**
  * Device init routine.
@@ -241,6 +216,7 @@ static void _xSoutb(uint8_t byte, int flush)
 int exSID_init(void)
 {
 	unsigned char dummy;
+	int ret = 0;
 
 	if (ftdi) {
 		xserror("Device already open!\n");
@@ -248,7 +224,7 @@ int exSID_init(void)
 	}
 
 	if (xSfw_dlopen()) {
-		xserror("dl error\n");
+		xserror("Failed to open dynamic loader\n");
 		return -1;
 	}
 
@@ -269,6 +245,7 @@ int exSID_init(void)
 		ftdi = NULL;
 		return -1;
 	}
+
 	ftdi_status = xSfw_usb_setup(ftdi, XS_BDRATE, XS_USBLAT);
 	if (ftdi_status < 0) {
 		xserror("Failed to setup device\n");
@@ -281,11 +258,15 @@ int exSID_init(void)
 
 #ifdef	EXSID_THREADED
 	xsdbg("Thread setup\n");
-	mtx_init(&frontbuf_mtx, mtx_plain);
-	cnd_init(&frontbuf_ready_cnd);
-	cnd_init(&frontbuf_done_cnd);
+	ret = mtx_init(&frontbuf_mtx, mtx_plain);
+	ret |= cnd_init(&frontbuf_ready_cnd);
+	ret |= cnd_init(&frontbuf_done_cnd);
 	backbuf_idx = frontbuf_idx = 0;
-	thrd_create(&thread_output, _exSID_thread_output, NULL);
+	ret |= thrd_create(&thread_output, _exSID_thread_output, NULL);
+	if (ret) {
+		xserror("Thread setup failed\n");
+		return -1;
+	}
 #endif
 
 	xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers

@@ -11,6 +11,7 @@ endif
 AM_CPPFLAGS = \
 $(FTDI_CFLAGS) \
 ${W32_CPPFLAGS} \
+$(PTHREAD_CFLAGS) \
 @debug_flags@
 
 EXTRA_DIST = \
@@ -26,7 +27,7 @@ exSID.h
 
 libexsid_ladir = $(includedir)
 
-libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION) $(W32_LDFLAGS)
+libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION) $(W32_LDFLAGS) $(PTHREAD_LIBS)
 
 #=========================================================
 

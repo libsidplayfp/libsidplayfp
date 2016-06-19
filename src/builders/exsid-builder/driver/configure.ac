@@ -50,6 +50,15 @@ PKG_CHECK_EXISTS([libftdi1 >= 1.0],
 	)
 AC_SUBST([FTDI_CFLAGS])
 
+# check for thread model if available
+AC_CHECK_HEADERS([threads.h],
+	[AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])],
+	[AX_PTHREAD(
+		[AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])]
+		[AC_DEFINE([HAVE_PTHREAD_H], 1, [Define to 1 if you have pthread.h])]
+	)]
+)
+
 eval loadable_shrext=$shrext_cmds
 AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
 
