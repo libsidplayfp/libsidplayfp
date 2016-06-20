@@ -44,7 +44,7 @@ static void * ftdi = NULL;
 // Global variables for flip buffering
 static unsigned char bufchar0[XS_BUFFSZ];
 static unsigned char bufchar1[XS_BUFFSZ];
-static unsigned char * frontbuf = bufchar0, * backbuf = bufchar1;
+static unsigned char * restrict frontbuf = bufchar0, * restrict backbuf = bufchar1;
 static int frontbuf_idx = 0, backbuf_idx = 0;
 static mtx_t frontbuf_mtx;	///< mutex protecting access to frontbuf
 static cnd_t frontbuf_ready_cnd, frontbuf_done_cnd;
@@ -167,8 +167,9 @@ static void _xSoutb(uint8_t byte, int flush)
 #ifndef	EXSID_THREADED
 	static unsigned char backbuf[XS_BUFFSZ];
 	static int backbuf_idx = 0;
-#endif
+#else
 	unsigned char * bufptr = NULL;
+#endif
 
 	backbuf[backbuf_idx++] = (unsigned char)byte;
 

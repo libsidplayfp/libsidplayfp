@@ -8,7 +8,7 @@ if MINGW32
   W32_LDFLAGS = -no-undefined
 endif
 
-AM_CPPFLAGS = \
+AM_CPPFLAGS = -Wall -fstrict-aliasing \
 $(FTDI_CFLAGS) \
 ${W32_CPPFLAGS} \
 $(PTHREAD_CFLAGS) \

@@ -137,7 +137,7 @@ static int _xSfwftdi_usb_open_desc(void ** ftdi, int vid, int pid, const char * 
 
 // wrappers for FTD2XX
 #ifdef	HAVE_FTD2XX
-static int _xSfwFT_write_data(void * ftdi, const unsigned char * buf, int size)
+static int _xSfwFT_write_data(void * restrict ftdi, const unsigned char * restrict buf, int size)
 {
 	static int rval;
 	if(unlikely(rval = _FT_Write(ftdi, (LPVOID)buf, size, &dummysize)))
@@ -146,7 +146,7 @@ static int _xSfwFT_write_data(void * ftdi, const unsigned char * buf, int size)
 		return dummysize;
 }
 
-static int _xSfwFT_read_data(void * ftdi, unsigned char * buf, int size)
+static int _xSfwFT_read_data(void * restrict ftdi, unsigned char * restrict buf, int size)
 {
 	static int rval;
 	if (unlikely(rval = _FT_Read(ftdi, (LPVOID)buf, size, &dummysize)))
@@ -316,7 +316,6 @@ int xSfw_usb_setup(void * ftdi, int baudrate, int latency)
 #endif
 		xserror("Unkown access method\n");
 
-setupfail:
 	return rval;
 }
 

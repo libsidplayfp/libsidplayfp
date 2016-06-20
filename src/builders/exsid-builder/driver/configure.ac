@@ -12,6 +12,11 @@ PKG_PROG_PKG_CONFIG
 
 AC_CANONICAL_HOST
 
+AC_PROG_CC
+AC_PROG_CC_STDC
+AC_C_RESTRICT
+AC_C_INLINE
+
 dnl The dlopen() function is in the C library for *BSD and in
 dnl libdl on GLIBC-based systems. Use native functions on MinGW.
 AS_CASE([$host_os],
