@@ -145,6 +145,8 @@ static int _exSID_thread_output(void *arg)
 		_xSwrite(frontbuf, frontbuf_idx);
 		frontbuf_idx = 0;
 
+		// _xSread() and _xSoutb() are in the same thread of execution
+		// so it can only be one or the other waiting.
 		cnd_signal(&frontbuf_done_cnd);
 		mtx_unlock(&frontbuf_mtx);
 	}
@@ -184,8 +186,9 @@ static void _xSoutb(uint8_t byte, int flush)
 	// buffer dance
 	mtx_lock(&frontbuf_mtx);
 
-	// wait for frontbuf available (empty)
-	while (frontbuf_idx)
+	// wait for frontbuf available (empty). Only triggers if previous
+	// write buffer hasn't been consummed before we get here again.
+	while (unlikely(frontbuf_idx))
 		cnd_wait(&frontbuf_done_cnd, &frontbuf_mtx);
 
 	if (unlikely(flush < 0))	// indicate exit request
@@ -252,7 +255,7 @@ int exSID_init(void)
 		return -1;
 	}
 
-	// success - device with device description "exSIDUSB" is open
+	// success - device with device description "exSID USB" is open
 	xsdbg("Device opened\n");
 	
 
@@ -343,11 +346,11 @@ void exSID_reset(uint_least8_t volume)
 {
 	xsdbg("rvol: %" PRIxLEAST8 "\n", volume);
 
-	_xSoutb(XS_AD_IOCTRS, 0);	// this will take more than XS_CYCCHR
+	_xSoutb(XS_AD_IOCTRS, 1);	// this will take more than XS_CYCCHR
+	usleep(1000);	// sleep for 1ms
 	_exSID_write(0x18, volume, 1);	// this only needs 2 bytes which matches the input buffer of the PIC so all is well
 
 	clkdrift = 0;
-	usleep(1000);	// sleep for 1ms
 }
 
 /**
