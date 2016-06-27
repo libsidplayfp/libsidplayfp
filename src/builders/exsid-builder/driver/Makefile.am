@@ -27,7 +27,7 @@ exSID.h
 
 libexsid_ladir = $(includedir)
 
-libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION) $(W32_LDFLAGS) $(PTHREAD_LIBS)
+libexsid_la_LDFLAGS = -version-info $(LIBEXSIDVERSION) $(W32_LDFLAGS) $(PTHREAD_LIBS) $(PTHREAD_CFLAGS)
 
 #=========================================================
 

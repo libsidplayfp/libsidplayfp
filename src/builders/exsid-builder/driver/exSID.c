@@ -150,6 +150,7 @@ static int _exSID_thread_output(void *arg)
 		cnd_signal(&frontbuf_done_cnd);
 		mtx_unlock(&frontbuf_mtx);
 	}
+	return 0;	// make the compiler happy
 }
 #endif	// EXSID_THREADED
 
