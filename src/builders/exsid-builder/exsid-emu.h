@@ -54,6 +54,8 @@ private:
 
     bool muted[3];
 
+    SidConfig::sid_model_t runmodel;
+
 private:
     unsigned int delay();
 

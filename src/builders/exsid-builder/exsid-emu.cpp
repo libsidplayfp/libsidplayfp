@@ -112,6 +112,14 @@ uint8_t exSID::read(uint_least8_t addr)
     {
         printf("WARNING: Read support is limited. This file may not play correctly!\n");
         readflag = true;
+
+        // Here we implement the "safe" detection routine return values
+        if (0x1b == addr) {	// we could implement a commandline-chosen return byte here
+            if (SidConfig::MOS8580 == runmodel)
+                return 0x02;
+            else
+                return 0x03;
+        }
     }
 
     const unsigned int cycles = delay();
@@ -141,6 +149,7 @@ void exSID::voice(unsigned int num, bool mute)
 
 void exSID::model(SidConfig::sid_model_t model)
 {
+    runmodel = model;
     exSID_chipselect(model == SidConfig::MOS8580 ? XS_CS_CHIP1 : XS_CS_CHIP0);
 }
 
