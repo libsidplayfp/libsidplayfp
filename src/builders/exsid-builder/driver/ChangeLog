@@ -1,5 +1,6 @@
-1.3pre
+1.3
 	* Switch to threaded output for better playback performance
+	* Use 40ms buffer size for improved host compatibility
 
 1.2
 	* Use dynamic loading to access FTDI chip

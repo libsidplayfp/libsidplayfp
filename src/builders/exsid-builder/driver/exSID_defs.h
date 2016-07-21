@@ -32,7 +32,7 @@
 #define	XS_ADJMLT	2		///< 2-to-1 cycle adjustement (max resolution: 2 cycles).
 #endif
 
-#define	XS_BUFFMS	20		///< write buffer size in milliseconds of playback.
+#define	XS_BUFFMS	40		///< write buffer size in milliseconds of playback.
 #define	XS_SIDCLK	1000000		///< 1MHz (for computation only, currently hardcoded in firmware)
 #define XS_RSBCLK	(XS_BDRATE/10)	///< RS232 byte clock. Each RS232 byte is 10 bits long due to start and stop bits
 #define	XS_CYCCHR	(XS_SIDCLK/XS_RSBCLK)	///< SID cycles between two consecutive chars
