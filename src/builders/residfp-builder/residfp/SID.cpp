@@ -325,6 +325,7 @@ unsigned char SID::read(int offset)
 
     case 0x1b: // Voice #3 waveform output
         busValue = voice[2]->wave()->readOSC();
+        busValueTtl = modelTTL;
         break;
 
     case 0x1c: // Voice #3 ADSR output
