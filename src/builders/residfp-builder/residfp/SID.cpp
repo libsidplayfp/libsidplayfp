@@ -309,8 +309,6 @@ void SID::input(int value)
 
 unsigned char SID::read(int offset)
 {
-    // FIXME: is bus TTL actually reset after read?
-    // FIXME: are read values actually latched?
     switch (offset)
     {
     case 0x19: // X value of paddle
@@ -334,7 +332,10 @@ unsigned char SID::read(int offset)
         break;
 
     default:
-        busValueTtl /= 2; // FIXME: what's this???
+        // Reading from a write-only or non-existing register
+        // makes the bus discharge faster.
+        // Emulate this by halving the residual TTL.
+        busValueTtl /= 2;
         break;
     }
 
