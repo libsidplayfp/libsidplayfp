@@ -138,10 +138,12 @@ void WaveformGenerator::setWaveformModels(matrix_t* models)
 
 void WaveformGenerator::setChipModel(ChipModel chipModel)
 {
+    is6581 = chipModel == MOS6581;
+
     Dac dacBuilder(DAC_BITS);
     dacBuilder.kinkedDac(chipModel);
 
-    const float offset = dacBuilder.getOutput(chipModel == MOS6581 ? 0x380 : 0x800);
+    const float offset = dacBuilder.getOutput(is6581 ? 0x380 : 0x800);
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {

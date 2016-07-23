@@ -45,11 +45,11 @@ WaveformCalculator* WaveformCalculator::getInstance()
  */
 const CombinedWaveformConfig config[2][4] =
 {
-    { /* kevtris chip J (6581 R2) */
-        {0.979544f, 0.f,       0.f,       3.98271f,   0.f,      0.775023f}, // error   148  (61)
-        {0.9079f,   1.72749f,  0.f,       1.12017f,   1.10793f, 0.f      }, // error  1540 (102)
-        {0.9f,      2.f,       0.f,       1.f,        1.f,      0.f      }, // error     0
-        {0.95248f,  1.51f,     0.f,       1.07153f,   1.09353f, 1.f      }, // error     0
+    { /* kevtris chip G (6581 R2) */
+        {0.90251f, 0.f,        0.f,       1.9147f,    1.6747f,  0.62376f }, // error  1689 (280)
+        {0.93088f, 2.4843f,    0.f,       1.0353f,    1.1484f,  0.f      }, // error  6128 (130)
+        {0.90988f, 2.26303f,   1.13126f,  1.0035f,    1.13801f, 0.f      }, // error 14243 (632)
+        {0.91f,    1.192f,     0.f,       1.0169f,    1.2f,     0.637f   }, // error    64   (2)
     },
     { /* kevtris chip V (8580 R5) */
         {0.9632f,   0.f,       0.975f,    1.7467f,    2.36132f, 0.975395f}, // error  1380 (169)

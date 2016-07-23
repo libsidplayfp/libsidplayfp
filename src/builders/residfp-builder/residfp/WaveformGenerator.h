@@ -130,6 +130,8 @@ private:
     /// Tell whether the accumulator MSB was set high on this cycle.
     bool msb_rising;
 
+    bool is6581;
+
     /// Tell whether the next noise register write back should be skipped.
     bool skipLFSRwrite;
 
@@ -195,6 +197,7 @@ public:
         test(false),
         sync(false),
         msb_rising(false),
+        is6581(true),
         skipLFSRwrite(true) {}
 
     /**
@@ -337,8 +340,12 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
 
-        write_shift_register();
+        // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
+        // when the sawtooth is selected
+        if (unlikely(waveform > 0x8) && (waveform & 2) && is6581)
+            accumulator &= (waveform_output << 12) | 0x7fffff;
 
+        write_shift_register();
     }
     else
     {
