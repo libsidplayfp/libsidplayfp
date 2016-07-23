@@ -130,6 +130,9 @@ private:
     /// Tell whether the accumulator MSB was set high on this cycle.
     bool msb_rising;
 
+    /// Tell whether the next noise register write back should be skipped.
+    bool skipLFSRwrite;
+
     float dac[4096];
 
 private:
@@ -191,7 +194,8 @@ public:
         freq(0),
         test(false),
         sync(false),
-        msb_rising(false) {}
+        msb_rising(false),
+        skipLFSRwrite(true) {}
 
     /**
      * Write FREQ LO register.
@@ -292,6 +296,8 @@ void WaveformGenerator::clock()
 
         // The test bit sets pulse high.
         pulse_output = 0xfff;
+
+        skipLFSRwrite = true;
     }
     else
     {
@@ -330,6 +336,9 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         // calculation of the output value.
         const unsigned int ix = (accumulator ^ (ringModulator->accumulator & ring_msb_mask)) >> 12;
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
+
+        write_shift_register();
+
     }
     else
     {

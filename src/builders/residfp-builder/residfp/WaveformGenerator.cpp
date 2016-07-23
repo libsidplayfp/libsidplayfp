@@ -52,24 +52,35 @@ const int DAC_BITS = 12;
 
 void WaveformGenerator::clock_shift_register(unsigned int bit0)
 {
-    write_shift_register();
-
     shift_register = (shift_register >> 1) | bit0;
 
     // New noise waveform output.
     set_noise_output();
+
+    skipLFSRwrite = true;
 }
 
+/**
+ * Combined waveforms write back to the noise register at every cycle
+ * except the first one following a shift or a test/reset release.
+ * (see $D1+$81_wave_test [1])
+ *
+ * [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
+ */
 void WaveformGenerator::write_shift_register()
 {
+    if (unlikely(skipLFSRwrite))
+    {
+        // During this cycle the write back does not happen
+        skipLFSRwrite = false;
+        return;
+    }
+
     if (unlikely(waveform > 0x8))
     {
         // Write changes to the shift register output caused by combined waveforms
-        // back into the shift register. This happens only when the register is clocked
-        // (see $D1+$81_wave_test [1]) or when the test bit is set.
+        // back into the shift register.
         // A bit once set to zero cannot be changed, hence the and'ing.
-        //
-        // [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
         //
         // FIXME: Write test program to check the effect of 1 bits and whether
         // neighboring bits are affected.
