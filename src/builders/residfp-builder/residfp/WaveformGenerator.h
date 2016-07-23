@@ -48,7 +48,7 @@ namespace reSIDfp
  * The MSB is used to create the falling edge of the triangle by inverting
  * the lower 11 bits. The MSB is thrown away and the lower 11 bits are
  * left-shifted (half the resolution, full amplitude).
- * Ring modulation substitutes the MSB with MSB EOR sync_source MSB.
+ * Ring modulation substitutes the MSB with MSB EOR NOT sync_source MSB.
  *
  *
  * - Sawtooth:
@@ -334,7 +334,7 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
     {
         // The bit masks no_pulse and no_noise are used to achieve branch-free
         // calculation of the output value.
-        const unsigned int ix = (accumulator ^ (ringModulator->accumulator & ring_msb_mask)) >> 12;
+        const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
 
         write_shift_register();
