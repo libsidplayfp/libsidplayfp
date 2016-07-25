@@ -121,6 +121,9 @@ private:
     // Fout  = (Fn*Fclk/16777216)Hz
     unsigned int freq;
 
+    // 8580 tri/saw pipeline
+    unsigned int tri_saw_pipeline;
+
     /// The control register bits. Gate is handled by EnvelopeGenerator.
     //@{
     bool test;
@@ -194,6 +197,7 @@ public:
         waveform_output(0),
         accumulator(0),
         freq(0),
+        tri_saw_pipeline(0),
         test(false),
         sync(false),
         msb_rising(false),
@@ -335,10 +339,24 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
     // Set output value.
     if (likely(waveform != 0))
     {
+        const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
+
+        // Triangle/Sawtooth output is delayed half cycle on 8580
+        if ((waveform & 3) && !is6581)
+        {
+            // FIXME this won't produce correct result
+            // with the current combined waveforms model
+            waveform_output = tri_saw_pipeline;
+            tri_saw_pipeline = wave[ix];
+        }
+        else
+        {
+            waveform_output = wave[ix];
+        }
+
         // The bit masks no_pulse and no_noise are used to achieve branch-free
         // calculation of the output value.
-        const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
-        waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
+        waveform_output &= (no_pulse | pulse_output) & no_noise_or_noise_output;
 
         // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
         // when the sawtooth is selected
