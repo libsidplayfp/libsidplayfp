@@ -98,8 +98,138 @@ void SID::enableFilter(bool enable)
     filter8580->enable(enable);
 }
 
-void SID::writeImmediate(int offset, unsigned char value)
+void SID::voiceSync(bool sync)
 {
+    if (sync)
+    {
+        // Synchronize the 3 waveform generators.
+        for (int i = 0; i < 3; i++)
+        {
+            voice[i]->wave()->synchronize(voice[(i + 1) % 3]->wave(), voice[(i + 2) % 3]->wave());
+        }
+    }
+
+    // Calculate the time to next voice sync
+    nextVoiceSync = std::numeric_limits<int>::max();
+
+    for (int i = 0; i < 3; i++)
+    {
+        const unsigned int freq = voice[i]->wave()->readFreq();
+
+        if (voice[i]->wave()->readTest() || freq == 0 || !voice[(i + 1) % 3]->wave()->readSync())
+        {
+            continue;
+        }
+
+        const unsigned int accumulator = voice[i]->wave()->readAccumulator();
+        const unsigned int thisVoiceSync = ((0x7fffff - accumulator) & 0xffffff) / freq + 1;
+
+        if (thisVoiceSync < nextVoiceSync)
+        {
+            nextVoiceSync = thisVoiceSync;
+        }
+    }
+}
+
+void SID::setChipModel(ChipModel model)
+{
+    switch (model)
+    {
+    case MOS6581:
+        filter = filter6581.get();
+        modelTTL = BUS_TTL_6581;
+        break;
+
+    case MOS8580:
+        filter = filter8580.get();
+        modelTTL = BUS_TTL_8580;
+        break;
+
+    default:
+        throw SIDError("Unknown chip type");
+    }
+
+    this->model = model;
+
+    // calculate waveform-related tables, feed them to the generator
+    matrix_t* tables = WaveformCalculator::getInstance()->buildTable(model);
+
+    // update voice offsets
+    for (int i = 0; i < 3; i++)
+    {
+        voice[i]->envelope()->setChipModel(model);
+        voice[i]->wave()->setChipModel(model);
+        voice[i]->wave()->setWaveformModels(tables);
+    }
+}
+
+void SID::reset()
+{
+    for (int i = 0; i < 3; i++)
+    {
+        voice[i]->reset();
+    }
+
+    filter6581->reset();
+    filter8580->reset();
+    externalFilter->reset();
+
+    if (resampler.get())
+    {
+        resampler->reset();
+    }
+
+    busValue = 0;
+    busValueTtl = 0;
+    voiceSync(false);
+}
+
+void SID::input(int value)
+{
+    filter6581->input(value);
+    filter8580->input(value);
+}
+
+unsigned char SID::read(int offset)
+{
+    switch (offset)
+    {
+    case 0x19: // X value of paddle
+        busValue = potX->readPOT();
+        busValueTtl = modelTTL;
+        break;
+
+    case 0x1a: // Y value of paddle
+        busValue = potY->readPOT();
+        busValueTtl = modelTTL;
+        break;
+
+    case 0x1b: // Voice #3 waveform output
+        busValue = voice[2]->wave()->readOSC();
+        busValueTtl = modelTTL;
+        break;
+
+    case 0x1c: // Voice #3 ADSR output
+        busValue = voice[2]->envelope()->readENV();
+        busValueTtl = modelTTL;
+        break;
+
+    default:
+        // Reading from a write-only or non-existing register
+        // makes the bus discharge faster.
+        // Emulate this by halving the residual TTL.
+        busValueTtl /= 2;
+        break;
+    }
+
+    return busValue;
+}
+
+void SID::write(int offset, unsigned char value)
+{
+    busValue = value;
+    busValueTtl = modelTTL;
+
     switch (offset)
     {
     case 0x00: // Voice #1 frequency (Low-byte)
@@ -214,150 +344,6 @@ void SID::writeImmediate(int offset, unsigned char value)
     voiceSync(false);
 }
 
-void SID::voiceSync(bool sync)
-{
-    if (sync)
-    {
-        // Synchronize the 3 waveform generators.
-        for (int i = 0; i < 3; i++)
-        {
-            voice[i]->wave()->synchronize(voice[(i + 1) % 3]->wave(), voice[(i + 2) % 3]->wave());
-        }
-    }
-
-    // Calculate the time to next voice sync
-    nextVoiceSync = std::numeric_limits<int>::max();
-
-    for (int i = 0; i < 3; i++)
-    {
-        const unsigned int freq = voice[i]->wave()->readFreq();
-
-        if (voice[i]->wave()->readTest() || freq == 0 || !voice[(i + 1) % 3]->wave()->readSync())
-        {
-            continue;
-        }
-
-        const unsigned int accumulator = voice[i]->wave()->readAccumulator();
-        const unsigned int thisVoiceSync = ((0x7fffff - accumulator) & 0xffffff) / freq + 1;
-
-        if (thisVoiceSync < nextVoiceSync)
-        {
-            nextVoiceSync = thisVoiceSync;
-        }
-    }
-}
-
-void SID::setChipModel(ChipModel model)
-{
-    switch (model)
-    {
-    case MOS6581:
-        filter = filter6581.get();
-        modelTTL = BUS_TTL_6581;
-        break;
-
-    case MOS8580:
-        filter = filter8580.get();
-        modelTTL = BUS_TTL_8580;
-        break;
-
-    default:
-        throw SIDError("Unknown chip type");
-    }
-
-    this->model = model;
-
-    // calculate waveform-related tables, feed them to the generator
-    matrix_t* tables = WaveformCalculator::getInstance()->buildTable(model);
-
-    // update voice offsets
-    for (int i = 0; i < 3; i++)
-    {
-        voice[i]->envelope()->setChipModel(model);
-        voice[i]->wave()->setChipModel(model);
-        voice[i]->wave()->setWaveformModels(tables);
-    }
-}
-
-void SID::reset()
-{
-    for (int i = 0; i < 3; i++)
-    {
-        voice[i]->reset();
-    }
-
-    filter6581->reset();
-    filter8580->reset();
-    externalFilter->reset();
-
-    if (resampler.get())
-    {
-        resampler->reset();
-    }
-
-    busValue = 0;
-    busValueTtl = 0;
-    delayedOffset = -1;
-    voiceSync(false);
-}
-
-void SID::input(int value)
-{
-    filter6581->input(value);
-    filter8580->input(value);
-}
-
-unsigned char SID::read(int offset)
-{
-    switch (offset)
-    {
-    case 0x19: // X value of paddle
-        busValue = potX->readPOT();
-        busValueTtl = modelTTL;
-        break;
-
-    case 0x1a: // Y value of paddle
-        busValue = potY->readPOT();
-        busValueTtl = modelTTL;
-        break;
-
-    case 0x1b: // Voice #3 waveform output
-        busValue = voice[2]->wave()->readOSC();
-        busValueTtl = modelTTL;
-        break;
-
-    case 0x1c: // Voice #3 ADSR output
-        busValue = voice[2]->envelope()->readENV();
-        busValueTtl = modelTTL;
-        break;
-
-    default:
-        // Reading from a write-only or non-existing register
-        // makes the bus discharge faster.
-        // Emulate this by halving the residual TTL.
-        busValueTtl /= 2;
-        break;
-    }
-
-    return busValue;
-}
-
-void SID::write(int offset, unsigned char value)
-{
-    busValue = value;
-    busValueTtl = modelTTL;
-
-    if (model == MOS8580)
-    {
-        delayedOffset = offset;
-        delayedValue = value;
-    }
-    else
-    {
-        writeImmediate(offset, value);
-    }
-}
-
 void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency)
 {
     externalFilter->setClockFrequency(clockFrequency);
@@ -387,11 +373,6 @@ void SID::clockSilent(unsigned int cycles)
 
         if (delta_t > 0)
         {
-            if (delayedOffset != -1)
-            {
-                delta_t = 1;
-            }
-
             for (int i = 0; i < delta_t; i++)
             {
                 // clock waveform generators (can affect OSC3)
@@ -401,12 +382,6 @@ void SID::clockSilent(unsigned int cycles)
 
                 // clock ENV3 only
                 voice[2]->envelope()->clock();
-            }
-
-            if (delayedOffset != -1)
-            {
-                writeImmediate(delayedOffset, delayedValue);
-                delayedOffset = -1;
             }
 
             cycles -= delta_t;

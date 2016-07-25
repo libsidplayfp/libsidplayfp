@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -96,14 +96,8 @@ private:
     /// Time until #voiceSync must be run.
     unsigned int nextVoiceSync;
 
-    /// Delayed MOS8580 write register
-    int delayedOffset;
-
     /// Currently active chip model.
     ChipModel model;
-
-    /// Delayed MOS8580 write value
-    unsigned char delayedValue;
 
     /// Last written value
     unsigned char busValue;
@@ -112,14 +106,6 @@ private:
     bool muted[3];
 
 private:
-    /**
-     * Write value to register during this clock cycle.
-     *
-     * @param offset chip register to write
-     * @param value value to write
-     */
-    void writeImmediate(int offset, unsigned char value);
-
     /**
      * Age the bus value and zero it if it's TTL has expired.
      *
@@ -334,11 +320,6 @@ int SID::clock(unsigned int cycles, short* buf)
 
         if (likely(delta_t > 0))
         {
-            if (unlikely(delayedOffset != -1))
-            {
-                delta_t = 1;
-            }
-
             for (unsigned int i = 0; i < delta_t; i++)
             {
                 // clock waveform generators
@@ -355,12 +336,6 @@ int SID::clock(unsigned int cycles, short* buf)
                 {
                     buf[s++] = resampler->getOutput();
                 }
-            }
-
-            if (unlikely(delayedOffset != -1))
-            {
-                writeImmediate(delayedOffset, delayedValue);
-                delayedOffset = -1;
             }
 
             cycles -= delta_t;
