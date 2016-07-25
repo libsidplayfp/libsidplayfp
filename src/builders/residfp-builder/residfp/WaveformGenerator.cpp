@@ -52,41 +52,17 @@ const int DAC_BITS = 12;
 
 void WaveformGenerator::clock_shift_register(unsigned int bit0)
 {
+    noiseClocked = true;
+
     shift_register = (shift_register >> 1) | bit0;
 
     // New noise waveform output.
     set_noise_output();
-
-    skipLFSRwrite = true;
 }
 
-/**
- * Combined waveforms write back to the noise register at every cycle
- * except the first one following a shift or a test/reset release.
- * (see $D1+$81_wave_test [1])
- *
- * [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
- */
-void WaveformGenerator::write_shift_register()
+unsigned int WaveformGenerator::get_noise_writeback()
 {
-    if (unlikely(skipLFSRwrite))
-    {
-        // During this cycle the write back does not happen
-        skipLFSRwrite = false;
-        return;
-    }
-
-    if (unlikely(waveform > 0x8))
-    {
-        // Write changes to the shift register output caused by combined waveforms
-        // back into the shift register.
-        // A bit once set to zero cannot be changed, hence the and'ing.
-        //
-        // FIXME: Write test program to check the effect of 1 bits and whether
-        // neighboring bits are affected.
-
-        shift_register &=
-            ~(
+    return ~(
                 (1 <<  2) |  // Bit 20
                 (1 <<  4) |  // Bit 18
                 (1 <<  8) |  // Bit 14
@@ -104,6 +80,45 @@ void WaveformGenerator::write_shift_register()
             ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
             ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
             ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
+}
+
+/**
+ * Write changes to the shift register output caused by combined waveforms
+ * back into the shift register.
+ * During normal operation the output is written back to the same bit.
+ * During shifting the output is written back to the internal latch
+ * of the following bit and becomes the bit's value in the next cycle.
+ * If test or reset line is active the output overwrites the internal latch
+ * of the following bit until the signal is released when it becomes
+ * the bit's value.
+ * See $D1+$81_wave_test [1].
+ * A bit once set to zero cannot be changed, hence the and'ing.
+ *
+ * [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
+ *
+ * FIXME: Write test program to check the effect of 1 bits and whether
+ * neighboring bits are affected.
+ */
+void WaveformGenerator::write_shift_register()
+{
+    if (unlikely(waveform > 0x8))
+    {
+        if (unlikely(test) || unlikely(noiseClocked))
+        {
+            bufferedWriteback = (get_noise_writeback() >> 1) | (1 << 22);
+            isBufferedWriteback = true;
+            return;
+        }
+
+        if (unlikely(isBufferedWriteback))
+        {
+            shift_register &= bufferedWriteback;
+            set_noise_output();
+            isBufferedWriteback = false;
+            return;
+        }
+
+        shift_register &= get_noise_writeback();
 
         noise_output &= waveform_output;
         no_noise_or_noise_output = no_noise | noise_output;
@@ -208,9 +223,6 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             // Set reset time for shift register.
             shift_register_reset = SHIFT_REGISTER_RESET;
 
-            // Write back to the shift register.
-            write_shift_register();
-
             // New noise waveform output.
             set_noise_output();
         }
@@ -232,6 +244,9 @@ void WaveformGenerator::reset()
     pw = 0;
 
     msb_rising = false;
+
+    isBufferedWriteback = false;
+    noiseClocked = false;
 
     waveform = 0;
     test = false;

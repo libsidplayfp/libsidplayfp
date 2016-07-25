@@ -124,6 +124,10 @@ private:
     // 8580 tri/saw pipeline
     unsigned int tri_saw_pipeline;
 
+    unsigned int bufferedWriteback;
+    bool isBufferedWriteback;
+    bool noiseClocked;
+
     /// The control register bits. Gate is handled by EnvelopeGenerator.
     //@{
     bool test;
@@ -135,15 +139,14 @@ private:
 
     bool is6581;
 
-    /// Tell whether the next noise register write back should be skipped.
-    bool skipLFSRwrite;
-
     float dac[4096];
 
 private:
     void clock_shift_register(unsigned int bit0);
 
     void write_shift_register();
+
+    unsigned int get_noise_writeback();
 
     void reset_shift_register();
 
@@ -198,11 +201,12 @@ public:
         accumulator(0),
         freq(0),
         tri_saw_pipeline(0),
+        isBufferedWriteback(false),
+        noiseClocked(false),
         test(false),
         sync(false),
         msb_rising(false),
-        is6581(true),
-        skipLFSRwrite(true) {}
+        is6581(true) {}
 
     /**
      * Write FREQ LO register.
@@ -289,13 +293,13 @@ namespace reSIDfp
 RESID_INLINE
 void WaveformGenerator::clock()
 {
+    noiseClocked = false;
+
     if (unlikely(test))
     {
         if (unlikely(shift_register_reset != 0) && unlikely(--shift_register_reset == 0))
         {
             reset_shift_register();
-
-            write_shift_register();
 
             // New noise waveform output.
             set_noise_output();
@@ -303,8 +307,6 @@ void WaveformGenerator::clock()
 
         // The test bit sets pulse high.
         pulse_output = 0xfff;
-
-        skipLFSRwrite = true;
     }
     else
     {
