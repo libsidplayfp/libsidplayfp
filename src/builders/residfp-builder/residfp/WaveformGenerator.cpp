@@ -101,28 +101,24 @@ unsigned int WaveformGenerator::get_noise_writeback()
  */
 void WaveformGenerator::write_shift_register()
 {
-    if (unlikely(waveform > 0x8))
+    if (unlikely(test) || unlikely(noiseClocked))
     {
-        if (unlikely(test) || unlikely(noiseClocked))
-        {
-            bufferedWriteback = (get_noise_writeback() >> 1) | (1 << 22);
-            isBufferedWriteback = true;
-            return;
-        }
-
-        if (unlikely(isBufferedWriteback))
-        {
-            shift_register &= bufferedWriteback;
-            set_noise_output();
-            isBufferedWriteback = false;
-            return;
-        }
-
-        shift_register &= get_noise_writeback();
-
-        noise_output &= waveform_output;
-        no_noise_or_noise_output = no_noise | noise_output;
+        bufferedWriteback = (get_noise_writeback() >> 1) | (1 << 22);
+        isBufferedWriteback = true;
+        return;
     }
+
+    if (unlikely(isBufferedWriteback))
+    {
+        shift_register &= bufferedWriteback;
+        set_noise_output();
+        return;
+    }
+
+    shift_register &= get_noise_writeback();
+
+    noise_output &= waveform_output;
+    no_noise_or_noise_output = no_noise | noise_output;
 }
 
 void WaveformGenerator::reset_shift_register()

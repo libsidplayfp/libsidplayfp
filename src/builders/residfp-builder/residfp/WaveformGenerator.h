@@ -293,8 +293,6 @@ namespace reSIDfp
 RESID_INLINE
 void WaveformGenerator::clock()
 {
-    noiseClocked = false;
-
     if (unlikely(test))
     {
         if (unlikely(shift_register_reset != 0) && unlikely(--shift_register_reset == 0))
@@ -365,7 +363,13 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         if (unlikely(waveform > 0x8) && (waveform & 2) && is6581)
             accumulator &= (waveform_output << 12) | 0x7fffff;
 
-        write_shift_register();
+        if (unlikely(waveform > 0x8))
+        {
+            write_shift_register();
+        }
+
+        noiseClocked = false;
+        isBufferedWriteback = false;
     }
     else
     {
