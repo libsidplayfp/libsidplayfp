@@ -61,6 +61,15 @@ static int_fast32_t clkdrift = 0;
 
 static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
 
+/**
+ * Returns a string describing the last recorded error.
+ * @return error message (max 256 bytes long).
+ */
+const char * const exSID_error_str(void)
+{
+	return (xSerrstr);
+}
+
 
 /**
  * Write routine to send data to the device.
@@ -73,11 +82,11 @@ static inline void _xSwrite(const unsigned char * buff, int size)
 	ftdi_status = xSfw_write_data(ftdi, buff, size);
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-		xserror("Error ftdi_write_data(%d): %s\n",
+		xsdbg("Error ftdi_write_data(%d): %s\n",
 			ftdi_status, xSfw_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
-		xserror("ftdi_write_data only wrote %d (of %d) bytes\n",
+		xsdbg("ftdi_write_data only wrote %d (of %d) bytes\n",
 			ftdi_status, size);
 	}
 #endif
@@ -103,11 +112,11 @@ static inline void _xSread(unsigned char * buff, int size)
 
 #ifdef	DEBUG
 	if (unlikely(ftdi_status < 0)) {
-		xserror("Error ftdi_read_data(%d): %s\n",
+		xsdbg("Error ftdi_read_data(%d): %s\n",
 			ftdi_status, xSfw_get_error_string(ftdi));
 	}
 	if (unlikely(ftdi_status != size)) {
-		xserror("ftdi_read_data only read %d (of %d) bytes\n",
+		xsdbg("ftdi_read_data only read %d (of %d) bytes\n",
 			ftdi_status, size);
 	}
 #endif
@@ -224,26 +233,26 @@ int exSID_init(void)
 	int ret = 0;
 
 	if (ftdi) {
-		xserror("Device already open!\n");
+		xserror("Device already open!");
 		return -1;
 	}
 
 	if (xSfw_dlopen()) {
-		xserror("Failed to open dynamic loader\n");
+		//xserror("Failed to open dynamic loader"); // already sets its own error message
 		return -1;
 	}
 
 	if (xSfw_new) {
 		ftdi = xSfw_new();
 		if (!ftdi) {
-			xserror("ftdi_new failed\n");
+			xserror("ftdi_new failed");
 			return -1;
 		}
 	}
 
 	ftdi_status = xSfw_usb_open_desc(&ftdi, XS_USBVID, XS_USBPID, XS_USBDSC, NULL);
 	if (ftdi_status < 0) {
-		xserror("Failed to open device: %d (%s)\n",
+		xserror("Failed to open device: %d (%s)",
 			ftdi_status, xSfw_get_error_string(ftdi));
 		if (xSfw_free)
 			xSfw_free(ftdi);
@@ -253,7 +262,7 @@ int exSID_init(void)
 
 	ftdi_status = xSfw_usb_setup(ftdi, XS_BDRATE, XS_USBLAT);
 	if (ftdi_status < 0) {
-		xserror("Failed to setup device\n");
+		// xserror("Failed to setup device"); // already sets its own error message
 		return -1;
 	}
 
@@ -269,7 +278,7 @@ int exSID_init(void)
 	backbuf_idx = frontbuf_idx = 0;
 	ret |= thrd_create(&thread_output, _exSID_thread_output, NULL);
 	if (ret) {
-		xserror("Thread setup failed\n");
+		xserror("Thread setup failed");
 		return -1;
 	}
 #endif
@@ -315,7 +324,7 @@ void exSID_exit(void)
 
 		ftdi_status = xSfw_usb_close(ftdi);
 		if (ftdi_status < 0)
-			xserror("unable to close ftdi device: %d (%s)\n",
+			xserror("Unable to close ftdi device: %d (%s)",
 				ftdi_status, xSfw_get_error_string(ftdi));
 
 		if (xSfw_free)
@@ -422,7 +431,7 @@ void exSID_polldelay(uint_fast32_t cycles)
 
 #ifdef	DEBUG
 	if (unlikely((multiple <=0) || (multiple > 255)))
-		xserror("Wrong delay!\n");
+		xsdbg("Wrong delay!\n");
 #endif
 
 	// send delay command and flush queue
@@ -506,7 +515,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (unlikely(addr > 0x18)) {
-		xserror("Invalid write: %.2" PRIxLEAST8 "\n", addr);
+		xsdbg("Invalid write: %.2" PRIxLEAST8 "\n", addr);
 		exSID_delay(cycles);
 		return;
 	}
@@ -521,7 +530,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 #ifdef	DEBUG
 	if (clkdrift >= XS_CYCCHR)
-		xserror("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
+		xsdbg("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
 	else if (clkdrift < 0)
 		accdrift += clkdrift;
 #endif
@@ -602,7 +611,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (unlikely((addr < 0x19) || (addr > 0x1C))) {
-		xserror("Invalid read: %.2" PRIxLEAST8 "\n", addr);
+		xsdbg("Invalid read: %.2" PRIxLEAST8 "\n", addr);
 		exSID_delay(cycles);
 		return 0xFF;
 	}
@@ -618,7 +627,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 #ifdef	DEBUG
 	if (clkdrift > XS_CYCCHR)
-		xserror("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
+		xsdbg("Impossible drift adjustment! %" PRIdFAST32 " cycles", clkdrift);
 	else if (clkdrift < 0) {
 		accdrift += clkdrift;
 		xsdbg("Late read request! %" PRIdFAST32 " cycles\n", clkdrift);

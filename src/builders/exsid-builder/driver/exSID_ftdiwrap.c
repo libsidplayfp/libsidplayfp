@@ -249,14 +249,14 @@ int xSfw_dlopen()
 	{
 		xserror("No method found to access FTDI interface.\n"
 			"Are any of the following libraries installed?\n"
-			"\t" EXSID_INTERFACES "\n");
+			"\t" EXSID_INTERFACES);
 		return -1;
 	}
 
 	return 0;
 
 dlfail:
-	xserror("dlsym error: %s\n", dlerrorstr);
+	xserror("dlsym error: %s", dlerrorstr);
 	_xSfw_free_errstr(dlerrorstr);
 	xSfw_dlclose(dlhandle);
 	return -1;
@@ -277,45 +277,55 @@ int xSfw_usb_setup(void * ftdi, int baudrate, int latency)
 #ifdef	HAVE_FTDI
 	if (XS_LIBFTDI == libtype) {
 		rval = _xSfw_set_baudrate(ftdi, baudrate);
-		if (rval < 0)
-			xserror("SBR error\n");
-
+		if (rval < 0) {
+			xserror("SBR error");
+			goto setupfail;
+		}
 		rval = _xSfw_set_line_property(ftdi, BITS_8 , STOP_BIT_1, NONE);
-		if (rval < 0)
-			xserror("SLP error\n");
-
+		if (rval < 0) {
+			xserror("SLP error");
+			goto setupfail;
+		}
 		rval = _xSfw_setflowctrl(ftdi, SIO_DISABLE_FLOW_CTRL);
-		if (rval < 0)
-			xserror("SFC error\n");
-
+		if (rval < 0) {
+			xserror("SFC error");
+			goto setupfail;
+		}
 		rval = _xSfw_set_latency_timer(ftdi, latency);
-		if (rval < 0)
-			xserror("SLT error\n");
+		if (rval < 0) {
+			xserror("SLT error");
+			goto setupfail;
+		}
 	}
 	else
 #endif
 #ifdef	HAVE_FTD2XX
 	if (XS_LIBFTD2XX == libtype) {
 		rval = -_FT_SetBaudRate(ftdi, baudrate);
-		if (rval < 0)
-			xserror("SBR error\n");
-
+		if (rval < 0) {
+			xserror("SBR error");
+			goto setupfail;
+		}
 		rval = -_FT_SetDataCharacteristics(ftdi, FT_BITS_8, FT_STOP_BITS_1, FT_PARITY_NONE);
-		if (rval < 0)
-			xserror("SLP error\n");
-
+		if (rval < 0) {
+			xserror("SLP error");
+			goto setupfail;
+		}
 		rval = -_FT_SetFlowControl(ftdi, FT_FLOW_NONE, 0, 0);
-		if (rval < 0)
-			xserror("SFC error\n");
-
+		if (rval < 0) {
+			xserror("SFC error");
+			goto setupfail;
+		}
 		rval = -_FT_SetLatencyTimer(ftdi, latency);
-		if (rval < 0)
-			xserror("SLT error\n");
+		if (rval < 0) {
+			xserror("SLT error");
+			goto setupfail;
+		}
 	}
 	else
 #endif
 		xserror("Unkown access method\n");
-
+setupfail:
 	return rval;
 }
 

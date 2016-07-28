@@ -25,7 +25,7 @@ extern "C" {
 enum {
 	XS_CS_CHIP0,	///< 6581
 	XS_CS_CHIP1,	///< 8580
-	XS_CS_BOTH,	///< Both chips. @warning Invalid for reads: unknown behaviour!
+	XS_CS_BOTH,	///< Both chips. @warning Invalid for reads: undefined behaviour!
 };
 
 // public interface
@@ -38,6 +38,7 @@ void exSID_delay(uint_fast32_t cycles);
 void exSID_polldelay(uint_fast32_t cycles);
 void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data);
 uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr);
+const char * const exSID_error_str(void);
 
 #define exSID_write(addr, data)	exSID_clkdwrite(0, addr, data)
 #define exSID_read(addr)	exSID_clkdread(0, addr)

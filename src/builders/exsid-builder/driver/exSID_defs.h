@@ -66,7 +66,9 @@
  #define xsdbg(format, ...)       /* nothing */
 #endif
 
-#define xserror(format, ...)      printf("(%s) ERROR " format, __func__, ## __VA_ARGS__)
+#define ERRORBUF	256
+
+#define xserror(format, ...)      snprintf(xSerrstr, ERRORBUF, "(%s) ERROR " format, __func__, ## __VA_ARGS__)
 
 #ifdef HAVE_BUILTIN_EXPECT
  #define likely(x)       __builtin_expect(!!(x), 1)
@@ -75,5 +77,7 @@
  #define likely(x)      (x)
  #define unlikely(x)    (x)
 #endif
+
+char xSerrstr[ERRORBUF+1];	// 256-byte max string for error message
 
 #endif /* exSID_defs_h */
