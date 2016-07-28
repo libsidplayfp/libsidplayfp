@@ -573,7 +573,7 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
 	static unsigned char data;
 
 	_xSoutb(addr, flush);	// XXX
-	_xSread(&data, flush);	// blocking
+	_xSread(&data, 1);	// blocking
 
 	xsdbg("addr: %.2" PRIxLEAST8 ", data: %.2hhx\n", addr, data);
 	return data;
