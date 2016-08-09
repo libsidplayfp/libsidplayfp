@@ -198,9 +198,9 @@ public:
         waveform(0),
         floating_output_ttl(0),
         waveform_output(0),
-        accumulator(0),
+        accumulator(0x555555),          // Accumulator's even bits are high on powerup
         freq(0),
-        tri_saw_pipeline(0),
+        tri_saw_pipeline(0x555),
         isBufferedWriteback(false),
         noiseClocked(false),
         test(false),

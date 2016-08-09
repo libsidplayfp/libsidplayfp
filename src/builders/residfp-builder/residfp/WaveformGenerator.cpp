@@ -235,7 +235,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
 void WaveformGenerator::reset()
 {
-    accumulator = 0;
+    // accumulator is not changed on reset
     freq = 0;
     pw = 0;
 
