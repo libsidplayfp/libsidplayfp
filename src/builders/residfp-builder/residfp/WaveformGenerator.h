@@ -250,7 +250,6 @@ public:
 
     /**
      * 12-bit waveform output as an analogue float value.
-     * The output from SID 8580 is delayed one cycle compared to SID 6581;
      *
      * @param ringModulator The oscillator ring-modulating current one.
      * @return output the waveform generator output
@@ -258,7 +257,7 @@ public:
     float output(const WaveformGenerator* ringModulator);
 
     /**
-     * Read OSC3 value (6581, not latched/delayed version)
+     * Read OSC3 value.
      */
     unsigned char readOSC() const { return static_cast<unsigned char>(waveform_output >> 4); }
 
@@ -344,8 +343,6 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         // Triangle/Sawtooth output is delayed half cycle on 8580
         if ((waveform & 3) && !is6581)
         {
-            // FIXME this won't produce correct result
-            // with the current combined waveforms model
             waveform_output = tri_saw_pipeline;
             tri_saw_pipeline = wave[ix];
         }
@@ -360,6 +357,7 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
 
         // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
         // when the sawtooth is selected
+        // FIXME this is currently broken
         if (unlikely(waveform > 0x8) && (waveform & 2) && is6581)
             accumulator &= (waveform_output << 12) | 0x7fffff;
 
