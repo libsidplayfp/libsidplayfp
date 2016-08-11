@@ -123,6 +123,7 @@ private:
 
     // 8580 tri/saw pipeline
     unsigned int tri_saw_pipeline;
+    unsigned int osc3;
 
     unsigned int bufferedWriteback;
     bool isBufferedWriteback;
@@ -201,6 +202,7 @@ public:
         accumulator(0x555555),          // Accumulator's even bits are high on powerup
         freq(0),
         tri_saw_pipeline(0x555),
+        osc3(0),
         isBufferedWriteback(false),
         noiseClocked(false),
         test(false),
@@ -259,7 +261,7 @@ public:
     /**
      * Read OSC3 value.
      */
-    unsigned char readOSC() const { return static_cast<unsigned char>(waveform_output >> 4); }
+    unsigned char readOSC() const { return static_cast<unsigned char>(osc3 >> 4); }
 
     /**
      * Read accumulator value.
@@ -340,20 +342,21 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
     {
         const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
 
-        // Triangle/Sawtooth output is delayed half cycle on 8580
+        // The bit masks no_pulse and no_noise are used to achieve branch-free
+        // calculation of the output value.
+        waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
+
+        // Triangle/Sawtooth output is delayed half cycle on 8580.
+        // This will appear as a one cycle delay on OSC3 as it is latched first phase of the clock.
         if ((waveform & 3) && !is6581)
         {
-            waveform_output = tri_saw_pipeline;
+            osc3 = tri_saw_pipeline & (no_pulse | pulse_output) & no_noise_or_noise_output;
             tri_saw_pipeline = wave[ix];
         }
         else
         {
-            waveform_output = wave[ix];
+            osc3 = waveform_output;
         }
-
-        // The bit masks no_pulse and no_noise are used to achieve branch-free
-        // calculation of the output value.
-        waveform_output &= (no_pulse | pulse_output) & no_noise_or_noise_output;
 
         // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
         // when the sawtooth is selected
