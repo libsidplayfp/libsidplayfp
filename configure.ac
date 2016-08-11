@@ -5,7 +5,7 @@ m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIRS([m4 src/builders/exsid-builder/driver/m4])
 AC_CONFIG_SRCDIR([src/sidplayfp/sidplayfp.cpp])
 AC_CONFIG_HEADER([src/config.h])
 AM_INIT_AUTOMAKE
@@ -285,6 +285,17 @@ AC_SUBST([FTDI_CFLAGS])
 
 AM_CONDITIONAL([EXSID_SUPPORT], [ test "x${build_exsid_builder}" = xyes])
 AM_CONDITIONAL([EXSID_DRIVER], [ test "x${build_exsid_driver}" = xyes])
+
+# check for thread model if available
+AS_IF([test "x$build_exsid_driver" = xyes],
+        [AC_CHECK_HEADERS([threads.h],
+                [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])],
+                [AX_PTHREAD(
+                        [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])]
+                        [AC_DEFINE([HAVE_PTHREAD_H], 1, [Define to 1 if you have pthread.h])]
+                )]
+        )]
+)
 
 eval loadable_shrext=$shrext_cmds
 AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
