@@ -358,8 +358,8 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
         // when the sawtooth is selected
         // FIXME this is currently broken
-        if (unlikely(waveform > 0x8) && (waveform & 2) && is6581)
-            accumulator &= (waveform_output << 12) | 0x7fffff;
+        //if ((waveform & 2) && unlikely(waveform & 0xd) && is6581)
+        //    accumulator &= (waveform_output << 12) | 0x7fffff;
 
         if (unlikely(waveform > 0x8))
         {
