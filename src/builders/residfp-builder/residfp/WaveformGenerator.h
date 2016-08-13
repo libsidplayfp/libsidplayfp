@@ -364,13 +364,19 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         //if ((waveform & 2) && unlikely(waveform & 0xd) && is6581)
         //    accumulator &= (waveform_output << 12) | 0x7fffff;
 
+        if (unlikely(isBufferedWriteback) && !(test || noiseClocked))
+        {
+            shift_register &= bufferedWriteback;
+            set_noise_output();
+            isBufferedWriteback = false;
+        }
+
         if (unlikely(waveform > 0x8))
         {
             write_shift_register();
         }
 
         noiseClocked = false;
-        isBufferedWriteback = false;
     }
     else
     {

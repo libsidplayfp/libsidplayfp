@@ -108,13 +108,6 @@ void WaveformGenerator::write_shift_register()
         return;
     }
 
-    if (unlikely(isBufferedWriteback))
-    {
-        shift_register &= bufferedWriteback;
-        set_noise_output();
-        return;
-    }
-
     shift_register &= get_noise_writeback();
 
     noise_output &= waveform_output;
