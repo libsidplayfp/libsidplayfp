@@ -78,6 +78,6 @@
  #define unlikely(x)    (x)
 #endif
 
-char xSerrstr[ERRORBUF+1];	// 256-byte max string for error message
+extern char xSerrstr[ERRORBUF+1];	// 256-byte max string for error message
 
 #endif /* exSID_defs_h */

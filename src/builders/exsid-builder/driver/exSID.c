@@ -30,6 +30,8 @@
  #endif
 #endif	// EXSID_TRHREADED
 
+char xSerrstr[ERRORBUF+1];	// 256-byte max string for error message
+
 #ifdef	DEBUG
 static long accdrift = 0;
 static unsigned long accioops = 0;
