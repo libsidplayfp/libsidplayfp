@@ -364,19 +364,19 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         //if ((waveform & 2) && unlikely(waveform & 0xd) && is6581)
         //    accumulator &= (waveform_output << 12) | 0x7fffff;
 
-        if (unlikely(isBufferedWriteback) && !(test || noiseClocked))
+        if (unlikely(isBufferedWriteback))
         {
-            shift_register &= bufferedWriteback;
-            set_noise_output();
+            if (!(test || noiseClocked))
+            {
+                shift_register &= bufferedWriteback;
+                set_noise_output();
+            }
             isBufferedWriteback = false;
         }
-
-        if (unlikely(waveform > 0x8))
+        else if (unlikely(waveform > 0x8))
         {
             write_shift_register();
         }
-
-        noiseClocked = false;
     }
     else
     {
@@ -386,6 +386,8 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
             waveform_output = 0;
         }
     }
+
+    noiseClocked = false;
 
     // The pulse level is defined as (accumulator >> 12) >= pw ? 0xfff : 0x000.
     // The expression -((accumulator >> 12) >= pw) & 0xfff yields the same
