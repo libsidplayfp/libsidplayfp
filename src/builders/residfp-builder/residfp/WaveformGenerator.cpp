@@ -62,7 +62,7 @@ void WaveformGenerator::clock_shift_register(unsigned int bit0)
 
 void WaveformGenerator::write_shift_register()
 {
-    if (unlikely(waveform > 0x8))
+    if (unlikely(waveform > 0x8) && likely(!test) && likely(shift_pipeline != 1))
     {
         // Write changes to the shift register output caused by combined waveforms
         // back into the shift register. This happens only when the register is clocked
@@ -196,9 +196,6 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
             // Set reset time for shift register.
             shift_register_reset = SHIFT_REGISTER_RESET;
-
-            // Write back to the shift register.
-            write_shift_register();
 
             // New noise waveform output.
             set_noise_output();

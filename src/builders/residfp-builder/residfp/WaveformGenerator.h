@@ -292,8 +292,6 @@ void WaveformGenerator::clock()
         {
             reset_shift_register();
 
-            write_shift_register();
-
             // New noise waveform output.
             set_noise_output();
         }
