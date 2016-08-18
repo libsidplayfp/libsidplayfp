@@ -125,10 +125,6 @@ private:
     unsigned int tri_saw_pipeline;
     unsigned int osc3;
 
-    unsigned int bufferedWriteback;
-    bool isBufferedWriteback;
-    bool noiseClocked;
-
     /// The control register bits. Gate is handled by EnvelopeGenerator.
     //@{
     bool test;
@@ -146,8 +142,6 @@ private:
     void clock_shift_register(unsigned int bit0);
 
     void write_shift_register();
-
-    unsigned int get_noise_writeback();
 
     void reset_shift_register();
 
@@ -203,8 +197,6 @@ public:
         freq(0),
         tri_saw_pipeline(0x555),
         osc3(0),
-        isBufferedWriteback(false),
-        noiseClocked(false),
         test(false),
         sync(false),
         msb_rising(false),
@@ -300,6 +292,8 @@ void WaveformGenerator::clock()
         {
             reset_shift_register();
 
+            write_shift_register();
+
             // New noise waveform output.
             set_noise_output();
         }
@@ -364,19 +358,7 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         //if ((waveform & 2) && unlikely(waveform & 0xd) && is6581)
         //    accumulator &= (waveform_output << 12) | 0x7fffff;
 
-        if (unlikely(isBufferedWriteback))
-        {
-            if (!(test || noiseClocked))
-            {
-                shift_register &= bufferedWriteback;
-                set_noise_output();
-            }
-            isBufferedWriteback = false;
-        }
-        else if (unlikely(waveform > 0x8))
-        {
-            write_shift_register();
-        }
+        write_shift_register();
     }
     else
     {
@@ -386,8 +368,6 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
             waveform_output = 0;
         }
     }
-
-    noiseClocked = false;
 
     // The pulse level is defined as (accumulator >> 12) >= pw ? 0xfff : 0x000.
     // The expression -((accumulator >> 12) >= pw) & 0xfff yields the same
