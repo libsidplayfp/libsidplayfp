@@ -95,9 +95,6 @@ private:
 
     unsigned int shift_register;
 
-    /// Remaining time to fully reset shift register.
-    int shift_register_reset;
-
     /// Emulation of pipeline causing bit 19 to clock the shift register.
     int shift_pipeline;
 
@@ -124,6 +121,12 @@ private:
     // 8580 tri/saw pipeline
     unsigned int tri_saw_pipeline;
     unsigned int osc3;
+
+    /// Remaining time to fully reset shift register.
+    int shift_register_reset;
+
+    /// Current chip model's shift register reset time.
+    int model_shift_register_reset;
 
     /// The control register bits. Gate is handled by EnvelopeGenerator.
     //@{
@@ -352,9 +355,9 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
 
         // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
         // when the sawtooth is selected
-        // FIXME this is currently broken
-        //if ((waveform & 2) && unlikely(waveform & 0xd) && is6581)
-        //    accumulator &= (waveform_output << 12) | 0x7fffff;
+        // FIXME doesn't seem to always happen
+        if ((waveform & 2) && unlikely(waveform & 0xd) && is6581)
+            accumulator &= (waveform_output << 12) | 0x7fffff;
 
         write_shift_register();
     }

@@ -45,8 +45,13 @@ const int FLOATING_OUTPUT_TTL = 0xF4240;
 /**
  * Number of cycles after which the shift register is reset
  * when the test bit is set.
+ * Values measured on warm chips (6581R3 and 8580R5).
+ * Times vary wildly with temperature and may differ
+ * from chip to chip so the numbers here represents
+ * only the big difference between the old and new models.
  */
-const int SHIFT_REGISTER_RESET = 0x8000;
+int constexpr SHIFT_REGISTER_RESET_6581 = 200000;  // ~200ms
+int constexpr SHIFT_REGISTER_RESET_8580 = 5000000; // ~5s
 
 const int DAC_BITS = 12;
 
@@ -139,6 +144,8 @@ void WaveformGenerator::setChipModel(ChipModel chipModel)
         const double dacValue = dacBuilder.getOutput(i);
         dac[i] = static_cast<float>(dacValue - offset);
     }
+
+    model_shift_register_reset = is6581 ? SHIFT_REGISTER_RESET_6581 : SHIFT_REGISTER_RESET_8580;
 }
 
 void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const
@@ -195,7 +202,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             shift_pipeline = 0;
 
             // Set reset time for shift register.
-            shift_register_reset = SHIFT_REGISTER_RESET;
+            shift_register_reset = model_shift_register_reset;
 
             // New noise waveform output.
             set_noise_output();
