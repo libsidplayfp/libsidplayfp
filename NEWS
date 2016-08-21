@@ -1,3 +1,13 @@
+2.0.0 2016-xx-xx
+* Cleaned up directory structure
+* Use c++11 features where supported
+* Added exSID USB support
+* Improved SID emulation
+* Do not use kernal calls in psid driver
+* Support libgcrypt for md5
+
+
+
 1.8.6 2016-04-15
 * Fix an off-by-one error in mixer code
 * Slightly improve some combined waveforms
