@@ -288,7 +288,8 @@ AM_CONDITIONAL([EXSID_DRIVER], [ test "x${build_exsid_driver}" = xyes])
 
 # check for thread model if available
 AS_IF([test "x$build_exsid_driver" = xyes],
-        [AC_CHECK_HEADERS([threads.h],
+        [AC_C_RESTRICT
+        AC_CHECK_HEADERS([threads.h],
                 [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])],
                 [AX_PTHREAD(
                         [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])]
