@@ -1,3 +1,49 @@
+1.8.6 2016-04-15
+* Fix an off-by-one error in mixer code
+* Slightly improve some combined waveforms
+
+
+
+1.8.5 2016-04-09
+* Fix a regression in VIC-II code
+* Improve combined waveforms emulation
+
+
+
+1.8.4 2016-02-21
+* Fix a possible crash when locking a sid device fails
+
+
+
+1.8.3 2015-12-28
+* Fix an overflow in resid/residfp for 8580 output, noticed in /MUSICIANS/L/Linus/64_Forever.sid
+* Use log1p in resid/residfp for improved precision of 6581 filter parameter calculation
+* Fix a warning in PSID model checking
+
+
+
+1.8.2 2015-10-10
+* Fix running with -b parameter
+* Attenuate second chip output by 3dB in 3SID mode as it is mixed in both channels
+* Fix uninitialized vars
+
+
+
+1.8.1 2015-08-09
+* Fix a regresion in MUS loader introduced in 1.8.0
+* Fix a regresion in STIL
+
+
+
+1.8.0 2015-07-09
+* Rework and clean tune loading to be more portable
+* Add support for 3SID files (PSID v4)
+* Check if lightpen is really triggered before changing state
+* Define WIN32_LEAN_AND_MEAN when compiling on MinGW
+* Other minor fixes and improvements
+
+
+
 1.7.2 2015-05-10
 * Fix interpolation outside bounds in reSIDfp
 * Remove redundant code in PSID loader
