@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -32,11 +32,11 @@ namespace reSIDfp
  * A 15 bit [LFSR] is used to implement the envelope rates, in effect dividing
  * the clock to the envelope counter by the currently selected rate period.
  *
- * In addition, another counter is used to implement the exponential envelope decay,
+ * In addition, another 5 bit counter is used to implement the exponential envelope decay,
  * in effect further dividing the clock to the envelope counter.
  * The period of this counter is set to 1, 2, 4, 8, 16, 30 at the envelope counter
  * values 255, 93, 54, 26, 14, 6, respectively.
- * 
+ *
  * [LFSR]: https://en.wikipedia.org/wiki/Linear_feedback_shift_register
  */
 class EnvelopeGenerator
@@ -69,12 +69,12 @@ private:
      * decrement.
      */
     unsigned int exponential_counter_period;
+    unsigned int new_exponential_counter_period;
+
+    unsigned int state_pipeline;
 
     /// Current envelope state
     State state;
-
-    /// Whether hold is enabled. Only switching to ATTACK can release envelope.
-    bool hold_zero;
 
     bool envelope_pipeline;
 
@@ -99,22 +99,11 @@ private:
     /**
      * Emulated nonlinearity of the envelope DAC.
      *
-     * @See SID.kinked_dac
+     * @See Dac
      */
     float dac[256];
 
 private:
-    /**
-     * Lookup table to convert from attack, decay, or release value to rate
-     * counter period.
-     *
-     * The rate counter is a 15 bit register which is left shifted each cycle.
-     * When the counter reaches a specific comparison value,
-     * the envelope counter is incremented (attack) or decremented
-     * (decay/release) and the rate counter is resetted.
-     *
-     * see [kevtris.org](http://blog.kevtris.org/?p=13)
-     */
     static const unsigned int adsrtable[16];
 
 private:
@@ -150,8 +139,9 @@ public:
         rate(0),
         exponential_counter(0),
         exponential_counter_period(1),
+        new_exponential_counter_period(0),
+        state_pipeline(0),
         state(RELEASE),
-        hold_zero(true),
         envelope_pipeline(false),
         gate(false),
         envelope_counter(0),
@@ -209,10 +199,57 @@ void EnvelopeGenerator::clock()
 {
     if (unlikely(envelope_pipeline))
     {
-        --envelope_counter;
+        if (envelope_counter)
+        {
+            --envelope_counter;
+            // Check for change of exponential counter period.
+            set_exponential_counter();
+        }
         envelope_pipeline = false;
-        // Check for change of exponential counter period.
-        set_exponential_counter();
+    }
+
+    if (unlikely(state_pipeline))
+    {
+        switch (state)
+        {
+        case ATTACK:
+            switch (state_pipeline)
+            {
+            case 3:
+                // Counting direction changes
+                rate = adsrtable[decay];
+                break;
+            case 2:
+                // Counter is being inverted for counting upward
+                rate = adsrtable[attack];
+                break;
+            case 1:
+                // Counter output will be normal from now on
+                break;
+            }
+            break;
+        case DECAY_SUSTAIN:
+            switch (state_pipeline)
+            {
+            case 3:
+                // Counting direction changes
+                // no visible effect
+                break;
+            case 2:
+                // Counter is being inverted for counting downward
+                rate = adsrtable[decay];
+                break;
+            case 1:
+                // Counter output will be inverted from now on
+                break;
+            }
+            break;
+        case RELEASE:
+            rate = adsrtable[release];
+            break;
+        }
+
+        state_pipeline--;
     }
 
     // Check for ADSR delay bug.
@@ -245,12 +282,6 @@ void EnvelopeGenerator::clock()
         // likely (~50%)
         exponential_counter = 0;
 
-        // Check whether the envelope counter is frozen at zero.
-        if (unlikely(hold_zero))
-        {
-            return;
-        }
-
         switch (state)
         {
         case ATTACK:
@@ -263,7 +294,7 @@ void EnvelopeGenerator::clock()
             if (unlikely(envelope_counter == 0xff))
             {
                 state = DECAY_SUSTAIN;
-                rate = adsrtable[decay];
+                state_pipeline = 3;
             }
 
             break;
@@ -281,7 +312,6 @@ void EnvelopeGenerator::clock()
             // attack, then to release. The envelope counter will then continue
             // counting down in the release state.
             // This has been verified by sampling ENV3.
-            // NB! The operation below requires two's complement integer.
             if (unlikely(exponential_counter_period != 1))
             {
                 // The decrement is delayed one cycle.

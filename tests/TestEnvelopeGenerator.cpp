@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2014 Leandro Nini
+ *  Copyright (C) 2014-2016 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,11 @@ SUITE(EnvelopeGenerator)
 struct TestFixture
 {
     // Test setup
-    TestFixture() { generator.reset(); }
+    TestFixture()
+    {
+        generator.reset();
+        generator.envelope_counter = 0;
+    }
 
     reSIDfp::EnvelopeGenerator generator;
 };
@@ -93,7 +97,6 @@ TEST_FIXTURE(TestFixture, TestFlipFFto00)
     }
 
     CHECK_EQUAL(0, (int)generator.readENV());
-    CHECK(generator.hold_zero);
 }
 
 TEST_FIXTURE(TestFixture, TestFlip00toFF)
@@ -105,8 +108,6 @@ TEST_FIXTURE(TestFixture, TestFlip00toFF)
     generator.writeATTACK_DECAY(0xff);
     generator.writeSUSTAIN_RELEASE(0xff);
 
-    generator.hold_zero = false;
-
     CHECK_EQUAL(0, (int)generator.readENV());
 
     generator.writeCONTROL_REG(0x01);
@@ -117,7 +118,6 @@ TEST_FIXTURE(TestFixture, TestFlip00toFF)
     }
 
     CHECK_EQUAL(0xff, (int)generator.readENV());
-    CHECK(!generator.hold_zero);
 }
 
 }
