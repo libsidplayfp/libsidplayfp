@@ -68,14 +68,6 @@ void EnvelopeGenerator::set_exponential_counter()
     //
     // For a detailed description see:
     // http://ploguechipsounds.blogspot.it/2010/03/sid-6581r3-adsr-tables-up-close.html
-
-    if (unlikely(new_exponential_counter_period > 0))
-    {
-        exponential_counter_period = new_exponential_counter_period;
-        new_exponential_counter_period = 0;
-        return;
-    }
-
     switch (envelope_counter)
     {
     case 0xff:

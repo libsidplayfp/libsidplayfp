@@ -197,6 +197,12 @@ namespace reSIDfp
 RESID_INLINE
 void EnvelopeGenerator::clock()
 {
+    if (unlikely(new_exponential_counter_period > 0))
+    {
+        exponential_counter_period = new_exponential_counter_period;
+        new_exponential_counter_period = 0;
+    }
+
     if (unlikely(envelope_pipeline))
     {
         if (envelope_counter)
@@ -217,14 +223,16 @@ void EnvelopeGenerator::clock()
             {
             case 3:
                 // Counting direction changes
+                // During this cycle the decay register is "accidentally" activated
                 rate = adsrtable[decay];
                 break;
             case 2:
-                // Counter is being inverted for counting upward
+                // Counter is being inverted
+                // Now the attack register is correctly activated
                 rate = adsrtable[attack];
                 break;
             case 1:
-                // Counter output will be normal from now on
+                // Counter will be counting upward from now on
                 break;
             }
             break;
@@ -236,11 +244,12 @@ void EnvelopeGenerator::clock()
                 // no visible effect
                 break;
             case 2:
-                // Counter is being inverted for counting downward
+                // Counter is being inverted
+                // During this cycle the decay register is activated
                 rate = adsrtable[decay];
                 break;
             case 1:
-                // Counter output will be inverted from now on
+                // Counter will be counting downward from now on
                 break;
             }
             break;
@@ -319,7 +328,11 @@ void EnvelopeGenerator::clock()
                 return;
             }
 
-            --envelope_counter;
+            // FIXME this breaks TestFlip00toFF
+            if (envelope_counter)
+            {
+                --envelope_counter;
+            }
             break;
         }
 
