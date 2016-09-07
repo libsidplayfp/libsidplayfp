@@ -96,6 +96,7 @@ void EnvelopeGenerator::set_exponential_counter()
 
     case 0x00:
         new_exponential_counter_period = 1;
+        counter_enabled = false;
         break;
     }
 }
@@ -131,6 +132,7 @@ void EnvelopeGenerator::reset()
     new_exponential_counter_period = 0;
 
     state = RELEASE;
+    counter_enabled = true;
     rate = adsrtable[release];
 }
 

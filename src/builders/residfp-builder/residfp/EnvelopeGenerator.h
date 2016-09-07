@@ -76,6 +76,9 @@ private:
     /// Current envelope state
     State state;
 
+    /// Whether counter is enabled. Only switching to ATTACK can release envelope.
+    bool counter_enabled;
+
     bool envelope_pipeline;
 
     /// Gate bit
@@ -142,6 +145,7 @@ public:
         new_exponential_counter_period(0),
         state_pipeline(0),
         state(RELEASE),
+        counter_enabled(true),
         envelope_pipeline(false),
         gate(false),
         envelope_counter(0),
@@ -225,6 +229,7 @@ void EnvelopeGenerator::clock()
                 // Counting direction changes
                 // During this cycle the decay register is "accidentally" activated
                 rate = adsrtable[decay];
+                counter_enabled = true;
                 break;
             case 2:
                 // Counter is being inverted
@@ -329,7 +334,7 @@ void EnvelopeGenerator::clock()
             }
 
             // FIXME this breaks TestFlip00toFF
-            if (envelope_counter)
+            if (likely(counter_enabled))
             {
                 --envelope_counter;
             }
