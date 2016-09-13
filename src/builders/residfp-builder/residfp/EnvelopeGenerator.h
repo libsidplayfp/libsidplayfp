@@ -48,7 +48,7 @@ private:
      */
     enum State
     {
-        ATTACK, DECAY_SUSTAIN, RELEASE
+        ATTACK, DECAY_SUSTAIN, RELEASE, DISABLED
     };
 
 private:
@@ -209,10 +209,11 @@ void EnvelopeGenerator::clock()
 
     if (unlikely(envelope_pipeline))
     {
-        if (envelope_counter)
+        if (likely(counter_enabled))
         {
             --envelope_counter;
             // Check for change of exponential counter period.
+            // Will take effect on next cycle.
             set_exponential_counter();
         }
         envelope_pipeline = false;
@@ -229,12 +230,12 @@ void EnvelopeGenerator::clock()
                 // Counting direction changes
                 // During this cycle the decay register is "accidentally" activated
                 rate = adsrtable[decay];
-                counter_enabled = true;
                 break;
             case 2:
                 // Counter is being inverted
                 // Now the attack register is correctly activated
                 rate = adsrtable[attack];
+                counter_enabled = true;
                 break;
             case 1:
                 // Counter will be counting upward from now on
@@ -246,7 +247,7 @@ void EnvelopeGenerator::clock()
             {
             case 3:
                 // Counting direction changes
-                // no visible effect
+                // The attack register is still active
                 break;
             case 2:
                 // Counter is being inverted
@@ -260,6 +261,16 @@ void EnvelopeGenerator::clock()
             break;
         case RELEASE:
             rate = adsrtable[release];
+            break;
+        case DISABLED:
+            switch (state_pipeline)
+            {
+            case 2:
+                break;
+            case 1:
+                counter_enabled = false;
+                break;
+            }
             break;
         }
 
@@ -333,7 +344,6 @@ void EnvelopeGenerator::clock()
                 return;
             }
 
-            // FIXME this breaks TestFlip00toFF
             if (likely(counter_enabled))
             {
                 --envelope_counter;

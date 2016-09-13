@@ -96,7 +96,8 @@ void EnvelopeGenerator::set_exponential_counter()
 
     case 0x00:
         new_exponential_counter_period = 1;
-        counter_enabled = false;
+        state = DISABLED;
+        state_pipeline = 2;
         break;
     }
 }
