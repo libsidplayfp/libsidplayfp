@@ -20,6 +20,13 @@
 #ifndef SIDDEFS_FP_H
 #define SIDDEFS_FP_H
 
+// Compilation configuration.
+#define RESID_BRANCH_HINTS @RESID_BRANCH_HINTS@
+#define ENABLE_NEW8580FILTER @ENABLE_NEW8580FILTER@
+
+// Compiler specifics.
+#define HAVE_BUILTIN_EXPECT @HAVE_BUILTIN_EXPECT@
+
 #ifndef M_PI
 #  define M_PI    3.14159265358979323846
 #endif

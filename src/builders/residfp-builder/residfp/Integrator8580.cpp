@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2014-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#define INTEGRATOR_CPP
+#define INTEGRATOR8580_CPP
 
-#include "Integrator.h"
+#include "Integrator8580.h"
 
 // This is needed when compiling with --disable-inline

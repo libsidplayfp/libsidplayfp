@@ -302,6 +302,26 @@ eval loadable_shrext=$shrext_cmds
 AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
 
 
+# new 8580 filter emulation
+# remove once stable
+AC_ARG_ENABLE([new8580filter],
+  [AS_HELP_STRING([--enable-new8580filter],
+    [enable new 8580 filter implementation [default=no]]
+  )],
+  [],
+  [enable_new8580filter=no]
+)
+
+
+AM_CONDITIONAL([ENABLE_NEW8580FILTER], [test x$enable_new8580filter != xno])
+
+AS_IF([test "x$enable_new8580filter" = "xno"],
+  [ENABLE_NEW8580FILTER=0],
+  [ENABLE_NEW8580FILTER=1]
+)
+
+AC_SUBST([ENABLE_NEW8580FILTER])
+
 
 AC_CONFIG_FILES([
 Makefile

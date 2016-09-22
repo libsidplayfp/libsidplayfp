@@ -20,12 +20,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef FILTERMODELCONFIG_H
-#define FILTERMODELCONFIG_H
+#ifndef FILTERMODELCONFIG8580_H
+#define FILTERMODELCONFIG8580_H
 
 #include <memory>
 
-#include "Dac.h"
 #include "Spline.h"
 
 #include "sidcxx11.h"
@@ -33,23 +32,20 @@
 namespace reSIDfp
 {
 
-class Integrator;
+class Integrator8580;
 
 /**
- * Calculate parameters for 6581 filter emulation.
+ * Calculate parameters for 8580 filter emulation.
  */
-class FilterModelConfig
+class FilterModelConfig8580
 {
 private:
-    static const unsigned int DAC_BITS = 11;
-
-private:
-    static std::unique_ptr<FilterModelConfig> instance;
+    static std::unique_ptr<FilterModelConfig8580> instance;
     // This allows access to the private constructor
 #ifdef HAVE_CXX11
-    friend std::unique_ptr<FilterModelConfig>::deleter_type;
+    friend std::unique_ptr<FilterModelConfig8580>::deleter_type;
 #else
-    friend class std::auto_ptr<FilterModelConfig>;
+    friend class std::auto_ptr<FilterModelConfig8580>;
 #endif
 
     const double voice_voltage_range;
@@ -65,15 +61,7 @@ private:
     const double Ut;            ///< Thermal voltage: Ut = k*T/q = 8.61734315e-5*T ~ 26mV
     const double k;             ///< Gate coupling coefficient: K = Cox/(Cox+Cdep) ~ 0.7
     const double uCox;          ///< u*Cox
-    const double WL_vcr;        ///< W/L for VCR
-    const double WL_snake;      ///< W/L for "snake"
     const double kVddt;         ///< k * (Vdd - Vth)
-    //@}
-
-    /// DAC parameters.
-    //@{
-    const double dac_zero;
-    const double dac_scale;
     //@}
 
     // Derived stuff
@@ -87,29 +75,19 @@ private:
     //@{
     unsigned short* mixer[8];
     unsigned short* summer[5];
-    unsigned short* gain[16];
-    //@}
-
-    /// DAC lookup table
-    Dac dac;
-
-    /// VCR - 6581 only.
-    //@{
-    unsigned short vcr_kVg[1 << 16];
-    unsigned short vcr_n_Ids_term[1 << 16];
+    unsigned short* gain_vol[16];
+    unsigned short* gain_res[16];
     //@}
 
     /// Reverse op-amp transfer function.
     unsigned short opamp_rev[1 << 16];
 
 private:
-    double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
-
-    FilterModelConfig();
-    ~FilterModelConfig();
+    FilterModelConfig8580();
+    ~FilterModelConfig8580();
 
 public:
-    static FilterModelConfig* getInstance();
+    static FilterModelConfig8580* getInstance();
 
     /**
      * The digital range of one voice is 20 bits; create a scaling term
@@ -122,28 +100,19 @@ public:
      */
     int getVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
 
-    unsigned short** getGain() { return gain; }
+    unsigned short** getGainVol() { return gain_vol; }
+    unsigned short** getGainRes() { return gain_res; }
 
     unsigned short** getSummer() { return summer; }
 
     unsigned short** getMixer() { return mixer; }
 
     /**
-     * Construct an 11 bit cutoff frequency DAC output voltage table.
-     * Ownership is transferred to the requester which becomes responsible
-     * of freeing the object when done.
-     *
-     * @param adjustment
-     * @return the DAC table
-     */
-    unsigned short* getDAC(double adjustment) const;
-
-    /**
      * Construct an integrator solver.
      *
      * @return the integrator
      */
-    std::unique_ptr<Integrator> buildIntegrator();
+    std::unique_ptr<Integrator8580> buildIntegrator();
 };
 
 } // namespace reSIDfp
