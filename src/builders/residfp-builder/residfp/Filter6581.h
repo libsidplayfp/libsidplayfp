@@ -441,9 +441,9 @@ int Filter6581::clock(int voice1, int voice2, int voice3)
 
     (filtE ? Vi : Vo) += ve;
 
-    Vlp = bpIntegrator->solve(Vbp);
-    Vbp = hpIntegrator->solve(Vhp);
     Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
+    Vbp = hpIntegrator->solve(Vhp);
+    Vlp = bpIntegrator->solve(Vbp);
 
     if (lp) Vo += Vlp;
     if (bp) Vo += Vbp;

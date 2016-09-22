@@ -174,9 +174,9 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
 
     (filtE ? Vi : Vo) += ve;
 
-    Vlp -= w0 * Vbp;
-    Vbp -= w0 * Vhp;
     Vhp = (Vbp * _1_div_Q) - Vlp - static_cast<float>(Vi >> 7) + noise.get();
+    Vbp -= w0 * Vhp;
+    Vlp -= w0 * Vbp;
 
     assert(std::fpclassify(Vlp) != FP_SUBNORMAL);
     assert(std::fpclassify(Vbp) != FP_SUBNORMAL);
