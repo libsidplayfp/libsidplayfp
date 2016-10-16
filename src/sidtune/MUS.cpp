@@ -131,12 +131,22 @@ bool MUS::mergeParts(buffer_t& musBuf, buffer_t& strBuf)
     return true;
 }
 
+/**
+ * Replace useless SID reads with NOPs.
+ */
+void removeReads(sidmemory& mem, uint_least16_t dest)
+{
+    const int sid_read_offset = 0x424 - o65headersize - 2;
+    mem.fillRam(dest + sid_read_offset, 0xea, 12);
+}
+
 void MUS::installPlayer(sidmemory& mem)
 {
     // Install MUS player #1.
     uint_least16_t dest = endian_16(player1[1], player1[0]);
 
     mem.fillRam(dest, player1 + 2, player1size - 2);
+    removeReads(mem, dest);
     // Point player #1 to data #1.
     mem.writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + 2) & 0xFF);
     mem.writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + 2) >> 8);
@@ -146,6 +156,7 @@ void MUS::installPlayer(sidmemory& mem)
         // Install MUS player #2.
         dest = endian_16(player2[1], player2[0]);
         mem.fillRam(dest, player2 + 2, player2size - 2);
+        removeReads(mem, dest);
         // Point player #2 to data #2.
         mem.writeMemByte(dest + 0xc6e, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) & 0xFF);
         mem.writeMemByte(dest + 0xc70, (SIDTUNE_MUS_DATA_ADDR + musDataLen + 2) >> 8);
