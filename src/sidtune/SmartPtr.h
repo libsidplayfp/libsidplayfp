@@ -15,30 +15,27 @@ class SmartPtrBase_sidtt
 {
 public:
     SmartPtrBase_sidtt(T* buffer, ulint_smartpt bufferLen, bool bufOwner = false) :
+        bufBegin(nullptr),
+        pBufCurrent(nullptr),
+        bufEnd(nullptr),
+        bufLen(0),
+        status(false),
+        doFree(bufOwner),
         dummy(0)
-	{
-		doFree = bufOwner;
-        if (bufferLen)
+    {
+        if ((buffer != nullptr) && (bufferLen != 0))
 		{
 			bufBegin = buffer;
 			pBufCurrent = buffer;
 			bufEnd = bufBegin + bufferLen;
 			bufLen = bufferLen;
 			status = true;
-		}
-		else
-		{
-            bufBegin = nullptr;
-            pBufCurrent = nullptr;
-            bufEnd = nullptr;
-			bufLen = 0;
-			status = false;
-		}
+        }
 	}
 
 	virtual ~SmartPtrBase_sidtt()
 	{
-        if (doFree && bufBegin != nullptr)
+        if (doFree && (bufBegin != nullptr))
         {
             delete[] bufBegin;
 		}
@@ -60,12 +57,13 @@ public:
         if (bufLen)
 		{
 			pBufCurrent = bufBegin;
-			return (status = true);
+            status = true;
 		}
 		else
 		{
-			return (status = false);
+            status = false;
 		}
+        return status;
 	}
 
     virtual bool good() const
@@ -178,14 +176,15 @@ public:
 
     virtual operator bool() { return status; }
 
- protected:
+protected:
 	T* bufBegin;
 	T* bufEnd;
 	T* pBufCurrent;
 	ulint_smartpt bufLen;
 	bool status;
-	bool doFree;
-	T dummy;
+
+    const bool doFree;
+    const T dummy;
 };
 
 
@@ -203,7 +202,7 @@ public:
 
 	void setBuffer(T* buffer, ulint_smartpt bufferLen)
 	{
-        if (bufferLen)
+        if ((buffer != nullptr) && (bufferLen != 0))
 		{
 			this->bufBegin = buffer;
 			this->pBufCurrent = buffer;
