@@ -30,39 +30,35 @@ namespace reSIDfp
 {
 
 /**
- * Filter cutoff DAC resistances.
+ * W/L ratio of frequency DAC bit 0,
+ * other bit are proportional.
+ * When no bit are selected a resistance with half
+ * W/L ratio is selected.
  */
-const double dacWL[11] =
-{
-    (1./64.)*(1./(5./2. + 1./27.5)),
-    (1./32.)*(1./(5./2. + 1./27.5)),
-    (1./16.)*(1./(5./2. + 1./27.5)),
-    (1./8.) *(1./(5./2. + 1./27.5)),
-    (1./4.) *(1./(5./2. + 1./27.5)),
-    (1./2.) *(1./(5./2. + 1./27.5)),
-     1.     *(1./(5./2. + 1./27.5)),
-     2.     *(1./(5./2. + 1./27.5)),
-     4.     *(1./(5./2. + 1./27.5)),
-     8.     *(1./(5./2. + 1./27.5)),
-    16.     *(1./(5./2. + 1./27.5))
-};
+const double DAC_WL0 = 0.00625;
 
 Filter8580::~Filter8580() {}
 
 void Filter8580::updatedCenterFrequency()
 {
     double wl;
+    double dacWL = DAC_WL0 * cp;
     if (fc)
     {
         wl = 0.;
         for (unsigned int i = 0; i < 11; i++)
         {
             if (fc & (1 << i))
-                wl += dacWL[i] * cp;
+            {
+                wl += dacWL;
+            }
+            dacWL *= 2;
         }
     }
     else
-        wl = (1./128.)*(1./(5./2. + 1./27.5)) * cp;
+    {
+        wl = dacWL/2.;
+    }
 
     bpIntegrator->setFc(wl);
     lpIntegrator->setFc(wl);
