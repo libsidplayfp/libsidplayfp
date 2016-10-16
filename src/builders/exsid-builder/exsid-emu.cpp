@@ -123,9 +123,8 @@ uint8_t exSID::read(uint_least8_t addr)
 
     const unsigned int cycles = delay();
 
-    uint8_t data = exSID_clkdread(cycles, addr);
-    busValue = data;	// busValue is updated on valid reads
-    return data;
+    busValue = exSID_clkdread(cycles, addr);	// busValue is updated on valid reads
+    return busValue;
 }
 
 void exSID::write(uint_least8_t addr, uint8_t data)
