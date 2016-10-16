@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -582,22 +582,28 @@ std::string SidTuneBase::petsciiToAscii(SmartPtr_sidtt<const uint8_t>& spPet)
 {
     std::string buffer;
 
-    char c;
     do
     {
-        c = CHR_tab[*spPet];  // ASCII CHR$ conversion
-        if ((c >= 0x20) && (buffer.length() <= 31))
-            buffer.push_back(c);  // copy to info string
+        const uint8_t petsciiChar = *spPet;
+        spPet++;
+
+        if ((petsciiChar == 0x00) || (petsciiChar == 0x0d))
+            break;
 
         // If character is 0x9d (left arrow key) then move back.
-        if ((*spPet == 0x9d) && (!buffer.empty()))
+        if ((petsciiChar == 0x9d) && (!buffer.empty()))
         {
             buffer.resize(buffer.size() - 1);
         }
-
-        spPet++;
+        else
+        {
+            // ASCII CHR$ conversion
+            const char asciiChar = CHR_tab[petsciiChar];
+            if ((asciiChar >= 0x20) && (buffer.length() <= 31))
+                buffer.push_back(asciiChar);
+        }
     }
-    while (!((c == 0x0D) || (c == 0x00) || spPet.fail()));
+    while (!spPet.fail());
 
     return buffer;
 }
