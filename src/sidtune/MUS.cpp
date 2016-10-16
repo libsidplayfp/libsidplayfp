@@ -62,22 +62,22 @@ const uint8_t* player2 = sidplayer2 + o65headersize;
 const size_t player1size = sizeof(sidplayer1) - o65headersize;
 const size_t player2size = sizeof(sidplayer2) - o65headersize;
 
-bool detect(const uint8_t* buffer, uint_least32_t bufLen,
-                         uint_least32_t& voice3Index)
+bool detect(const uint8_t* buffer, uint_least32_t& voice3Index)
 {
-    SmartPtr_sidtt<const uint8_t> spMus(buffer, bufLen);
+    if (buffer == nullptr)
+        return false;
+
     // Skip load address and 3x length entry.
     uint_least32_t voice1Index = 2 + 3 * 2;
     // Add length of voice 1 data.
-    voice1Index += endian_16(spMus[3], spMus[2]);
+    voice1Index += endian_16(buffer[3], buffer[2]);
     // Add length of voice 2 data.
-    uint_least32_t voice2Index = voice1Index + endian_16(spMus[5], spMus[4]);
+    uint_least32_t voice2Index = voice1Index + endian_16(buffer[5], buffer[4]);
     // Add length of voice 3 data.
-    voice3Index = voice2Index + endian_16(spMus[7], spMus[6]);
-    return ((endian_16(spMus[voice1Index - 2], spMus[voice1Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(spMus[voice2Index - 2], spMus[voice2Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(spMus[voice3Index - 2], spMus[voice3Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
-            && spMus);
+    voice3Index = voice2Index + endian_16(buffer[7], buffer[6]);
+    return ((endian_16(buffer[voice1Index - 2], buffer[voice1Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_16(buffer[voice2Index - 2], buffer[voice2Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_16(buffer[voice3Index - 2], buffer[voice3Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD));
 }
 
 void MUS::setPlayerAddress()
@@ -176,7 +176,7 @@ SidTuneBase* MUS::load(buffer_t& musBuf,
 {
     uint_least32_t voice3Index;
     SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size() - fileOffset);
-    if (!detect(&spPet[0], spPet.tellLength(), voice3Index))
+    if (!detect(&spPet[0], voice3Index))
         return nullptr;
 
     std::unique_ptr<MUS> tune(new MUS());
@@ -239,7 +239,7 @@ void MUS::tryLoad(buffer_t& musBuf,
     bool stereo = false;
     if (!strBuf.empty())
     {
-        if (!detect(&strBuf[0], strBuf.size(), voice3Index))
+        if (!detect(&strBuf[0], voice3Index))
             throw loadError(ERR_2ND_INVALID);
         spPet.setBuffer(&strBuf[0], strBuf.size());
         stereo = true;
@@ -250,7 +250,7 @@ void MUS::tryLoad(buffer_t& musBuf,
         if (spPet.good())
         {
             const ulint_smartpt pos = spPet.tellPos();
-            if (detect(&spPet[0], spPet.tellLength() - pos, voice3Index))
+            if (detect(&spPet[0], voice3Index))
             {
                 musDataLen = static_cast<uint_least16_t>(pos);
                 stereo = true;
