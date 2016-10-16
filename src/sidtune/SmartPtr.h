@@ -16,8 +16,8 @@ class SmartPtrBase_sidtt
 public:
     SmartPtrBase_sidtt(T* buffer, ulint_smartpt bufferLen, bool bufOwner = false) :
         bufBegin(nullptr),
-        pBufCurrent(nullptr),
         bufEnd(nullptr),
+        pBufCurrent(nullptr),
         bufLen(0),
         status(false),
         doFree(bufOwner),

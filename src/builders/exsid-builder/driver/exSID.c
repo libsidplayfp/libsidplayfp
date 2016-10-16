@@ -67,7 +67,7 @@ static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
  * Returns a string describing the last recorded error.
  * @return error message (max 256 bytes long).
  */
-const char * const exSID_error_str(void)
+const char * exSID_error_str(void)
 {
 	return (xSerrstr);
 }

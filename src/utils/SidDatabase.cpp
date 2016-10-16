@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -35,7 +35,6 @@
 const char ERR_DATABASE_CORRUPT[]        = "SID DATABASE ERROR: Database seems to be corrupt.";
 const char ERR_NO_DATABASE_LOADED[]      = "SID DATABASE ERROR: Songlength database not loaded.";
 const char ERR_NO_SELECTED_SONG[]        = "SID DATABASE ERROR: No song selected for retrieving song length.";
-const char ERR_MEM_ALLOC[]               = "SID DATABASE ERROR: Memory Allocation Failure.";
 const char ERR_UNABLE_TO_LOAD_DATABASE[] = "SID DATABASE ERROR: Unable to load the songlegnth database.";
 
 class parseError {};

@@ -349,6 +349,9 @@ void EnvelopeGenerator::clock()
                 --envelope_counter;
             }
             break;
+
+        case DISABLED:
+            break;
         }
 
         // Check for change of exponential counter period.

@@ -81,7 +81,7 @@ public:
 
     void voice(unsigned int num, bool mute) override;
 
-    void filter(bool enable) {}
+    void filter(bool) {}
 
     // exSID specific
     void flush();

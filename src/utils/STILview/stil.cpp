@@ -54,7 +54,7 @@ const char  _AUTHOR_STR[] = " AUTHOR: ";
 const char   _TITLE_STR[] = "  TITLE: ";
 const char  _ARTIST_STR[] = " ARTIST: ";
 const char _COMMENT_STR[] = "COMMENT: ";
-const char     _BUG_STR[] = "BUG: ";
+//const char     _BUG_STR[] = "BUG: ";
 
 const char *STIL::STIL_ERROR_STR[] =
 {
