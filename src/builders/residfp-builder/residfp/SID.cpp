@@ -28,7 +28,7 @@
 
 #include "array.h"
 #include "Filter6581.h"
-#ifdef ENABLE_NEW8580FILTER
+#if ENABLE_NEW8580FILTER
 #  include "Filter8580_new.h"
 #else
 #  include "Filter8580.h"
