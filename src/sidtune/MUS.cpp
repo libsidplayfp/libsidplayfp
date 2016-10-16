@@ -175,12 +175,11 @@ SidTuneBase* MUS::load(buffer_t& musBuf,
                             bool init)
 {
     uint_least32_t voice3Index;
-    SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size() - fileOffset);
-    if (!detect(&spPet[0], voice3Index))
+    if (!detect(&musBuf[fileOffset], voice3Index))
         return nullptr;
 
     std::unique_ptr<MUS> tune(new MUS());
-    tune->tryLoad(musBuf, strBuf, spPet, voice3Index, init);
+    tune->tryLoad(musBuf, strBuf, fileOffset, voice3Index, init);
     tune->mergeParts(musBuf, strBuf);
 
     return tune.release();
@@ -188,7 +187,7 @@ SidTuneBase* MUS::load(buffer_t& musBuf,
 
 void MUS::tryLoad(buffer_t& musBuf,
                     buffer_t& strBuf,
-                    SmartPtr_sidtt<const uint8_t> &spPet,
+                    uint_least32_t fileOffset,
                     uint_least32_t voice3Index,
                     bool init)
 {
@@ -222,6 +221,8 @@ void MUS::tryLoad(buffer_t& musBuf,
 
     musDataLen = musBuf.size();
     info->m_loadAddr = SIDTUNE_MUS_DATA_ADDR;
+
+    SmartPtr_sidtt<const uint8_t> spPet(&musBuf[fileOffset], musBuf.size() - fileOffset);
 
     // Voice3Index now is offset to text lines (uppercase Pet-strings).
     spPet += voice3Index;
