@@ -117,10 +117,7 @@ uint8_t exSID::read(uint_least8_t addr)
 
         // Here we implement the "safe" detection routine return values
         if (0x1b == addr) {	// we could implement a commandline-chosen return byte here
-            if (SidConfig::MOS8580 == runmodel)
-                return 0x02;
-            else
-                return 0x03;
+            return (SidConfig::MOS8580 == runmodel) ? 0x02 : 0x03;
         }
     }
 
