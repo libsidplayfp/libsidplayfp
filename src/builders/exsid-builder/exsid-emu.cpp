@@ -110,7 +110,9 @@ uint8_t exSID::read(uint_least8_t addr)
 
     if (!readflag)
     {
+#ifdef DEBUG
         printf("WARNING: Read support is limited. This file may not play correctly!\n");
+#endif
         readflag = true;
 
         // Here we implement the "safe" detection routine return values
