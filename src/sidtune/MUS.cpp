@@ -70,14 +70,15 @@ bool detect(const uint8_t* buffer, uint_least32_t& voice3Index)
     // Skip load address and 3x length entry.
     uint_least32_t voice1Index = 2 + 3 * 2;
     // Add length of voice 1 data.
-    voice1Index += endian_16(buffer[3], buffer[2]);
+    voice1Index += endian_little16(&buffer[2]);
     // Add length of voice 2 data.
-    uint_least32_t voice2Index = voice1Index + endian_16(buffer[5], buffer[4]);
+    uint_least32_t voice2Index = voice1Index + endian_little16(&buffer[4]);
     // Add length of voice 3 data.
-    voice3Index = voice2Index + endian_16(buffer[7], buffer[6]);
-    return ((endian_16(buffer[voice1Index - 2], buffer[voice1Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(buffer[voice2Index - 2], buffer[voice2Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD)
-            && (endian_16(buffer[voice3Index - 2], buffer[voice3Index + 1 - 2]) == SIDTUNE_MUS_HLT_CMD));
+    voice3Index = voice2Index + endian_little16(&buffer[6]);
+
+    return ((endian_big16(&buffer[voice1Index - 2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_big16(&buffer[voice2Index - 2]) == SIDTUNE_MUS_HLT_CMD)
+            && (endian_big16(&buffer[voice3Index - 2]) == SIDTUNE_MUS_HLT_CMD));
 }
 
 void MUS::setPlayerAddress()
@@ -228,7 +229,7 @@ void MUS::tryLoad(buffer_t& musBuf,
     spPet += voice3Index;
 
     // Extract credits
-    while (spPet[0])
+    while (*spPet)
     {
         info->m_commentString.push_back(petsciiToAscii(spPet));
     }
@@ -265,7 +266,7 @@ void MUS::tryLoad(buffer_t& musBuf,
         spPet += voice3Index;
 
         // Extract credits
-        while (spPet[0])
+        while (*spPet)
         {
             info->m_commentString.push_back(petsciiToAscii(spPet));
         }
