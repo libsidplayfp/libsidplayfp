@@ -126,14 +126,8 @@ const SidTuneInfo* SidTuneBase::getInfo(unsigned int songNum)
 
 unsigned int SidTuneBase::selectSong(unsigned int selectedSong)
 {
-    // First, check whether selected song is valid.
-    if (selectedSong > info->m_songs || selectedSong > MAX_SONGS)
-    {
-        return info->m_currentSong;
-    }
-
-    // Determine and set starting song number.
-    const unsigned int song = (selectedSong == 0) ? info->m_startSong : selectedSong;
+    // Check whether selected song is valid, use start song if not
+    const unsigned int song = (selectedSong == 0 || selectedSong > info->m_songs) ? info->m_startSong : selectedSong;
 
     // Copy any song-specific variable information
     // such a speed/clock setting to the info structure.
