@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <cstring>
 
-#define BUFFERSIZE 22
+#define BUFFERSIZE 26
 
 #define LOADADDRESS_HI  1
 #define LOADADDRESS_LO  0
@@ -43,7 +43,7 @@ uint8_t const bufferMUS[BUFFERSIZE] =
     0x00, 0x00, 0x01, 0x4F, // data for Voice 1
     0x00, 0x00, 0x01, 0x4F, // data for Voice 2
     0x00, 0x01, 0x01, 0x4F, // data for Voice 3
-    0x00, 0x00,             // text description
+    0x0d, 0x0d, 0x0d, 0x0d, 0x0d, 0x00, // text description
 };
 
 SUITE(MUS)
