@@ -48,7 +48,7 @@ private:
      */
     enum State
     {
-        ATTACK, DECAY_SUSTAIN, RELEASE, DISABLED
+        ATTACK, DECAY_SUSTAIN, RELEASE, FREEZED
     };
 
 private:
@@ -138,7 +138,7 @@ public:
      * Constructor.
      */
     EnvelopeGenerator() :
-        lfsr(0),
+        lfsr(0x7fff),
         rate(0),
         exponential_counter(0),
         exponential_counter_period(1),
@@ -148,7 +148,7 @@ public:
         counter_enabled(true),
         envelope_pipeline(false),
         gate(false),
-        envelope_counter(0),
+        envelope_counter(0xaa),
         attack(0),
         decay(0),
         sustain(0),
@@ -212,8 +212,6 @@ void EnvelopeGenerator::clock()
         if (likely(counter_enabled))
         {
             --envelope_counter;
-            // Check for change of exponential counter period.
-            // Will take effect on next cycle.
             set_exponential_counter();
         }
         envelope_pipeline = false;
@@ -262,7 +260,7 @@ void EnvelopeGenerator::clock()
         case RELEASE:
             rate = adsrtable[release];
             break;
-        case DISABLED:
+        case FREEZED:
             switch (state_pipeline)
             {
             case 2:
@@ -314,7 +312,9 @@ void EnvelopeGenerator::clock()
             // release, then to attack. The envelope counter is then frozen at
             // zero; to unlock this situation the state must be changed to release,
             // then to attack. This has been verified by sampling ENV3.
+
             ++envelope_counter;
+            set_exponential_counter();
 
             if (unlikely(envelope_counter == 0xff))
             {
@@ -337,25 +337,14 @@ void EnvelopeGenerator::clock()
             // attack, then to release. The envelope counter will then continue
             // counting down in the release state.
             // This has been verified by sampling ENV3.
-            if (unlikely(exponential_counter_period != 1))
-            {
-                // The decrement is delayed one cycle.
-                envelope_pipeline = true;
-                return;
-            }
 
-            if (likely(counter_enabled))
-            {
-                --envelope_counter;
-            }
+            // The decrement is delayed one cycle.
+            envelope_pipeline = true;
             break;
 
-        case DISABLED:
+        case FREEZED:
             break;
         }
-
-        // Check for change of exponential counter period.
-        set_exponential_counter();
     }
 }
 

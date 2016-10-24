@@ -96,7 +96,7 @@ void EnvelopeGenerator::set_exponential_counter()
 
     case 0x00:
         new_exponential_counter_period = 1;
-        state = DISABLED;
+        state = FREEZED;
         state_pipeline = 2;
         break;
     }
@@ -115,7 +115,7 @@ void EnvelopeGenerator::setChipModel(ChipModel chipModel)
 
 void EnvelopeGenerator::reset()
 {
-    envelope_counter = 0xaa;
+    // counter is not changed on reset
     envelope_pipeline = false;
 
     state_pipeline = 0;
