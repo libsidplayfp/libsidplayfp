@@ -192,15 +192,13 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
                 }
                 else
                 {
+                    // Bad line may be generated during fetch interval
+                    //   (VICII_FETCH_CYCLE <= lineCycle < VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 3)
+                    // or after the fetch interval but before raster ycounter is incremented
+                    //   (VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 3 <= lineCycle <= VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 6)
                     if (lineCycle >= VICII_FETCH_CYCLE
-                        && lineCycle < VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 3)
+                        && lineCycle <= VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 6)
                     {
-                        isBadLine = true;
-                    }
-                    else if (lineCycle <= VICII_FETCH_CYCLE + VICII_SCREEN_TEXTCOLS + 6)
-                    {
-                        // Bad line has been generated after fetch interval, but
-                        // before the raster counter is incremented.
                         isBadLine = true;
                     }
                 }
