@@ -75,6 +75,7 @@ private:
 
     /// Current envelope state
     State state;
+    State next_state;
 
     /// Whether counter is enabled. Only switching to ATTACK can release envelope.
     bool counter_enabled;
@@ -99,6 +100,9 @@ private:
     /// Release register
     unsigned char release;
 
+    /// The ENV3 value, sampled at the first phase of the clock
+    unsigned char env3;
+
     /**
      * Emulated nonlinearity of the envelope DAC.
      *
@@ -111,6 +115,8 @@ private:
 
 private:
     void set_exponential_counter();
+
+    void state_change();
 
 public:
     /**
@@ -188,7 +194,7 @@ public:
      *
      * @return envelope counter
      */
-    unsigned char readENV() const { return envelope_counter; }
+    unsigned char readENV() const { return env3; }
 };
 
 } // namespace reSIDfp
@@ -201,6 +207,8 @@ namespace reSIDfp
 RESID_INLINE
 void EnvelopeGenerator::clock()
 {
+    env3 = envelope_counter;
+
     if (unlikely(new_exponential_counter_period > 0))
     {
         exponential_counter_period = new_exponential_counter_period;
@@ -219,71 +227,15 @@ void EnvelopeGenerator::clock()
 
     if (unlikely(state_pipeline))
     {
-        switch (state)
-        {
-        case ATTACK:
-            switch (state_pipeline)
-            {
-            case 3:
-                // Counting direction changes
-                // During this cycle the decay register is "accidentally" activated
-                rate = adsrtable[decay];
-                break;
-            case 2:
-                // Counter is being inverted
-                // Now the attack register is correctly activated
-                rate = adsrtable[attack];
-                counter_enabled = true;
-                break;
-            case 1:
-                // Counter will be counting upward from now on
-                break;
-            }
-            break;
-        case DECAY_SUSTAIN:
-            switch (state_pipeline)
-            {
-            case 3:
-                // Counting direction changes
-                // The attack register is still active
-                break;
-            case 2:
-                // Counter is being inverted
-                // During this cycle the decay register is activated
-                rate = adsrtable[decay];
-                break;
-            case 1:
-                // Counter will be counting downward from now on
-                break;
-            }
-            break;
-        case RELEASE:
-            rate = adsrtable[release];
-            break;
-        case FREEZED:
-            switch (state_pipeline)
-            {
-            case 2:
-                break;
-            case 1:
-                counter_enabled = false;
-                break;
-            }
-            break;
-        }
-
-        state_pipeline--;
+        state_change();
     }
 
-    // Check for ADSR delay bug.
+    // ADSR delay bug.
     // If the rate counter comparison value is set below the current value of the
     // rate counter, the counter will continue counting up until it wraps around
     // to zero at 2^15 = 0x8000, and then count rate_period - 1 before the
     // envelope can constly be stepped.
     // This has been verified by sampling ENV3.
-    //
-    // Note: Envelope is now implemented like in the real machine with a shift register
-    // so the ADSR delay bug should be correcly modeled
 
     // check to see if LFSR matches table value
     if (likely(lfsr != rate))
@@ -318,7 +270,7 @@ void EnvelopeGenerator::clock()
 
             if (unlikely(envelope_counter == 0xff))
             {
-                state = DECAY_SUSTAIN;
+                next_state = DECAY_SUSTAIN;
                 state_pipeline = 3;
             }
 
@@ -327,7 +279,7 @@ void EnvelopeGenerator::clock()
         case DECAY_SUSTAIN:
             if (likely(envelope_counter == sustain))
             {
-                return;
+                break;
             }
 
             // fall-through
@@ -343,9 +295,83 @@ void EnvelopeGenerator::clock()
             break;
 
         case FREEZED:
+            // we should never get here
             break;
         }
     }
+}
+
+/**
+ * This is what happens on chip during state switching,
+ * based on die reverse engineering and transistor level
+ * emulation.
+ *
+ * Attack
+ *
+ *  0 - Gate on
+ *  1 - Counting direction changes
+ *      During this cycle the decay state is "accidentally" activated
+ *  2 - Counter is being inverted
+ *      Now the attack state is correctly activated
+ *      Counter is enabled
+ *  3 - Counter will be counting upward from now on
+ *
+ * Decay
+ *
+ *  0 - Counter == $ff
+ *  1 - Counting direction changes
+ *      The attack state is still active
+ *  2 - Counter is being inverted
+ *      During this cycle the decay state is activated
+ *  3 - Counter will be counting downward from now on
+ *
+ * Release
+ *
+ *  0 - Gate off
+ *  1 - During this cycle the release state is activated if coming from sustain/decay
+ * *2 - Counter is being inverted, the release state is activated
+ * *3 - Counter will be counting downward from now on
+ *
+ *  (* only if coming directly from Attack state)
+ *
+ * Freeze
+ *
+ *  0 - Counter == $00
+ *  1 - Nothing
+ *  2 - Counter is disabled
+ */
+RESID_INLINE
+void EnvelopeGenerator::state_change()
+{
+    if (((next_state == ATTACK) && (state_pipeline == 3))
+            || ((next_state == DECAY_SUSTAIN) && (state_pipeline == 2)))
+    {
+        // The decay state is "accidentally" activated also during first cycle of attack phase
+        state = DECAY_SUSTAIN;
+        rate = adsrtable[decay];
+    }
+    else if ((next_state == ATTACK) && (state_pipeline == 2))
+    {
+        // The attack register is correctly activated during second cycle of attack phase
+        state = ATTACK;
+        rate = adsrtable[attack];
+        counter_enabled = true;
+    }
+    else if (next_state == RELEASE)
+    {
+        if (((state == ATTACK) && (state_pipeline == 2))
+            || ((state == DECAY_SUSTAIN) && (state_pipeline == 3)))
+        {
+            state = RELEASE;
+            rate = adsrtable[release];
+        }
+    }
+    else if ((next_state == FREEZED) && (state_pipeline == 1))
+    {
+        counter_enabled = false;
+    }
+
+    state_pipeline--;
 }
 
 } // namespace reSIDfp

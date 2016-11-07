@@ -96,7 +96,7 @@ void EnvelopeGenerator::set_exponential_counter()
 
     case 0x00:
         new_exponential_counter_period = 1;
-        state = FREEZED;
+        next_state = FREEZED;
         state_pipeline = 2;
         break;
     }
@@ -147,18 +147,10 @@ void EnvelopeGenerator::writeCONTROL_REG(unsigned char control)
     // The rate counter is never reset, thus there will be a delay before the
     // envelope counter starts counting up (attack) or down (release).
 
-    if (gate_next)
-    {
-        // Gate bit on: Start attack, decay, sustain.
-        state = ATTACK;
-        state_pipeline = 3;
-    }
-    else
-    {
-        // Gate bit off: Start release.
-        state = RELEASE;
-        state_pipeline = 1;
-    }
+    // Gate bit on:  Start attack, decay, sustain.
+    // Gate bit off: Start release.
+    next_state = gate_next ? ATTACK : RELEASE;
+    state_pipeline = 3;
 
     gate = gate_next;
 }
