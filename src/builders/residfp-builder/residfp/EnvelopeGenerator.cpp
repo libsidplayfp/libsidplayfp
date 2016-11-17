@@ -116,7 +116,7 @@ void EnvelopeGenerator::setChipModel(ChipModel chipModel)
 void EnvelopeGenerator::reset()
 {
     // counter is not changed on reset
-    envelope_pipeline = false;
+    envelope_pipeline = 0;
 
     state_pipeline = 0;
 
@@ -127,7 +127,8 @@ void EnvelopeGenerator::reset()
 
     gate = false;
 
-    lfsr = 0x7fff;
+    resetLfsr = true;
+
     exponential_counter = 0;
     exponential_counter_period = 1;
     new_exponential_counter_period = 0;
@@ -141,18 +142,18 @@ void EnvelopeGenerator::writeCONTROL_REG(unsigned char control)
 {
     const bool gate_next = (control & 0x01) != 0;
 
-    if (gate_next == gate)
-        return;
+    if (gate_next != gate)
+    {
+        gate = gate_next;
 
-    // The rate counter is never reset, thus there will be a delay before the
-    // envelope counter starts counting up (attack) or down (release).
+        // The rate counter is never reset, thus there will be a delay before the
+        // envelope counter starts counting up (attack) or down (release).
 
-    // Gate bit on:  Start attack, decay, sustain.
-    // Gate bit off: Start release.
-    next_state = gate_next ? ATTACK : RELEASE;
-    state_pipeline = 3;
-
-    gate = gate_next;
+        // Gate bit on:  Start attack, decay, sustain.
+        // Gate bit off: Start release.
+        next_state = gate_next ? ATTACK : RELEASE;
+        state_pipeline = 3;
+    }
 }
 
 void EnvelopeGenerator::writeATTACK_DECAY(unsigned char attack_decay)

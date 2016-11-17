@@ -73,6 +73,11 @@ private:
 
     unsigned int state_pipeline;
 
+    ///
+    unsigned int envelope_pipeline;
+
+    unsigned int exponential_pipeline;
+
     /// Current envelope state
     State state;
     State next_state;
@@ -80,10 +85,11 @@ private:
     /// Whether counter is enabled. Only switching to ATTACK can release envelope.
     bool counter_enabled;
 
-    bool envelope_pipeline;
-
     /// Gate bit
     bool gate;
+
+    ///
+    bool resetLfsr;
 
     /// The current digital value of envelope output.
     unsigned char envelope_counter;
@@ -150,10 +156,12 @@ public:
         exponential_counter_period(1),
         new_exponential_counter_period(0),
         state_pipeline(0),
+        envelope_pipeline(0),
+        exponential_pipeline(0),
         state(RELEASE),
         counter_enabled(true),
-        envelope_pipeline(false),
         gate(false),
+        resetLfsr(false),
         envelope_counter(0xaa),
         attack(0),
         decay(0),
@@ -215,21 +223,72 @@ void EnvelopeGenerator::clock()
         new_exponential_counter_period = 0;
     }
 
-    if (unlikely(envelope_pipeline))
-    {
-        if (likely(counter_enabled))
-        {
-            --envelope_counter;
-            set_exponential_counter();
-        }
-        envelope_pipeline = false;
-    }
-
     if (unlikely(state_pipeline))
     {
         state_change();
     }
 
+    if (unlikely(envelope_pipeline != 0) && (--envelope_pipeline == 0))
+    {
+        if (likely(counter_enabled))
+        {
+            if (state == ATTACK)
+            {
+                envelope_counter++;
+                if (unlikely(envelope_counter == 0xff))
+                {
+                    next_state = DECAY_SUSTAIN;
+                    state_pipeline = 3;
+                }
+            }
+            else if ((state == DECAY_SUSTAIN) || (state == RELEASE))
+            {
+                envelope_counter--;
+            }
+
+            set_exponential_counter();
+        }
+    }
+
+    if (unlikely(exponential_pipeline != 0) && (--exponential_pipeline == 0))
+    {
+        exponential_counter = 0;
+
+       if (((state == DECAY_SUSTAIN) && (envelope_counter != sustain))
+           || (state == RELEASE))
+        {
+            // The envelope counter can flip from 0x00 to 0xff by changing state to
+            // attack, then to release. The envelope counter will then continue
+            // counting down in the release state.
+            // This has been verified by sampling ENV3.
+
+            envelope_pipeline = 1;
+        }
+    }
+    else if (unlikely(resetLfsr))
+    {
+        lfsr = 0x7fff;
+        resetLfsr = false;
+
+        if (state == ATTACK)
+        {
+            // The first envelope step in the attack state also resets the exponential
+            // counter. This has been verified by sampling ENV3.
+            exponential_counter = 0; // NOTE this is actually delayed one cycle, not modeled
+
+            // The envelope counter can flip from 0xff to 0x00 by changing state to
+            // release, then to attack. The envelope counter is then frozen at
+            // zero; to unlock this situation the state must be changed to release,
+            // then to attack. This has been verified by sampling ENV3.
+
+            envelope_pipeline = 2;
+        }
+        else
+        {
+            if (++exponential_counter == exponential_counter_period)
+                exponential_pipeline = exponential_counter_period != 1 ? 2 : 1;
+        }
+    }
     // ADSR delay bug.
     // If the rate counter comparison value is set below the current value of the
     // rate counter, the counter will continue counting up until it wraps around
@@ -238,66 +297,16 @@ void EnvelopeGenerator::clock()
     // This has been verified by sampling ENV3.
 
     // check to see if LFSR matches table value
-    if (likely(lfsr != rate))
+    else if (likely(lfsr != rate))
     {
         // it wasn't a match, clock the LFSR once
         // by performing XOR on last 2 bits
         const unsigned int feedback = ((lfsr << 14) ^ (lfsr << 13)) & 0x4000;
         lfsr = (lfsr >> 1) | feedback;
-        return;
     }
-
-    // reset LFSR
-    lfsr = 0x7fff;
-
-    // The first envelope step in the attack state also resets the exponential
-    // counter. This has been verified by sampling ENV3.
-    if (state == ATTACK || ++exponential_counter == exponential_counter_period)
+    else
     {
-        // likely (~50%)
-        exponential_counter = 0;
-
-        switch (state)
-        {
-        case ATTACK:
-            // The envelope counter can flip from 0xff to 0x00 by changing state to
-            // release, then to attack. The envelope counter is then frozen at
-            // zero; to unlock this situation the state must be changed to release,
-            // then to attack. This has been verified by sampling ENV3.
-
-            ++envelope_counter;
-            set_exponential_counter();
-
-            if (unlikely(envelope_counter == 0xff))
-            {
-                next_state = DECAY_SUSTAIN;
-                state_pipeline = 3;
-            }
-
-            break;
-
-        case DECAY_SUSTAIN:
-            if (likely(envelope_counter == sustain))
-            {
-                break;
-            }
-
-            // fall-through
-
-        case RELEASE:
-            // The envelope counter can flip from 0x00 to 0xff by changing state to
-            // attack, then to release. The envelope counter will then continue
-            // counting down in the release state.
-            // This has been verified by sampling ENV3.
-
-            // The decrement is delayed one cycle.
-            envelope_pipeline = true;
-            break;
-
-        case FREEZED:
-            // we should never get here
-            break;
-        }
+        resetLfsr = true;
     }
 }
 
@@ -344,7 +353,7 @@ RESID_INLINE
 void EnvelopeGenerator::state_change()
 {
     if (((next_state == ATTACK) && (state_pipeline == 3))
-            || ((next_state == DECAY_SUSTAIN) && (state_pipeline == 2)))
+        || ((next_state == DECAY_SUSTAIN) && (state_pipeline == 2)))
     {
         // The decay state is "accidentally" activated also during first cycle of attack phase
         state = DECAY_SUSTAIN;
