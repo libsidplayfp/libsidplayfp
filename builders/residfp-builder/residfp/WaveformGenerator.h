@@ -308,7 +308,7 @@ void WaveformGenerator::clock()
             // Pipeline: Detect rising bit, shift phase 1, shift phase 2.
             shift_pipeline = 2;
         }
-        else if (unlikely(shift_pipeline) != 0 && --shift_pipeline == 0)
+        else if (unlikely(shift_pipeline != 0) && --shift_pipeline == 0)
         {
             clock_shift_register();
         }
