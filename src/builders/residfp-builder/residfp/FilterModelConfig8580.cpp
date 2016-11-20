@@ -122,7 +122,7 @@ FilterModelConfig8580* FilterModelConfig8580::getInstance()
 }
 
 FilterModelConfig8580::FilterModelConfig8580() :
-    voice_voltage_range(0.3), // FIMXE measure
+    voice_voltage_range(0.3), // FIXME measure
     voice_DC_voltage(4.76),
     C(22e-9),
     Vdd(9.09),
