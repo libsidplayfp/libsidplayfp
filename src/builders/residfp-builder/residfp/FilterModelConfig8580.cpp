@@ -270,15 +270,9 @@ FilterModelConfig8580::~FilterModelConfig8580()
     }
 }
 
-std::unique_ptr<Integrator8580> FilterModelConfig8580::buildIntegrator()
+std::unique_ptr<Integrator8580> FilterModelConfig8580::buildIntegrator(double v)
 {
-    // Vdd - Vth, normalized so that translated values can be subtracted:
-    // k*Vddt - x = (k*Vddt - t) - (x - t)
-    const double tmp = N16 * (kVddt - vmin);
-    assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short nkVddt = static_cast<unsigned short>(tmp + 0.5);
-
-    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev, nkVddt, denorm, C, k, uCox));
+    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev, Vth, denorm, C, k, uCox, vmin, N16, v));
 }
 
 } // namespace reSIDfp

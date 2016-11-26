@@ -337,9 +337,9 @@ public:
         ve(0),
         voiceScaleS14(FilterModelConfig8580::getInstance()->getVoiceScaleS14()),
         voiceDC(FilterModelConfig8580::getInstance()->getVoiceDC()),
-        cp(10.0), // FIXME find a good default
-        lpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())
+        cp(1.5),
+        lpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator(cp)),
+        bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator(cp))
     {
         input(0);
     }
@@ -364,7 +364,7 @@ public:
      *
      * @param res the new resonance value
      */
-    void updateResonance(unsigned char res) override { currentResonance = gain_res[~res & 0x0f]; } // FIXME why is res reversed ???
+    void updateResonance(unsigned char res) override { currentResonance = gain_res[res]; }
 
     void updatedMixing() override;
 

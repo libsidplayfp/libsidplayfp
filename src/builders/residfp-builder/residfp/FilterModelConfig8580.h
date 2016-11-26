@@ -112,7 +112,7 @@ public:
      *
      * @return the integrator
      */
-    std::unique_ptr<Integrator8580> buildIntegrator();
+    std::unique_ptr<Integrator8580> buildIntegrator(double v);
 };
 
 } // namespace reSIDfp

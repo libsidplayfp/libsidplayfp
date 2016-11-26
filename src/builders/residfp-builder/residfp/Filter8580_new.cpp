@@ -35,14 +35,14 @@ namespace reSIDfp
  * When no bit are selected a resistance with half
  * W/L ratio is selected.
  */
-const double DAC_WL0 = 0.00625;
+const double DAC_WL0 = 0.0625; // FIXME was 0.00625
 
 Filter8580::~Filter8580() {}
 
 void Filter8580::updatedCenterFrequency()
 {
     double wl;
-    double dacWL = DAC_WL0 * cp;
+    double dacWL = DAC_WL0;
     if (fc)
     {
         wl = 0.;
@@ -91,7 +91,9 @@ void Filter8580::updatedMixing()
 void Filter8580::setFilterCurve(double curvePosition)
 {
     cp = curvePosition;
-    updatedCenterFrequency();
+
+    bpIntegrator->setV(cp);
+    lpIntegrator->setV(cp);
 }
 
 } // namespace reSIDfp
