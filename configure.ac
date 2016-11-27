@@ -1,6 +1,6 @@
 m4_define([lib_major], [2])
 m4_define([lib_minor], [0])
-m4_define([lib_level], [0alpha2])
+m4_define([lib_level], [0alpha3])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
@@ -306,18 +306,18 @@ AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension
 # remove once stable
 AC_ARG_ENABLE([new8580filter],
   [AS_HELP_STRING([--enable-new8580filter],
-    [enable new 8580 filter implementation [default=no]]
+    [enable new 8580 filter implementation [default=yes]]
   )],
   [],
-  [enable_new8580filter=no]
+  [enable_new8580filter=yes]
 )
 
 
 AM_CONDITIONAL([ENABLE_NEW8580FILTER], [test x$enable_new8580filter != xno])
 
-AS_IF([test "x$enable_new8580filter" = "xno"],
-  [ENABLE_NEW8580FILTER=0],
-  [ENABLE_NEW8580FILTER=1]
+AS_IF([test "x$enable_new8580filter" != "xno"],
+  [ENABLE_NEW8580FILTER=1],
+  [ENABLE_NEW8580FILTER=0]
 )
 
 AC_SUBST([ENABLE_NEW8580FILTER])
