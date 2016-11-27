@@ -337,10 +337,11 @@ public:
         ve(0),
         voiceScaleS14(FilterModelConfig8580::getInstance()->getVoiceScaleS14()),
         voiceDC(FilterModelConfig8580::getInstance()->getVoiceDC()),
-        cp(1.5),
-        lpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator(cp)),
-        bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator(cp))
+        cp(0.5),
+        lpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())
     {
+        setFilterCurve(cp);
         input(0);
     }
 

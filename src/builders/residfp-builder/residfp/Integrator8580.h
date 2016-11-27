@@ -69,7 +69,7 @@ private:
     const double N16;
 
 public:
-    Integrator8580(const unsigned short* opamp_rev, unsigned short Vth, double denorm, double C, double k, double uCox, double vmin, double N16, double v) :
+    Integrator8580(const unsigned short* opamp_rev, unsigned short Vth, double denorm, double C, double k, double uCox, double vmin, double N16) :
         opamp_rev(opamp_rev),
         vx(0),
         vc(0),
@@ -81,7 +81,7 @@ public:
         vmin(vmin),
         N16(N16)
     {
-        setV(v);
+        setV(1.5);
     }
 
     void setFc(double wl)

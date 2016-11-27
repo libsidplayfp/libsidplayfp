@@ -270,9 +270,9 @@ FilterModelConfig8580::~FilterModelConfig8580()
     }
 }
 
-std::unique_ptr<Integrator8580> FilterModelConfig8580::buildIntegrator(double v)
+std::unique_ptr<Integrator8580> FilterModelConfig8580::buildIntegrator()
 {
-    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev, Vth, denorm, C, k, uCox, vmin, N16, v));
+    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev, Vth, denorm, C, k, uCox, vmin, N16));
 }
 
 } // namespace reSIDfp

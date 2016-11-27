@@ -90,7 +90,9 @@ void Filter8580::updatedMixing()
 
 void Filter8580::setFilterCurve(double curvePosition)
 {
-    cp = curvePosition;
+    // Adjust cp to fit in [0,1]
+    // 1.2 <= cp <= 1.8
+    cp = 1.8 - curvePosition * 3./5.;
 
     bpIntegrator->setV(cp);
     lpIntegrator->setV(cp);
