@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -80,7 +80,7 @@ unsigned int WaveformGenerator::get_noise_writeback()
     ) |
     ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
     ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
-    ((waveform_output & (1 <<  9)) <<  1) |  // Bit  9 -> bit 14
+    ((waveform_output & (1 <<  9)) >>  1) |  // Bit  9 -> bit 14
     ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
     ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
     ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
