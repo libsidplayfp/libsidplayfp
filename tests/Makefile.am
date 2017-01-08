@@ -11,6 +11,7 @@ AM_LDFLAGS = @unittest_libs@
 
 TESTS = \
 TestEnvelopeGenerator \
+TestWaveformGenerator \
 TestSpline \
 TestDac \
 TestPSID \
@@ -23,6 +24,14 @@ Main.cpp \
 TestEnvelopeGenerator.cpp
 TestEnvelopeGenerator_LDADD = \
 $(top_builddir)/src/builders/residfp-builder/residfp/EnvelopeGenerator.o \
+$(top_builddir)/src/builders/residfp-builder/residfp/Dac.o
+
+TestWaveformGenerator_SOURCES = \
+Main.cpp \
+TestWaveformGenerator.cpp
+TestWaveformGenerator_LDADD = \
+$(top_builddir)/src/builders/residfp-builder/residfp/WaveformGenerator.o \
+$(top_builddir)/src/builders/residfp-builder/residfp/WaveformCalculator.o \
 $(top_builddir)/src/builders/residfp-builder/residfp/Dac.o
 
 TestSpline_SOURCES = \
