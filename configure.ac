@@ -34,7 +34,7 @@ AC_PROG_CXX
 dnl Use C++ for tests.
 AC_LANG([C++])
 
-SID_CXX_COMPILE_STDCXX_11
+AX_CXX_COMPILE_STDCXX_11([noext], [optional])
 
 dnl check for hidden visibility support
 AX_CHECK_COMPILE_FLAG([-fvisibility=hidden -fvisibility-inlines-hidden], [has_visibility=yes], [has_visibility=no])
