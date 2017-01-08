@@ -214,20 +214,6 @@ src_libsidplayfp_la_CPPFLAGS = $(GCRYPT_CFLAGS) $(AM_CPPFLAGS)
 #=========================================================
 # residfp
 
-if ENABLE_NEW8580FILTER
-  FILTER8580SRC = \
-  src/builders/residfp-builder/residfp/Filter8580_new.cpp \
-  src/builders/residfp-builder/residfp/Filter8580_new.h \
-  src/builders/residfp-builder/residfp/FilterModelConfig8580.cpp \
-  src/builders/residfp-builder/residfp/FilterModelConfig8580.h \
-  src/builders/residfp-builder/residfp/Integrator8580.cpp \
-  src/builders/residfp-builder/residfp/Integrator8580.h
-else
- FILTER8580SRC = \
- src/builders/residfp-builder/residfp/Filter8580.cpp \
- src/builders/residfp-builder/residfp/Filter8580.h
-endif
-
 src_builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
 src/builders/residfp-builder/residfp/array.h \
 src/builders/residfp-builder/residfp/Dac.cpp \
@@ -244,7 +230,12 @@ src/builders/residfp-builder/residfp/Filter.cpp \
 src/builders/residfp-builder/residfp/Filter.h \
 src/builders/residfp-builder/residfp/Filter6581.cpp \
 src/builders/residfp-builder/residfp/Filter6581.h \
-$(FILTER8580SRC) \
+src/builders/residfp-builder/residfp/Filter8580.cpp \
+src/builders/residfp-builder/residfp/Filter8580.h \
+src/builders/residfp-builder/residfp/FilterModelConfig8580.cpp \
+src/builders/residfp-builder/residfp/FilterModelConfig8580.h \
+src/builders/residfp-builder/residfp/Integrator8580.cpp \
+src/builders/residfp-builder/residfp/Integrator8580.h \
 src/builders/residfp-builder/residfp/OpAmp.cpp \
 src/builders/residfp-builder/residfp/OpAmp.h \
 src/builders/residfp-builder/residfp/Potentiometer.h \

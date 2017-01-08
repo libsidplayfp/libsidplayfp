@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -23,108 +23,338 @@
 #ifndef FILTER8580_H
 #define FILTER8580_H
 
-#include <cmath>
-#include <cstring>
-
-#include <stdint.h>
-
 #include "siddefs-fp.h"
 
+#include <memory>
+
 #include "Filter.h"
+#include "FilterModelConfig8580.h"
+#include "Integrator8580.h"
 
 #include "sidcxx11.h"
 
 namespace reSIDfp
 {
 
+class Integrator8580;
+
 /**
- * Simple white noise generator.
- * Generates small low quality pseudo random numbers
- * useful to prevent float denormals.
+ * Filter for 8580 chip
+ * --------------------
+ * The 8580 filter stage had been redesigned to be more linear and robust
+ * against temperature change. It also features real op-amps and a
+ * revisited resonance model.
+ * The filter schematics below are reverse engineered from re-vectorized
+ * and annotated die photographs. Credits to Michael Huth for the microscope
+ * photographs of the die, Tommi Lempinen for re-vectorizating and annotating
+ * the images and ttlworks from forum.6502.org for the circuit analysis.
  *
- * Based on the paper [Denormal numbers in floating point signal
- * processing applications](http://ldesoras.free.fr/prod.html#doc_denormal)
- * from Laurent de Soras.
- */
-class antiDenormalNoise
-{
-private:
-    uint32_t rand_state;
-
-private:
-    /**
-     * Reduce 32bit integer to float with a magnitude of about 10^–20.
-     */
-    static inline float reduce(uint32_t val)
-    {
-        // FIXME may not be fully portable
-        // This code assumes IEEE-754 floating point representation
-        // and same endianness for integers and floats
-        const uint32_t mantissa = val & 0x807F0000; // Keep only most significant bits
-        const uint32_t flt_rnd = mantissa | 0x1E000000; // Set exponent
-        float temp;
-        memcpy(&temp, &flt_rnd, sizeof(float));
-        return temp;
-    }
-
-public:
-    antiDenormalNoise() :
-        rand_state(1) {}
-
-    inline float get()
-    {
-        // LCG from Numerical Recipes
-        rand_state = rand_state * 1664525 + 1013904223;
-
-        return reduce(rand_state);
-    }
-};
-
-/**
- * Filter for 8580 chip based on simple linear approximation
- * of the FC control.
+ * ~~~
+ *
+ *               +---------------------------------------------------+
+ *               |    $17      +----Rf-+                             |
+ *               |             |       |                             |
+ *               |      D4&!D5 o- \-R3-o                             |
+ *               |             |       |                    $17      |
+ *               |     !D4&!D5 o- \-R2-o                             |
+ *               |             |       |  +---R8-- \--+  !D6&D7      |
+ *               |      D4&!D5 o- \-R1-o  |           |              |
+ *               |             |       |  o---RC-- \--o   D6&D7      |
+ *               |   +---------o--<A]--o--o           |              |
+ *               |   |                    o---R4-- \--o  D6&!D7      |
+ *               |   |                    |           |              |
+ *               |   |                    +---Ri-- \--o !D6&!D7      |
+ *               |   |                                |              |
+ * $17           |   |                    (CAP2B)     |  (CAP1B)     |
+ * 0=to mixer    |   +--R8--+  +---R8--+      +---C---o      +---C---o
+ * 1=to filter   |          |  |       |      |       |      |       |
+ *               +------R8--o--o--[A>--o--Rfc-o--[A>--o--Rfc-o--[A>--o
+ *     ve (EXT IN)          |          |              |              |
+ * D3  \ ---------------R8--o          |              | (CAP2A)      | (CAP1A)
+ *     |   v3               |          | vhp          | vbp          | vlp
+ * D2  |   \ -----------R8--o    +-----+              |              |
+ *     |   |   v2           |    |                    |              |
+ * D1  |   |   \ -------R8--o    |   +----------------+              |
+ *     |   |   |   v1       |    |   |                               |
+ * D0  |   |   |   \ ---R8--+    |   |   +---------------------------+
+ *     |   |   |   |             |   |   |
+ *     R6  R6  R6  R6            R6  R6  R6
+ *     |   |   |   | $18         |   |   |  $18
+ *     |    \  |   | D7: 1=open   \   \   \ D6 - D4: 0=open
+ *     |   |   |   |             |   |   |
+ *     +---o---o---o-------------o---o---+
+ *                 |
+ *                 |               D3 +--/ --1R2--+
+ *                 |   +---R8--+      |           |  +---R2--+
+ *                 |   |       |   D2 o--/ --2R2--o  |       |
+ *                 +---o--[A>--o------o           o--o--[A>--o-- vo (AUDIO OUT)
+ *                                 D1 o--/ --4R2--o (4.25R2)
+ *                        $18         |           |
+ *                        0=open   D0 +--/ --8R2--+ (8.75R2)
+ *
+ *
+ *
+ * Resonance
+ * ---------
+ * For resonance, we have two tiny DACs that controls both the input
+ * and feedback resistances.
+ *
+ * The "resistors" are switched in as follows by bits in register $17:
+ *
+ * feedback:
+ * R1: bit4&!bit5
+ * R2: !bit4&bit5
+ * R3: bit4&bit5
+ * Rf: always on
+ *
+ * input:
+ * R4: bit6&!bit7
+ * R8: !bit6&bit7
+ * RC: bit6&bit7
+ * Ri: !(R4|R8|RC) = !(bit6|bit7) = !bit6&!bit7
+ *
+ *
+ * The relative "resistor" values are approximately (using channel length):
+ *
+ * R1 = 15.3*Ri
+ * R2 =  7.3*Ri
+ * R3 =  4.7*Ri
+ * Rf =  1.4*Ri
+ * R4 =  1.4*Ri
+ * R8 =  2.0*Ri
+ * RC =  2.8*Ri
+ *
+ *
+ * Approximate values for 1/Q can now be found as follows (assuming an
+ * ideal op-amp):
+ *
+ * res  feedback  input  -gain (1/Q)
+ * ---  --------  -----  ----------
+ *  0   Rf        Ri     Rf/Ri      = 1/(Ri*(1/Rf))      = 1/0.71
+ *  1   Rf|R1     Ri     (Rf|R1)/Ri = 1/(Ri*(1/Rf+1/R1)) = 1/0.78
+ *  2   Rf|R2     Ri     (Rf|R2)/Ri = 1/(Ri*(1/Rf+1/R2)) = 1/0.85
+ *  3   Rf|R3     Ri     (Rf|R3)/Ri = 1/(Ri*(1/Rf+1/R3)) = 1/0.92
+ *  4   Rf        R4     Rf/R4      = 1/(R4*(1/Rf))      = 1/1.00
+ *  5   Rf|R1     R4     (Rf|R1)/R4 = 1/(R4*(1/Rf+1/R1)) = 1/1.10
+ *  6   Rf|R2     R4     (Rf|R2)/R4 = 1/(R4*(1/Rf+1/R2)) = 1/1.20
+ *  7   Rf|R3     R4     (Rf|R3)/R4 = 1/(R4*(1/Rf+1/R3)) = 1/1.30
+ *  8   Rf        R8     Rf/R8      = 1/(R8*(1/Rf))      = 1/1.43
+ *  9   Rf|R1     R8     (Rf|R1)/R8 = 1/(R8*(1/Rf+1/R1)) = 1/1.56
+ *  A   Rf|R2     R8     (Rf|R2)/R8 = 1/(R8*(1/Rf+1/R2)) = 1/1.70
+ *  B   Rf|R3     R8     (Rf|R3)/R8 = 1/(R8*(1/Rf+1/R3)) = 1/1.86
+ *  C   Rf        RC     Rf/RC      = 1/(RC*(1/Rf))      = 1/2.00
+ *  D   Rf|R1     RC     (Rf|R1)/RC = 1/(RC*(1/Rf+1/R1)) = 1/2.18
+ *  E   Rf|R2     RC     (Rf|R2)/RC = 1/(RC*(1/Rf+1/R2)) = 1/2.38
+ *  F   Rf|R3     RC     (Rf|R3)/RC = 1/(RC*(1/Rf+1/R3)) = 1/2.60
+ *
+ *
+ * These data indicate that the following function for 1/Q has been
+ * modeled in the MOS 8580:
+ *
+ *    1/Q = 2^(1/2)*2^(-x/8) = 2^(1/2 - x/8) = 2^((4 - x)/8)
+ *
+ *
+ *
+ * Op-amps
+ * -------
+ * Unlike the 6581, the 8580 has real OpAmps.
+ *
+ * Temperature compensated differential amplifier:
+ *
+ *                9V
+ *
+ *                |
+ *      +-------o-o-o-------+
+ *      |       |   |       |
+ *      |       R   R       |
+ *      +--||   |   |   ||--+
+ *         ||---o   o---||
+ *      +--||   |   |   ||--+
+ *      |       |   |       |
+ *      o-----+ |   |       o--- Va
+ *      |     | |   |       |
+ *      +--|| | |   |   ||--+
+ *         ||-o-+---+---||
+ *      +--||   |   |   ||--+
+ *      |       |   |       |
+ *              |   |
+ *     GND      |   |      GND
+ *          ||--+   +--||
+ * in- -----||         ||------ in+
+ *          ||----o----||
+ *                |
+ *                8 Current sink
+ *                |
+ *
+ *               GND
+ *
+ * Inverter + non-inverting output amplifier:
+ *
+ * Va ---o---||-------------------o--------------------+
+ *       |                        |               9V   |
+ *       |             +----------+----------+     |   |
+ *       |        9V   |          |     9V   | ||--+   |
+ *       |         |   |      9V  |      |   +-||      |
+ *       |         R   |       |  |  ||--+     ||--+   |
+ *       |         |   |   ||--+  +--||            o---o--- Vout
+ *       |         o---o---||        ||--+     ||--+
+ *       |         |       ||--+         o-----||
+ *       |     ||--+           |     ||--+     ||--+
+ *       +-----||              o-----||            |
+ *             ||--+           |     ||--+
+ *                 |           R         |        GND
+ *                             |
+ *                GND                   GND
+ *                            GND
+ *
+ *
+ *
+ * Virtual ground
+ * --------------
+ * A PolySi resitive voltage divider provides the voltage
+ * for the positive input of the filter op-amps.
+ *
+ *     5V
+ *          +----------+
+ *      |   |   |\     |
+ *      R1  +---|-\    |
+ * 5V   |       |A >---o--- Vref
+ *      o-------|+/
+ *  |   |       |/
+ * R10  R4
+ *  |   |
+ *  o---+
+ *  |
+ * R10
+ *  |
+ *
+ * GND
+ *
+ * Rn = n*R1
+ *
+ *
+ *
+ * Rfc - freq control DAC resistance ladder
+ * ----------------------------------------
+ * The 8580 has 11 bits for frequency control, but 12 bit DACs.
+ * If those 11 bits would be '0', the impedance of the DACs would be "infinitely high".
+ * To get around this, there is an 11 input NOR gate below the DACs sensing those 11 bits.
+ * If all are 0, the NOR gate gives the gate control voltage to the 12 bit DAC LSB.
+ *
+ *     ----------------------------
+ *         |   |       |   |   |
+ *       Rb10 Rb9 ... Rb1 Rb0  R0
+ *         |   |       |   |   |
+ *     ----------------------------
+ *
+ *
+ *
+ * Crystal stabilized precision swithced capacitor voltage divider
+ * ---------------------------------------------------------------
+ * There is a FET working as a temperature sensor close to the DACs which changes the gate voltage
+ * of the frequency control DACs according to the temperature of the DACs,
+ * to reduce the effects of temperature on the filter curve.
+ * An asynchronous 3 bit binary counter, running at the speed of PHI2, drives two big capacitors
+ * whose AC resistance is then used as a voltage divider.
+ * This implicates that frequency difference between PAL and NTSC might shift the filter curve by 4% or such.
+ *
+ *                                |\  OpAmp has a smaller capacitor than the other OPs
+ *                        Vref ---|+\
+ *                                |A >---o--- Vdac
+ *                        o-------|-/    |
+ *                        |       |/     |
+ *                        |              |
+ *       C1               |     C2       |
+ *   +---||---o---+   +---o-----||-------o
+ *   |        |   |   |   |              |
+ *   o----+   |   -----   |              |
+ *   |    |   |   -----   +----+   +-----+
+ *   |    -----     |          |   |     |
+ *   |    -----     |          -----     |
+ *   |      |       |          -----     |
+ *   |    +-----------+          |       |
+ *        | /Q      Q |          +-------+
+ *  GND   +-----------+      FET close to DAC
+ *        |   clk/8   |      working as temperature sensor
+ *        +-----------+
  */
 class Filter8580 final : public Filter
 {
 private:
-    /// Cutoff frequency in Hertz
-    double highFreq;
+    /// Current volume amplifier setting.
+    unsigned short* currentGain;
 
-    /// Lowpass filter voltage
-    float Vlp;
+    /// Current filter/voice mixer setting.
+    unsigned short* currentMixer;
 
-    /// Bandpass filter voltage
-    float Vbp;
+    /// Filter input summer setting.
+    unsigned short* currentSummer;
 
-    /// Highpass filter voltage
-    float Vhp;
+    /// Filter resonance value.
+    unsigned short* currentResonance;
 
-    float w0;
+    unsigned short** mixer;
+    unsigned short** summer;
+    unsigned short** gain_res;
+    unsigned short** gain_vol;
 
-    /// Resonance parameter
-    float _1_div_Q;
+    /// Filter highpass state.
+    int Vhp;
 
-    /// External input voltage
+    /// Filter bandpass state.
+    int Vbp;
+
+    /// Filter lowpass state.
+    int Vlp;
+
+    /// Filter external input.
     int ve;
 
-    antiDenormalNoise noise;
+    const int voiceScaleS14;
+    const int voiceDC;
+
+    double cp;
+
+    /// VCR + associated capacitor connected to lowpass output.
+    std::unique_ptr<Integrator8580> const lpIntegrator;
+
+    /// VCR + associated capacitor connected to bandpass output.
+    std::unique_ptr<Integrator8580> const bpIntegrator;
 
 public:
     Filter8580() :
-        highFreq(12500.),
-        Vlp(0.f),
-        Vbp(0.f),
-        Vhp(0.f),
-        w0(0.f),
-        _1_div_Q(0.f),
-        ve(0) {}
+        currentGain(nullptr),
+        currentMixer(nullptr),
+        currentSummer(nullptr),
+        currentResonance(nullptr),
+        mixer(FilterModelConfig8580::getInstance()->getMixer()),
+        summer(FilterModelConfig8580::getInstance()->getSummer()),
+        gain_res(FilterModelConfig8580::getInstance()->getGainRes()),
+        gain_vol(FilterModelConfig8580::getInstance()->getGainVol()),
+        Vhp(0),
+        Vbp(0),
+        Vlp(0),
+        ve(0),
+        voiceScaleS14(FilterModelConfig8580::getInstance()->getVoiceScaleS14()),
+        voiceDC(FilterModelConfig8580::getInstance()->getVoiceDC()),
+        cp(0.5),
+        lpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())
+    {
+        setFilterCurve(cp);
+        input(0);
+    }
+
+    ~Filter8580();
 
     int clock(int voice1, int voice2, int voice3) override;
+
+    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 14) + mixer[0][0]; }
 
     /**
      * Set filter cutoff frequency.
      */
-    void updatedCenterFrequency() override { w0 = static_cast<float>(2. * M_PI * highFreq * fc / 2047. / 1e6); }
+    void updatedCenterFrequency() override;
 
     /**
      * Set filter resonance.
@@ -135,25 +365,23 @@ public:
      *
      * @param res the new resonance value
      */
-    void updateResonance(unsigned char res) override { _1_div_Q = static_cast<float>(pow(2., (4 - res) / 8.)); }
+    void updateResonance(unsigned char res) override { currentResonance = gain_res[res]; }
 
-    void input(int input) override { ve = input << 4; }
+    void updatedMixing() override;
 
-    void updatedMixing() override {}
-
+public:
     /**
      * Set filter curve type based on single parameter.
      *
-     * @param curvePosition filter's center frequency expressed in Hertz, default is 12500
+     * FIXME find a reasonable range of values
+     * @param curvePosition
      */
-    void setFilterCurve(double curvePosition) { highFreq = curvePosition; }
+    void setFilterCurve(double curvePosition);
 };
 
 } // namespace reSIDfp
 
 #if RESID_INLINING || defined(FILTER8580_CPP)
-
-#include <cassert>
 
 namespace reSIDfp
 {
@@ -161,6 +389,10 @@ namespace reSIDfp
 RESID_INLINE
 int Filter8580::clock(int voice1, int voice2, int voice3)
 {
+    voice1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
+    voice2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
+    voice3 = (voice3 * voiceScaleS14 >> 18) + voiceDC;
+
     int Vi = 0;
     int Vo = 0;
 
@@ -174,21 +406,15 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
 
     (filtE ? Vi : Vo) += ve;
 
-    Vhp = (Vbp * _1_div_Q) - Vlp - static_cast<float>(Vi >> 7) + noise.get();
-    Vbp -= w0 * Vhp;
-    Vlp -= w0 * Vbp;
+    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
+    Vbp = bpIntegrator->solve(Vhp);
+    Vlp = lpIntegrator->solve(Vbp);
 
-    assert(std::fpclassify(Vlp) != FP_SUBNORMAL);
-    assert(std::fpclassify(Vbp) != FP_SUBNORMAL);
-    assert(std::fpclassify(Vhp) != FP_SUBNORMAL);
+    if (lp) Vo += Vlp;
+    if (bp) Vo += Vbp;
+    if (hp) Vo += Vhp;
 
-    float Vof = static_cast<float>(Vo >> 7);
-
-    if (lp) Vof += Vlp;
-    if (bp) Vof += Vbp;
-    if (hp) Vof += Vhp;
-
-    return static_cast<int>(floor(Vof + 0.5f)) * vol >> 4;
+    return currentGain[currentMixer[Vo]] - (1 << 15);
 }
 
 } // namespace reSIDfp

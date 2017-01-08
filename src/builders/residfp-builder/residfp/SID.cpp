@@ -28,11 +28,7 @@
 
 #include "array.h"
 #include "Filter6581.h"
-#if ENABLE_NEW8580FILTER
-#  include "Filter8580_new.h"
-#else
-#  include "Filter8580.h"
-#endif
+#include "Filter8580.h"
 #include "Potentiometer.h"
 #include "WaveformCalculator.h"
 #include "resample/TwoPassSincResampler.h"
