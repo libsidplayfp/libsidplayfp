@@ -35,7 +35,7 @@ namespace reSIDfp
  * When no bit are selected a resistance with half
  * W/L ratio is selected.
  */
-const double DAC_WL0 = 0.0625; // FIXME was 0.00625
+const double DAC_WL0 = 0.0615; // FIXME was actually ~0.00615
 
 Filter8580::~Filter8580() {}
 
