@@ -144,6 +144,8 @@ private:
 private:
     void clock_shift_register(unsigned int bit0);
 
+    unsigned int get_noise_writeback();
+
     void write_shift_register();
 
     void reset_shift_register();

@@ -65,6 +65,29 @@ void WaveformGenerator::clock_shift_register(unsigned int bit0)
     set_noise_output();
 }
 
+unsigned int WaveformGenerator::get_noise_writeback()
+{
+  return
+    ~(
+        (1 <<  2) |  // Bit 20
+        (1 <<  4) |  // Bit 18
+        (1 <<  8) |  // Bit 14
+        (1 << 11) |  // Bit 11
+        (1 << 13) |  // Bit  9
+        (1 << 17) |  // Bit  5
+        (1 << 20) |  // Bit  2
+        (1 << 22)    // Bit  0
+    ) |
+    ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
+    ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
+    ((waveform_output & (1 <<  9)) <<  1) |  // Bit  9 -> bit 14
+    ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
+    ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
+    ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
+    ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
+    ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
+}
+
 void WaveformGenerator::write_shift_register()
 {
     if (unlikely(waveform > 0x8) && likely(!test) && likely(shift_pipeline != 1))
@@ -79,25 +102,7 @@ void WaveformGenerator::write_shift_register()
         // FIXME: Write test program to check the effect of 1 bits and whether
         // neighboring bits are affected.
 
-        shift_register &=
-            ~(
-                (1 <<  2) |  // Bit 20
-                (1 <<  4) |  // Bit 18
-                (1 <<  8) |  // Bit 14
-                (1 << 11) |  // Bit 11
-                (1 << 13) |  // Bit  9
-                (1 << 17) |  // Bit  5
-                (1 << 20) |  // Bit  2
-                (1 << 22)    // Bit  0
-            ) |
-            ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
-            ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
-            ((waveform_output & (1 <<  9)) <<  1) |  // Bit  9 -> bit 14
-            ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
-            ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
-            ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
-            ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
-            ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
+        shift_register &= get_noise_writeback();
 
         noise_output &= waveform_output;
         no_noise_or_noise_output = no_noise | noise_output;
@@ -159,6 +164,23 @@ void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformG
     }
 }
 
+bool do_pre_writeback(unsigned int waveform_prev, unsigned int waveform, bool is6581)
+{
+    // no writeback without combined waveforms
+    if (likely(waveform_prev <= 0x8))
+        return false;
+    // This need more investigation
+    if (waveform == 8)
+        return false;
+    // What's happening here?
+    if (is6581 &&
+            ((((waveform_prev & 0x3) == 0x1) && ((waveform & 0x3) == 0x2))
+            || (((waveform_prev & 0x3) == 0x2) && ((waveform & 0x3) == 0x1))))
+        return false;
+    // ok do the writeback
+    return true;
+}
+
 void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 {
     const unsigned int waveform_prev = waveform;
@@ -211,6 +233,13 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         {
             // When the test bit is falling, the second phase of the shift is
             // completed by enabling SRAM write.
+
+            // During first phase of the shift the bits are interconnected
+            // and the output of each bit is latched into the following.
+            // The output may overwrite the latched value.
+            if (do_pre_writeback(waveform_prev, waveform, is6581)) {
+                shift_register &= get_noise_writeback();
+            }
 
             // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
             clock_shift_register((~shift_register << 17) & (1 << 22));
