@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -289,6 +289,7 @@ void EnvelopeGenerator::clock()
                 exponential_pipeline = exponential_counter_period != 1 ? 2 : 1;
         }
     }
+
     // ADSR delay bug.
     // If the rate counter comparison value is set below the current value of the
     // rate counter, the counter will continue counting up until it wraps around
@@ -297,7 +298,7 @@ void EnvelopeGenerator::clock()
     // This has been verified by sampling ENV3.
 
     // check to see if LFSR matches table value
-    else if (likely(lfsr != rate))
+    if (likely(lfsr != rate))
     {
         // it wasn't a match, clock the LFSR once
         // by performing XOR on last 2 bits
