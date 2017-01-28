@@ -256,6 +256,8 @@ void WaveformGenerator::reset()
     msb_rising = false;
 
     waveform = 0;
+    osc3 = 0;
+
     test = false;
     sync = false;
 
