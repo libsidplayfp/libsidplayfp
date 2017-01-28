@@ -380,6 +380,10 @@ void SID::clockSilent(unsigned int cycles)
                 voice[1]->wave()->clock();
                 voice[2]->wave()->clock();
 
+                voice[0]->wave()->output(voice[2]->wave());
+                voice[1]->wave()->output(voice[0]->wave());
+                voice[2]->wave()->output(voice[1]->wave());
+
                 // clock ENV3 only
                 voice[2]->envelope()->clock();
             }
