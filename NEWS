@@ -8,6 +8,13 @@
 
 
 
+1.8.7 2016-12-09
+* Fix out of range tune selection
+* Reenable accidentally broken branch hints in residfp
+* Minor fix in VIC-II code ported from VICE
+
+
+
 1.8.6 2016-04-15
 * Fix an off-by-one error in mixer code
 * Slightly improve some combined waveforms
