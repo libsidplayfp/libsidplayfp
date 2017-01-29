@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -322,35 +322,11 @@ class Integrator;
 class Filter6581 final : public Filter
 {
 private:
-    /// Current volume amplifier setting.
-    unsigned short* currentGain;
-
-    /// Current filter/voice mixer setting.
-    unsigned short* currentMixer;
-
-    /// Filter input summer setting.
-    unsigned short* currentSummer;
-
-    /// Filter resonance value.
-    unsigned short* currentResonance;
-
     const unsigned short* f0_dac;
 
     unsigned short** mixer;
     unsigned short** summer;
     unsigned short** gain;
-
-    /// Filter highpass state.
-    int Vhp;
-
-    /// Filter bandpass state.
-    int Vbp;
-
-    /// Filter lowpass state.
-    int Vlp;
-
-    /// Filter external input.
-    int ve;
 
     const int voiceScaleS14;
     const int voiceDC;
@@ -361,34 +337,7 @@ private:
     /// VCR + associated capacitor connected to lowpass output.
     std::unique_ptr<Integrator> const bpIntegrator;
 
-public:
-    Filter6581() :
-        currentGain(nullptr),
-        currentMixer(nullptr),
-        currentSummer(nullptr),
-        currentResonance(nullptr),
-        f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
-        mixer(FilterModelConfig::getInstance()->getMixer()),
-        summer(FilterModelConfig::getInstance()->getSummer()),
-        gain(FilterModelConfig::getInstance()->getGain()),
-        Vhp(0),
-        Vbp(0),
-        Vlp(0),
-        ve(0),
-        voiceScaleS14(FilterModelConfig::getInstance()->getVoiceScaleS14()),
-        voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
-        hpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator())
-    {
-        input(0);
-    }
-
-    ~Filter6581();
-
-    int clock(int voice1, int voice2, int voice3) override;
-
-    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
-
+protected:
     /**
      * Set filter cutoff frequency.
      */
@@ -404,6 +353,25 @@ public:
     void updatedMixing() override;
 
 public:
+    Filter6581() :
+        f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
+        mixer(FilterModelConfig::getInstance()->getMixer()),
+        summer(FilterModelConfig::getInstance()->getSummer()),
+        gain(FilterModelConfig::getInstance()->getGain()),
+        voiceScaleS14(FilterModelConfig::getInstance()->getVoiceScaleS14()),
+        voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
+        hpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator())
+    {
+        input(0);
+    }
+
+    ~Filter6581();
+
+    int clock(int voice1, int voice2, int voice3) override;
+
+    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
+
     /**
      * Set filter curve type based on single parameter.
      *

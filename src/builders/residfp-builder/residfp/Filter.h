@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -32,6 +32,30 @@ namespace reSIDfp
 class Filter
 {
 protected:
+    /// Current volume amplifier setting.
+    unsigned short* currentGain;
+
+    /// Current filter/voice mixer setting.
+    unsigned short* currentMixer;
+
+    /// Filter input summer setting.
+    unsigned short* currentSummer;
+
+    /// Filter resonance value.
+    unsigned short* currentResonance;
+
+    /// Filter highpass state.
+    int Vhp;
+
+    /// Filter bandpass state.
+    int Vbp;
+
+    /// Filter lowpass state.
+    int Vlp;
+
+    /// Filter external input.
+    int ve;
+
     /// Filter cutoff frequency.
     unsigned int fc;
 
@@ -72,6 +96,14 @@ protected:
 
 public:
     Filter() :
+        currentGain(nullptr),
+        currentMixer(nullptr),
+        currentSummer(nullptr),
+        currentResonance(nullptr),
+        Vhp(0),
+        Vbp(0),
+        Vlp(0),
+        ve(0),
         fc(0),
         filt1(false),
         filt2(false),
