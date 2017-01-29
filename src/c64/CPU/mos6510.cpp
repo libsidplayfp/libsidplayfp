@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -1331,9 +1331,9 @@ void MOS6510::tya_instr()
     interruptsAndNextOpcode();
 }
 
-void MOS6510::illegal_instr()
+void MOS6510::invalidOpcode()
 {
-    cycleCount --;
+    throw haltInstruction();
 }
 
 
@@ -2173,7 +2173,7 @@ void MOS6510::buildInstructionTable()
         // CPU state machine locks up and will never recover.
         if (!(legalMode && legalInstr))
         {
-            instrTable[buildCycle++].func = &MOS6510::illegal_instr;
+            instrTable[buildCycle++].func = &MOS6510::invalidOpcode;
         }
 
         // check for IRQ triggers or fetch next opcode...
@@ -2242,7 +2242,7 @@ const char *MOS6510::credits()
         "MOS6510 Cycle Exact Emulation\n"
         "\t(C) 2000 Simon A. White\n"
         "\t(C) 2008-2010 Antti S. Lankila\n"
-        "\t(C) 2011-2016 Leandro Nini\n";
+        "\t(C) 2011-2017 Leandro Nini\n";
 }
 
 void MOS6510::debug(bool enable, FILE *out)

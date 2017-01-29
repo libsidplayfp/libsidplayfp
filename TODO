@@ -1,5 +1,4 @@
 3.0
-* raise an error on HLT instructions execution
 * keep event scheduler internal
 * wrap everything into a library namespace (?)
 

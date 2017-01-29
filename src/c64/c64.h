@@ -218,6 +218,13 @@ public:
 
     uint_least32_t getTime() const { return static_cast<uint_least32_t>(eventScheduler.getTime(EVENT_CLOCK_PHI1) / cpuFrequency); }
 
+    /**
+     * Clock the emulation.
+     *
+     * @throws haltInstruction
+     */
+    void clock() { eventScheduler.clock(); }
+
     void debug(bool enable, FILE *out) { cpu.debug(enable, out); }
 
     void reset();

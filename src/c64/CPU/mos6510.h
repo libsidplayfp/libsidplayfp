@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -71,6 +71,9 @@ class MOS6510
 #ifdef DEBUG
     friend void MOS6510Debug::DumpState(event_clock_t time, MOS6510 &cpu);
 #endif
+
+public:
+    class haltInstruction {};
 
 private:
     /**
@@ -284,7 +287,10 @@ private:
     inline void xas_instr();
     inline void sh_instr(uint8_t offset);
 
-    void illegal_instr();
+    /**
+     * @throws haltInstruction
+     */
+    void invalidOpcode();
 
     // Declare Arithmetic Operations
     inline void doADC();

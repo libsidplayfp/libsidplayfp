@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -173,10 +173,13 @@ void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
         s->voice(voice, enable);
 }
 
+/**
+ * @throws MOS6510::haltInstruction
+ */
 void Player::run(unsigned int events)
 {
     for (unsigned int i = 0; m_isPlaying && i < events; i++)
-        m_c64.getEventScheduler()->clock();
+        m_c64.clock();
 }
 
 uint_least32_t Player::play(short *buffer, uint_least32_t count)
@@ -193,41 +196,49 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
     {
         m_mixer.begin(buffer, count);
 
-        if (m_mixer.getSid(0) != nullptr)
+        try
         {
-            if (count && buffer != nullptr)
+            if (m_mixer.getSid(0) != nullptr)
             {
-                // Clock chips and mix into output buffer
-                while (m_isPlaying && m_mixer.notFinished())
+                if (count && buffer != nullptr)
                 {
-                    run(sidemu::OUTPUTBUFFERSIZE);
+                    // Clock chips and mix into output buffer
+                    while (m_isPlaying && m_mixer.notFinished())
+                    {
+                        run(sidemu::OUTPUTBUFFERSIZE);
 
-                    m_mixer.clockChips();
-                    m_mixer.doMix();
+                        m_mixer.clockChips();
+                        m_mixer.doMix();
+                    }
+                    count = m_mixer.samplesGenerated();
                 }
-                count = m_mixer.samplesGenerated();
+                else
+                {
+                    // Clock chips and discard buffers
+                    int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
+                    while (m_isPlaying && --size)
+                    {
+                        run(sidemu::OUTPUTBUFFERSIZE);
+
+                        m_mixer.clockChips();
+                        m_mixer.resetBufs();
+                    }
+                }
             }
             else
             {
-                // Clock chips and discard buffers
+                // Clock the machine
                 int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
                 while (m_isPlaying && --size)
                 {
                     run(sidemu::OUTPUTBUFFERSIZE);
-
-                    m_mixer.clockChips();
-                    m_mixer.resetBufs();
                 }
             }
         }
-        else
+        catch (MOS6510::haltInstruction const &)
         {
-            // Clock the machine
-            int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
-            while (m_isPlaying && --size)
-            {
-                run(sidemu::OUTPUTBUFFERSIZE);
-            }
+            m_errorString = "Illegal instruction executed";
+            m_isPlaying = STOPPING;
         }
     }
 
