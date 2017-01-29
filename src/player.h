@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -150,15 +150,13 @@ public:
 
     bool load(SidTune *tune);
 
-    double cpuFreq() const { return m_c64.getMainCpuSpeed(); }
-
     uint_least32_t play(short *buffer, uint_least32_t samples);
 
     bool isPlaying() const { return m_isPlaying != STOPPED; }
 
     void stop();
 
-    uint_least32_t time() const { return static_cast<uint_least32_t>(m_c64.getEventScheduler().getTime(EVENT_CLOCK_PHI1) / cpuFreq()); }
+    uint_least32_t time() const { return m_c64.getTime(); }
 
     void debug(const bool enable, FILE *out) { m_c64.debug(enable, out); }
 
