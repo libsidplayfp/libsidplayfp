@@ -2,9 +2,13 @@
 * Cleaned up directory structure
 * Use c++11 features where supported
 * Added exSID USB support
-* Improved SID emulation
+* Improved SID emulation with:
+  - Proper 8580 filter model
+  - More accurate envelope generator
+  - Other minor fixes
 * Do not use kernal calls in psid driver
 * Support libgcrypt for md5
+* Interrupt playback on invalid opcode execution
 
 
 
