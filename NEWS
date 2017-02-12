@@ -7,8 +7,10 @@
   - More accurate envelope generator
   - Other minor fixes
 * Do not use kernal calls in psid driver
-* Support libgcrypt for md5
+* Support libgcrypt for md5 computation
 * Interrupt playback on invalid opcode execution
+* Drop poweron delay setting
+* Do not expose event scheduler
 
 
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -156,14 +156,6 @@ public:
      * @param character pointer to character generator ROM.
      */
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
-
-    /**
-     * \deprecated
-     * Do not use, will be removed.
-     *
-     * @return null pointer.
-     */
-    SID_DEPRECATED EventContext *getEventContext();
 
     /**
      * Get the CIA 1 Timer A programmed value.

@@ -1,5 +1,4 @@
 3.0
-* keep event scheduler internal
 * wrap everything into a library namespace (?)
 
 

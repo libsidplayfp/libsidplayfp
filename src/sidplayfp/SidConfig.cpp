@@ -38,7 +38,6 @@ SidConfig::SidConfig() :
     sidEmulation(nullptr),
     leftVolume(libsidplayfp::Mixer::VOLUME_MAX),
     rightVolume(libsidplayfp::Mixer::VOLUME_MAX),
-    powerOnDelay(DEFAULT_POWER_ON_DELAY),
     samplingMethod(RESAMPLE_INTERPOLATE),
     fastSampling(false)
 {}

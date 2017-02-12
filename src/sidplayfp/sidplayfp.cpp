@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -104,11 +104,6 @@ bool sidplayfp::isPlaying() const
 void sidplayfp::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
 {
     sidplayer.setRoms(kernal, basic, character);
-}
-
-EventContext *sidplayfp::getEventContext()
-{
-    return 0;
 }
 
 uint_least16_t sidplayfp::getCia1TimerA() const

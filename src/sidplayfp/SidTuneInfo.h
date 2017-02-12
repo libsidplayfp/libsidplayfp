@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2015 Leandro Nini
+ *  Copyright 2011-2017 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -103,17 +103,7 @@ public:
      * - 0xD400 for the 1st SID
      * - 0 if the nth SID is not required
      */
-    //@{
-    SID_DEPRECATED uint_least16_t sidChipBase1() const;
-    SID_DEPRECATED uint_least16_t sidChipBase2() const;
     uint_least16_t sidChipBase(unsigned int i) const;
-    //@}
-
-    /**
-     * \deprecated
-     * Whether sidtune uses two SID chips.
-     */
-    SID_DEPRECATED bool isStereo() const;
 
     /**
      * The number of SID chips required by the tune.
@@ -139,11 +129,7 @@ public:
      * @name SID model
      * The SID chip model(s) requested by the sidtune.
      */
-    //@{
-    SID_DEPRECATED model_t sidModel1() const;
-    SID_DEPRECATED model_t sidModel2() const;
     model_t sidModel(unsigned int i) const;
-    //@}
 
     /**
      * Compatibility requirements.

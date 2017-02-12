@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2015 Leandro Nini
+ *  Copyright 2011-2017 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -34,14 +34,7 @@ unsigned int SidTuneInfo::startSong() const { return getStartSong(); }
 
 unsigned int SidTuneInfo::currentSong() const { return getCurrentSong(); }
 
-// deprecated
-uint_least16_t SidTuneInfo::sidChipBase1() const { return getSidChipBase(0); }
-uint_least16_t SidTuneInfo::sidChipBase2() const { return getSidChipBase(1); }
-
 uint_least16_t SidTuneInfo::sidChipBase(unsigned int i) const { return getSidChipBase(i); }
-
-// deprecated
-bool SidTuneInfo::isStereo() const { return getSidChips() > 1; }
 
 int SidTuneInfo::sidChips() const { return getSidChips(); }
 
@@ -50,10 +43,6 @@ int SidTuneInfo::songSpeed() const { return getSongSpeed(); }
 uint_least8_t SidTuneInfo::relocStartPage() const { return getRelocStartPage(); }
 
 uint_least8_t SidTuneInfo::relocPages() const { return getRelocPages(); }
-
-// deprecated
-SidTuneInfo::model_t SidTuneInfo::sidModel1() const { return getSidModel(0); }
-SidTuneInfo::model_t SidTuneInfo::sidModel2() const { return getSidModel(1); }
 
 SidTuneInfo::model_t SidTuneInfo::sidModel(unsigned int i) const { return getSidModel(i); }
 
