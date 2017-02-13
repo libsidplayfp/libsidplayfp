@@ -84,25 +84,21 @@ AM_CONDITIONAL([LIBGCRYPT], [test "x$have_libgcrypt" = "xyes"])
 
 dnl libtool-style version-info number
 #
-# http://blog.flameeyes.eu/2009/04/22/shared-object-version
+# https://autotools.io/libtool/version.html
 #
-# if you don’t change the interface at all just increase the
-#     “interface revision” value;
-# if you make backward-compatible changes (like adding interfaces),
-#     increase the “current interface” value and the “older interface age”
-#     value, reset “interface revision” to zero;
-# if you make backward-incompatible changes, breaking ABI
-#     (removing interfaces for instance), increase the “current interface”
-#     value and # reset both “older interface age” and ”interface revision”
-#     to zero.
+# Always increase the revision value.
+#
+# Increase the current value whenever an interface has been added, removed or changed.
+#
+# Increase the age value only if the changes made to the ABI are backward compatible.
 
-LIBSIDPLAYCUR=4
-LIBSIDPLAYREV=0
-LIBSIDPLAYAGE=1
+LIBSIDPLAYCUR=7
+LIBSIDPLAYREV=9
+LIBSIDPLAYAGE=2
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
 LIBSTILVIEWCUR=0
-LIBSTILVIEWREV=1
+LIBSTILVIEWREV=4
 LIBSTILVIEWAGE=0
 LIBSTILVIEWVERSION=$LIBSTILVIEWCUR:$LIBSTILVIEWREV:$LIBSTILVIEWAGE
 
