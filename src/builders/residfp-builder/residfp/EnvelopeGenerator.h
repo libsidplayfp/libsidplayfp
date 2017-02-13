@@ -159,6 +159,7 @@ public:
         envelope_pipeline(0),
         exponential_pipeline(0),
         state(RELEASE),
+        next_state(RELEASE),
         counter_enabled(true),
         gate(false),
         resetLfsr(false),
@@ -166,7 +167,8 @@ public:
         attack(0),
         decay(0),
         sustain(0),
-        release(0) {}
+        release(0),
+        env3(0) {}
 
     /**
      * SID reset.

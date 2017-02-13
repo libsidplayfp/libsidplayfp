@@ -148,7 +148,8 @@ private:
 
 public:
     InterruptSource6526(EventScheduler &scheduler, MOS6526 &parent) :
-        InterruptSource(scheduler, parent)
+        InterruptSource(scheduler, parent),
+        scheduled(false)
     {}
 
     void trigger(uint8_t interruptMask) override;
