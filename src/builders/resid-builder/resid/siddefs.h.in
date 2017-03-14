@@ -26,9 +26,9 @@
 #define RESID_BRANCH_HINTS @RESID_BRANCH_HINTS@
 
 // Compiler specifics.
-#define HAVE_BOOL @RESID_HAVE_BOOL@
+#define HAVE_BOOL @HAVE_BOOL@
 #define HAVE_BUILTIN_EXPECT @HAVE_BUILTIN_EXPECT@
-#define HAVE_LOG1P @RESID_HAVE_LOG1P@
+#define HAVE_LOG1P @HAVE_LOG1P@
 
 // Define bool, true, and false for C++ compilers that lack these keywords.
 #if !HAVE_BOOL
@@ -71,8 +71,12 @@ typedef double double_point[2];
 
 enum chip_model { MOS6581, MOS8580 };
 
-enum sampling_method { SAMPLE_FAST, SAMPLE_INTERPOLATE,
-		       SAMPLE_RESAMPLE, SAMPLE_RESAMPLE_FASTMEM };
+enum sampling_method {
+    SAMPLE_FAST, 
+    SAMPLE_INTERPOLATE,
+    SAMPLE_RESAMPLE, 
+    SAMPLE_RESAMPLE_FASTMEM 
+};
 
 } // namespace reSID
 
@@ -81,7 +85,7 @@ extern "C"
 #ifndef RESID_VERSION_CC
 extern const char* resid_version_string;
 #else
-const char* resid_version_string = "1.0-pre2";
+const char* resid_version_string = VERSION;
 #endif
 }
 

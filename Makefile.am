@@ -258,6 +258,10 @@ src/builders/residfp-builder/residfp/version.cc
 #=========================================================
 # resid
 
+src_builders_resid_builder_resid_libresid_la_CPPFLAGS = \
+$(AM_CPPFLAGS) \
+-DVERSION=\"1.0-pre2\"
+
 src_builders_resid_builder_resid_libresid_la_SOURCES = \
 src/builders/resid-builder/resid/dac.h \
 src/builders/resid-builder/resid/sid.h \

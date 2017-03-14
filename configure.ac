@@ -160,8 +160,8 @@ AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 )
 
 AS_IF([test "x$ac_cv_cxx_bool" = "xno"],
-  [RESID_HAVE_BOOL=0],
-  [RESID_HAVE_BOOL=1]
+  [HAVE_BOOL=0],
+  [HAVE_BOOL=1]
 )
 
 dnl Enable branch prediction hints.
@@ -173,8 +173,8 @@ AC_ARG_ENABLE([branch-hints],
 )
 
 AS_IF([test "$enable_branch_hints" != no],
-  [AC_SUBST([RESID_BRANCH_HINTS], [1])],
-  [AC_SUBST([RESID_BRANCH_HINTS], [0])]
+  [RESID_BRANCH_HINTS=1],
+  [RESID_BRANCH_HINTS=0]
 )
 
 AC_CACHE_CHECK([for log1p], [resid_cv_log1p],
@@ -182,9 +182,9 @@ AC_CACHE_CHECK([for log1p], [resid_cv_log1p],
     resid_cv_log1p=yes, resid_cv_log1p=no)])
 
 AS_IF([test "$resid_cv_log1p" = no],
-  [AC_SUBST([RESID_HAVE_LOG1P], [0])],
-  [AC_SUBST([RESID_HAVE_LOG1P], [1])])
-
+  [HAVE_LOG1P=0],
+  [HAVE_LOG1P=1]
+)
 
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
   [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
@@ -192,8 +192,8 @@ AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
 )
 
 AS_IF([test "$resid_cv_builtin_expect" = no],
-  [AC_SUBST([HAVE_BUILTIN_EXPECT], [0])],
-  [AC_SUBST([HAVE_BUILTIN_EXPECT], [1])]
+  [HAVE_BUILTIN_EXPECT=0],
+  [HAVE_BUILTIN_EXPECT=1]
 )
 
 
@@ -244,9 +244,13 @@ AC_ARG_ENABLE([tests],
 AM_CONDITIONAL([ENABLE_TEST], [test x$am_unittest = xtrue])
 AC_SUBST([unittest_libs])
 
-AC_SUBST(RESID_HAVE_BOOL)
+AC_SUBST(HAVE_BOOL)
+AC_SUBST(HAVE_LOG1P)
+AC_SUBST(HAVE_BUILTIN_EXPECT)
 AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)
+AC_SUBST(RESID_BRANCH_HINTS)
+
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
 
