@@ -302,16 +302,6 @@ eval loadable_shrext=$shrext_cmds
 AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
 
 
-AM_CONDITIONAL([ENABLE_NEW8580FILTER], [test x$enable_new8580filter != xno])
-
-AS_IF([test "x$enable_new8580filter" != "xno"],
-  [ENABLE_NEW8580FILTER=1],
-  [ENABLE_NEW8580FILTER=0]
-)
-
-AC_SUBST([ENABLE_NEW8580FILTER])
-
-
 AC_CONFIG_FILES([
 Makefile
 libsidplayfp.pc
