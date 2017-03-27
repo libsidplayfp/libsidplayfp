@@ -254,33 +254,50 @@ AC_SUBST(RESID_BRANCH_HINTS)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
 
-# exSID support requires either libexsid or one of libfdti1 or libftd2xx
-PKG_CHECK_MODULES([EXSID],
-    [libexsid >= 1.0],
-    [AC_DEFINE([HAVE_EXSID], 1, [Define to 1 if you have libexsid (-lexsid).])
-    build_exsid_builder=yes],
-    [AC_MSG_WARN([$EXSID_PKG_ERRORS] [- using internal driver])
-        AS_IF([test "x$MINGW32" != "xyes"],
-            AC_SEARCH_LIBS([dlopen], [dl dld], [],
-              [AC_MSG_ERROR([unable to find the dlopen() function])]
-            )
-        )
-        AC_CHECK_HEADERS([ftd2xx.h],
-            [AC_DEFINE([HAVE_FTD2XX], 1, [Define to 1 if you have ftd2xx.h])
-            build_exsid_builder=yes
-            build_exsid_driver=yes],
-            [AC_MSG_WARN([ftd2xx.h not found, support will not be available])]
-        )
-        AC_MSG_CHECKING([for libftdi1])
-        PKG_CHECK_EXISTS([libftdi1 >= 1.0],
-            [AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have ftdi.h])
-            build_exsid_builder=yes
-            build_exsid_driver=yes
-            FTDI_CFLAGS=`$PKG_CONFIG --cflags libftdi1`
-            AC_MSG_RESULT([yes])],
-            [AC_MSG_WARN([libftdi1 not found, support will not be available])]
-        )]
+# exSID support
+AC_ARG_WITH(
+    [exsid],
+    [AS_HELP_STRING([--with-exsid], [Build with exsid support [@<:@yes/no/check, default=check@:>@]])],
+    [],
+    [with_exsid=check]
 )
+
+# exSID support requires either libexsid or one of libfdti1 or libftd2xx
+AS_IF(
+    [test "x$with_exsid" != "xno"],
+    [PKG_CHECK_MODULES([EXSID],
+        [libexsid >= 1.0],
+        [AC_DEFINE([HAVE_EXSID], 1, [Define to 1 if you have libexsid (-lexsid).])
+        build_exsid_builder=yes],
+        [AC_MSG_WARN([$EXSID_PKG_ERRORS] [- using internal driver])
+            AS_IF([test "x$MINGW32" != "xyes"],
+                AC_SEARCH_LIBS([dlopen], [dl dld], [],
+                  [AC_MSG_ERROR([unable to find the dlopen() function])]
+                )
+            )
+            AC_CHECK_HEADERS([ftd2xx.h],
+                [AC_DEFINE([HAVE_FTD2XX], 1, [Define to 1 if you have ftd2xx.h])
+                build_exsid_builder=yes
+                build_exsid_driver=yes],
+                [AC_MSG_WARN([ftd2xx.h not found, support will not be available])]
+            )
+            AC_MSG_CHECKING([for libftdi1])
+            PKG_CHECK_EXISTS([libftdi1 >= 1.0],
+                [AC_DEFINE([HAVE_FTDI], 1, [Define to 1 if you have ftdi.h])
+                build_exsid_builder=yes
+                build_exsid_driver=yes
+                FTDI_CFLAGS=`$PKG_CONFIG --cflags libftdi1`
+                AC_MSG_RESULT([yes])],
+                [AC_MSG_WARN([libftdi1 not found, support will not be available])]
+            )]
+    )]
+)
+
+AS_IF(
+    [test "x$with_exsid" = "xyes" -a "x$build_exsid_driver" != xyes],
+    [AC_MSG_ERROR([Neither libexid nor ftd2xx nor libftdi1 found])]
+)
+
 AC_SUBST([FTDI_CFLAGS])
 
 AM_CONDITIONAL([EXSID_SUPPORT], [ test "x${build_exsid_builder}" = xyes])
