@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -66,7 +66,7 @@ void TimerB::underFlow()
     parent.underflowB();
 }
 
-void InterruptSource6526A::trigger(uint8_t interruptMask)
+void InterruptSource8521::trigger(uint8_t interruptMask)
 {
     InterruptSource::trigger(interruptMask);
 
@@ -77,7 +77,7 @@ void InterruptSource6526A::trigger(uint8_t interruptMask)
     }
 }
 
-uint8_t InterruptSource6526A::clear()
+uint8_t InterruptSource8521::clear()
 {
     if (!interruptTriggered())
     {
@@ -131,11 +131,11 @@ void InterruptSource6526::reset()
 const char *MOS6526::credits()
 {
     return
-            "MOS6526/6526A (CIA) Emulation:\n"
+            "MOS6526/8521 (CIA) Emulation:\n"
             "\tCopyright (C) 2001-2004 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"
-            "\tCopyright (C) 2011-2015 Leandro Nini\n";
+            "\tCopyright (C) 2011-2017 Leandro Nini\n";
 }
 
 MOS6526::MOS6526(EventScheduler &scheduler) :
