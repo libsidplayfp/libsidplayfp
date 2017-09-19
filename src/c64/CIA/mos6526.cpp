@@ -230,9 +230,9 @@ uint8_t MOS6526::read(uint_least8_t addr)
     case IDR:
         return interruptSource->clear();
     case CRA:
-        return (regs[CRA] & 0xfe) | (timerA.getState() & 1);
+        return (regs[CRA] & 0xee) | (timerA.getState() & 1);
     case CRB:
-        return (regs[CRB] & 0xfe) | (timerB.getState() & 1);
+        return (regs[CRB] & 0xee) | (timerB.getState() & 1);
     default:
         return regs[addr];
     }
