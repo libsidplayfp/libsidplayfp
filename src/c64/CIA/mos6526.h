@@ -208,9 +208,6 @@ protected:
     /// Serial Data Registers
     SerialPort serialPort;
 
-    /// Have we already scheduled CIA->CPU interrupt transition?
-    bool triggerScheduled;
-
     /// Events
     //@{
     EventCallback<MOS6526> bTickEvent;

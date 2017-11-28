@@ -178,8 +178,6 @@ void MOS6526::reset()
     // Reset tod
     tod.reset();
 
-    triggerScheduled = false;
-
     eventScheduler.cancel(bTickEvent);
 }
 
