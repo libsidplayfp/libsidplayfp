@@ -1,16 +1,16 @@
 //
 //  exSID.c
-//	A simple I/O library for exSID USB
+//	A simple I/O library for exSID/exSID+ USB
 //
 //  (C) 2015-2017 Thibaut VARENE
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
 
 /**
  * @file
- * exSID USB I/O library
+ * exSID/exSID+ USB I/O library
  * @author Thibaut VARENE
  * @date 2015-2017
- * @version 1.5
+ * @version 2.0
  */
 
 #include "exSID.h"
@@ -68,23 +68,17 @@ static clkdrift_t clkdrift = 0;
 /**
  * This private structure holds hardware-dependent constants.
  */
-static struct {
+static struct xSpriv_s {
+	unsigned int	model;			///< exSID device model in use
 	clkdrift_t	write_cycles;		///< number of SID clocks spent in write ops
 	clkdrift_t	read_pre_cycles;	///< number of SID clocks spent in read op before data is actually read
 	clkdrift_t	read_post_cycles;	///< number of SID clocks spent in read op after data is actually read
 	clkdrift_t	read_offset_cycles;	///< read offset adjustment to align with writes (see function documentation)
-	clkdrift_t	ioctl_cycles;		///< number of SID clocks spent in ioctls
+	clkdrift_t	csioctl_cycles;		///< number of SID clocks spent in chip select ioctl
 	clkdrift_t	mindel_cycles;		///< lowest number of SID clocks that can be accounted for in delay
 	clkdrift_t	max_adj;		///< maximum number of SID clocks that can be encoded in final delay for read()/write()
-} _xSpriv = {
-	.write_cycles = XS_CYCIO,
-	.read_pre_cycles = XS_CYCCHR,
-	.read_post_cycles = XS_CYCCHR,
-	.read_offset_cycles = -2,
-	.ioctl_cycles = XS_CYCCHR,
-	.mindel_cycles = XS_MINDEL,
-	.max_adj = XS_MAXADJ,
-};
+	clkdrift_t	ldelay_offs;		///< long delay SID clocks offset
+} xSpriv;
 
 static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
 
@@ -277,14 +271,48 @@ int exSID_init(void)
 		}
 	}
 
+	/* try exSID USB first */
 	ftdi_status = xSfw_usb_open_desc(&ftdi, XS_USBVID, XS_USBPID, XS_USBDSC, NULL);
-	if (ftdi_status < 0) {
-		xserror("Failed to open device: %d (%s)",
-			ftdi_status, xSfw_get_error_string(ftdi));
-		if (xSfw_free)
-			xSfw_free(ftdi);
-		ftdi = NULL;
-		return -1;
+	if (ftdi_status >= 0) {
+		xSpriv = (struct xSpriv_s){
+			.model = XS_MODEL_STD,
+			.write_cycles = XS_CYCIO,
+			.read_pre_cycles = XS_CYCCHR,
+			.read_post_cycles = XS_CYCCHR,
+			.read_offset_cycles = -2,	// see exSID_clkdread() documentation
+			.csioctl_cycles = XS_CYCCHR,
+			.mindel_cycles = XS_MINDEL,
+			.max_adj = XS_MAXADJ,
+			.ldelay_offs = XS_LDOFFS,
+		};
+	}
+	else {
+		xsdbg("Failed to open exSID USB: %d (%s)\n",
+		      ftdi_status, xSfw_get_error_string(ftdi));
+
+		/* then exSID+ */
+		ftdi_status = xSfw_usb_open_desc(&ftdi, XS_USBVID, XS_USBPID, XSP_USBDSC, NULL);
+		if (ftdi_status >= 0) {
+			xSpriv = (struct xSpriv_s){
+				.model = XS_MODEL_PLUS,
+				.write_cycles = XSP_CYCIO,
+				.read_pre_cycles = XSP_PRE_RD,
+				.read_post_cycles = XSP_POSTRD,
+				.read_offset_cycles = 0,
+				.csioctl_cycles = XSP_CYCCS,
+				.mindel_cycles = XSP_MINDEL,
+				.max_adj = XSP_MAXADJ,
+				.ldelay_offs = XSP_LDOFFS,
+			};
+		}
+		else {
+			xserror("Failed to open device: %d (%s)",
+				ftdi_status, xSfw_get_error_string(ftdi));
+			if (xSfw_free)
+				xSfw_free(ftdi);
+			ftdi = NULL;
+			return -1;
+		}
 	}
 
 	ftdi_status = xSfw_usb_setup(ftdi, XS_BDRATE, XS_USBLAT);
@@ -391,6 +419,82 @@ void exSID_reset(uint_least8_t volume)
 	clkdrift = 0;
 }
 
+
+/**
+ * exSID+ clock selection routine.
+ * Selects between PAL and NTSC clocks.
+ * @note upon clock change the hardware resync itself and resets the SIDs, which
+ * takes approximately 50us: this function waits for enough time before resuming
+ * execution via a call to usleep();
+ * Output should be muted before execution
+ * @param clock clock selector value, see exSID.h.
+ * @return execution status
+ */
+int exSID_clockselect(int clock)
+{
+	xsdbg("clk: %d\n", clock);
+
+	if (XS_MODEL_PLUS != xSpriv.model)
+		return -1;
+
+	switch (clock) {
+		case XS_CL_PAL:
+			xSoutb(XSP_AD_IOCTCP, 1);
+			break;
+		case XS_CL_NTSC:
+			xSoutb(XSP_AD_IOCTCN, 1);
+			break;
+		default:
+			return -1;
+	}
+
+	usleep(100);	// sleep for 100us
+
+	clkdrift = 0;	// reset drift
+
+	return 0;
+}
+
+/**
+ * exSID+ audio operations routine.
+ * Selects the audio mixing / muting option. Only implemented in exSID+ devices.
+ * @note no accounting for SID cycles consumed.
+ * @param operation audio operation value, see exSID.h.
+ * @return execution status
+ */
+int exSID_audio_op(int operation)
+{
+	xsdbg("auop: %d\n", operation);
+
+	if (XS_MODEL_PLUS != xSpriv.model)
+		return -1;
+
+	switch (operation) {
+		case XS_AU_6581_8580:
+			xSoutb(XSP_AD_IOCTA0, 0);
+			break;
+		case XS_AU_8580_6581:
+			xSoutb(XSP_AD_IOCTA1, 0);
+			break;
+		case XS_AU_8580_8580:
+			xSoutb(XSP_AD_IOCTA2, 0);
+			break;
+		case XS_AU_6581_6581:
+			xSoutb(XSP_AD_IOCTA3, 0);
+			break;
+		case XS_AU_MUTE:
+			xSoutb(XSP_AD_IOCTAM, 0);
+			break;
+		case XS_AU_UNMUTE:
+			xSoutb(XSP_AD_IOCTAU, 0);
+			break;
+		default:
+			return -1;
+	}
+
+	return 0;
+}
+
 /**
  * SID chipselect routine.
  * Selects which SID will play the tunes. If neither CHIP0 or CHIP1 is chosen,
@@ -399,7 +503,7 @@ void exSID_reset(uint_least8_t volume)
  */
 void exSID_chipselect(int chip)
 {
-	clkdrift -= xSpriv.ioctl_cycles;
+	clkdrift -= xSpriv.csioctl_cycles;
 
 	xsdbg("cs: %d\n", chip);
 
@@ -471,7 +575,7 @@ static void xSlongdelay(uint_fast32_t cycles)
 	uint_fast32_t delta;
 	unsigned char dummy;
 
-	flush = 1;
+	flush = (XS_MODEL_STD == xSpriv.model);
 
 	multiple = cycles - xSpriv.ldelay_offs;
 	delta = multiple % XS_LDMULT;
@@ -525,7 +629,17 @@ void exSID_delay(uint_fast32_t cycles)
 
 	delay = clkdrift - xSpriv.write_cycles;
 
-	xSdelay(delay);
+	switch (xSpriv.model) {
+#if 0	// currently breaks sidplayfp - REVIEW
+		case XS_MODEL_PLUS:
+			if (delay > XS_LDMULT) {
+				xSlongdelay(delay);
+				break;
+			}
+#endif
+		default:
+			xSdelay(delay);
+	}
 }
 
 /**

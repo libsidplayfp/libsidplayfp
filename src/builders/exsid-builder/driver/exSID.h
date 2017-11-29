@@ -19,7 +19,7 @@ extern "C" {
 
 #include <stdint.h>
 
-#define	XS_VERSION	"1.5"
+#define	XS_VERSION	"2.0pre"
 
 /* Chip selection values for exSID_chipselect() */
 enum {
@@ -28,11 +28,29 @@ enum {
 	XS_CS_BOTH,	///< Both chips. @warning Invalid for reads: undefined behaviour!
 };
 
+/* Audio output operations for exSID_audio_op() */
+enum {
+	XS_AU_6581_8580,	///< mix: 6581 L / 8580 R
+	XS_AU_8580_6581,	///< mix: 8580 L / 6581 R
+	XS_AU_8580_8580,	///< mix: 8580 L and R
+	XS_AU_6581_6581,	///< mix: 6581 L and R
+	XS_AU_MUTE,		///< mute output
+	XS_AU_UNMUTE,		///< unmute output
+};
+
+/* Clock selection values for exSID_clockselect() */
+enum {
+	XS_CL_PAL,		///< select PAL clock
+	XS_CL_NTSC,		///< select NTSC clock
+};
+
 // public interface
 int exSID_init(void);
 void exSID_exit(void);
 void exSID_reset(uint_least8_t volume);
 uint16_t exSID_hwversion(void);
+int exSID_clockselect(int clock);
+int exSID_audio_op(int operation);
 void exSID_chipselect(int chip);
 void exSID_delay(uint_fast32_t cycles);
 void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data);
