@@ -2,7 +2,7 @@
 //  exSID.h
 //	A simple I/O library for exSID USB - interface header file
 //
-//  (C) 2015-2016 Thibaut VARENE
+//  (C) 2015-2017 Thibaut VARENE
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
 //
 
@@ -19,7 +19,7 @@ extern "C" {
 
 #include <stdint.h>
 
-#define	XS_VERSION	"1.3"
+#define	XS_VERSION	"1.4"
 
 /* Chip selection values for exSID_chipselect() */
 enum {
