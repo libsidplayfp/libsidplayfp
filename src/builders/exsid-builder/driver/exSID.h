@@ -35,7 +35,6 @@ void exSID_reset(uint_least8_t volume);
 uint16_t exSID_hwversion(void);
 void exSID_chipselect(int chip);
 void exSID_delay(uint_fast32_t cycles);
-void exSID_polldelay(uint_fast32_t cycles);
 void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data);
 uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr);
 const char * exSID_error_str(void);

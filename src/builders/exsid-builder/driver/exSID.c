@@ -30,7 +30,7 @@
  #endif
 #endif	// EXSID_TRHREADED
 
-char xSerrstr[ERRORBUF+1];	// 256-byte max string for error message
+char xSerrstr[];
 
 #ifdef	DEBUG
 static long accdrift = 0;
@@ -104,7 +104,7 @@ const char * exSID_error_str(void)
  * @param buff pointer to a byte array of data to send
  * @param size number of bytes to send
  */
-static inline void _xSwrite(const unsigned char * buff, int size)
+static inline void xSwrite(const unsigned char * buff, int size)
 {
 	ftdi_status = xSfw_write_data(ftdi, buff, size);
 #ifdef	DEBUG
@@ -125,7 +125,7 @@ static inline void _xSwrite(const unsigned char * buff, int size)
  * @param buff pointer to a byte array that will be filled with read data
  * @param size number of bytes to read
  */
-static inline void _xSread(unsigned char * buff, int size)
+static void xSread(unsigned char * buff, int size)
 {
 #ifdef	EXSID_THREADED
 	mtx_lock(&frontbuf_mtx);
@@ -153,10 +153,10 @@ static inline void _xSread(unsigned char * buff, int size)
 #ifdef	EXSID_THREADED
 /**
  * Writer thread. ** consummer **
- * This thread consumes buffer prepared in _xSoutb().
+ * This thread consumes buffer prepared in xSoutb().
  * Since writes to the FTDI subsystem are blocking, this thread blocks when it's
  * writing to the chip, and also while it's waiting for the front buffer to be ready.
- * This ensures execution time consistency as _xSoutb() periodically wait for 
+ * This ensures execution time consistency as xSoutb() periodically waits for
  * the front buffer to be ready before flipping buffers.
  * @note BLOCKING.
  * @param arg ignored
@@ -178,10 +178,10 @@ static int _exSID_thread_output(void *arg)
 			thrd_exit(0);
 		}
 
-		_xSwrite(frontbuf, frontbuf_idx);
+		xSwrite(frontbuf, frontbuf_idx);
 		frontbuf_idx = 0;
 
-		// _xSread() and _xSoutb() are in the same thread of execution
+		// xSread() and xSoutb() are in the same thread of execution
 		// so it can only be one or the other waiting.
 		cnd_signal(&frontbuf_done_cnd);
 		mtx_unlock(&frontbuf_mtx);
@@ -199,7 +199,7 @@ static int _exSID_thread_output(void *arg)
  * @param byte byte to send
  * @param flush force write flush if positive, trigger thread exit if negative
  */
-static void _xSoutb(uint8_t byte, int flush)
+static void xSoutb(uint8_t byte, int flush)
 {
 #ifndef	EXSID_THREADED
 	static unsigned char backbuf[XS_BUFFSZ];
@@ -242,7 +242,7 @@ static void _xSoutb(uint8_t byte, int flush)
 	cnd_signal(&frontbuf_ready_cnd);
 	mtx_unlock(&frontbuf_mtx);
 #else	// unthreaded
-	_xSwrite(backbuf, backbuf_idx);
+	xSwrite(backbuf, backbuf_idx);
 	backbuf_idx = 0;
 #endif
 }
@@ -314,8 +314,8 @@ int exSID_init(void)
 
 	// Wait for device ready by trying to read FV and wait for the answer
 	// XXX Broken with libftdi due to non-blocking read :-/
-	_xSoutb(XS_AD_IOCTFV, 1);
-	_xSread(&dummy, 1);
+	xSoutb(XS_AD_IOCTFV, 1);
+	xSread(&dummy, 1);
 
 	xsdbg("Rock'n'roll!\n");
 
@@ -341,7 +341,7 @@ void exSID_exit(void)
 		exSID_reset(0);
 
 #ifdef	EXSID_THREADED
-		_xSoutb(XS_AD_IOCTFV, -1);	// signal end of thread
+		xSoutb(XS_AD_IOCTFV, -1);	// signal end of thread
 		cnd_destroy(&frontbuf_ready_cnd);
 		mtx_destroy(&frontbuf_mtx);
 		thrd_join(thread_output, NULL);
@@ -384,8 +384,8 @@ void exSID_reset(uint_least8_t volume)
 {
 	xsdbg("rvol: %" PRIxLEAST8 "\n", volume);
 
-	_xSoutb(XS_AD_IOCTRS, 1);	// this will take more than XS_CYCCHR
-	usleep(1000);	// sleep for 1ms
+	xSoutb(XS_AD_IOCTRS, 1);	// this will take more than XS_CYCCHR
+	usleep(100);	// sleep for 100us
 	_exSID_write(0x18, volume, 1);	// this only needs 2 bytes which matches the input buffer of the PIC so all is well
 
 	clkdrift = 0;
@@ -399,14 +399,16 @@ void exSID_reset(uint_least8_t volume)
  */
 void exSID_chipselect(int chip)
 {
-	clkdrift -= _xSpriv.ioctl_cycles;
+	clkdrift -= xSpriv.ioctl_cycles;
+
+	xsdbg("cs: %d\n", chip);
 
 	if (XS_CS_CHIP0 == chip)
-		_xSoutb(XS_AD_IOCTS0, 0);
+		xSoutb(XS_AD_IOCTS0, 0);
 	else if (XS_CS_CHIP1 == chip)
-		_xSoutb(XS_AD_IOCTS1, 0);
+		xSoutb(XS_AD_IOCTS1, 0);
 	else
-		_xSoutb(XS_AD_IOCTSB, 0);
+		xSoutb(XS_AD_IOCTSB, 0);
 }
 
 /**
@@ -423,9 +425,9 @@ uint16_t exSID_hwversion(void)
 	unsigned char inbuf[2];
 	uint16_t out = 0;
 
-	_xSoutb(XS_AD_IOCTHV, 0);
-	_xSoutb(XS_AD_IOCTFV, 1);
-	_xSread(inbuf, 2);
+	xSoutb(XS_AD_IOCTHV, 0);
+	xSoutb(XS_AD_IOCTFV, 1);
+	xSread(inbuf, 2);
 	out = inbuf[0] << 8 | inbuf[1];	// ensure proper order regardless of endianness
 
 	xsdbg("HV: %c, FV: %hhu\n", inbuf[0], inbuf[1]);
@@ -434,63 +436,20 @@ uint16_t exSID_hwversion(void)
 }
 
 /**
- * Poll-based blocking (long) delay.
- * Calls to IOCTLD polled delay, for "very" long delays (thousands of SID clocks).
- * Total delay should be 3*CYCCHR + WAITCNT(500 + 1) (see PIC firmware), and for
- * better performance, ideally the requested delay time should be close to a multiple
- * of XS_USBLAT milliseconds.
- * @warning NOT CYCLE ACCURATE
- * @param cycles how many SID clocks to wait for.
- */
-void exSID_polldelay(uint_fast32_t cycles)
-{
-#define	SBPDOFFSET	(3*XS_CYCCHR)
-#define	SBPDMULT	501
-	int delta;
-	int multiple;	// minimum 1 full loop
-	unsigned char dummy;
-
-	multiple = cycles - SBPDOFFSET;
-	delta = multiple % SBPDMULT;
-	multiple /= SBPDMULT;
-
-	//xsdbg("ldelay: %d, multiple: %d, delta: %d\n", cycles, multiple, delta);
-
-#ifdef	DEBUG
-	if (unlikely((multiple <=0) || (multiple > 255)))
-		xsdbg("Wrong delay!\n");
-#endif
-
-	// send delay command and flush queue
-	_exSID_write(XS_AD_IOCTLD, (unsigned char)multiple, 1);
-
-	// wait for answer with blocking read
-	_xSread(&dummy, 1);
-
-	// deal with remainder
-	exSID_delay(delta);
-
-#ifdef	DEBUG
-	acccycle += (cycles - delta);
-	accdelay += (cycles - delta);
-#endif
-}
-
-/**
- * Private delay loop.
+ * Private busy delay loop.
  * @note will block every time a device write is triggered, blocking time will be
  * equal to the number of bytes written times mindel_cycles.
  * @param cycles how many SID clocks to loop for.
  */
-static inline void _xSdelay(uint_fast32_t cycles)
+static inline void xSdelay(uint_fast32_t cycles)
 {
 #ifdef	DEBUG
 	accdelay += cycles;
 #endif
-	while (likely(cycles >= _xSpriv.mindel_cycles)) {
-		_xSoutb(XS_AD_IOCTD1, 0);
-		cycles -= _xSpriv.mindel_cycles;
-		clkdrift -= _xSpriv.mindel_cycles;
+	while (likely(cycles >= xSpriv.mindel_cycles)) {
+		xSoutb(XS_AD_IOCTD1, 0);
+		cycles -= xSpriv.mindel_cycles;
+		clkdrift -= xSpriv.mindel_cycles;
 	}
 #ifdef	DEBUG
 	accdelay -= cycles;
@@ -498,22 +457,75 @@ static inline void _xSdelay(uint_fast32_t cycles)
 }
 
 /**
- * Write-based delay.
- * Calls _xSdelay() while leaving enough lead time for an I/O operation.
+ * Private long delay loop.
+ * Calls to IOCTLD delay, for "very" long delays (thousands of SID clocks).
+ * Requested delay @b MUST be > ldelay_offs, and for better performance,
+ * the requested delay time should ideally be several XS_LDMULT and be close to
+ * a multiple of XS_USBLAT milliseconds (on the exSID).
+ * @warning polling and NOT CYCLE ACCURATE on exSID
+ * @param cycles how many SID clocks to wait for.
+ */
+static void xSlongdelay(uint_fast32_t cycles)
+{
+	int multiple, flush;
+	uint_fast32_t delta;
+	unsigned char dummy;
+
+	flush = 1;
+
+	multiple = cycles - xSpriv.ldelay_offs;
+	delta = multiple % XS_LDMULT;
+	multiple /= XS_LDMULT;
+
+	//xsdbg("ldelay: %" PRIdFAST32 ", multiple: %d, delta: %" PRIdFAST32 "\n", cycles, multiple, delta);
+
+	if (unlikely(multiple < 0)) {
+		xsdbg("Wrong delay!\n");
+		return;
+	}
+
+#ifdef	DEBUG
+	accdelay += (cycles - delta);
+#endif
+
+	while (multiple >= 255) {
+		_exSID_write(XS_AD_IOCTLD, 255, flush);
+		if (flush)
+			xSread(&dummy, 1);	// wait for answer with blocking read
+		multiple -= 255;
+	}
+
+	if (multiple) {
+		_exSID_write(XS_AD_IOCTLD, (unsigned char)multiple, flush);
+		if (flush)
+			xSread(&dummy, 1);	// wait for answer with blocking read
+	}
+
+	// deal with remainder
+	xSdelay(delta);
+}
+
+/**
+ * Cycle accurate delay routine.
+ * Applies the most efficient strategy to delay for cycles SID clocks
+ * while leaving enough lead time for an I/O operation.
  * @param cycles how many SID clocks to loop for.
  */
 void exSID_delay(uint_fast32_t cycles)
 {
-	clkdrift += cycles;
+	uint_fast32_t delay;
 
+	clkdrift += cycles;
 #ifdef	DEBUG
 	acccycle += cycles;
 #endif
 
-	if (unlikely(clkdrift <= _xSpriv.write_cycles))	// never delay for less than a full write would need
+	if (unlikely(clkdrift <= xSpriv.write_cycles))	// never delay for less than a full write would need
 		return;	// too short
 
-	_xSdelay(clkdrift - _xSpriv.write_cycles);
+	delay = clkdrift - xSpriv.write_cycles;
+
+	xSdelay(delay);
 }
 
 /**
@@ -524,14 +536,14 @@ void exSID_delay(uint_fast32_t cycles)
  */
 static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush)
 {
-	_xSoutb((unsigned char)addr, 0);
-	_xSoutb((unsigned char)data, flush);
+	xSoutb((unsigned char)addr, 0);
+	xSoutb((unsigned char)data, flush);
 }
 
 /**
  * Timed write routine, attempts cycle-accurate writes.
  * This function will be cycle-accurate provided that no two consecutive reads or writes
- * are less than XS_CYCIO apart and the leftover delay is <= max_adj SID clock cycles.
+ * are less than write_cycles apart and the leftover delay is <= max_adj SID clock cycles.
  * @param cycles how many SID clocks to wait before the actual data write.
  * @param addr target address.
  * @param data data to write at that address.
@@ -548,15 +560,15 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 	}
 #endif
 
-	// actual write will cost XS_CYCIO. Delay for cycles - XS_CYCIO then account for the write
+	// actual write will cost write_cycles. Delay for cycles - write_cycles then account for the write
 	clkdrift += cycles;
-	if (clkdrift > _xSpriv.write_cycles)
-		_xSdelay(clkdrift - _xSpriv.write_cycles);
+	if (clkdrift > xSpriv.write_cycles)
+		xSdelay(clkdrift - xSpriv.write_cycles);
 
-	clkdrift -= _xSpriv.write_cycles;	// write is going to consume XS_CYCIO clock ticks
+	clkdrift -= xSpriv.write_cycles;	// write is going to consume write_cycles clock ticks
 
 #ifdef	DEBUG
-	if (clkdrift >= _xSpriv.mindel_cycles)
+	if (clkdrift >= xSpriv.mindel_cycles)
 		xsdbg("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
 	else if (clkdrift < 0)
 		accdrift += clkdrift;
@@ -565,11 +577,11 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 	/* if we are still going to be early, delay actual write by up to XS_MAXAD ticks
 	At this point it is guaranted that clkdrift will be < mindel_cycles. */
 	if (likely(clkdrift >= 0)) {
-		adj = clkdrift % (_xSpriv.max_adj+1);
+		adj = clkdrift % (xSpriv.max_adj+1);
 		/* if max_adj is >= clkdrift, modulo will give the same results
 		   as the correct test:
 		   adj = (clkdrift < max_adj ? clkdrift : max_adj)
-		   but without an extra conditional branch. If is is < clkdrift, then it
+		   but without an extra conditional branch. If is is < max_adj, then it
 		   seems to provide better results by evening jitter accross writes. So
 		   it's the preferred solution for all cases. */
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
@@ -598,8 +610,8 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
 {
 	static unsigned char data;
 
-	_xSoutb(addr, flush);	// XXX
-	_xSread(&data, 1);	// blocking
+	xSoutb(addr, flush);	// XXX
+	xSread(&data, 1);	// blocking
 
 	xsdbg("addr: %.2" PRIxLEAST8 ", data: %.2hhx\n", addr, data);
 	return data;
@@ -607,6 +619,7 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
 
 /**
  * BLOCKING Timed read routine, attempts cycle-accurate reads.
+ * The following description is based on exSID (standard).
  * This function will be cycle-accurate provided that no two consecutive reads or writes
  * are less than XS_CYCIO apart and leftover delay is <= max_adj SID clock cycles.
  * Read result will only be available after a full XS_CYCIO, giving clkdread() the same
@@ -625,8 +638,8 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
  * @note The actual time the read will take to complete depends
  * on the USB bus activity and settings. It *should* complete in XS_USBLAT ms, but
  * not less, meaning that read operations are bound to introduce timing inaccuracy.
- * As such, this function is only really provided as a proof of concept but should
- * better be avoided.
+ * As such, this function is only really provided as a proof of concept but SHOULD
+ * BETTER BE AVOIDED.
  * @param cycles how many SID clocks to wait before the actual data read.
  * @param addr target address.
  * @return data read from address.
@@ -644,15 +657,15 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 #endif
 
 	// actual read will happen after read_pre_cycles. Delay for cycles - read_pre_cycles then account for the read
-	clkdrift += _xSpriv.read_offset_cycles;		// 2-cycle offset adjustement, see function documentation.
+	clkdrift += xSpriv.read_offset_cycles;		// 2-cycle offset adjustement, see function documentation.
 	clkdrift += cycles;
-	if (clkdrift > _xSpriv.read_pre_cycles)
-		_xSdelay(clkdrift - _xSpriv.read_pre_cycles);
+	if (clkdrift > xSpriv.read_pre_cycles)
+		xSdelay(clkdrift - xSpriv.read_pre_cycles);
 
-	clkdrift -= _xSpriv.read_pre_cycles;	// read request is going to consume read_pre_cycles clock ticks
+	clkdrift -= xSpriv.read_pre_cycles;	// read request is going to consume read_pre_cycles clock ticks
 
 #ifdef	DEBUG
-	if (clkdrift > _xSpriv.mindel_cycles)
+	if (clkdrift > xSpriv.mindel_cycles)
 		xsdbg("Impossible drift adjustment! %" PRIdFAST32 " cycles", clkdrift);
 	else if (clkdrift < 0) {
 		accdrift += clkdrift;
@@ -662,7 +675,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 	// if we are still going to be early, delay actual read by up to max_adj ticks
 	if (likely(clkdrift >= 0)) {
-		adj = clkdrift % (_xSpriv.max_adj+1);	// see clkdwrite()
+		adj = clkdrift % (xSpriv.max_adj+1);	// see clkdwrite()
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
 #ifdef	DEBUG
 		accdrift += (clkdrift - adj);
@@ -676,7 +689,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 #endif
 
 	// after read has completed, at least another read_post_cycles will have been spent
-	clkdrift -= _xSpriv.read_post_cycles;
+	clkdrift -= xSpriv.read_post_cycles;
 
 	//xsdbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
 	return _exSID_read(addr, 1);
