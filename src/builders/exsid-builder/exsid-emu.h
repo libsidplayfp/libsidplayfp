@@ -83,6 +83,9 @@ public:
 
     void filter(bool) {}
 
+    void sampling(float systemclock, float freq,
+        SidConfig::sampling_method_t method, bool) override;
+
     // exSID specific
     void flush();
 

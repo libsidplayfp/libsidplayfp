@@ -458,6 +458,8 @@ int exSID_clockselect(int clock)
 /**
  * exSID+ audio operations routine.
  * Selects the audio mixing / muting option. Only implemented in exSID+ devices.
+ * @warning all these operations (excepting unmuting obviously) will mute the
+ * output by default.
  * @note no accounting for SID cycles consumed.
  * @param operation audio operation value, see exSID.h.
  * @return execution status
