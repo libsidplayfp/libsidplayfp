@@ -10,7 +10,7 @@
  * exSID USB I/O library
  * @author Thibaut VARENE
  * @date 2015-2017
- * @version 1.4
+ * @version 1.5
  */
 
 #include "exSID.h"
@@ -531,7 +531,7 @@ static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush)
 /**
  * Timed write routine, attempts cycle-accurate writes.
  * This function will be cycle-accurate provided that no two consecutive reads or writes
- * are less than XS_CYCIO apart and the leftover delay is <= max_adj*XS_ADJMLT SID clock cycles.
+ * are less than XS_CYCIO apart and the leftover delay is <= max_adj SID clock cycles.
  * @param cycles how many SID clocks to wait before the actual data write.
  * @param addr target address.
  * @param data data to write at that address.
@@ -562,22 +562,21 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 		accdrift += clkdrift;
 #endif
 
-	/* if we are still going to be early, delay actual write by up to XS_MAXAD*XS_ADJMLT ticks
+	/* if we are still going to be early, delay actual write by up to XS_MAXAD ticks
 	At this point it is guaranted that clkdrift will be < mindel_cycles. */
 	if (likely(clkdrift >= 0)) {
-		adj = clkdrift % (_xSpriv.max_adj*XS_ADJMLT+1);
-		/* if max_adj*XS_ADJMLT is >= clkdrift, modulo will give the same results
+		adj = clkdrift % (_xSpriv.max_adj+1);
+		/* if max_adj is >= clkdrift, modulo will give the same results
 		   as the correct test:
-		   adj = (clkdrift < max_adj*XS_ADJMLT ? clkdrift : max_adj*XS_ADJMLT)
+		   adj = (clkdrift < max_adj ? clkdrift : max_adj)
 		   but without an extra conditional branch. If is is < clkdrift, then it
 		   seems to provide better results by evening jitter accross writes. So
 		   it's the preferred solution for all cases. */
-		adj /= XS_ADJMLT;
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
 #ifdef	DEBUG
-		accdrift += (clkdrift - adj*XS_ADJMLT);
+		accdrift += (clkdrift - adj);
 #endif
-		//xsdbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
+		//xsdbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj, (char)(addr | (adj << 5)), data);
 	}
 
 #ifdef	DEBUG
@@ -609,7 +608,7 @@ static inline uint8_t _exSID_read(uint_least8_t addr, int flush)
 /**
  * BLOCKING Timed read routine, attempts cycle-accurate reads.
  * This function will be cycle-accurate provided that no two consecutive reads or writes
- * are less than XS_CYCIO apart and leftover delay is <= max_adj*XS_ADJMLT SID clock cycles.
+ * are less than XS_CYCIO apart and leftover delay is <= max_adj SID clock cycles.
  * Read result will only be available after a full XS_CYCIO, giving clkdread() the same
  * run time as clkdwrite(). There's a 2-cycle negative adjustment in the code because
  * that's the actual offset from the write calls ('/' denotes falling clock edge latch),
@@ -661,15 +660,14 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 	}
 #endif
 
-	// if we are still going to be early, delay actual read by up to max_adj*XS_ADJMLT ticks
+	// if we are still going to be early, delay actual read by up to max_adj ticks
 	if (likely(clkdrift >= 0)) {
-		adj = clkdrift % (_xSpriv.max_adj*XS_ADJMLT+1);	// see clkdwrite()
-		adj /= XS_ADJMLT;
+		adj = clkdrift % (_xSpriv.max_adj+1);	// see clkdwrite()
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
 #ifdef	DEBUG
-		accdrift += (clkdrift - adj*XS_ADJMLT);
+		accdrift += (clkdrift - adj);
 #endif
-		//xsdbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj*XS_ADJMLT, (char)(addr | (adj << 5)), data);
+		//xsdbg("drft: %d, adj: %d, addr: %.2hhx, data: %.2hhx\n", clkdrift, adj, (char)(addr | (adj << 5)), data);
 	}
 
 #ifdef	DEBUG

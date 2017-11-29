@@ -24,14 +24,7 @@
 // CLOCK_FREQ_NTSC = 1022727.14;
 // CLOCK_FREQ_PAL  = 985248.4;
 
-#if 1
 #define	XS_BDRATE	2000000		///< 2Mpbs
-#define	XS_ADJMLT	1		///< 1-to-1 cycle adjustement (max resolution: 1 cycle).
-#else
-#define	XS_BDRATE	750000		///< 750kpbs
-#define	XS_ADJMLT	2		///< 2-to-1 cycle adjustement (max resolution: 2 cycles).
-#endif
-
 #define	XS_BUFFMS	40		///< write buffer size in milliseconds of playback.
 #define	XS_SIDCLK	1000000		///< 1MHz (for computation only, currently hardcoded in firmware)
 #define XS_RSBCLK	(XS_BDRATE/10)	///< RS232 byte clock. Each RS232 byte is 10 bits long due to start and stop bits

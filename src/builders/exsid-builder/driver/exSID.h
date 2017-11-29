@@ -19,7 +19,7 @@ extern "C" {
 
 #include <stdint.h>
 
-#define	XS_VERSION	"1.4"
+#define	XS_VERSION	"1.5"
 
 /* Chip selection values for exSID_chipselect() */
 enum {
