@@ -64,6 +64,23 @@ public:
 
     void poke(uint_least16_t address, uint8_t value) override
     {
+#ifdef DEBUG
+        //if (address == 0xD01A)
+        //{
+        //    std::cout << std::hex << (int)address << ": " << (int)value << std::endl;
+        //}
+        if (address == 0xD020)
+        {
+            //std::cout << (int)(value && 0x0f) << std::endl;
+            const char* msg = nullptr;
+            if (value == 5 || value == 13) msg = "OK";      // Green
+            else if (value == 2 || value == 10) msg = "KO"; // Red
+            if (msg)
+            {
+                std::cout << std::endl << msg << std::endl;
+            }
+        }
+#endif
         write(endian_16lo8(address), value);
     }
 
