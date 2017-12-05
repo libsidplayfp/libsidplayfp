@@ -35,18 +35,23 @@ void SerialPort::reset()
     buffered = false;
 }
 
+void SerialPort::event()
+{
+    parent.spInterrupt();
+}
+
 void SerialPort::handle(uint8_t serialDataReg)
 {
     if (count && --count == 0)
     {
-        parent.spInterrupt();
+        eventScheduler.schedule(*this, 1, EVENT_CLOCK_PHI1);
     }
 
     if (count == 0 && buffered)
     {
         out = serialDataReg;
         buffered = false;
-        count = 16;
+        count = 14;
         // Output rate 8 bits at ta / 2
     }
 }

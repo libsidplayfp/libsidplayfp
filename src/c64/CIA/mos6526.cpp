@@ -148,7 +148,7 @@ MOS6526::MOS6526(EventScheduler &scheduler) :
     timerB(scheduler, *this),
     interruptSource(new InterruptSource6526(scheduler, *this)),
     tod(scheduler, *this, regs),
-    serialPort(*this),
+    serialPort(scheduler, *this),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick)
 {
     reset();

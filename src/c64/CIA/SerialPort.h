@@ -26,16 +26,21 @@
 
 #include "interrupt.h"
 
+#include "Event.h"
+
 namespace libsidplayfp
 {
 
 class MOS6526;
 
-class SerialPort
+class SerialPort : private Event
 {
 private:
     /// Pointer to the MOS6526 which this Serial Port belongs to.
     MOS6526 &parent;
+
+    /// Event context.
+    EventScheduler &eventScheduler;
 
     int count;
 
@@ -43,8 +48,13 @@ private:
 
     uint8_t out;
 
+private:
+    void event() override;
+
 public:
-    explicit SerialPort(MOS6526 &parent) :
+    explicit SerialPort(EventScheduler &scheduler, MOS6526 &parent) :
+        Event("Serial Port interrupt"),
+        eventScheduler(scheduler),
         parent(parent)
     {}
 
