@@ -11,6 +11,10 @@
  * @author Thibaut VARENE
  * @date 2015-2017
  * @version 2.0
+ *
+ * This driver will control the first exSID device available.
+ * All public API functions are only valid after a successful call to exSID_init().
+ * To release the device and resources, exSID_exit() must be called.
  */
 
 #include "exSID.h"
@@ -518,6 +522,32 @@ void exSID_chipselect(int chip)
 		xSoutb(XS_AD_IOCTS1, 0);
 	else
 		xSoutb(XS_AD_IOCTSB, 0);
+}
+
+/**
+ * Device hardware model.
+ * Queries the driver for the hardware model currently identified.
+ * @return hardware model as enumerated in exSID.h, negative value on error.
+ */
+int exSID_hwmodel(void)
+{
+	int model;
+
+	switch (xSpriv.model) {
+		case XS_MODEL_STD:
+			model = XS_MD_STD;
+			break;
+		case XS_MODEL_PLUS:
+			model = XS_MD_PLUS;
+			break;
+		default:
+			model = -1;
+			break;
+	}
+
+	xsdbg("HW model: %d\n", model);
+
+	return model;
 }
 
 /**

@@ -21,14 +21,14 @@ extern "C" {
 
 #define	XS_VERSION	"2.0pre"
 
-/* Chip selection values for exSID_chipselect() */
+/** Chip selection values for exSID_chipselect() */
 enum {
 	XS_CS_CHIP0,	///< 6581
 	XS_CS_CHIP1,	///< 8580
 	XS_CS_BOTH,	///< Both chips. @warning Invalid for reads: undefined behaviour!
 };
 
-/* Audio output operations for exSID_audio_op() */
+/** Audio output operations for exSID_audio_op() */
 enum {
 	XS_AU_6581_8580,	///< mix: 6581 L / 8580 R
 	XS_AU_8580_6581,	///< mix: 8580 L / 6581 R
@@ -38,17 +38,25 @@ enum {
 	XS_AU_UNMUTE,		///< unmute output
 };
 
-/* Clock selection values for exSID_clockselect() */
+/** Clock selection values for exSID_clockselect() */
 enum {
 	XS_CL_PAL,		///< select PAL clock
 	XS_CL_NTSC,		///< select NTSC clock
 	XS_CL_1MHZ,		///< select 1MHz clock
 };
 
+/** Hardware model return values for exSID_hwmodel() */
+enum {
+	XS_MD_STD,		///< exSID USB
+	XS_MD_PLUS,		///< exSID+ USB
+};
+
 // public interface
 int exSID_init(void);
 void exSID_exit(void);
+
 void exSID_reset(uint_least8_t volume);
+int exSID_hwmodel(void);
 uint16_t exSID_hwversion(void);
 int exSID_clockselect(int clock);
 int exSID_audio_op(int operation);
