@@ -74,9 +74,12 @@
 #define	XS_AD_IOCTHV	0xFE	///< Hardware version query
 #define XS_AD_IOCTRS	0xFF	///< SID reset
 
-#define	XS_USBVID	0x0403	///< Default FTDI VID
+#define XS_USBVID	0x0403	///< Default FTDI VID
 #define XS_USBPID	0x6001	///< Default FTDI PID
 #define XS_USBDSC	"exSID USB"
+
+#define XSP_USBVID	0x0403	///< Default FTDI VID
+#define XSP_USBPID	0x6015	///< Default FTDI PID
 #define XSP_USBDSC	"exSID+ USB"
 
 #define XS_MODEL_STD	0

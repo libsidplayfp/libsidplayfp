@@ -34,6 +34,8 @@
  #endif
 #endif	// EXSID_TRHREADED
 
+#define ARRAY_SIZE(x)		(sizeof(x) / sizeof(x[0]))
+
 char xSerrstr[];
 
 #ifdef	DEBUG
@@ -72,7 +74,7 @@ static clkdrift_t clkdrift = 0;
 /**
  * This private structure holds hardware-dependent constants.
  */
-static struct xSpriv_s {
+struct xSpriv_s {
 	unsigned int	model;			///< exSID device model in use
 	clkdrift_t	write_cycles;		///< number of SID clocks spent in write ops
 	clkdrift_t	read_pre_cycles;	///< number of SID clocks spent in read op before data is actually read
@@ -82,7 +84,52 @@ static struct xSpriv_s {
 	clkdrift_t	mindel_cycles;		///< lowest number of SID clocks that can be accounted for in delay
 	clkdrift_t	max_adj;		///< maximum number of SID clocks that can be encoded in final delay for read()/write()
 	clkdrift_t	ldelay_offs;		///< long delay SID clocks offset
-} xSpriv;
+};
+
+/** Array of supported devices */
+const struct {
+	const char *		desc;
+	const int		pid;
+	const int		vid;
+	const struct xSpriv_s	xsp;
+} xSsupported[] = {
+	{
+		/* exSID USB */
+		.desc = XS_USBDSC,
+		.pid = XS_USBPID,
+		.vid = XS_USBVID,
+		.xsp = (struct xSpriv_s){
+			.model = XS_MODEL_STD,
+			.write_cycles = XS_CYCIO,
+			.read_pre_cycles = XS_CYCCHR,
+			.read_post_cycles = XS_CYCCHR,
+			.read_offset_cycles = -2,	// see exSID_clkdread() documentation
+			.csioctl_cycles = XS_CYCCHR,
+			.mindel_cycles = XS_MINDEL,
+			.max_adj = XS_MAXADJ,
+			.ldelay_offs = XS_LDOFFS,
+		},
+	}, {
+		/* exSID+ USB */
+		.desc = XSP_USBDSC,
+		.pid = XSP_USBPID,
+		.vid = XSP_USBVID,
+		.xsp = (struct xSpriv_s){
+			.model = XS_MODEL_PLUS,
+			.write_cycles = XSP_CYCIO,
+			.read_pre_cycles = XSP_PRE_RD,
+			.read_post_cycles = XSP_POSTRD,
+			.read_offset_cycles = 0,
+			.csioctl_cycles = XSP_CYCCS,
+			.mindel_cycles = XSP_MINDEL,
+			.max_adj = XSP_MAXADJ,
+			.ldelay_offs = XSP_LDOFFS,
+		},
+	}
+};
+
+/** Global pointer used by all the hardware access routines */
+const struct xSpriv_s * restrict xSpriv;
 
 static inline void _exSID_write(uint_least8_t addr, uint8_t data, int flush);
 
@@ -248,14 +295,14 @@ static void xSoutb(uint8_t byte, int flush)
 /**
  * Device init routine.
  * Must be called once before any operation is attempted on the device.
- * Opens the named device, and sets various parameters: baudrate, parity, flow
+ * Opens first available device, and sets various parameters: baudrate, parity, flow
  * control and USB latency, and finally clears the RX and TX buffers.
  * @return 0 on success, !0 otherwise.
  */
 int exSID_init(void)
 {
 	unsigned char dummy;
-	int ret = 0;
+	int i, found, ret;
 
 	if (ftdi) {
 		xserror("Device already open!");
@@ -267,56 +314,39 @@ int exSID_init(void)
 		return -1;
 	}
 
-	if (xSfw_new) {
-		ftdi = xSfw_new();
-		if (!ftdi) {
-			xserror("ftdi_new failed");
-			return -1;
+	/* Attempt to open all supported devices until first success.
+	 * Cleanup ftdi after each try to avoid passing garbage around as we don't know what
+	 * the FTDI open routines do with the pointer.
+	 * FIXME: despite that, some combinations still don't seem to work */
+	found = 0;
+	for (i = 0; i < ARRAY_SIZE(xSsupported); i++) {
+		if (xSfw_new) {
+			ftdi = xSfw_new();
+			if (!ftdi) {
+				xserror("ftdi_new failed");
+				return -1;
+			}
 		}
-	}
 
-	/* try exSID USB first */
-	ftdi_status = xSfw_usb_open_desc(&ftdi, XS_USBVID, XS_USBPID, XS_USBDSC, NULL);
-	if (ftdi_status >= 0) {
-		xSpriv = (struct xSpriv_s){
-			.model = XS_MODEL_STD,
-			.write_cycles = XS_CYCIO,
-			.read_pre_cycles = XS_CYCCHR,
-			.read_post_cycles = XS_CYCCHR,
-			.read_offset_cycles = -2,	// see exSID_clkdread() documentation
-			.csioctl_cycles = XS_CYCCHR,
-			.mindel_cycles = XS_MINDEL,
-			.max_adj = XS_MAXADJ,
-			.ldelay_offs = XS_LDOFFS,
-		};
-	}
-	else {
-		xsdbg("Failed to open exSID USB: %d (%s)\n",
-		      ftdi_status, xSfw_get_error_string(ftdi));
-
-		/* then exSID+ */
-		ftdi_status = xSfw_usb_open_desc(&ftdi, XS_USBVID, XS_USBPID, XSP_USBDSC, NULL);
+		xsdbg("Trying %s...\n", xSsupported[i].desc);
+		xSpriv = &xSsupported[i].xsp;	// setting unconditionnally avoids segfaults if user code does the wrong thing.
+		ftdi_status = xSfw_usb_open_desc(&ftdi, xSsupported[i].vid, xSsupported[i].pid, xSsupported[i].desc, NULL);
 		if (ftdi_status >= 0) {
-			xSpriv = (struct xSpriv_s){
-				.model = XS_MODEL_PLUS,
-				.write_cycles = XSP_CYCIO,
-				.read_pre_cycles = XSP_PRE_RD,
-				.read_post_cycles = XSP_POSTRD,
-				.read_offset_cycles = 0,
-				.csioctl_cycles = XSP_CYCCS,
-				.mindel_cycles = XSP_MINDEL,
-				.max_adj = XSP_MAXADJ,
-				.ldelay_offs = XSP_LDOFFS,
-			};
+			xsdbg("Opened!\n");
+			found = 1;
+			break;
 		}
 		else {
-			xserror("Failed to open device: %d (%s)",
-				ftdi_status, xSfw_get_error_string(ftdi));
+			xsdbg("Failed: %d (%s)\n", ftdi_status, xSfw_get_error_string(ftdi));
 			if (xSfw_free)
 				xSfw_free(ftdi);
 			ftdi = NULL;
-			return -1;
 		}
+	}
+
+	if (!found) {
+		xserror("No device could be opened");
+		return -1;
 	}
 
 	ftdi_status = xSfw_usb_setup(ftdi, XS_BDRATE, XS_USBLAT);
@@ -325,8 +355,8 @@ int exSID_init(void)
 		return -1;
 	}
 
-	// success - device with device description "exSID USB" is open
-	xsdbg("Device opened\n");
+	// success - device is ready
+	xsdbg("Device ready\n");
 	
 
 #ifdef	EXSID_THREADED
@@ -438,7 +468,7 @@ int exSID_clockselect(int clock)
 {
 	xsdbg("clk: %d\n", clock);
 
-	if (XS_MODEL_PLUS != xSpriv.model)
+	if (XS_MODEL_PLUS != xSpriv->model)
 		return -1;
 
 	switch (clock) {
@@ -475,7 +505,7 @@ int exSID_audio_op(int operation)
 {
 	xsdbg("auop: %d\n", operation);
 
-	if (XS_MODEL_PLUS != xSpriv.model)
+	if (XS_MODEL_PLUS != xSpriv->model)
 		return -1;
 
 	switch (operation) {
@@ -512,7 +542,7 @@ int exSID_audio_op(int operation)
  */
 void exSID_chipselect(int chip)
 {
-	clkdrift -= xSpriv.csioctl_cycles;
+	clkdrift -= xSpriv->csioctl_cycles;
 
 	xsdbg("cs: %d\n", chip);
 
@@ -533,7 +563,7 @@ int exSID_hwmodel(void)
 {
 	int model;
 
-	switch (xSpriv.model) {
+	switch (xSpriv->model) {
 		case XS_MODEL_STD:
 			model = XS_MD_STD;
 			break;
@@ -585,10 +615,10 @@ static inline void xSdelay(uint_fast32_t cycles)
 #ifdef	DEBUG
 	accdelay += cycles;
 #endif
-	while (likely(cycles >= xSpriv.mindel_cycles)) {
+	while (likely(cycles >= xSpriv->mindel_cycles)) {
 		xSoutb(XS_AD_IOCTD1, 0);
-		cycles -= xSpriv.mindel_cycles;
-		clkdrift -= xSpriv.mindel_cycles;
+		cycles -= xSpriv->mindel_cycles;
+		clkdrift -= xSpriv->mindel_cycles;
 	}
 #ifdef	DEBUG
 	accdelay -= cycles;
@@ -610,9 +640,9 @@ static void xSlongdelay(uint_fast32_t cycles)
 	uint_fast32_t delta;
 	unsigned char dummy;
 
-	flush = (XS_MODEL_STD == xSpriv.model);
+	flush = (XS_MODEL_STD == xSpriv->model);
 
-	multiple = cycles - xSpriv.ldelay_offs;
+	multiple = cycles - xSpriv->ldelay_offs;
 	delta = multiple % XS_LDMULT;
 	multiple /= XS_LDMULT;
 
@@ -659,12 +689,12 @@ void exSID_delay(uint_fast32_t cycles)
 	acccycle += cycles;
 #endif
 
-	if (unlikely(clkdrift <= xSpriv.write_cycles))	// never delay for less than a full write would need
+	if (unlikely(clkdrift <= xSpriv->write_cycles))	// never delay for less than a full write would need
 		return;	// too short
 
-	delay = clkdrift - xSpriv.write_cycles;
+	delay = clkdrift - xSpriv->write_cycles;
 
-	switch (xSpriv.model) {
+	switch (xSpriv->model) {
 #if 0	// currently breaks sidplayfp - REVIEW
 		case XS_MODEL_PLUS:
 			if (delay > XS_LDMULT) {
@@ -711,13 +741,13 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 
 	// actual write will cost write_cycles. Delay for cycles - write_cycles then account for the write
 	clkdrift += cycles;
-	if (clkdrift > xSpriv.write_cycles)
-		xSdelay(clkdrift - xSpriv.write_cycles);
+	if (clkdrift > xSpriv->write_cycles)
+		xSdelay(clkdrift - xSpriv->write_cycles);
 
-	clkdrift -= xSpriv.write_cycles;	// write is going to consume write_cycles clock ticks
+	clkdrift -= xSpriv->write_cycles;	// write is going to consume write_cycles clock ticks
 
 #ifdef	DEBUG
-	if (clkdrift >= xSpriv.mindel_cycles)
+	if (clkdrift >= xSpriv->mindel_cycles)
 		xsdbg("Impossible drift adjustment! %" PRIdFAST32 " cycles\n", clkdrift);
 	else if (clkdrift < 0)
 		accdrift += clkdrift;
@@ -726,7 +756,7 @@ void exSID_clkdwrite(uint_fast32_t cycles, uint_least8_t addr, uint8_t data)
 	/* if we are still going to be early, delay actual write by up to XS_MAXAD ticks
 	At this point it is guaranted that clkdrift will be < mindel_cycles. */
 	if (likely(clkdrift >= 0)) {
-		adj = clkdrift % (xSpriv.max_adj+1);
+		adj = clkdrift % (xSpriv->max_adj+1);
 		/* if max_adj is >= clkdrift, modulo will give the same results
 		   as the correct test:
 		   adj = (clkdrift < max_adj ? clkdrift : max_adj)
@@ -806,15 +836,15 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 #endif
 
 	// actual read will happen after read_pre_cycles. Delay for cycles - read_pre_cycles then account for the read
-	clkdrift += xSpriv.read_offset_cycles;		// 2-cycle offset adjustement, see function documentation.
+	clkdrift += xSpriv->read_offset_cycles;		// 2-cycle offset adjustement, see function documentation.
 	clkdrift += cycles;
-	if (clkdrift > xSpriv.read_pre_cycles)
-		xSdelay(clkdrift - xSpriv.read_pre_cycles);
+	if (clkdrift > xSpriv->read_pre_cycles)
+		xSdelay(clkdrift - xSpriv->read_pre_cycles);
 
-	clkdrift -= xSpriv.read_pre_cycles;	// read request is going to consume read_pre_cycles clock ticks
+	clkdrift -= xSpriv->read_pre_cycles;	// read request is going to consume read_pre_cycles clock ticks
 
 #ifdef	DEBUG
-	if (clkdrift > xSpriv.mindel_cycles)
+	if (clkdrift > xSpriv->mindel_cycles)
 		xsdbg("Impossible drift adjustment! %" PRIdFAST32 " cycles", clkdrift);
 	else if (clkdrift < 0) {
 		accdrift += clkdrift;
@@ -824,7 +854,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 
 	// if we are still going to be early, delay actual read by up to max_adj ticks
 	if (likely(clkdrift >= 0)) {
-		adj = clkdrift % (xSpriv.max_adj+1);	// see clkdwrite()
+		adj = clkdrift % (xSpriv->max_adj+1);	// see clkdwrite()
 		addr = (unsigned char)(addr | (adj << 5));	// final delay encoded in top 3 bits of address
 #ifdef	DEBUG
 		accdrift += (clkdrift - adj);
@@ -838,7 +868,7 @@ uint8_t exSID_clkdread(uint_fast32_t cycles, uint_least8_t addr)
 #endif
 
 	// after read has completed, at least another read_post_cycles will have been spent
-	clkdrift -= xSpriv.read_post_cycles;
+	clkdrift -= xSpriv->read_post_cycles;
 
 	//xsdbg("delay: %d, clkdrift: %d\n", cycles, clkdrift);
 	return _exSID_read(addr, 1);

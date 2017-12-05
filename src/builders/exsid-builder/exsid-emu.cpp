@@ -70,7 +70,8 @@ exSID::exSID(sidbuilder *builder) :
 exSID::~exSID()
 {
     sid--;
-    exSID_audio_op(XS_AU_MUTE);
+    if (m_status)
+        exSID_audio_op(XS_AU_MUTE);
     exSID_exit();
 }
 
