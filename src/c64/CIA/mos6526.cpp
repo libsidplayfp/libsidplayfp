@@ -148,7 +148,7 @@ MOS6526::MOS6526(EventScheduler &scheduler) :
     timerB(scheduler, *this),
     interruptSource(new InterruptSource6526(scheduler, *this)),
     tod(scheduler, *this, regs),
-    serialPort(interruptSource.get()),
+    serialPort(*this),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick)
 {
     reset();
@@ -329,6 +329,11 @@ void MOS6526::underflowB()
 void MOS6526::todInterrupt()
 {
     interruptSource->trigger(InterruptSource::INTERRUPT_ALARM);
+}
+
+void MOS6526::spInterrupt()
+{
+    interruptSource->trigger(InterruptSource::INTERRUPT_SP);
 }
 
 }

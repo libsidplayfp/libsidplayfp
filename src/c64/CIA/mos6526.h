@@ -174,6 +174,7 @@ class MOS6526
 {
     friend class InterruptSource6526;
     friend class InterruptSource8521;
+    friend class SerialPort;
     friend class TimerA;
     friend class TimerB;
     friend class Tod;
@@ -218,6 +219,11 @@ private:
      * Trigger an interrupt from TOD.
      */
     void todInterrupt();
+
+    /**
+     * Trigger an interrupt from Serial Port.
+     */
+    void spInterrupt();
 
     /**
      * This event exists solely to break the ambiguity of what scheduling on
