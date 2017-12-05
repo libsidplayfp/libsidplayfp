@@ -42,6 +42,7 @@ enum {
 enum {
 	XS_CL_PAL,		///< select PAL clock
 	XS_CL_NTSC,		///< select NTSC clock
+	XS_CL_1MHZ,		///< select 1MHz clock
 };
 
 // public interface

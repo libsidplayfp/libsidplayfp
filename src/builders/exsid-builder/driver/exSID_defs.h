@@ -53,6 +53,7 @@
 /* IO controls 0x3D to 0x7F are only implemented on exSID+ */
 #define XSP_AD_IOCTCP	0x3D	///< Select PAL clock
 #define XSP_AD_IOCTCN	0x3E	///< Select NTSC clock
+#define XSP_AD_IOCTC1	0x3F	///< Select 1MHz clock
 
 #define XSP_AD_IOCTA0	0x5D	///< Audio Mix: 6581 L / 8580 R
 #define XSP_AD_IOCTA1	0x5E	///< Audio Mix: 8580 L / 6581 R

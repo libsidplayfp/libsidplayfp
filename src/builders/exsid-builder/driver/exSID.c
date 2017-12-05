@@ -422,7 +422,7 @@ void exSID_reset(uint_least8_t volume)
 
 /**
  * exSID+ clock selection routine.
- * Selects between PAL and NTSC clocks.
+ * Selects between PAL, NTSC and 1MHz clocks.
  * @note upon clock change the hardware resync itself and resets the SIDs, which
  * takes approximately 50us: this function waits for enough time before resuming
  * execution via a call to usleep();
@@ -443,6 +443,9 @@ int exSID_clockselect(int clock)
 			break;
 		case XS_CL_NTSC:
 			xSoutb(XSP_AD_IOCTCN, 1);
+			break;
+		case XS_CL_1MHZ:
+			xSoutb(XSP_AD_IOCTC1, 1);
 			break;
 		default:
 			return -1;
