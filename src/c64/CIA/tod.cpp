@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -33,6 +33,7 @@ namespace libsidplayfp
 void Tod::reset()
 {
     cycles = 0;
+    todtickcounter = 0;
 
     memset(clock, 0, sizeof(clock));
     clock[HOURS] = 1; // the most common value
@@ -104,7 +105,7 @@ void Tod::write(uint_least8_t reg, uint8_t data)
             // seconds register.
             if (isStopped)
             {
-                cycles = 0;
+                todtickcounter = 0;
                 isStopped = false;
             }
         }
@@ -129,15 +130,31 @@ void Tod::write(uint_least8_t reg, uint8_t data)
 
 void Tod::event()
 {
-    // Reload divider according to 50/60 Hz flag
-    // Only performed on expiry according to Frodo
-    cycles += period * ((cra & 0x80) ? 5 : 6);
+    cycles += period;
 
     // Fixed precision 25.7
     eventScheduler.schedule(*this, cycles >> 7);
     cycles &= 0x7F; // Just keep the decimal part
 
+    bool update = false;
     if (!isStopped)
+    {
+        // count 50/60 hz ticks
+        todtickcounter++;
+        // wild assumption: counter is 3 bits and is not reset elsewhere
+        // FIXME: this doesnt seem to be 100% correct - apparently it is reset
+        //        in some cases
+        todtickcounter &= 7;
+        // if the counter matches the TOD frequency ...
+        if (todtickcounter == ((cra & 0x80) ? 5 : 6))
+        {
+            // reset the counter and update the timer
+            todtickcounter = 0;
+            update = true;
+        }
+    }
+
+    if (update)
     {
         // advance the counters.
         // - individual counters are all 4 bit
