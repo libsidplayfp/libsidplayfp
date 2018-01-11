@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -51,6 +51,8 @@ enum
     CRB     = 15
 };
 
+// Timer A
+
 void TimerA::underFlow()
 {
     parent.underflowA();
@@ -61,16 +63,20 @@ void TimerA::serialPort()
     parent.handleSerialPort();
 }
 
+// Timer B
+
 void TimerB::underFlow()
 {
     parent.underflowB();
 }
 
+// Interrupt Source 8521
+
 void InterruptSource8521::trigger(uint8_t interruptMask)
 {
     InterruptSource::trigger(interruptMask);
 
-    if (interruptMasked() && interruptTriggered())
+    if (interruptMasked() && !interruptTriggered())
     {
         triggerInterrupt();
         parent.interrupt(true);
@@ -87,11 +93,33 @@ uint8_t InterruptSource8521::clear()
     return InterruptSource::clear();
 }
 
+// Interrupt Source 6526
+
 void InterruptSource6526::trigger(uint8_t interruptMask)
 {
+    // timer b bug
+    if (interruptMask == InterruptSource::INTERRUPT_UNDERFLOW_B)
+    {
+        tbBug = (eventScheduler.getTime(EVENT_CLOCK_PHI2) == last_clear+1);
+    }
+
     InterruptSource::trigger(interruptMask);
 
-    if (interruptMasked() && interruptTriggered())
+    if (!interruptMasked())
+        return;
+
+    if (eventScheduler.getTime(EVENT_CLOCK_PHI2) == last_clear)
+    {
+        return;
+    }
+
+    if (tbBug)
+    {
+        triggerBug();
+        tbBug = false;
+    }
+
+    if (!interruptTriggered())
     {
         schedule();
     }
@@ -99,13 +127,21 @@ void InterruptSource6526::trigger(uint8_t interruptMask)
 
 uint8_t InterruptSource6526::clear()
 {
+    last_clear = eventScheduler.getTime(EVENT_CLOCK_PHI2);
+
     if (scheduled)
     {
         eventScheduler.cancel(*this);
         scheduled = false;
     }
 
-    if (!interruptTriggered())
+    if (tbBug)
+    {
+        triggerBug();
+        tbBug = false;
+    }
+
+    if (interruptTriggered())
     {
         parent.interrupt(false);
     }
@@ -125,6 +161,7 @@ void InterruptSource6526::reset()
 {
     InterruptSource::reset();
 
+    tbBug = false;
     scheduled = false;
 }
 
@@ -135,7 +172,7 @@ const char *MOS6526::credits()
             "\tCopyright (C) 2001-2004 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"
-            "\tCopyright (C) 2011-2017 Leandro Nini\n";
+            "\tCopyright (C) 2011-2018 Leandro Nini\n";
 }
 
 MOS6526::MOS6526(EventScheduler &scheduler) :

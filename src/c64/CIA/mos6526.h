@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -130,8 +130,14 @@ public:
 class InterruptSource6526 final : public InterruptSource
 {
 private:
+    /// Clock when clear was called last
+    event_clock_t last_clear;
+
     /// Have we already scheduled CIA->CPU interrupt transition?
     bool scheduled;
+
+    /// Timer B bug
+    bool tbBug;
 
 private:
     /**
@@ -149,7 +155,9 @@ private:
 public:
     InterruptSource6526(EventScheduler &scheduler, MOS6526 &parent) :
         InterruptSource(scheduler, parent),
-        scheduled(false)
+        last_clear(0),
+        scheduled(false),
+        tbBug(false)
     {}
 
     void trigger(uint8_t interruptMask) override;
