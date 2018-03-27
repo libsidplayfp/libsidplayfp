@@ -33,6 +33,10 @@
 
 #include "sidcxx11.h"
 
+#ifdef DEBUG
+#  include <iostream>
+#endif
+
 namespace libsidplayfp
 {
 
