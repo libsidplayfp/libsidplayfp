@@ -42,7 +42,7 @@ char xSerrstr[];
 static long accdrift = 0;
 static unsigned long accioops = 0;
 static unsigned long accdelay = 0;
-static unsigned long acccycle = 0;
+static unsigned long acccycle = 0;	// ensures no overflow with exSID+ up to ~1h of continuous playback
 #endif
 
 static int ftdi_status;
@@ -238,8 +238,7 @@ static int _exSID_thread_output(void *arg)
 /**
  * Single byte output routine. ** producer **
  * Fills a static buffer with bytes to send to the device until the buffer is
- * full or a forced write is triggered. Compensates for drift if XS_BDRATE isn't
- * a multiple of of XS_SIDCLK.
+ * full or a forced write is triggered.
  * @note No drift compensation is performed on read operations.
  * @param byte byte to send
  * @param flush force write flush if positive, trigger thread exit if negative
@@ -255,13 +254,6 @@ static void xSoutb(uint8_t byte, int flush)
 
 	backbuf[backbuf_idx++] = (unsigned char)byte;
 
-	/* if XS_BDRATE isn't a multiple of XS_SIDCLK we will drift:
-	 every XS_BDRATE/(remainder of XS_SIDCLK/XS_BDRATE) we lose one SID cycle.
-	 Compensate here */
-#if (XS_SIDCLK % XS_RSBCLK)
-	if (!(backbuf_idx % (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK))))
-		clkdrift--;
-#endif
 	if (likely((backbuf_idx < XS_BUFFSZ) && !flush))
 		return;
 
@@ -383,9 +375,7 @@ int exSID_init(void)
 
 #ifdef	DEBUG
 	exSID_hwversion();
-	xsdbg("XS_BDRATE: %dkpbs, XS_BUFFSZ: %d bytes\n", XS_BDRATE/1000, XS_BUFFSZ);
-	xsdbg("XS_CYCCHR: %d, XS_CYCIO: %d, compensation every %d cycle(s)\n",
-		XS_CYCCHR, XS_CYCIO, (XS_SIDCLK % XS_RSBCLK) ? (XS_RSBCLK/(XS_SIDCLK%XS_RSBCLK)) : 0);
+	xsdbg("XS_BUFFSZ: %d bytes\n", XS_BUFFSZ);
 #endif
 
 	return 0;
@@ -421,7 +411,7 @@ void exSID_exit(void)
 		ftdi = NULL;
 
 #ifdef	DEBUG
-		xsdbg("mean jitter: %.1f cycle(s) over %lu I/O ops\n",
+		xsdbg("mean jitter: %.2f cycle(s) over %lu I/O ops\n",
 			((float)accdrift/accioops), accioops);
 		xsdbg("bandwidth used for I/O ops: %lu%% (approx)\n",
 			100-(accdelay*100/acccycle));
@@ -437,8 +427,8 @@ void exSID_exit(void)
 /**
  * SID reset routine.
  * Performs a hardware reset on the SIDs.
- * @note since the reset procedure in firmware will stall the device for more than
- * XS_CYCCHR, reset forcefully waits for enough time before resuming execution
+ * @note since the reset procedure in firmware will stall the device,
+ * reset forcefully waits for enough time before resuming execution
  * via a call to usleep();
  * @param volume volume to set the SIDs to after reset.
  */
@@ -446,7 +436,7 @@ void exSID_reset(uint_least8_t volume)
 {
 	xsdbg("rvol: %" PRIxLEAST8 "\n", volume);
 
-	xSoutb(XS_AD_IOCTRS, 1);	// this will take more than XS_CYCCHR
+	xSoutb(XS_AD_IOCTRS, 1);	// this will stall
 	usleep(100);	// sleep for 100us
 	_exSID_write(0x18, volume, 1);	// this only needs 2 bytes which matches the input buffer of the PIC so all is well
 
