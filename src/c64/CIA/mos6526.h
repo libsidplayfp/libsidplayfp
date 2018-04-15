@@ -267,7 +267,7 @@ protected:
      * @param context the event context
      */
     MOS6526(EventScheduler &scheduler);
-    ~MOS6526() {}
+    ~MOS6526();
 
     /**
      * Signal interrupt.
