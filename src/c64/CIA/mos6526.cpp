@@ -191,8 +191,6 @@ MOS6526::MOS6526(EventScheduler &scheduler) :
     reset();
 }
 
-MOS6526::~MOS6526() {}
-
 void MOS6526::handleSerialPort()
 {
     if (regs[CRA] & 0x40)

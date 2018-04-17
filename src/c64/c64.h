@@ -201,7 +201,6 @@ private:
 
 public:
     c64();
-    ~c64() {}
 
 #ifdef PC64_TESTSUITE
     void setTestEnv(testEnv *env)
