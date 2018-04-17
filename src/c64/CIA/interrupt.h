@@ -91,6 +91,8 @@ protected:
     {}
 
 public:
+    virtual ~InterruptSource() {}
+
     /**
      * Trigger an interrupt.
      * 
