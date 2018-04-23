@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -237,11 +237,6 @@ void EnvelopeGenerator::clock()
             if (state == ATTACK)
             {
                 envelope_counter++;
-                if (unlikely(envelope_counter == 0xff))
-                {
-                    next_state = DECAY_SUSTAIN;
-                    state_pipeline = 3;
-                }
             }
             else if ((state == DECAY_SUSTAIN) || (state == RELEASE))
             {
@@ -384,6 +379,49 @@ void EnvelopeGenerator::state_change()
     }
 
     state_pipeline--;
+}
+
+RESID_INLINE
+void EnvelopeGenerator::set_exponential_counter()
+{
+    // Check for change of exponential counter period.
+    //
+    // For a detailed description see:
+    // http://ploguechipsounds.blogspot.it/2010/03/sid-6581r3-adsr-tables-up-close.html
+    switch (envelope_counter)
+    {
+    case 0xff:
+        new_exponential_counter_period = 1;
+        next_state = DECAY_SUSTAIN;
+        state_pipeline = 3;
+        break;
+
+    case 0x5d:
+        new_exponential_counter_period = 2;
+        break;
+
+    case 0x36:
+        new_exponential_counter_period = 4;
+        break;
+
+    case 0x1a:
+        new_exponential_counter_period = 8;
+        break;
+
+    case 0x0e:
+        new_exponential_counter_period = 16;
+        break;
+
+    case 0x06:
+        new_exponential_counter_period = 30;
+        break;
+
+    case 0x00:
+        new_exponential_counter_period = 1;
+        next_state = FREEZED;
+        state_pipeline = 2;
+        break;
+    }
 }
 
 } // namespace reSIDfp
