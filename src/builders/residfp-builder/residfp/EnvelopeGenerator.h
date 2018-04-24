@@ -360,12 +360,12 @@ void EnvelopeGenerator::state_change()
             state = ATTACK;
             // The decay rate is "accidentally" enabled during first cycle of attack phase
             rate = adsrtable[decay];
-            counter_enabled = true;
         }
         else if (state_pipeline == 1)
         {
             // The attack rate is correctly enabled during second cycle of attack phase
             rate = adsrtable[attack];
+            counter_enabled = true;
         }
         break;
     case DECAY_SUSTAIN:
