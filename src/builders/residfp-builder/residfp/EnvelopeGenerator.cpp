@@ -112,7 +112,7 @@ void EnvelopeGenerator::writeCONTROL_REG(unsigned char control)
         // Gate bit on:  Start attack, decay, sustain.
         // Gate bit off: Start release.
         next_state = gate_next ? ATTACK : RELEASE;
-        state_pipeline = 3;
+        state_pipeline = 2;
     }
 }
 

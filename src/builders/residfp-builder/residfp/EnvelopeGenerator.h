@@ -355,13 +355,13 @@ void EnvelopeGenerator::state_change()
     switch (next_state)
     {
     case ATTACK:
-        if (state_pipeline == 2)
+        if (state_pipeline == 1)
         {
             state = ATTACK;
             // The decay rate is "accidentally" enabled during first cycle of attack phase
             rate = adsrtable[decay];
         }
-        else if (state_pipeline == 1)
+        else if (state_pipeline == 0)
         {
             // The attack rate is correctly enabled during second cycle of attack phase
             rate = adsrtable[attack];
@@ -369,15 +369,15 @@ void EnvelopeGenerator::state_change()
         }
         break;
     case DECAY_SUSTAIN:
-        if (state_pipeline == 2)
+        if (state_pipeline == 0)
         {
             state = DECAY_SUSTAIN;
             rate = adsrtable[decay];
         }
         break;
     case RELEASE:
-        if (((state == ATTACK) && (state_pipeline == 1))
-            || ((state == DECAY_SUSTAIN) && (state_pipeline == 2)))
+        if (((state == ATTACK) && (state_pipeline == 0))
+            || ((state == DECAY_SUSTAIN) && (state_pipeline == 1)))
         {
             state = RELEASE;
             rate = adsrtable[release];
@@ -405,7 +405,7 @@ void EnvelopeGenerator::set_exponential_counter()
     case 0xff:
         new_exponential_counter_period = 1;
         next_state = DECAY_SUSTAIN;
-        state_pipeline = 3;
+        state_pipeline = 2;
         break;
 
     case 0x5d:
