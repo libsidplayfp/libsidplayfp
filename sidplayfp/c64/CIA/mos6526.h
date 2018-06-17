@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -150,6 +150,7 @@ protected:
     //@{
     EventCallback<MOS6526> bTickEvent;
     EventCallback<MOS6526> triggerEvent;
+    EventCallback<MOS6526> spEvent;
     //@}
 
 protected:
@@ -236,6 +237,11 @@ protected:
 
 private:
     void todInterrupt();
+
+    /**
+     * Serial Port interrupt.
+     */
+    void spInterrupt();
 
 public:
     /**

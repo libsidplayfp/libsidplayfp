@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -54,6 +54,8 @@ private:
     event_clock_t cycles;
     event_clock_t period;
 
+    unsigned int todtickcounter;
+
     uint8_t clock[4];
     uint8_t latch[4];
     uint8_t alarm[4];
@@ -75,6 +77,7 @@ public:
         event_context(*context),
         parent(parent),
         period(~0), // Dummy
+        todtickcounter(0),
         cra(regs[0x0e]),
         crb(regs[0x0f]) {}
 

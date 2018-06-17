@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2009-2014 VICE Project
  * Copyright 2000 Simon White
@@ -94,7 +94,8 @@ MOS6526::MOS6526(EventContext *context) :
     event_context(*context),
     tod(context, this, regs),
     bTickEvent("CIA B counts A", *this, &MOS6526::bTick),
-    triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger)
+    triggerEvent("Trigger Interrupt", *this, &MOS6526::trigger),
+    spEvent("Serial Port interrupt", *this, &MOS6526::spInterrupt)
 {
     reset();
 }
@@ -107,14 +108,14 @@ void MOS6526::serialPort()
         {
             if (--sdr_count == 0)
             {
-                trigger(INTERRUPT_SP);
+                event_context.schedule(spEvent, 1, EVENT_CLOCK_PHI1);
             }
         }
         if (sdr_count == 0 && sdr_buffered)
         {
             sdr_out = regs[SDR];
             sdr_buffered = false;
-            sdr_count = 16;
+            sdr_count = 14;
             // Output rate 8 bits at ta / 2
         }
     }
@@ -334,4 +335,9 @@ void MOS6526::underflowB()
 void MOS6526::todInterrupt()
 {
     trigger(INTERRUPT_ALARM);
+}
+
+void MOS6526::spInterrupt()
+{
+    trigger(INTERRUPT_SP);
 }
