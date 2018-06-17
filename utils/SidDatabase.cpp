@@ -33,7 +33,7 @@ const char ERR_DATABASE_CORRUPT[]        = "SID DATABASE ERROR: Database seems t
 const char ERR_NO_DATABASE_LOADED[]      = "SID DATABASE ERROR: Songlength database not loaded.";
 const char ERR_NO_SELECTED_SONG[]        = "SID DATABASE ERROR: No song selected for retrieving song length.";
 const char ERR_MEM_ALLOC[]               = "SID DATABASE ERROR: Memory Allocation Failure.";
-const char ERR_UNABLE_TO_LOAD_DATABASE[] = "SID DATABASE ERROR: Unable to load the songlegnth database.";
+const char ERR_UNABLE_TO_LOAD_DATABASE[] = "SID DATABASE ERROR: Unable to load the songlength database.";
 
 SidDatabase::SidDatabase() :
     m_parser(0),
