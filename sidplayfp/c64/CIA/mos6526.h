@@ -109,6 +109,12 @@ class MOS6526: public component
 private:
     static const char *credit;
 
+    /// Clock when clear was called last
+    event_clock_t last_clear;
+
+    /// Timer B bug
+    bool tbBug;
+
 protected:
     /// These are all CIA registers.
     uint8_t regs[0x10];
@@ -242,6 +248,8 @@ private:
      * Serial Port interrupt.
      */
     void spInterrupt();
+
+    void triggerBug();
 
 public:
     /**

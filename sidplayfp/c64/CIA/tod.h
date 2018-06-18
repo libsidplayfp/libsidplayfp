@@ -69,6 +69,8 @@ private:
 private:
     inline void checkAlarm();
 
+    inline void updateCounters();
+
     void event();
 
 public:

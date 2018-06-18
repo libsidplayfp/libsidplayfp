@@ -29,13 +29,13 @@
 
 enum
 {
-    INTERRUPT_NONE         = 0,
-    INTERRUPT_UNDERFLOW_A  = 1 << 0,
-    INTERRUPT_UNDERFLOW_B  = 1 << 1,
-    INTERRUPT_ALARM        = 1 << 2,
-    INTERRUPT_SP           = 1 << 3,
-    INTERRUPT_FLAG         = 1 << 4,
-    INTERRUPT_REQUEST      = 1 << 7
+        INTERRUPT_NONE         = 0,      ///< no interrupt
+        INTERRUPT_UNDERFLOW_A  = 1 << 0, ///< underflow Timer A
+        INTERRUPT_UNDERFLOW_B  = 1 << 1, ///< underflow Timer B
+        INTERRUPT_ALARM        = 1 << 2, ///< alarm clock
+        INTERRUPT_SP           = 1 << 3, ///< serial port
+        INTERRUPT_FLAG         = 1 << 4, ///< external flag
+        INTERRUPT_REQUEST      = 1 << 7  ///< control bit
 };
 
 enum
@@ -80,10 +80,12 @@ const char *MOS6526::credit =
     "\tCopyright (C) 2001-2004 Simon White\n"
     "\tCopyright (C) 2009-2014 VICE Project\n"
     "\tCopyright (C) 2009-2010 Antti S. Lankila\n"
-    "\tCopyright (C) 2011-2014 Leandro Nini\n"
+    "\tCopyright (C) 2011-2018 Leandro Nini\n"
 };
 
 MOS6526::MOS6526(EventContext *context) :
+    last_clear(0),
+    tbBug(false),
     pra(regs[PRA]),
     prb(regs[PRB]),
     ddra(regs[DDRA]),
@@ -146,6 +148,7 @@ void MOS6526::reset()
     // Reset tod
     tod.reset();
 
+    tbBug = false;
     triggerScheduled = false;
 
     event_context.cancel(bTickEvent);
@@ -195,11 +198,20 @@ uint8_t MOS6526::read(uint_least8_t addr)
     case TOD_HR:
         return tod.read(addr - TOD_TEN);
     case IDR:{
+        last_clear = event_context.getTime(EVENT_CLOCK_PHI2);
+
         if (triggerScheduled)
         {
             event_context.cancel(triggerEvent);
             triggerScheduled = false;
         }
+
+        if (tbBug)
+        {
+            triggerBug();
+            tbBug = false;
+        }
+
         // Clear IRQs, and return interrupt
         // data register
         const uint8_t ret = idr;
@@ -298,8 +310,29 @@ void MOS6526::trigger()
 
 void MOS6526::trigger(uint8_t interruptMask)
 {
+    // timer b bug
+    if (interruptMask == INTERRUPT_UNDERFLOW_B)
+    {
+        tbBug = (event_context.getTime(EVENT_CLOCK_PHI2) == last_clear+1);
+    }
+
     idr |= interruptMask;
-    if ((icr & idr) && !(idr & INTERRUPT_REQUEST))
+
+    if (!(icr & idr))
+        return;
+
+    if (event_context.getTime(EVENT_CLOCK_PHI2) == last_clear)
+    {
+        return;
+    }
+
+    if (tbBug)
+    {
+        triggerBug();
+        tbBug = false;
+    }
+
+    if (!(idr & INTERRUPT_REQUEST))
     {
         if (!triggerScheduled)
         {
@@ -340,4 +373,9 @@ void MOS6526::todInterrupt()
 void MOS6526::spInterrupt()
 {
     trigger(INTERRUPT_SP);
+}
+
+void MOS6526::triggerBug()
+{
+    idr &= ~INTERRUPT_UNDERFLOW_B;
 }
