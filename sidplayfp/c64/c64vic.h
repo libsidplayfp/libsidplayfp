@@ -71,7 +71,7 @@ public:
         if (address == 0xD020)
         {
             //std::cout << (int)(value && 0x0f) << std::endl;
-            const char* msg = nullptr;
+            const char* msg = 0;
             if (value == 5 || value == 13) msg = "OK";      // Green
             else if (value == 2 || value == 10) msg = "KO"; // Red
             if (msg)
