@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -75,10 +75,11 @@ public:
         //}
         if (address == 0xD020)
         {
-            //std::cout << (int)(value && 0x0f) << std::endl;
+            const uint8_t color = value & 0xf;
+            //std::cout << (int)color << std::endl;color
             const char* msg = nullptr;
-            if (value == 5 || value == 13) msg = "OK";      // Green
-            else if (value == 2 || value == 10) msg = "KO"; // Red
+            if (color == 5 || color == 13) msg = "OK";      // Green
+            else if (color == 2 || color == 10) msg = "KO"; // Red
             if (msg)
             {
                 std::cout << std::endl << msg << std::endl;
