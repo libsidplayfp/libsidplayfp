@@ -386,7 +386,6 @@ void EnvelopeGenerator::state_change()
     case FREEZED:
         if (state_pipeline == 0)
         {
-            state = FREEZED;
             counter_enabled = false;
         }
         break;
