@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004, 2010 Dag Lem <resid@nimrod.no>
  *
@@ -123,13 +123,9 @@ namespace reSIDfp
 RESID_INLINE
 int Integrator8580::solve(int vi) const
 {
-    // Check that transistor is actually in triode mode
-    // VDS < VGS - Vth
-    assert(vi < kVgt);
-
-    // DAC voltages for triode mode calculation.
+    // DAC voltages
     const unsigned int Vgst = kVgt - vx;
-    const unsigned int Vgdt = kVgt - vi;
+    const unsigned int Vgdt = (vi < kVgt) ? kVgt - vi : 0;  // triode/saturation mode
 
     const unsigned int Vgst_2 = Vgst * Vgst;
     const unsigned int Vgdt_2 = Vgdt * Vgdt;
