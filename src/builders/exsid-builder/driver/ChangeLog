@@ -1,4 +1,4 @@
-X.X
+1.6
 	* Initial support for exSID+
 	* Rename some functions
 	* Rework delay routines
