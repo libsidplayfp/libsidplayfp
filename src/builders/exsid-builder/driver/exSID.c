@@ -2,14 +2,14 @@
 //  exSID.c
 //	A simple I/O library for exSID/exSID+ USB
 //
-//  (C) 2015-2017 Thibaut VARENE
+//  (C) 2015-2018 Thibaut VARENE
 //  License: GPLv2 - http://www.gnu.org/licenses/gpl-2.0.html
 
 /**
  * @file
  * exSID/exSID+ USB I/O library
  * @author Thibaut VARENE
- * @date 2015-2017
+ * @date 2015-2018
  * @version 2.0
  *
  * This driver will control the first exSID device available.
