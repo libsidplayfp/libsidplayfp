@@ -2,6 +2,7 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2018 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -48,7 +49,7 @@ private:
      */
     enum State
     {
-        ATTACK, DECAY_SUSTAIN, RELEASE, FREEZED
+        ATTACK, DECAY_SUSTAIN, RELEASE
     };
 
 private:
@@ -69,7 +70,6 @@ private:
      * decrement.
      */
     unsigned int exponential_counter_period;
-    unsigned int new_exponential_counter_period;
 
     unsigned int state_pipeline;
 
@@ -154,7 +154,6 @@ public:
         rate(0),
         exponential_counter(0),
         exponential_counter_period(1),
-        new_exponential_counter_period(0),
         state_pipeline(0),
         envelope_pipeline(0),
         exponential_pipeline(0),
@@ -168,7 +167,8 @@ public:
         decay(0),
         sustain(0),
         release(0),
-        env3(0) {}
+        env3(0)
+    {}
 
     /**
      * SID reset.
@@ -219,12 +219,6 @@ void EnvelopeGenerator::clock()
 {
     env3 = envelope_counter;
 
-    if (unlikely(new_exponential_counter_period > 0))
-    {
-        exponential_counter_period = new_exponential_counter_period;
-        new_exponential_counter_period = 0;
-    }
-
     if (unlikely(state_pipeline))
     {
         state_change();
@@ -246,12 +240,11 @@ void EnvelopeGenerator::clock()
             set_exponential_counter();
         }
     }
-
-    if (unlikely(exponential_pipeline != 0) && (--exponential_pipeline == 0))
+    else if (unlikely(exponential_pipeline != 0) && (--exponential_pipeline == 0))
     {
         exponential_counter = 0;
 
-       if (((state == DECAY_SUSTAIN) && (envelope_counter != sustain))
+        if (((state == DECAY_SUSTAIN) && (envelope_counter != sustain))
            || (state == RELEASE))
         {
             // The envelope counter can flip from 0x00 to 0xff by changing state to
@@ -282,7 +275,7 @@ void EnvelopeGenerator::clock()
         }
         else
         {
-            if (++exponential_counter == exponential_counter_period)
+            if (counter_enabled && (++exponential_counter == exponential_counter_period))
                 exponential_pipeline = exponential_counter_period != 1 ? 2 : 1;
         }
     }
@@ -355,38 +348,22 @@ void EnvelopeGenerator::state_change()
     switch (next_state)
     {
     case ATTACK:
-        if (state_pipeline == 1)
+        if (state_pipeline == 0)
         {
             state = ATTACK;
-            // The decay rate is "accidentally" enabled during first cycle of attack phase
-            rate = adsrtable[decay];
-        }
-        else if (state_pipeline == 0)
-        {
-            // The attack rate is correctly enabled during second cycle of attack phase
+            // The attack rate register is correctly enabled during second cycle of attack phase
             rate = adsrtable[attack];
             counter_enabled = true;
         }
         break;
     case DECAY_SUSTAIN:
-        if (state_pipeline == 0)
-        {
-            state = DECAY_SUSTAIN;
-            rate = adsrtable[decay];
-        }
         break;
     case RELEASE:
         if (((state == ATTACK) && (state_pipeline == 0))
-            || ((state == DECAY_SUSTAIN) && (state_pipeline == 1)))
+          || ((state == DECAY_SUSTAIN) && (state_pipeline == 1)))
         {
             state = RELEASE;
             rate = adsrtable[release];
-        }
-        break;
-    case FREEZED:
-        if (state_pipeline == 0)
-        {
-            counter_enabled = false;
         }
         break;
     }
@@ -402,35 +379,34 @@ void EnvelopeGenerator::set_exponential_counter()
     switch (envelope_counter)
     {
     case 0xff:
-        new_exponential_counter_period = 1;
-        next_state = DECAY_SUSTAIN;
-        state_pipeline = 2;
+        exponential_counter_period = 1;
+        state = DECAY_SUSTAIN;
+        rate = adsrtable[decay];
         break;
 
     case 0x5d:
-        new_exponential_counter_period = 2;
+        exponential_counter_period = 2;
         break;
 
     case 0x36:
-        new_exponential_counter_period = 4;
+        exponential_counter_period = 4;
         break;
 
     case 0x1a:
-        new_exponential_counter_period = 8;
+        exponential_counter_period = 8;
         break;
 
     case 0x0e:
-        new_exponential_counter_period = 16;
+        exponential_counter_period = 16;
         break;
 
     case 0x06:
-        new_exponential_counter_period = 30;
+        exponential_counter_period = 30;
         break;
 
     case 0x00:
-        new_exponential_counter_period = 1;
-        next_state = FREEZED;
-        state_pipeline = 2;
+        exponential_counter_period = 1;
+        counter_enabled = false;
         break;
     }
 }
