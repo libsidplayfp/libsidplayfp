@@ -57,8 +57,6 @@ const int DAC_BITS = 12;
 
 void WaveformGenerator::clock_shift_register(unsigned int bit0)
 {
-    write_shift_register();
-
     shift_register = (shift_register >> 1) | bit0;
 
     // New noise waveform output.
