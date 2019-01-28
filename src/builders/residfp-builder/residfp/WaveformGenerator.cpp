@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -50,8 +50,8 @@ const int FLOATING_OUTPUT_TTL = 0xF4240;
  * from chip to chip so the numbers here represents
  * only the big difference between the old and new models.
  */
-int constexpr SHIFT_REGISTER_RESET_6581 = 200000;  // ~200ms
-int constexpr SHIFT_REGISTER_RESET_8580 = 5000000; // ~5s
+const int SHIFT_REGISTER_RESET_6581 = 200000;  // ~200ms
+const int SHIFT_REGISTER_RESET_8580 = 5000000; // ~5s
 
 const int DAC_BITS = 12;
 
