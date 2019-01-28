@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -61,7 +61,18 @@ const char *parseTime(const char *str, long &result)
 
     end++;
     const long seconds = strtol(end, &end, 10);
-    result = (minutes * 60) + seconds;
+    result = ((minutes * 60) + seconds) * 1000;
+
+    if (*end == '.')
+    {
+        end++;
+        long milliseconds = strtol(end, &end, 10);
+        if (milliseconds<10)
+            milliseconds *= 100;
+        else if (milliseconds<100)
+            milliseconds *= 10;
+        result += milliseconds;
+    }
 
     while (!isspace(*end))
     {
@@ -147,5 +158,5 @@ int_least32_t SidDatabase::length(const char *md5, unsigned int song)
         }
     }
 
-    return time;
+    return time / 1000;
 }
