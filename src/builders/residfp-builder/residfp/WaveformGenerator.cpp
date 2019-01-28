@@ -40,7 +40,8 @@ namespace reSIDfp
  * and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid;
  * see [VICE Bug #290](http://sourceforge.net/p/vice-emu/bugs/290/)
  */
-const int FLOATING_OUTPUT_TTL = 0xF4240;
+const int FLOATING_OUTPUT_TTL_6581 = 200000;  // ~200ms
+const int FLOATING_OUTPUT_TTL_8580 = 5000000; // ~5s;
 
 /**
  * Number of cycles after which the shift register is reset
@@ -222,7 +223,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         {
             // Change to floating DAC input.
             // Reset fading time for floating DAC input.
-            floating_output_ttl = FLOATING_OUTPUT_TTL;
+            floating_output_ttl = is6581 ? FLOATING_OUTPUT_TTL_6581 : FLOATING_OUTPUT_TTL_8580;
         }
     }
 
