@@ -54,7 +54,9 @@ namespace MOS6510Debug
  * This will slow down the emulation a bit with no real benefit
  * for SID playing so we keep it disabled.
  */
-//#define CORRECT_SH_INSTRUCTIONS
+#ifdef PC64_TESTSUITE
+#  define CORRECT_SH_INSTRUCTIONS
+#endif
 
 
 /**

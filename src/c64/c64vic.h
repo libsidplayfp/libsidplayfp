@@ -33,7 +33,7 @@
 
 #include "sidcxx11.h"
 
-#ifdef DEBUG
+#if defined(DEBUG) && !defined (PC64_TESTSUITE)
 #  include <iostream>
 #endif
 
@@ -68,7 +68,7 @@ public:
 
     void poke(uint_least16_t address, uint8_t value) override
     {
-#ifdef DEBUG
+#if defined(DEBUG) && !defined (PC64_TESTSUITE)
         //if (address == 0xD01A)
         //{
         //    std::cout << std::hex << (int)address << ": " << (int)value << std::endl;
