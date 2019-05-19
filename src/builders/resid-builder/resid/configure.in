@@ -19,6 +19,8 @@ dnl AC_SUBST([LTVERSION], [6:0:0])
 dnl Use C++ for tests.
 AC_LANG([C++])
 
+AC_CANONICAL_HOST
+
 dnl Enable inlining.
 AC_ARG_ENABLE([inline],
   [AC_HELP_STRING([--enable-inline],
@@ -49,6 +51,21 @@ AC_ARG_ENABLE([branch-hints],
 AS_IF([test "$enable_branch_hints" != no],
   [AC_SUBST([RESID_BRANCH_HINTS], [1])],
   [AC_SUBST([RESID_BRANCH_HINTS], [0])])
+
+dnl Enable experimental 8580 filters.
+AC_ARG_ENABLE([new8580filter],
+  [AS_HELP_STRING([--enable-new8580filter],
+    [enable new 8580 filter implementation [default=no]]
+  )],
+  [],
+  [enable_new8580filter=no]
+)
+AM_CONDITIONAL([NEW_8580_FILTER], [test x$enable_new8580filter != xno])
+AS_IF([test "x$enable_new8580filter" = "xno"],
+  [NEW_8580_FILTER=0],
+  [NEW_8580_FILTER=1]
+)
+AC_SUBST([NEW_8580_FILTER])
 
 dnl Store CXXFLAGS status.
 resid_test_CXXFLAGS=${CXXFLAGS+set}
@@ -98,6 +115,14 @@ AS_IF([test "$GXX" = yes -a "$resid_test_CXXFLAGS" != set],
                                         [AC_MSG_RESULT(yes)],
                                         [AC_MSG_RESULT(no)
                                          CXXFLAGS=$resid_save_CXXFLAGS])])])
+
+case $host_os in
+darwin*)
+  CXXFLAGS="$CXXFLAGS -mmacosx-version-min=10.9"
+  ;;
+*)
+  ;;
+esac
 
 AC_CHECK_PROG([AR], [ar], [ar], [ar])
 AC_PROG_RANLIB
