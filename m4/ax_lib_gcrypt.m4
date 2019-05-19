@@ -1,5 +1,5 @@
 # ===========================================================================
-#       http://www.gnu.org/software/autoconf-archive/ax_lib_gcrypt.html
+#      https://www.gnu.org/software/autoconf-archive/ax_lib_gcrypt.html
 # ===========================================================================
 #
 # SYNOPSIS
@@ -31,7 +31,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 9
+#serial 12
 
 # AX_CHECK_GCRYPT_ALGO([algo])
 # generate convenient defines for each algorithm
@@ -65,41 +65,41 @@ AC_DEFUN([AX_LIB_GCRYPT],[
       gcrypt_algos=`$LIBGCRYPT_CONFIG --algorithms`
       # ciphers
       # this does not work with a "for" loop: nothing generated in config.h:-(
-#      AX_CHECK_GCRYPT_ALGO([AES])
-#      AX_CHECK_GCRYPT_ALGO([ARCFOUR])
-#      AX_CHECK_GCRYPT_ALGO([BLOWFISH])
-#      AX_CHECK_GCRYPT_ALGO([CAST5])
-#      AX_CHECK_GCRYPT_ALGO([DES])
-#      AX_CHECK_GCRYPT_ALGO([IDEA])
-#      AX_CHECK_GCRYPT_ALGO([RFC2268])
-#      AX_CHECK_GCRYPT_ALGO([SERPENT])
-#      AX_CHECK_GCRYPT_ALGO([TWOFISH])
+      AX_CHECK_GCRYPT_ALGO([AES])
+      AX_CHECK_GCRYPT_ALGO([ARCFOUR])
+      AX_CHECK_GCRYPT_ALGO([BLOWFISH])
+      AX_CHECK_GCRYPT_ALGO([CAST5])
+      AX_CHECK_GCRYPT_ALGO([DES])
+      AX_CHECK_GCRYPT_ALGO([IDEA])
+      AX_CHECK_GCRYPT_ALGO([RFC2268])
+      AX_CHECK_GCRYPT_ALGO([SERPENT])
+      AX_CHECK_GCRYPT_ALGO([TWOFISH])
       # digests
-#      AX_CHECK_GCRYPT_ALGO([CRC])
-#      AX_CHECK_GCRYPT_ALGO([HAVAL])
-#      AX_CHECK_GCRYPT_ALGO([MD2])
-#      AX_CHECK_GCRYPT_ALGO([MD4])
+      AX_CHECK_GCRYPT_ALGO([CRC])
+      AX_CHECK_GCRYPT_ALGO([HAVAL])
+      AX_CHECK_GCRYPT_ALGO([MD2])
+      AX_CHECK_GCRYPT_ALGO([MD4])
       AX_CHECK_GCRYPT_ALGO([MD5])
-#      AX_CHECK_GCRYPT_ALGO([RMD160])
-#      AX_CHECK_GCRYPT_ALGO([SHA0])
-#      AX_CHECK_GCRYPT_ALGO([SHA1])
-#      AX_CHECK_GCRYPT_ALGO([SHA224])
-#      AX_CHECK_GCRYPT_ALGO([SHA256])
-#      AX_CHECK_GCRYPT_ALGO([SHA384])
-#      AX_CHECK_GCRYPT_ALGO([SHA512])
-#      AX_CHECK_GCRYPT_ALGO([TIGER])
-#      AX_CHECK_GCRYPT_ALGO([WHIRLPOOL])
+      AX_CHECK_GCRYPT_ALGO([RMD160])
+      AX_CHECK_GCRYPT_ALGO([SHA0])
+      AX_CHECK_GCRYPT_ALGO([SHA1])
+      AX_CHECK_GCRYPT_ALGO([SHA224])
+      AX_CHECK_GCRYPT_ALGO([SHA256])
+      AX_CHECK_GCRYPT_ALGO([SHA384])
+      AX_CHECK_GCRYPT_ALGO([SHA512])
+      AX_CHECK_GCRYPT_ALGO([TIGER])
+      AX_CHECK_GCRYPT_ALGO([WHIRLPOOL])
       # others
-#      AX_CHECK_GCRYPT_ALGO([DSA])
-#      AX_CHECK_GCRYPT_ALGO([ELGAMAL])
-#      AX_CHECK_GCRYPT_ALGO([RSA])
+      AX_CHECK_GCRYPT_ALGO([DSA])
+      AX_CHECK_GCRYPT_ALGO([ELGAMAL])
+      AX_CHECK_GCRYPT_ALGO([RSA])
       # conclusion
       GCRYPT_CFLAGS=`$LIBGCRYPT_CONFIG --cflags`
       GCRYPT_LIBS=`$LIBGCRYPT_CONFIG --libs`
       AC_SUBST(GCRYPT_CFLAGS)
       AC_SUBST(GCRYPT_LIBS)
     ],[
-      # complain only if explicitely required
+      # complain only if explicitly required
       if test "$ac_with_gcrypt" = "yes" ; then
 	AC_MSG_ERROR([cannot configure required gcrypt library])
       fi
