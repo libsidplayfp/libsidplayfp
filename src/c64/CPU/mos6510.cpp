@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -678,12 +678,6 @@ void MOS6510::cli_instr()
 
 void MOS6510::jmp_instr()
 {
-    doJSR();
-    interruptsAndNextOpcode();
-}
-
-void MOS6510::doJSR()
-{
     Register_ProgramCounter = Cycle_EffectiveAddress;
 
 #ifdef PC64_TESTSUITE
@@ -721,6 +715,8 @@ void MOS6510::doJSR()
         exit(0);
     }
 #endif // PC64_TESTSUITE
+
+    interruptsAndNextOpcode();
 }
 
 void MOS6510::pha_instr()
@@ -2242,7 +2238,7 @@ const char *MOS6510::credits()
         "MOS6510 Cycle Exact Emulation\n"
         "\t(C) 2000 Simon A. White\n"
         "\t(C) 2008-2010 Antti S. Lankila\n"
-        "\t(C) 2011-2017 Leandro Nini\n";
+        "\t(C) 2011-2019 Leandro Nini\n";
 }
 
 void MOS6510::debug(bool enable, FILE *out)
