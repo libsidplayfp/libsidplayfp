@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -85,7 +85,7 @@ void InterruptSource8521::trigger(uint8_t interruptMask)
 
 uint8_t InterruptSource8521::clear()
 {
-    if (!interruptTriggered())
+    if (interruptTriggered())
     {
         parent.interrupt(false);
     }
