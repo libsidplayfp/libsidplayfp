@@ -123,13 +123,13 @@ FilterModelConfig8580* FilterModelConfig8580::getInstance()
 
 FilterModelConfig8580::FilterModelConfig8580() :
     voice_voltage_range(0.4), // FIXME measure
-    voice_DC_voltage(4.76),
+    voice_DC_voltage(4.80), // FIXME was 4.76
     C(22e-9),
     Vdd(9.09),
     Vth(0.80),
     Ut(26.0e-3),
     k(1.0),
-    uCox(40e-6), // FIXME measure
+    uCox(55e-6), // FIXME measure
     kVddt(k * (Vdd - Vth)),
     vmin(opamp_voltage[0].x),
     vmax(kVddt < opamp_voltage[0].y ? opamp_voltage[0].y : kVddt),
