@@ -49,7 +49,17 @@ SidDatabase::~SidDatabase()
     // Needed to delete auto_ptr with complete type
 }
 
-const char *parseTime(const char *str, long &result)
+// mm:ss[.SSS]
+//
+// Examples of song length values:
+//
+// 1:02
+//
+// 1:02.5
+//
+// 1:02.500
+//
+const char *parseTime(const char *str, int_least32_t &result)
 {
     char *end;
     const long minutes = strtol(str, &end, 10);
@@ -71,6 +81,8 @@ const char *parseTime(const char *str, long &result)
             milliseconds *= 100;
         else if (milliseconds<100)
             milliseconds *= 10;
+        else if (milliseconds>=1000)
+            throw parseError();
         result += milliseconds;
     }
 
@@ -104,6 +116,11 @@ void SidDatabase::close()
 
 int_least32_t SidDatabase::length(SidTune &tune)
 {
+    return lengthMs(tune) / 1000;
+}
+
+int_least32_t SidDatabase::lengthMs(SidTune &tune)
+{
     const unsigned int song = tune.getInfo()->currentSong();
 
     if (!song)
@@ -114,10 +131,15 @@ int_least32_t SidDatabase::length(SidTune &tune)
 
     char md5[SidTune::MD5_LENGTH + 1];
     tune.createMD5(md5);
-    return length(md5, song);
+    return lengthMs(md5, song);
 }
 
 int_least32_t SidDatabase::length(const char *md5, unsigned int song)
+{
+    return lengthMs(md5, song) / 1000;
+}
+
+int_least32_t SidDatabase::lengthMs(const char *md5, unsigned int song)
 {
     if (m_parser.get() == nullptr)
     {
@@ -142,7 +164,7 @@ int_least32_t SidDatabase::length(const char *md5, unsigned int song)
     }
 
     const char *str = timeStamp;
-    long  time = 0;
+    int_least32_t time = 0;
 
     for (unsigned int i = 0; i < song; i++)
     {
@@ -158,5 +180,5 @@ int_least32_t SidDatabase::length(const char *md5, unsigned int song)
         }
     }
 
-    return time / 1000;
+    return time;
 }

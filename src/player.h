@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -157,6 +157,8 @@ public:
     void stop();
 
     uint_least32_t time() const { return m_c64.getTime(); }
+
+    uint_least32_t timeMs() const { return m_c64.getTimeMs(); }
 
     void debug(const bool enable, FILE *out) { m_c64.debug(enable, out); }
 
