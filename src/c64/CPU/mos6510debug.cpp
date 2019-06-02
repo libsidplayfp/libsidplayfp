@@ -49,7 +49,7 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
     fprintf(cpu.m_fdbg, cpu.flags.getN() ? "1" : "0");
     fprintf(cpu.m_fdbg, cpu.flags.getV()  ? "1" : "0");
     fprintf(cpu.m_fdbg, "1");
-    fprintf(cpu.m_fdbg, cpu.flags.getB() ? "1" : "0");
+    fprintf(cpu.m_fdbg, cpu.d1x1 ? "0" : "1");
     fprintf(cpu.m_fdbg, cpu.flags.getD() ? "1" : "0");
     fprintf(cpu.m_fdbg, cpu.flags.getI() ? "1" : "0");
     fprintf(cpu.m_fdbg, cpu.flags.getZ() ? "1" : "0");

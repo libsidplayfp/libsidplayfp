@@ -157,7 +157,8 @@ void MOS6510::setRDY(bool newRDY)
 void MOS6510::PushSR()
 {
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    cpuWrite(addr, flags.get());
+    const uint8_t p = flags.get() | (d1x1 ? 0x20 : 0x30);
+    cpuWrite(addr, p);
     Register_StackPointer--;
 }
 
@@ -170,7 +171,7 @@ void MOS6510::PopSR()
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     flags.set(cpuRead(addr));
-    flags.setB(true);
+    d1x1 = false;
 
     calculateInterruptTriggerCycle();
 }
@@ -257,7 +258,7 @@ void MOS6510::interruptsAndNextOpcode()
 #endif
         cpuRead(Register_ProgramCounter);
         cycleCount = BRKn << 3;
-        flags.setB(false);
+        d1x1 = true;
         interruptCycle = MAX;
     }
     else
@@ -348,7 +349,7 @@ void MOS6510::throwAwayRead()
 void MOS6510::FetchDataByte()
 {
     Cycle_Data = cpuRead(Register_ProgramCounter);
-    if (flags.getB())
+    if (!d1x1)
     {
         Register_ProgramCounter++;
     }
@@ -659,7 +660,7 @@ void MOS6510::brkPushLowPC()
 void MOS6510::brk_instr()
 {
     PushSR();
-    flags.setB(true);
+    d1x1 = false;
     flags.setI(true);
 }
 
@@ -737,6 +738,7 @@ void MOS6510::rti_instr()
     if (dodump)
         fprintf (m_fdbg, "****************************************************\n\n");
 #endif
+
     Register_ProgramCounter = Cycle_EffectiveAddress;
     interruptsAndNextOpcode();
 }
@@ -1213,11 +1215,6 @@ void MOS6510::pla_instr()
     Register_StackPointer++;
     const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
     flags.setNZ(Register_Accumulator = cpuRead (addr));
-}
-
-void MOS6510::plp_instr()
-{
-    interruptsAndNextOpcode();
 }
 
 void MOS6510::rol_instr()
@@ -1997,7 +1994,6 @@ void MOS6510::buildInstructionTable()
             // Truly side-effect free.
             instrTable[buildCycle++].func = &MOS6510::WasteCycle;
             instrTable[buildCycle++].func = &MOS6510::PopSR;
-            instrTable[buildCycle++].func = &MOS6510::plp_instr;
             break;
 
         case RLAz: case RLAzx: case RLAix: case RLAa: case RLAax: case RLAay:
@@ -2206,6 +2202,7 @@ void MOS6510::Initialise()
 
     // Signals
     rdy = true;
+    d1x1 = false;
 
     eventScheduler.schedule(m_nosteal, 0, EVENT_CLOCK_PHI2);
 }

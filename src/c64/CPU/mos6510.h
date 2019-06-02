@@ -127,6 +127,8 @@ private:
     /// Address Low summer carry
     bool adl_carry;
 
+    bool d1x1;
+
 #ifdef CORRECT_SH_INSTRUCTIONS
     /// The RDY pin state during last throw away read.
     bool rdyOnThrowAwayRead;
@@ -261,7 +263,6 @@ private:
     inline void ora_instr();
     inline void pha_instr();
     inline void pla_instr();
-    inline void plp_instr();
     inline void rla_instr();
     inline void rol_instr();
     inline void rola_instr();
