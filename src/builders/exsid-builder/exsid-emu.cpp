@@ -150,7 +150,7 @@ void exSID::voice(unsigned int num, bool mute)
     muted[num] = mute;
 }
 
-void exSID::model(SidConfig::sid_model_t model)
+void exSID::model(SidConfig::sid_model_t model, bool digiboost)
 {
     runmodel = model;
     // currently no support for stereo mode: output the selected SID to both L and R channels

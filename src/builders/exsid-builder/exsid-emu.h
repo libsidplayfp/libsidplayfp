@@ -77,7 +77,7 @@ public:
     // Standard SID functions
     void clock() override;
 
-    void model(SidConfig::sid_model_t model) override;
+    void model(SidConfig::sid_model_t model, bool digiboost) override;
 
     void voice(unsigned int num, bool mute) override;
 

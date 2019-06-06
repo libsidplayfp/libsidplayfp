@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -31,6 +31,7 @@ SidConfig::SidConfig() :
     forceC64Model(false),
     defaultSidModel(MOS6581),
     forceSidModel(false),
+    digiBoost(false),
     playback(MONO),
     frequency(DEFAULT_SAMPLING_FREQ),
     secondSidAddress(0),

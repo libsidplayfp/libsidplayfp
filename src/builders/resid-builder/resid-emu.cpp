@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -142,7 +142,7 @@ void ReSID::voice(unsigned int num, bool mute)
 }
 
 // Set the emulated SID model
-void ReSID::model(SidConfig::sid_model_t model)
+void ReSID::model(SidConfig::sid_model_t model, bool digiboost)
 {
     reSID::chip_model chipModel;
     switch (model)
@@ -152,12 +152,12 @@ void ReSID::model(SidConfig::sid_model_t model)
             break;
         case SidConfig::MOS8580:
             chipModel = reSID::MOS8580;
+            if (digiboost)
+            {
+                m_sid.set_voice_mask(0x0f);
+                m_sid.input(-32768);
+            }
             break;
-        /* MOS8580 + digi boost
-        *      chipModel = (RESID_NS::MOS8580);
-        *      m_sid.set_voice_mask(0x0f);
-        *      m_sid.input(-32768);
-        */
         default:
             m_status = false;
             m_error = ERR_INVALID_CHIP;

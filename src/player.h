@@ -116,7 +116,7 @@ private:
      *
      * @throw configError
      */
-    void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
+    void sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel, bool digiboost,
                     bool forced, const std::vector<unsigned int> &extraSidAddresses);
 
     /**

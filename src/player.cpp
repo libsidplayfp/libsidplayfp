@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -302,7 +302,7 @@ bool Player::config(const SidConfig &cfg, bool force)
 
             // SID emulation setup (must be performed before the
             // environment setup call)
-            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.forceSidModel, addresses);
+            sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.digiBoost, cfg.forceSidModel, addresses);
 
             // Determine clock speed
             const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
@@ -482,7 +482,7 @@ void Player::sidRelease()
     m_mixer.clearSids();
 }
 
-void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
+void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel, bool digiboost,
                         bool forced, const std::vector<unsigned int> &extraSidAddresses)
 {
     if (builder != nullptr)
@@ -491,7 +491,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 
         // Setup base SID
         const SidConfig::sid_model_t userModel = getSidModel(tuneInfo->sidModel(0), defaultModel, forced);
-        sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
+        sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel, digiboost);
         if (!builder->getStatus())
         {
             throw configError(builder->error());
@@ -513,7 +513,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
             {
                 const SidConfig::sid_model_t userModel = getSidModel(tuneInfo->sidModel(i+1), defaultModel, forced);
 
-                sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel);
+                sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel, digiboost);
                 if (!builder->getStatus())
                 {
                     throw configError(builder->error());
