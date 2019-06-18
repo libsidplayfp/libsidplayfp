@@ -150,7 +150,7 @@ private:
 
 #ifdef DEBUG
     // Debug info
-    uint_least16_t instrStartPC;
+    int_least32_t instrStartPC;
     uint_least16_t instrOperand;
 
     FILE *m_fdbg;

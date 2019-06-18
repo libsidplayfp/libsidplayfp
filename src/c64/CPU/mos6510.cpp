@@ -245,11 +245,13 @@ void MOS6510::interruptsAndNextOpcode()
         if (dodump)
         {
             const event_clock_t cycles = eventScheduler.getTime(EVENT_CLOCK_PHI2);
+            MOS6510Debug::DumpState(cycles, *this);
             fprintf(m_fdbg, "****************************************************\n");
             fprintf(m_fdbg, " interrupt (%d)\n", static_cast<int>(cycles));
             fprintf(m_fdbg, "****************************************************\n");
-            MOS6510Debug::DumpState(cycles, *this);
         }
+
+        instrStartPC = -1;
 #endif
         cpuRead(Register_ProgramCounter);
         cycleCount = BRKn << 3;
@@ -739,13 +741,13 @@ void MOS6510::pha_instr()
  */
 void MOS6510::rti_instr()
 {
-#ifdef DEBUG
-    if (dodump)
-        fprintf (m_fdbg, "****************************************************\n\n");
-#endif
-
     Register_ProgramCounter = Cycle_EffectiveAddress;
     interruptsAndNextOpcode();
+
+#ifdef DEBUG
+    if (dodump)
+        fprintf(m_fdbg, "****************************************************\n\n");
+#endif
 }
 
 void MOS6510::rts_instr()
@@ -2189,6 +2191,10 @@ void MOS6510::Initialise()
 
     // Reset Cycle Count
     cycleCount = (BRKn << 3) + 6; // fetchNextOpcode
+
+#ifdef DEBUG
+    instrStartPC = -1;
+#endif
 
     // Reset Status Register
     flags.reset();
