@@ -156,10 +156,7 @@ void MOS6510::setRDY(bool newRDY)
  */
 void MOS6510::PushSR()
 {
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    const uint8_t p = flags.get() | (d1x1 ? 0x20 : 0x30);
-    cpuWrite(addr, p);
-    Register_StackPointer--;
+    Push(flags.get() | (d1x1 ? 0x20 : 0x30));
 }
 
 /**
@@ -168,9 +165,7 @@ void MOS6510::PushSR()
 void MOS6510::PopSR()
 {
     // Get status register off stack
-    Register_StackPointer++;
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    flags.set(cpuRead(addr));
+    flags.set(Pop());
     d1x1 = false;
 
     calculateInterruptTriggerCycle();
@@ -585,13 +580,31 @@ void MOS6510::PutEffAddrDataByte()
 }
 
 /**
+ * Push data on the stack
+ */
+void MOS6510::Push(uint8_t data)
+{
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
+    cpuWrite(addr, data);
+    Register_StackPointer--;
+}
+
+/**
+ * Pop data from the stack
+ */
+uint8_t MOS6510::Pop()
+{
+    Register_StackPointer++;
+    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
+    return cpuRead(addr);
+}
+
+/**
  * Push Program Counter Low Byte on stack, decrement S.
  */
 void MOS6510::PushLowPC()
 {
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    cpuWrite(addr, endian_16lo8(Register_ProgramCounter));
-    Register_StackPointer--;
+    Push(endian_16lo8(Register_ProgramCounter));
 }
 
 /**
@@ -599,9 +612,7 @@ void MOS6510::PushLowPC()
  */
 void MOS6510::PushHighPC()
 {
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    cpuWrite(addr, endian_16hi8(Register_ProgramCounter));
-    Register_StackPointer--;
+    Push(endian_16hi8(Register_ProgramCounter));
 }
 
 /**
@@ -609,9 +620,7 @@ void MOS6510::PushHighPC()
  */
 void MOS6510::PopLowPC()
 {
-    Register_StackPointer++;
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    endian_16lo8(Cycle_EffectiveAddress, cpuRead(addr));
+    endian_16lo8(Cycle_EffectiveAddress, Pop());
 }
 
 /**
@@ -619,9 +628,7 @@ void MOS6510::PopLowPC()
  */
 void MOS6510::PopHighPC()
 {
-    Register_StackPointer++;
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    endian_16hi8(Cycle_EffectiveAddress, cpuRead(addr));
+    endian_16hi8(Cycle_EffectiveAddress, Pop());
 }
 
 void MOS6510::WasteCycle() {}
@@ -722,9 +729,7 @@ void MOS6510::jmp_instr()
 
 void MOS6510::pha_instr()
 {
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    cpuWrite(addr, Register_Accumulator);
-    Register_StackPointer--;
+    Push(Register_Accumulator);
 }
 
 /**
@@ -1106,28 +1111,27 @@ void MOS6510::clv_instr()
     interruptsAndNextOpcode();
 }
 
-void MOS6510::cmp_instr()
+void MOS6510::compare(uint8_t data)
 {
-    const uint_least16_t tmp = static_cast<uint_least16_t>(Register_Accumulator) - Cycle_Data;
+    const uint_least16_t tmp = static_cast<uint_least16_t>(data) - Cycle_Data;
     flags.setNZ(tmp);
     flags.setC(tmp < 0x100);
     interruptsAndNextOpcode();
+}
+
+void MOS6510::cmp_instr()
+{
+    compare(Register_Accumulator);
 }
 
 void MOS6510::cpx_instr()
 {
-    const uint_least16_t tmp = static_cast<uint_least16_t>(Register_X) - Cycle_Data;
-    flags.setNZ(tmp);
-    flags.setC(tmp < 0x100);
-    interruptsAndNextOpcode();
+    compare(Register_X);
 }
 
 void MOS6510::cpy_instr()
 {
-    const uint_least16_t tmp = static_cast<uint_least16_t>(Register_Y) - Cycle_Data;
-    flags.setNZ(tmp);
-    flags.setC(tmp < 0x1009);
-    interruptsAndNextOpcode();
+    compare(Register_Y);
 }
 
 void MOS6510::dec_instr()
@@ -1212,9 +1216,7 @@ void MOS6510::ora_instr()
 
 void MOS6510::pla_instr()
 {
-    Register_StackPointer++;
-    const uint_least16_t addr = endian_16(SP_PAGE, Register_StackPointer);
-    flags.setNZ(Register_Accumulator = cpuRead (addr));
+    flags.setNZ(Register_Accumulator = Pop());
 }
 
 void MOS6510::rol_instr()
@@ -1531,9 +1533,9 @@ MOS6510::MOS6510(EventScheduler &scheduler) :
 
     Cycle_EffectiveAddress = 0;
     Cycle_Data             = 0;
-    #ifdef DEBUG
+#ifdef DEBUG
     dodump = false;
-    #endif
+#endif
     Initialise();
 }
 

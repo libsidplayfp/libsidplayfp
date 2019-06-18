@@ -210,6 +210,10 @@ private:
     inline void brkPushLowPC();
     inline void WasteCycle();
 
+    inline void Push(uint8_t data);
+    inline uint8_t Pop();
+    inline void compare(uint8_t data);
+
     // Delcare Instruction Operation Routines
     inline void adc_instr();
     inline void alr_instr();
