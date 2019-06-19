@@ -57,6 +57,8 @@ public:
     /// Size of the driver in bytes
     uint_least16_t driverLength() const;
 
+    uint_least16_t powerOnDelay() const;
+
     /// Describes the speed current song is running at
     const char *speedString() const;
 
@@ -82,6 +84,8 @@ private:
     virtual uint_least16_t getDriverAddr() const =0;
 
     virtual uint_least16_t getDriverLength() const =0;
+
+    virtual uint_least16_t getPowerOnDelay() const =0;
 
     virtual const char *getSpeedString() const =0;
 

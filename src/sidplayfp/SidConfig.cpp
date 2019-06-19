@@ -39,6 +39,7 @@ SidConfig::SidConfig() :
     sidEmulation(nullptr),
     leftVolume(libsidplayfp::Mixer::VOLUME_MAX),
     rightVolume(libsidplayfp::Mixer::VOLUME_MAX),
+    powerOnDelay(DEFAULT_POWER_ON_DELAY),
     samplingMethod(RESAMPLE_INTERPOLATE),
     fastSampling(false)
 {}
@@ -56,6 +57,7 @@ bool SidConfig::compare(const SidConfig &config)
         || sidEmulation != config.sidEmulation
         || leftVolume != config.leftVolume
         || rightVolume != config.rightVolume
+        || powerOnDelay != config.powerOnDelay
         || samplingMethod != config.samplingMethod
         || fastSampling != config.fastSampling;
 }

@@ -69,7 +69,8 @@ Player::Player() :
     // Set default settings for system
     m_tune(nullptr),
     m_errorString(ERR_NA),
-    m_isPlaying(STOPPED)
+    m_isPlaying(STOPPED),
+    m_rand((unsigned int)::time(0))
 {
 #ifdef PC64_TESTSUITE
     m_c64.setTestEnv(this);
@@ -130,7 +131,15 @@ void Player::initialise()
         throw configError(ERR_UNSUPPORTED_SIZE);
     }
 
+    uint_least16_t powerOnDelay = m_cfg.powerOnDelay;
+    // Delays above MAX result in random delays
+    if (powerOnDelay > SidConfig::MAX_POWER_ON_DELAY)
+    {   // Limit the delay to something sensible.
+        powerOnDelay = (uint_least16_t)((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
+    }
+
     psiddrv driver(m_tune->getInfo());
+    driver.powerOnDelay(powerOnDelay);
     if (!driver.drvReloc())
     {
         throw configError(driver.errorString());
@@ -138,6 +147,7 @@ void Player::initialise()
 
     m_info.m_driverAddr = driver.driverAddr();
     m_info.m_driverLength = driver.driverLength();
+    m_info.m_powerOnDelay = powerOnDelay;
 
     driver.install(m_c64.getMemInterface(), videoSwitch);
 

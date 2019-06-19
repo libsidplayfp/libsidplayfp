@@ -111,6 +111,7 @@ src/romCheck.h \
 src/sidemu.cpp \
 src/sidemu.h \
 src/sidendian.h \
+src/sidrandom.h \
 src/stringutils.h \
 src/c64/Banks/Bank.h \
 src/c64/c64cpu.h \

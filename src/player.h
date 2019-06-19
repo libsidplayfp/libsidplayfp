@@ -32,6 +32,7 @@
 #include "sidplayfp/SidTuneInfo.h"
 
 #include "SidInfoImpl.h"
+#include "sidrandom.h"
 #include "mixer.h"
 #include "c64/c64.h"
 
@@ -86,6 +87,8 @@ private:
     const char *m_errorString;
 
     volatile state_t m_isPlaying;
+
+    sidrandom m_rand;
 
     /// PAL/NTSC switch value
     uint8_t videoSwitch;
