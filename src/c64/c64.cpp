@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -128,6 +128,12 @@ void c64::setModel(model_t model)
     const unsigned int rate = cpuFrequency / modelData[model].powerFreq;
     cia1.setDayOfTimeRate(rate);
     cia2.setDayOfTimeRate(rate);
+}
+
+void c64::setCiaModel(bool newModel)
+{
+    cia1.setModel(newModel);
+    cia2.setModel(newModel);
 }
 
 void c64::setBaseSid(c64sid *s)

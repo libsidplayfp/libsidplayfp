@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -69,7 +69,7 @@ public:
  * It consists of the following chips:
  * - CPU 6510
  * - VIC-II 6567/6569/6572/6573
- * - CIA 6526
+ * - CIA 6526/8521
  * - SID 6581/8580
  * - PLA 7700/82S100
  * - Color RAM 2114
@@ -236,6 +236,11 @@ public:
      * Set the c64 model.
      */
     void setModel(model_t model);
+
+    /**
+     * Set the cia model.
+     */
+    void setCiaModel(bool newModel);
 
     void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
     {

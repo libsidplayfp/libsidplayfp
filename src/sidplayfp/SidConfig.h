@@ -53,6 +53,13 @@ public:
         MOS8580
     } sid_model_t;
 
+    /// CIA chip model
+    typedef enum
+    {
+        MOS6526,
+        MOS8521
+    } cia_model_t;
+
     /// C64 model
     typedef enum
     {
@@ -112,6 +119,13 @@ public:
      * Enable digiboost when 8580 is used.
      */
     bool digiBoost;
+
+    /**
+     * Intended cia model.
+     * - MOS6526
+     * - MOS8521
+     */
+    cia_model_t ciaModel;
 
     /**
      * Playbak mode.

@@ -373,4 +373,14 @@ void MOS6526::spInterrupt()
     interruptSource->trigger(InterruptSource::INTERRUPT_SP);
 }
 
+void MOS6526::setModel(bool newModel)
+{
+    if (newModel)
+        interruptSource.reset(new InterruptSource8521(eventScheduler, *this));
+    else
+        interruptSource.reset(new InterruptSource6526(eventScheduler, *this));
+
+    reset();
+}
+
 }

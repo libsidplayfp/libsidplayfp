@@ -32,6 +32,7 @@ SidConfig::SidConfig() :
     defaultSidModel(MOS6581),
     forceSidModel(false),
     digiBoost(false),
+    ciaModel(MOS6526),
     playback(MONO),
     frequency(DEFAULT_SAMPLING_FREQ),
     secondSidAddress(0),
@@ -50,6 +51,7 @@ bool SidConfig::compare(const SidConfig &config)
         || forceC64Model != config.forceC64Model
         || defaultSidModel != config.defaultSidModel
         || forceSidModel != config.forceSidModel
+        || ciaModel != config.ciaModel
         || playback != config.playback
         || frequency != config.frequency
         || secondSidAddress != config.secondSidAddress

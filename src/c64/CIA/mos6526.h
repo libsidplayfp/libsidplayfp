@@ -299,6 +299,13 @@ protected:
 
 public:
     /**
+     * Select chip model.
+     * 
+     * @param newModel true for new model 8521, false for old 6526
+     */
+    void setModel(bool newModel);
+
+    /**
      * Reset CIA.
      */
     virtual void reset();
