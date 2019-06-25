@@ -51,6 +51,8 @@ TEST_FIXTURE(TestFixture, TestADSRDelayBug)
     // to zero at 2^15 = 0x8000, and then count rate_period - 1 before the
     // envelope can constly be stepped.
 
+    generator.clock();
+
     generator.writeATTACK_DECAY(0x70);
 
     generator.writeCONTROL_REG(0x01);
@@ -83,6 +85,8 @@ TEST_FIXTURE(TestFixture, TestFlipFFto00)
     // zero; to unlock this situation the state must be changed to release,
     // then to attack.
 
+    generator.clock();
+
     generator.writeATTACK_DECAY(0x77);
 
     generator.writeCONTROL_REG(0x01);
@@ -111,6 +115,8 @@ TEST_FIXTURE(TestFixture, TestFlip00toFF)
     // The envelope counter can flip from 0x00 to 0xff by changing state to
     // attack, then to release. The envelope counter will then continue
     // counting down in the release state.
+
+    generator.clock();
 
     generator.writeATTACK_DECAY(0x77);
     generator.writeSUSTAIN_RELEASE(0x77);
