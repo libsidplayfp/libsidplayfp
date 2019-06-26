@@ -116,7 +116,17 @@ void SidDatabase::close()
 
 int_least32_t SidDatabase::length(SidTune &tune)
 {
-    return lengthMs(tune) / 1000;
+    const unsigned int song = tune.getInfo()->currentSong();
+
+    if (!song)
+    {
+        errorString = ERR_NO_SELECTED_SONG;
+        return -1;
+    }
+
+    char md5[SidTune::MD5_LENGTH + 1];
+    tune.createMD5(md5);
+    return lengthMs(md5, song) / 1000;
 }
 
 int_least32_t SidDatabase::lengthMs(SidTune &tune)
@@ -130,7 +140,7 @@ int_least32_t SidDatabase::lengthMs(SidTune &tune)
     }
 
     char md5[SidTune::MD5_LENGTH + 1];
-    tune.createMD5(md5);
+    tune.createMD5New(md5);
     return lengthMs(md5, song);
 }
 
