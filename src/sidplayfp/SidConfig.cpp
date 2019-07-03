@@ -51,6 +51,7 @@ bool SidConfig::compare(const SidConfig &config)
         || forceC64Model != config.forceC64Model
         || defaultSidModel != config.defaultSidModel
         || forceSidModel != config.forceSidModel
+        || digiBoost != config.digiBoost
         || ciaModel != config.ciaModel
         || playback != config.playback
         || frequency != config.frequency
