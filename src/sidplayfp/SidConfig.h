@@ -95,6 +95,7 @@ public:
      * - NTSC
      * - OLD_NTSC
      * - DREAN
+     * - PAL_M
      */
     c64_model_t defaultC64Model;
 
@@ -116,7 +117,7 @@ public:
     bool forceSidModel;
 
     /**
-     * Enable digiboost when 8580 is used.
+     * Enable digiboost when 8580 SID model is used.
      */
     bool digiBoost;
 
