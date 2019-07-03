@@ -303,6 +303,8 @@ private:
     inline void doADC();
     inline void doSBC();
 
+    inline bool checkInterrupts() const { return rstFlag || nmiFlag || (irqAssertedOnPin && !flags.getI()); }
+
     inline void buildInstructionTable();
 
 protected:

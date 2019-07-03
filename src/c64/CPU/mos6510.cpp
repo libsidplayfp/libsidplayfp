@@ -281,7 +281,7 @@ void MOS6510::fetchNextOpcode()
     cycleCount = cpuRead(Register_ProgramCounter) << 3;
     Register_ProgramCounter++;
 
-    if (!rstFlag && !nmiFlag && !(!flags.getI() && irqAssertedOnPin))
+    if (!checkInterrupts())
     {
         interruptCycle = MAX;
     }
@@ -300,7 +300,7 @@ void MOS6510::calculateInterruptTriggerCycle()
     /* Interrupt cycle not going to trigger? */
     if (interruptCycle == MAX)
     {
-        if (rstFlag || nmiFlag || (!flags.getI() && irqAssertedOnPin))
+        if (checkInterrupts())
         {
             interruptCycle = cycleCount;
         }
