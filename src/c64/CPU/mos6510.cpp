@@ -165,10 +165,7 @@ void MOS6510::PushSR()
  */
 void MOS6510::PopSR()
 {
-    // Get status register off stack
     flags.set(Pop());
-    d1x1 = false;
-
     calculateInterruptTriggerCycle();
 }
 
@@ -316,6 +313,7 @@ void MOS6510::IRQLoRequest()
 void MOS6510::IRQHiRequest()
 {
     endian_16hi8(Register_ProgramCounter, cpuRead(Cycle_EffectiveAddress + 1));
+    d1x1 = false;
 }
 
 /**
@@ -669,9 +667,8 @@ void MOS6510::brkPushLowPC()
 
 void MOS6510::brk_instr()
 {
-    PushSR();
-    d1x1 = false;
     flags.setI(true);
+    fetchNextOpcode();
 }
 
 void MOS6510::cld_instr()
@@ -1815,10 +1812,10 @@ void MOS6510::buildInstructionTable()
             instrTable[buildCycle].nosteal = true;
             instrTable[buildCycle++].func = &MOS6510::brkPushLowPC;
             instrTable[buildCycle].nosteal = true;
-            instrTable[buildCycle++].func = &MOS6510::brk_instr;
+            instrTable[buildCycle++].func = &MOS6510::PushSR;
             instrTable[buildCycle++].func = &MOS6510::IRQLoRequest;
             instrTable[buildCycle++].func = &MOS6510::IRQHiRequest;
-            instrTable[buildCycle++].func = &MOS6510::fetchNextOpcode;
+            instrTable[buildCycle++].func = &MOS6510::brk_instr;
             break;
 
         case BVCr:
