@@ -35,6 +35,7 @@
 
 #ifdef PC64_TESTSUITE
 #  include <cstdlib>
+#  include <iostream>
 #endif
 
 namespace libsidplayfp
@@ -701,15 +702,15 @@ void MOS6510::jmp_instr()
         case 0:
             break;
         case 1:
-            fprintf(stderr, " ");
+            std::cerr << " ";
             break;
         case 0xd:
-            fprintf(stderr, "\n");
+            std::cerr << std::endl;
             filepos = 0;
             break;
         default:
             filetmp[filepos++] = ch;
-            fprintf(stderr, "%c", ch);
+            std::cerr << ch;
         }
     }
     else if (Register_ProgramCounter == 0xe16f)
