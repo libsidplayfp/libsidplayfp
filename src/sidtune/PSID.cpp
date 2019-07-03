@@ -431,7 +431,7 @@ const char *PSID::createMD5(char *md5)
 const char *PSID::createMD5New(char *md5)
 {
     if (md5 == nullptr)
-    md5 = m_md5;
+        md5 = m_md5;
 
     *md5 = '\0';
 

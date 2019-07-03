@@ -205,7 +205,7 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
                 }
 
                 if (isBadLine != oldBadLine)
-                        eventScheduler.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
+                    eventScheduler.schedule(badLineStateChangeEvent, 0, EVENT_CLOCK_PHI1);
             }
         }
     }
