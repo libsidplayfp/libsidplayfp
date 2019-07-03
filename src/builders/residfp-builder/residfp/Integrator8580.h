@@ -58,7 +58,7 @@ private:
     mutable int vc;
 
     unsigned short kVgt;
-    unsigned short n_snake;
+    unsigned short n_dac;
 
     const double Vth;
     const double denorm;
@@ -90,7 +90,7 @@ public:
         // Fit in 5 bits.
         const double tmp = denorm * (1 << 13) * (uCox / (2. * k) * wl * 1.0e-6 / C);
         assert(tmp > -0.5 && tmp < 65535.5);
-        n_snake = static_cast<unsigned short>(tmp + 0.5);
+        n_dac = static_cast<unsigned short>(tmp + 0.5);
     }
 
     /**
@@ -131,10 +131,10 @@ int Integrator8580::solve(int vi) const
     const unsigned int Vgdt_2 = Vgdt * Vgdt;
 
     // DAC current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
+    const int n_I_dac = n_dac * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
 
     // Change in capacitor charge.
-    vc += n_I_snake;
+    vc += n_I_dac;
 
     // vx = g(vc)
     const int tmp = (vc >> 15) + (1 << 15);

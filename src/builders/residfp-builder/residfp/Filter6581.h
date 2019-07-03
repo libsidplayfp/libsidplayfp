@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -334,7 +334,7 @@ private:
     /// VCR + associated capacitor connected to highpass output.
     std::unique_ptr<Integrator> const hpIntegrator;
 
-    /// VCR + associated capacitor connected to lowpass output.
+    /// VCR + associated capacitor connected to bandpass output.
     std::unique_ptr<Integrator> const bpIntegrator;
 
 protected:
