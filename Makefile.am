@@ -397,8 +397,15 @@ endif
 #=========================================================
 # test
 if TESTSUITE
+
+if MINGW32
+DEMO_SRC =
+else
+DEMO_SRC = test/demo
+endif
+
 noinst_PROGRAMS = \
-test/demo \
+$(DEMO_SRC) \
 test/test \
 src/builders/residfp-builder/residfp/resample/test
 
