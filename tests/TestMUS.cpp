@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2015 Leandro Nini
+ *  Copyright (C) 2015-2019 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include "../src/sidplayfp/SidTune.h"
 #include "../src/sidplayfp/SidTuneInfo.h"
+#include "../src/sidtune/MUS.h"
 
 #include <stdint.h>
 #include <cstring>
@@ -31,6 +32,9 @@
 
 #define LOADADDRESS_HI  1
 #define LOADADDRESS_LO  0
+
+#define VOICE1_LEN_HI   3
+#define VOICE1_LEN_LO   2
 
 using namespace UnitTest;
 
@@ -63,6 +67,16 @@ TEST_FIXTURE(TestFixture, TestPlayerAddress)
 
     CHECK_EQUAL(0xec60, tune.getInfo()->initAddr());
     CHECK_EQUAL(0xec80, tune.getInfo()->playAddr());
+}
+
+TEST_FIXTURE(TestFixture, TestWrongVoiceLength)
+{
+    data[VOICE1_LEN_LO] = 0x76;
+
+    SidTune tune(data, BUFFERSIZE);
+    CHECK(!tune.getStatus());
+
+    CHECK_EQUAL("SIDTUNE ERROR: Could not determine file format", tune.statusString());
 }
 
 }
