@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -32,10 +32,6 @@
 #include "VIC_II/mos656x.h"
 
 #include "sidcxx11.h"
-
-#if defined(DEBUG) && !defined (PC64_TESTSUITE)
-#  include <iostream>
-#endif
 
 namespace libsidplayfp
 {
@@ -68,24 +64,6 @@ public:
 
     void poke(uint_least16_t address, uint8_t value) override
     {
-#if defined(DEBUG) && !defined (PC64_TESTSUITE)
-        //if (address == 0xD01A)
-        //{
-        //    std::cout << std::hex << (int)address << ": " << (int)value << std::endl;
-        //}
-        if (address == 0xD020)
-        {
-            const uint8_t color = value & 0xf;
-            //std::cout << (int)color << std::endl;color
-            const char* msg = nullptr;
-            if (color == 5 || color == 13) msg = "OK";      // Green
-            else if (color == 2 || color == 10) msg = "KO"; // Red
-            if (msg)
-            {
-                std::cout << std::endl << msg << std::endl;
-            }
-        }
-#endif
         write(endian_16lo8(address), value);
     }
 
