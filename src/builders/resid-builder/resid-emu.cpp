@@ -145,6 +145,8 @@ void ReSID::voice(unsigned int num, bool mute)
 void ReSID::model(SidConfig::sid_model_t model, bool digiboost)
 {
     reSID::chip_model chipModel;
+    short sample = 0;
+    m_voiceMask &= 0x07;
     switch (model)
     {
         case SidConfig::MOS6581:
@@ -154,8 +156,8 @@ void ReSID::model(SidConfig::sid_model_t model, bool digiboost)
             chipModel = reSID::MOS8580;
             if (digiboost)
             {
-                m_sid.set_voice_mask(0x0f);
-                m_sid.input(-32768);
+                m_voiceMask |= 0x08;
+                sample = -32768;
             }
             break;
         default:
@@ -165,6 +167,8 @@ void ReSID::model(SidConfig::sid_model_t model, bool digiboost)
     }
 
     m_sid.set_chip_model(chipModel);
+    m_sid.set_voice_mask(m_voiceMask);
+    m_sid.input(sample);
     m_status = true;
 }
 
