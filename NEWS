@@ -1,4 +1,4 @@
-2.0.0 2019-xx-xx
+2.0.0 2019-07-30
 * Cleaned up directory structure
 * Use c++11 features where supported
 * Added exSID USB support
