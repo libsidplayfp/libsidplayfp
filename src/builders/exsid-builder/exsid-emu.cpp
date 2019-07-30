@@ -49,9 +49,9 @@ const char* exSID::getCredits()
 
 exSID::exSID(sidbuilder *builder) :
     sidemu(builder),
-    busValue(0),
     m_status(false),
-    readflag(false)
+    readflag(false),
+    busValue(0)
 {
     if (exSID_init() < 0)
     {

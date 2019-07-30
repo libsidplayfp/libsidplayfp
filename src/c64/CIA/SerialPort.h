@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -54,8 +54,8 @@ private:
 public:
     explicit SerialPort(EventScheduler &scheduler, MOS6526 &parent) :
         Event("Serial Port interrupt"),
-        eventScheduler(scheduler),
-        parent(parent)
+        parent(parent),
+        eventScheduler(scheduler)
     {}
 
     void reset();
