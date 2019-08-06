@@ -52,7 +52,9 @@ src/builders/resid-builder/resid/TODO \
 src/builders/resid-builder/resid/filter8580new.cc \
 src/builders/resid-builder/resid/filter8580new.h \
 $(noinst_DATA) \
-$(noinst_SCRIPTS)
+$(noinst_SCRIPTS) \
+test/testsuite.sh \
+test/testlist
 
 #=========================================================
 # Libraries

@@ -210,16 +210,16 @@ AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([Doxyfile])])
 
 AC_ARG_ENABLE([testsuite],
   [AS_HELP_STRING([--enable-testsuite=PATH_TO_TESTSUITE],
-    [enable Lorenz' testsuite [default=no]]
+    [enable VICE testsuite [default=no]]
   )],
   [],
   [enable_testsuite=no]
 )
 
 AS_IF([test "x$enable_testsuite" != xno],
-  AC_DEFINE_UNQUOTED([PC64_TESTSUITE],
+  AC_DEFINE_UNQUOTED([VICE_TESTSUITE],
     ["$enable_testsuite"],
-    [Path to Lorenz' testsuite.]
+    [Path to VICE testsuite.]
   )
 )
 

@@ -40,10 +40,6 @@
 #  include "config.h"
 #endif
 
-#ifdef PC64_TESTSUITE
-#  include <string>
-#endif
-
 #include <vector>
 
 class SidTune;
@@ -55,9 +51,6 @@ namespace libsidplayfp
 {
 
 class Player
-#ifdef PC64_TESTSUITE
-  : public testEnv
-#endif
 {
 private:
     typedef enum
@@ -132,10 +125,6 @@ private:
      */
     void sidParams(double cpuFreq, int frequency,
                     SidConfig::sampling_method_t sampling, bool fastSampling);
-
-#ifdef PC64_TESTSUITE
-    void load(const char *file);
-#endif
 
     inline void run(unsigned int events);
 

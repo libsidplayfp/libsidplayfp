@@ -72,10 +72,6 @@ Player::Player() :
     m_isPlaying(STOPPED),
     m_rand((unsigned int)::time(0))
 {
-#ifdef PC64_TESTSUITE
-    m_c64.setTestEnv(this);
-#endif
-
     m_c64.setRoms(nullptr, nullptr, nullptr);
     config(m_cfg);
 
@@ -551,18 +547,5 @@ void Player::sidParams(double cpuFreq, int frequency,
         s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
     }
 }
-
-#ifdef PC64_TESTSUITE
-    void Player::load(const char *file)
-    {
-        std::string name(PC64_TESTSUITE);
-        name.append(file);
-        name.append(".prg");
-
-        m_tune->load(name.c_str());
-        m_tune->selectSong(0);
-        initialise();
-    }
-#endif
 
 }

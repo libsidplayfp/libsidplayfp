@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <cstdlib>
 
 #include "sidplayfp/sidplayfp.h"
 #include "sidplayfp/SidTune.h"
@@ -44,7 +45,7 @@ void loadRom(const char* path, char* buffer)
     if (!is.is_open())
     {
         std::cout << "File " << path << " not found" << std::endl;
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
     is.read(buffer, 8192);
     is.close();
@@ -63,8 +64,11 @@ int main(int argc, char* argv[])
     loadRom(CHARGEN_PATH, chargen);
 
     m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic, (const uint8_t*)chargen);
+    SidConfig config = m_engine.config();
+    config.powerOnDelay = 0x1267;
+    m_engine.config(config);
 
-    std::string name(PC64_TESTSUITE);
+    std::string name(VICE_TESTSUITE);
 
     if (argc > 1)
     {
@@ -72,7 +76,8 @@ int main(int argc, char* argv[])
     }
     else
     {
-        name.append(" start.prg");
+        std::cerr << "Missing test name" << std::endl;
+        return -1;
     }
 
     std::auto_ptr<SidTune> tune(new SidTune(name.c_str()));
@@ -91,8 +96,11 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    //m_engine.debug(true, nullptr);
+
     for (;;)
     {
-        m_engine.play(0, 0);
+        m_engine.play(nullptr, 0);
+        std::cerr << ".";
     }
 }

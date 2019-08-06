@@ -24,7 +24,7 @@
 #include "c64/c64env.h"
 #include "CPU/mos6510.h"
 
-#if defined(DEBUG) && !defined (PC64_TESTSUITE)
+#ifdef VICE_TESTSUITE
 #  include <iostream>
 #  include <cstdlib>
 #endif
@@ -47,7 +47,7 @@ protected:
     uint8_t cpuRead(uint_least16_t addr) override { return m_env.cpuRead(addr); }
 
     void cpuWrite(uint_least16_t addr, uint8_t data) override {
-#if defined(DEBUG) && !defined(PC64_TESTSUITE)
+#ifdef VICE_TESTSUITE
         // for VICE tests
         if (addr == 0xd7ff)
         {
@@ -70,10 +70,6 @@ public:
     c64cpu (c64env &env) :
         MOS6510(env.scheduler()),
         m_env(env) {}
-
-#ifdef PC64_TESTSUITE
-    void loadFile(const char *file) override { m_env.loadFile(file); }
-#endif
 };
 
 }

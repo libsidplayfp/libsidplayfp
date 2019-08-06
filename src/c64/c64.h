@@ -188,26 +188,10 @@ private:
 
     inline void lightpen(bool state) override;
 
-#ifdef PC64_TESTSUITE
-    testEnv *m_env;
-
-    void loadFile(const char *file) override
-    {
-        m_env->load(file);
-    }
-#endif
-
     void resetIoBank();
 
 public:
     c64();
-
-#ifdef PC64_TESTSUITE
-    void setTestEnv(testEnv *env)
-    {
-        m_env = env;
-    }
-#endif
 
     /**
      * Get C64's event scheduler
