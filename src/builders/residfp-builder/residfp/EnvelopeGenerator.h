@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2018 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
@@ -230,11 +230,18 @@ void EnvelopeGenerator::clock()
         {
             if (state == ATTACK)
             {
-                envelope_counter++;
+                if (++envelope_counter==0xff)
+                {
+                    state = DECAY_SUSTAIN;
+                    rate = adsrtable[decay];
+                }
             }
             else if ((state == DECAY_SUSTAIN) || (state == RELEASE))
             {
-                envelope_counter--;
+                if (--envelope_counter==0x00)
+                {
+                    counter_enabled = false;
+                }
             }
 
             set_exponential_counter();
@@ -380,8 +387,6 @@ void EnvelopeGenerator::set_exponential_counter()
     {
     case 0xff:
         exponential_counter_period = 1;
-        state = DECAY_SUSTAIN;
-        rate = adsrtable[decay];
         break;
 
     case 0x5d:
@@ -406,7 +411,6 @@ void EnvelopeGenerator::set_exponential_counter()
 
     case 0x00:
         exponential_counter_period = 1;
-        counter_enabled = false;
         break;
     }
 }
