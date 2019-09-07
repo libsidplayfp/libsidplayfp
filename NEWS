@@ -1,3 +1,11 @@
+2.0.1 2019-09-07
+* Fix loading stereo mus tunes
+* Fix residfp envelope (bug #29)
+* Minor interrupt timing tweaks
+* Dirty hack to reduce overloading in 8580 filter (bug #29)
+
+
+
 2.0.0 2019-07-30
 * Cleaned up directory structure
 * Use c++11 features where supported
