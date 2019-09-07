@@ -1,4 +1,4 @@
-# general
+### general ###
 general/banking00/banking00
 general/fuxxortest/test
 general/Lorenz-2.15/src/start
@@ -266,7 +266,7 @@ general/Lorenz-2.15/src/cia1tb
 general/Lorenz-2.15/src/cia2ta
 general/Lorenz-2.15/src/cia2tb
 general/Lorenz-2.15/src/finish
-# CIA
+### CIA ###
 CIA/CIA-AcountsB/cia-b-counts-a
 CIA/CIA-AcountsB/cmp-b-counts-a-old
 #CIA/ciaports/ciaports
@@ -289,9 +289,9 @@ CIA/ciavarious/cia13
 CIA/ciavarious/cia14
 CIA/ciavarious/cia15
 CIA/dd0dtest/dd0dtest
-#FIXME these should work
 #CIA/irqdelay/irqdelay
 #CIA/irqdelay/irqdelay2
+#CIA/irqdelay/irqdelay-oneshot
 CIA/irqdelay/irqdelay-cia1
 CIA/irqdelay/irqdelay-cia1-4-old
 CIA/irqdelay/irqdelay-cia1-oneshot
@@ -300,8 +300,6 @@ CIA/irqdelay/irqdelay-cia2
 CIA/irqdelay/irqdelay-cia2-4
 CIA/irqdelay/irqdelay-cia2-oneshot
 CIA/irqdelay/irqdelay-cia2-oneshot-4
-#FIXME this should work
-#CIA/irqdelay/irqdelay-oneshot
 CIA/reload0/reload0a
 CIA/reload0/reload0b
 CIA/shiftregister/cia-icr-test2-continues
@@ -340,7 +338,7 @@ CIA/tod/powerup
 CIA/tod/read-latch
 #CIA/tod/stability
 CIA/tod/write-stop
-# CPU
+### CPU ###
 CPU/64doc/dadc
 CPU/64doc/dincsbc
 CPU/64doc/dincsbc-deccmp
@@ -358,7 +356,6 @@ CPU/Acid800/cpu_timing
 CPU/ane/ane
 CPU/ane/ane-border
 CPU/ane/ane-none
-#FIXME this should work
 #CPU/ane-lax/ane-lax
 CPU/asap/cpu_ane
 CPU/asap/cpu_anx
@@ -366,7 +363,6 @@ CPU/asap/cpu_decimal
 CPU/asap/cpu_las
 CPU/asap/cpu_shx
 CPU/bclark/decimalmode
-#FIXME these should work
 #CPU/cpujam/cpujam02
 #CPU/cpujam/cpujam12
 #CPU/cpujam/cpujam22
@@ -410,7 +406,7 @@ CPU/shxy/shyx1
 CPU/shxy/shyx2
 CPU/shxy/shyx3
 CPU/shxy/shyx4
-# interrupts
+### interrupts ###
 interrupts/branchquirk/branchquirk-nmiold
 interrupts/branchquirk/branchquirk-old
 #FIXME this should work
