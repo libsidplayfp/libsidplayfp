@@ -128,7 +128,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
     Vdd(9.09),
     Vth(0.80),
     Ut(26.0e-3),
-    k(1.0),
+    k(1.3), // FIXME this is just a hack, k must be less than one, likely around 0.7
     uCox(55e-6), // FIXME measure
     kVddt(k * (Vdd - Vth)),
     vmin(opamp_voltage[0].x),
