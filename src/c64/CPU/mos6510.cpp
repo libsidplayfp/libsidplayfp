@@ -247,7 +247,7 @@ void MOS6510::fetchNextOpcode()
     {
         interruptCycle = MAX;
     }
-    if (interruptCycle != MAX)
+    else if (interruptCycle != MAX)
     {
         interruptCycle = -MAX;
     }
@@ -272,12 +272,13 @@ void MOS6510::calculateInterruptTriggerCycle()
 void MOS6510::IRQLoRequest()
 {
     endian_16lo8(Register_ProgramCounter, cpuRead(Cycle_EffectiveAddress));
+    d1x1 = false;
 }
 
 void MOS6510::IRQHiRequest()
 {
     endian_16hi8(Register_ProgramCounter, cpuRead(Cycle_EffectiveAddress + 1));
-    d1x1 = false;
+    flags.setI(true);
 }
 
 /**
@@ -601,6 +602,7 @@ void MOS6510::WasteCycle() {}
 void MOS6510::brkPushLowPC()
 {
     PushLowPC();
+
     if (rstFlag)
     {
         /* rst = %10x */
@@ -628,12 +630,6 @@ void MOS6510::brkPushLowPC()
 // See and 6510 Assembly Book for more information on these instructions   //
 //-------------------------------------------------------------------------//
 //-------------------------------------------------------------------------//
-
-void MOS6510::brk_instr()
-{
-    flags.setI(true);
-    fetchNextOpcode();
-}
 
 void MOS6510::cld_instr()
 {
@@ -1743,7 +1739,7 @@ void MOS6510::buildInstructionTable()
             instrTable[buildCycle++].func = &MOS6510::PushSR;
             instrTable[buildCycle++].func = &MOS6510::IRQLoRequest;
             instrTable[buildCycle++].func = &MOS6510::IRQHiRequest;
-            instrTable[buildCycle++].func = &MOS6510::brk_instr;
+            instrTable[buildCycle++].func = &MOS6510::fetchNextOpcode;
             break;
 
         case BVCr:

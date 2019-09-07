@@ -235,7 +235,6 @@ private:
     inline void branch_instr(bool condition);
     inline void fix_branch();
     inline void bpl_instr();
-    inline void brk_instr();
     inline void bvc_instr();
     inline void bvs_instr();
     inline void clc_instr();
