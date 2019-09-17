@@ -27,6 +27,7 @@
 #include "sidplayfp/sidplayfp.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/sidbuilder.h"
+#include "sidplayfp/builders/residfp.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -66,6 +67,8 @@ int main(int argc, char* argv[])
     m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic, (const uint8_t*)chargen);
     SidConfig config = m_engine.config();
     config.powerOnDelay = 0x1267;
+    config.sidEmulation = new ReSIDfpBuilder("test");
+    config.sidEmulation->create(1);
     m_engine.config(config);
 
     std::string name(VICE_TESTSUITE);
