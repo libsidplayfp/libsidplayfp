@@ -397,15 +397,19 @@ CPU/sha/shazpy3
 CPU/shs/shsabsy1
 CPU/shs/shsabsy2
 CPU/shs/shsabsy3
+CPU/shs/shsabsy4
+CPU/shs/shsabsy5
 #CPU/shxy/shx-test
 CPU/shxy/shxy1
 CPU/shxy/shxy2
 CPU/shxy/shxy3
 CPU/shxy/shxy4
+CPU/shxy/shxy5
 CPU/shxy/shyx1
 CPU/shxy/shyx2
 CPU/shxy/shyx3
 CPU/shxy/shyx4
+CPU/shxy/shyx5
 ### interrupts ###
 interrupts/branchquirk/branchquirk-nmiold
 interrupts/branchquirk/branchquirk-old
@@ -454,6 +458,13 @@ SID/osc_topbit/osc_topbit_test_pulse_old
 SID/osc_topbit/osc_topbit_test_triangle_old
 SID/oscinit/noiseinit
 SID/oscinit/oscinit
+SID/resid-test/envdelay
+SID/resid-test/envrate
+SID/resid-test/envsustain
+SID/resid-test/envtime
+SID/resid-test/noisetest
+SID/resid-test/oscsample0-6581
+SID/resid-test/oscsample1-6581
 SID/ringmod/ringmodtest
 SID/waveforms/waveforms-10-6581
 SID/waveforms/waveforms-20-6581
