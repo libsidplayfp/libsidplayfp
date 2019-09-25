@@ -23,6 +23,7 @@
 #include <fstream>
 #include <memory>
 #include <cstdlib>
+#include <cstring>
 
 #include "sidplayfp/sidplayfp.h"
 #include "sidplayfp/SidTune.h"
@@ -54,6 +55,12 @@ void loadRom(const char* path, char* buffer)
 
 int main(int argc, char* argv[])
 {
+    if (argc == 0)
+    {
+        std::cerr << "Missing test name" << std::endl;
+        return -1;
+    }
+
     sidplayfp m_engine;
 
     char kernal[8192];
@@ -67,22 +74,56 @@ int main(int argc, char* argv[])
     m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic, (const uint8_t*)chargen);
     SidConfig config = m_engine.config();
     config.powerOnDelay = 0x1267;
-    config.sidEmulation = new ReSIDfpBuilder("test");
-    config.sidEmulation->create(1);
-    m_engine.config(config);
 
     std::string name(VICE_TESTSUITE);
 
-    if (argc > 1)
+    int i = 1;
+    while ((i < argc) && (argv[i] != nullptr))
     {
-        name.append(argv[1]).append(".prg");
-    }
-    else
-    {
-        std::cerr << "Missing test name" << std::endl;
-        return -1;
+        if ((argv[i][0] == '-') && (argv[i][1] != '\0'))
+        {
+            if (!strcmp(&argv[i][1], "-sid"))
+            {
+                i++;
+                if (!strcmp(&argv[i][0], "old"))
+                {
+                    config.sidEmulation = new ReSIDfpBuilder("test");
+                    config.sidEmulation->create(1);
+                    config.forceSidModel = true;
+                    config.defaultSidModel = SidConfig::MOS6581;
+                }
+                else
+                if (!strcmp(&argv[i][0], "new"))
+                {
+                    config.sidEmulation = new ReSIDfpBuilder("test");
+                    config.sidEmulation->create(1);
+                    config.forceSidModel = true;
+                    config.defaultSidModel = SidConfig::MOS8580;
+                }
+            }
+            if (!strcmp(&argv[i][1], "-cia"))
+            {
+                i++;
+                if (!strcmp(&argv[i][0], "old"))
+                {
+                    config.ciaModel = SidConfig::MOS6526;
+                }
+                else
+                if (!strcmp(&argv[i][0], "new"))
+                {
+                    config.ciaModel = SidConfig::MOS8521;
+                }
+            }
+        }
+        else
+        {
+            name.append(argv[i]).append(".prg");
+        }
+
+        i++;
     }
 
+    m_engine.config(config);
     std::auto_ptr<SidTune> tune(new SidTune(name.c_str()));
 
     if (!tune->getStatus())
