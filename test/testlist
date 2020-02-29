@@ -289,6 +289,9 @@ general/Lorenz-2.15/src/cia1tbnew                    --cia new
 general/Lorenz-2.15/src/finish
 # won't work as VIC II emulation is incomplete
 #general/ram0001/test1
+### C64 ###
+C64/raminitpattern/cyberloadtest
+C64/raminitpattern/platoontest
 ### CIA ###
 CIA/CIA-AcountsB/cia-b-counts-a
 CIA/CIA-AcountsB/cmp-b-counts-a-old                  --cia old
@@ -468,9 +471,13 @@ CPU/lax/lax-none
 CPU/sha/shaabsy1
 CPU/sha/shaabsy2
 CPU/sha/shaabsy3
+CPU/sha/shaabsy4
+CPU/sha/shaabsy5
 CPU/sha/shazpy1
 CPU/sha/shazpy2
 CPU/sha/shazpy3
+CPU/sha/shazpy4
+CPU/sha/shazpy5
 CPU/shs/shsabsy1
 CPU/shs/shsabsy2
 CPU/shs/shsabsy3
@@ -541,6 +548,7 @@ SID/envelope/lft-adsr-test                           --sid old
 SID/envelope/testADSRDelayBug                        --sid old
 SID/envelope/testFlip00toFF                          --sid old
 SID/envelope/testFlipFFto00                          --sid old
+SID/exp_counter_reset/env_test_exr                   --sid old
 SID/osc_topbit/osc_topbit_test_noise_old             --sid old
 SID/osc_topbit/osc_topbit_test_pulse_old             --sid old
 SID/osc_topbit/osc_topbit_test_triangle_old          --sid old
@@ -680,3 +688,6 @@ SID/wb_testsuite/noise_writeback_check_F_to_F_new    --sid new
 SID/writedelay/writedelay                            --sid old
 #SID/wf12nsr/wf12nsr                                  --sid old
 #SID/wf12nsr/wf12nsr-8580                             --sid new
+### VICII ###
+VICII/banking/banking
+
