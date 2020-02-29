@@ -15,7 +15,8 @@ TestWaveformGenerator \
 TestSpline \
 TestDac \
 TestPSID \
-TestMUS
+TestMUS \
+TestMos6510
 
 check_PROGRAMS = $(TESTS)
 
@@ -53,5 +54,11 @@ TestMUS_SOURCES = \
 Main.cpp \
 TestMUS.cpp
 TestMUS_LDADD = $(top_builddir)/src/libsidplayfp.la
+
+TestMos6510_SOURCES = \
+Main.cpp \
+TestMos6510.cpp
+TestMos6510_LDADD = $(top_builddir)/src/c64/CPU/mos6510.o \
+$(top_builddir)/src/EventScheduler.o
 
 endif
