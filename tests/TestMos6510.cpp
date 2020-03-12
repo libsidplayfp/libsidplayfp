@@ -176,8 +176,8 @@ TEST_FIXTURE(TestFixture, TestSei)
 }
 
 /*
- * Interrupt is not recognized at T0 during SEI
- * as the I flag is set while the CPU is stalled by RDY line
+ * Interrupt is recognized at T0 during SEI
+ * even if the I flag is set while the CPU is stalled by RDY line
  *
  * http://visual6502.org/JSSim/expert.html?graphics=f&loglevel=2&steps=20&a=0010&d=5878eaeaeaea&a=fffe&d=2000&a=0020&d=e840&r=0010&irq0=4&irq1=100&logmore=rdy,irq&rdy0=6&rdy1=8
  */
@@ -192,6 +192,31 @@ TEST_FIXTURE(TestFixture, TestSeiRdy)
 
     cpu.triggerIRQ();
     scheduler.clock(); // T1
+    cpu.setRDY(false);
+    scheduler.clock(); // CPU stalled but the I flag is being set
+    cpu.setRDY(true);
+    scheduler.clock(); // T0+T2
+    scheduler.clock(); // T1
+    CHECK(cpu.check(BRKn));
+}
+
+/*
+ * Interrupt is not recognized at T0 during SEI
+ * even if the I flag is set while the CPU is stalled by RDY line
+ *
+ * http://visual6502.org/JSSim/expert.html?graphics=f&loglevel=2&steps=20&a=0010&d=5878eaeaeaea&a=fffe&d=2000&a=0020&d=e840&r=0010&irq0=6&irq1=100&logmore=rdy,irq&rdy0=6&rdy1=8
+ */
+TEST_FIXTURE(TestFixture, TestSeiRdy2)
+{
+    cpu.setMem(0, CLIn);
+    cpu.setMem(1, SEIn);
+    cpu.setMem(2, NOPn);
+
+    scheduler.clock(); // T1
+    scheduler.clock(); // T0+T2
+
+    scheduler.clock(); // T1
+    cpu.triggerIRQ();
     cpu.setRDY(false);
     scheduler.clock(); // CPU stalled but the I flag is being set
     cpu.setRDY(true);
