@@ -327,10 +327,6 @@ protected:
     virtual void cpuWrite(uint_least16_t addr, uint8_t data) =0;
 
 public:
-#ifdef PC64_TESTSUITE
-    virtual void loadFile(const char *file) =0;
-#endif
-
     void reset();
 
     static const char *credits();
