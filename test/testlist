@@ -544,6 +544,7 @@ SID/env_test/env_test_ar_2                           --sid old
 SID/env_test/env_test_ar_3                           --sid old
 SID/env_test/env_test_ra_0000                        --sid old
 SID/env_test/env_test_ra_0100                        --sid old
+SID/env_test/env_test_ra_ff00                        --sid old
 SID/envelope/lft-adsr-test                           --sid old
 SID/envelope/testADSRDelayBug                        --sid old
 SID/envelope/testFlip00toFF                          --sid old
@@ -558,6 +559,7 @@ SID/osc_topbit/osc_topbit_test_triangle_new          --sid new
 #SID/oscinit/allinit
 SID/oscinit/noiseinit                                --sid old
 SID/oscinit/oscinit                                  --sid old
+SID/exp_counter_reset/env_test_exr                   --sid old
 SID/resid-test/envdelay                              --sid old
 SID/resid-test/envrate                               --sid old
 SID/resid-test/envsustain                            --sid old
