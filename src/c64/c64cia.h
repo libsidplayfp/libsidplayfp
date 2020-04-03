@@ -67,10 +67,11 @@ public:
 
     void poke(uint_least16_t address, uint8_t value) override
     {
-        write(endian_16lo8(address), value);
+        const uint8_t addr = endian_16lo8(address);
+        write(addr, value);
 
         // Save the value written to Timer A
-        if (address == 0xDC04 || address == 0xDC05)
+        if ((addr == 0x04) || (addr == 0x05))
         {
             if (timerA.getTimer() != 0)
                 last_ta = timerA.getTimer();
