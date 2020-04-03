@@ -54,15 +54,6 @@ namespace libsidplayfp
 class c64sid;
 class sidmemory;
 
-#ifdef PC64_TESTSUITE
-class testEnv
-{
-public:
-    virtual ~testEnv() {}
-    virtual void load(const char *) =0;
-};
-#endif
-
 /**
  * Commodore 64 emulation core.
  *
