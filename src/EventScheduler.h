@@ -79,7 +79,7 @@ private:
         Event **scan = &firstEvent;
         for (;;)
         {
-            if (*scan == nullptr || (*scan)->triggerTime > event.triggerTime)
+            if ((*scan == nullptr) || ((*scan)->triggerTime > event.triggerTime))
             {
                  event.next = *scan;
                  *scan = &event;

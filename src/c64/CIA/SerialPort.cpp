@@ -42,12 +42,12 @@ void SerialPort::event()
 
 void SerialPort::handle(uint8_t serialDataReg)
 {
-    if (count && --count == 0)
+    if (count && (--count == 0))
     {
         eventScheduler.schedule(*this, 1, EVENT_CLOCK_PHI1);
     }
 
-    if (count == 0 && buffered)
+    if ((count == 0) && buffered)
     {
         out = serialDataReg;
         buffered = false;
