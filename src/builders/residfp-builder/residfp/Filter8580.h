@@ -249,7 +249,7 @@ class Integrator8580;
  *
  *
  *
- * Crystal stabilized precision swithced capacitor voltage divider
+ * Crystal stabilized precision switched capacitor voltage divider
  * ---------------------------------------------------------------
  * There is a FET working as a temperature sensor close to the DACs which changes the gate voltage
  * of the frequency control DACs according to the temperature of the DACs,
