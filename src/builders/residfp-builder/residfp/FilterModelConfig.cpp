@@ -246,6 +246,7 @@ FilterModelConfig::FilterModelConfig() :
     //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
 
     const double kVt = k * Vth;
+    // moderate inversion characteristic current
     const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
