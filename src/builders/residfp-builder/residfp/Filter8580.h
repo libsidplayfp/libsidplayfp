@@ -341,8 +341,7 @@ public:
     /**
      * Set filter curve type based on single parameter.
      *
-     * FIXME find a reasonable range of values
-     * @param curvePosition
+     * @param curvePosition 0 .. 1, where 0 sets center frequency high ("light") and 1 sets it low ("dark"), default is 0.5
      */
     void setFilterCurve(double curvePosition);
 };
