@@ -240,8 +240,8 @@ FilterModelConfig::FilterModelConfig() :
 
     //  EKV model:
     //
-    //  Ids = Is*(if - ir)
-    //  Is = 2*u*Cox*Ut^2/k*W/L
+    //  Ids = Is * (if - ir)
+    //  Is = (2 * u*Cox * Ut^2)/k * W/L
     //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
     //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
 

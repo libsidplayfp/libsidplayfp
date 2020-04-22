@@ -71,7 +71,7 @@ namespace reSIDfp
  *     Ids = K/2*W/L*Vgst^2             , Vgst >= 0, Vds >= Vgst (saturation mode)
  *
  * where
- *     K   = u*Cox (conductance)
+ *     K   = u*Cox (transconductance coefficient)
  *     W/L = ratio between substrate width and length
  *     Vgst = Vg - Vs - Vt (overdrive voltage)
  *
@@ -83,10 +83,10 @@ namespace reSIDfp
  *
  *     Vds = Vgst - (Vgst - Vds) = Vgst - Vgdt
  *
- *     Ids = K*W/L*(2*Vgst - Vds)*Vds
- *     = K*W/L*(2*Vgst - (Vgst - Vgdt)*(Vgst - Vgdt)
- *     = K*W/L*(Vgst + Vgdt)*(Vgst - Vgdt)
- *     = K*W/L*(Vgst^2 - Vgdt^2)
+ *     Ids = K/2*W/L*(2*Vgst - Vds)*Vds
+ *     = K/2*W/L*(2*Vgst - (Vgst - Vgdt)*(Vgst - Vgdt)
+ *     = K/2*W/L*(Vgst + Vgdt)*(Vgst - Vgdt)
+ *     = K/2*W/L*(Vgst^2 - Vgdt^2)
  *
  * This turns out to be a general equation which covers both the triode
  * and saturation modes (where the second term is 0 in saturation mode).
@@ -109,8 +109,8 @@ namespace reSIDfp
  * The EKV model (Enz, Krummenacher and Vittoz) essentially performs this
  * blending using an elegant mathematical formulation:
  *
- *     Ids = Is*(if - ir)
- *     Is = 2*u*Cox*Ut^2/k*W/L
+ *     Ids = Is * (if - ir)
+ *     Is = (2 * u*Cox * Ut^2)/k * W/L
  *     if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
  *     ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
  *
