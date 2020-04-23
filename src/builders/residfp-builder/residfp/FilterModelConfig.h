@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -103,7 +103,7 @@ private:
     unsigned short opamp_rev[1 << 16];
 
 private:
-    double getDacZero(double adjustment) const { return dac_zero - (adjustment - 0.5) * 2.; }
+    double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
 
     FilterModelConfig();
     ~FilterModelConfig();
