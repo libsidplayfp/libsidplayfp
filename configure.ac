@@ -1,6 +1,6 @@
 m4_define([lib_major], [2])
 m4_define([lib_minor], [0])
-m4_define([lib_level], [1])
+m4_define([lib_level], [2])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
@@ -93,7 +93,7 @@ dnl libtool-style version-info number
 # Increase the age value only if the changes made to the ABI are backward compatible.
 
 LIBSIDPLAYCUR=7
-LIBSIDPLAYREV=11
+LIBSIDPLAYREV=12
 LIBSIDPLAYAGE=2
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 

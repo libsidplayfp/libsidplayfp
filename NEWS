@@ -1,3 +1,9 @@
+2.0.2 2020-04-25
+* Adjusted residfp 6581 filter parameter range (bug #30)
+* Recalculate noise output when actually changed in residfp
+
+
+
 2.0.1 2019-09-07
 * Fix loading stereo mus tunes
 * Fix residfp envelope (bug #29)
