@@ -344,6 +344,12 @@ CIA/shiftregister/cia-icr-test-continues-old         --cia old
 CIA/shiftregister/cia-icr-test-continues-new         --cia new
 CIA/shiftregister/cia-icr-test-oneshot-old           --cia old
 CIA/shiftregister/cia-icr-test-oneshot-new           --cia new
+CIA/shiftregister/cia-sdr-load
+# FIXME
+#CIA/shiftregister/cia-sdr-delay
+#CIA/shiftregister/cia-sdr-init
+#CIA/shiftregister/cia-sdr-icr-old                    --cia old
+#CIA/shiftregister/cia-sdr-icr-new                    --cia new
 CIA/shiftregister/cia-sp-test-continues-old          --cia old
 CIA/shiftregister/cia-sp-test-continues-new          --cia new
 CIA/shiftregister/cia-sp-test-oneshot-old            --cia old
