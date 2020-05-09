@@ -61,9 +61,7 @@ private:
     unsigned short n_dac;
 
     const double Vth;
-    const double denorm;
-    const double C;
-    const double uCox;
+    const double nKp;
     const double vmin;
     const double N16;
 
@@ -73,9 +71,7 @@ public:
         vx(0),
         vc(0),
         Vth(Vth),
-        denorm(denorm),
-        C(C),
-        uCox(uCox),
+        nKp(denorm* (uCox / 2. * 1.0e-6 / C)),
         vmin(vmin),
         N16(N16)
     {
@@ -86,7 +82,7 @@ public:
     {
         // Normalized current factor, 1 cycle at 1MHz.
         // Fit in 5 bits.
-        const double tmp = denorm * (1 << 13) * (uCox / 2. * wl * 1.0e-6 / C);
+        const double tmp = (1 << 13) * nKp * wl;
         assert(tmp > -0.5 && tmp < 65535.5);
         n_dac = static_cast<unsigned short>(tmp + 0.5);
     }
