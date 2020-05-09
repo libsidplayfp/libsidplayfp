@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -59,9 +59,8 @@ private:
     const double Vdd;
     const double Vth;           ///< Threshold voltage
     const double Ut;            ///< Thermal voltage: Ut = kT/q = 8.61734315e-5*T ~ 26mV
-    const double k;             ///< Gate coupling coefficient: k = Cox/(Cox+Cdep) ~ 0.7
     const double uCox;          ///< Transconductance coefficient: u*Cox
-    const double kVddt;         ///< k * (Vdd - Vth)
+    const double Vddt;          ///< Vdd - Vth
     //@}
 
     // Derived stuff
