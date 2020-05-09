@@ -128,7 +128,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
     Vdd(9.09),
     Vth(0.80),
     Ut(26.0e-3),
-    uCox(55e-6), // FIXME measure
+    uCox(100e-6),
     Vddt(Vdd - Vth),
     vmin(opamp_voltage[0].x),
     vmax(Vddt < opamp_voltage[0].y ? opamp_voltage[0].y : Vddt),
