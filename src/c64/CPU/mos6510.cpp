@@ -1518,6 +1518,7 @@ void MOS6510::buildInstructionTable()
         case ASLz: case DCPz: case DECz: case INCz: case ISBz: case LSRz:
         case ROLz: case RORz: case SREz: case SLOz: case RLAz: case RRAz:
             access = READ;
+            // fallthrough
         case SAXz: case STAz: case STXz: case STYz:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
             break;
@@ -1531,6 +1532,7 @@ void MOS6510::buildInstructionTable()
         case ASLzx: case DCPzx: case DECzx: case INCzx: case ISBzx: case LSRzx:
         case RLAzx:    case ROLzx: case RORzx: case RRAzx: case SLOzx: case SREzx:
             access = READ;
+            // fallthrough
         case STAzx: case STYzx:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddrX;
             // operates on 0 page in read mode. Truly side-effect free.
@@ -1540,6 +1542,7 @@ void MOS6510::buildInstructionTable()
         // Zero Page with Y Offset Addressing Mode Handler
         case LDXzy: case LAXzy:
             access = READ;
+            // fallthrough
         case STXzy: case SAXzy:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddrY;
             // operates on 0 page in read mode. Truly side-effect free.
@@ -1553,6 +1556,7 @@ void MOS6510::buildInstructionTable()
         case ASLa: case DCPa: case DECa: case INCa: case ISBa: case LSRa:
         case ROLa: case RORa: case SLOa: case SREa: case RLAa: case RRAa:
             access = READ;
+            // fallthrough
         case JMPw: case SAXa: case STAa: case STXa: case STYa:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
             instrTable[buildCycle++].func = &MOS6510::FetchHighAddr;
@@ -1578,6 +1582,7 @@ void MOS6510::buildInstructionTable()
         case LSRax: case RLAax: case ROLax: case RORax: case RRAax:
         case SLOax: case SREax:
             access = READ;
+            // fallthrough
         case SHYax: case STAax:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
             instrTable[buildCycle++].func = &MOS6510::FetchHighAddrX;
@@ -1588,6 +1593,7 @@ void MOS6510::buildInstructionTable()
         case ADCay: case ANDay: case CMPay: case EORay: case LASay:
         case LAXay: case LDAay: case LDXay: case ORAay: case SBCay:
             access = READ;
+            // fallthrough
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
             instrTable[buildCycle++].func = &MOS6510::FetchHighAddrY2;
             instrTable[buildCycle++].func = &MOS6510::throwAwayRead;
@@ -1597,6 +1603,7 @@ void MOS6510::buildInstructionTable()
         case DCPay: case ISBay: case RLAay: case RRAay: case SLOay:
         case SREay:
             access = READ;
+            // fallthrough
         case SHAay: case SHSay: case SHXay: case STAay:
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddr;
             instrTable[buildCycle++].func = &MOS6510::FetchHighAddrY;
@@ -1616,6 +1623,7 @@ void MOS6510::buildInstructionTable()
         case ORAix: case SBCix:
         case DCPix: case ISBix: case SLOix: case SREix: case RLAix: case RRAix:
             access = READ;
+            // fallthrough
         case SAXix: case STAix:
             instrTable[buildCycle++].func = &MOS6510::FetchLowPointer;
             instrTable[buildCycle++].func = &MOS6510::FetchLowPointerX;
@@ -1637,6 +1645,7 @@ void MOS6510::buildInstructionTable()
         case DCPiy: case ISBiy: case RLAiy: case RRAiy: case SLOiy:
         case SREiy:
             access = READ;
+            // fallthrough
         case SHAiy: case STAiy:
             instrTable[buildCycle++].func = &MOS6510::FetchLowPointer;
             instrTable[buildCycle++].func = &MOS6510::FetchLowEffAddr;
@@ -1847,6 +1856,7 @@ void MOS6510::buildInstructionTable()
             instrTable[buildCycle].nosteal = true;
             instrTable[buildCycle++].func = &MOS6510::PushLowPC;
             instrTable[buildCycle++].func = &MOS6510::FetchHighAddr;
+            // fallthrough
         case JMPw: case JMPi:
             instrTable[buildCycle++].func = &MOS6510::jmp_instr;
             break;
