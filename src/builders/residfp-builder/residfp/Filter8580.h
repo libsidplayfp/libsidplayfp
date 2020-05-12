@@ -334,7 +334,7 @@ public:
 
     ~Filter8580();
 
-    int clock(int voice1, int voice2, int voice3) override;
+    unsigned short clock(int voice1, int voice2, int voice3) override;
 
     void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 14) + mixer[0][0]; }
 
@@ -354,7 +354,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Filter8580::clock(int voice1, int voice2, int voice3)
+unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
 {
     voice1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
     voice2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
@@ -377,7 +377,7 @@ int Filter8580::clock(int voice1, int voice2, int voice3)
     if (bp) Vo += Vbp;
     if (hp) Vo += Vhp;
 
-    return currentGain[currentMixer[Vo]] - (1 << 15);
+    return currentGain[currentMixer[Vo]];
 }
 
 } // namespace reSIDfp

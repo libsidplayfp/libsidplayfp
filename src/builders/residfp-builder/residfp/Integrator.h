@@ -218,7 +218,9 @@ int Integrator::solve(int vi)
     assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const int n_I_vcr = static_cast<int>(vcr_n_Ids_term[Vgs] - vcr_n_Ids_term[Vgd]) << 15;
+    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[Vgs]) << 15;
+    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[Vgd]) << 15;
+    const int n_I_vcr = If - Ir;
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;
