@@ -1,3 +1,9 @@
+2.0.3 2020-05-15
+* Avoid saturation of residfp 8580 filter
+* Fix some UBSan warnings
+
+
+
 2.0.2 2020-04-25
 * Adjusted residfp 6581 filter parameter range (bug #30)
 * Recalculate noise output when actually changed in residfp
