@@ -344,8 +344,7 @@ CIA/shiftregister/cia-icr-test-continues-new         --cia new
 CIA/shiftregister/cia-icr-test-oneshot-old           --cia old
 CIA/shiftregister/cia-icr-test-oneshot-new           --cia new
 CIA/shiftregister/cia-sdr-load
-# FIXME prg is missing
-#CIA/shiftregister/cia-sdr-delay
+CIA/shiftregister/cia-sdr-delay
 CIA/shiftregister/cia-sdr-init
 # FIXME
 #CIA/shiftregister/cia-sdr-icr-old                    --cia old
