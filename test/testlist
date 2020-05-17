@@ -319,13 +319,12 @@ CIA/ciavarious/cia13
 CIA/ciavarious/cia14
 CIA/ciavarious/cia15
 CIA/dd0dtest/dd0dtest
-# FIXME these should work
-#CIA/irqdelay/irqdelay                                --cia old
-#CIA/irqdelay/irqdelay-new                            --cia new
-#CIA/irqdelay/irqdelay2                               --cia old
-#CIA/irqdelay/irqdelay2-new                           --cia new
-#CIA/irqdelay/irqdelay-oneshot                        --cia old
-#CIA/irqdelay/irqdelay-oneshot-new                    --cia new
+CIA/irqdelay/irqdelay                                --cia old
+CIA/irqdelay/irqdelay-new                            --cia new
+CIA/irqdelay/irqdelay2                               --cia old
+CIA/irqdelay/irqdelay2-new                           --cia new
+CIA/irqdelay/irqdelay-oneshot                        --cia old
+CIA/irqdelay/irqdelay-oneshot-new                    --cia new
 CIA/irqdelay/irqdelay-cia1
 CIA/irqdelay/irqdelay-cia1-4-old                     --cia old
 CIA/irqdelay/irqdelay-cia1-4-new                     --cia new
@@ -345,9 +344,10 @@ CIA/shiftregister/cia-icr-test-continues-new         --cia new
 CIA/shiftregister/cia-icr-test-oneshot-old           --cia old
 CIA/shiftregister/cia-icr-test-oneshot-new           --cia new
 CIA/shiftregister/cia-sdr-load
-# FIXME
+# FIXME prg is missing
 #CIA/shiftregister/cia-sdr-delay
 CIA/shiftregister/cia-sdr-init
+# FIXME
 #CIA/shiftregister/cia-sdr-icr-old                    --cia old
 #CIA/shiftregister/cia-sdr-icr-new                    --cia new
 CIA/shiftregister/cia-sp-test-continues-old          --cia old
