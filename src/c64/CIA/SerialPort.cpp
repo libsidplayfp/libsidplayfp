@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -44,7 +44,7 @@ void SerialPort::handle(uint8_t serialDataReg)
 {
     if (count && (--count == 0))
     {
-        eventScheduler.schedule(*this, 1, EVENT_CLOCK_PHI1);
+        eventScheduler.schedule(*this, 4, EVENT_CLOCK_PHI1);
     }
 
     if ((count == 0) && buffered)
