@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -37,20 +37,14 @@ namespace libsidplayfp
 {
 
 /**
- * Magic value for lxa and ane undocumented instructions.
+ * Magic values for lxa and ane undocumented instructions.
  * Magic may be EE, EF, FE or FF, but most emulators seem to use EE.
- * Based on tests on a couple of chips at
- * http://visual6502.org/wiki/index.php?title=6502_Opcode_8B_(XAA,_ANE)
- * the value of magic for the MOS 6510 is FF.
- * However the Lorentz test suite assumes this to be EE.
+ * The constants here defined are based on VICE testsuite which
+ * refers to some real case usage of the opcodes.
  */
-const uint8_t magic =
-#ifdef VICE_TESTSUITE
-    0xef
-#else
-    0xff
-#endif
-;
+const uint8_t lxa_magic = 0xee;
+const uint8_t ane_magic = 0xef;
+
 //-------------------------------------------------------------------------//
 
 /**
@@ -907,7 +901,7 @@ void MOS6510::and_instr()
  */
 void MOS6510::ane_instr()
 {
-    flags.setNZ(Register_Accumulator = (Register_Accumulator | magic) & Register_X & Cycle_Data);
+    flags.setNZ(Register_Accumulator = (Register_Accumulator | ane_magic) & Register_X & Cycle_Data);
     interruptsAndNextOpcode();
 }
 
@@ -1398,7 +1392,7 @@ void MOS6510::lse_instr()
  */
 void MOS6510::oal_instr()
 {
-    flags.setNZ(Register_X = (Register_Accumulator = (Cycle_Data & (Register_Accumulator | magic))));
+    flags.setNZ(Register_X = (Register_Accumulator = (Cycle_Data & (Register_Accumulator | lxa_magic))));
     interruptsAndNextOpcode();
 }
 
