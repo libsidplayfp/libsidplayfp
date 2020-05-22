@@ -384,7 +384,7 @@ CIA/tod/hzsync4
 CIA/tod/hzsync5
 CIA/tod/powerup
 CIA/tod/read-latch
-#CIA/tod/stability
+CIA/tod/stability
 CIA/tod/write-stop
 ### CPU ###
 CPU/64doc/dadc
