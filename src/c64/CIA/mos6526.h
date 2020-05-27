@@ -130,6 +130,9 @@ private:
     /// Timer B bug
     bool tbBug;
 
+private:
+    void triggerBug() { idr &= ~INTERRUPT_UNDERFLOW_B; }
+
 public:
     InterruptSource6526(EventScheduler &scheduler, MOS6526 &parent) :
         InterruptSource(scheduler, parent),

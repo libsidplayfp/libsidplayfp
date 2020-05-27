@@ -52,23 +52,24 @@ public:
         INTERRUPT_REQUEST      = 1 << 7  ///< control bit
     };
 
-protected:
+private:
     /// Pointer to the MOS6526 which this Interrupt belongs to.
     MOS6526 &parent;
 
+protected:
     /// Event scheduler.
     EventScheduler &eventScheduler;
 
     /// Clock when clear was called last
     event_clock_t last_clear;
 
-private:
     /// Interrupt control register
     uint8_t icr;
 
     /// Interrupt data register
     uint8_t idr;
 
+private:
     /// Have we already scheduled CIA->CPU interrupt transition?
     bool scheduled;
 
@@ -78,8 +79,6 @@ protected:
     bool interruptTriggered() const { return idr & INTERRUPT_REQUEST; }
 
     void triggerInterrupt() { idr |= INTERRUPT_REQUEST; }
-
-    void triggerBug() { idr &= ~INTERRUPT_UNDERFLOW_B; }
 
 protected:
     /**
