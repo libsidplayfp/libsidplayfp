@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -78,8 +78,16 @@ void InterruptSource8521::trigger(uint8_t interruptMask)
 
     if (interruptMasked() && !interruptTriggered())
     {
-        triggerInterrupt();
-        parent.interrupt(true);
+        if (eventScheduler.getTime(EVENT_CLOCK_PHI2) == last_clear+1)
+        {
+            // Interrupt delayed by 1/2 cycle if acknowledged on assert
+            schedule();
+        }
+        else
+        {
+            triggerInterrupt();
+            interrupt(true);
+        }
     }
 }
 
@@ -87,7 +95,7 @@ uint8_t InterruptSource8521::clear()
 {
     if (interruptTriggered())
     {
-        parent.interrupt(false);
+        interrupt(false);
     }
 
     return InterruptSource::clear();
@@ -121,20 +129,13 @@ void InterruptSource6526::trigger(uint8_t interruptMask)
 
     if (!interruptTriggered())
     {
+        // interrupts are delayed by 1 clk on old CIAs
         schedule();
     }
 }
 
 uint8_t InterruptSource6526::clear()
 {
-    last_clear = eventScheduler.getTime(EVENT_CLOCK_PHI2);
-
-    if (scheduled)
-    {
-        eventScheduler.cancel(*this);
-        scheduled = false;
-    }
-
     if (tbBug)
     {
         triggerBug();
@@ -143,18 +144,10 @@ uint8_t InterruptSource6526::clear()
 
     if (interruptTriggered())
     {
-        parent.interrupt(false);
+        interrupt(false);
     }
 
     return InterruptSource::clear();
-}
-
-void InterruptSource6526::event()
-{
-    triggerInterrupt();
-    parent.interrupt(true);
-
-    scheduled = false;
 }
 
 void InterruptSource6526::reset()
@@ -162,7 +155,6 @@ void InterruptSource6526::reset()
     InterruptSource::reset();
 
     tbBug = false;
-    scheduled = false;
 }
 
 const char *MOS6526::credits()
@@ -172,7 +164,7 @@ const char *MOS6526::credits()
             "\tCopyright (C) 2001-2004 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"
-            "\tCopyright (C) 2011-2018 Leandro Nini\n";
+            "\tCopyright (C) 2011-2020 Leandro Nini\n";
 }
 
 MOS6526::MOS6526(EventScheduler &scheduler) :
