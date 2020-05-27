@@ -30,7 +30,6 @@ namespace libsidplayfp
 
 void SerialPort::reset()
 {
-    out = 0;
     count = 0;
     buffered = false;
 }
@@ -40,19 +39,36 @@ void SerialPort::event()
     parent.spInterrupt();
 }
 
+void SerialPort::check(uint16_t ltDiff)
+{
+    if (count)
+    {
+        const bool cnt = !(count & 1);
+        if ((cnt
+                && (ltDiff != 1)
+                && (!newModel || (ltDiff != 3))
+                && ((count != 2) || (ltDiff != 2)))
+            || (!cnt && (ltDiff > 0) && (ltDiff < 5)))
+        {
+            eventScheduler.schedule(*this, 4, EVENT_CLOCK_PHI1);
+        }
+
+        count = 0;
+    }
+}
+
 void SerialPort::handle(uint8_t serialDataReg)
 {
-    if (count && (--count == 0))
+    if (count && (--count == 2))
     {
         eventScheduler.schedule(*this, 4, EVENT_CLOCK_PHI1);
     }
 
-    if ((count == 0) && buffered)
+    if (buffered)
     {
-        out = serialDataReg;
         buffered = false;
-        count = 14;
         // Output rate 8 bits at ta / 2
+        count = 16;
     }
 }
 

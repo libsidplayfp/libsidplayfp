@@ -78,12 +78,6 @@ private:
     /// PB6/PB7 Flipflop to signal underflows.
     bool pbToggle;
 
-    /// Current timer value.
-    uint_least16_t timer;
-
-    /// Timer start value (Latch).
-    uint_least16_t latch;
-
     /// Copy of regs[CRA/B]
     uint8_t lastControlValue;
 
@@ -93,6 +87,12 @@ protected:
 
     /// CRA/CRB control register / state.
     int_least32_t state;
+
+    /// Current timer value.
+    uint_least16_t timer;
+
+    /// Timer start value (Latch).
+    uint_least16_t latch;
 
 private:
     /**
@@ -140,11 +140,11 @@ protected:
         m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
         eventScheduler(scheduler),
         pbToggle(false),
-        timer(0),
-        latch(0),
         lastControlValue(0),
         parent(parent),
-        state(0) {}
+        state(0),
+        timer(0),
+        latch(0) {}
 
 public:
     /**

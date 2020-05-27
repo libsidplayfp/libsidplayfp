@@ -315,6 +315,8 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
         {
             // Reset the underflow flipflop for the data port
             timerA.setPbToggle(true);
+            if (!(data & 8))
+                serialPort.check(timerA.getLatchTimerDiff());
         }
         timerA.setControlRegister(data);
         break;
@@ -371,6 +373,8 @@ void MOS6526::setModel(bool newModel)
         interruptSource.reset(new InterruptSource8521(eventScheduler, *this));
     else
         interruptSource.reset(new InterruptSource6526(eventScheduler, *this));
+
+    serialPort.setNewModel(newModel);
 }
 
 }

@@ -46,7 +46,7 @@ private:
 
     bool buffered;
 
-    uint8_t out;
+    bool newModel;
 
 private:
     void event() override;
@@ -61,6 +61,10 @@ public:
     void reset();
 
     void setBuffered() { buffered = true; }
+
+    void setNewModel(bool nm) { newModel = nm; }
+
+    void check(uint16_t ltDiff);
 
     void handle(uint8_t serialDataReg);
 };

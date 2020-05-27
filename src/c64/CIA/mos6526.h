@@ -65,6 +65,8 @@ public:
      */
     TimerA(EventScheduler &scheduler, MOS6526 &parent) :
         Timer("CIA Timer A", scheduler, parent) {}
+
+    inline uint_least16_t getLatchTimerDiff() const { return latch-timer; }
 };
 
 /**
