@@ -504,9 +504,8 @@ interrupts/branchquirk/branchquirk-nmiold            --cia old
 interrupts/branchquirk/branchquirk-old               --cia old
 interrupts/branchquirk/branchquirk-nminew            --cia new
 interrupts/branchquirk/branchquirk-new               --cia new
-# FIXME these should work
-#interrupts/cia-int/cia-int-irq                       --cia old
-#interrupts/cia-int/cia-int-irq-new                   --cia new
+interrupts/cia-int/cia-int-irq                       --cia old
+interrupts/cia-int/cia-int-irq-new                   --cia new
 interrupts/cia-int/cia-int-nmi                       --cia old
 interrupts/cia-int/cia-int-nmi-new                   --cia new
 interrupts/irq-ackn-bug/cia1                         --cia old

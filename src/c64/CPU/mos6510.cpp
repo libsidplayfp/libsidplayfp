@@ -86,6 +86,11 @@ void MOS6510::eventWithSteals()
     }
 }
 
+void MOS6510::removeIRQ()
+{
+    if (!rstFlag && !nmiFlag && interruptCycle != MAX)
+        interruptCycle = MAX;
+}
 
 /**
  * Handle bus access signals. When RDY line is asserted, the CPU
@@ -190,7 +195,7 @@ void MOS6510::triggerIRQ()
 void MOS6510::clearIRQ()
 {
     irqAssertedOnPin = false;
-    calculateInterruptTriggerCycle();
+    eventScheduler.schedule(clearInt, 2, EVENT_CLOCK_PHI1);
 }
 
 void MOS6510::interruptsAndNextOpcode()
@@ -1440,7 +1445,8 @@ MOS6510::MOS6510(EventScheduler &scheduler) :
     m_fdbg(stdout),
 #endif
     m_nosteal("CPU-nosteal", *this, &MOS6510::eventWithoutSteals),
-    m_steal("CPU-steal", *this, &MOS6510::eventWithSteals)
+    m_steal("CPU-steal", *this, &MOS6510::eventWithSteals),
+    clearInt("Remove IRQ", *this, &MOS6510::removeIRQ)
 {
     buildInstructionTable();
 

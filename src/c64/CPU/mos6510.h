@@ -168,8 +168,11 @@ private:
     /// Represents an instruction subcycle that reads
     EventCallback<MOS6510> m_steal;
 
+    EventCallback<MOS6510> clearInt;
+
     void eventWithoutSteals();
     void eventWithSteals();
+    void removeIRQ();
 
     inline void Initialise();
 
