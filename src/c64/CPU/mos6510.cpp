@@ -45,6 +45,8 @@ namespace libsidplayfp
 const uint8_t lxa_magic = 0xee;
 const uint8_t ane_magic = 0xef;
 
+const int interruptDelay = 2;
+
 //-------------------------------------------------------------------------//
 
 /**
@@ -79,7 +81,7 @@ void MOS6510::eventWithSteals()
         else if (cycleCount == (SEIn << 3))
         {
             flags.setI(true);
-            if (!rstFlag && !nmiFlag && (cycleCount <= interruptCycle + 2))
+            if (!rstFlag && !nmiFlag && (cycleCount <= interruptCycle + interruptDelay))
                 interruptCycle = MAX;
         }
 #ifdef CORRECT_SH_INSTRUCTIONS
@@ -93,14 +95,14 @@ void MOS6510::eventWithSteals()
         // interrupt delay, but only the first one.
         if (interruptCycle == cycleCount)
         {
-            interruptCycle --;
+            interruptCycle--;
         }
     }
 }
 
 void MOS6510::removeIRQ()
 {
-    if (!rstFlag && !nmiFlag && interruptCycle != MAX)
+    if (!rstFlag && !nmiFlag && (interruptCycle != MAX))
         interruptCycle = MAX;
 }
 
@@ -207,12 +209,12 @@ void MOS6510::triggerIRQ()
 void MOS6510::clearIRQ()
 {
     irqAssertedOnPin = false;
-    eventScheduler.schedule(clearInt, 2, EVENT_CLOCK_PHI1);
+    eventScheduler.schedule(clearInt, interruptDelay, EVENT_CLOCK_PHI1);
 }
 
 void MOS6510::interruptsAndNextOpcode()
 {
-    if (cycleCount > interruptCycle + 2)
+    if (cycleCount > interruptCycle + interruptDelay)
     {
 #ifdef DEBUG
         if (dodump)
