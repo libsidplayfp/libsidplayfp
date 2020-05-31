@@ -70,6 +70,18 @@ void MOS6510::eventWithSteals()
     }
     else
     {
+        if (cycleCount == (CLIn << 3))
+        {
+            flags.setI(false);
+            if (irqAssertedOnPin && (interruptCycle == MAX))
+                interruptCycle = -MAX;
+        }
+        else if (cycleCount == (SEIn << 3))
+        {
+            flags.setI(true);
+            if (!rstFlag && !nmiFlag && (cycleCount <= interruptCycle + 2))
+                interruptCycle = MAX;
+        }
 #ifdef CORRECT_SH_INSTRUCTIONS
         // Save rdy state for SH* instructions
         if (instrTable[cycleCount].func == &MOS6510::throwAwayRead)

@@ -525,11 +525,10 @@ interrupts/irqdma/test4
 interrupts/irqdma/test4b
 interrupts/irqdma/test5
 interrupts/irqdma/test5b
-#FIXME these should work
-#interrupts/irqdma/test6
-#interrupts/irqdma/test6b
-#interrupts/irqdma/test7
-#interrupts/irqdma/test7b
+interrupts/irqdma/test6
+interrupts/irqdma/test6b
+interrupts/irqdma/test7
+interrupts/irqdma/test7b
 interrupts/irqdummy/irqdummy
 interrupts/irqnmi/irqnmi-old                         --cia old
 interrupts/irqnmi/irqnmi-new                         --cia new
