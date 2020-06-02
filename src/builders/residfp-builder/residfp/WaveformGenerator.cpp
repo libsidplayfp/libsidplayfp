@@ -192,6 +192,8 @@ bool do_pre_writeback(unsigned int waveform_prev, unsigned int waveform, bool is
             ((((waveform_prev & 0x3) == 0x1) && ((waveform & 0x3) == 0x2))
             || (((waveform_prev & 0x3) == 0x2) && ((waveform & 0x3) == 0x1))))
         return false;
+    if (waveform_prev == 0xc)
+        return false;
     // ok do the writeback
     return true;
 }
