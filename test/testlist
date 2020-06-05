@@ -695,9 +695,9 @@ SID/wf12nsr/wf12nsr                                  --sid old
 VICII/colorram/test
 VICII/split-tests/bascan/bascan
 VICII/vspbug/vsp_bug
-VICII/spritesteal/spritesteal
-#VICII/spritesteal spritesteal_ntsc
-#VICII/spritesteal spritesteal_ntscold
+VICII/spritesteal/spritesteal                        --vic pal
+VICII/spritesteal spritesteal_ntsc                   --vic ntsc
+VICII/spritesteal spritesteal_ntscold                --vic oldntsc
 #VICII/spritex/demusinterruptus
 #VICII/spritex/testsuite
 #VICII/spritex/testsuite_ntsc

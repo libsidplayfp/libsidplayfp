@@ -114,6 +114,27 @@ int main(int argc, char* argv[])
                     config.ciaModel = SidConfig::MOS8521;
                 }
             }
+            if (!strcmp(&argv[i][1], "-vic"))
+            {
+                i++;
+                if (!strcmp(&argv[i][0], "pal"))
+                {
+                    config.defaultC64Model = SidConfig::PAL;
+                    config.forceC64Model = true;
+                }
+                else
+                if (!strcmp(&argv[i][0], "ntsc"))
+                {
+                    config.defaultC64Model = SidConfig::NTSC;
+                    config.forceC64Model = true;
+                }
+                else
+                if (!strcmp(&argv[i][0], "oldntsc"))
+                {
+                    config.defaultC64Model = SidConfig::OLD_NTSC;
+                    config.forceC64Model = true;
+                }
+            }
         }
         else
         {
