@@ -692,4 +692,17 @@ SID/writedelay/writedelay                            --sid old
 SID/wf12nsr/wf12nsr                                  --sid old
 #SID/wf12nsr/wf12nsr-8580                             --sid new
 ### VICII ###
-VICII/banking/banking
+VICII/colorram/test
+VICII/split-tests/bascan/bascan
+VICII/vspbug/vsp_bug
+VICII/spritesteal/spritesteal
+#VICII/spritesteal spritesteal_ntsc
+#VICII/spritesteal spritesteal_ntscold
+#VICII/spritex/demusinterruptus
+#VICII/spritex/testsuite
+#VICII/spritex/testsuite_ntsc
+#VICII/spritex/testsuite_ntscold
+#VICII/spritey/spritey
+#VICII/lplatency/lplatency
+#VICII/lp-trigger/test2
+#VICII/lp-trigger/test2new
