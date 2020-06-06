@@ -72,25 +72,30 @@ void MOS6510::eventWithSteals()
     }
     else
     {
-        if (cycleCount == (CLIn << 3))
+        switch (cycleCount)
         {
+        case (CLIn << 3):
             flags.setI(false);
             if (irqAssertedOnPin && (interruptCycle == MAX))
                 interruptCycle = -MAX;
-        }
-        else if (cycleCount == (SEIn << 3))
-        {
+            break;
+        case (SEIn << 3):
             flags.setI(true);
             if (!rstFlag && !nmiFlag && (cycleCount <= interruptCycle + interruptDelay))
                 interruptCycle = MAX;
+            break;
+        case (SHAiy << 3) + 3:
+        case (SHSay << 3) + 2:
+        case (SHYax << 3) + 2:
+        case (SHXay << 3) + 2:
+        case (SHAay << 3) + 2:
+            // Save rdy state for SH* instructions
+            rdyOnThrowAwayRead = true;
+            break;
+        default:
+            break;
         }
-#ifdef CORRECT_SH_INSTRUCTIONS
-        // Save rdy state for SH* instructions
-        if (instrTable[cycleCount].func == &MOS6510::throwAwayRead)
-        {
-            rdyOnThrowAwayRead = false;
-        }
-#endif
+
         // Even while stalled, the CPU can still process first clock of
         // interrupt delay, but only the first one.
         if (interruptCycle == cycleCount)
@@ -250,9 +255,8 @@ void MOS6510::fetchNextOpcode()
     instrStartPC = Register_ProgramCounter;
 #endif
 
-#ifdef CORRECT_SH_INSTRUCTIONS
-    rdyOnThrowAwayRead = true;
-#endif
+    rdyOnThrowAwayRead = false;
+
     cycleCount = cpuRead(Register_ProgramCounter) << 3;
     Register_ProgramCounter++;
 
@@ -754,7 +758,6 @@ void MOS6510::sh_instr(uint8_t offset)
 {
     const uint8_t tmp = Cycle_Data & (endian_16hi8(Cycle_EffectiveAddress - offset) + 1);
 
-#ifdef CORRECT_SH_INSTRUCTIONS
     /*
      * When a DMA is going on (the CPU is halted by the VIC-II)
      * while the instruction sha/shx/shy executes then the last
@@ -762,11 +765,10 @@ void MOS6510::sh_instr(uint8_t offset)
      *
      * http://sourceforge.net/p/vice-emu/bugs/578/
      */
-    if (rdyOnThrowAwayRead)
+    if (!rdyOnThrowAwayRead)
     {
         Cycle_Data = tmp;
     }
-#endif
 
     /*
      * When the addressing/indexing causes a page boundary crossing
@@ -2189,7 +2191,7 @@ const char *MOS6510::credits()
         "MOS6510 Cycle Exact Emulation\n"
         "\t(C) 2000 Simon A. White\n"
         "\t(C) 2008-2010 Antti S. Lankila\n"
-        "\t(C) 2011-2019 Leandro Nini\n";
+        "\t(C) 2011-2020 Leandro Nini\n";
 }
 
 void MOS6510::debug(bool enable, FILE *out)

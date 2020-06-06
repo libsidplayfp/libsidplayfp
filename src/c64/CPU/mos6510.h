@@ -129,10 +129,8 @@ private:
 
     bool d1x1;
 
-#ifdef CORRECT_SH_INSTRUCTIONS
     /// The RDY pin state during last throw away read.
     bool rdyOnThrowAwayRead;
-#endif
 
     /// Status register
     Flags flags;
