@@ -131,22 +131,20 @@ public:
      */
     bool trigger(unsigned int lineCycle, unsigned int rasterY)
     {
-        if (!isTriggered)
+        if (isTriggered)
+            return false;
+
+        isTriggered = true;
+
+        // don't latch on the last line, except on the first cycle
+        if ((rasterY != lastLine) || (lineCycle == 0))
         {
-            // don't trigger on the last line, except on the first cycle
-            if ((rasterY == lastLine) && (lineCycle > 0))
-            {
-                return false;
-            }
-
-            isTriggered = true;
-
             // Latch current coordinates
             lpx = getXpos(lineCycle) + 2;
             lpy = rasterY;
-            return true;
         }
-        return false;
+
+        return true;
     }
 
     /**
