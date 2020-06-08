@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -177,6 +177,9 @@ private:
      */
     inline void setBA(bool state) override;
 
+    /**
+     * @param state fire pressed, active low
+     */
     inline void lightpen(bool state) override;
 
     void resetIoBank();
@@ -297,7 +300,7 @@ void c64::setBA(bool state)
 
 void c64::lightpen(bool state)
 {
-    if (state)
+    if (!state)
         vic.triggerLightpen();
     else
         vic.clearLightpen();

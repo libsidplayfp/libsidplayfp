@@ -696,13 +696,13 @@ VICII/colorram/test
 VICII/split-tests/bascan/bascan
 VICII/vspbug/vsp_bug
 VICII/spritesteal/spritesteal                        --vic pal
-VICII/spritesteal spritesteal_ntsc                   --vic ntsc
-VICII/spritesteal spritesteal_ntscold                --vic oldntsc
+VICII/spritesteal/spritesteal_ntsc                   --vic ntsc
+VICII/spritesteal/spritesteal_ntscold                --vic oldntsc
 #VICII/spritex/demusinterruptus
 #VICII/spritex/testsuite
 #VICII/spritex/testsuite_ntsc
 #VICII/spritex/testsuite_ntscold
 #VICII/spritey/spritey
-#VICII/lplatency/lplatency
-#VICII/lp-trigger/test2
+VICII/lplatency/lplatency
+VICII/lp-trigger/test2
 #VICII/lp-trigger/test2new
