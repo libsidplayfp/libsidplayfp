@@ -210,6 +210,23 @@ void MOS6526::reset()
     eventScheduler.cancel(bTickEvent);
 }
 
+uint8_t MOS6526::adjustDataPort(uint8_t data)
+{
+    if (regs[CRA] & 0x02)
+    {
+        data &= 0xbf;
+        if (timerA.getPb(regs[CRA]))
+            data |= 0x40;
+    }
+    if (regs[CRB] & 0x02)
+    {
+        data &= 0x7f;
+        if (timerB.getPb(regs[CRB]))
+            data |= 0x80;
+    }
+    return data;
+}
+
 uint8_t MOS6526::read(uint_least8_t addr)
 {
     addr &= 0x0f;
@@ -224,23 +241,7 @@ uint8_t MOS6526::read(uint_least8_t addr)
     case PRA: // Simulate a serial port
         return (regs[PRA] | ~regs[DDRA]);
     case PRB:
-    {
-        uint8_t data = regs[PRB] | ~regs[DDRB];
-        // Timers can appear on the port
-        if (regs[CRA] & 0x02)
-        {
-            data &= 0xbf;
-            if (timerA.getPb(regs[CRA]))
-                data |= 0x40;
-        }
-        if (regs[CRB] & 0x02)
-        {
-            data &= 0x7f;
-            if (timerB.getPb(regs[CRB]))
-                data |= 0x80;
-        }
-        return data;
-    }
+        return adjustDataPort(regs[PRB] | ~regs[DDRB]);
     case TAL:
         return endian_16lo8(timerA.getTimer());
     case TAH:

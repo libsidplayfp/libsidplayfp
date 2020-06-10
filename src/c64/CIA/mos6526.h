@@ -252,6 +252,11 @@ protected:
     virtual void portA() {}
     virtual void portB() {}
 
+     /**
+      * Timers can appear on the port.
+      */
+     uint8_t adjustDataPort(uint8_t data);
+
     /**
      * Read CIA register.
      *

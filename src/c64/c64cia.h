@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -57,7 +57,10 @@ protected:
 
     void portB() override
     {
-        m_env.lightpen((prb | ~ddrb) & 0x10);
+        const uint8_t pb = prb | ~ddrb;
+        // We should call adjustDataPort here
+        // but we're only interested in bit 4
+        m_env.lightpen(pb & 0x10);
     }
 
 public:
