@@ -210,9 +210,9 @@ class Integrator;
  * Note that these are only approximate values for one particular SID chip,
  * due to process variations the values can be substantially different in
  * other chips.
- * 
- * 
- * 
+ *
+ *
+ *
  * Filter frequency cutoff DAC
  * ---------------------------
  *
@@ -395,7 +395,7 @@ unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
     voice1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
     voice2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = filt3 || !voice3off ? (voice3 * voiceScaleS14 >> 18) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS14 >> 18) + voiceDC : 0;
 
     int Vi = 0;
     int Vo = 0;
