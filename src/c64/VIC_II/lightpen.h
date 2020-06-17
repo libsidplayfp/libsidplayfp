@@ -56,7 +56,7 @@ private:
      * @param lineCycle
      * @return x position divided by two
      */
-    uint8_t getXpos(unsigned int lineCycle)
+    uint8_t getXpos(unsigned int lineCycle) const
     {
         if (lineCycle < 12)
             lineCycle += cyclesPerLine-1;
