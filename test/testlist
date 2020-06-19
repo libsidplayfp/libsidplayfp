@@ -346,12 +346,38 @@ CIA/shiftregister/cia-icr-test-oneshot-new           --cia new
 CIA/shiftregister/cia-sdr-load
 CIA/shiftregister/cia-sdr-delay
 CIA/shiftregister/cia-sdr-init
-CIA/shiftregister/cia-sdr-icr-old                    --cia old
-CIA/shiftregister/cia-sdr-icr-new                    --cia new
+### weird difference between models here ###
 CIA/shiftregister/cia-sp-test-continues-old          --cia old
 CIA/shiftregister/cia-sp-test-continues-new          --cia new
 CIA/shiftregister/cia-sp-test-oneshot-old            --cia old
 CIA/shiftregister/cia-sp-test-oneshot-new            --cia new
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-5
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-6
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-7         --cia new
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-8         --cia new
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-50        --cia new
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-51        --cia new
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-64        --cia new
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-5
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-6
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-7         --cia new
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-8         --cia new
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-50        --cia new
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-51        --cia new
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-64        --cia new
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-7    --cia old
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-8    --cia old
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-50   --cia old
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-51   --cia old
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-64   --cia old
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-7    --cia old
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-8    --cia old
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-50   --cia old
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-51   --cia old
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-64   --cia old
+###
 CIA/timerbasics/test                                 --cia old
 CIA/timerbasics/test_new                             --cia new
 CIA/timerbasics/timer                                --cia old
@@ -557,7 +583,7 @@ SID/osc_topbit/osc_topbit_test_triangle_old          --sid old
 SID/osc_topbit/osc_topbit_test_noise_new             --sid new
 SID/osc_topbit/osc_topbit_test_pulse_new             --sid new
 SID/osc_topbit/osc_topbit_test_triangle_new          --sid new
-#SID/oscinit/allinit
+SID/oscinit/allinit                                  --sid old
 SID/oscinit/noiseinit                                --sid old
 SID/oscinit/oscinit                                  --sid old
 SID/exp_counter_reset/env_test_exr                   --sid old
@@ -694,10 +720,12 @@ SID/wf12nsr/wf12nsr                                  --sid old
 ### VICII ###
 VICII/colorram/test
 VICII/split-tests/bascan/bascan
+#VICII/split-tests/lightpen/lightpen
 VICII/vspbug/vsp_bug
 VICII/spritesteal/spritesteal                        --vic pal
 VICII/spritesteal/spritesteal_ntsc                   --vic ntsc
 VICII/spritesteal/spritesteal_ntscold                --vic oldntsc
+# sprite collision, won't work
 #VICII/spritex/demusinterruptus
 #VICII/spritex/testsuite
 #VICII/spritex/testsuite_ntsc
@@ -705,4 +733,3 @@ VICII/spritesteal/spritesteal_ntscold                --vic oldntsc
 #VICII/spritey/spritey
 VICII/lplatency/lplatency
 VICII/lp-trigger/test2
-#VICII/lp-trigger/test2new
