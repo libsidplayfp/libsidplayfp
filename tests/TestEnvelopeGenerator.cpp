@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2014-2016 Leandro Nini
+ *  Copyright (C) 2014-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,8 +51,6 @@ TEST_FIXTURE(TestFixture, TestADSRDelayBug)
     // to zero at 2^15 = 0x8000, and then count rate_period - 1 before the
     // envelope can constly be stepped.
 
-    generator.clock();
-
     generator.writeATTACK_DECAY(0x70);
 
     generator.writeCONTROL_REG(0x01);
@@ -63,7 +61,7 @@ TEST_FIXTURE(TestFixture, TestADSRDelayBug)
         generator.clock();
     }
 
-    CHECK_EQUAL(0, (int)generator.readENV());
+    CHECK_EQUAL(1, (int)generator.readENV());
 
     // set lower Attack time
     // should theoretically clock after 63 cycles
@@ -75,7 +73,7 @@ TEST_FIXTURE(TestFixture, TestADSRDelayBug)
         generator.clock();
     }
 
-    CHECK_EQUAL(0, (int)generator.readENV());
+    CHECK_EQUAL(1, (int)generator.readENV());
 }
 
 TEST_FIXTURE(TestFixture, TestFlipFFto00)
@@ -85,9 +83,8 @@ TEST_FIXTURE(TestFixture, TestFlipFFto00)
     // zero; to unlock this situation the state must be changed to release,
     // then to attack.
 
-    generator.clock();
-
     generator.writeATTACK_DECAY(0x77);
+    generator.writeSUSTAIN_RELEASE(0x77);
 
     generator.writeCONTROL_REG(0x01);
 
@@ -96,8 +93,11 @@ TEST_FIXTURE(TestFixture, TestFlipFFto00)
         generator.clock();
     } while ((int)generator.readENV() != 0xff);
 
-
     generator.writeCONTROL_REG(0x00);
+    // run for three clocks, accounting for state pipeline
+    generator.clock();
+    generator.clock();
+    generator.clock();
     generator.writeCONTROL_REG(0x01);
 
     // wait at least 313 cycles
@@ -116,12 +116,18 @@ TEST_FIXTURE(TestFixture, TestFlip00toFF)
     // attack, then to release. The envelope counter will then continue
     // counting down in the release state.
 
-    generator.clock();
+    generator.counter_enabled = false;
 
     generator.writeATTACK_DECAY(0x77);
     generator.writeSUSTAIN_RELEASE(0x77);
+    generator.clock();
+    CHECK_EQUAL(0, (int)generator.readENV());
 
     generator.writeCONTROL_REG(0x01);
+    // run for three clocks, accounting for state pipeline
+    generator.clock();
+    generator.clock();
+    generator.clock();
     generator.writeCONTROL_REG(0x00);
 
     // wait at least 313 cycles
