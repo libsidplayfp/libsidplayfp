@@ -1,3 +1,10 @@
+2.0.4 2020-06-22
+* Further improved CPU/CIA/VICII emulation based on VICE testprogs (bug #27)
+* Fixed an envelope generator regression in resid/residfp (bug #31)
+* Improved noise+pulse interaction in resid/residfp (bug #28)
+
+
+
 2.0.3 2020-05-15
 * Avoid saturation of residfp 8580 filter
 * Fix some UBSan warnings
