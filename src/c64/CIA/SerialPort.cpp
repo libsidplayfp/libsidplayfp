@@ -46,7 +46,7 @@ void SerialPort::check(uint16_t ltDiff)
         const bool cnt = !(count & 1);
         if ((cnt
                 && (ltDiff != 1)
-                && (!newModel || (ltDiff != 3))
+                && (model4485 || (ltDiff != 3))
                 && ((count != 2) || (ltDiff != 2)))
             || (!cnt && (ltDiff > 0) && (ltDiff < 5)))
         {

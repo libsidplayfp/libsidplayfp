@@ -46,7 +46,7 @@ private:
 
     bool buffered;
 
-    bool newModel;
+    bool model4485;
 
 private:
     void event() override;
@@ -55,14 +55,15 @@ public:
     explicit SerialPort(EventScheduler &scheduler, MOS6526 &parent) :
         Event("Serial Port interrupt"),
         parent(parent),
-        eventScheduler(scheduler)
+        eventScheduler(scheduler),
+        model4485(false)
     {}
 
     void reset();
 
     void setBuffered() { buffered = true; }
 
-    void setNewModel(bool nm) { newModel = nm; }
+    void setModel4485(bool is4485) { model4485 = is4485; }
 
     void check(uint16_t ltDiff);
 

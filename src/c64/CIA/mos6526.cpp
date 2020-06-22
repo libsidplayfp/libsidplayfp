@@ -375,7 +375,7 @@ void MOS6526::setModel(bool newModel)
     else
         interruptSource.reset(new InterruptSource6526(eventScheduler, *this));
 
-    serialPort.setNewModel(newModel);
+    //serialPort.setNewModel(newModel);
 }
 
 }
