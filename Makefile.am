@@ -269,13 +269,22 @@ src_builders_resid_builder_resid_libresid_la_CPPFLAGS = \
 $(AM_CPPFLAGS) \
 -DVERSION=\"1.0-pre2\"
 
+if NEW_8580_FILTER
+FILTER8580SRC = \
+src/builders/resid-builder/resid/filter8580new.h \
+src/builders/resid-builder/resid/filter8580new.cc
+else
+FILTER8580SRC = \
+src/builders/resid-builder/resid/filter.h \
+src/builders/resid-builder/resid/filter.cc
+endif
+
 src_builders_resid_builder_resid_libresid_la_SOURCES = \
 src/builders/resid-builder/resid/dac.h \
 src/builders/resid-builder/resid/sid.h \
 src/builders/resid-builder/resid/voice.h \
 src/builders/resid-builder/resid/wave.h \
 src/builders/resid-builder/resid/envelope.h \
-src/builders/resid-builder/resid/filter.h \
 src/builders/resid-builder/resid/extfilt.h \
 src/builders/resid-builder/resid/pot.h \
 src/builders/resid-builder/resid/spline.h \
@@ -284,11 +293,11 @@ src/builders/resid-builder/resid/sid.cc \
 src/builders/resid-builder/resid/voice.cc \
 src/builders/resid-builder/resid/wave.cc \
 src/builders/resid-builder/resid/envelope.cc \
-src/builders/resid-builder/resid/filter.cc \
 src/builders/resid-builder/resid/extfilt.cc \
 src/builders/resid-builder/resid/pot.cc \
 src/builders/resid-builder/resid/resid-config.h \
 src/builders/resid-builder/resid/version.cc \
+$(FILTER8580SRC) \
 $(noinst_DATA:.dat=.h)
 
 noinst_DATA = \
