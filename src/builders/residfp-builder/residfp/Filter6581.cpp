@@ -24,7 +24,7 @@
 
 #include "Filter6581.h"
 
-#include "Integrator.h"
+#include "Integrator6581.h"
 
 namespace reSIDfp
 {

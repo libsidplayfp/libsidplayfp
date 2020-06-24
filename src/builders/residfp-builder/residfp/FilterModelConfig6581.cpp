@@ -20,12 +20,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "FilterModelConfig.h"
+#include "FilterModelConfig6581.h"
 
 #include <cmath>
 #include <cassert>
 
-#include "Integrator.h"
+#include "Integrator6581.h"
 #include "OpAmp.h"
 
 namespace reSIDfp

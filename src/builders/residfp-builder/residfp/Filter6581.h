@@ -28,7 +28,7 @@
 #include <memory>
 
 #include "Filter.h"
-#include "FilterModelConfig.h"
+#include "FilterModelConfig6581.h"
 
 #include "sidcxx11.h"
 
@@ -384,7 +384,7 @@ public:
 
 #if RESID_INLINING || defined(FILTER6581_CPP)
 
-#include "Integrator.h"
+#include "Integrator6581.h"
 
 namespace reSIDfp
 {
