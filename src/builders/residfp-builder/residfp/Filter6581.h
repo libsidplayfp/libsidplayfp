@@ -332,10 +332,10 @@ private:
     const int voiceDC;
 
     /// VCR + associated capacitor connected to highpass output.
-    std::unique_ptr<Integrator> const hpIntegrator;
+    std::unique_ptr<Integrator6581> const hpIntegrator;
 
     /// VCR + associated capacitor connected to bandpass output.
-    std::unique_ptr<Integrator> const bpIntegrator;
+    std::unique_ptr<Integrator6581> const bpIntegrator;
 
 protected:
     /**
@@ -354,14 +354,14 @@ protected:
 
 public:
     Filter6581() :
-        f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
-        mixer(FilterModelConfig::getInstance()->getMixer()),
-        summer(FilterModelConfig::getInstance()->getSummer()),
-        gain(FilterModelConfig::getInstance()->getGain()),
-        voiceScaleS14(FilterModelConfig::getInstance()->getVoiceScaleS14()),
-        voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
-        hpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator())
+        f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5)),
+        mixer(FilterModelConfig6581::getInstance()->getMixer()),
+        summer(FilterModelConfig6581::getInstance()->getSummer()),
+        gain(FilterModelConfig6581::getInstance()->getGain()),
+        voiceScaleS14(FilterModelConfig6581::getInstance()->getVoiceScaleS14()),
+        voiceDC(FilterModelConfig6581::getInstance()->getVoiceDC()),
+        hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
     {
         input(0);
     }

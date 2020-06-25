@@ -89,19 +89,19 @@ const Spline::Point opamp_voltage[OPAMP_SIZE] =
   { 10.31,  0.81 },  // Approximate end of actual range
 };
 
-std::unique_ptr<FilterModelConfig> FilterModelConfig::instance(nullptr);
+std::unique_ptr<FilterModelConfig6581> FilterModelConfig6581::instance(nullptr);
 
-FilterModelConfig* FilterModelConfig::getInstance()
+FilterModelConfig6581* FilterModelConfig6581::getInstance()
 {
     if (!instance.get())
     {
-        instance.reset(new FilterModelConfig());
+        instance.reset(new FilterModelConfig6581());
     }
 
     return instance.get();
 }
 
-FilterModelConfig::FilterModelConfig() :
+FilterModelConfig6581::FilterModelConfig6581() :
     voice_voltage_range(1.5),
     voice_DC_voltage(5.0),
     C(470e-12),
@@ -278,7 +278,7 @@ FilterModelConfig::FilterModelConfig() :
     }
 }
 
-FilterModelConfig::~FilterModelConfig()
+FilterModelConfig6581::~FilterModelConfig6581()
 {
     for (int i = 0; i < 5; i++)
     {
@@ -296,7 +296,7 @@ FilterModelConfig::~FilterModelConfig()
     }
 }
 
-unsigned short* FilterModelConfig::getDAC(double adjustment) const
+unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
 {
     const double dac_zero = getDacZero(adjustment);
 
@@ -313,7 +313,7 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
     return f0_dac;
 }
 
-std::unique_ptr<Integrator> FilterModelConfig::buildIntegrator()
+std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
 {
     // Vdd - Vth, normalized so that translated values can be subtracted:
     // k*Vddt - x = (k*Vddt - t) - (x - t)
@@ -327,7 +327,7 @@ std::unique_ptr<Integrator> FilterModelConfig::buildIntegrator()
     assert(tmp > -0.5 && tmp < 65535.5);
     const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
 
-    return std::unique_ptr<Integrator>(new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nkVddt, n_snake));
+    return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nkVddt, n_snake));
 }
 
 } // namespace reSIDfp

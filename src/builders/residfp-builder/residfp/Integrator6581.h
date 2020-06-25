@@ -152,7 +152,7 @@ namespace reSIDfp
  *
  *     Vg = Vddt - sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
  */
-class Integrator
+class Integrator6581
 {
 private:
     const unsigned short* vcr_kVg;
@@ -167,7 +167,7 @@ private:
     const unsigned short n_snake;
 
 public:
-    Integrator(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
+    Integrator6581(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
                const LUT* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
@@ -191,7 +191,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator::solve(int vi)
+int Integrator6581::solve(int vi)
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < kVddt);
