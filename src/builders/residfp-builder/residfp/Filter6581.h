@@ -326,7 +326,7 @@ private:
 
     unsigned short** mixer;
     unsigned short** summer;
-    unsigned short** gain;
+    LUT** gain;
 
     const int voiceScaleS14;
     const int voiceDC;
@@ -405,7 +405,7 @@ unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
     (filt3 ? Vi : Vo) += voice3;
     (filtE ? Vi : Vo) += ve;
 
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
+    Vhp = currentSummer[currentResonance->output(Vbp) + Vlp + Vi];
     Vbp = hpIntegrator->solve(Vhp);
     Vlp = bpIntegrator->solve(Vbp);
 
@@ -413,7 +413,7 @@ unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
     if (bp) Vo += Vbp;
     if (hp) Vo += Vhp;
 
-    return currentGain[currentMixer[Vo]];
+    return currentGain->output(currentMixer[Vo]);
 }
 
 } // namespace reSIDfp

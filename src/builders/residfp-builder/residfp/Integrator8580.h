@@ -23,6 +23,8 @@
 #ifndef INTEGRATOR8580_H
 #define INTEGRATOR8580_H
 
+#include "InterpolatedLUT.h"
+
 #include <stdint.h>
 #include <cassert>
 
@@ -52,7 +54,7 @@ namespace reSIDfp
 class Integrator8580
 {
 private:
-    const unsigned short* opamp_rev;
+    const LUT* opamp_rev;
 
     mutable int vx;
     mutable int vc;
@@ -66,7 +68,7 @@ private:
     const double N16;
 
 public:
-    Integrator8580(const unsigned short* opamp_rev, double Vth, double denorm, double C, double uCox, double vmin, double N16) :
+    Integrator8580(const LUT* opamp_rev, double Vth, double denorm, double C, double uCox, double vmin, double N16) :
         opamp_rev(opamp_rev),
         vx(0),
         vc(0),
@@ -136,7 +138,7 @@ int Integrator8580::solve(int vi) const
     // vx = g(vc)
     const int tmp = (vc >> 15) + (1 << 15);
     assert(tmp < (1 << 16));
-    vx = opamp_rev[tmp];
+    vx = opamp_rev->output(tmp);
 
     // Return vo.
     return vx - (vc >> 14);

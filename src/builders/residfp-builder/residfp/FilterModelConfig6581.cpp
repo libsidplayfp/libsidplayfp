@@ -138,14 +138,21 @@ FilterModelConfig::FilterModelConfig() :
 
     Spline s(scaled_voltage, OPAMP_SIZE);
 
-    for (int x = 0; x < (1 << 16); x++)
+    unsigned short opamp_rev_tab[(1 << 8)+1];
+    for (int x = 0; x < (1 << 8); x++)
     {
-        const Spline::Point out = s.evaluate(x);
+        const Spline::Point out = s.evaluate(x<<8);
         double tmp = out.x;
-        if (tmp < 0.) tmp = 0.;
-        assert(tmp < 65535.5);
-        opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
+        assert(tmp > -0.5 && tmp < 65535.5);
+        opamp_rev_tab[x] = static_cast<unsigned short>(tmp + 0.5);
     }
+    {
+        const Spline::Point out = s.evaluate((1<<16)-1);
+        double tmp = out.x;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        opamp_rev_tab[1 << 8] = static_cast<unsigned short>(tmp + 0.5);
+    }
+    opamp_rev_lut = new InterpolatedLUT<256>(0, 65535, opamp_rev_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -204,18 +211,24 @@ FilterModelConfig::FilterModelConfig() :
     // op-amps and ideal "resistors").
     for (int n8 = 0; n8 < 16; n8++)
     {
-        const int size = 1 << 16;
+        const int size = 1 << 8;
         const double n = n8 / 8.0;
         opampModel.reset();
-        gain[n8] = new unsigned short[size];
 
         for (int vi = 0; vi < size; vi++)
         {
-            const double vin = vmin + vi / N16; /* vmin .. vmax */
+            const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            gain[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
+            opamp_rev_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
         }
+        {
+            const double vin = vmin + ((1<<16)-1) / N16; /* vmin .. vmax */
+            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
+            assert(tmp > -0.5 && tmp < 65535.5);
+            opamp_rev_tab[1 << 8] = static_cast<unsigned short>(tmp + 0.5);
+        }
+        gain[n8] = new InterpolatedLUT<256>(0, 65535, opamp_rev_tab);
     }
 
     const double nkVddt = N16 * kVddt;
@@ -279,7 +292,7 @@ FilterModelConfig::~FilterModelConfig()
 
     for (int i = 0; i < 16; i++)
     {
-        delete [] gain[i];
+        delete gain[i];
     }
 }
 
@@ -314,7 +327,7 @@ std::unique_ptr<Integrator> FilterModelConfig::buildIntegrator()
     assert(tmp > -0.5 && tmp < 65535.5);
     const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
 
-    return std::unique_ptr<Integrator>(new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, nkVddt, n_snake));
+    return std::unique_ptr<Integrator>(new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nkVddt, n_snake));
 }
 
 } // namespace reSIDfp

@@ -23,9 +23,11 @@
 #include "FilterModelConfig8580.h"
 
 #include <cassert>
+#include <iostream>
 
 #include "Integrator8580.h"
 #include "OpAmp.h"
+#include "InterpolatedLUT.h"
 
 namespace reSIDfp
 {
@@ -150,13 +152,21 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
     Spline s(scaled_voltage, OPAMP_SIZE);
 
-    for (int x = 0; x < (1 << 16); x++)
+    unsigned short opamp_rev_tab[(1 << 8)+1];
+    for (int x = 0; x < (1 << 8); x++)
     {
-        const Spline::Point out = s.evaluate(x);
+        const Spline::Point out = s.evaluate(x<<8);
         double tmp = out.x;
         assert(tmp > -0.5 && tmp < 65535.5);
-        opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
+        opamp_rev_tab[x] = static_cast<unsigned short>(tmp + 0.5);
     }
+    {
+        const Spline::Point out = s.evaluate((1<<16)-1);
+        double tmp = out.x;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        opamp_rev_tab[1 << 8] = static_cast<unsigned short>(tmp + 0.5);;
+    }
+    opamp_rev_lut = new InterpolatedLUT<256>(0, 65535, opamp_rev_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -214,18 +224,24 @@ FilterModelConfig8580::FilterModelConfig8580() :
     // it follows that gain ~ vol/8 (assuming ideal op-amps
     for (int n8 = 0; n8 < 16; n8++)
     {
-        const int size = 1 << 16;
+        const int size = 1 << 8;
         const double n = n8 / 8.0;
         opampModel.reset();
-        gain_vol[n8] = new unsigned short[size];
 
         for (int vi = 0; vi < size; vi++)
         {
-            const double vin = vmin + vi / N16; /* vmin .. vmax */
+            const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            gain_vol[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
+            opamp_rev_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
         }
+        {
+            const double vin = vmin + ((1<<16)-1) / N16; /* vmin .. vmax */
+            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
+            assert(tmp > -0.5 && tmp < 65535.5);
+            opamp_rev_tab[1 << 8] = static_cast<unsigned short>(tmp + 0.5);
+        }
+        gain_vol[n8] = new InterpolatedLUT<256>(0, 65535, opamp_rev_tab);
     }
 
     // 4 bit "resistor" ladders in the bandpass resonance gain
@@ -235,22 +251,31 @@ FilterModelConfig8580::FilterModelConfig8580() :
     // op-amps and ideal "resistors").
     for (int n8 = 0; n8 < 16; n8++)
     {
-        const int size = 1 << 16;
+        const int size = 1 << 8;
         opampModel.reset();
-        gain_res[n8] = new unsigned short[size];
 
         for (int vi = 0; vi < size; vi++)
         {
-            const double vin = vmin + vi / N16; /* vmin .. vmax */
+            const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            gain_res[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
+            opamp_rev_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
         }
+        {
+            const double vin = vmin + ((1<<16)-1) / N16; /* vmin .. vmax */
+            const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * N16;
+            assert(tmp > -0.5 && tmp < 65535.5);
+            opamp_rev_tab[1 << 8] = static_cast<unsigned short>(tmp + 0.5);
+        }
+        gain_res[n8] = new InterpolatedLUT<256>(0, 65535, opamp_rev_tab);
     }
+
 }
 
 FilterModelConfig8580::~FilterModelConfig8580()
 {
+    delete opamp_rev_lut;
+
     for (int i = 0; i < 5; i++)
     {
         delete [] summer[i];
@@ -263,14 +288,14 @@ FilterModelConfig8580::~FilterModelConfig8580()
 
     for (int i = 0; i < 16; i++)
     {
-        delete [] gain_vol[i];
-        delete [] gain_res[i];
+        delete gain_vol[i];
+        delete gain_res[i];
     }
 }
 
 std::unique_ptr<Integrator8580> FilterModelConfig8580::buildIntegrator()
 {
-    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev, Vth, denorm, C, uCox, vmin, N16));
+    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev_lut, Vth, denorm, C, uCox, vmin, N16));
 }
 
 } // namespace reSIDfp

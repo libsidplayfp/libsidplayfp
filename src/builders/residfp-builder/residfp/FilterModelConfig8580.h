@@ -33,6 +33,7 @@ namespace reSIDfp
 {
 
 class Integrator8580;
+class LUT;
 
 /**
  * Calculate parameters for 8580 filter emulation.
@@ -74,12 +75,12 @@ private:
     //@{
     unsigned short* mixer[8];
     unsigned short* summer[5];
-    unsigned short* gain_vol[16];
-    unsigned short* gain_res[16];
+    LUT* gain_vol[16];
+    LUT* gain_res[16];
     //@}
 
     /// Reverse op-amp transfer function.
-    unsigned short opamp_rev[1 << 16];
+    LUT* opamp_rev_lut;
 
 private:
     FilterModelConfig8580();
@@ -99,8 +100,8 @@ public:
      */
     int getVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
 
-    unsigned short** getGainVol() { return gain_vol; }
-    unsigned short** getGainRes() { return gain_res; }
+    LUT** getGainVol() { return gain_vol; }
+    LUT** getGainRes() { return gain_res; }
 
     unsigned short** getSummer() { return summer; }
 

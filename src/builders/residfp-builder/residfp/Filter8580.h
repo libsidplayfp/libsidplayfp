@@ -283,8 +283,8 @@ class Filter8580 final : public Filter
 private:
     unsigned short** mixer;
     unsigned short** summer;
-    unsigned short** gain_res;
-    unsigned short** gain_vol;
+    LUT** gain_res;
+    LUT** gain_vol;
 
     const int voiceScaleS14;
     const int voiceDC;
@@ -369,7 +369,7 @@ unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
     (filt3 ? Vi : Vo) += voice3;
     (filtE ? Vi : Vo) += ve;
 
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
+    Vhp = currentSummer[currentResonance->output(Vbp) + Vlp + Vi];
     Vbp = hpIntegrator->solve(Vhp);
     Vlp = bpIntegrator->solve(Vbp);
 
@@ -377,7 +377,7 @@ unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
     if (bp) Vo += Vbp;
     if (hp) Vo += Vhp;
 
-    return currentGain[currentMixer[Vo]];
+    return currentGain->output(currentMixer[Vo]);
 }
 
 } // namespace reSIDfp

@@ -26,6 +26,8 @@
 namespace reSIDfp
 {
 
+class LUT;
+
 /**
  * SID filter base class
  */
@@ -33,7 +35,7 @@ class Filter
 {
 protected:
     /// Current volume amplifier setting.
-    unsigned short* currentGain;
+    LUT* currentGain;
 
     /// Current filter/voice mixer setting.
     unsigned short* currentMixer;
@@ -42,7 +44,7 @@ protected:
     unsigned short* currentSummer;
 
     /// Filter resonance value.
-    unsigned short* currentResonance;
+    LUT* currentResonance;
 
     /// Filter highpass state.
     int Vhp;

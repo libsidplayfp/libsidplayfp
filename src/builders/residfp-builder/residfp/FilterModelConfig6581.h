@@ -34,6 +34,7 @@ namespace reSIDfp
 {
 
 class Integrator;
+class LUT;
 
 /**
  * Calculate parameters for 6581 filter emulation.
@@ -87,7 +88,7 @@ private:
     //@{
     unsigned short* mixer[8];
     unsigned short* summer[5];
-    unsigned short* gain[16];
+    LUT* gain[16];
     //@}
 
     /// DAC lookup table
@@ -100,7 +101,7 @@ private:
     //@}
 
     /// Reverse op-amp transfer function.
-    unsigned short opamp_rev[1 << 16];
+    LUT* opamp_rev_lut;
 
 private:
     double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
@@ -122,7 +123,7 @@ public:
      */
     int getVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
 
-    unsigned short** getGain() { return gain; }
+    LUT** getGain() { return gain; }
 
     unsigned short** getSummer() { return summer; }
 

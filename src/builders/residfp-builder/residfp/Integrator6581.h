@@ -23,6 +23,8 @@
 #ifndef INTEGRATOR_H
 #define INTEGRATOR_H
 
+#include "InterpolatedLUT.h"
+
 #include <stdint.h>
 #include <cassert>
 
@@ -155,7 +157,7 @@ class Integrator
 private:
     const unsigned short* vcr_kVg;
     const unsigned short* vcr_n_Ids_term;
-    const unsigned short* opamp_rev;
+    const LUT* opamp_rev;
 
     unsigned int Vddt_Vw_2;
     int vx;
@@ -166,7 +168,7 @@ private:
 
 public:
     Integrator(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
-               const unsigned short* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
+               const LUT* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev),
@@ -231,7 +233,7 @@ int Integrator::solve(int vi)
     // vx = g(vc)
     const int tmp = (vc >> 15) + (1 << 15);
     assert(tmp < (1 << 16));
-    vx = opamp_rev[tmp];
+    vx = opamp_rev->output(tmp);
 
     // Return vo.
     return vx - (vc >> 14);
