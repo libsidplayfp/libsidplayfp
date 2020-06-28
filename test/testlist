@@ -290,12 +290,19 @@ general/Lorenz-2.15/src/finish
 # won't work as VIC II emulation is incomplete
 #general/ram0001/test1
 ### C64 ###
+C64/bankio/bankio
+#C64/openio/gauntlet
 C64/raminitpattern/cyberloadtest
+#C64/raminitpattern/darkstarbbstest
 C64/raminitpattern/platoontest
+#C64/raminitpattern/typicaltest
 ### CIA ###
 CIA/CIA-AcountsB/cia-b-counts-a
 CIA/CIA-AcountsB/cmp-b-counts-a-old                  --cia old
 CIA/CIA-AcountsB/cmp-b-counts-a-new                  --cia new
+CIA/CIA-AcountsB/cia-b-counts-a_ntsc                 --vic ntsc
+CIA/CIA-AcountsB/cmp-b-counts-a-old_ntsc             --cia old --vic ntsc
+CIA/CIA-AcountsB/cmp-b-counts-a-new_ntsc             --cia new --vic ntsc
 CIA/cia-timer/cia-timer-oldcias                      --cia old
 CIA/cia-timer/cia-timer-newcias                      --cia new
 CIA/ciavarious/cia1
@@ -410,6 +417,7 @@ CIA/tod/hzsync5
 CIA/tod/powerup
 CIA/tod/read-latch
 CIA/tod/stability
+CIA/tod/stability-ntsc                --vic ntsc
 CIA/tod/write-stop
 ### CPU ###
 CPU/64doc/dadc
@@ -429,6 +437,7 @@ CPU/Acid800/cpu_flags
 CPU/Acid800/cpu_illegal
 CPU/Acid800/cpu_insn
 CPU/Acid800/cpu_timing
+#CPU/Acid800/cpu_timing_ntsc                   --vic ntsc
 CPU/ane/ane
 CPU/ane/ane-border
 CPU/ane/ane-none
@@ -721,6 +730,7 @@ SID/wf12nsr/wf12nsr                                  --sid old
 VICII/colorram/test
 VICII/split-tests/bascan/bascan
 #VICII/split-tests/lightpen/lightpen
+#VICII/split-tests/spritescan/spritescan
 VICII/vspbug/vsp_bug
 VICII/spritesteal/spritesteal                        --vic pal
 VICII/spritesteal/spritesteal_ntsc                   --vic ntsc
