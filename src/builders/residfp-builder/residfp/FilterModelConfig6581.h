@@ -96,8 +96,8 @@ private:
 
     /// VCR - 6581 only.
     //@{
-    unsigned short vcr_kVg[1 << 16];
-    unsigned short vcr_n_Ids_term[1 << 16];
+    LUT* vcr_kVg;
+    LUT* vcr_n_Ids_term;
     //@}
 
     /// Reverse op-amp transfer function.

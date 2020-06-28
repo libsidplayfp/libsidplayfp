@@ -223,7 +223,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     const double nkVddt = N16 * kVddt;
     const double nVmin = N16 * vmin;
 
-    for (unsigned int i = 0; i < (1 << 16); i++)
+    for (unsigned int i = 0; i < (1 << 8); i++)
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
@@ -234,11 +234,12 @@ FilterModelConfig6581::FilterModelConfig6581() :
         //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
         // I.e. k*Vg - t must be returned.
-        const double Vg = nkVddt - sqrt((double)(i << 16));
+        const double Vg = nkVddt - sqrt((double)(i << 24));
         const double tmp = k * Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
-        vcr_kVg[i] = static_cast<unsigned short>(tmp + 0.5);
+        temp_tab[i] = static_cast<unsigned short>(tmp + 0.5);
     }
+    vcr_kVg = new InterpolatedLUT(256, 0, 65535, temp_tab);
 
     //  EKV model:
     //
@@ -257,14 +258,15 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     // kVg_Vx = k*Vg - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
-    for (int kVg_Vx = 0; kVg_Vx < (1 << 16); kVg_Vx++)
+    for (int kVg_Vx = 0; kVg_Vx < (1 << 8); kVg_Vx++)
     {
-        const double log_term = log1p(exp((kVg_Vx / N16 - kVt) / (2. * Ut)));
+        const double log_term = log1p(exp(((kVg_Vx<<8) / N16 - kVt) / (2. * Ut)));
         // Scaled by m*2^15
         const double tmp = n_Is * log_term * log_term;
         assert(tmp > -0.5 && tmp < 65535.5);
-        vcr_n_Ids_term[kVg_Vx] = static_cast<unsigned short>(tmp + 0.5);
+        temp_tab[kVg_Vx] = static_cast<unsigned short>(tmp + 0.5);
     }
+    vcr_n_Ids_term = new InterpolatedLUT(256, 0, 65535, temp_tab);
 }
 
 FilterModelConfig6581::~FilterModelConfig6581()

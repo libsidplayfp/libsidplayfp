@@ -155,8 +155,8 @@ namespace reSIDfp
 class Integrator6581
 {
 private:
-    const unsigned short* vcr_kVg;
-    const unsigned short* vcr_n_Ids_term;
+    const LUT* vcr_kVg;
+    const LUT* vcr_n_Ids_term;
     const LUT* opamp_rev;
 
     unsigned int Vddt_Vw_2;
@@ -167,7 +167,7 @@ private:
     const unsigned short n_snake;
 
 public:
-    Integrator6581(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
+    Integrator6581(const LUT* vcr_kVg, const LUT* vcr_n_Ids_term,
                const LUT* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
@@ -212,7 +212,7 @@ int Integrator6581::solve(int vi)
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int kVg = static_cast<int>(vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
+    const int kVg = static_cast<int>(vcr_kVg->output((Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16));
 
     // VCR voltages for EKV model table lookup.
     int Vgs = kVg - vx;
@@ -223,8 +223,8 @@ int Integrator6581::solve(int vi)
     assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[Vgs]) << 15;
-    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[Vgd]) << 15;
+    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgs)) << 15;
+    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgd)) << 15;
     const int n_I_vcr = If - Ir;
 
     // Change in capacitor charge.
