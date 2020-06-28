@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2010 Dag Lem
  *
@@ -134,25 +134,20 @@ FilterModelConfig6581::FilterModelConfig6581() :
         scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
     }
 
+    unsigned short temp_tab[(7 << 8)+1];
+
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
 
     Spline s(scaled_voltage, OPAMP_SIZE);
 
-    unsigned short opamp_rev_tab[(1 << 8)+1];
-    for (int x = 0; x < (1 << 8); x++)
+    for (int x = 0; x <= (1 << 8); x++)
     {
         const Spline::Point out = s.evaluate(x<<8);
         double tmp = out.x;
         assert(tmp > -0.5 && tmp < 65535.5);
-        opamp_rev_tab[x] = static_cast<unsigned short>(tmp + 0.5);
+        temp_tab[x] = static_cast<unsigned short>(tmp + 0.5);
     }
-    {
-        const Spline::Point out = s.evaluate((1<<16)-1);
-        double tmp = out.x;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        opamp_rev_tab[1 << 8] = static_cast<unsigned short>(tmp + 0.5);
-    }
-    opamp_rev_lut = new InterpolatedLUT<256>(0, 65535, opamp_rev_tab);
+    opamp_rev_lut = new InterpolatedLUT(256, 0, 65535, temp_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -168,18 +163,18 @@ FilterModelConfig6581::FilterModelConfig6581() :
     for (int i = 0; i < 5; i++)
     {
         const int idiv = 2 + i;        // 2 - 6 input "resistors".
-        const int size = idiv << 16;
+        const int size = idiv << 8;
         const double n = idiv;
         opampModel.reset();
-        summer[i] = new unsigned short[size];
 
-        for (int vi = 0; vi < size; vi++)
+        for (int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
+            const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            summer[i][vi] = static_cast<unsigned short>(tmp + 0.5);
+            temp_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
         }
+        summer[i] = new InterpolatedLUT(size, 0, size<<8, temp_tab);
     }
 
     // The audio mixer operates at n ~ 8/6, and has 8 fundamentally different
@@ -190,18 +185,18 @@ FilterModelConfig6581::FilterModelConfig6581() :
     for (int i = 0; i < 8; i++)
     {
         const int idiv = (i == 0) ? 1 : i;
-        const int size = (i == 0) ? 1 : i << 16;
+        const int size = (i == 0) ? 1 : i << 8;
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
-        mixer[i] = new unsigned short[size];
 
-        for (int vi = 0; vi < size; vi++)
+        for (int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
+            const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            mixer[i][vi] = static_cast<unsigned short>(tmp + 0.5);
+            temp_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
         }
+        mixer[i] = new InterpolatedLUT(size, 0, size<<8, temp_tab);
     }
 
     // 4 bit "resistor" ladders in the bandpass resonance gain and the audio
@@ -215,20 +210,14 @@ FilterModelConfig6581::FilterModelConfig6581() :
         const double n = n8 / 8.0;
         opampModel.reset();
 
-        for (int vi = 0; vi < size; vi++)
+        for (int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            opamp_rev_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
+            temp_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
         }
-        {
-            const double vin = vmin + ((1<<16)-1) / N16; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
-            opamp_rev_tab[1 << 8] = static_cast<unsigned short>(tmp + 0.5);
-        }
-        gain[n8] = new InterpolatedLUT<256>(0, 65535, opamp_rev_tab);
+        gain[n8] = new InterpolatedLUT(256, 0, 65535, temp_tab);
     }
 
     const double nkVddt = N16 * kVddt;
@@ -282,12 +271,12 @@ FilterModelConfig6581::~FilterModelConfig6581()
 {
     for (int i = 0; i < 5; i++)
     {
-        delete [] summer[i];
+        delete summer[i];
     }
 
     for (int i = 0; i < 8; i++)
     {
-        delete [] mixer[i];
+        delete mixer[i];
     }
 
     for (int i = 0; i < 16; i++)

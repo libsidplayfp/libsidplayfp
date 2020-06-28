@@ -38,10 +38,10 @@ protected:
     LUT* currentGain;
 
     /// Current filter/voice mixer setting.
-    unsigned short* currentMixer;
+    LUT* currentMixer;
 
     /// Filter input summer setting.
-    unsigned short* currentSummer;
+    LUT* currentSummer;
 
     /// Filter resonance value.
     LUT* currentResonance;

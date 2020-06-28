@@ -73,8 +73,8 @@ private:
 
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
-    unsigned short* mixer[8];
-    unsigned short* summer[5];
+    LUT* mixer[8];
+    LUT* summer[5];
     LUT* gain_vol[16];
     LUT* gain_res[16];
     //@}
@@ -103,9 +103,9 @@ public:
     LUT** getGainVol() { return gain_vol; }
     LUT** getGainRes() { return gain_res; }
 
-    unsigned short** getSummer() { return summer; }
+    LUT** getSummer() { return summer; }
 
-    unsigned short** getMixer() { return mixer; }
+    LUT** getMixer() { return mixer; }
 
     /**
      * Construct an integrator solver.

@@ -86,8 +86,8 @@ private:
 
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
-    unsigned short* mixer[8];
-    unsigned short* summer[5];
+    LUT* mixer[8];
+    LUT* summer[5];
     LUT* gain[16];
     //@}
 
@@ -125,9 +125,9 @@ public:
 
     LUT** getGain() { return gain; }
 
-    unsigned short** getSummer() { return summer; }
+    LUT** getSummer() { return summer; }
 
-    unsigned short** getMixer() { return mixer; }
+    LUT** getMixer() { return mixer; }
 
     /**
      * Construct an 11 bit cutoff frequency DAC output voltage table.

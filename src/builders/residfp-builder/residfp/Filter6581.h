@@ -29,6 +29,7 @@
 
 #include "Filter.h"
 #include "FilterModelConfig6581.h"
+#include "InterpolatedLUT.h"
 
 #include "sidcxx11.h"
 
@@ -324,8 +325,8 @@ class Filter6581 final : public Filter
 private:
     const unsigned short* f0_dac;
 
-    unsigned short** mixer;
-    unsigned short** summer;
+    LUT** mixer;
+    LUT** summer;
     LUT** gain;
 
     const int voiceScaleS14;
@@ -370,7 +371,7 @@ public:
 
     unsigned short clock(int voice1, int voice2, int voice3) override;
 
-    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0][0]; }
+    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0]->output(0); }
 
     /**
      * Set filter curve type based on single parameter.
@@ -405,7 +406,7 @@ unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
     (filt3 ? Vi : Vo) += voice3;
     (filtE ? Vi : Vo) += ve;
 
-    Vhp = currentSummer[currentResonance->output(Vbp) + Vlp + Vi];
+    Vhp = currentSummer->output(currentResonance->output(Vbp) + Vlp + Vi);
     Vbp = hpIntegrator->solve(Vhp);
     Vlp = bpIntegrator->solve(Vbp);
 
@@ -413,7 +414,7 @@ unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
     if (bp) Vo += Vbp;
     if (hp) Vo += Vhp;
 
-    return currentGain->output(currentMixer[Vo]);
+    return currentGain->output(currentMixer->output(Vo));
 }
 
 } // namespace reSIDfp

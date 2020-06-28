@@ -22,6 +22,7 @@
 #define INPERPOLATEDLUT_H
 
 #include <cstring>
+#include <cstdint>
 
 #include "sidcxx11.h"
 
@@ -31,48 +32,39 @@ namespace reSIDfp
 class LUT
 {
 public:
-    virtual unsigned short output(unsigned short input) const = 0;
+    virtual unsigned short output(unsigned int input) const = 0;
 
     virtual ~LUT() {}
 };
 
-template <unsigned int N>
 class InterpolatedLUT final : public LUT
 {
 private:
-    const unsigned short min;
-    const unsigned short range;
+    const unsigned short size;
+    const unsigned int min;
+    const unsigned int range;
 
-    unsigned short table[N+1];
+    unsigned short* table;
 
 public:
-    InterpolatedLUT(unsigned short min, unsigned short max, const unsigned short tab[N+1]) :
+    InterpolatedLUT(unsigned short size, unsigned int min, unsigned int max, const unsigned short* tab) :
+        size(size),
         min(min),
-        range(max-min)
+        range(max-min),
+        table(new unsigned short[size+1])
     {
-        memcpy(table, tab, (N+1)*sizeof(unsigned short));
+        memcpy(table, tab, (size+1)*sizeof(unsigned short));
     }
 
-    unsigned short output(unsigned short input) const
+    ~InterpolatedLUT() { delete [] table; }
+
+    unsigned short output(unsigned int input) const
     {
-        const unsigned int scaledInput = ((static_cast<unsigned int>(input - min)<<16) / range) * N;
-        const unsigned int index = scaledInput >> 16;
-        const unsigned int dist = (scaledInput & ((1 << 16)-1));
+        const uint64_t scaledInput = ((static_cast<uint64_t>(input - min)<<16) / range) * size;
+        const uint64_t index = scaledInput >> 16;
+        const uint64_t dist = (scaledInput & ((1 << 16)-1));
         return table[index] + (dist * (table[index+1] - table[index])) / (1 << 16);
     }
-};
-
-template <>
-class InterpolatedLUT<1> final : public LUT
-{
-private:
-    const unsigned short data;
-
-public:
-    InterpolatedLUT(unsigned short data) :
-        data(data) {}
-
-    unsigned short output(unsigned short input) const { return data; }
 };
 
 } // namespace reSIDfp
