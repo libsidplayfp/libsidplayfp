@@ -83,9 +83,8 @@ public:
     void setFc(double wl)
     {
         // Normalized current factor, 1 cycle at 1MHz.
-        // Fit in 5 bits.
-        const double tmp = (1 << 13) * nKp * wl;
-        assert(tmp > -0.5 && tmp < 65535.5);
+        const double tmp = nKp * wl;
+        //assert(tmp > -0.5 && tmp < 65535.5);
         n_dac = static_cast<float>(tmp);
     }
 
@@ -106,7 +105,7 @@ public:
         nVgt = static_cast<float>(tmp);
     }
 
-    int solve(int vi) const;
+    int solve(float vi) const;
 };
 
 } // namespace reSIDfp
@@ -117,7 +116,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator8580::solve(int vi) const
+int Integrator8580::solve(float vi) const
 {
     // Make sure we're not in subthreshold mode
     assert(vx < nVgt);
@@ -129,8 +128,8 @@ int Integrator8580::solve(int vi) const
     const float Vgst_2 = Vgst * Vgst;
     const float Vgdt_2 = Vgdt * Vgdt;
 
-    // DAC current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const float n_I_dac = n_dac * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
+    // DAC current, scaled by (1/m)*m*2^16*m*2^16*2^-2 = m*2^30
+    const float n_I_dac = n_dac * (static_cast<int>(Vgst_2 - Vgdt_2) >> 2);
 
     // Change in capacitor charge.
     vc += n_I_dac;

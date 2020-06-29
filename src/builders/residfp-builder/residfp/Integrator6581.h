@@ -180,7 +180,7 @@ public:
 
     void setVw(float Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) / 2.f; }
 
-    int solve(int vi) const;
+    int solve(float vi) const;
 };
 
 } // namespace reSIDfp
@@ -191,7 +191,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator6581::solve(int vi) const
+int Integrator6581::solve(float vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < kVddt);

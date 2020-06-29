@@ -287,18 +287,18 @@ FilterModelConfig6581::~FilterModelConfig6581()
     }
 }
 
-unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
+float* FilterModelConfig6581::getDAC(double adjustment) const
 {
     const double dac_zero = getDacZero(adjustment);
 
-    unsigned short* f0_dac = new unsigned short[1 << DAC_BITS];
+    float* f0_dac = new float[1 << DAC_BITS];
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         const double fcd = dac.getOutput(i);
         const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
-        f0_dac[i] = static_cast<unsigned short>(tmp + 0.5);
+        f0_dac[i] = static_cast<float>(tmp);
     }
 
     return f0_dac;

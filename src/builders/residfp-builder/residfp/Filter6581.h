@@ -323,14 +323,14 @@ class Integrator;
 class Filter6581 final : public Filter
 {
 private:
-    const unsigned short* f0_dac;
+    const float* f0_dac;
 
     LUT** mixer;
     LUT** summer;
     LUT** gain;
 
-    const int voiceScaleS14;
-    const int voiceDC;
+    const float voiceScale;
+    const float voiceDC;
 
     /// VCR + associated capacitor connected to highpass output.
     std::unique_ptr<Integrator6581> const hpIntegrator;
@@ -359,7 +359,7 @@ public:
         mixer(FilterModelConfig6581::getInstance()->getMixer()),
         summer(FilterModelConfig6581::getInstance()->getSummer()),
         gain(FilterModelConfig6581::getInstance()->getGain()),
-        voiceScaleS14(FilterModelConfig6581::getInstance()->getVoiceScaleS14()),
+        voiceScale(FilterModelConfig6581::getInstance()->getVoiceScale()),
         voiceDC(FilterModelConfig6581::getInstance()->getVoiceDC()),
         hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
@@ -371,7 +371,7 @@ public:
 
     unsigned short clock(int voice1, int voice2, int voice3) override;
 
-    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 10) + mixer[0]->output(0); }
+    void input(int sample) override { ve = (sample * voiceScale * 3) + mixer[0]->output(0); }
 
     /**
      * Set filter curve type based on single parameter.
@@ -393,10 +393,10 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
 {
-    voice1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
-    voice2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
+    voice1 = (static_cast<int>(voice1 * voiceScale) >> 4) + voiceDC;
+    voice2 = (static_cast<int>(voice2 * voiceScale) >> 4) + voiceDC;
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS14 >> 18) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? (static_cast<int>(voice3 * voiceScale) >> 4) + voiceDC : 0;
 
     float Vi = 0.f;
     float Vo = 0.f;
