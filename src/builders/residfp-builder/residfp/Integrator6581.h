@@ -161,7 +161,7 @@ private:
 
     float Vddt_Vw_2;
     mutable float vx;
-    mutable int vc;
+    mutable float vc;
 
     const float kVddt;
     const float n_snake;
@@ -174,7 +174,7 @@ public:
         opamp_rev(opamp_rev),
         Vddt_Vw_2(0.f),
         vx(0.f),
-        vc(0),
+        vc(0.f),
         kVddt(kVddt),
         n_snake(n_snake) {}
 
@@ -207,8 +207,8 @@ float Integrator6581::solve(float vi) const
     const float Vgst_2 = Vgst * Vgst;
     const float Vgdt_2 = Vgdt * Vgdt;
 
-    // "Snake" current, scaled by (1/m)*m*2^16*m*2^16*2^-2 = m*2^30
-    const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 2);
+    // "Snake" current, scaled by (1/m)*m*2^16*m*2^16 = m*2^32
+    const float n_I_snake = n_snake * (Vgst_2 - Vgdt_2);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
@@ -220,21 +220,21 @@ float Integrator6581::solve(float vi) const
     const float Vgd = (vi < kVg) ? kVg - vi : 0.;
     assert(Vgd < (1 << 16));
 
-    // VCR current, scaled by m*2^15*2^2 = m*2^30
-    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgs)) << 15;
-    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgd)) << 15;
-    const int n_I_vcr = If - Ir;
+    // VCR current, scaled by m*2^16*2^16 = m*2^32
+    const float If = (vcr_n_Ids_term->output(Vgs)) * 65536.f;
+    const float Ir = (vcr_n_Ids_term->output(Vgd)) * 65536.f;
+    const float n_I_vcr = If - Ir;
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    const float tmp = (vc >> 15) + (1 << 15);
+    const float tmp = (vc / 65536.f / 2.f) + (1 << 15);
     assert(tmp < (1 << 16));
     vx = opamp_rev->output(tmp);
 
     // Return vo.
-    return vx - (vc >> 14);
+    return vx - (vc / 65536.f);
 }
 
 } // namespace reSIDfp

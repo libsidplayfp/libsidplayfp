@@ -253,18 +253,17 @@ FilterModelConfig6581::FilterModelConfig6581() :
     const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
-    const double N15 = norm * ((1 << 15) - 1);
-    const double n_Is = N15 * 1.0e-6 / C * Is;
+    const double n_Is = N16 * 1.0e-6 / C * Is;
 
     // kVg_Vx = k*Vg - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
     for (int kVg_Vx = 0; kVg_Vx < (1 << 8); kVg_Vx++)
     {
         const double log_term = log1p(exp(((kVg_Vx<<8) / N16 - kVt) / (2. * Ut)));
-        // Scaled by m*2^15
+        // Scaled by m*2^16
         const double tmp = n_Is * log_term * log_term;
         assert(tmp > -0.5 && tmp < 65535.5);
-        temp_tab[kVg_Vx] = static_cast<unsigned short>(tmp + 0.5);
+        temp_tab[kVg_Vx] = static_cast<float>(tmp);
     }
     vcr_n_Ids_term = new InterpolatedLUT(256, 0, 65535, temp_tab);
 }

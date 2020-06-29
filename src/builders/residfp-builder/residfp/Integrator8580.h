@@ -57,7 +57,7 @@ private:
     const LUT* opamp_rev;
 
     mutable float vx;
-    mutable int vc;
+    mutable float vc;
 
     float nVgt;
     float n_dac;
@@ -71,7 +71,7 @@ public:
     Integrator8580(const LUT* opamp_rev, double Vth, double denorm, double C, double uCox, double vmin, double N16) :
         opamp_rev(opamp_rev),
         vx(0.f),
-        vc(0),
+        vc(0.f),
         Vth(Vth),
         nKp(denorm* (uCox / 2. * 1.0e-6 / C)),
         vmin(vmin),
@@ -135,12 +135,12 @@ float Integrator8580::solve(float vi) const
     vc += n_I_dac;
 
     // vx = g(vc)
-    const float tmp = (vc >> 17) + (1 << 15);
+    const float tmp = (vc / 65536.f / 2.f) + (1 << 15);
     assert(tmp < (1 << 16));
     vx = opamp_rev->output(tmp);
 
     // Return vo.
-    return vx - (vc >> 16);
+    return vx - (vc / 65536.f);
 }
 
 } // namespace reSIDfp
