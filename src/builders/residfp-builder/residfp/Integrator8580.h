@@ -136,7 +136,7 @@ int Integrator8580::solve(int vi) const
     vc += n_I_dac;
 
     // vx = g(vc)
-    const int tmp = (vc >> 15) + (1 << 15);
+    const float tmp = (vc >> 15) + (1 << 15);
     assert(tmp < (1 << 16));
     vx = opamp_rev->output(tmp);
 

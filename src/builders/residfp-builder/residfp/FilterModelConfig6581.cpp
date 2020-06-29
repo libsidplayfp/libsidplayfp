@@ -310,13 +310,12 @@ std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
     // k*Vddt - x = (k*Vddt - t) - (x - t)
     double tmp = N16 * (kVddt - vmin);
     assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short nkVddt = static_cast<unsigned short>(tmp + 0.5);
+    const float nkVddt = static_cast<float>(tmp);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
-    // Fit in 5 bits.
-    tmp = denorm * (1 << 13) * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
+    tmp = denorm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
     assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
+    const float n_snake = static_cast<float>(tmp);
 
     return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nkVddt, n_snake));
 }

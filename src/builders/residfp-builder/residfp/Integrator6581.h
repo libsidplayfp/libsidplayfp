@@ -164,11 +164,11 @@ private:
     mutable int vc;
 
     const float kVddt;
-    const unsigned short n_snake;
+    const float n_snake;
 
 public:
     Integrator6581(const LUT* vcr_kVg, const LUT* vcr_n_Ids_term,
-               const LUT* opamp_rev, float kVddt, unsigned short n_snake) :
+               const LUT* opamp_rev, float kVddt, float n_snake) :
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev),
@@ -178,7 +178,7 @@ public:
         kVddt(kVddt),
         n_snake(n_snake) {}
 
-    void setVw(unsigned short Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) / 2.f; }
+    void setVw(float Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) / 2.f; }
 
     int solve(int vi) const;
 };
@@ -207,7 +207,7 @@ int Integrator6581::solve(int vi) const
     const float Vgst_2 = Vgst * Vgst;
     const float Vgdt_2 = Vgdt * Vgdt;
 
-    // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
+    // "Snake" current, scaled by (1/m)*m*2^16*m*2^16*2^-15 = m*2^17
     const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
 
     // VCR gate voltage.       // Scaled by m*2^16
@@ -220,16 +220,16 @@ int Integrator6581::solve(int vi) const
     const float Vgd = (kVg < vi) ? kVg - vi : 0.;
     assert(Vgd < (1 << 16));
 
-    // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgs)) << 15;
-    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgd)) << 15;
+    // VCR current, scaled by m*2^15*2^2 = m*2^17
+    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgs)) << 2;
+    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgd)) << 2;
     const int n_I_vcr = If - Ir;
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    const int tmp = (vc >> 15) + (1 << 15);
+    const float tmp = (vc >> 15) + (1 << 15);
     assert(tmp < (1 << 16));
     vx = opamp_rev->output(tmp);
 
