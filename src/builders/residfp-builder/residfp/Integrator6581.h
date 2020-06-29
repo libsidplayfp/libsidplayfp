@@ -207,22 +207,22 @@ int Integrator6581::solve(float vi) const
     const float Vgst_2 = Vgst * Vgst;
     const float Vgdt_2 = Vgdt * Vgdt;
 
-    // "Snake" current, scaled by (1/m)*m*2^16*m*2^16*2^-15 = m*2^17
-    const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
+    // "Snake" current, scaled by (1/m)*m*2^16*m*2^16*2^-2 = m*2^30
+    const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 2);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
     const float kVg = vcr_kVg->output((Vddt_Vw_2 + (Vgdt_2 / 2.f)) / 65536.f);
 
     // VCR voltages for EKV model table lookup.
-    const float Vgs = (kVg < vx) ? kVg - vx : 0.;
+    const float Vgs = (vx < kVg) ? kVg - vx : 0.;
     assert(Vgs < (1 << 16));
-    const float Vgd = (kVg < vi) ? kVg - vi : 0.;
+    const float Vgd = (vi < kVg) ? kVg - vi : 0.;
     assert(Vgd < (1 << 16));
 
-    // VCR current, scaled by m*2^15*2^2 = m*2^17
-    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgs)) << 2;
-    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgd)) << 2;
+    // VCR current, scaled by m*2^15*2^2 = m*2^30
+    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgs)) << 15;
+    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term->output(Vgd)) << 15;
     const int n_I_vcr = If - Ir;
 
     // Change in capacitor charge.
