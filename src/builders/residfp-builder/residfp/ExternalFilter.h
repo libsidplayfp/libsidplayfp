@@ -64,7 +64,7 @@ public:
      *
      * @param input
      */
-    float clock(unsigned short input);
+    float clock(float input);
 
     /**
      * Constructor.
@@ -92,9 +92,8 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-float ExternalFilter::clock(unsigned short input)
+float ExternalFilter::clock(float Vi)
 {
-    const float Vi = static_cast<float>(input);
     const float dVlp = w0lp_1_s7 * (Vi - Vlp);
     const float dVhp = w0hp_1_s17 * (Vlp - Vhp);
     Vlp += dVlp;

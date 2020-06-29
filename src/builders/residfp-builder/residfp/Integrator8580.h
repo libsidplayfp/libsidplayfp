@@ -105,7 +105,7 @@ public:
         nVgt = static_cast<float>(tmp);
     }
 
-    int solve(float vi) const;
+    float solve(float vi) const;
 };
 
 } // namespace reSIDfp
@@ -116,7 +116,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator8580::solve(float vi) const
+float Integrator8580::solve(float vi) const
 {
     // Make sure we're not in subthreshold mode
     assert(vx < nVgt);
@@ -128,19 +128,19 @@ int Integrator8580::solve(float vi) const
     const float Vgst_2 = Vgst * Vgst;
     const float Vgdt_2 = Vgdt * Vgdt;
 
-    // DAC current, scaled by (1/m)*m*2^16*m*2^16*2^-2 = m*2^30
-    const float n_I_dac = n_dac * (static_cast<int>(Vgst_2 - Vgdt_2) >> 2);
+    // DAC current, scaled by (1/m)*m*2^16*m*2^16 = m*2^32
+    const float n_I_dac = n_dac * (Vgst_2 - Vgdt_2);
 
     // Change in capacitor charge.
     vc += n_I_dac;
 
     // vx = g(vc)
-    const float tmp = (vc >> 15) + (1 << 15);
+    const float tmp = (vc >> 17) + (1 << 15);
     assert(tmp < (1 << 16));
     vx = opamp_rev->output(tmp);
 
     // Return vo.
-    return vx - (vc >> 14);
+    return vx - (vc >> 16);
 }
 
 } // namespace reSIDfp

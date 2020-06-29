@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -60,9 +60,9 @@ public:
      * @return waveformgenerator output
      */
     RESID_INLINE
-    int output(const WaveformGenerator* ringModulator) const
+    float output(const WaveformGenerator* ringModulator) const
     {
-        return static_cast<int>(waveformGenerator->output(ringModulator) * envelopeGenerator->output());
+        return waveformGenerator->output(ringModulator) * envelopeGenerator->output();
     }
 
     /**

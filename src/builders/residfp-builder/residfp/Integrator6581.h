@@ -178,9 +178,9 @@ public:
         kVddt(kVddt),
         n_snake(n_snake) {}
 
-    void setVw(float Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) / 2.f; }
+    void setVw(float Vw) { Vddt_Vw_2 = (kVddt - Vw) * (kVddt - Vw); }
 
-    int solve(float vi) const;
+    float solve(float vi) const;
 };
 
 } // namespace reSIDfp
@@ -191,7 +191,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator6581::solve(float vi) const
+float Integrator6581::solve(float vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < kVddt);
@@ -212,7 +212,7 @@ int Integrator6581::solve(float vi) const
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const float kVg = vcr_kVg->output((Vddt_Vw_2 + (Vgdt_2 / 2.f)) / 65536.f);
+    const float kVg = vcr_kVg->output(((Vddt_Vw_2 + Vgdt_2) / 2.f) / 65536.f);
 
     // VCR voltages for EKV model table lookup.
     const float Vgs = (vx < kVg) ? kVg - vx : 0.;

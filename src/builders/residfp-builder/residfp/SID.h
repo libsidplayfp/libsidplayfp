@@ -300,9 +300,9 @@ void SID::ageBusValue(unsigned int n)
 RESID_INLINE
 int SID::output() const
 {
-    const int v1 = voice[0]->output(voice[2]->wave());
-    const int v2 = voice[1]->output(voice[0]->wave());
-    const int v3 = voice[2]->output(voice[1]->wave());
+    const float v1 = voice[0]->output(voice[2]->wave());
+    const float v2 = voice[1]->output(voice[0]->wave());
+    const float v3 = voice[2]->output(voice[1]->wave());
 
     return externalFilter->clock(filter->clock(v1, v2, v3));
 }
