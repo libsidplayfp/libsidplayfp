@@ -159,28 +159,28 @@ private:
     const LUT* vcr_n_Ids_term;
     const LUT* opamp_rev;
 
-    unsigned int Vddt_Vw_2;
-    int vx;
-    int vc;
+    float Vddt_Vw_2;
+    mutable float vx;
+    mutable int vc;
 
-    const unsigned short kVddt;
+    const float kVddt;
     const unsigned short n_snake;
 
 public:
     Integrator6581(const LUT* vcr_kVg, const LUT* vcr_n_Ids_term,
-               const LUT* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
+               const LUT* opamp_rev, float kVddt, unsigned short n_snake) :
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev),
-        Vddt_Vw_2(0),
-        vx(0),
+        Vddt_Vw_2(0.f),
+        vx(0.f),
         vc(0),
         kVddt(kVddt),
         n_snake(n_snake) {}
 
-    void setVw(unsigned short Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) >> 1; }
+    void setVw(unsigned short Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) / 2.f; }
 
-    int solve(int vi);
+    int solve(int vi) const;
 };
 
 } // namespace reSIDfp
@@ -191,7 +191,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator6581::solve(int vi)
+int Integrator6581::solve(int vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < kVddt);
@@ -201,25 +201,23 @@ int Integrator6581::solve(int vi)
     assert(vi < kVddt);
 
     // "Snake" voltages for triode mode calculation.
-    const unsigned int Vgst = kVddt - vx;
-    const unsigned int Vgdt = kVddt - vi;
+    const float Vgst = kVddt - vx;
+    const float Vgdt = kVddt - vi;
 
-    const unsigned int Vgst_2 = Vgst * Vgst;
-    const unsigned int Vgdt_2 = Vgdt * Vgdt;
+    const float Vgst_2 = Vgst * Vgst;
+    const float Vgdt_2 = Vgdt * Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
     const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int kVg = static_cast<int>(vcr_kVg->output((Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16));
+    const float kVg = vcr_kVg->output((Vddt_Vw_2 + (Vgdt_2 / 2.f)) / 65536.f);
 
     // VCR voltages for EKV model table lookup.
-    int Vgs = kVg - vx;
-    if (Vgs < 0) Vgs = 0;
+    const float Vgs = (kVg < vx) ? kVg - vx : 0.;
     assert(Vgs < (1 << 16));
-    int Vgd = kVg - vi;
-    if (Vgd < 0) Vgd = 0;
+    const float Vgd = (kVg < vi) ? kVg - vi : 0.;
     assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30

@@ -362,8 +362,8 @@ unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
     voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS14 >> 18) + voiceDC : 0;
 
-    int Vi = 0;
-    int Vo = 0;
+    float Vi = 0.f;
+    float Vo = 0.f;
 
     (filt1 ? Vi : Vo) += voice1;
     (filt2 ? Vi : Vo) += voice2;

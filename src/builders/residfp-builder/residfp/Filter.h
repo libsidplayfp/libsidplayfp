@@ -47,18 +47,18 @@ protected:
     LUT* currentResonance;
 
     /// Filter highpass state.
-    int Vhp;
+    float Vhp;
 
     /// Filter bandpass state.
-    int Vbp;
+    float Vbp;
 
     /// Filter lowpass state.
-    int Vlp;
+    float Vlp;
 
     /// Filter external input.
-    int ve;
+    float ve;
 
-    /// Filter cutoff frequency.
+    /// Filter cutoff level.
     unsigned int fc;
 
     /// Routing to filter or outside filter
@@ -102,10 +102,10 @@ public:
         currentMixer(nullptr),
         currentSummer(nullptr),
         currentResonance(nullptr),
-        Vhp(0),
-        Vbp(0),
-        Vlp(0),
-        ve(0),
+        Vhp(0.f),
+        Vbp(0.f),
+        Vlp(0.f),
+        ve(0.f),
         fc(0),
         filt1(false),
         filt2(false),

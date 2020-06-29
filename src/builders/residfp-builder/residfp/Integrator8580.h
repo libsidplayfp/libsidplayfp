@@ -56,11 +56,11 @@ class Integrator8580
 private:
     const LUT* opamp_rev;
 
-    mutable int vx;
+    mutable float vx;
     mutable int vc;
 
-    unsigned short nVgt;
-    unsigned short n_dac;
+    float nVgt;
+    float n_dac;
 
     const double Vth;
     const double nKp;
@@ -70,7 +70,7 @@ private:
 public:
     Integrator8580(const LUT* opamp_rev, double Vth, double denorm, double C, double uCox, double vmin, double N16) :
         opamp_rev(opamp_rev),
-        vx(0),
+        vx(0.f),
         vc(0),
         Vth(Vth),
         nKp(denorm* (uCox / 2. * 1.0e-6 / C)),
@@ -86,7 +86,7 @@ public:
         // Fit in 5 bits.
         const double tmp = (1 << 13) * nKp * wl;
         assert(tmp > -0.5 && tmp < 65535.5);
-        n_dac = static_cast<unsigned short>(tmp + 0.5);
+        n_dac = static_cast<float>(tmp);
     }
 
     /**
@@ -103,7 +103,7 @@ public:
         // Vgt - x = (Vgt - t) - (x - t)
         const double tmp = N16 * (Vgt - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
-        nVgt = static_cast<unsigned short>(tmp + 0.5);
+        nVgt = static_cast<float>(tmp);
     }
 
     int solve(int vi) const;
@@ -123,14 +123,14 @@ int Integrator8580::solve(int vi) const
     assert(vx < nVgt);
 
     // DAC voltages
-    const unsigned int Vgst = nVgt - vx;
-    const unsigned int Vgdt = (vi < nVgt) ? nVgt - vi : 0;  // triode/saturation mode
+    const float Vgst = nVgt - vx;
+    const float Vgdt = (vi < nVgt) ? nVgt - vi : 0.f;  // triode/saturation mode
 
-    const unsigned int Vgst_2 = Vgst * Vgst;
-    const unsigned int Vgdt_2 = Vgdt * Vgdt;
+    const float Vgst_2 = Vgst * Vgst;
+    const float Vgdt_2 = Vgdt * Vgdt;
 
     // DAC current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_dac = n_dac * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
+    const float n_I_dac = n_dac * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
 
     // Change in capacitor charge.
     vc += n_I_dac;
