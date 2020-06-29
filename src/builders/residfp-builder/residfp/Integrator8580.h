@@ -132,15 +132,15 @@ float Integrator8580::solve(float vi) const
     const float n_I_dac = n_dac * (Vgst_2 - Vgdt_2);
 
     // Change in capacitor charge.
-    vc += n_I_dac;
+    vc += n_I_dac / 65536.f;
 
     // vx = g(vc)
-    const float tmp = (vc / 65536.f / 2.f) + (1 << 15);
+    const float tmp = (vc / 2.f) + (1 << 15);
     assert(tmp < (1 << 16));
     vx = opamp_rev->output(tmp);
 
     // Return vo.
-    return vx - (vc / 65536.f);
+    return vx - vc;
 }
 
 } // namespace reSIDfp

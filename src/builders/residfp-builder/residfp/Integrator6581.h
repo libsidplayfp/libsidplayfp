@@ -220,21 +220,19 @@ float Integrator6581::solve(float vi) const
     const float Vgd = (vi < kVg) ? kVg - vi : 0.;
     assert(Vgd < (1 << 16));
 
-    // VCR current, scaled by m*2^16*2^16 = m*2^32
-    const float If = (vcr_n_Ids_term->output(Vgs)) * 65536.f;
-    const float Ir = (vcr_n_Ids_term->output(Vgd)) * 65536.f;
-    const float n_I_vcr = If - Ir;
+    // VCR current, scaled by m*2^16
+    const float n_I_vcr = vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd);
 
     // Change in capacitor charge.
-    vc += n_I_snake + n_I_vcr;
+    vc += (n_I_snake / 65536.f) + n_I_vcr;
 
     // vx = g(vc)
-    const float tmp = (vc / 65536.f / 2.f) + (1 << 15);
+    const float tmp = (vc / 2.f) + (1 << 15);
     assert(tmp < (1 << 16));
     vx = opamp_rev->output(tmp);
 
     // Return vo.
-    return vx - (vc / 65536.f);
+    return vx - vc;
 }
 
 } // namespace reSIDfp
