@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -39,10 +39,10 @@ inline double getW0(double res, double cap)
 }
 
 ExternalFilter::ExternalFilter() :
-    Vlp(0),
-    Vhp(0),
-    w0lp_1_s7(0),
-    w0hp_1_s17(0)
+    Vlp(0.f),
+    Vhp(0.f),
+    w0lp_1_s7(0.f),
+    w0hp_1_s17(0.f)
 {
     reset();
 }
@@ -50,17 +50,17 @@ ExternalFilter::ExternalFilter() :
 void ExternalFilter::setClockFrequency(double frequency)
 {
     // Low-pass: R = 10kOhm, C = 1000pF; w0l = 1/RC = 1/(1e4*1e-9) = 100000
-    w0lp_1_s7 = static_cast<int>(getW0(10e3, 1000e-12) / frequency * (1 << 7) + 0.5);
+    w0lp_1_s7 = static_cast<float>(getW0(10e3, 1000e-12) / frequency);
 
     // High-pass: R = 1kOhm, C = 10uF; w0h = 1/RC = 1/(1e3*1e-5) = 100
-    w0hp_1_s17 = static_cast<int>(getW0(1e3, 10e-6) / frequency * (1 << 17) + 0.5);
+    w0hp_1_s17 = static_cast<float>(getW0(1e3, 10e-6) / frequency);
 }
 
 void ExternalFilter::reset()
 {
     // State of filter.
-    Vlp = 0; //1 << (15 + 11);
-    Vhp = 0;
+    Vlp = 0.f;
+    Vhp = 0.f;
 }
 
 } // namespace reSIDfp
