@@ -32,7 +32,7 @@ namespace reSIDfp
 class LUT
 {
 public:
-    virtual unsigned short output(unsigned int input) const = 0;
+    virtual float output(float input) const = 0;
 
     virtual ~LUT() {}
 };
@@ -40,30 +40,30 @@ public:
 class InterpolatedLUT final : public LUT
 {
 private:
-    const unsigned short size;
-    const unsigned int min;
-    const unsigned int range;
+    const unsigned int size;
+    const float min;
+    const float range;
 
-    unsigned short* table;
+    float* table;
 
 public:
-    InterpolatedLUT(unsigned short size, unsigned int min, unsigned int max, const unsigned short* tab) :
+    InterpolatedLUT(unsigned int size, float min, float max, const float* tab) :
         size(size),
         min(min),
         range(max-min),
-        table(new unsigned short[size+1])
+        table(new float[size+1])
     {
-        memcpy(table, tab, (size+1)*sizeof(unsigned short));
+        memcpy(table, tab, (size+1)*sizeof(float));
     }
 
     ~InterpolatedLUT() { delete [] table; }
 
-    unsigned short output(unsigned int input) const
+    float output(float input) const
     {
-        const uint64_t scaledInput = ((static_cast<uint64_t>(input - min)<<16) / range) * size;
-        const uint64_t index = scaledInput >> 16;
-        const uint64_t dist = (scaledInput & ((1 << 16)-1));
-        return table[index] + (dist * (table[index+1] - table[index])) / (1 << 16);
+        const float scaledInput = ((input - min) / range) * size;
+        const unsigned int index = static_cast<unsigned int>(scaledInput + 0.5f);
+        const float dist = scaledInput - index;
+        return table[index] + (dist * (table[index+1] - table[index]));
     }
 };
 

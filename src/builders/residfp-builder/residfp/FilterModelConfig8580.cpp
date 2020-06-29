@@ -148,7 +148,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
     }
 
-    unsigned short temp_tab[(8 << 8)+1];
+    float temp_tab[(8 << 8)+1];
 
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
 
@@ -159,9 +159,9 @@ FilterModelConfig8580::FilterModelConfig8580() :
         const Spline::Point out = s.evaluate(x<<8);
         double tmp = out.x;
         assert(tmp > -0.5 && tmp < 65535.5);
-        temp_tab[x] = static_cast<unsigned short>(tmp + 0.5);
+        temp_tab[x] = static_cast<float>(tmp);
     }
-    opamp_rev_lut = new InterpolatedLUT(256, 0, 65535, temp_tab);
+    opamp_rev_lut = new InterpolatedLUT(255, 0, 65535, temp_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -186,7 +186,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
             const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            temp_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
+            temp_tab[vi] = static_cast<float>(tmp);
         }
         summer[i] = new InterpolatedLUT(size, 0, size<<8, temp_tab);
     }
@@ -208,7 +208,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
             const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            temp_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
+            temp_tab[vi] = static_cast<float>(tmp);
         }
         mixer[i] = new InterpolatedLUT(size, 0, size<<8, temp_tab);
     }
@@ -228,9 +228,9 @@ FilterModelConfig8580::FilterModelConfig8580() :
             const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            temp_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
+            temp_tab[vi] = static_cast<float>(tmp);
         }
-        gain_vol[n8] = new InterpolatedLUT(256, 0, 65535, temp_tab);
+        gain_vol[n8] = new InterpolatedLUT(255, 0, 65535, temp_tab);
     }
 
     // 4 bit "resistor" ladders in the bandpass resonance gain
@@ -248,7 +248,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
             const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            temp_tab[vi] = static_cast<unsigned short>(tmp + 0.5);
+            temp_tab[vi] = static_cast<float>(tmp);
         }
         gain_res[n8] = new InterpolatedLUT(256, 0, 65535, temp_tab);
     }
