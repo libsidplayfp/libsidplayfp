@@ -158,8 +158,8 @@ private:
     const unsigned short* opamp_rev;
 
     unsigned int Vddt_Vw_2;
-    int vx;
-    int vc;
+    mutable int vx;
+    mutable int vc;
 
     const unsigned short kVddt;
     const unsigned short n_snake;
@@ -178,7 +178,7 @@ public:
 
     void setVw(unsigned short Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) >> 1; }
 
-    int solve(int vi);
+    int solve(int vi) const;
 };
 
 } // namespace reSIDfp
@@ -189,7 +189,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator::solve(int vi)
+int Integrator::solve(int vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < kVddt);
@@ -213,11 +213,9 @@ int Integrator::solve(int vi)
     const int kVg = static_cast<int>(vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
 
     // VCR voltages for EKV model table lookup.
-    int Vgs = kVg - vx;
-    if (Vgs < 0) Vgs = 0;
+    const int Vgs = (vx < kVg) ? kVg - vx : 0;
     assert(Vgs < (1 << 16));
-    int Vgd = kVg - vi;
-    if (Vgd < 0) Vgd = 0;
+    const int Vgd = (vi < kVg) ? kVg - vi : 0;
     assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
