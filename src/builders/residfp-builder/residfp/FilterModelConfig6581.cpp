@@ -140,14 +140,14 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     Spline s(scaled_voltage, OPAMP_SIZE);
 
-    for (int x = 0; x <= (1 << 8); x++)
+    for (unsigned int x = 0; x <= (1 << 8); x++)
     {
         const Spline::Point out = s.evaluate(x<<8);
         double tmp = out.x;
         assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[x] = static_cast<float>(tmp);
     }
-    opamp_rev_lut = new InterpolatedLUT(255, 0, 65535, temp_tab);
+    opamp_rev_lut = new InterpolatedLUT(256, 0, 65535, temp_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -167,7 +167,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         const double n = idiv;
         opampModel.reset();
 
-        for (int vi = 0; vi <= size; vi++)
+        for (unsigned int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
@@ -189,7 +189,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
 
-        for (int vi = 0; vi <= size; vi++)
+        for (unsigned int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
@@ -210,14 +210,14 @@ FilterModelConfig6581::FilterModelConfig6581() :
         const double n = n8 / 8.0;
         opampModel.reset();
 
-        for (int vi = 0; vi <= size; vi++)
+        for (unsigned int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        gain[n8] = new InterpolatedLUT(255, 0, 65535, temp_tab);
+        gain[n8] = new InterpolatedLUT(size, 0, 65535, temp_tab);
     }
 
     const double nkVddt = N16 * kVddt;
@@ -239,7 +239,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[i] = static_cast<float>(tmp);
     }
-    vcr_kVg = new InterpolatedLUT(255, 0, 65535, temp_tab);
+    vcr_kVg = new InterpolatedLUT(256, 0, 65535, temp_tab);
 
     //  EKV model:
     //
@@ -257,7 +257,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     // kVg_Vx = k*Vg - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
-    for (int kVg_Vx = 0; kVg_Vx < (1 << 8); kVg_Vx++)
+    for (unsigned int kVg_Vx = 0; kVg_Vx < (1 << 8); kVg_Vx++)
     {
         const double log_term = log1p(exp(((kVg_Vx<<8) / N16 - kVt) / (2. * Ut)));
         // Scaled by m*2^16

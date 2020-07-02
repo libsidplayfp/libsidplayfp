@@ -144,7 +144,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
-        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y + denorm) / 2.;
+        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y + denorm);
         scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
     }
 
@@ -154,14 +154,14 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
     Spline s(scaled_voltage, OPAMP_SIZE);
 
-    for (int x = 0; x <= (1 << 8); x++)
+    for (unsigned int x = 0; x <= (1 << 8); x++)
     {
         const Spline::Point out = s.evaluate(x<<8);
         double tmp = out.x;
         assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[x] = static_cast<float>(tmp);
     }
-    opamp_rev_lut = new InterpolatedLUT(255, 0, 65535, temp_tab);
+    opamp_rev_lut = new InterpolatedLUT(256, 0, 65535*2, temp_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -203,7 +203,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
 
-        for (int vi = 0; vi <= size; vi++)
+        for (unsigned int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
@@ -223,14 +223,14 @@ FilterModelConfig8580::FilterModelConfig8580() :
         const double n = n8 / 8.0;
         opampModel.reset();
 
-        for (int vi = 0; vi <= size; vi++)
+        for (unsigned int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        gain_vol[n8] = new InterpolatedLUT(255, 0, 65535, temp_tab);
+        gain_vol[n8] = new InterpolatedLUT(size, 0, 65535, temp_tab);
     }
 
     // 4 bit "resistor" ladders in the bandpass resonance gain
@@ -243,7 +243,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         const int size = 1 << 8;
         opampModel.reset();
 
-        for (int vi = 0; vi <= size; vi++)
+        for (unsigned int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * N16;

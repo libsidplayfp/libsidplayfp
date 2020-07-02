@@ -73,7 +73,7 @@ public:
         vx(0.f),
         vc(0.f),
         Vth(Vth),
-        nKp(denorm* (uCox / 2. * 1.0e-6 / C)),
+        nKp(denorm * (uCox / 2. * 1.0e-6 / C)),
         vmin(vmin),
         N16(N16)
     {
@@ -135,9 +135,8 @@ float Integrator8580::solve(float vi) const
     vc += n_I_dac / 65536.f;
 
     // vx = g(vc)
-    const float tmp = (vc / 2.f) + (1 << 15);
-    assert(tmp < (1 << 16));
-    vx = opamp_rev->output(tmp);
+    assert(vc > -65536.f && vc < 65536.f);
+    vx = opamp_rev->output(vc + 65536.f);
 
     // Return vo.
     return vx - vc;
