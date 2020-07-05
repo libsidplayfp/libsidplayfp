@@ -130,7 +130,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
-        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y + denorm) / 2.;
+        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y);
         scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
     }
 
@@ -142,12 +142,12 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     for (unsigned int x = 0; x <= (1 << 8); x++)
     {
-        const Spline::Point out = s.evaluate(x<<8);
+        const Spline::Point out = s.evaluate(static_cast<float>(x<<9)-65535.f);
         double tmp = out.x;
-        assert(tmp > -0.5 && tmp < 65535.5);
+        //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[x] = static_cast<float>(tmp);
     }
-    opamp_rev_lut = new InterpolatedLUT(256, 0, 65535, temp_tab);
+    opamp_rev_lut = new InterpolatedLUT(256, -65535, 65535, temp_tab);
 
     // Create lookup tables for gains / summers.
 

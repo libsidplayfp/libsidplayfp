@@ -136,7 +136,7 @@ float Integrator8580::solve(float vi) const
 
     // vx = g(vc)
     assert(vc > -65536.f && vc < 65536.f);
-    vx = opamp_rev->output(vc + 65536.f);
+    vx = opamp_rev->output(vc);
 
     // Return vo.
     return vx - vc;

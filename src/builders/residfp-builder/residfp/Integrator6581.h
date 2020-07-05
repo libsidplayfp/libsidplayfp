@@ -227,9 +227,8 @@ float Integrator6581::solve(float vi) const
     vc += (n_I_snake / 65536.f) + n_I_vcr;
 
     // vx = g(vc)
-    const float tmp = (vc / 2.f) + (1 << 15);
-    assert(tmp < (1 << 16));
-    vx = opamp_rev->output(tmp);
+    assert(vc > -65536.f && vc < 65536.f);
+    vx = opamp_rev->output(vc);
 
     // Return vo.
     return vx - vc;
