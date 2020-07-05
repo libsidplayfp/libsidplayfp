@@ -196,6 +196,8 @@ float Integrator6581::solve(float vi) const
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < kVddt);
 
+    vi /= 65536.f;
+
     // Check that transistor is actually in triode mode
     // Vds < Vgs - Vth
     assert(vi < kVddt);
@@ -212,26 +214,26 @@ float Integrator6581::solve(float vi) const
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const float kVg = vcr_kVg->output(((Vddt_Vw_2 + Vgdt_2) / 2.f) / 65536.f);
+    const float kVg = vcr_kVg->output((Vddt_Vw_2 + Vgdt_2) / 2.f);
 
     // VCR voltages for EKV model table lookup.
     const float Vgs = (vx < kVg) ? kVg - vx : 0.;
-    assert(Vgs < (1 << 16));
+    //assert(Vgs < (1 << 16));
     const float Vgd = (vi < kVg) ? kVg - vi : 0.;
-    assert(Vgd < (1 << 16));
+    //assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^16
-    const float n_I_vcr = vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd);
+    const float n_I_vcr = (vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd));
 
     // Change in capacitor charge.
-    vc += (n_I_snake / 65536.f) + n_I_vcr;
+    vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    assert(vc > -65536.f && vc < 65536.f);
+    //assert(vc > -65536.f && vc < 65536.f);
     vx = opamp_rev->output(vc);
 
     // Return vo.
-    return vx - vc;
+    return (vx - vc) * 65536.f;
 }
 
 } // namespace reSIDfp

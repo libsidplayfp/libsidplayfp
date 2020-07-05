@@ -65,17 +65,17 @@ private:
     const double Vth;
     const double nKp;
     const double vmin;
-    const double N16;
+    const double norm;
 
 public:
-    Integrator8580(const LUT* opamp_rev, double Vth, double denorm, double C, double uCox, double vmin, double N16) :
+    Integrator8580(const LUT* opamp_rev, double Vth, double denorm, double C, double uCox, double vmin, double norm) :
         opamp_rev(opamp_rev),
         vx(0.f),
         vc(0.f),
         Vth(Vth),
         nKp(denorm * (uCox / 2. * 1.0e-6 / C)),
         vmin(vmin),
-        N16(N16)
+        norm(norm)
     {
         setV(1.5);
     }
@@ -100,7 +100,7 @@ public:
 
         // Vg - Vth, normalized so that translated values can be subtracted:
         // Vgt - x = (Vgt - t) - (x - t)
-        const double tmp = N16 * (Vgt - vmin);
+        const double tmp = norm * (Vgt - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
         nVgt = static_cast<float>(tmp);
     }
@@ -121,6 +121,8 @@ float Integrator8580::solve(float vi) const
     // Make sure we're not in subthreshold mode
     assert(vx < nVgt);
 
+    vi /= 65536.f;
+
     // DAC voltages
     const float Vgst = nVgt - vx;
     const float Vgdt = (vi < nVgt) ? nVgt - vi : 0.f;  // triode/saturation mode
@@ -128,18 +130,18 @@ float Integrator8580::solve(float vi) const
     const float Vgst_2 = Vgst * Vgst;
     const float Vgdt_2 = Vgdt * Vgdt;
 
-    // DAC current, scaled by (1/m)*m*2^16*m*2^16 = m*2^32
+    // DAC current
     const float n_I_dac = n_dac * (Vgst_2 - Vgdt_2);
 
     // Change in capacitor charge.
-    vc += n_I_dac / 65536.f;
+    vc += n_I_dac;
 
     // vx = g(vc)
-    assert(vc > -65536.f && vc < 65536.f);
+    //assert(vc > -65536.f && vc < 65536.f);
     vx = opamp_rev->output(vc);
 
     // Return vo.
-    return vx - vc;
+    return (vx - vc) * 65536.f;
 }
 
 } // namespace reSIDfp

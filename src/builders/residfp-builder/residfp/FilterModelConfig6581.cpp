@@ -130,8 +130,8 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
-        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y);
-        scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
+        scaled_voltage[i].x = norm * (opamp_voltage[i].x - opamp_voltage[i].y);
+        scaled_voltage[i].y = norm * (opamp_voltage[i].x - vmin);
     }
 
     float temp_tab[(7 << 8)+1];
@@ -142,12 +142,12 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     for (unsigned int x = 0; x <= (1 << 8); x++)
     {
-        const Spline::Point out = s.evaluate(static_cast<float>(x<<9)-65535.f);
+        const Spline::Point out = s.evaluate(static_cast<float>(x)/256.f*2.f-1.f);
         double tmp = out.x;
         //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[x] = static_cast<float>(tmp);
     }
-    opamp_rev_lut = new InterpolatedLUT(256, -65535, 65535, temp_tab);
+    opamp_rev_lut = new InterpolatedLUT(256, -1.f, 1.f, temp_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -220,8 +220,8 @@ FilterModelConfig6581::FilterModelConfig6581() :
         gain[n8] = new InterpolatedLUT(size, 0, 65535, temp_tab);
     }
 
-    const double nkVddt = N16 * kVddt;
-    const double nVmin = N16 * vmin;
+    const double nkVddt = norm * kVddt;
+    const double nVmin = norm * vmin;
 
     for (unsigned int i = 0; i < (1 << 8); i++)
     {
@@ -234,12 +234,12 @@ FilterModelConfig6581::FilterModelConfig6581() :
         //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
         // I.e. k*Vg - t must be returned.
-        const double Vg = nkVddt - sqrt((double)(i << 24));
+        const double Vg = nkVddt - sqrt(static_cast<double>(i)/256.);
         const double tmp = k * Vg - nVmin;
-        assert(tmp > -0.5 && tmp < 65535.5);
+        //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[i] = static_cast<float>(tmp);
     }
-    vcr_kVg = new InterpolatedLUT(256, 0, 65535, temp_tab);
+    vcr_kVg = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
 
     //  EKV model:
     //
@@ -253,19 +253,18 @@ FilterModelConfig6581::FilterModelConfig6581() :
     const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
-    const double n_Is = N16 * 1.0e-6 / C * Is;
+    const double n_Is = norm * 1.0e-6 / C * Is;
 
     // kVg_Vx = k*Vg - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
     for (unsigned int kVg_Vx = 0; kVg_Vx < (1 << 8); kVg_Vx++)
     {
-        const double log_term = log1p(exp(((kVg_Vx<<8) / N16 - kVt) / (2. * Ut)));
-        // Scaled by m*2^16
+        const double log_term = log1p(exp(((kVg_Vx/256.) / norm - kVt) / (2. * Ut)));
         const double tmp = n_Is * log_term * log_term;
-        assert(tmp > -0.5 && tmp < 65535.5);
+        //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[kVg_Vx] = static_cast<float>(tmp);
     }
-    vcr_n_Ids_term = new InterpolatedLUT(256, 0, 65535, temp_tab);
+    vcr_n_Ids_term = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
 }
 
 FilterModelConfig6581::~FilterModelConfig6581()
@@ -295,8 +294,8 @@ float* FilterModelConfig6581::getDAC(double adjustment) const
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         const double fcd = dac.getOutput(i);
-        const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
-        assert(tmp > -0.5 && tmp < 65535.5);
+        const double tmp = norm * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
+        //assert(tmp > -0.5 && tmp < 65535.5);
         f0_dac[i] = static_cast<float>(tmp);
     }
 
@@ -307,8 +306,8 @@ std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
 {
     // Vdd - Vth, normalized so that translated values can be subtracted:
     // k*Vddt - x = (k*Vddt - t) - (x - t)
-    double tmp = N16 * (kVddt - vmin);
-    assert(tmp > -0.5 && tmp < 65535.5);
+    double tmp = norm * (kVddt - vmin);
+    //assert(tmp > -0.5 && tmp < 65535.5);
     const float nkVddt = static_cast<float>(tmp);
 
     // Normalized snake current factor, 1 cycle at 1MHz.

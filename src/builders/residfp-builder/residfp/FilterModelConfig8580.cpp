@@ -144,8 +144,8 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
     for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
-        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y);
-        scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
+        scaled_voltage[i].x = norm * (opamp_voltage[i].x - opamp_voltage[i].y);
+        scaled_voltage[i].y = norm * (opamp_voltage[i].x - vmin);
     }
 
     float temp_tab[(8 << 8)+1];
@@ -156,12 +156,12 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
     for (unsigned int x = 0; x <= (1 << 8); x++)
     {
-        const Spline::Point out = s.evaluate(static_cast<float>(x<<8)*2.f-65535.f);
+        const Spline::Point out = s.evaluate(static_cast<float>(x)/256.f*2.f-1.f);
         double tmp = out.x;
         //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[x] = static_cast<float>(tmp);
     }
-    opamp_rev_lut = new InterpolatedLUT(256, -65535, 65535, temp_tab);
+    opamp_rev_lut = new InterpolatedLUT(256, -1.f, 1.f, temp_tab);
 
     // Create lookup tables for gains / summers.
 
@@ -278,7 +278,7 @@ FilterModelConfig8580::~FilterModelConfig8580()
 
 std::unique_ptr<Integrator8580> FilterModelConfig8580::buildIntegrator()
 {
-    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev_lut, Vth, denorm, C, uCox, vmin, N16));
+    return std::unique_ptr<Integrator8580>(new Integrator8580(opamp_rev_lut, Vth, denorm, C, uCox, vmin, norm));
 }
 
 } // namespace reSIDfp
