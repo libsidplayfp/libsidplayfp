@@ -156,7 +156,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
     for (unsigned int x = 0; x <= (1 << 8); x++)
     {
-        const Spline::Point out = s.evaluate(static_cast<float>(x<<8)-65535);
+        const Spline::Point out = s.evaluate(static_cast<float>(x<<8)*2.f-65535.f);
         double tmp = out.x;
         //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[x] = static_cast<float>(tmp);
