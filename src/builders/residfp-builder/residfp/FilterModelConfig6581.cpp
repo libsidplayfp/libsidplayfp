@@ -168,12 +168,12 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
         for (unsigned int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + static_cast<double>(vi)/256. / norm / idiv; /* vmin .. vmax */
+            const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
             assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        summer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256., temp_tab);
+        summer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
     }
 
     // The audio mixer operates at n ~ 8/6, and has 8 fundamentally different
@@ -190,12 +190,12 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
         for (unsigned int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + static_cast<double>(vi)/256. / norm / idiv; /* vmin .. vmax */
+            const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
             assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        mixer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256., temp_tab);
+        mixer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
     }
 
     // 4 bit "resistor" ladders in the bandpass resonance gain and the audio
@@ -258,7 +258,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     // I.e. if k != 1.0, Vg must be scaled accordingly.
     for (unsigned int kVg_Vx = 0; kVg_Vx < (1 << 8); kVg_Vx++)
     {
-        const double log_term = log1p(exp(((kVg_Vx/256.) / norm - kVt) / (2. * Ut)));
+        const double log_term = log1p(exp(((static_cast<double>(kVg_Vx)/256.) * denorm - kVt) / (2. * Ut)));
         const double tmp = n_Is * log_term * log_term;
         //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[kVg_Vx] = static_cast<float>(tmp);

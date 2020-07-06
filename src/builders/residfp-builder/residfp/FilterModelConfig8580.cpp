@@ -182,7 +182,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
         for (int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + static_cast<double>(vi)/256. / norm / idiv; /* vmin .. vmax */
+            const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
             //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
@@ -204,7 +204,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
         for (unsigned int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + static_cast<double>(vi)/256. / norm / idiv; /* vmin .. vmax */
+            const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
             //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
@@ -244,7 +244,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
         for (unsigned int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + static_cast<double>(vi)/256. / norm; /* vmin .. vmax */
+            const double vin = vmin + static_cast<double>(vi)/256. * denorm; /* vmin .. vmax */
             const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * norm;
             //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);

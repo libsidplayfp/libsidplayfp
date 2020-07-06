@@ -43,7 +43,7 @@ class InterpolatedLUT final : public LUT
 private:
     const unsigned int size;
     const float min;
-    const float range;
+    const float scaling;
 
     float* table;
 
@@ -51,7 +51,7 @@ public:
     InterpolatedLUT(unsigned int size, float min, float max, const float* tab) :
         size(size),
         min(min),
-        range(max-min),
+        scaling(static_cast<float>(size)/(max-min)),
         table(new float[size+1])
     {
         memcpy(table, tab, (size+1)*sizeof(float));
@@ -61,7 +61,7 @@ public:
 
     float output(float input) const
     {
-        const float scaledInput = ((input - min) / range) * size;
+        const float scaledInput = (input - min) * scaling;
         const unsigned int index = static_cast<unsigned int>(scaledInput + 0.5f);
         const float dist = scaledInput - index;
         assert(index <= size);

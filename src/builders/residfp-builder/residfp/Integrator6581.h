@@ -215,13 +215,13 @@ float Integrator6581::solve(float vi) const
     const float kVg = vcr_kVg->output((Vddt_Vw_2 + Vgdt_2) / 2.f);
 
     // VCR voltages for EKV model table lookup.
-    const float Vgs = (vx < kVg) ? kVg - vx : 0.;
+    const float Vgs = (vx < kVg) ? kVg - vx : 0.f;
     //assert(Vgs < (1 << 16));
-    const float Vgd = (vi < kVg) ? kVg - vi : 0.;
+    const float Vgd = (vi < kVg) ? kVg - vi : 0.f;
     //assert(Vgd < (1 << 16));
 
     // VCR current, scaled by m*2^16
-    const float n_I_vcr = (vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd));
+    const float n_I_vcr = vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd);
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;
