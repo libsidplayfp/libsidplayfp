@@ -195,10 +195,10 @@ FilterModelConfig8580::FilterModelConfig8580() :
     //
     // All "on", transistors are modeled as one - see comments above for
     // the filter summer.
-    for (int i = 0; i < 8; i++)
+    for (unsigned int i = 0; i < 8; i++)
     {
-        const int idiv = (i == 0) ? 1 : i;
-        const int size = (i == 0) ? 1 : i << 8;
+        const unsigned int idiv = (i == 0) ? 1 : i;
+        const unsigned int size = (i == 0) ? 1 : i << 8;
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
 
@@ -216,9 +216,9 @@ FilterModelConfig8580::FilterModelConfig8580() :
     // necessitate 16 gain tables.
     // From die photographs of the volume "resistor" ladders
     // it follows that gain ~ vol/8 (assuming ideal op-amps
-    for (int n8 = 0; n8 < 16; n8++)
+    for (unsigned int n8 = 0; n8 < 16; n8++)
     {
-        const int size = 1 << 8;
+        const unsigned int size = 1 << 8;
         const double n = n8 / 8.0;
         opampModel.reset();
 

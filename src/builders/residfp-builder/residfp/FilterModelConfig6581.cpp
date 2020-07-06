@@ -159,10 +159,10 @@ FilterModelConfig6581::FilterModelConfig6581() :
     // entirely accurate, since the input for each transistor is different,
     // and transistors are not linear components. However modeling all
     // transistors separately would be extremely costly.
-    for (int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 5; i++)
     {
-        const int idiv = 2 + i;        // 2 - 6 input "resistors".
-        const int size = idiv << 8;
+        const unsigned int idiv = 2 + i;        // 2 - 6 input "resistors".
+        const unsigned int size = idiv << 8;
         const double n = idiv;
         opampModel.reset();
 
@@ -181,10 +181,10 @@ FilterModelConfig6581::FilterModelConfig6581() :
     //
     // All "on", transistors are modeled as one - see comments above for
     // the filter summer.
-    for (int i = 0; i < 8; i++)
+    for (unsigned int i = 0; i < 8; i++)
     {
-        const int idiv = (i == 0) ? 1 : i;
-        const int size = (i == 0) ? 1 : i << 8;
+        const unsigned int idiv = (i == 0) ? 1 : i;
+        const unsigned int size = (i == 0) ? 1 : i << 8;
         const double n = i * 8.0 / 6.0;
         opampModel.reset();
 
@@ -203,9 +203,9 @@ FilterModelConfig6581::FilterModelConfig6581() :
     // From die photographs of the bandpass and volume "resistor" ladders
     // it follows that gain ~ vol/8 and 1/Q ~ ~res/8 (assuming ideal
     // op-amps and ideal "resistors").
-    for (int n8 = 0; n8 < 16; n8++)
+    for (unsigned int n8 = 0; n8 < 16; n8++)
     {
-        const int size = 1 << 8;
+        const unsigned int size = 1 << 8;
         const double n = n8 / 8.0;
         opampModel.reset();
 
