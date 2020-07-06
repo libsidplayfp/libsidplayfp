@@ -121,8 +121,6 @@ float Integrator8580::solve(float vi) const
     // Make sure we're not in subthreshold mode
     assert(vx < nVgt);
 
-    vi /= 65536.f;
-
     // DAC voltages
     const float Vgst = nVgt - vx;
     const float Vgdt = (vi < nVgt) ? nVgt - vi : 0.f;  // triode/saturation mode
@@ -141,7 +139,7 @@ float Integrator8580::solve(float vi) const
     vx = opamp_rev->output(vc);
 
     // Return vo.
-    return (vx - vc) * 65536.f;
+    return vx - vc;
 }
 
 } // namespace reSIDfp

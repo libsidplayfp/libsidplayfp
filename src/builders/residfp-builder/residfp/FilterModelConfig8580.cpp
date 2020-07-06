@@ -135,8 +135,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
     vmin(opamp_voltage[0].x),
     vmax(Vddt < opamp_voltage[0].y ? opamp_voltage[0].y : Vddt),
     denorm(vmax - vmin),
-    norm(1.0 / denorm),
-    N16(norm * ((1 << 16) - 1))
+    norm(1.0 / denorm)
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
@@ -156,7 +155,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
     for (unsigned int x = 0; x <= (1 << 8); x++)
     {
-        const Spline::Point out = s.evaluate(static_cast<float>(x)/256.f*2.f-1.f);
+        const Spline::Point out = s.evaluate(static_cast<double>(x)*2./256. - 1.);
         double tmp = out.x;
         //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[x] = static_cast<float>(tmp);
@@ -183,12 +182,12 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
         for (int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
+            const double vin = vmin + static_cast<double>(vi)/256. / norm / idiv; /* vmin .. vmax */
+            const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
+            //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        summer[i] = new InterpolatedLUT(size, 0, size<<8, temp_tab);
+        summer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
     }
 
     // The audio mixer operates at n ~ 8/6, and has 8 fundamentally different
@@ -205,12 +204,12 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
         for (unsigned int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
+            const double vin = vmin + static_cast<double>(vi)/256. / norm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
             //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        mixer[i] = new InterpolatedLUT(size, 0, size<<8, temp_tab);
+        mixer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
     }
 
     // 4 bit "resistor" ladders in the audio output gain
@@ -245,12 +244,12 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
         for (unsigned int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
+            const double vin = vmin + static_cast<double>(vi)/256. / norm; /* vmin .. vmax */
+            const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * norm;
+            //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        gain_res[n8] = new InterpolatedLUT(256, 0, 65535, temp_tab);
+        gain_res[n8] = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
     }
 
 }

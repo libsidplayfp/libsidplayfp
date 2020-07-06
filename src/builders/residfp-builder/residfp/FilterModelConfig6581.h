@@ -81,9 +81,6 @@ private:
     const double vmin, vmax;
     const double denorm, norm;
 
-    /// Fixed point scaling for 16 bit op-amp output.
-    const double N16;
-
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
     LUT* mixer[8];
@@ -121,7 +118,7 @@ public:
     /**
      * The "zero" output level of the voices.
      */
-    float getVoiceDC() const { return N16 * (voice_DC_voltage - vmin); }
+    float getVoiceDC() const { return norm * (voice_DC_voltage - vmin); }
 
     LUT** getGain() { return gain; }
 

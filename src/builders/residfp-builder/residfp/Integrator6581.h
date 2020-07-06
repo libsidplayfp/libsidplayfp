@@ -196,8 +196,6 @@ float Integrator6581::solve(float vi) const
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < kVddt);
 
-    vi /= 65536.f;
-
     // Check that transistor is actually in triode mode
     // Vds < Vgs - Vth
     assert(vi < kVddt);
@@ -233,7 +231,7 @@ float Integrator6581::solve(float vi) const
     vx = opamp_rev->output(vc);
 
     // Return vo.
-    return (vx - vc) * 65536.f;
+    return vx - vc;
 }
 
 } // namespace reSIDfp
