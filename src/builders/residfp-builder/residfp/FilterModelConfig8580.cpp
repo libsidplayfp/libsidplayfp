@@ -206,8 +206,8 @@ FilterModelConfig8580::FilterModelConfig8580() :
         for (unsigned int vi = 0; vi <= size; vi++)
         {
             const double vin = vmin + (vi<<8) / N16 / idiv; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
+            const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
+            //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
         mixer[i] = new InterpolatedLUT(size, 0, size<<8, temp_tab);
@@ -225,12 +225,12 @@ FilterModelConfig8580::FilterModelConfig8580() :
 
         for (unsigned int vi = 0; vi <= size; vi++)
         {
-            const double vin = vmin + (vi<<8) / N16; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
+            const double vin = vmin + static_cast<double>(vi)/256. * denorm; /* vmin .. vmax */
+            const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
+            //assert(tmp > -0.5 && tmp < 65535.5);
             temp_tab[vi] = static_cast<float>(tmp);
         }
-        gain_vol[n8] = new InterpolatedLUT(size, 0, 65535, temp_tab);
+        gain_vol[n8] = new InterpolatedLUT(size, 0.f, 1.f, temp_tab);
     }
 
     // 4 bit "resistor" ladders in the bandpass resonance gain

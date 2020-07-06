@@ -371,7 +371,7 @@ public:
 
     float clock(float voice1, float voice2, float voice3) override;
 
-    void input(int sample) override { ve = (sample * voiceScale * 3) + mixer[0]->output(0); }
+    void input(int sample) override { ve = (sample * voiceScale * 3) + mixer[0]->output(0) * 65536.f; }
 
     /**
      * Set filter curve type based on single parameter.
@@ -406,7 +406,7 @@ float Filter6581::clock(float voice1, float voice2, float voice3)
     (filt3 ? Vi : Vo) += voice3;
     (filtE ? Vi : Vo) += ve;
 
-    Vhp = currentSummer->output(currentResonance->output(Vbp) + Vlp + Vi);
+    Vhp = currentSummer->output(currentResonance->output(Vbp / 65536.f) * 65536.f + Vlp + Vi);
     Vbp = hpIntegrator->solve(Vhp);
     Vlp = bpIntegrator->solve(Vbp);
 
@@ -414,7 +414,7 @@ float Filter6581::clock(float voice1, float voice2, float voice3)
     if (bp) Vo += Vbp;
     if (hp) Vo += Vhp;
 
-    return currentGain->output(currentMixer->output(Vo));
+    return currentGain->output(currentMixer->output(Vo)) * 65536.f;
 }
 
 } // namespace reSIDfp

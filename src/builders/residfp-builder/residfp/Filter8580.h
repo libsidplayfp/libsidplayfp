@@ -337,7 +337,7 @@ public:
 
     float clock(float voice1, float voice2, float voice3) override;
 
-    void input(int sample) override { ve = (sample * voiceScale * 3) + mixer[0]->output(0); }
+    void input(int sample) override { ve = (sample * voiceScale * 3) + mixer[0]->output(0) * 65536.f; }
 
     /**
      * Set filter curve type based on single parameter.
@@ -378,7 +378,7 @@ float Filter8580::clock(float voice1, float voice2, float voice3)
     if (bp) Vo += Vbp;
     if (hp) Vo += Vhp;
 
-    return currentGain->output(currentMixer->output(Vo));
+    return currentGain->output(currentMixer->output(Vo)) * 65536.f;
 }
 
 } // namespace reSIDfp

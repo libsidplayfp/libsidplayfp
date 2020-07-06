@@ -101,7 +101,7 @@ public:
         // Vg - Vth, normalized so that translated values can be subtracted:
         // Vgt - x = (Vgt - t) - (x - t)
         const double tmp = norm * (Vgt - vmin);
-        assert(tmp > -0.5 && tmp < 65535.5);
+        //assert(tmp > -0.5 && tmp < 65535.5);
         nVgt = static_cast<float>(tmp);
     }
 
