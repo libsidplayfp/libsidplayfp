@@ -186,8 +186,9 @@ void SID::reset()
 
 void SID::input(int value)
 {
-    filter6581->input(value);
-    filter8580->input(value);
+    const float sample = static_cast<float>(value) / 65536.f;
+    filter6581->input(sample);
+    filter8580->input(sample);
 }
 
 unsigned char SID::read(int offset)

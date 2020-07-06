@@ -171,7 +171,7 @@ public:
      */
     void writeMODE_VOL(unsigned char mode_vol);
 
-    virtual void input(int input) = 0;
+    virtual void input(float input) = 0;
 };
 
 } // namespace reSIDfp

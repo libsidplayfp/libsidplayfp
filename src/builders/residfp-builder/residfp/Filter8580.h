@@ -337,7 +337,7 @@ public:
 
     float clock(float voice1, float voice2, float voice3) override;
 
-    void input(int sample) override { ve = (static_cast<float>(sample)/65536.f * voiceScale * 3) + mixer[0]->output(0); }
+    void input(float sample) override { ve = (sample * voiceScale * 3) + mixer[0]->output(0); }
 
     /**
      * Set filter curve type based on single parameter.
@@ -357,10 +357,10 @@ namespace reSIDfp
 RESID_INLINE
 float Filter8580::clock(float voice1, float voice2, float voice3)
 {
-    voice1 = ((voice1 * voiceScale) / (65536.f * 16.f)) + voiceDC;
-    voice2 = ((voice2 * voiceScale) / (65536.f * 16.f)) + voiceDC;
+    voice1 = (voice1 * voiceScale) + voiceDC;
+    voice2 = (voice2 * voiceScale) + voiceDC;
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? ((voice3 * voiceScale) / (65536.f * 16.f)) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScale) + voiceDC : 0;
 
     float Vi = 0.f;
     float Vo = 0.f;
@@ -378,7 +378,7 @@ float Filter8580::clock(float voice1, float voice2, float voice3)
     if (bp) Vo += Vbp;
     if (hp) Vo += Vhp;
 
-    return currentGain->output(currentMixer->output(Vo)) * 65536.f;
+    return currentGain->output(currentMixer->output(Vo));
 }
 
 } // namespace reSIDfp
