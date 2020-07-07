@@ -71,7 +71,7 @@ private:
     /// Current root position (cached as guess to speed up next iteration)
     mutable double x;
 
-    const double kVddt;
+    const double Vddt;
     const double vmin;
     const double vmax;
 
@@ -83,11 +83,11 @@ public:
      *
      * @param opamp opamp mapping table as pairs of points (in -> out)
      * @param opamplength length of the opamp array
-     * @param kVddt transistor dt parameter (in volts)
+     * @param Vddt transistor dt parameter (in volts)
      */
-    OpAmp(const Spline::Point opamp[], int opamplength, double kVddt) :
+    OpAmp(const Spline::Point opamp[], int opamplength, double Vddt) :
         x(0.),
-        kVddt(kVddt),
+        Vddt(Vddt),
         vmin(opamp[0].x),
         vmax(opamp[opamplength - 1].x),
         opamp(new Spline(opamp, opamplength)) {}

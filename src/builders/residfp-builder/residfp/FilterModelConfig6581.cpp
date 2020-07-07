@@ -112,11 +112,11 @@ FilterModelConfig6581::FilterModelConfig6581() :
     uCox(20e-6),
     WL_vcr(9.0 / 1.0),
     WL_snake(1.0 / 115.0),
-    kVddt(k * (Vdd - Vth)),
+    Vddt(Vdd - Vth),
     dac_zero(6.65),
     dac_scale(2.63),
     vmin(opamp_voltage[0].x),
-    vmax(kVddt < opamp_voltage[0].y ? opamp_voltage[0].y : kVddt),
+    vmax(Vddt < opamp_voltage[0].y ? opamp_voltage[0].y : Vddt),
     denorm(vmax - vmin),
     norm(1.0 / denorm),
     dac(DAC_BITS)
@@ -150,7 +150,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     // Create lookup tables for gains / summers.
 
-    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, kVddt);
+    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, Vddt);
 
     // The filter summer operates at n ~ 1, and has 5 fundamentally different
     // input configurations (2 - 6 input "resistors").
@@ -219,21 +219,18 @@ FilterModelConfig6581::FilterModelConfig6581() :
         gain[n8] = new InterpolatedLUT(size, 0.f, 1.f, temp_tab);
     }
 
-    const double nkVddt = norm * kVddt;
+    const double nVddt = norm * Vddt;
     const double nVmin = norm * vmin;
 
     for (unsigned int i = 0; i < (1 << 8); i++)
     {
-        // The table index is right-shifted 16 times in order to fit in
-        // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-        //
         // The returned value must be corrected for translation. Vg always
         // takes part in a subtraction as follows:
         //
         //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
         //
         // I.e. k*Vg - t must be returned.
-        const double Vg = nkVddt - sqrt(static_cast<double>(i)/256.);
+        const double Vg = nVddt - sqrt(static_cast<double>(i)/256.);
         const double tmp = k * Vg - nVmin;
         //assert(tmp > -0.5 && tmp < 65535.5);
         temp_tab[i] = static_cast<float>(tmp);
@@ -243,13 +240,13 @@ FilterModelConfig6581::FilterModelConfig6581() :
     //  EKV model:
     //
     //  Ids = Is * (if - ir)
-    //  Is = (2 * u*Cox * Ut^2)/k * W/L
+    //  Is = ((2 * u*Cox * Ut^2)/k) * W/L
     //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
     //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
 
     const double kVt = k * Vth;
     // moderate inversion characteristic current
-    const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
+    const double Is = ((2. * uCox * Ut * Ut) / k) * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
     const double n_Is = norm * 1.0e-6 / C * Is;
@@ -304,17 +301,17 @@ float* FilterModelConfig6581::getDAC(double adjustment) const
 std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
 {
     // Vdd - Vth, normalized so that translated values can be subtracted:
-    // k*Vddt - x = (k*Vddt - t) - (x - t)
-    double tmp = norm * (kVddt - vmin);
+    // Vddt - x = (Vddt - t) - (x - t)
+    double tmp = norm * (Vddt - vmin);
     //assert(tmp > -0.5 && tmp < 65535.5);
-    const float nkVddt = static_cast<float>(tmp);
+    const float nVddt = static_cast<float>(tmp);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     tmp = denorm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
     //assert(tmp > -0.5 && tmp < 65535.5);
     const float n_snake = static_cast<float>(tmp);
 
-    return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nkVddt, n_snake));
+    return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nVddt, n_snake));
 }
 
 } // namespace reSIDfp

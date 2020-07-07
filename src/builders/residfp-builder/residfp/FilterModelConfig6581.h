@@ -68,7 +68,7 @@ private:
     const double uCox;          ///< Transconductance coefficient: u*Cox
     const double WL_vcr;        ///< W/L for VCR
     const double WL_snake;      ///< W/L for "snake"
-    const double kVddt;         ///< k * (Vdd - Vth)
+    const double Vddt;          ///< Vdd - Vth
     //@}
 
     /// DAC parameters.

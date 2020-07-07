@@ -69,11 +69,11 @@ namespace reSIDfp
  * be written as follows:
  *
  *     Ids = 0                          , Vgst < 0               (subthreshold mode)
- *     Ids = K/2*W/L*(2*Vgst - Vds)*Vds , Vgst >= 0, Vds < Vgst  (triode mode)
- *     Ids = K/2*W/L*Vgst^2             , Vgst >= 0, Vds >= Vgst (saturation mode)
+ *     Ids = K*W/L*(2*Vgst - Vds)*Vds   , Vgst >= 0, Vds < Vgst  (triode mode)
+ *     Ids = K*W/L*Vgst^2               , Vgst >= 0, Vds >= Vgst (saturation mode)
  *
  * where
- *     K   = u*Cox (transconductance coefficient)
+ *     K   = u*Cox/2 (transconductance coefficient)
  *     W/L = ratio between substrate width and length
  *     Vgst = Vg - Vs - Vt (overdrive voltage)
  *
@@ -85,10 +85,10 @@ namespace reSIDfp
  *
  *     Vds = Vgst - (Vgst - Vds) = Vgst - Vgdt
  *
- *     Ids = K/2*W/L*(2*Vgst - Vds)*Vds
- *     = K/2*W/L*(2*Vgst - (Vgst - Vgdt)*(Vgst - Vgdt)
- *     = K/2*W/L*(Vgst + Vgdt)*(Vgst - Vgdt)
- *     = K/2*W/L*(Vgst^2 - Vgdt^2)
+ *     Ids = K*W/L*(2*Vgst - Vds)*Vds
+ *     = K*W/L*(2*Vgst - (Vgst - Vgdt)*(Vgst - Vgdt)
+ *     = K*W/L*(Vgst + Vgdt)*(Vgst - Vgdt)
+ *     = K*W/L*(Vgst^2 - Vgdt^2)
  *
  * This turns out to be a general equation which covers both the triode
  * and saturation modes (where the second term is 0 in saturation mode).
@@ -163,22 +163,22 @@ private:
     mutable float vx;
     mutable float vc;
 
-    const float kVddt;
+    const float Vddt;
     const float n_snake;
 
 public:
     Integrator6581(const LUT* vcr_kVg, const LUT* vcr_n_Ids_term,
-               const LUT* opamp_rev, float kVddt, float n_snake) :
+               const LUT* opamp_rev, float Vddt, float n_snake) :
         vcr_kVg(vcr_kVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev),
         Vddt_Vw_2(0.f),
         vx(0.f),
         vc(0.f),
-        kVddt(kVddt),
+        Vddt(Vddt),
         n_snake(n_snake) {}
 
-    void setVw(float Vw) { Vddt_Vw_2 = (kVddt - Vw) * (kVddt - Vw); }
+    void setVw(float Vw) { Vddt_Vw_2 = (Vddt - Vw) * (Vddt - Vw); }
 
     float solve(float vi) const;
 };
@@ -194,24 +194,24 @@ RESID_INLINE
 float Integrator6581::solve(float vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
-    assert(vx < kVddt);
+    assert(vx < Vddt);
 
     // Check that transistor is actually in triode mode
     // Vds < Vgs - Vth
-    assert(vi < kVddt);
+    assert(vi < Vddt);
 
     // "Snake" voltages for triode mode calculation.
-    const float Vgst = kVddt - vx;
-    const float Vgdt = kVddt - vi;
+    const float Vgst = Vddt - vx;
+    const float Vgdt = Vddt - vi;
 
     const float Vgst_2 = Vgst * Vgst;
     const float Vgdt_2 = Vgdt * Vgdt;
 
-    // "Snake" current, scaled by (1/m)*m*2^16*m*2^16 = m*2^32
+    // "Snake" current
     const float n_I_snake = n_snake * (Vgst_2 - Vgdt_2);
 
-    // VCR gate voltage.       // Scaled by m*2^16
-    // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
+    // VCR gate voltage.
+    // k*Vg = k*(Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2))
     const float kVg = vcr_kVg->output((Vddt_Vw_2 + Vgdt_2) / 2.f);
 
     // VCR voltages for EKV model table lookup.
@@ -220,7 +220,7 @@ float Integrator6581::solve(float vi) const
     const float Vgd = (vi < kVg) ? kVg - vi : 0.f;
     //assert(Vgd < (1 << 16));
 
-    // VCR current, scaled by m*2^16
+    // VCR current
     const float n_I_vcr = vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd);
 
     // Change in capacitor charge.

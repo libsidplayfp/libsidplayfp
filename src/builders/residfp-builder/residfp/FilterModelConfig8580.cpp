@@ -173,10 +173,10 @@ FilterModelConfig8580::FilterModelConfig8580() :
     // entirely accurate, since the input for each transistor is different,
     // and transistors are not linear components. However modeling all
     // transistors separately would be extremely costly.
-    for (int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 5; i++)
     {
-        const int idiv = 2 + i;        // 2 - 6 input "resistors".
-        const int size = idiv << 8;
+        const unsigned int idiv = 2 + i;        // 2 - 6 input "resistors".
+        const unsigned int size = idiv << 8;
         const double n = idiv;
         opampModel.reset();
 
