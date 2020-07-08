@@ -334,7 +334,13 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    buf[s++] = resampler->getOutput();
+                    int value = static_cast<int>(resampler->getOutput());
+
+                    // Clip signed integer value into the [-32768,32767] range.
+                    if (value < -32768) value = -32768;
+                    if (value > 32767) value = 32767;
+
+                    buf[s++] = value;
                 }
             }
 

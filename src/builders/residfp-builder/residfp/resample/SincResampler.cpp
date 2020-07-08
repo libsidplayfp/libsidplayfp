@@ -42,7 +42,7 @@
 namespace reSIDfp
 {
 
-typedef std::map<std::string, matrix_t> fir_cache_t;
+typedef std::map<std::string, matrixf_t> fir_cache_t;
 
 /// Cache for the expensive FIR table computation results.
 fir_cache_t FIR_CACHE;
@@ -87,38 +87,19 @@ double I0(double x)
  * @param bLength length of the sinc buffer
  * @return convolved result
  */
-int convolve(const short* a, const short* b, int bLength)
+float convolve(const float* a, const float* b, int bLength)
 {
-#ifdef HAVE_MMINTRIN_H
-    __m64 acc = _mm_setzero_si64();
-
-    const int n = bLength / 4;
-
-    for (int i = 0; i < n; i++)
-    {
-        const __m64 tmp = _mm_madd_pi16(*(__m64*)a, *(__m64*)b);
-        acc = _mm_add_pi16(acc, tmp);
-        a += 4;
-        b += 4;
-    }
-
-    int out = _mm_cvtsi64_si32(acc) + _mm_cvtsi64_si32(_mm_srli_si64(acc, 32));
-    _mm_empty();
-
-    bLength &= 3;
-#else
-    int out = 0;
-#endif
+    float out = 0.f;
 
     for (int i = 0; i < bLength; i++)
     {
         out += *a++ * *b++;
     }
 
-    return (out + (1 << 14)) >> 15;
+    return out;
 }
 
-int SincResampler::fir(int subcycle)
+float SincResampler::fir(int subcycle)
 {
     // Find the first of the nearest fir tables close to the phase
     int firTableFirst = (subcycle * firRES >> 10);
@@ -127,7 +108,7 @@ int SincResampler::fir(int subcycle)
     // Find firN most recent samples, plus one extra in case the FIR wraps.
     int sampleStart = sampleIndex - firN + RINGSIZE - 1;
 
-    const int v1 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+    const float v1 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
 
     // Use next FIR table, wrap around to first FIR table using
     // previous sample.
@@ -137,18 +118,18 @@ int SincResampler::fir(int subcycle)
         ++sampleStart;
     }
 
-    const int v2 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+    const float v2 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
 
     // Linear interpolation between the sinc tables yields good
     // approximation for the exact value.
-    return v1 + (firTableOffset * (v2 - v1) >> 10);
+    return v1 + (firTableOffset * (v2 - v1) / 1024.f);
 }
 
 SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
     sampleIndex(0),
     cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.)),
     sampleOffset(0),
-    outputValue(0)
+    outputValue(0.f)
 {
     // 16 bits -> -96dB stopband attenuation.
     const double A = -20. * log10(1.0 / (1 << BITS));
@@ -203,14 +184,14 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     else
     {
         // Allocate memory for FIR tables.
-        matrix_t tempTable(firRES, firN);
+        matrixf_t tempTable(firRES, firN);
         firTable = &(FIR_CACHE.insert(lb, fir_cache_t::value_type(firKey, tempTable))->second);
 
         // The cutoff frequency is midway through the transition band, in effect the same as nyquist.
         const double wc = M_PI;
 
         // Calculate the sinc tables.
-        const double scale = 32768.0 * wc / cyclesPerSampleD / M_PI;
+        const double scale = wc / cyclesPerSampleD / M_PI;
 
         for (int i = 0; i < firRES; i++)
         {
@@ -226,32 +207,17 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
                 const double wt = wc * x / cyclesPerSampleD;
                 const double sincWt = fabs(wt) >= 1e-8 ? sin(wt) / wt : 1.;
 
-                (*firTable)[i][j] = static_cast<short>(scale * sincWt * kaiserXt);
+                (*firTable)[i][j] = static_cast<float>(scale * sincWt * kaiserXt);
             }
         }
     }
 }
 
-template<typename I, typename O>
-inline O clip(I input)
-{
-    if (input < std::numeric_limits<O>::min()) input = std::numeric_limits<O>::min();
-    if (input > std::numeric_limits<O>::max()) input = std::numeric_limits<O>::max();
-    return static_cast<O>(input);
-}
-
-bool SincResampler::input(int input)
+bool SincResampler::input(float input)
 {
     bool ready = false;
 
-    /*
-     * Clip the input as it may overflow the 16 bit range.
-     *
-     * Approximate measured input ranges:
-     * 6581: ]-20000,+20000[
-     * 8580: ]-33000,+33000[
-     */
-    sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = clip<int, short>(input);
+    sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = input;
     sampleIndex = (sampleIndex + 1) & (RINGSIZE - 1);
 
     if (sampleOffset < 1024)
@@ -268,7 +234,7 @@ bool SincResampler::input(int input)
 
 void SincResampler::reset()
 {
-    memset(sample, 0, sizeof(sample));
+    memset(sample, 0.f, sizeof(sample));
     sampleOffset = 0;
 }
 

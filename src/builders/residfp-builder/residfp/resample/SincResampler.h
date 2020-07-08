@@ -58,7 +58,7 @@ private:
 
 private:
     /// Table of the fir filter coefficients
-    matrix_t* firTable;
+    matrixf_t* firTable;
 
     int sampleIndex;
 
@@ -72,12 +72,12 @@ private:
 
     int sampleOffset;
 
-    int outputValue;
+    float outputValue;
 
-    short sample[RINGSIZE * 2];
+    float sample[RINGSIZE * 2];
 
 private:
-    int fir(int subcycle);
+    float fir(int subcycle);
 
 public:
     /**
@@ -102,9 +102,9 @@ public:
      */
     SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency);
 
-    bool input(int input) override;
+    bool input(float input) override;
 
-    int output() const override { return outputValue; }
+    float output() const override { return outputValue; }
 
     void reset() override;
 };

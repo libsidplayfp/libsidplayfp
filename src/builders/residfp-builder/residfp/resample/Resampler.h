@@ -32,7 +32,7 @@ namespace reSIDfp
 class Resampler
 {
 protected:
-    virtual int output() const = 0;
+    virtual float output() const = 0;
 
     Resampler() {}
 
@@ -45,22 +45,16 @@ public:
      * @param sample input sample
      * @return true when a sample is ready
      */
-    virtual bool input(int sample) = 0;
+    virtual bool input(float sample) = 0;
 
     /**
      * Output a sample from resampler.
      *
      * @return resampled sample
      */
-    short getOutput() const
+    float getOutput() const
     {
-        int value = output();
-
-        // Clip signed integer value into the [-32768,32767] range.
-        if (value < -32768) value = -32768;
-        if (value > 32767) value = 32767;
-
-        return value;
+        return output();
     }
 
     virtual void reset() = 0;
