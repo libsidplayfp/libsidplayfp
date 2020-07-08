@@ -222,7 +222,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     const double nVddt = norm * Vddt;
     const double nVmin = norm * vmin;
 
-    for (unsigned int i = 0; i < (1 << 8); i++)
+    for (unsigned int i = 0; i <= (1 << 8); i++)
     {
         // The returned value must be corrected for translation. Vg always
         // takes part in a subtraction as follows:
@@ -253,7 +253,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     // kVg_Vx = k*Vg - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
-    for (unsigned int kVg_Vx = 0; kVg_Vx < (1 << 8); kVg_Vx++)
+    for (unsigned int kVg_Vx = 0; kVg_Vx <= (1 << 8); kVg_Vx++)
     {
         const double log_term = log1p(exp(((static_cast<double>(kVg_Vx)/256.) * denorm - kVt) / (2. * Ut)));
         const double tmp = n_Is * log_term * log_term;
