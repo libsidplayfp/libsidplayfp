@@ -66,12 +66,12 @@ private:
     const double N16;
 
 public:
-    Integrator8580(const unsigned short* opamp_rev, double Vth, double denorm, double C, double uCox, double vmin, double N16) :
+    Integrator8580(const unsigned short* opamp_rev, double Vth, double nKp, double vmin, double N16) :
         opamp_rev(opamp_rev),
         vx(0),
         vc(0),
         Vth(Vth),
-        nKp(denorm* (uCox / 2. * 1.0e-6 / C)),
+        nKp(nKp),
         vmin(vmin),
         N16(N16)
     {
