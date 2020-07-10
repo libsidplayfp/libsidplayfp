@@ -22,6 +22,8 @@
 #ifndef RESAMPLER_H
 #define RESAMPLER_H
 
+#include <limits>
+
 namespace reSIDfp
 {
 
@@ -32,6 +34,14 @@ namespace reSIDfp
 class Resampler
 {
 protected:
+    template<typename I, typename O>
+    static inline O clip(I input)
+    {
+        if (input < std::numeric_limits<O>::min()) input = std::numeric_limits<O>::min();
+        if (input > std::numeric_limits<O>::max()) input = std::numeric_limits<O>::max();
+        return static_cast<O>(input);
+    }
+
     virtual int output() const = 0;
 
     Resampler() {}
@@ -54,13 +64,7 @@ public:
      */
     short getOutput() const
     {
-        int value = output();
-
-        // Clip signed integer value into the [-32768,32767] range.
-        if (value < -32768) value = -32768;
-        if (value > 32767) value = 32767;
-
-        return value;
+        return clip<int, short>(output());
     }
 
     virtual void reset() = 0;

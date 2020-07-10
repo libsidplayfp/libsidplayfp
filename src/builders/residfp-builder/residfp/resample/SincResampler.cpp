@@ -27,7 +27,6 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
-#include <limits>
 
 #include "siddefs-fp.h"
 
@@ -230,14 +229,6 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
             }
         }
     }
-}
-
-template<typename I, typename O>
-inline O clip(I input)
-{
-    if (input < std::numeric_limits<O>::min()) input = std::numeric_limits<O>::min();
-    if (input > std::numeric_limits<O>::max()) input = std::numeric_limits<O>::max();
-    return static_cast<O>(input);
 }
 
 bool SincResampler::input(int input)
