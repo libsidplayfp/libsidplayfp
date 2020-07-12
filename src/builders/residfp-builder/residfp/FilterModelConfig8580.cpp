@@ -23,7 +23,6 @@
 #include "FilterModelConfig8580.h"
 
 #include <cassert>
-#include <iostream>
 
 #include "Integrator8580.h"
 #include "OpAmp.h"
@@ -157,7 +156,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
     {
         const Spline::Point out = s.evaluate(static_cast<double>(x)*2./256. - 1.);
         double tmp = out.x;
-        //assert(tmp > -0.5 && tmp < 65535.5);
+        assert((tmp >= 0.) && (tmp <= 1.));
         temp_tab[x] = static_cast<float>(tmp);
     }
     opamp_rev_lut = new InterpolatedLUT(256, -1.f, 1.f, temp_tab);
@@ -184,7 +183,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         {
             const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
-            //assert(tmp > -0.5 && tmp < 65535.5);
+            assert((tmp >= 0.) && (tmp <= 1.));
             temp_tab[vi] = static_cast<float>(tmp);
         }
         summer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
@@ -206,7 +205,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         {
             const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
-            //assert(tmp > -0.5 && tmp < 65535.5);
+            assert((tmp >= 0.) && (tmp <= 1.));
             temp_tab[vi] = static_cast<float>(tmp);
         }
         mixer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
@@ -226,7 +225,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         {
             const double vin = vmin + static_cast<double>(vi)/256. * denorm; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
-            //assert(tmp > -0.5 && tmp < 65535.5);
+            assert((tmp >= 0.) && (tmp <= 1.));
             temp_tab[vi] = static_cast<float>(tmp);
         }
         gain_vol[n8] = new InterpolatedLUT(size, 0.f, 1.f, temp_tab);
@@ -246,7 +245,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         {
             const double vin = vmin + static_cast<double>(vi)/256. * denorm; /* vmin .. vmax */
             const double tmp = (opampModel.solve(resGain[n8], vin) - vmin) * norm;
-            //assert(tmp > -0.5 && tmp < 65535.5);
+            assert((tmp >= 0.) && (tmp <= 1.));
             temp_tab[vi] = static_cast<float>(tmp);
         }
         gain_res[n8] = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);

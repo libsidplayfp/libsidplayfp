@@ -143,7 +143,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     {
         const Spline::Point out = s.evaluate(static_cast<double>(x)*2./256. - 1.);
         double tmp = out.x;
-        //assert(tmp > -0.5 && tmp < 65535.5);
+        //assert((tmp >= 0.) && (tmp <= 1.));
         temp_tab[x] = static_cast<float>(tmp);
     }
     opamp_rev_lut = new InterpolatedLUT(256, -1.f, 1.f, temp_tab);
@@ -170,7 +170,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         {
             const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
-            assert(tmp > -0.5 && tmp < 65535.5);
+            assert((tmp >= 0.) && (tmp <= 1.));
             temp_tab[vi] = static_cast<float>(tmp);
         }
         summer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
@@ -192,7 +192,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         {
             const double vin = vmin + static_cast<double>(vi)/256. * denorm / idiv; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
-            assert(tmp > -0.5 && tmp < 65535.5);
+            assert((tmp >= 0.) && (tmp <= 1.));
             temp_tab[vi] = static_cast<float>(tmp);
         }
         mixer[i] = new InterpolatedLUT(size, 0.f, static_cast<float>(size)/256.f, temp_tab);
@@ -213,7 +213,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         {
             const double vin = vmin + static_cast<double>(vi)/256. * denorm; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * norm;
-            //assert(tmp > -0.5 && tmp < 65535.5);
+            assert((tmp >= 0.) && (tmp <= 1.));
             temp_tab[vi] = static_cast<float>(tmp);
         }
         gain[n8] = new InterpolatedLUT(size, 0.f, 1.f, temp_tab);
@@ -232,7 +232,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         // I.e. k*Vg - t must be returned.
         const double Vg = nVddt - sqrt(static_cast<double>(i)/256.);
         const double tmp = k * Vg - nVmin;
-        //assert(tmp > -0.5 && tmp < 65535.5);
+        assert((tmp >= 0.) && (tmp <= 1.));
         temp_tab[i] = static_cast<float>(tmp);
     }
     vcr_kVg = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
@@ -257,7 +257,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     {
         const double log_term = log1p(exp(((static_cast<double>(kVg_Vx)/256.) * denorm - kVt) / (2. * Ut)));
         const double tmp = n_Is * log_term * log_term;
-        //assert(tmp > -0.5 && tmp < 65535.5);
+        //assert((tmp >= 0.) && (tmp <= 1.));
         temp_tab[kVg_Vx] = static_cast<float>(tmp);
     }
     vcr_n_Ids_term = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
@@ -291,7 +291,7 @@ float* FilterModelConfig6581::getDAC(double adjustment) const
     {
         const double fcd = dac.getOutput(i);
         const double tmp = norm * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
-        //assert(tmp > -0.5 && tmp < 65535.5);
+        assert((tmp >= 0.) && (tmp <= 1.));
         f0_dac[i] = static_cast<float>(tmp);
     }
 
@@ -303,12 +303,12 @@ std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
     // Vdd - Vth, normalized so that translated values can be subtracted:
     // Vddt - x = (Vddt - t) - (x - t)
     double tmp = norm * (Vddt - vmin);
-    //assert(tmp > -0.5 && tmp < 65535.5);
+    assert((tmp >= 0.) && (tmp <= 1.));
     const float nVddt = static_cast<float>(tmp);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     tmp = denorm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
-    //assert(tmp > -0.5 && tmp < 65535.5);
+    assert((tmp >= 0.) && (tmp <= 1.));
     const float n_snake = static_cast<float>(tmp);
 
     return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nVddt, n_snake));
