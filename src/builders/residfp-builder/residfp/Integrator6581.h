@@ -216,9 +216,9 @@ float Integrator6581::solve(float vi) const
 
     // VCR voltages for EKV model table lookup.
     const float Vgs = (vx < kVg) ? kVg - vx : 0.f;
-    //assert(Vgs < (1 << 16));
+    //assert(Vgs < 1.f);
     const float Vgd = (vi < kVg) ? kVg - vi : 0.f;
-    //assert(Vgd < (1 << 16));
+    //assert(Vgd < 1.f);
 
     // VCR current
     const float n_I_vcr = vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd);
@@ -227,7 +227,7 @@ float Integrator6581::solve(float vi) const
     vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    //assert(vc > -65536.f && vc < 65536.f);
+    assert((vc > -1.f) && (vc < 1.f));
     vx = opamp_rev->output(vc);
 
     // Return vo.
