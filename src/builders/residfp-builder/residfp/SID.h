@@ -118,7 +118,7 @@ private:
      *
      * @return the output sample
      */
-    int output() const;
+    float output() const;
 
     /**
      * Calculate the numebr of cycles according to current parameters
@@ -298,7 +298,7 @@ void SID::ageBusValue(unsigned int n)
 }
 
 RESID_INLINE
-int SID::output() const
+float SID::output() const
 {
     const float v1 = voice[0]->output(voice[2]->wave()) / (65536.f * 16.f);
     const float v2 = voice[1]->output(voice[0]->wave()) / (65536.f * 16.f);
