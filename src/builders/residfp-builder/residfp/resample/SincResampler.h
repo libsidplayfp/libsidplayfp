@@ -68,16 +68,16 @@ private:
     /// Filter length
     int firN;
 
-    const int cyclesPerSample;
+    const double cyclesPerSample;
 
-    int sampleOffset;
+    double sampleOffset;
 
     float outputValue;
 
     float sample[RINGSIZE * 2];
 
 private:
-    float fir(int subcycle);
+    float fir(float subcycle);
 
 public:
     /**

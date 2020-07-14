@@ -99,11 +99,12 @@ float convolve(const float* a, const float* b, int bLength)
     return out;
 }
 
-float SincResampler::fir(int subcycle)
+float SincResampler::fir(float subcycle)
 {
     // Find the first of the nearest fir tables close to the phase
-    int firTableFirst = (subcycle * firRES >> 10);
-    const int firTableOffset = (subcycle * firRES) & 0x3ff;
+    const float tmp = subcycle * firRES;
+    int firTableFirst = static_cast<int>(tmp);
+    const float firTableOffset = tmp - firTableFirst;
 
     // Find firN most recent samples, plus one extra in case the FIR wraps.
     int sampleStart = sampleIndex - firN + RINGSIZE - 1;
@@ -122,13 +123,13 @@ float SincResampler::fir(int subcycle)
 
     // Linear interpolation between the sinc tables yields good
     // approximation for the exact value.
-    return v1 + (firTableOffset * (v2 - v1) / 1024.f);
+    return v1 + (firTableOffset * (v2 - v1));
 }
 
 SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
     sampleIndex(0),
-    cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.)),
-    sampleOffset(0),
+    cyclesPerSample(clockFrequency / samplingFrequency),
+    sampleOffset(0.),
     outputValue(0.f)
 {
     // 16 bits -> -96dB stopband attenuation.
@@ -142,7 +143,6 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     // http://www.mathworks.com/help/signal/ref/kaiserord.html
     const double beta = 0.1102 * (A - 8.7);
     const double I0beta = I0(beta);
-    const double cyclesPerSampleD = clockFrequency / samplingFrequency;
 
     {
         // The filter order will maximally be 124 with the current constraints.
@@ -155,14 +155,14 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         // The filter length is equal to the filter order + 1.
         // The filter length must be an odd number (sinc is symmetric with respect to
         // x = 0).
-        firN = static_cast<int>(N * cyclesPerSampleD) + 1;
+        firN = static_cast<int>(N * cyclesPerSample) + 1;
         firN |= 1;
 
         // Check whether the sample ring buffer would overflow.
         assert(firN < RINGSIZE);
 
         // Error is bounded by err < 1.234 / L^2, so L = sqrt(1.234 / (2^-16)) = sqrt(1.234 * 2^16).
-        firRES = static_cast<int>(ceil(sqrt(1.234 * (1 << BITS)) / cyclesPerSampleD));
+        firRES = static_cast<int>(ceil(sqrt(1.234 * (1 << BITS)) / cyclesPerSample));
 
         // firN*firRES represent the total resolution of the sinc sampling. JOS
         // recommends a length of 2^BITS, but we don't quite use that good a filter.
@@ -171,7 +171,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
 
     // Create the map key
     std::ostringstream o;
-    o << firN << "," << firRES << "," << cyclesPerSampleD;
+    o << firN << "," << firRES << "," << cyclesPerSample;
     const std::string firKey = o.str();
     fir_cache_t::iterator lb = FIR_CACHE.lower_bound(firKey);
 
@@ -191,7 +191,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         const double wc = M_PI;
 
         // Calculate the sinc tables.
-        const double scale = wc / cyclesPerSampleD / M_PI;
+        const double scale = wc / cyclesPerSample / M_PI;
 
         for (int i = 0; i < firRES; i++)
         {
@@ -204,7 +204,7 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
                 const double xt = x / (firN / 2);
                 const double kaiserXt = fabs(xt) < 1. ? I0(beta * sqrt(1. - xt * xt)) / I0beta : 0.;
 
-                const double wt = wc * x / cyclesPerSampleD;
+                const double wt = wc * x / cyclesPerSample;
                 const double sincWt = fabs(wt) >= 1e-8 ? sin(wt) / wt : 1.;
 
                 (*firTable)[i][j] = static_cast<float>(scale * sincWt * kaiserXt);
@@ -220,14 +220,14 @@ bool SincResampler::input(float input)
     sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = input;
     sampleIndex = (sampleIndex + 1) & (RINGSIZE - 1);
 
-    if (sampleOffset < 1024)
+    if (sampleOffset < 1.)
     {
         outputValue = fir(sampleOffset);
         ready = true;
         sampleOffset += cyclesPerSample;
     }
 
-    sampleOffset -= 1024;
+    sampleOffset -= 1.;
 
     return ready;
 }
@@ -235,7 +235,7 @@ bool SincResampler::input(float input)
 void SincResampler::reset()
 {
     memset(sample, 0.f, sizeof(sample));
-    sampleOffset = 0;
+    sampleOffset = 0.;
 }
 
 } // namespace reSIDfp
