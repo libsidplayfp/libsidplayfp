@@ -165,18 +165,6 @@ public:
     }
 
     /**
-     * Get clocks since specified clock in given phase.
-     *
-     * @param clock the time to compare to
-     * @param phase the phase to comapre to
-     * @return the time between specified clock and now
-     */
-    event_clock_t getTime(event_clock_t clock, event_phase_t phase) const
-    {
-        return getTime(phase) - clock;
-    }
-
-    /**
      * Return current clock phase.
      *
      * @return The current phase

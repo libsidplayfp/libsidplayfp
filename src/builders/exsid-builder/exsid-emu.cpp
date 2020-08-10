@@ -84,7 +84,7 @@ void exSID::reset(uint8_t volume)
 
 unsigned int exSID::delay()
 {
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
 
     while (cycles > 0xffff)

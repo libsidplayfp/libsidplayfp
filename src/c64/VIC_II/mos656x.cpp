@@ -257,7 +257,7 @@ void MOS656X::handleIrqState()
 
 void MOS656X::event()
 {
-    const event_clock_t cycles = eventScheduler.getTime(rasterClk, eventScheduler.phase());
+    const event_clock_t cycles = eventScheduler.getTime(eventScheduler.phase()) - rasterClk;
 
     event_clock_t delay;
 
