@@ -187,7 +187,7 @@ void MOS6526::handleSerialPort()
 {
     if (regs[CRA] & 0x40)
     {
-        serialPort.handle(regs[SDR]);
+        serialPort.handle();
     }
 }
 
@@ -305,19 +305,18 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
         tod.write(addr - TOD_TEN, data);
         break;
     case SDR:
-        if (regs[CRA] & 0x40)
-            serialPort.setBuffered();
+        serialPort.startSdr();
         break;
     case ICR:
         interruptSource->set(data);
         break;
     case CRA:
+        if ((data ^ oldData) & 0x40)
+            serialPort.switchSerialDirection((data & 0x40) == 0);
         if ((data & 1) && !(oldData & 1))
         {
             // Reset the underflow flipflop for the data port
             timerA.setPbToggle(true);
-            if (!(data & 8))
-                serialPort.check(timerA.getLatchTimerDiff());
         }
         timerA.setControlRegister(data);
         break;
