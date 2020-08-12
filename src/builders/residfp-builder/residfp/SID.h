@@ -307,6 +307,11 @@ float SID::output() const
     return externalFilter->clock(filter->clock(v1, v2, v3)) * 65536.f;
 }
 
+inline float limiter(float x)
+{
+    const float x2 = x*x;
+    return x * (27.f + x2) / (27.f + 9.f * x2);
+}
 
 RESID_INLINE
 int SID::clock(unsigned int cycles, short* buf)
@@ -334,13 +339,13 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    int value = static_cast<int>(resampler->getOutput());
+                    const float value = resampler->getOutput() / 32768.f;
 
                     // Clip signed integer value into the [-32768,32767] range.
-                    if (value < -32768) value = -32768;
-                    if (value > 32767) value = 32767;
+                    //if (value < -32768) value = -32768;
+                    //if (value > 32767) value = 32767;
 
-                    buf[s++] = value;
+                    buf[s++] = limiter(value) * 32768.f;
                 }
             }
 
