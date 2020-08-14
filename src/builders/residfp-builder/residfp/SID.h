@@ -307,12 +307,22 @@ float SID::output() const
     return externalFilter->clock(filter->clock(v1, v2, v3)) * 65536.f;
 }
 
+inline float fastTanh(float x)
+{
+    // efficient tanh computation using Lambert’s continued fraction
+    const float x2 = x * x;
+    const float a = x * (135135.0f + x2 * (17325.0f + x2 * (378.0f + x2)));
+    const float b = 135135.0f + x2 * (62370.0f + x2 * (3150.0f + x2 * 28.0f));
+    return a / b;
+}
+/*
 inline float limiter(float x)
 {
+    // fast tanh computation using pade approximation
     const float x2 = x*x;
     return x * (27.f + x2) / (27.f + 9.f * x2);
 }
-
+*/
 RESID_INLINE
 int SID::clock(unsigned int cycles, short* buf)
 {
@@ -339,13 +349,12 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    const float value = resampler->getOutput() / 32768.f;
-
-                    // Clip signed integer value into the [-32768,32767] range.
-                    //if (value < -32768) value = -32768;
-                    //if (value > 32767) value = 32767;
-
-                    buf[s++] = limiter(value) * 32768.f;
+                    float value = resampler->getOutput() / 32768.f;
+                    constexpr float t = 0.8f;
+                    constexpr float a = 1.f - t;
+                    constexpr float b = 1.f/a;
+                    if (unlikely(value > t)) value = t + a * fastTanh(b*(value-t));
+                    buf[s++] = value * 32768.f;
                 }
             }
 
