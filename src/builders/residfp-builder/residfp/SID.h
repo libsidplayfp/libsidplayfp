@@ -300,11 +300,11 @@ void SID::ageBusValue(unsigned int n)
 RESID_INLINE
 float SID::output() const
 {
-    const float v1 = voice[0]->output(voice[2]->wave()) / (65536.f * 16.f);
-    const float v2 = voice[1]->output(voice[0]->wave()) / (65536.f * 16.f);
-    const float v3 = voice[2]->output(voice[1]->wave()) / (65536.f * 16.f);
+    const float v1 = voice[0]->output(voice[2]->wave()) / (4096.f * 255.f);
+    const float v2 = voice[1]->output(voice[0]->wave()) / (4096.f * 255.f);
+    const float v3 = voice[2]->output(voice[1]->wave()) / (4096.f * 255.f);
 
-    return externalFilter->clock(filter->clock(v1, v2, v3)) * 65536.f;
+    return externalFilter->clock(filter->clock(v1, v2, v3)) * 2.f;
 }
 
 inline float fastTanh(float x)
@@ -349,7 +349,7 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    float value = resampler->getOutput() / 32768.f;
+                    float value = resampler->getOutput();
                     constexpr float t = 0.8f;
                     constexpr float a = 1.f - t;
                     constexpr float b = 1.f/a;
