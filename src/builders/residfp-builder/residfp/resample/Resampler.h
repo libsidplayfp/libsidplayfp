@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,11 @@
 #ifndef RESAMPLER_H
 #define RESAMPLER_H
 
-#include <limits>
+#include <cmath>
+
+#include "sidcxx11.h"
+
+#include "siddefs-fp.h"
 
 namespace reSIDfp
 {
@@ -34,12 +38,19 @@ namespace reSIDfp
 class Resampler
 {
 protected:
-    template<typename I, typename O>
-    static inline O clip(I input)
+    inline short softClip(int x) const
     {
-        if (input < std::numeric_limits<O>::min()) input = std::numeric_limits<O>::min();
-        if (input > std::numeric_limits<O>::max()) input = std::numeric_limits<O>::max();
-        return static_cast<O>(input);
+        constexpr int threshold = 28000;
+        if (likely(x < threshold))
+            return x;
+
+        constexpr double t = threshold / 32768.;
+        constexpr double a = 1. - t;
+        constexpr double b = 1. / a;
+
+        double value = static_cast<double>(x - threshold) / 32768.;
+        value = t + a * tanh(b * value);
+        return static_cast<short>(value * 32768.);
     }
 
     virtual int output() const = 0;
@@ -64,7 +75,7 @@ public:
      */
     short getOutput() const
     {
-        return clip<int, short>(output());
+        return softClip(output());
     }
 
     virtual void reset() = 0;
