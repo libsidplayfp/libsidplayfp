@@ -64,7 +64,7 @@ public:
         const float scaledInput = (input - min) * scaling;
         const unsigned int index = static_cast<unsigned int>(scaledInput + 0.5f);
         const float dist = scaledInput - index;
-        assert(index <= size);
+        assert(index < size);
         return table[index] + (dist * (table[index+1] - table[index]));
     }
 };
