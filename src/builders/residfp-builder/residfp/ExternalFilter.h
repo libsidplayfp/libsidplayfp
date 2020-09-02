@@ -54,9 +54,9 @@ private:
     /// Highpass filter voltage
     float Vhp;
 
-    float w0lp_1_s7;
+    float w0lp;
 
-    float w0hp_1_s17;
+    float w0hp;
 
 public:
     /**
@@ -94,8 +94,8 @@ namespace reSIDfp
 RESID_INLINE
 float ExternalFilter::clock(float Vi)
 {
-    const float dVlp = w0lp_1_s7 * (Vi - Vlp);
-    const float dVhp = w0hp_1_s17 * (Vlp - Vhp);
+    const float dVlp = w0lp * (Vi - Vlp);
+    const float dVhp = w0hp * (Vlp - Vhp);
     Vlp += dVlp;
     Vhp += dVhp;
     return Vlp - Vhp;

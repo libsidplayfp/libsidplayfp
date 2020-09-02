@@ -41,8 +41,8 @@ inline double getW0(double res, double cap)
 ExternalFilter::ExternalFilter() :
     Vlp(0.f),
     Vhp(0.f),
-    w0lp_1_s7(0.f),
-    w0hp_1_s17(0.f)
+    w0lp(0.f),
+    w0hp(0.f)
 {
     reset();
 }
@@ -50,10 +50,10 @@ ExternalFilter::ExternalFilter() :
 void ExternalFilter::setClockFrequency(double frequency)
 {
     // Low-pass: R = 10kOhm, C = 1000pF; w0l = 1/RC = 1/(1e4*1e-9) = 100000
-    w0lp_1_s7 = static_cast<float>(getW0(10e3, 1000e-12) / frequency);
+    w0lp = static_cast<float>(getW0(10e3, 1000e-12) / frequency);
 
     // High-pass: R = 1kOhm, C = 10uF; w0h = 1/RC = 1/(1e3*1e-5) = 100
-    w0hp_1_s17 = static_cast<float>(getW0(1e3, 10e-6) / frequency);
+    w0hp = static_cast<float>(getW0(1e3, 10e-6) / frequency);
 }
 
 void ExternalFilter::reset()
