@@ -350,7 +350,7 @@ int SID::clock(unsigned int cycles, short* buf)
                 if (unlikely(resampler->input(output())))
                 {
                     float value = resampler->getOutput();
-                    constexpr float t = 0.8f;
+                    constexpr float t = 0.85f;
                     constexpr float a = 1.f - t;
                     constexpr float b = 1.f/a;
                     if (unlikely(value > t)) value = t + a * fastTanh(b*(value-t));
