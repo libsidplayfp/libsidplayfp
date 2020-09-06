@@ -35,6 +35,21 @@ namespace reSIDfp
  * equipment impedance. Here we suppose an impedance of 1kOhm resulting
  * in a 3 dB attenuation at 16Hz.
  *
+ * ~~~
+ *                                 9/12V
+ * -----+
+ * audio|       10k                  |
+ *      +----+---R---+--------+-----(K)          +---
+ *  out |    |       |        |      |           |
+ * -----+    R 1k    C 1000   |      |    10 uF  |
+ *           |       |  pF    +-C----+-----C-----+ 1K
+ *                             470   |           |
+ *          GND     GND         pF   R 1K        |
+ *                                   |           +---
+ *
+ *                                  GND
+ * ~~~
+ *
  * The STC networks are connected with a [BJT] supposedly meant to act
  * as a unity gain buffer, which is not really how it works.
  * A more elaborate model would include the BJT, however DC circuit analysis
