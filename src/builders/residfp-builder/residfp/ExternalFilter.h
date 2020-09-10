@@ -32,33 +32,31 @@ namespace reSIDfp
  * The audio output stage in a Commodore 64 consists of two STC networks, a
  * low-pass filter with 3 dB frequency 16kHz followed by a DC-blocker which
  * acts as a high-pass filter with a cutoff dependent on the attached audio
- * equipment impedance. Here we suppose an impedance of 1kOhm resulting
- * in a 3 dB attenuation at 16Hz.
+ * equipment impedance. Here we suppose an impedance of 10kOhm resulting
+ * in a 3 dB attenuation at 1.6Hz.
  *
  * ~~~
  *                                 9/12V
  * -----+
  * audio|       10k                  |
- *      +----+---R---+--------+-----(K)          +---
- *  out |    |       |        |      |           |
- * -----+    R 1k    C 1000   |      |    10 uF  |
- *           |       |  pF    +-C----+-----C-----+ 1K
+ *      +---+----R---+--------+-----(K)          +-----
+ *  out |   |        |        |      |           |audio
+ * -----+   R 1k     C 1000   |      |    10 uF  |
+ *          |        |  pF    +-C----+-----C-----+ 10k
  *                             470   |           |
- *          GND     GND         pF   R 1K        |
- *                                   |           +---
+ *         GND      GND         pF   R 1K        | amp
+ *                                   |           +-----
  *
  *                                  GND
  * ~~~
  *
- * The STC networks are connected with a [BJT] supposedly meant to act
- * as a unity gain buffer, which is not really how it works.
- * A more elaborate model would include the BJT, however DC circuit analysis
- * yields BJT base-emitter and emitter-base impedances sufficiently low
- * to produce additional low-pass and high-pass 3dB-frequencies
- * in the order of hundreds of kHz. This calls for a sampling frequency
- * of several MHz, which is far too high for practical use.
+ * The STC networks are connected with a [BJT] based [common collector]
+ * used as a voltage follower, with a [bootstrap] condenser to increase
+ * the input impedance.
  *
  * [BJT]: https://en.wikipedia.org/wiki/Bipolar_junction_transistor
+ * [common collector]: https://en.wikipedia.org/wiki/Common_collector
+ * [bootstrap]: https://en.wikipedia.org/wiki/Bootstrapping_(electronics)
  */
 class ExternalFilter
 {
