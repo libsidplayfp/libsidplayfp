@@ -45,14 +45,15 @@ namespace reSIDfp
  *          |        |  pF    +-C----+-----C-----+ 10k
  *                             470   |           |
  *         GND      GND         pF   R 1K        | amp
- *                                   |           +-----
+ *                              *    |           +-----
  *
  *                                  GND
  * ~~~
  *
  * The STC networks are connected with a [BJT] based [common collector]
- * used as a voltage follower, with a [bootstrap] condenser to increase
- * the input impedance.
+ * used as a voltage follower (featuring a 2SC1815 NPN transistor).
+ * * The C64c board additionally includes a [bootstrap] condenser to increase
+ * the input impedance of the common collector.
  *
  * [BJT]: https://en.wikipedia.org/wiki/Bipolar_junction_transistor
  * [common collector]: https://en.wikipedia.org/wiki/Common_collector
