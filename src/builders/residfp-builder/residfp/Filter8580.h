@@ -241,11 +241,11 @@ class Integrator8580;
  * To get around this, there is an 11 input NOR gate below the DACs sensing those 11 bits.
  * If all are 0, the NOR gate gives the gate control voltage to the 12 bit DAC LSB.
  *
- *     ----------------------------
+ *     ----o---o--...--o---o---o---
  *         |   |       |   |   |
  *       Rb10 Rb9 ... Rb1 Rb0  R0
  *         |   |       |   |   |
- *     ----------------------------
+ *     ----o---o--...--o---o---o---
  *
  *
  *

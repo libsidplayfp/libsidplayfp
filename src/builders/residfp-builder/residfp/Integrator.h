@@ -37,11 +37,11 @@ namespace reSIDfp
  *
  * A circuit diagram of a MOS 6581 integrator is shown below.
  *
- *                    ---C---
+ *                   +---C---+
  *                   |       |
- *     vi -----Rw-------[A>----- vo
+ *     vi --o--Rw--o-o--[A>--o-- vo
  *          |      | vx
- *           --Rs--
+ *          +--Rs--+
  *
  * From Kirchoff's current law it follows that
  *
@@ -67,11 +67,11 @@ namespace reSIDfp
  * be written as follows:
  *
  *     Ids = 0                          , Vgst < 0               (subthreshold mode)
- *     Ids = K/2*W/L*(2*Vgst - Vds)*Vds , Vgst >= 0, Vds < Vgst  (triode mode)
- *     Ids = K/2*W/L*Vgst^2             , Vgst >= 0, Vds >= Vgst (saturation mode)
+ *     Ids = K*W/L*(2*Vgst - Vds)*Vds   , Vgst >= 0, Vds < Vgst  (triode mode)
+ *     Ids = K*W/L*Vgst^2               , Vgst >= 0, Vds >= Vgst (saturation mode)
  *
  * where
- *     K   = u*Cox (transconductance coefficient)
+ *     K   = u*Cox/2 (transconductance coefficient)
  *     W/L = ratio between substrate width and length
  *     Vgst = Vg - Vs - Vt (overdrive voltage)
  *
@@ -83,10 +83,10 @@ namespace reSIDfp
  *
  *     Vds = Vgst - (Vgst - Vds) = Vgst - Vgdt
  *
- *     Ids = K/2*W/L*(2*Vgst - Vds)*Vds
- *     = K/2*W/L*(2*Vgst - (Vgst - Vgdt)*(Vgst - Vgdt)
- *     = K/2*W/L*(Vgst + Vgdt)*(Vgst - Vgdt)
- *     = K/2*W/L*(Vgst^2 - Vgdt^2)
+ *     Ids = K*W/L*(2*Vgst - Vds)*Vds
+ *         = K*W/L*(2*Vgst - (Vgst - Vgdt)*(Vgst - Vgdt)
+ *         = K*W/L*(Vgst + Vgdt)*(Vgst - Vgdt)
+ *         = K*W/L*(Vgst^2 - Vgdt^2)
  *
  * This turns out to be a general equation which covers both the triode
  * and saturation modes (where the second term is 0 in saturation mode).
@@ -110,7 +110,7 @@ namespace reSIDfp
  * blending using an elegant mathematical formulation:
  *
  *     Ids = Is * (if - ir)
- *     Is = (2 * u*Cox * Ut^2)/k * W/L
+ *     Is = ((2 * u*Cox * Ut^2)/k) * W/L
  *     if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
  *     ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
  *
@@ -125,17 +125,17 @@ namespace reSIDfp
  * Rw in the circuit diagram above is a VCR (voltage controlled resistor),
  * as shown in the circuit diagram below.
  *
- *                      Vw
- *     
- *                      |
- *              Vdd     |
- *                 |---|
+ *                      
+ *                        Vdd
+ *                           |
+ *              Vdd         _|_
+ *                 |    +---+ +---- Vw
  *                _|_   |
- *              --    --| Vg
+ *             +--+ +---o Vg
  *             |      __|__
  *             |      -----  Rw
  *             |      |   |
- *     vi ------------     -------- vo
+ *     vi -----o------+   +-------- vo
  *
  *
  * In order to calculalate the current through the VCR, its gate voltage

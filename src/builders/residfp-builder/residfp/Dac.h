@@ -36,7 +36,7 @@ namespace reSIDfp
  *         |   |       |   |   |      |   Termination
  *        2R  2R      2R  2R  2R     2R   only for
  *         |   |       |   |   |      |   MOS 8580
- *     Vo  --R---R--...--R---R--    ---
+ *     Vo -o-R-o-R-...-o-R-o-R--    --+
  *
  *
  * All MOS 6581 DACs are missing a termination resistor at bit 0. This causes
