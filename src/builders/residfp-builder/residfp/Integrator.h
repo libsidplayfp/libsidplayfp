@@ -96,7 +96,10 @@ namespace reSIDfp
  *
  * FIXME: Subthreshold as function of Vgs, Vgd.
  *
- *     Ids = I0*e^(Vgst/(n*VT))       , Vgst < 0               (subthreshold mode)
+ *     Ids = I0*W/L*e^(Vgst/(Ut/k))   , Vgst < 0               (subthreshold mode)
+ *
+ * where
+ *     I0 = (2 * uCox * Ut^2) / k
  *
  * The remaining problem with the textbook model is that the transition
  * from subthreshold the triode/saturation is not continuous.
