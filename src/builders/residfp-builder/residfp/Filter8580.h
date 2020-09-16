@@ -268,7 +268,7 @@ class Integrator8580;
  *   +---||---o---+   +---o-----||-------o
  *   |        |   |   |   |              |
  *   o----+   |   -----   |              |
- *   |    |   |   -----   +----+   +-----+
+ *   |    |   |   -----   +----+   +-----o
  *   |    -----     |          |   |     |
  *   |    -----     |          -----     |
  *   |      |       |          -----     |
@@ -305,11 +305,7 @@ protected:
 
     /**
      * Set filter resonance.
-     *
-     * The following function for 1/Q has been modeled in the MOS 8580:
-     *
-     * 1/Q = 2^(1/2)*2^(-x/8) = 2^(1/2 - x/8) = 2^((4 - x)/8)
-     *
+	 *
      * @param res the new resonance value
      */
     void updateResonance(unsigned char res) override { currentResonance = gain_res[res]; }

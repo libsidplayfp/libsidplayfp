@@ -125,7 +125,7 @@ namespace reSIDfp
  * Rw in the circuit diagram above is a VCR (voltage controlled resistor),
  * as shown in the circuit diagram below.
  *
- *                      
+ *
  *                        Vdd
  *                           |
  *              Vdd         _|_
