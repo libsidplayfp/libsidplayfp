@@ -307,7 +307,7 @@ std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
     const float nVddt = static_cast<float>(tmp);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
-    tmp = denorm * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
+    tmp = denorm * (uCox / 2. * WL_snake * 1.0e-6 / C);
     assert((tmp >= 0.) && (tmp <= 1.));
     const float n_snake = static_cast<float>(tmp);
 
