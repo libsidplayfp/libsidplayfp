@@ -32,7 +32,6 @@ namespace reSIDfp
 class Resampler
 {
 protected:
-    virtual float output() const = 0;
 
     Resampler() {}
 
@@ -52,10 +51,7 @@ public:
      *
      * @return resampled sample
      */
-    float getOutput() const
-    {
-        return output();
-    }
+    virtual float output() const = 0;
 
     virtual void reset() = 0;
 };

@@ -35,7 +35,7 @@ namespace reSIDfp
  */
 inline double getW0(double res, double cap)
 {
-    return 1. / (res * cap);
+    return (res * cap);
 }
 
 ExternalFilter::ExternalFilter() :
@@ -49,11 +49,13 @@ ExternalFilter::ExternalFilter() :
 
 void ExternalFilter::setClockFrequency(double frequency)
 {
+    const double dt = 1. / frequency;
+
     // Low-pass: R = 10kOhm, C = 1000pF; w0l = 1/RC = 1/(1e4*1e-9) = 100000
-    w0lp = static_cast<float>(getW0(10e3, 1000e-12) / frequency);
+    w0lp = static_cast<float>(dt / (dt + getW0(10e3, 1000e-12)));
 
     // High-pass: R = 1kOhm, C = 10uF; w0h = 1/RC = 1/(1e3*1e-5) = 100
-    w0hp = static_cast<float>(getW0(1e3, 10e-6) / frequency);
+    w0hp = static_cast<float>(dt / (dt + getW0(1e3, 10e-6)));
 }
 
 void ExternalFilter::reset()

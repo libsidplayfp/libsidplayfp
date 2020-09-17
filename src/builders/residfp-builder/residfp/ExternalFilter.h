@@ -94,11 +94,10 @@ namespace reSIDfp
 RESID_INLINE
 float ExternalFilter::clock(float Vi)
 {
-    const float dVlp = w0lp * (Vi - Vlp);
-    const float dVhp = w0hp * (Vlp - Vhp);
-    Vlp += dVlp;
-    Vhp += dVhp;
-    return Vlp - Vhp;
+    const float out = Vlp - Vhp;
+    Vhp += w0hp * (Vlp - Vhp);
+    Vlp += w0lp * (Vi - Vlp);
+    return out;
 }
 
 } // namespace reSIDfp

@@ -304,7 +304,7 @@ float SID::output() const
     const float v2 = voice[1]->output(voice[0]->wave()) / (4096.f * 255.f);
     const float v3 = voice[2]->output(voice[1]->wave()) / (4096.f * 255.f);
 
-    return externalFilter->clock(filter->clock(v1, v2, v3)) * 2.f;
+    return externalFilter->clock(filter->clock(v1, v2, v3) * 2.f);
 }
 
 inline float fastTanh(float x)
@@ -349,10 +349,10 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    float value = resampler->getOutput();
+                    float value = resampler->output();
                     constexpr float t = 0.85f;
                     constexpr float a = 1.f - t;
-                    constexpr float b = 1.f/a;
+                    constexpr float b = 1.f / a;
                     if (unlikely(value > t)) value = t + a * fastTanh(b*(value-t));
                     buf[s++] = value * 32768.f;
                 }
