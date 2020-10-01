@@ -182,6 +182,8 @@ public:
      * @return The current phase
      */
     event_phase_t phase() const { return static_cast<event_phase_t>(currentTime & 1); }
+
+    event_clock_t remaining(Event &event) const { return event.triggerTime - currentTime; }
 };
 
 }

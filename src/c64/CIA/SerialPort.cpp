@@ -31,7 +31,13 @@ namespace libsidplayfp
 void SerialPort::reset()
 {
     count = 0;
-    buffered = false;
+    cntHistory = 0;
+    cnt = 1;
+    loaded = false;
+    pending = false;
+    forceFinish = false;
+
+    lastSync = eventScheduler.getTime(EVENT_CLOCK_PHI1);
 }
 
 void SerialPort::event()
@@ -39,36 +45,110 @@ void SerialPort::event()
     parent.spInterrupt();
 }
 
-void SerialPort::check(uint16_t ltDiff)
+void SerialPort::syncCntHistory()
 {
-    if (count)
+    const event_clock_t time = eventScheduler.getTime(EVENT_CLOCK_PHI1);
+    const event_clock_t clocks = time - lastSync;
+    lastSync = time;
+    for (int i=0; i<clocks; i++)
     {
-        const bool cnt = !(count & 1);
-        if ((cnt
-                && (ltDiff != 1)
-                && (model4485 || (ltDiff != 3))
-                && ((count != 2) || (ltDiff != 2)))
-            || (!cnt && (ltDiff > 0) && (ltDiff < 5)))
-        {
-            eventScheduler.schedule(*this, 4, EVENT_CLOCK_PHI1);
-        }
-
-        count = 0;
+        cntHistory = (cntHistory << 1) | cnt;
     }
 }
 
-void SerialPort::handle(uint8_t serialDataReg)
+void SerialPort::startSdr()
 {
-    if (count && (--count == 2))
+    eventScheduler.schedule(startSdrEvent, 1);
+}
+
+void SerialPort::doStartSdr()
+{
+    if (!loaded)
+        loaded = true;
+    else
+        pending = true;
+}
+
+void SerialPort::switchSerialDirection(bool input)
+{
+    syncCntHistory();
+
+    if (input)
     {
-        eventScheduler.schedule(*this, 4, EVENT_CLOCK_PHI1);
+        const uint8_t cntVal = model4485 ? 0x7 : 0x6;
+        forceFinish = (cntHistory & cntVal) != cntVal;
+
+        if (!forceFinish)
+        {
+            if ((count != 2) && (eventScheduler.remaining(flipCntEvent) == 1))
+            {
+                forceFinish = true;
+            }
+        }
+    }
+    else
+    {
+        if (forceFinish)
+        {
+            eventScheduler.cancel(*this);
+            eventScheduler.schedule(*this, 2);
+            forceFinish = false;
+        }
     }
 
-    if (buffered)
+    cnt = 1;
+    cntHistory |= 1;
+
+    eventScheduler.cancel(flipCntEvent);
+    eventScheduler.cancel(flipFakeEvent);
+
+    count = 0;
+    loaded = false;
+    pending = false;
+}
+
+void SerialPort::handle()
+{
+    if (loaded && (count == 0))
     {
-        buffered = false;
         // Output rate 8 bits at ta / 2
         count = 16;
+    }
+
+    if (count == 0)
+        return;
+
+    if (eventScheduler.isPending(flipFakeEvent) || eventScheduler.isPending(flipCntEvent))
+    {
+        eventScheduler.cancel(flipFakeEvent);
+        eventScheduler.schedule(flipFakeEvent, 2);
+    }
+    else
+    {
+        eventScheduler.cancel(flipCntEvent);
+        eventScheduler.schedule(flipCntEvent, 2);
+    }
+
+}
+
+void SerialPort::flipFake() {}
+
+void SerialPort::flipCnt()
+{
+    if (count == 0)
+        return;
+
+    syncCntHistory();
+
+    cnt ^= 1;
+
+    if (--count == 1)
+    {
+        eventScheduler.cancel(*this);
+        eventScheduler.schedule(*this, 2);
+
+        loaded = pending;
+        pending = false;
     }
 }
 

@@ -337,12 +337,12 @@ CIA/irqdelay/irqdelay-cia2-oneshot
 CIA/irqdelay/irqdelay-cia2-oneshot-4
 CIA/reload0/reload0a
 CIA/reload0/reload0b
-CIA/shiftregister/cia-icr-test2-continues
-CIA/shiftregister/cia-icr-test2-oneshot
 CIA/shiftregister/cia-icr-test-continues-old         --cia old
 CIA/shiftregister/cia-icr-test-continues-new         --cia new
 CIA/shiftregister/cia-icr-test-oneshot-old           --cia old
 CIA/shiftregister/cia-icr-test-oneshot-new           --cia new
+CIA/shiftregister/cia-icr-test2-continues
+CIA/shiftregister/cia-icr-test2-oneshot
 CIA/shiftregister/cia-sdr-load
 CIA/shiftregister/cia-sdr-delay
 CIA/shiftregister/cia-sdr-init
@@ -350,33 +350,49 @@ CIA/shiftregister/cia-sp-test-continues-old          --cia old
 CIA/shiftregister/cia-sp-test-continues-new          --cia new
 CIA/shiftregister/cia-sp-test-oneshot-old            --cia old
 CIA/shiftregister/cia-sp-test-oneshot-new            --cia new
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-5
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-6
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-7
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-8
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-50
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-51
-CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-64
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-5
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-6
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-7
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-8
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-50
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-51
-CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-64
-###
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-7    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-8    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-50   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-51   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-64   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-7    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-8    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-50   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-51   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-64   --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-0
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-0_7f
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-1_7f
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-3
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4_7f
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-19
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-39
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-generic-0
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-generic-0_7f
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-generic-1_7f
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-generic-3
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-generic-4_7f
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-generic-19
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-generic-39
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-0
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-0_7f
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-1_7f
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-3
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4_7f
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-19
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-39
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-0
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-0_7f
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-1_7f
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-3
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-4_7f
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-19
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-39
+###                                                   --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-0    --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-0_7f --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-1_7f --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-3    --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-4_7f --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-19   --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-39   --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-0    --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-0_7f --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-1_7f --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-3    --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-4_7f --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-19   --cia 4485
+#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-39   --cia 4485
 ###
 CIA/timerbasics/test                                 --cia old
 CIA/timerbasics/test_new                             --cia new
