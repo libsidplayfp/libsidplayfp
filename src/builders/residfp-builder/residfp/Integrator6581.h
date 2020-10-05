@@ -26,6 +26,8 @@
 #include "InterpolatedLUT.h"
 
 #include <stdint.h>
+
+#include <cmath>
 #include <cassert>
 
 #include "siddefs-fp.h"
@@ -155,27 +157,33 @@ namespace reSIDfp
 class Integrator6581
 {
 private:
-    const LUT* vcr_kVg;
+    const LUT* vcr_Vg;
     const LUT* vcr_n_Ids_term;
     const LUT* opamp_rev;
 
     float Vddt_Vw_2;
     mutable float vx;
     mutable float vc;
+    mutable double n;
 
     const float Vddt;
+    const float Vt;
+    const float nVmin;
     const float n_snake;
 
 public:
-    Integrator6581(const LUT* vcr_kVg, const LUT* vcr_n_Ids_term,
-               const LUT* opamp_rev, float Vddt, float n_snake) :
-        vcr_kVg(vcr_kVg),
+    Integrator6581(const LUT* vcr_Vg, const LUT* vcr_n_Ids_term,
+               const LUT* opamp_rev, float Vddt, float Vt, float nVmin, float n_snake) :
+        vcr_Vg(vcr_Vg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev),
         Vddt_Vw_2(0.f),
         vx(0.f),
         vc(0.f),
+        n(1.4),
         Vddt(Vddt),
+        Vt(Vt),
+        nVmin(nVmin),
         n_snake(n_snake) {}
 
     void setVw(float Vw) { Vddt_Vw_2 = (Vddt - Vw) * (Vddt - Vw); }
@@ -212,7 +220,9 @@ float Integrator6581::solve(float vi) const
 
     // VCR gate voltage.
     // k*Vg = k*(Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2))
-    const float kVg = vcr_kVg->output((Vddt_Vw_2 + Vgdt_2) / 2.f);
+    const float Vg = vcr_Vg->output((Vddt_Vw_2 + Vgdt_2) / 2.f);
+    const float Vp = (Vg - Vt) / n;
+    const float kVg = Vp - nVmin;
 
     // VCR voltages for EKV model table lookup.
     const float Vgs = (vx < kVg) ? kVg - vx : 0.f;
@@ -221,7 +231,15 @@ float Integrator6581::solve(float vi) const
     //assert(Vgd < 1.f);
 
     // VCR current
-    const float n_I_vcr = vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd);
+    const float n_I_vcr = (vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd)) * n;
+
+    // estimate new slope factor
+#if 0
+    n = 1. + (0.71 / sqrt(Vp + 0.9));
+    assert((n > 1.2) && (n < 1.8));
+#else
+    n = 1.;
+#endif
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;

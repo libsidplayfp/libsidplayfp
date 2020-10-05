@@ -108,7 +108,6 @@ FilterModelConfig6581::FilterModelConfig6581() :
     Vdd(12.18),
     Vth(1.31),
     Ut(26.0e-3),
-    k(1.0),
     uCox(20e-6),
     WL_vcr(9.0 / 1.0),
     WL_snake(1.0 / 115.0),
@@ -220,22 +219,14 @@ FilterModelConfig6581::FilterModelConfig6581() :
     }
 
     const double nVddt = norm * Vddt;
-    const double nVmin = norm * vmin;
 
     for (unsigned int i = 0; i <= (1 << 8); i++)
     {
-        // The returned value must be corrected for translation. Vg always
-        // takes part in a subtraction as follows:
-        //
-        //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
-        //
-        // I.e. k*Vg - t must be returned.
-        const double Vg = nVddt - sqrt(static_cast<double>(i)/256.);
-        const double tmp = k * Vg - nVmin;
-        assert((tmp >= 0.) && (tmp <= 1.));
+        const double tmp = nVddt - sqrt(static_cast<double>(i)/256.);
+        //assert((tmp >= 0.) && (tmp <= 1.));
         temp_tab[i] = static_cast<float>(tmp);
     }
-    vcr_kVg = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
+    vcr_Vg = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
 
     //  EKV model:
     //
@@ -244,21 +235,20 @@ FilterModelConfig6581::FilterModelConfig6581() :
     //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
     //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
 
-    const double kVt = k * Vth;
     // moderate inversion characteristic current
-    const double Is = ((2. * uCox * Ut * Ut) / k) * WL_vcr;
+    const double Is = (2. * uCox * Ut * Ut) * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
     const double n_Is = norm * 1.0e-6 / C * Is;
 
-    // kVg_Vx = k*Vg - Vx
+    // kVgt_Vx = k*Vg - Vth - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
-    for (unsigned int kVg_Vx = 0; kVg_Vx <= (1 << 8); kVg_Vx++)
+    for (unsigned int kVgt_Vx = 0; kVgt_Vx <= (1 << 8); kVgt_Vx++)
     {
-        const double log_term = log1p(exp(((static_cast<double>(kVg_Vx)/256.) * denorm - kVt) / (2. * Ut)));
+        const double log_term = log1p(exp(((static_cast<double>(kVgt_Vx)/256.) * denorm) / (2. * Ut)));
         const double tmp = n_Is * log_term * log_term;
         //assert((tmp >= 0.) && (tmp <= 1.));
-        temp_tab[kVg_Vx] = static_cast<float>(tmp);
+        temp_tab[kVgt_Vx] = static_cast<float>(tmp);
     }
     vcr_n_Ids_term = new InterpolatedLUT(256, 0.f, 1.f, temp_tab);
 }
@@ -306,12 +296,15 @@ std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
     assert((tmp >= 0.) && (tmp <= 1.));
     const float nVddt = static_cast<float>(tmp);
 
+    const double nVt = static_cast<float>(norm * Vth);
+    const float nVmin = static_cast<float>(norm * vmin);
+
     // Normalized snake current factor, 1 cycle at 1MHz.
     tmp = denorm * (uCox / 2. * WL_snake * 1.0e-6 / C);
     assert((tmp >= 0.) && (tmp <= 1.));
     const float n_snake = static_cast<float>(tmp);
 
-    return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_kVg, vcr_n_Ids_term, opamp_rev_lut, nVddt, n_snake));
+    return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_Vg, vcr_n_Ids_term, opamp_rev_lut, nVddt, nVt, nVmin, n_snake));
 }
 
 } // namespace reSIDfp

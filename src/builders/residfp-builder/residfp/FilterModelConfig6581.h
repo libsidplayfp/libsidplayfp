@@ -64,7 +64,6 @@ private:
     const double Vdd;
     const double Vth;           ///< Threshold voltage
     const double Ut;            ///< Thermal voltage: Ut = kT/q = 8.61734315e-5*T ~ 26mV
-    const double k;             ///< Gate coupling coefficient: k = Cox/(Cox+Cdep) ~ 0.7
     const double uCox;          ///< Transconductance coefficient: u*Cox
     const double WL_vcr;        ///< W/L for VCR
     const double WL_snake;      ///< W/L for "snake"
@@ -93,7 +92,7 @@ private:
 
     /// VCR - 6581 only.
     //@{
-    LUT* vcr_kVg;
+    LUT* vcr_Vg;
     LUT* vcr_n_Ids_term;
     //@}
 
