@@ -209,8 +209,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
         if (waveform == 0)
         {
-            waveform_output = 0xfff;
-            osc3 = 0xff;
+            osc3 = waveform_output = 0xfff;
         }
     }
 
