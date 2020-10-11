@@ -108,8 +108,6 @@ private:
     /// The control register right-shifted 4 bits; used for output function table lookup.
     unsigned int waveform;
 
-    int floating_output_ttl;
-
     unsigned int waveform_output;
 
     /// Current and previous accumulator value.
@@ -195,7 +193,6 @@ public:
         no_pulse(0),
         pulse_output(0),
         waveform(0),
-        floating_output_ttl(0),
         waveform_output(0),
         accumulator(0x555555),          // Accumulator's even bits are high on powerup
         freq(0),
@@ -376,14 +373,6 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
             accumulator &= (waveform_output << 12) | 0x7fffff;
 
         write_shift_register();
-    }
-    else
-    {
-        // Age floating DAC input.
-        if (likely(floating_output_ttl != 0) && unlikely(--floating_output_ttl == 0))
-        {
-            waveform_output = 0;
-        }
     }
 
     // The pulse level is defined as (accumulator >> 12) >= pw ? 0xfff : 0x000.

@@ -30,21 +30,6 @@ namespace reSIDfp
 {
 
 /**
- * Number of cycles after which the waveform output fades to 0 when setting
- * the waveform register to 0.
- *
- * FIXME
- * This value has been adjusted aleatorily
- * from the original reSID value (0x4000)
- * to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
- * and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid;
- * see [VICE Bug #290](http://sourceforge.net/p/vice-emu/bugs/290/)
- * and [VICE Bug #1128](http://sourceforge.net/p/vice-emu/bugs/1128/)
- */
-const int FLOATING_OUTPUT_TTL_6581 = 200000;  // ~200ms
-const int FLOATING_OUTPUT_TTL_8580 = 5000000; // ~5s;
-
-/**
  * Number of cycles after which the shift register is reset
  * when the test bit is set.
  * Values measured on warm chips (6581R3 and 8580R5).
@@ -224,9 +209,8 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
         if (waveform == 0)
         {
-            // Change to floating DAC input.
-            // Reset fading time for floating DAC input.
-            floating_output_ttl = is6581 ? FLOATING_OUTPUT_TTL_6581 : FLOATING_OUTPUT_TTL_8580;
+            waveform_output = 0xfff;
+            osc3 = 0xff;
         }
     }
 
@@ -293,7 +277,6 @@ void WaveformGenerator::reset()
     shift_pipeline = 0;
 
     waveform_output = 0;
-    floating_output_ttl = 0;
 }
 
 } // namespace reSIDfp
