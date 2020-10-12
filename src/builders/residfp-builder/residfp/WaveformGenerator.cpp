@@ -32,28 +32,31 @@ namespace reSIDfp
 /**
  * Number of cycles after which the waveform output fades to 0 when setting
  * the waveform register to 0.
+ * Values measured on warm chips (6581R3/R4 and 8580R5)
+ * checking OSC3.
+ * Times vary wildly with temperature and may differ
+ * from chip to chip so the numbers here represent
+ * only the big difference between the old and new models.
  *
- * FIXME
- * This value has been adjusted aleatorily
- * from the original reSID value (0x4000)
- * to fix /MUSICIANS/H/Hatlelid_Kris/Grand_Prix_Circuit.sid#2
- * and /MUSICIANS/P/PVCF/Thomkat_with_Strange_End.sid;
- * see [VICE Bug #290](http://sourceforge.net/p/vice-emu/bugs/290/)
+ * See [VICE Bug #290](http://sourceforge.net/p/vice-emu/bugs/290/)
  * and [VICE Bug #1128](http://sourceforge.net/p/vice-emu/bugs/1128/)
  */
-const int FLOATING_OUTPUT_TTL_6581 = 200000;  // ~200ms
-const int FLOATING_OUTPUT_TTL_8580 = 5000000; // ~5s;
+const int FLOATING_OUTPUT_TTL_6581R3 =   95000; // ~95ms
+const int FLOATING_OUTPUT_TTL_6581R4 = 1000000; // ~1s
+const int FLOATING_OUTPUT_TTL_8580R5 = 1000000; // ~1s
 
 /**
  * Number of cycles after which the shift register is reset
  * when the test bit is set.
- * Values measured on warm chips (6581R3 and 8580R5).
+ * Values measured on warm chips (6581R3/R4 and 8580R5)
+ * checking OSC3.
  * Times vary wildly with temperature and may differ
  * from chip to chip so the numbers here represent
  * only the big difference between the old and new models.
  */
-const int SHIFT_REGISTER_RESET_6581 = 200000;  // ~200ms
-const int SHIFT_REGISTER_RESET_8580 = 5000000; // ~5s
+const int SHIFT_REGISTER_RESET_6581R3 =  210000; // ~210ms
+const int SHIFT_REGISTER_RESET_6581R4 = 2150000; // ~2.15s
+const int SHIFT_REGISTER_RESET_8580R5 = 2800000; // ~2.8s
 
 const int DAC_BITS = 12;
 
@@ -165,7 +168,7 @@ void WaveformGenerator::setChipModel(ChipModel chipModel)
         dac[i] = static_cast<float>(dacValue - offset);
     }
 
-    model_shift_register_reset = is6581 ? SHIFT_REGISTER_RESET_6581 : SHIFT_REGISTER_RESET_8580;
+    model_shift_register_reset = is6581 ? SHIFT_REGISTER_RESET_6581R3 : SHIFT_REGISTER_RESET_8580R5;
 }
 
 void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const
@@ -226,7 +229,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         {
             // Change to floating DAC input.
             // Reset fading time for floating DAC input.
-            floating_output_ttl = is6581 ? FLOATING_OUTPUT_TTL_6581 : FLOATING_OUTPUT_TTL_8580;
+            floating_output_ttl = is6581 ? FLOATING_OUTPUT_TTL_6581R3 : FLOATING_OUTPUT_TTL_8580R5;
         }
     }
 
