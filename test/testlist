@@ -1,6 +1,8 @@
 ### general ###
 general/banking00/banking00
-general/fuxxortest/test
+#general/fuxxortest/test-fuxxored
+general/fuxxortest/ef1-nmi
+#general/fuxxortest/ef2-inst4b
 general/Lorenz-2.15/src/start
 general/Lorenz-2.15/src/ldab
 general/Lorenz-2.15/src/ldaz
@@ -453,6 +455,7 @@ CPU/Acid800/cpu_flags
 CPU/Acid800/cpu_illegal
 CPU/Acid800/cpu_insn
 CPU/Acid800/cpu_timing
+# FIXME
 #CPU/Acid800/cpu_timing_ntsc                   --vic ntsc
 CPU/ane/ane
 CPU/ane/ane-border
