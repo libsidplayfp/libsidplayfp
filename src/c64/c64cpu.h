@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2012-2019 Leandro Nini
+ *  Copyright (C) 2012-2020 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #ifdef VICE_TESTSUITE
 #  include <iostream>
 #  include <cstdlib>
+//#define PRINTSCREENCODES
 #endif
 
 #include "sidcxx11.h"
@@ -37,7 +38,7 @@
 
 namespace libsidplayfp
 {
-#if 1
+#ifdef PRINTSCREENCODES
 /**
  * CHR$ conversion table (0x01 = no output)
  */
@@ -73,7 +74,7 @@ protected:
 
     void cpuWrite(uint_least16_t addr, uint8_t data) override
     {
-#if 0
+#ifdef PRINTSCREENCODES
         if (addr >= 1024 && addr <= 2047)
         {
             std::cout << CHRtab[data];
