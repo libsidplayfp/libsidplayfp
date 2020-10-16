@@ -41,9 +41,14 @@ namespace reSIDfp
  * See [VICE Bug #290](http://sourceforge.net/p/vice-emu/bugs/290/)
  * and [VICE Bug #1128](http://sourceforge.net/p/vice-emu/bugs/1128/)
  */
-const int FLOATING_OUTPUT_TTL_6581R3 =   95000; // ~95ms
-const int FLOATING_OUTPUT_TTL_6581R4 = 1000000; // ~1s
-const int FLOATING_OUTPUT_TTL_8580R5 = 1000000; // ~1s
+// ~95ms
+const unsigned int FLOATING_OUTPUT_TTL_6581R3  =   54000;
+const unsigned int FLOATING_OUTPUT_FADE_6581R3 =    1400;
+// ~1s
+const unsigned int FLOATING_OUTPUT_TTL_6581R4  = 1000000;
+// ~1s
+const unsigned int FLOATING_OUTPUT_TTL_8580R5  =  800000;
+const unsigned int FLOATING_OUTPUT_FADE_8580R5 =   50000;
 
 /**
  * Number of cycles after which the shift register is reset
@@ -54,9 +59,14 @@ const int FLOATING_OUTPUT_TTL_8580R5 = 1000000; // ~1s
  * from chip to chip so the numbers here represent
  * only the big difference between the old and new models.
  */
-const int SHIFT_REGISTER_RESET_6581R3 =  210000; // ~210ms
-const int SHIFT_REGISTER_RESET_6581R4 = 2150000; // ~2.15s
-const int SHIFT_REGISTER_RESET_8580R5 = 2800000; // ~2.8s
+// ~210ms
+const unsigned int SHIFT_REGISTER_RESET_6581R3 =    6000;
+const unsigned int SHIFT_REGISTER_FADE_6581R3  =   19300;
+// ~2.15s
+const unsigned int SHIFT_REGISTER_RESET_6581R4 = 2150000;
+// ~2.8s
+const unsigned int SHIFT_REGISTER_RESET_8580R5 =  986000;
+const unsigned int SHIFT_REGISTER_FADE_8580R5  =  314300;
 
 const int DAC_BITS = 12;
 
@@ -127,12 +137,6 @@ void WaveformGenerator::write_shift_register()
     }
 }
 
-void WaveformGenerator::reset_shift_register()
-{
-    shift_register = 0x7fffff;
-    shift_register_reset = 0;
-}
-
 void WaveformGenerator::set_noise_output()
 {
     noise_output =
@@ -167,8 +171,6 @@ void WaveformGenerator::setChipModel(ChipModel chipModel)
         const double dacValue = dacBuilder.getOutput(i);
         dac[i] = static_cast<float>(dacValue - offset);
     }
-
-    model_shift_register_reset = is6581 ? SHIFT_REGISTER_RESET_6581R3 : SHIFT_REGISTER_RESET_8580R5;
 }
 
 void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const
@@ -244,7 +246,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             shift_pipeline = 0;
 
             // Set reset time for shift register.
-            shift_register_reset = model_shift_register_reset;
+            shift_register_reset = is6581 ? SHIFT_REGISTER_RESET_6581R3 : SHIFT_REGISTER_RESET_8580R5;
         }
         else
         {
@@ -268,6 +270,22 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
     }
 }
 
+void WaveformGenerator::waveBitfade()
+{
+	waveform_output &= waveform_output >> 1;
+	osc3 = waveform_output;
+	if (waveform_output != 0)
+		floating_output_ttl = is6581 ? FLOATING_OUTPUT_FADE_6581R3 : FLOATING_OUTPUT_FADE_8580R5;
+}
+
+void WaveformGenerator::shiftregBitfade()
+{
+	shift_register |= 1;
+	shift_register |= shift_register << 1;
+	if (shift_register != 0x7fffff)
+		shift_register_reset = is6581 ? SHIFT_REGISTER_FADE_6581R3 : SHIFT_REGISTER_FADE_8580R5;
+}
+
 void WaveformGenerator::reset()
 {
     // accumulator is not changed on reset
@@ -289,9 +307,9 @@ void WaveformGenerator::reset()
     no_pulse = 0xfff;
     pulse_output = 0xfff;
 
-    reset_shift_register();
+    shift_register_reset = 0;
     // when reset is released the shift register is clocked once
-    clock_shift_register((~shift_register << 17) & (1 << 22));
+    shift_register = 0x7ffffe;
 
     shift_pipeline = 0;
 
