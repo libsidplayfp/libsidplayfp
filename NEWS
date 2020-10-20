@@ -1,3 +1,10 @@
+2.0.5 2020-10-xx
+* Fixed CIA SDR handling, code borrowed from Denise emulator
+* Fixed external filter coefficients calculation in resid/residfp
+* Update osc3 on waveform zero
+
+
+
 2.0.4 2020-06-22
 * Further improved CPU/CIA/VICII emulation based on VICE testprogs (bug #27)
 * Fixed an envelope generator regression in resid/residfp (bug #31)
