@@ -382,7 +382,7 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         // Age floating DAC input.
         if (likely(floating_output_ttl != 0) && unlikely(--floating_output_ttl == 0))
         {
-            waveform_output = 0;
+            osc3 = waveform_output = 0;
         }
     }
 

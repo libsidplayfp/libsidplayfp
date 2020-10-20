@@ -593,6 +593,8 @@ SID/envelope/testADSRDelayBug                        --sid old
 SID/envelope/testFlip00toFF                          --sid old
 SID/envelope/testFlipFFto00                          --sid old
 SID/exp_counter_reset/env_test_exr                   --sid old
+SID/osc3-wave0/osc3-wave0-new                        --sid new
+SID/osc3-wave0/osc3-wave0                            --sid old
 SID/osc_topbit/osc_topbit_test_noise_old             --sid old
 SID/osc_topbit/osc_topbit_test_pulse_old             --sid old
 SID/osc_topbit/osc_topbit_test_triangle_old          --sid old
