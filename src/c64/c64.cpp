@@ -63,7 +63,7 @@ double c64::getCpuFreq(model_t model)
 
     // The VIC II produces the two-phase system clock
     // by running the input clock through a divider
-    return crystalFreq/modelData[model].divider;
+    return crystalFreq / modelData[model].divider;
 }
 
 c64::c64() :
