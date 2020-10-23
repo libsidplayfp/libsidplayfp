@@ -188,9 +188,7 @@ bool psiddrv::drvReloc()
     reloc_driver = psid_driver;
     reloc_size   = sizeof(psid_driver);
 
-    reloc65 relocator;
-    relocator.setReloc(reloc65::TEXT, relocAddr - 10);
-    relocator.setExtract(reloc65::TEXT);
+    reloc65 relocator(relocAddr - 10);
     if (!relocator.reloc(&reloc_driver, &reloc_size))
     {
         m_errorString = ERR_PSIDDRV_RELOC;

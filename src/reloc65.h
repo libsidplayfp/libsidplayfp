@@ -25,7 +25,7 @@
     Relocate and extract text segment from memory buffer instead of file.
     For use with VICE VSID.
 
-    Ported to c++ by Leandro Nini
+    Ported to c++ and cut down for use in libsidplayfp by Leandro Nini
 */
 
 #ifndef RELOC65_H
@@ -33,26 +33,13 @@
 
 /**
  * reloc65 -- A part of xa65 - 65xx/65816 cross-assembler and utility suite
- * o65 file relocator.
+ * o65 file relocator. Trimmed down for our needs.
  */
 class reloc65
 {
-public:
-    typedef enum
-    {
-        WHOLE,
-        TEXT,
-        DATA,
-        BSS,
-        ZEROPAGE
-    } segment_t;
-
 private:
-    int m_tbase, m_dbase, m_bbase, m_zbase;
-    int m_tdiff, m_ddiff, m_bdiff, m_zdiff;
-    bool m_tflag, m_dflag, m_bflag, m_zflag;
-
-    segment_t m_extract;
+    const int m_tbase;
+    int m_tdiff;
 
 private:
     int reldiff(unsigned char s);
@@ -76,22 +63,10 @@ private:
     unsigned char* reloc_globals(unsigned char *buf);
 
 public:
-    reloc65();
-
     /**
-     * Select segment to relocate.
-     * 
-     * @param type the segment to relocate
-     * @param addr new address
+     * @param addr address of the segment to relocate
      */
-    void setReloc(segment_t type, int addr);
-
-    /**
-     * Select segment to extract.
-     * 
-     * @param type the segment to extract
-     */
-    void setExtract(segment_t type);
+    reloc65(int addr);
 
     /**
      * Do the relocation.

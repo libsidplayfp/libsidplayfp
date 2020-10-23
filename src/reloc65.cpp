@@ -92,46 +92,8 @@ inline int read_undef(unsigned char *buf)
     return l;
 }
 
-reloc65::reloc65() :
-    m_tbase(0),
-    m_dbase(0),
-    m_bbase(0),
-    m_zbase(0),
-    m_tflag(false),
-    m_dflag(false),
-    m_bflag(false),
-    m_zflag(false),
-    m_extract(WHOLE) {}
-
-void reloc65::setReloc(segment_t type, int addr)
-{
-    switch (type)
-    {
-    case TEXT:
-        m_tflag = true;
-        m_tbase = addr;
-        break;
-    case DATA:
-        m_dflag = true;
-        m_dbase = addr;
-        break;
-    case BSS:
-        m_bflag = true;
-        m_bbase = addr;
-        break;
-    case ZEROPAGE:
-        m_zflag = true;
-        m_zbase = addr;
-        break;
-    default:
-        break;
-    }
-}
-
-void reloc65::setExtract(segment_t type)
-{
-    m_extract = type;
-}
+reloc65::reloc65(int addr) :
+    m_tbase(addr) {}
 
 bool reloc65::reloc(unsigned char **buf, int *fsize)
 {
@@ -153,19 +115,9 @@ bool reloc65::reloc(unsigned char **buf, int *fsize)
 
     const int tbase = getWord(tmpBuf, 8);
     const int tlen  = getWord(tmpBuf, 10);
-    m_tdiff = m_tflag ? m_tbase - tbase : 0;
+    m_tdiff = m_tbase - tbase;
 
-    const int dbase = getWord(tmpBuf, 12);
     const int dlen  = getWord(tmpBuf, 14);
-    m_ddiff = m_dflag ? m_dbase - dbase : 0;
-
-    const int bbase = getWord(tmpBuf, 16);
-    const int blen SID_UNUSED = getWord(tmpBuf, 18);
-    m_bdiff = m_bflag ? m_bbase - bbase : 0;
-
-    const int zbase = getWord(tmpBuf, 20);
-    const int zlen SID_UNUSED = getWord(tmpBuf, 21);
-    m_zdiff = m_zflag ? m_zbase - zbase : 0;
 
     unsigned char *segt = tmpBuf + hlen;                    // Text segment
     unsigned char *segd = segt + tlen;                      // Data segment
@@ -178,50 +130,16 @@ bool reloc65::reloc(unsigned char **buf, int *fsize)
 
     reloc_globals(extab);
 
-    if (m_tflag)
-    {
-        setWord(tmpBuf, 8, m_tbase);
-    }
-    if (m_dflag)
-    {
-        setWord(tmpBuf, 12, m_dbase);
-    }
-    if (m_bflag)
-    {
-        setWord(tmpBuf, 16, m_bbase);
-    }
-    if (m_zflag)
-    {
-        setWord(tmpBuf, 20, m_zbase);
-    }
+	setWord(tmpBuf, 8, m_tbase);
 
-    switch (m_extract)
-    {
-    case WHOLE:
-        return true;
-    case TEXT:
-        *buf = segt;
-        *fsize = tlen;
-        return true;
-    case DATA:
-        *buf = segd;
-        *fsize = dlen;
-        return true;
-    default:
-        return false;
-    }
+	*buf = segt;
+	*fsize = tlen;
+	return true;
 }
 
 int reloc65::reldiff(unsigned char s)
 {
-    switch (s)
-    {
-    case 2: return m_tdiff;
-    case 3: return m_ddiff;
-    case 4: return m_bdiff;
-    case 5: return m_zdiff;
-    default: return 0;
-    }
+	return s==2 ? m_tdiff : 0;
 }
 
 unsigned char* reloc65::reloc_seg(unsigned char *buf, int len, unsigned char *rtab)
