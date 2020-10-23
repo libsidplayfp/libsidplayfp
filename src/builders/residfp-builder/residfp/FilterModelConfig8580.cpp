@@ -122,7 +122,7 @@ FilterModelConfig8580* FilterModelConfig8580::getInstance()
 }
 
 FilterModelConfig8580::FilterModelConfig8580() :
-    voice_voltage_range(0.2), // FIXME measure
+    voice_voltage_range(0.25), // FIXME measure
     voice_DC_voltage(4.80), // FIXME was 4.76
     C(22e-9),
     Vdd(9.09),
@@ -186,7 +186,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         }
     }
 
-    // The audio mixer operates at n ~ 8/6, and has 8 fundamentally different
+    // The audio mixer operates at n ~ 8/5, and has 8 fundamentally different
     // input configurations (0 - 7 input "resistors").
     //
     // All "on", transistors are modeled as one - see comments above for
@@ -195,7 +195,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
     {
         const int idiv = (i == 0) ? 1 : i;
         const int size = (i == 0) ? 1 : i << 16;
-        const double n = i * 8.0 / 6.0;
+        const double n = i * 8.0 / 5.0;
         opampModel.reset();
         mixer[i] = new unsigned short[size];
 
@@ -215,7 +215,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
     for (int n8 = 0; n8 < 16; n8++)
     {
         const int size = 1 << 16;
-        const double n = n8 / 8.0;
+        const double n = n8 / 16.0;
         opampModel.reset();
         gain_vol[n8] = new unsigned short[size];
 
