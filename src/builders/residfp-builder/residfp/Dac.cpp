@@ -76,7 +76,7 @@ void Dac::kinkedDac(ChipModel chipModel)
         {
             Rn = (Rn == R_INFINITY) ?
                  R + _2R :
-                 R + _2R * Rn / (_2R + Rn); // R + 2R || Rn
+                 R + (_2R * Rn) / (_2R + Rn); // R + 2R || Rn
         }
 
         // Source transformation for bit voltage.
@@ -86,7 +86,7 @@ void Dac::kinkedDac(ChipModel chipModel)
         }
         else
         {
-            Rn = _2R * Rn / (_2R + Rn); // 2R || Rn
+            Rn = (_2R * Rn) / (_2R + Rn); // 2R || Rn
             Vn = Vn * Rn / _2R;
         }
 
@@ -97,7 +97,7 @@ void Dac::kinkedDac(ChipModel chipModel)
         {
             Rn += R;
             const double I = Vn / Rn;
-            Rn = _2R * Rn / (_2R + Rn); // 2R || Rn
+            Rn = (_2R * Rn) / (_2R + Rn); // 2R || Rn
             Vn = Rn * I;
         }
 
