@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -328,7 +328,7 @@ private:
     unsigned short** summer;
     unsigned short** gain;
 
-    const int voiceScaleS14;
+    const int voiceScaleS11;
     const int voiceDC;
 
     /// VCR + associated capacitor connected to highpass output.
@@ -358,7 +358,7 @@ public:
         mixer(FilterModelConfig::getInstance()->getMixer()),
         summer(FilterModelConfig::getInstance()->getSummer()),
         gain(FilterModelConfig::getInstance()->getGain()),
-        voiceScaleS14(FilterModelConfig::getInstance()->getVoiceScaleS14()),
+        voiceScaleS11(FilterModelConfig::getInstance()->getVoiceScaleS11()),
         voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
         hpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator())
@@ -370,7 +370,7 @@ public:
 
     unsigned short clock(int voice1, int voice2, int voice3) override;
 
-    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 14) + mixer[0][0]; }
+    void input(int sample) override { ve = (sample * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 
     /**
      * Set filter curve type based on single parameter.
@@ -392,10 +392,10 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
 {
-    voice1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
-    voice2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
+    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
+    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS14 >> 18) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
 
     int Vi = 0;
     int Vo = 0;

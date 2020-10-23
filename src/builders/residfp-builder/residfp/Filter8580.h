@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -261,7 +261,7 @@ class Integrator8580;
  *                                |\  OpAmp has a smaller capacitor than the other OPs
  *                        Vref ---|+\
  *                                |A >---o--- Vdac
- *                        o-------|-/    |
+ *                        +-------|-/    |
  *                        |       |/     |
  *                        |              |
  *       C1               |     C2       |
@@ -286,7 +286,7 @@ private:
     unsigned short** gain_res;
     unsigned short** gain_vol;
 
-    const int voiceScaleS14;
+    const int voiceScaleS11;
     const int voiceDC;
 
     double cp;
@@ -318,7 +318,7 @@ public:
         summer(FilterModelConfig8580::getInstance()->getSummer()),
         gain_res(FilterModelConfig8580::getInstance()->getGainRes()),
         gain_vol(FilterModelConfig8580::getInstance()->getGainVol()),
-        voiceScaleS14(FilterModelConfig8580::getInstance()->getVoiceScaleS14()),
+        voiceScaleS11(FilterModelConfig8580::getInstance()->getVoiceScaleS11()),
         voiceDC(FilterModelConfig8580::getInstance()->getVoiceDC()),
         cp(0.5),
         hpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
@@ -332,7 +332,7 @@ public:
 
     unsigned short clock(int voice1, int voice2, int voice3) override;
 
-    void input(int sample) override { ve = (sample * voiceScaleS14 * 3 >> 14) + mixer[0][0]; }
+    void input(int sample) override { ve = (sample * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 
     /**
      * Set filter curve type based on single parameter.
@@ -352,10 +352,10 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
 {
-    voice1 = (voice1 * voiceScaleS14 >> 18) + voiceDC;
-    voice2 = (voice2 * voiceScaleS14 >> 18) + voiceDC;
+    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
+    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS14 >> 18) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
 
     int Vi = 0;
     int Vo = 0;
