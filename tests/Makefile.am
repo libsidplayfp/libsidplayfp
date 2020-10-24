@@ -22,28 +22,26 @@ check_PROGRAMS = $(TESTS)
 
 TestEnvelopeGenerator_SOURCES = \
 Main.cpp \
-TestEnvelopeGenerator.cpp
-TestEnvelopeGenerator_LDADD = \
-$(top_builddir)/src/builders/residfp-builder/residfp/EnvelopeGenerator.o \
-$(top_builddir)/src/builders/residfp-builder/residfp/Dac.o
+TestEnvelopeGenerator.cpp \
+$(top_srcdir)/src/builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
+$(top_srcdir)/src/builders/residfp-builder/residfp/Dac.cpp
 
 TestWaveformGenerator_SOURCES = \
 Main.cpp \
-TestWaveformGenerator.cpp
-TestWaveformGenerator_LDADD = \
-$(top_builddir)/src/builders/residfp-builder/residfp/WaveformGenerator.o \
-$(top_builddir)/src/builders/residfp-builder/residfp/WaveformCalculator.o \
-$(top_builddir)/src/builders/residfp-builder/residfp/Dac.o
+TestWaveformGenerator.cpp\
+$(top_srcdir)/src/builders/residfp-builder/residfp/WaveformGenerator.cpp \
+$(top_srcdir)/src/builders/residfp-builder/residfp/WaveformCalculator.cpp \
+$(top_srcdir)/src/builders/residfp-builder/residfp/Dac.cpp
 
 TestSpline_SOURCES = \
 Main.cpp \
-TestSpline.cpp
-TestSpline_LDADD = $(top_builddir)/src/builders/residfp-builder/residfp/Spline.o
+TestSpline.cpp \
+$(top_srcdir)/src/builders/residfp-builder/residfp/Spline.cpp
 
 TestDac_SOURCES = \
 Main.cpp \
-TestDac.cpp
-TestDac_LDADD = $(top_builddir)/src/builders/residfp-builder/residfp/Dac.o
+TestDac.cpp \
+$(top_srcdir)/src/builders/residfp-builder/residfp/Dac.cpp
 
 TestPSID_SOURCES = \
 Main.cpp \
@@ -57,8 +55,8 @@ TestMUS_LDADD = $(top_builddir)/src/libsidplayfp.la
 
 TestMos6510_SOURCES = \
 Main.cpp \
-TestMos6510.cpp
-TestMos6510_LDADD = $(top_builddir)/src/c64/CPU/mos6510.o \
-$(top_builddir)/src/EventScheduler.o
+TestMos6510.cpp \
+$(top_srcdir)/src/c64/CPU/mos6510.cpp \
+$(top_srcdir)/src/EventScheduler.cpp
 
 endif
