@@ -147,8 +147,7 @@ public:
 /**
  * This class is heavily based on the ciacore/ciatimer source code from VICE.
  * The CIA state machine is lifted as-is. Big thanks to VICE project!
- *
- * @author alankila
+ * The Serial Port emulation is based on Denise emu code.
  */
 class MOS6526
 {
