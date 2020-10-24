@@ -178,8 +178,13 @@ AS_IF([test "$enable_branch_hints" != no],
 )
 
 AC_CACHE_CHECK([for log1p], [resid_cv_log1p],
-  [AC_TRY_COMPILE([#include <math.h>], [ log1p(1); ],
-    resid_cv_log1p=yes, resid_cv_log1p=no)])
+  [AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+      [ #include <math.h> ], [ log1p(1); ]
+    )],
+    [resid_cv_log1p=yes], [resid_cv_log1p=no]
+  )]
+)
 
 AS_IF([test "$resid_cv_log1p" = no],
   [HAVE_LOG1P=0],
