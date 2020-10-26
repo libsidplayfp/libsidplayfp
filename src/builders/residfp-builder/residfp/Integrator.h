@@ -156,30 +156,39 @@ namespace reSIDfp
 class Integrator
 {
 private:
-    const unsigned short* vcr_kVg;
+    const unsigned short* vcr_Vg;
     const unsigned short* vcr_n_Ids_term;
     const unsigned short* opamp_rev;
 
     unsigned int Vddt_Vw_2;
     mutable int vx;
     mutable int vc;
-
-    const unsigned short kVddt;
+#if 0
+    mutable double n;             // Slope factor n = 1/(Cox/(Cox+Cdep)) ~ 1.4
+#endif
+	const double N16;
+    const unsigned short Vddt;
+	const unsigned short nVt;
+	const unsigned short nVmin;
     const unsigned short n_snake;
 
 public:
-    Integrator(const unsigned short* vcr_kVg, const unsigned short* vcr_n_Ids_term,
-               const unsigned short* opamp_rev, unsigned short kVddt, unsigned short n_snake) :
-        vcr_kVg(vcr_kVg),
+    Integrator(const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
+               const unsigned short* opamp_rev, unsigned short Vddt, unsigned short nVt,
+			   unsigned short nVmin, unsigned short n_snake, double N16) :
+        vcr_Vg(vcr_Vg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev),
         Vddt_Vw_2(0),
         vx(0),
         vc(0),
-        kVddt(kVddt),
+		N16(N16),
+        Vddt(Vddt),
+		nVt(nVt),
+		nVmin(nVmin),
         n_snake(n_snake) {}
 
-    void setVw(unsigned short Vw) { Vddt_Vw_2 = ((kVddt - Vw) * (kVddt - Vw)) >> 1; }
+    void setVw(unsigned short Vw) { Vddt_Vw_2 = ((Vddt - Vw) * (Vddt - Vw)) >> 1; }
 
     int solve(int vi) const;
 };
@@ -195,15 +204,15 @@ RESID_INLINE
 int Integrator::solve(int vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
-    assert(vx < kVddt);
+    assert(vx < Vddt);
 
     // Check that transistor is actually in triode mode
     // Vds < Vgs - Vth
-    assert(vi < kVddt);
+    assert(vi < Vddt);
 
     // "Snake" voltages for triode mode calculation.
-    const unsigned int Vgst = kVddt - vx;
-    const unsigned int Vgdt = kVddt - vi;
+    const unsigned int Vgst = Vddt - vx;
+    const unsigned int Vgdt = Vddt - vi;
 
     const unsigned int Vgst_2 = Vgst * Vgst;
     const unsigned int Vgdt_2 = Vgdt * Vgdt;
@@ -213,7 +222,9 @@ int Integrator::solve(int vi) const
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int kVg = static_cast<int>(vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
+    const int Vg = static_cast<int>(vcr_Vg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
+    const int Vp = (Vg - nVt); //FIXME divide by n
+    const int kVg = Vp - nVmin;
 
     // VCR voltages for EKV model table lookup.
     const int Vgs = (vx < kVg) ? kVg - vx : 0;
@@ -224,7 +235,16 @@ int Integrator::solve(int vi) const
     // VCR current, scaled by m*2^15*2^15 = m*2^30
     const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[Vgs]) << 15;
     const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[Vgd]) << 15;
-    const int n_I_vcr = If - Ir;
+    const int n_I_vcr = (If - Ir);  //FIXME multiply by n
+
+#if 0
+	// estimate new slope factor based on gate voltage
+	const double gamma = 1.0;   // body effect factor
+	const double phi = 0.8;     // bulk Fermi potential
+	const double nVp = static_cast<double>(Vp) / N16;
+    n = 1. + (gamma / sqrt(nVp + phi));
+    assert((n > 1.2) && (n < 1.8));
+#endif
 
     // Change in capacitor charge.
     vc += n_I_snake + n_I_vcr;

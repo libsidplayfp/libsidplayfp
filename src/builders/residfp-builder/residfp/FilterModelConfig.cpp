@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2010 Dag Lem
  *
@@ -108,15 +108,14 @@ FilterModelConfig::FilterModelConfig() :
     Vdd(12.18),
     Vth(1.31),
     Ut(26.0e-3),
-    k(1.0),
     uCox(20e-6),
     WL_vcr(9.0 / 1.0),
     WL_snake(1.0 / 115.0),
-    kVddt(k * (Vdd - Vth)),
+    Vddt(Vdd - Vth),
     dac_zero(6.65),
     dac_scale(2.63),
     vmin(opamp_voltage[0].x),
-    vmax(kVddt < opamp_voltage[0].y ? opamp_voltage[0].y : kVddt),
+    vmax(Vddt < opamp_voltage[0].y ? opamp_voltage[0].y : Vddt),
     denorm(vmax - vmin),
     norm(1.0 / denorm),
     N16(norm * ((1 << 16) - 1)),
@@ -149,7 +148,7 @@ FilterModelConfig::FilterModelConfig() :
 
     // Create lookup tables for gains / summers.
 
-    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, kVddt);
+    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, Vddt);
 
     // The filter summer operates at n ~ 1, and has 5 fundamentally different
     // input configurations (2 - 6 input "resistors").
@@ -218,24 +217,17 @@ FilterModelConfig::FilterModelConfig() :
         }
     }
 
-    const double nkVddt = N16 * kVddt;
-    const double nVmin = N16 * vmin;
+    const double nVddt = N16 * Vddt;
+	const double nVmin = N16 * vmin;
 
     for (unsigned int i = 0; i < (1 << 16); i++)
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-        //
-        // The returned value must be corrected for translation. Vg always
-        // takes part in a subtraction as follows:
-        //
-        //   k*Vg - Vx = (k*Vg - t) - (Vx - t)
-        //
-        // I.e. k*Vg - t must be returned.
-        const double Vg = nkVddt - sqrt((double)(i << 16));
-        const double tmp = k * Vg - nVmin;
+        const double Vg = nVddt - sqrt((double)(i << 16));
+		const double tmp = Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
-        vcr_kVg[i] = static_cast<unsigned short>(tmp + 0.5);
+        vcr_Vg[i] = static_cast<unsigned short>(tmp + 0.5);
     }
 
     //  EKV model:
@@ -245,23 +237,22 @@ FilterModelConfig::FilterModelConfig() :
     //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
     //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
 
-    const double kVt = k * Vth;
     // moderate inversion characteristic current
-    const double Is = 2. * uCox * Ut * Ut / k * WL_vcr;
+    const double Is = (2. * uCox * Ut * Ut) * WL_vcr;
 
     // Normalized current factor for 1 cycle at 1MHz.
     const double N15 = norm * ((1 << 15) - 1);
     const double n_Is = N15 * 1.0e-6 / C * Is;
 
-    // kVg_Vx = k*Vg - Vx
+    // kVgt_Vx = k*(Vg - Vt) - Vx
     // I.e. if k != 1.0, Vg must be scaled accordingly.
-    for (int kVg_Vx = 0; kVg_Vx < (1 << 16); kVg_Vx++)
+    for (int kVgt_Vx = 0; kVgt_Vx < (1 << 16); kVgt_Vx++)
     {
-        const double log_term = log1p(exp((kVg_Vx / N16 - kVt) / (2. * Ut)));
+        const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
         // Scaled by m*2^15
         const double tmp = n_Is * log_term * log_term;
         assert(tmp > -0.5 && tmp < 65535.5);
-        vcr_n_Ids_term[kVg_Vx] = static_cast<unsigned short>(tmp + 0.5);
+        vcr_n_Ids_term[kVgt_Vx] = static_cast<unsigned short>(tmp + 0.5);
     }
 }
 
@@ -303,18 +294,26 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
 std::unique_ptr<Integrator> FilterModelConfig::buildIntegrator()
 {
     // Vdd - Vth, normalized so that translated values can be subtracted:
-    // k*Vddt - x = (k*Vddt - t) - (x - t)
-    double tmp = N16 * (kVddt - vmin);
+    // Vddt - x = (Vddt - t) - (x - t)
+    double tmp = N16 * (Vddt - vmin);
     assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short nkVddt = static_cast<unsigned short>(tmp + 0.5);
+    const unsigned short nVddt = static_cast<unsigned short>(tmp + 0.5);
+
+    tmp = N16 * (Vth - vmin);
+    assert(tmp > -0.5 && tmp < 65535.5);
+    const unsigned short nVt = static_cast<unsigned short>(tmp + 0.5);
+
+    tmp = N16 * vmin;
+    assert(tmp > -0.5 && tmp < 65535.5);
+    const unsigned short nVmin = static_cast<unsigned short>(tmp + 0.5);
 
     // Normalized snake current factor, 1 cycle at 1MHz.
     // Fit in 5 bits.
-    tmp = denorm * (1 << 13) * (uCox / (2. * k) * WL_snake * 1.0e-6 / C);
+    tmp = denorm * (1 << 13) * (uCox / 2. * WL_snake * 1.0e-6 / C);
     assert(tmp > -0.5 && tmp < 65535.5);
     const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
 
-    return std::unique_ptr<Integrator>(new Integrator(vcr_kVg, vcr_n_Ids_term, opamp_rev, nkVddt, n_snake));
+    return std::unique_ptr<Integrator>(new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, nVddt, nVt, nVmin, n_snake, N16));
 }
 
 } // namespace reSIDfp
