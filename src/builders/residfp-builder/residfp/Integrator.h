@@ -166,26 +166,26 @@ private:
 #if 0
     mutable double n;             // Slope factor n = 1/(Cox/(Cox+Cdep)) ~ 1.4
 #endif
-	const double N16;
+    const double N16;
     const unsigned short Vddt;
-	const unsigned short nVt;
-	const unsigned short nVmin;
+    const unsigned short nVt;
+    const unsigned short nVmin;
     const unsigned short n_snake;
 
 public:
     Integrator(const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
                const unsigned short* opamp_rev, unsigned short Vddt, unsigned short nVt,
-			   unsigned short nVmin, unsigned short n_snake, double N16) :
+               unsigned short nVmin, unsigned short n_snake, double N16) :
         vcr_Vg(vcr_Vg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(opamp_rev),
         Vddt_Vw_2(0),
         vx(0),
         vc(0),
-		N16(N16),
+        N16(N16),
         Vddt(Vddt),
-		nVt(nVt),
-		nVmin(nVmin),
+        nVt(nVt),
+        nVmin(nVmin),
         n_snake(n_snake) {}
 
     void setVw(unsigned short Vw) { Vddt_Vw_2 = ((Vddt - Vw) * (Vddt - Vw)) >> 1; }
@@ -238,10 +238,10 @@ int Integrator::solve(int vi) const
     const int n_I_vcr = (If - Ir);  //FIXME multiply by n
 
 #if 0
-	// estimate new slope factor based on gate voltage
-	const double gamma = 1.0;   // body effect factor
-	const double phi = 0.8;     // bulk Fermi potential
-	const double nVp = static_cast<double>(Vp) / N16;
+    // estimate new slope factor based on gate voltage
+    const double gamma = 1.0;   // body effect factor
+    const double phi = 0.8;     // bulk Fermi potential
+    const double nVp = static_cast<double>(Vp) / N16;
     n = 1. + (gamma / sqrt(nVp + phi));
     assert((n > 1.2) && (n < 1.8));
 #endif

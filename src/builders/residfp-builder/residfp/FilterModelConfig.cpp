@@ -218,14 +218,14 @@ FilterModelConfig::FilterModelConfig() :
     }
 
     const double nVddt = N16 * Vddt;
-	const double nVmin = N16 * vmin;
+    const double nVmin = N16 * vmin;
 
     for (unsigned int i = 0; i < (1 << 16); i++)
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
         const double Vg = nVddt - sqrt((double)(i << 16));
-		const double tmp = Vg - nVmin;
+        const double tmp = Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         vcr_Vg[i] = static_cast<unsigned short>(tmp + 0.5);
     }
