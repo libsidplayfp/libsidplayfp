@@ -233,9 +233,12 @@ float Integrator6581::solve(float vi) const
     // VCR current
     const float n_I_vcr = (vcr_n_Ids_term->output(Vgs) - vcr_n_Ids_term->output(Vgd)) * n;
 
-    // estimate new slope factor
 #if 0
-    n = 1. + (0.71 / sqrt(Vp + 0.9));
+    // estimate new slope factor
+    const double gamma = 1.0;   // body effect factor
+    const double phi = 0.8;     // bulk Fermi potential
+    const double Ut = 26.0e-3;  // Thermal voltage
+    n = 1. + (gamma / (2 * sqrt(Vp + phi + 4.*Ut)));
     assert((n > 1.2) && (n < 1.8));
 #else
     n = 1.;
