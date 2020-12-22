@@ -132,9 +132,8 @@ void ReSIDfp::sampling(float systemclock, float freq,
 
     try
     {
-        // Round half frequency to the nearest multiple of 5000
-        const int halfFreq = 5000*((static_cast<int>(freq)+5000)/10000);
-        m_sid.setSamplingParameters(systemclock, sampleMethod, freq, std::min(halfFreq, 20000));
+        const int halfFreq = (freq > 44000) ? 20000 : 9 * freq / 20;
+        m_sid.setSamplingParameters(systemclock, sampleMethod, freq, halfFreq);
     }
     catch (reSIDfp::SIDError const &)
     {
