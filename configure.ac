@@ -3,11 +3,11 @@ m4_define([lib_minor], [1])
 m4_define([lib_level], [0a])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
-AC_INIT([libsidplayfp], [lib_version], [], [], [http://sourceforge.net/projects/sidplay-residfp/])
+AC_INIT([libsidplayfp],[lib_version],[],[],[http://sourceforge.net/projects/sidplay-residfp/])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIRS([m4 src/builders/exsid-builder/driver/m4])
 AC_CONFIG_SRCDIR([src/sidplayfp/sidplayfp.cpp])
-AC_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([src/config.h])
 AM_INIT_AUTOMAKE
 
 LIB_MAJOR=lib_major
