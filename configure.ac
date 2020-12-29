@@ -317,7 +317,9 @@ AS_IF([test "x$build_exsid_driver" = xyes],
         [AC_C_RESTRICT
         AC_CHECK_HEADERS([threads.h],
                 [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])
-                AC_SEARCH_LIBS([pthread_create], [pthread])],
+                AC_LANG_PUSH([C])
+                AC_SEARCH_LIBS([pthread_create], [pthread])
+                AC_LANG_POP],
                 [AX_PTHREAD(
                         [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])]
                         [AC_DEFINE([HAVE_PTHREAD_H], 1, [Define to 1 if you have pthread.h])]
