@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -24,7 +24,6 @@
 #define SIDDATABASE_H
 
 #include <stdint.h>
-#include <memory>
 
 #include "sidplayfp/siddefs.h"
 
@@ -42,7 +41,7 @@ class iniParser;
 class SID_EXTERN SidDatabase
 {
 private:
-    std::auto_ptr<libsidplayfp::iniParser> m_parser;
+    libsidplayfp::iniParser* m_parser;
 
     const char *errorString;
 

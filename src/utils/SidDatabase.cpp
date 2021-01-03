@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -97,7 +97,8 @@ const char *parseTime(const char *str, int_least32_t &result)
 
 bool SidDatabase::open(const char *filename)
 {
-    m_parser.reset(new libsidplayfp::iniParser());
+    delete m_parser;
+    m_parser = new libsidplayfp::iniParser();
 
     if (!m_parser->open(filename))
     {
@@ -111,7 +112,8 @@ bool SidDatabase::open(const char *filename)
 
 void SidDatabase::close()
 {
-    m_parser.reset(nullptr);
+    delete m_parser;
+    m_parser = nullptr;
 }
 
 int_least32_t SidDatabase::length(SidTune &tune)
@@ -151,7 +153,7 @@ int_least32_t SidDatabase::length(const char *md5, unsigned int song)
 
 int_least32_t SidDatabase::lengthMs(const char *md5, unsigned int song)
 {
-    if (m_parser.get() == nullptr)
+    if (m_parser == nullptr)
     {
         errorString = ERR_NO_DATABASE_LOADED;
         return -1;

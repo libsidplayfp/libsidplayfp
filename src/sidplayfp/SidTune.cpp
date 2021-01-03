@@ -1,7 +1,7 @@
  /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtu
 
 SidTune::~SidTune()
 {
-    // Needed to delete auto_ptr with complete type
+    delete tune;
 }
 
 void SidTune::setFileNameExtensions(const char **fileNameExt)
@@ -74,12 +74,14 @@ void SidTune::load(const char* fileName, bool separatorIsSlash)
 {
     try
     {
-        tune.reset(SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash));
+        delete tune;
+        tune = SidTuneBase::load(fileName, fileNameExtensions, separatorIsSlash);
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
     catch (loadError const &e)
     {
+        tune =  nullptr;
         m_status = false;
         m_statusString = e.message();
     }
@@ -89,12 +91,14 @@ void SidTune::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
 {
     try
     {
-        tune.reset(SidTuneBase::read(sourceBuffer, bufferLen));
+        delete tune;
+        tune = SidTuneBase::read(sourceBuffer, bufferLen);
         m_status = true;
         m_statusString = MSG_NO_ERRORS;
     }
     catch (loadError const &e)
     {
+        tune =  nullptr;
         m_status = false;
         m_statusString = e.message();
     }
@@ -102,17 +106,17 @@ void SidTune::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
 
 unsigned int SidTune::selectSong(unsigned int songNum)
 {
-    return tune.get() != nullptr ? tune->selectSong(songNum) : 0;
+    return tune != nullptr ? tune->selectSong(songNum) : 0;
 }
 
 const SidTuneInfo* SidTune::getInfo() const
 {
-    return tune.get() != nullptr ? tune->getInfo() : nullptr;
+    return tune != nullptr ? tune->getInfo() : nullptr;
 }
 
 const SidTuneInfo* SidTune::getInfo(unsigned int songNum)
 {
-    return tune.get() != nullptr ? tune->getInfo(songNum) : nullptr;
+    return tune != nullptr ? tune->getInfo(songNum) : nullptr;
 }
 
 bool SidTune::getStatus() const { return m_status; }
@@ -121,7 +125,7 @@ const char* SidTune::statusString() const { return m_statusString; }
 
 bool SidTune::placeSidTuneInC64mem(sidmemory& mem)
 {
-    if (tune.get() == nullptr)
+    if (tune == nullptr)
         return false;
 
     tune->placeSidTuneInC64mem(mem);
@@ -130,15 +134,15 @@ bool SidTune::placeSidTuneInC64mem(sidmemory& mem)
 
 const char* SidTune::createMD5(char *md5)
 {
-    return tune.get() != nullptr ? tune->createMD5(md5) : nullptr;
+    return tune != nullptr ? tune->createMD5(md5) : nullptr;
 }
 
 const char* SidTune::createMD5New(char *md5)
 {
-    return tune.get() != nullptr ? tune->createMD5New(md5) : nullptr;
+    return tune != nullptr ? tune->createMD5New(md5) : nullptr;
 }
 
 const uint_least8_t* SidTune::c64Data() const
 {
-    return tune.get() != nullptr ? tune->c64Data() : nullptr;
+    return tune != nullptr ? tune->c64Data() : nullptr;
 }

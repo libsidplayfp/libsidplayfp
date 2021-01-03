@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -24,7 +24,6 @@
 #define SIDTUNE_H
 
 #include <stdint.h>
-#include <memory>
 
 #include "sidplayfp/siddefs.h"
 
@@ -49,7 +48,7 @@ private:
     static const char** fileNameExtensions;
 
 private:  // -------------------------------------------------------------
-    std::auto_ptr<libsidplayfp::SidTuneBase> tune;
+    libsidplayfp::SidTuneBase* tune;
 
     const char* m_statusString;
 
