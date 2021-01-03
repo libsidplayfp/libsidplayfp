@@ -108,8 +108,6 @@ private:
     /// The control register right-shifted 4 bits; used for output function table lookup.
     unsigned int waveform;
 
-    int floating_output_ttl;
-
     unsigned int waveform_output;
 
     /// Current and previous accumulator value.
@@ -123,10 +121,9 @@ private:
     unsigned int osc3;
 
     /// Remaining time to fully reset shift register.
-    int shift_register_reset;
+    unsigned int shift_register_reset;
 
-    /// Current chip model's shift register reset time.
-    int model_shift_register_reset;
+    unsigned int floating_output_ttl;
 
     /// The control register bits. Gate is handled by EnvelopeGenerator.
     //@{
@@ -148,9 +145,11 @@ private:
 
     void write_shift_register();
 
-    void reset_shift_register();
-
     void set_noise_output();
+
+    void waveBitfade();
+
+    void shiftregBitfade();
 
 public:
     void setWaveformModels(matrix_t* models);
@@ -195,13 +194,13 @@ public:
         no_pulse(0),
         pulse_output(0),
         waveform(0),
-        floating_output_ttl(0),
         waveform_output(0),
         accumulator(0x555555),          // Accumulator's even bits are high on powerup
         freq(0),
         tri_saw_pipeline(0x555),
         osc3(0),
         shift_register_reset(0),
+        floating_output_ttl(0),
         test(false),
         sync(false),
         msb_rising(false),
@@ -295,7 +294,7 @@ void WaveformGenerator::clock()
     {
         if (unlikely(shift_register_reset != 0) && unlikely(--shift_register_reset == 0))
         {
-            reset_shift_register();
+            shiftregBitfade();
 
             // New noise waveform output.
             set_noise_output();
@@ -382,7 +381,7 @@ float WaveformGenerator::output(const WaveformGenerator* ringModulator)
         // Age floating DAC input.
         if (likely(floating_output_ttl != 0) && unlikely(--floating_output_ttl == 0))
         {
-            osc3 = waveform_output = 0;
+            waveBitfade();
         }
     }
 
