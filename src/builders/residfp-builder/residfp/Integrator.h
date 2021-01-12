@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004, 2010 Dag Lem <resid@nimrod.no>
  *
@@ -25,6 +25,9 @@
 
 #include <stdint.h>
 #include <cassert>
+#ifdef SLOPE_FACTOR
+#  include <cmath>
+#endif
 
 #include "siddefs-fp.h"
 
@@ -163,8 +166,13 @@ private:
     unsigned int Vddt_Vw_2;
     mutable int vx;
     mutable int vc;
-#if 0
-    mutable double n;             // Slope factor n = 1/(Cox/(Cox+Cdep)) ~ 1.4
+#ifdef SLOPE_FACTOR
+    // Slope factor n = 1/k
+    // where k is the gate coupling coefficient
+    // k = Cox/(Cox+Cdep) ~ 0.7
+    mutable double n;
+#else
+    const int n;
 #endif
     const double N16;
     const unsigned short Vddt;
@@ -182,6 +190,11 @@ public:
         Vddt_Vw_2(0),
         vx(0),
         vc(0),
+#ifdef SLOPE_FACTOR
+        n(1.4),
+#else
+        n(1),
+#endif
         N16(N16),
         Vddt(Vddt),
         nVt(nVt),
@@ -223,8 +236,8 @@ int Integrator::solve(int vi) const
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
     const int Vg = static_cast<int>(vcr_Vg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
-    const int Vp = (Vg - nVt); //FIXME divide by n
-    const int kVg = Vp - nVmin;
+    const int Vp = (Vg - nVt) / n; // Pinch-off voltage
+    const int kVg = static_cast<int>(Vp) - nVmin;
 
     // VCR voltages for EKV model table lookup.
     const int Vgs = (vx < kVg) ? kVg - vx : 0;
@@ -235,14 +248,15 @@ int Integrator::solve(int vi) const
     // VCR current, scaled by m*2^15*2^15 = m*2^30
     const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[Vgs]) << 15;
     const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[Vgd]) << 15;
-    const int n_I_vcr = (If - Ir);  //FIXME multiply by n
+    const int n_I_vcr = (If - Ir) * n;
 
-#if 0
+#ifdef SLOPE_FACTOR
     // estimate new slope factor based on gate voltage
     const double gamma = 1.0;   // body effect factor
     const double phi = 0.8;     // bulk Fermi potential
-    const double nVp = static_cast<double>(Vp) / N16;
-    n = 1. + (gamma / sqrt(nVp + phi));
+    const double Ut = 26.0e-3;  // Thermal voltage
+    const double nVp = Vp / N16;
+    n = 1. + (gamma / (2 * sqrt(nVp + phi + 4*Ut)));
     assert((n > 1.2) && (n < 1.8));
 #endif
 
