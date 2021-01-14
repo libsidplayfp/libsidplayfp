@@ -399,8 +399,7 @@ void exSID_exit(void)
 		thrd_join(thread_output, NULL);
 #endif
 
-		/* we don't purge buffers here to ensure the device processes all queued data and its
-		 * state machine goes back to standby. Purging here could otherwise leave the device stuck. */
+		xSfw_usb_purge_buffers(ftdi); // Purge both Rx and Tx buffers
 
 		ftdi_status = xSfw_usb_close(ftdi);
 		if (ftdi_status < 0)
