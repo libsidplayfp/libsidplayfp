@@ -40,9 +40,7 @@ src/builders/residfp-builder/residfp/COPYING \
 src/builders/residfp-builder/residfp/README \
 src/builders/resid-builder/resid/AUTHORS \
 src/builders/resid-builder/resid/ChangeLog \
-src/builders/resid-builder/resid/COPYING \
 src/builders/resid-builder/resid/configure.in \
-src/builders/resid-builder/resid/INSTALL \
 src/builders/resid-builder/resid/Makefile.am \
 src/builders/resid-builder/resid/NEWS \
 src/builders/resid-builder/resid/README \
