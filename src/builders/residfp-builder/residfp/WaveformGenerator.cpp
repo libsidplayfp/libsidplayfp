@@ -272,18 +272,18 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
 void WaveformGenerator::waveBitfade()
 {
-	waveform_output &= waveform_output >> 1;
-	osc3 = waveform_output;
-	if (waveform_output != 0)
-		floating_output_ttl = is6581 ? FLOATING_OUTPUT_FADE_6581R3 : FLOATING_OUTPUT_FADE_8580R5;
+    waveform_output &= waveform_output >> 1;
+    osc3 = waveform_output;
+    if (waveform_output != 0)
+        floating_output_ttl = is6581 ? FLOATING_OUTPUT_FADE_6581R3 : FLOATING_OUTPUT_FADE_8580R5;
 }
 
 void WaveformGenerator::shiftregBitfade()
 {
-	shift_register |= 1;
-	shift_register |= shift_register << 1;
-	if (shift_register != 0x7fffff)
-		shift_register_reset = is6581 ? SHIFT_REGISTER_FADE_6581R3 : SHIFT_REGISTER_FADE_8580R5;
+    shift_register |= 1;
+    shift_register |= shift_register << 1;
+    if (shift_register != 0x7fffff)
+        shift_register_reset = is6581 ? SHIFT_REGISTER_FADE_6581R3 : SHIFT_REGISTER_FADE_8580R5;
 }
 
 void WaveformGenerator::reset()
