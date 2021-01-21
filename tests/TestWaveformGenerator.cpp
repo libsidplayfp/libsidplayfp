@@ -42,7 +42,7 @@ TEST(TestClockShiftRegister)
     generator.shift_register = 0x35555e;
     generator.clock_shift_register(0);
 
-    CHECK_EQUAL(2528, generator.noise_output);
+    CHECK_EQUAL(0x9e0, generator.noise_output);
 }
 
 TEST(TestNoiseOutput)
@@ -53,7 +53,7 @@ TEST(TestNoiseOutput)
     generator.shift_register = 0x35555f;
     generator.set_noise_output();
 
-    CHECK_EQUAL(3616, generator.noise_output);
+    CHECK_EQUAL(0xe20, generator.noise_output);
 }
 
 TEST(TestWriteShiftRegister)
@@ -61,10 +61,10 @@ TEST(TestWriteShiftRegister)
     reSIDfp::WaveformGenerator generator;
     generator.reset();
 
-    generator.waveform_output = 0x5a7;
+    generator.waveform = 0xf;
     generator.write_shift_register();
 
-    CHECK_EQUAL(0xfe0, generator.noise_output);
+    CHECK_EQUAL(0x2dd6ea, generator.shift_register);
 }
 
 TEST(TestSetTestBit)
@@ -79,7 +79,7 @@ TEST(TestSetTestBit)
     generator.writeCONTROL_REG(0x08); // set test bit
     generator.writeCONTROL_REG(0x00); // unset test bit
 
-    CHECK_EQUAL(2544, generator.noise_output);
+    CHECK_EQUAL(0x9f0, generator.noise_output);
 }
 
 TEST(TestNoiseWriteBack1)
@@ -106,7 +106,7 @@ TEST(TestNoiseWriteBack1)
     generator.writeCONTROL_REG(0x80);
     generator.clock();
     generator.output(&modulator);
-    CHECK_EQUAL(0xfc, (int)generator.readOSC());
+    CHECK_EQUAL(0xfe, (int)generator.readOSC());
     generator.writeCONTROL_REG(0x88);
     generator.clock();
     generator.output(&modulator);
@@ -127,7 +127,7 @@ TEST(TestNoiseWriteBack1)
     generator.writeCONTROL_REG(0x80);
     generator.clock();
     generator.output(&modulator);
-    CHECK_EQUAL(0xb1, (int)generator.readOSC());
+    CHECK_EQUAL(0xb5, (int)generator.readOSC());
     generator.writeCONTROL_REG(0x88);
     generator.clock();
     generator.output(&modulator);
@@ -135,6 +135,27 @@ TEST(TestNoiseWriteBack1)
     generator.clock();
     generator.output(&modulator);
     CHECK_EQUAL(0xd8, (int)generator.readOSC());
+    generator.writeCONTROL_REG(0x88);
+    generator.clock();
+    generator.output(&modulator);
+    generator.writeCONTROL_REG(0x80);
+    generator.clock();
+    generator.output(&modulator);
+    CHECK_EQUAL(0x6a, (int)generator.readOSC());
+    generator.writeCONTROL_REG(0x88);
+    generator.clock();
+    generator.output(&modulator);
+    generator.writeCONTROL_REG(0x80);
+    generator.clock();
+    generator.output(&modulator);
+    CHECK_EQUAL(0xb1, (int)generator.readOSC());
+    generator.writeCONTROL_REG(0x88);
+    generator.clock();
+    generator.output(&modulator);
+    generator.writeCONTROL_REG(0x80);
+    generator.clock();
+    generator.output(&modulator);
+    CHECK_EQUAL(0xf8, (int)generator.readOSC());
 }
 
 }
