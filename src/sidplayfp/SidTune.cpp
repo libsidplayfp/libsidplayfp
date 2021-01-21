@@ -49,13 +49,15 @@ const char* defaultFileNameExt[] =
 
 const char** SidTune::fileNameExtensions = defaultFileNameExt;
 
-SidTune::SidTune(const char* fileName, const char **fileNameExt, bool separatorIsSlash)
+SidTune::SidTune(const char* fileName, const char **fileNameExt, bool separatorIsSlash) :
+    tune(nullptr)
 {
     setFileNameExtensions(fileNameExt);
     load(fileName, separatorIsSlash);
 }
 
-SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtuneLength)
+SidTune::SidTune(const uint_least8_t* oneFileFormatSidtune, uint_least32_t sidtuneLength) :
+    tune(nullptr)
 {
     read(oneFileFormatSidtune, sidtuneLength);
 }
