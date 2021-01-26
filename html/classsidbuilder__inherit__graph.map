@@ -1,0 +1,7 @@
+<map id="sidbuilder" name="sidbuilder">
+<area shape="rect" id="node1" title=" " alt="" coords="223,5,310,32"/>
+<area shape="rect" id="node2" href="$classexSIDBuilder.html" title=" " alt="" coords="5,80,112,107"/>
+<area shape="rect" id="node3" href="$classHardSIDBuilder.html" title=" " alt="" coords="137,80,258,107"/>
+<area shape="rect" id="node4" href="$classReSIDBuilder.html" title=" " alt="" coords="283,80,389,107"/>
+<area shape="rect" id="node5" href="$classReSIDfpBuilder.html" title=" " alt="" coords="414,80,533,107"/>
+</map>

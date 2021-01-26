@@ -1,0 +1,7 @@
+<map id="libsidplayfp::SidTuneBase" name="libsidplayfp::SidTuneBase">
+<area shape="rect" id="node1" title=" " alt="" coords="212,5,400,32"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1MUS.html" title=" " alt="" coords="5,80,140,107"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1p00.html" title=" " alt="" coords="165,80,295,107"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1prg.html" title=" " alt="" coords="320,80,447,107"/>
+<area shape="rect" id="node5" href="$classlibsidplayfp_1_1PSID.html" title=" " alt="" coords="471,80,607,107"/>
+</map>

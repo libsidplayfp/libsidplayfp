@@ -1,0 +1,26 @@
+<map id="libsidplayfp::Bank" name="libsidplayfp::Bank">
+<area shape="rect" id="node1" title=" " alt="" coords="5,351,144,377"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1c64cia1.html" title=" " alt="" coords="222,5,378,32"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1c64cia2.html" title=" " alt="" coords="222,56,378,83"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="226,107,374,133"/>
+<area shape="rect" id="node11" href="$classlibsidplayfp_1_1c64vic.html" title=" " alt="" coords="226,157,374,184"/>
+<area shape="rect" id="node12" href="$classlibsidplayfp_1_1ColorRAMBank.html" title=" " alt="" coords="199,208,401,235"/>
+<area shape="rect" id="node13" href="$classlibsidplayfp_1_1DisconnectedBusBank.html" title=" " alt="" coords="203,259,397,301"/>
+<area shape="rect" id="node14" href="$classlibsidplayfp_1_1ExtraSidBank.html" title=" " alt="" coords="203,325,397,352"/>
+<area shape="rect" id="node15" href="$classlibsidplayfp_1_1IOBank.html" title=" " alt="" coords="223,376,377,403"/>
+<area shape="rect" id="node16" href="$classlibsidplayfp_1_1romBank.html" title=" " alt="" coords="197,427,403,453"/>
+<area shape="rect" id="node17" href="$classlibsidplayfp_1_1SidBank.html" title=" " alt="" coords="221,477,379,504"/>
+<area shape="rect" id="node18" href="$classlibsidplayfp_1_1SystemRAMBank.html" title=" " alt="" coords="192,528,408,555"/>
+<area shape="rect" id="node19" href="$classlibsidplayfp_1_1ZeroRAMBank.html" title=" " alt="" coords="201,579,399,605"/>
+<area shape="rect" id="node20" href="$classlibsidplayfp_1_1romBank.html" title=" " alt="" coords="217,630,383,671"/>
+<area shape="rect" id="node22" href="$classlibsidplayfp_1_1romBank.html" title=" " alt="" coords="217,695,383,737"/>
+<area shape="rect" id="node5" href="$classlibsidplayfp_1_1NullSid.html" title=" " alt="" coords="495,81,647,108"/>
+<area shape="rect" id="node6" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="494,132,649,159"/>
+<area shape="rect" id="node7" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="742,56,886,83"/>
+<area shape="rect" id="node8" href="$classlibsidplayfp_1_1HardSID.html" title=" " alt="" coords="735,107,893,133"/>
+<area shape="rect" id="node9" href="$classlibsidplayfp_1_1ReSID.html" title=" " alt="" coords="742,157,886,184"/>
+<area shape="rect" id="node10" href="$classlibsidplayfp_1_1ReSIDfp.html" title=" " alt="" coords="735,208,893,235"/>
+<area shape="rect" id="node21" href="$classlibsidplayfp_1_1CharacterRomBank.html" title=" " alt="" coords="456,637,687,664"/>
+<area shape="rect" id="node23" href="$classlibsidplayfp_1_1BasicRomBank.html" title=" " alt="" coords="470,695,673,721"/>
+<area shape="rect" id="node24" href="$classlibsidplayfp_1_1KernalRomBank.html" title=" " alt="" coords="467,745,676,772"/>
+</map>

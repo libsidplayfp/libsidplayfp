@@ -1,0 +1,10 @@
+<map id="libsidplayfp::c64sid" name="libsidplayfp::c64sid">
+<area shape="rect" id="node1" title=" " alt="" coords="178,80,326,107"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1NullSid.html" title=" " alt="" coords="88,155,240,181"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="264,155,419,181"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="183,5,321,32"/>
+<area shape="rect" id="node5" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="5,229,149,256"/>
+<area shape="rect" id="node6" href="$classlibsidplayfp_1_1HardSID.html" title=" " alt="" coords="174,229,333,256"/>
+<area shape="rect" id="node7" href="$classlibsidplayfp_1_1ReSID.html" title=" " alt="" coords="357,229,501,256"/>
+<area shape="rect" id="node8" href="$classlibsidplayfp_1_1ReSIDfp.html" title=" " alt="" coords="525,229,683,256"/>
+</map>
