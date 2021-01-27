@@ -275,7 +275,7 @@ AC_ARG_WITH(
 AS_IF(
     [test "x$with_exsid" != "xno"],
     [PKG_CHECK_MODULES([EXSID],
-        [libexsid >= 1.0],
+        [libexsid >= 2.0],
         [AC_DEFINE([HAVE_EXSID], 1, [Define to 1 if you have libexsid (-lexsid).])
         build_exsid_builder=yes],
         [AC_MSG_WARN([$EXSID_PKG_ERRORS] [- using internal driver])

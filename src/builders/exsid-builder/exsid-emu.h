@@ -45,6 +45,7 @@ private:
 
     // exSID specific data
     static unsigned int sid;
+    void * exsid;
 
     bool m_status;
 
