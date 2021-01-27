@@ -68,8 +68,7 @@ exSID::exSID(sidbuilder *builder) :
 
     m_status = true;
     sid++;
-    sidemu::reset();
-
+  
     muted[0] = muted[1] = muted[2] = false;
 }
 
