@@ -32,6 +32,12 @@ Copyright (c) 2010-2021 Leandro Nini <drfiemost@users.sourceforge.net>
 
 -----------------------------------------------------------------------------
 
+API documentation available online at
+
+https://libsidplayfp.github.io/libsidplayfp/
+
+-----------------------------------------------------------------------------
+
 * Build
 
 This package uses autotools so the usual ./configure && make is enough to build
