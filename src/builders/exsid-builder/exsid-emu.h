@@ -30,11 +30,6 @@
 namespace libsidplayfp
 {
 
-#define EXSID_VOICES 3
-
-// Approx 30ms
-#define EXSID_DELAY_CYCLES 50480
-
 /***************************************************************************
  * exSID SID Specialisation
  ***************************************************************************/
@@ -45,6 +40,7 @@ private:
 
     // exSID specific data
     static unsigned int sid;
+    void * exsid;
 
     bool m_status;
 
