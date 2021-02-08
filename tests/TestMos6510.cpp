@@ -21,12 +21,15 @@
 #include "UnitTest++/UnitTest++.h"
 #include "UnitTest++/TestReporter.h"
 
+
 #include "../src/EventScheduler.h"
+#include "../src/EventScheduler.cpp"
 
 #define private protected
 
 #include "../src/c64/CPU/mos6510.h"
 #include "../src/c64/CPU/opcodes.h"
+#include "../src/c64/CPU/mos6510.cpp"
 
 #include <iostream>
 #include <iomanip>

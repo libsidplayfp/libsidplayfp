@@ -21,6 +21,9 @@
 #include "UnitTest++/UnitTest++.h"
 #include "UnitTest++/TestReporter.h"
 
+#include "../src/builders/residfp-builder/residfp/WaveformCalculator.cpp"
+#include "../src/builders/residfp-builder/residfp/Dac.cpp"
+
 #include "../src/builders/residfp-builder/residfp/WaveformCalculator.h"
 
 #define private public
@@ -28,6 +31,7 @@
 #define class struct
 
 #include "../src/builders/residfp-builder/residfp/WaveformGenerator.h"
+#include "../src/builders/residfp-builder/residfp/WaveformGenerator.cpp"
 
 using namespace UnitTest;
 

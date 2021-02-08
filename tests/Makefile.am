@@ -22,26 +22,19 @@ check_PROGRAMS = $(TESTS)
 
 TestEnvelopeGenerator_SOURCES = \
 Main.cpp \
-TestEnvelopeGenerator.cpp \
-$(top_srcdir)/src/builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
-$(top_srcdir)/src/builders/residfp-builder/residfp/Dac.cpp
+TestEnvelopeGenerator.cpp
 
 TestWaveformGenerator_SOURCES = \
 Main.cpp \
-TestWaveformGenerator.cpp\
-$(top_srcdir)/src/builders/residfp-builder/residfp/WaveformGenerator.cpp \
-$(top_srcdir)/src/builders/residfp-builder/residfp/WaveformCalculator.cpp \
-$(top_srcdir)/src/builders/residfp-builder/residfp/Dac.cpp
+TestWaveformGenerator.cpp
 
 TestSpline_SOURCES = \
 Main.cpp \
-TestSpline.cpp \
-$(top_srcdir)/src/builders/residfp-builder/residfp/Spline.cpp
+TestSpline.cpp
 
 TestDac_SOURCES = \
 Main.cpp \
-TestDac.cpp \
-$(top_srcdir)/src/builders/residfp-builder/residfp/Dac.cpp
+TestDac.cpp
 
 TestPSID_SOURCES = \
 Main.cpp \
@@ -55,8 +48,6 @@ TestMUS_LDADD = $(top_builddir)/src/libsidplayfp.la
 
 TestMos6510_SOURCES = \
 Main.cpp \
-TestMos6510.cpp \
-$(top_srcdir)/src/c64/CPU/mos6510.cpp \
-$(top_srcdir)/src/EventScheduler.cpp
+TestMos6510.cpp
 
 endif

@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: deps
+      run: sudo apt-get install libgcrypt20-dev xa65 libunittest++-dev #libftdi1-dev
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: bootstrap
+      run: autoreconf -vfi
+    - name: configure
+      run: ./configure
+    - name: make distcheck
+      run: make distcheck

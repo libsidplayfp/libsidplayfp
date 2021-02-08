@@ -24,6 +24,7 @@
 #include <limits>
 
 #include "../src/builders/residfp-builder/residfp/Spline.h"
+#include "../src/builders/residfp-builder/residfp/Spline.cpp"
 
 using namespace UnitTest;
 using namespace reSIDfp;

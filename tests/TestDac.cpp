@@ -22,6 +22,7 @@
 #include "UnitTest++/TestReporter.h"
 
 #include "../src/builders/residfp-builder/residfp/Dac.h"
+#include "../src/builders/residfp-builder/residfp/Dac.cpp"
 
 using namespace UnitTest;
 using namespace reSIDfp;

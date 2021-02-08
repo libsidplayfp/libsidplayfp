@@ -21,11 +21,14 @@
 #include "UnitTest++/UnitTest++.h"
 #include "UnitTest++/TestReporter.h"
 
+#include "../src/builders/residfp-builder/residfp/Dac.cpp"
+
 #define private public
 #define protected public
 #define class struct
 
 #include "../src/builders/residfp-builder/residfp/EnvelopeGenerator.h"
+#include "../src/builders/residfp-builder/residfp/EnvelopeGenerator.cpp"
 
 using namespace UnitTest;
 
