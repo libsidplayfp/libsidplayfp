@@ -39,12 +39,12 @@ TestDac.cpp
 TestPSID_SOURCES = \
 Main.cpp \
 TestPSID.cpp
-TestPSID_LDADD = $(top_builddir)/src/libsidplayfp.la
+TestPSID_LDADD = $(top_builddir)/src/libsidplayfp.la $(GCRYPT_LIBS) $(EXSID_LIBS)
 
 TestMUS_SOURCES = \
 Main.cpp \
 TestMUS.cpp
-TestMUS_LDADD = $(top_builddir)/src/libsidplayfp.la
+TestMUS_LDADD = $(top_builddir)/src/libsidplayfp.la $(GCRYPT_LIBS) $(EXSID_LIBS)
 
 TestMos6510_SOURCES = \
 Main.cpp \

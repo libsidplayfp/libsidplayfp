@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: deps
-      run: sudo apt-get install libgcrypt20-dev xa65 libunittest++-dev #libftdi1-dev
+      run: sudo apt-get install libgcrypt20-dev xa65 libunittest++-dev libftdi1-dev
     - uses: actions/checkout@v2
       with:
         submodules: true
