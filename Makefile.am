@@ -26,6 +26,7 @@ AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_srcdir)/src \
 ${W32_CPPFLAGS} \
 $(EXSID_CFLAGS) \
+$(PTHREAD_CFLAGS) \
 $(FTDI_CFLAGS) \
 @debug_flags@
 
@@ -205,16 +206,15 @@ src/builders/residfp-builder/libsidplayfp-residfp.la \
 src/builders/resid-builder/libsidplayfp-resid.la \
 $(GCRYPT_LIBS)
 
+src_libsidplayfp_la_CPPFLAGS = $(GCRYPT_CFLAGS) $(AM_CPPFLAGS)
+
 if HARDSID
   src_libsidplayfp_la_LIBADD += src/builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
 if EXSID_SUPPORT
-  src_libsidplayfp_la_LIBADD += src/builders/exsid-builder/libsidplayfp-exsid.la \
-  $(EXSID_LIBS)
+  src_libsidplayfp_la_LIBADD += src/builders/exsid-builder/libsidplayfp-exsid.la
 endif
-
-src_libsidplayfp_la_CPPFLAGS = $(GCRYPT_CFLAGS) $(AM_CPPFLAGS)
 
 #=========================================================
 # residfp
@@ -379,6 +379,10 @@ src/builders/exsid-builder/exsid-builder.cpp  \
 src/builders/exsid-builder/exsid-emu.cpp \
 src/builders/exsid-builder/exsid-emu.h \
 $(exsid_src)
+
+src_builders_exsid_builder_libsidplayfp_exsid_la_LIBADD = \
+    $(EXSID_LIBS) \
+    $(PTHREAD_LIBS)
 endif
 
 #=========================================================
