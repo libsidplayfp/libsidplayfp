@@ -21,10 +21,14 @@ jobs:
     - name: configure
       run: ./configure
     - name: make dist
-      run: make dist
+      id: package-generator
+      run: |
+        make dist
+        RELEASE_TARBALL=$(ls libsidplayfp-*.tar.gz)
+        echo ::set-output name=filename::${RELEASE_TARBALL}
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-        args: libsidplayfp-$(echo ${{ github.event.release.tag_name }} | cut -c2-).tar.gz application/gzip
+        args: ${{ steps.package-generator.outputs.filename }} application/gzip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
