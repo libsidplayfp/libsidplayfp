@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2002 Simon White
  *
@@ -85,7 +85,7 @@ HardSID::~HardSID()
 
 event_clock_t HardSID::delay()
 {
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
 
     while (cycles > 0xFFFF)
@@ -166,7 +166,7 @@ void HardSID::unlock()
 
 void HardSID::event()
 {
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     if (cycles < HARDSID_DELAY_CYCLES)
     {
         eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
