@@ -1,3 +1,19 @@
+2.1.0 2021-02-xx
+* Do not use smart pointers in public headers [bugs:#38]
+* Updated to exSID-driver v2.1
+* Trimmed down relocator code to the bare minimum required
+* resid/residfp:
+  - fixed external filter coefficients that were slightly off
+  - use soft instead of hard clipping
+  - rough implementation of bitfade
+* residfp:
+  - better bandpass frequency calculation
+  - updated 8580 resistor ratios based on schematics and adjusted voltage range
+  - updated TTL values
+  - assume a high impedance audio amplifier yielding an 1.6Hz high-pass
+
+
+
 2.0.5 2020-10-24
 * Fixed CIA SDR handling, code borrowed from Denise emulator
 * Fixed external filter coefficients calculation in resid/residfp
