@@ -366,8 +366,7 @@ src/builders/exsid-builder/driver/exSID.c \
 src/builders/exsid-builder/driver/exSID.h \
 src/builders/exsid-builder/driver/exSID_defs.h \
 src/builders/exsid-builder/driver/exSID_ftdiwrap.c \
-src/builders/exsid-builder/driver/exSID_ftdiwrap.h \
-src/builders/exsid-builder/driver/c11threads.h
+src/builders/exsid-builder/driver/exSID_ftdiwrap.h
 endif
 
 src_builders_exsid_builder_libsidplayfp_exsid_ladir = $(includedir)/sidplayfp/builders
