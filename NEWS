@@ -1,9 +1,9 @@
-2.1.0 2021-02-xx
+2.1.0 2021-02-11
 * Do not use smart pointers in public headers [bugs:#38]
 * Updated to exSID-driver v2.1
+* Fixed static builds with external exSID libs
 * Trimmed down relocator code to the bare minimum required
 * resid/residfp:
-  - fixed external filter coefficients that were slightly off
   - use soft instead of hard clipping
   - rough implementation of bitfade
 * residfp:
