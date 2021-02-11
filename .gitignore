@@ -29,3 +29,4 @@ src/sidtune/sidplayer2.bin
 tests/*.exe
 tests/*.log
 tests/*.trs
+libsidplayfp-*.tar.gz
