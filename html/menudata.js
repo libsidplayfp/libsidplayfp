@@ -25,8 +25,7 @@ var menudata={children:[
 {text:"t",url:"functions_t.html#index_t"},
 {text:"u",url:"functions_u.html#index_u"},
 {text:"v",url:"functions_v.html#index_v"},
-{text:"w",url:"functions_w.html#index_w"},
-{text:"x",url:"functions_x.html#index_x"}]},
+{text:"w",url:"functions_w.html#index_w"}]},
 {text:"Functions",url:"functions_func.html",children:[
 {text:"a",url:"functions_func.html#index_a"},
 {text:"b",url:"functions_func_b.html#index_b"},
@@ -63,9 +62,7 @@ var menudata={children:[
 {text:"r",url:"functions_vars.html#index_r"},
 {text:"s",url:"functions_vars.html#index_s"},
 {text:"t",url:"functions_vars.html#index_t"},
-{text:"v",url:"functions_vars.html#index_v"},
-{text:"w",url:"functions_vars.html#index_w"},
-{text:"x",url:"functions_vars.html#index_x"}]},
+{text:"v",url:"functions_vars.html#index_v"}]},
 {text:"Enumerations",url:"functions_enum.html"},
 {text:"Enumerator",url:"functions_eval.html",children:[
 {text:"b",url:"functions_eval.html#index_b"},
@@ -78,23 +75,5 @@ var menudata={children:[
 {text:"s",url:"functions_eval.html#index_s"},
 {text:"w",url:"functions_eval.html#index_w"}]}]}]},
 {text:"Files",url:"files.html",children:[
-{text:"File List",url:"files.html"},
-{text:"File Members",url:"globals.html",children:[
-{text:"All",url:"globals.html",children:[
-{text:"c",url:"globals.html#index_c"},
-{text:"d",url:"globals.html#index_d"},
-{text:"e",url:"globals.html#index_e"},
-{text:"l",url:"globals.html#index_l"},
-{text:"p",url:"globals.html#index_p"},
-{text:"v",url:"globals.html#index_v"},
-{text:"x",url:"globals.html#index_x"}]},
-{text:"Functions",url:"globals_func.html",children:[
-{text:"e",url:"globals_func.html#index_e"},
-{text:"x",url:"globals_func.html#index_x"}]},
-{text:"Variables",url:"globals_vars.html"},
-{text:"Typedefs",url:"globals_type.html"},
-{text:"Enumerations",url:"globals_enum.html"},
-{text:"Enumerator",url:"globals_eval.html"},
-{text:"Macros",url:"globals_defs.html",children:[
-{text:"x",url:"globals_defs.html#index_x"}]}]}]},
+{text:"File List",url:"files.html"}]},
 {text:"Examples",url:"examples.html"}]}

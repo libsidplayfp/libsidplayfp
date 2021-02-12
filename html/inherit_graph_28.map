@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classlibsidplayfp_1_1sidrandom.html" title="libsidplayfp::sidrandom" alt="" coords="5,5,180,32"/>
+<area shape="rect" id="node1" href="$classlibsidplayfp_1_1SidTuneBase.html" title="libsidplayfp::SidTuneBase" alt="" coords="5,81,193,108"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1MUS.html" title="libsidplayfp::MUS" alt="" coords="242,5,377,32"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1p00.html" title="libsidplayfp::p00" alt="" coords="244,56,375,83"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1prg.html" title="libsidplayfp::prg" alt="" coords="246,107,373,133"/>
+<area shape="rect" id="node5" href="$classlibsidplayfp_1_1PSID.html" title="libsidplayfp::PSID" alt="" coords="241,157,377,184"/>
 </map>
