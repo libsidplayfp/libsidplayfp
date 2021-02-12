@@ -1,9 +1,8 @@
 <map id="libsidplayfp::ReSID" name="libsidplayfp::ReSID">
-<area shape="rect" id="node1" title=" " alt="" coords="155,261,299,288"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="149,185,304,212"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="6,96,154,123"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="5,13,144,39"/>
-<area shape="rect" id="node5" title="STL class." alt="" coords="183,96,270,123"/>
-<area shape="rect" id="node6" title="STL class." alt="" coords="168,5,307,47"/>
-<area shape="rect" id="node7" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="294,96,501,123"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1sidemu.html" title="libsidplayfp::sidemu" alt="" coords="149,185,304,212"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1c64sid.html" title="libsidplayfp::c64sid" alt="" coords="6,96,154,123"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1Bank.html" title="libsidplayfp::Bank" alt="" coords="5,13,144,39"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="183,96,270,123"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="168,5,307,47"/>
+<area shape="rect" id="node7" href="$classlibsidplayfp_1_1EventScheduler.html" title="libsidplayfp::EventScheduler" alt="" coords="294,96,501,123"/>
 </map>

@@ -1,4 +1,3 @@
 <map id="libsidplayfp::DisconnectedBusBank" name="libsidplayfp::DisconnectedBusBank">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,200,121"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="33,5,172,32"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1Bank.html" title="libsidplayfp::Bank" alt="" coords="33,5,172,32"/>
 </map>

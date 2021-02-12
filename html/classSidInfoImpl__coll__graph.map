@@ -1,7 +1,5 @@
 <map id="SidInfoImpl" name="SidInfoImpl">
-<area shape="rect" id="node1" title=" " alt="" coords="72,336,168,363"/>
-<area shape="rect" id="node2" href="$classSidInfo.html" title=" " alt="" coords="5,216,72,243"/>
-<area shape="rect" id="node3" title="STL class." alt="" coords="98,96,185,123"/>
-<area shape="rect" id="node5" title=" " alt="" coords="249,216,436,243"/>
-<area shape="rect" id="node4" title="STL class." alt="" coords="72,5,211,47"/>
+<area shape="rect" id="node2" href="$classSidInfo.html" title="SidInfo" alt="" coords="5,216,72,243"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="98,96,185,123"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="72,5,211,47"/>
 </map>

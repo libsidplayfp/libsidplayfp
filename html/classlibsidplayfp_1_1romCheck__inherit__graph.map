@@ -1,6 +1,5 @@
 <map id="libsidplayfp::romCheck" name="libsidplayfp::romCheck">
-<area shape="rect" id="node1" title=" " alt="" coords="223,5,395,32"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1basicCheck.html" title=" " alt="" coords="5,80,185,107"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1chargenCheck.html" title=" " alt="" coords="209,80,408,107"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1kernalCheck.html" title=" " alt="" coords="433,80,619,107"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1basicCheck.html" title="libsidplayfp::basicCheck" alt="" coords="5,80,185,107"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1chargenCheck.html" title="libsidplayfp::chargenCheck" alt="" coords="209,80,408,107"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1kernalCheck.html" title="libsidplayfp::kernalCheck" alt="" coords="433,80,619,107"/>
 </map>

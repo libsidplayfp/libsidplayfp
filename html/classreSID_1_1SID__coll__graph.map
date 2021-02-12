@@ -1,10 +1,9 @@
 <map id="reSID::SID" name="reSID::SID">
-<area shape="rect" id="node1" title=" " alt="" coords="601,213,688,240"/>
-<area shape="rect" id="node2" href="$classreSID_1_1Voice.html" title=" " alt="" coords="269,109,369,136"/>
-<area shape="rect" id="node3" href="$classreSID_1_1EnvelopeGenerator.html" title=" " alt="" coords="5,13,196,39"/>
-<area shape="rect" id="node4" href="$classreSID_1_1WaveformGenerator.html" title=" " alt="" coords="221,13,418,39"/>
-<area shape="rect" id="node5" href="$classreSID_1_1Filter.html" title=" " alt="" coords="483,109,580,136"/>
-<area shape="rect" id="node6" href="$structreSID_1_1Filter_1_1model__filter__t.html" title=" " alt="" coords="547,5,694,47"/>
-<area shape="rect" id="node7" href="$classreSID_1_1Potentiometer.html" title=" " alt="" coords="604,109,763,136"/>
-<area shape="rect" id="node8" href="$classreSID_1_1ExternalFilter.html" title=" " alt="" coords="787,109,937,136"/>
+<area shape="rect" id="node2" href="$classreSID_1_1Voice.html" title="reSID::Voice" alt="" coords="269,109,369,136"/>
+<area shape="rect" id="node3" href="$classreSID_1_1EnvelopeGenerator.html" title="reSID::EnvelopeGenerator" alt="" coords="5,13,196,39"/>
+<area shape="rect" id="node4" href="$classreSID_1_1WaveformGenerator.html" title="reSID::WaveformGenerator" alt="" coords="221,13,418,39"/>
+<area shape="rect" id="node5" href="$classreSID_1_1Filter.html" title="reSID::Filter" alt="" coords="483,109,580,136"/>
+<area shape="rect" id="node6" href="$structreSID_1_1Filter_1_1model__filter__t.html" title="reSID::Filter::model\l_filter_t" alt="" coords="547,5,694,47"/>
+<area shape="rect" id="node7" href="$classreSID_1_1Potentiometer.html" title="reSID::Potentiometer" alt="" coords="604,109,763,136"/>
+<area shape="rect" id="node8" href="$classreSID_1_1ExternalFilter.html" title="reSID::ExternalFilter" alt="" coords="787,109,937,136"/>
 </map>

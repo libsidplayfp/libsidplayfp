@@ -1,11 +1,9 @@
 <map id="ReSIDfpBuilder" name="ReSIDfpBuilder">
-<area shape="rect" id="node1" title=" " alt="" coords="373,455,492,481"/>
-<area shape="rect" id="node2" href="$classsidbuilder.html" title=" " alt="" coords="389,379,476,405"/>
-<area shape="rect" id="node3" title="STL class." alt="" coords="429,96,516,123"/>
-<area shape="rect" id="node6" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="215,185,370,212"/>
-<area shape="rect" id="node4" title="STL class." alt="" coords="403,5,542,47"/>
-<area shape="rect" id="node5" title=" " alt="" coords="281,275,443,316"/>
-<area shape="rect" id="node7" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="5,96,153,123"/>
-<area shape="rect" id="node8" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="10,13,149,39"/>
-<area shape="rect" id="node9" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="177,96,384,123"/>
+<area shape="rect" id="node2" href="$classsidbuilder.html" title="sidbuilder" alt="" coords="389,379,476,405"/>
+<area shape="rect" id="node3" title="STL class. " alt="" coords="429,96,516,123"/>
+<area shape="rect" id="node6" href="$classlibsidplayfp_1_1sidemu.html" title="libsidplayfp::sidemu" alt="" coords="215,185,370,212"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="403,5,542,47"/>
+<area shape="rect" id="node7" href="$classlibsidplayfp_1_1c64sid.html" title="libsidplayfp::c64sid" alt="" coords="5,96,153,123"/>
+<area shape="rect" id="node8" href="$classlibsidplayfp_1_1Bank.html" title="libsidplayfp::Bank" alt="" coords="10,13,149,39"/>
+<area shape="rect" id="node9" href="$classlibsidplayfp_1_1EventScheduler.html" title="libsidplayfp::EventScheduler" alt="" coords="177,96,384,123"/>
 </map>

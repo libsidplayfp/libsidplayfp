@@ -1,5 +1,4 @@
 <map id="libsidplayfp::NullSid" name="libsidplayfp::NullSid">
-<area shape="rect" id="node1" title=" " alt="" coords="5,155,157,181"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="7,80,155,107"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="12,5,151,32"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1c64sid.html" title="libsidplayfp::c64sid" alt="" coords="7,80,155,107"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Bank.html" title="libsidplayfp::Bank" alt="" coords="12,5,151,32"/>
 </map>
