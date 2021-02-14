@@ -280,8 +280,8 @@ void WaveformGenerator::waveBitfade()
 
 void WaveformGenerator::shiftregBitfade()
 {
-    shift_register |= 1;
-    shift_register |= shift_register << 1;
+    shift_register |= shift_register >> 1;
+    shift_register |= 0x400000;
     if (shift_register != 0x7fffff)
         shift_register_reset = is6581 ? SHIFT_REGISTER_FADE_6581R3 : SHIFT_REGISTER_FADE_8580R5;
 }
