@@ -308,8 +308,9 @@ void WaveformGenerator::reset()
     pulse_output = 0xfff;
 
     shift_register_reset = 0;
+    shift_register = 0x7fffff;
     // when reset is released the shift register is clocked once
-    shift_register = 0x7ffffe;
+    clock_shift_register((~shift_register << 17) & (1 << 22));
 
     shift_pipeline = 0;
 
