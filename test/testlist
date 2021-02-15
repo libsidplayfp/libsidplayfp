@@ -295,9 +295,9 @@ general/Lorenz-2.15/src/finish
 C64/bankio/bankio
 #C64/openio/gauntlet
 C64/raminitpattern/cyberloadtest
-#C64/raminitpattern/darkstarbbstest
+C64/raminitpattern/darkstarbbstest
 C64/raminitpattern/platoontest
-#C64/raminitpattern/typicaltest
+C64/raminitpattern/typicaltest
 ### CIA ###
 CIA/CIA-AcountsB/cia-b-counts-a
 CIA/CIA-AcountsB/cmp-b-counts-a-old                  --cia old

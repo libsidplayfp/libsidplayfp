@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,8 +34,6 @@ namespace libsidplayfp
 
 /**
  * Area backed by RAM.
- *
- * @author Antti Lankila
  */
 class SystemRAMBank final : public Bank
 {
@@ -48,13 +46,26 @@ private:
 public:
     /**
      * Initialize RAM with powerup pattern.
+     *
+     * $0000: 00 00 ff ff ff ff 00 00 00 00 ff ff ff ff 00 00
+     * ...
+     * $4000: ff ff 00 00 00 00 ff ff ff ff 00 00 00 00 ff ff
+     * ...
+     * $8000: 00 00 ff ff ff ff 00 00 00 00 ff ff ff ff 00 00
+     * ...
+     * $c000: ff ff 00 00 00 00 ff ff ff ff 00 00 00 00 ff ff
      */
     void reset()
     {
-        memset(ram, 0, sizeof(ram));
-        for (int i = 0x40; i < 0x10000; i += 0x80)
+        uint8_t byte = 0x00;
+        for (int j=0x0000; j<0x10000; j+=0x4000)
         {
-            memset(ram+i, 0xff, 0x40);
+            memset(ram+j, byte, 0x4000);
+            byte = ~byte;
+            for (int i = 0x02; i < 0x4000; i += 0x08)
+            {
+                memset(ram+j+i, byte, 0x04);
+            }
         }
     }
 
