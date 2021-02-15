@@ -60,8 +60,8 @@ const unsigned int FLOATING_OUTPUT_FADE_8580R5 =   50000;
  * only the big difference between the old and new models.
  */
 // ~210ms
-const unsigned int SHIFT_REGISTER_RESET_6581R3 =    6000;
-const unsigned int SHIFT_REGISTER_FADE_6581R3  =   19300;
+const unsigned int SHIFT_REGISTER_RESET_6581R3 =   50000;
+const unsigned int SHIFT_REGISTER_FADE_6581R3  =   15000;
 // ~2.15s
 const unsigned int SHIFT_REGISTER_RESET_6581R4 = 2150000;
 // ~2.8s
