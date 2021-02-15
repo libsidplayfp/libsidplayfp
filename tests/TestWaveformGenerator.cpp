@@ -68,7 +68,7 @@ TEST(TestWriteShiftRegister)
     generator.waveform = 0xf;
     generator.write_shift_register();
 
-    CHECK_EQUAL(0x2dd6ea, generator.shift_register);
+    CHECK_EQUAL(0x2dd6eb, generator.shift_register);
 }
 
 TEST(TestSetTestBit)
@@ -110,7 +110,7 @@ TEST(TestNoiseWriteBack1)
     generator.writeCONTROL_REG(0x80);
     generator.clock();
     generator.output(&modulator);
-    CHECK_EQUAL(0xfe, (int)generator.readOSC());
+    CHECK_EQUAL(0xfc, (int)generator.readOSC());
     generator.writeCONTROL_REG(0x88);
     generator.clock();
     generator.output(&modulator);
@@ -131,7 +131,7 @@ TEST(TestNoiseWriteBack1)
     generator.writeCONTROL_REG(0x80);
     generator.clock();
     generator.output(&modulator);
-    CHECK_EQUAL(0xb5, (int)generator.readOSC());
+    CHECK_EQUAL(0xb1, (int)generator.readOSC());
     generator.writeCONTROL_REG(0x88);
     generator.clock();
     generator.output(&modulator);
@@ -159,7 +159,7 @@ TEST(TestNoiseWriteBack1)
     generator.writeCONTROL_REG(0x80);
     generator.clock();
     generator.output(&modulator);
-    CHECK_EQUAL(0xf8, (int)generator.readOSC());
+    CHECK_EQUAL(0xf0, (int)generator.readOSC());
 }
 
 }
