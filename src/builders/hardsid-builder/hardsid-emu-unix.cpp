@@ -139,7 +139,7 @@ void HardSID::reset(uint8_t volume)
 
 event_clock_t HardSID::delay()
 {
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
 
     while (cycles > 0xffff)
@@ -203,7 +203,7 @@ void HardSID::voice(unsigned int num, bool mute)
 
 void HardSID::event()
 {
-    event_clock_t cycles = eventScheduler->getTime(m_accessClk, EVENT_CLOCK_PHI1);
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     if (cycles < HARDSID_DELAY_CYCLES)
     {
         eventScheduler->schedule(*this, HARDSID_DELAY_CYCLES - cycles,
