@@ -13,6 +13,12 @@ if MINGW32
   W32_LDFLAGS = -no-undefined
 endif
 
+if MACOS
+  OD = god
+else
+  OD = od
+endif
+
 if HAVE_VISIBILITY
   AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
 endif
@@ -456,5 +462,5 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 .a65.bin:
 	o65file=`echo $@ | sed 's/bin/o65/'`;\
 	xa -R -G $< -o $$o65file &&\
-	od -v -An -w8 -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g' > $@ &&\
+	${OD} -v -An -w8 -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g' > $@ &&\
 	${RM} $$o65file
