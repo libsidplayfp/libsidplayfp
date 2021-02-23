@@ -21,9 +21,11 @@ AC_CANONICAL_HOST
 
 AS_CASE([$host_os],
         [mingw*], [MINGW32=yes],
-        [MINGW32=no]
+        [darwin*], [MACOS=yes],
+        [MINGW32=no MACOS=no]
 )
 AM_CONDITIONAL([MINGW32], [test "x$MINGW32" = "xyes"])
+AM_CONDITIONAL([MACOS], [test "x$MACOS" = "xyes"])
 
 dnl Initialize libtool.
 LT_INIT([win32-dll])
