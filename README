@@ -2,7 +2,6 @@ libsidplayfp
 ============
 
 https://github.com/libsidplayfp/libsidplayfp
-https://sourceforge.net/projects/sidplay-residfp/
 
 libsidplayfp is a C64 music player library which integrates
 the reSID SID chip emulation into a cycle-based emulator
@@ -12,7 +11,6 @@ C64 system and the SID chips.
 Copyright (c) 2000-2001 Simon White
 Copyright (c) 2007-2010 Antti Lankila
 Copyright (c) 2010-2021 Leandro Nini <drfiemost@users.sourceforge.net>
-
 
 -----------------------------------------------------------------------------
 
@@ -32,6 +30,10 @@ Copyright (c) 2010-2021 Leandro Nini <drfiemost@users.sourceforge.net>
 
 -----------------------------------------------------------------------------
 
+**NOTE**: the repository contains submodules, clone with the --recurse-submodules option
+
+-----------------------------------------------------------------------------
+
 API documentation available online at
 
 https://libsidplayfp.github.io/libsidplayfp/
@@ -41,7 +43,8 @@ https://libsidplayfp.github.io/libsidplayfp/
 * Build
 
 This package uses autotools so the usual ./configure && make is enough to build
-the libraries.
+the libraries. If cloning the bare sources the package need to be bootstrapped
+in advance with the autoconf -i command.
 In addition to the standard options the following are available:
 
 --enable-debug[=no/yes/full]
@@ -72,7 +75,7 @@ enables unit tests. Requires libUnitTest++ installed. Use "make check" to launch
 disabled by default
 
 --enable-hardsid
-enables hardsid support, still untested
+enables hardsid support
 
 --with-gcrypt / --without-gcrypt
 force/disable libgcrypt support for MD5 computation
@@ -90,3 +93,4 @@ can be built by invoking "make doc".
 Known bugs/limitations:
 * mus data embedded in psid file is not supported
 * hardsid support is untested and possibly broken
+
