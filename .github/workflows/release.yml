@@ -11,16 +11,16 @@ jobs:
 
     steps:
     - name: deps
-      run: sudo apt-get install libgcrypt20-dev xa65
+      run: sudo apt-get install libgcrypt20-dev xa65 doxygen graphviz
     - uses: actions/checkout@v2
       with:
         submodules: 'true'
         ref: ${{ github.ref }}
-    - name: bootstrap
+    - name: Bootstrap
       run: autoreconf -vfi
-    - name: configure
+    - name: Configure
       run: ./configure
-    - name: make dist
+    - name: Prepare package
       id: package-generator
       run: |
         make dist
@@ -32,3 +32,12 @@ jobs:
         args: ${{ steps.package-generator.outputs.filename }} application/gzip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Prepare docs
+      run: make doc
+    - name: Deploy docs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        publish_dir: ./docs/html
+        destination_dir: html
+        commit_message: Update docs
+        github_token: ${{ secrets.GITHUB_TOKEN }}
