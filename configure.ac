@@ -1,9 +1,9 @@
 m4_define([lib_major], [2])
 m4_define([lib_minor], [1])
-m4_define([lib_level], [0])
+m4_define([lib_level], [1])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
-AC_INIT([libsidplayfp],[lib_version],[],[],[http://sourceforge.net/projects/sidplay-residfp/])
+AC_INIT([libsidplayfp],[lib_version],[],[],[https://github.com/libsidplayfp/libsidplayfp/])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIRS([m4 src/builders/exsid-builder/driver/m4])
 AC_CONFIG_SRCDIR([src/sidplayfp/sidplayfp.cpp])
@@ -95,7 +95,7 @@ dnl libtool-style version-info number
 # Increase the age value only if the changes made to the ABI are backward compatible.
 
 LIBSIDPLAYCUR=8
-LIBSIDPLAYREV=16
+LIBSIDPLAYREV=17
 LIBSIDPLAYAGE=2
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 

@@ -30,7 +30,8 @@ Copyright (c) 2010-2021 Leandro Nini <drfiemost@users.sourceforge.net>
 
 -----------------------------------------------------------------------------
 
-**NOTE**: the repository contains submodules, clone with the --recurse-submodules option
+**NOTE**: the git repository contains submodules,
+          clone with the --recurse-submodules option
 
 -----------------------------------------------------------------------------
 
@@ -93,4 +94,3 @@ can be built by invoking "make doc".
 Known bugs/limitations:
 * mus data embedded in psid file is not supported
 * hardsid support is untested and possibly broken
-

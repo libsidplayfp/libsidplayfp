@@ -1,3 +1,10 @@
+2.1.1 2021-02-27
+* Fixed building hardsid support
+* reSIDfp: shift register regression fixes
+* Updated RAM init pattern similar to how it's done in VICE
+
+
+
 2.1.0 2021-02-11
 * Do not use smart pointers in public headers [bugs:#38]
 * Updated to exSID-driver v2.1
