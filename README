@@ -45,8 +45,10 @@ https://libsidplayfp.github.io/libsidplayfp/
 
 This package uses autotools so the usual ./configure && make is enough to build
 the libraries. If cloning the bare sources the package need to be bootstrapped
-in advance with the autoreconf -i command.
-In addition to the standard options the following are available:
+in advance with the autoreconf -i command. This step requires the xa cross-assembler
+installed, usually provided by distributions with the xa65 package or available at
+http://www.floodgap.com/retrotech/xa/.
+In addition to the standard build options the following are available:
 
 --enable-debug[=no/yes/full]
 compile with debugging messages
