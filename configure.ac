@@ -305,7 +305,7 @@ AS_IF(
 )
 
 AS_IF(
-    [test "x$with_exsid" = "xyes" -a "x$build_exsid_driver" != xyes],
+    [test "x$with_exsid" = "xyes" -a "x$build_exsid_builder" != xyes],
     [AC_MSG_ERROR([Neither libexsid nor ftd2xx nor libftdi1 found])]
 )
 
