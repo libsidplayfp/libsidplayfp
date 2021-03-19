@@ -2,7 +2,7 @@
 general/banking00/banking00
 #general/fuxxortest/test-fuxxored
 general/fuxxortest/ef1-nmi
-#general/fuxxortest/ef2-inst4b
+general/fuxxortest/ef2-inst4b                        --sid old
 general/Lorenz-2.15/src/start
 general/Lorenz-2.15/src/ldab
 general/Lorenz-2.15/src/ldaz
