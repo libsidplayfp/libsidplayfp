@@ -153,6 +153,25 @@ AS_IF([test x"$enable_mmx" = xyes],
    CPPFLAGS=$saveCPPFLAGS]
 )
  
+AC_ARG_ENABLE([neon],
+  [AS_HELP_STRING([--enable-neon],
+    [enable NEON optimization [default=no]])]
+)
+
+AS_IF([test x"$enable_neon" = xyes],
+# Testing for arm_neon.h requires compiler support
+# for neon support activated by specific flags
+# these are most likely defined in CXXFLAGS
+# but AC_CHECK_HEADERS uses only CPPFLAGS
+# so we need a workaround
+  [saveCPPFLAGS=$CPPFLAGS
+   CPPFLAGS="$CPPFLAGS $CXXFLAGS"
+
+   AC_CHECK_HEADERS([arm_neon.h])
+
+   CPPFLAGS=$saveCPPFLAGS]
+)
+
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 [AC_COMPILE_IFELSE(
   [AC_LANG_PROGRAM([],
