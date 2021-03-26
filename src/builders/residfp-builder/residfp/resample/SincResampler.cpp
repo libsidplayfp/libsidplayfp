@@ -38,6 +38,10 @@
 #  include <mmintrin.h>
 #endif
 
+#ifdef HAVE_ARM_NEON_H
+#  include <arm_neon.h>
+#endif
+
 namespace reSIDfp
 {
 
@@ -104,6 +108,26 @@ int convolve(const short* a, const short* b, int bLength)
     int out = _mm_cvtsi64_si32(acc) + _mm_cvtsi64_si32(_mm_srli_si64(acc, 32));
     _mm_empty();
 
+    bLength &= 3;
+#elif defined(HAVE_ARM_NEON_H)
+    int32x4_t acc = vdupq_n_s32(0);
+    
+    const int n = bLength / 4;
+    
+    for (int i = 0; i < n; i++)
+    {
+        const int16x4_t h_vec = vld1_s16(a);
+        const int16x4_t x_vec = vld1_s16(b);
+        acc = vmlal_s16(acc, h_vec, x_vec);
+        a += 4;
+        b += 4;
+    }
+    
+    int out = vgetq_lane_s32(acc, 0) +
+              vgetq_lane_s32(acc, 1) +
+              vgetq_lane_s32(acc, 2) +
+              vgetq_lane_s32(acc, 3);
+    
     bLength &= 3;
 #else
     int out = 0;
