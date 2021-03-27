@@ -134,42 +134,30 @@ AS_IF([test x"$enable_inline" != "xno"],
   [RESID_INLINE=""; RESID_INLINING=0]
 )
 
-AC_ARG_ENABLE([mmx],
-  [AS_HELP_STRING([--enable-mmx],
-    [enable MMX optimization [default=no]])]
+AC_ARG_WITH(
+    [simd],
+    [AS_HELP_STRING([--with-simd], [Build with SIMD optimizations [@<:@sse2/mmx/neon/none, default=none@:>@]])],
+    [],
+    [with_simd=none]
 )
 
-AS_IF([test x"$enable_mmx" = xyes],
-# Testing for mmintrin.h requires compiler support
-# for mmx support activated by specific flags
-# these are most probably defined in CXXFLAGS
-# but AC_CHECK_HEADERS uses only CPPFLAGS
-# so we need a workaround
-  [saveCPPFLAGS=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $CXXFLAGS"
+AS_IF([test x"$with_simd" != xnone],
+    # Testing for intrinsic headers requires compiler
+    # support activated by specific flags.
+    # These are most likely defined in CXXFLAGS
+    # but AC_CHECK_HEADERS uses only CPPFLAGS
+    # so we need a workaround.
+    [saveCPPFLAGS=$CPPFLAGS
+    CPPFLAGS="$CPPFLAGS $CXXFLAGS"
 
-   AC_CHECK_HEADERS([mmintrin.h])
+    AS_CASE([$with_simd],
+        [sse2], [AC_CHECK_HEADERS([emmintrin.h])],
+        [mmx],  [AC_CHECK_HEADERS([mmintrin.h])],
+        [neon], [AC_CHECK_HEADERS([arm_neon.h])],
+        [AC_MSG_ERROR([Unrecognized SIMD specified])]
+    )
 
-   CPPFLAGS=$saveCPPFLAGS]
-)
- 
-AC_ARG_ENABLE([neon],
-  [AS_HELP_STRING([--enable-neon],
-    [enable NEON optimization [default=no]])]
-)
-
-AS_IF([test x"$enable_neon" = xyes],
-# Testing for arm_neon.h requires compiler support
-# for neon support activated by specific flags
-# these are most likely defined in CXXFLAGS
-# but AC_CHECK_HEADERS uses only CPPFLAGS
-# so we need a workaround
-  [saveCPPFLAGS=$CPPFLAGS
-   CPPFLAGS="$CPPFLAGS $CXXFLAGS"
-
-   AC_CHECK_HEADERS([arm_neon.h])
-
-   CPPFLAGS=$saveCPPFLAGS]
+    CPPFLAGS=$saveCPPFLAGS]
 )
 
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
