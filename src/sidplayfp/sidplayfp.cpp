@@ -115,3 +115,8 @@ uint_least16_t sidplayfp::getCia1TimerA() const
 {
     return sidplayer.getCia1TimerA();
 }
+
+bool sidplayfp::getSidStatus(unsigned int sidNum, uint8_t regs[32])
+{
+    return sidplayer.getSidStatus(sidNum, regs);
+}

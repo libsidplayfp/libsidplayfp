@@ -548,4 +548,15 @@ void Player::sidParams(double cpuFreq, int frequency,
     }
 }
 
+bool Player::getSidStatus(unsigned int sidNum, uint8_t regs[32])
+{
+    sidemu *s = m_mixer.getSid(sidNum);
+
+    if (s == nullptr)
+        return false;
+
+    s->getStatus(regs);
+    return true;
+}
+
 }

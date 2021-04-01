@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -163,6 +163,14 @@ public:
      * Get the CIA 1 Timer A programmed value.
      */
     uint_least16_t getCia1TimerA() const;
+
+    /**
+     * Get the SID registers programmed value.
+     *
+     * @param sidNum the SID chip, 0 for the first one, 1 for the second.
+     * @param regs an array that will be filled with the last values written to the chip.
+     */
+    bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
 };
 
 #endif // SIDPLAYFP_H
