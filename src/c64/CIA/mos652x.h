@@ -21,8 +21,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef MOS6526_H
-#define MOS6526_H
+#ifndef MOS652X_H
+#define MOS652X_H
 
 #include <memory>
 
@@ -41,7 +41,7 @@ class EventContext;
 namespace libsidplayfp
 {
 
-class MOS6526;
+class MOS652X;
 
 /**
  * This is the timer A of this CIA.
@@ -63,7 +63,7 @@ public:
     /**
      * Create timer A.
      */
-    TimerA(EventScheduler &scheduler, MOS6526 &parent) :
+    TimerA(EventScheduler &scheduler, MOS652X &parent) :
         Timer("CIA Timer A", scheduler, parent) {}
 };
 
@@ -82,7 +82,7 @@ public:
     /**
      * Create timer B.
      */
-    TimerB(EventScheduler &scheduler, MOS6526 &parent) :
+    TimerB(EventScheduler &scheduler, MOS652X &parent) :
         Timer("CIA Timer B", scheduler, parent) {}
 
     /**
@@ -110,7 +110,7 @@ public:
 class InterruptSource8521 final : public InterruptSource
 {
 public:
-    InterruptSource8521(EventScheduler &scheduler, MOS6526 &parent) :
+    InterruptSource8521(EventScheduler &scheduler, MOS652X &parent) :
         InterruptSource(scheduler, parent)
     {}
 
@@ -132,7 +132,7 @@ private:
     void triggerBug() { idr &= ~INTERRUPT_UNDERFLOW_B; }
 
 public:
-    InterruptSource6526(EventScheduler &scheduler, MOS6526 &parent) :
+    InterruptSource6526(EventScheduler &scheduler, MOS652X &parent) :
         InterruptSource(scheduler, parent),
         tbBug(false)
     {}
@@ -149,7 +149,7 @@ public:
  * The CIA state machine is lifted as-is. Big thanks to VICE project!
  * The Serial Port emulation is based on Denise emu code.
  */
-class MOS6526
+class MOS652X
 {
     friend class InterruptSource;
     friend class SerialPort;
@@ -189,7 +189,7 @@ protected:
 
     /// Events
     //@{
-    EventCallback<MOS6526> bTickEvent;
+    EventCallback<MOS652X> bTickEvent;
     //@}
 
 private:
@@ -236,7 +236,7 @@ protected:
      *
      * @param context the event context
      */
-    MOS6526(EventScheduler &scheduler);
+    MOS652X(EventScheduler &scheduler);
 
     /**
      * Signal interrupt.

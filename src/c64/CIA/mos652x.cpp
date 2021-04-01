@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "mos6526.h"
+#include "mos652x.h"
 
 #include <cstring>
 
@@ -157,17 +157,17 @@ void InterruptSource6526::reset()
     tbBug = false;
 }
 
-const char *MOS6526::credits()
+const char *MOS652X::credits()
 {
     return
-            "MOS6526/8521 (CIA) Emulation:\n"
+            "MOS652X/8521 (CIA) Emulation:\n"
             "\tCopyright (C) 2001-2004 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"
             "\tCopyright (C) 2011-2020 Leandro Nini\n";
 }
 
-MOS6526::MOS6526(EventScheduler &scheduler) :
+MOS652X::MOS652X(EventScheduler &scheduler) :
     eventScheduler(scheduler),
     pra(regs[PRA]),
     prb(regs[PRB]),
@@ -178,12 +178,12 @@ MOS6526::MOS6526(EventScheduler &scheduler) :
     interruptSource(new InterruptSource6526(scheduler, *this)),
     tod(scheduler, *this, regs),
     serialPort(scheduler, *this),
-    bTickEvent("CIA B counts A", *this, &MOS6526::bTick)
+    bTickEvent("CIA B counts A", *this, &MOS652X::bTick)
 {
     reset();
 }
 
-void MOS6526::handleSerialPort()
+void MOS652X::handleSerialPort()
 {
     if (regs[CRA] & 0x40)
     {
@@ -191,7 +191,7 @@ void MOS6526::handleSerialPort()
     }
 }
 
-void MOS6526::reset()
+void MOS652X::reset()
 {
     memset(regs, 0, sizeof(regs));
 
@@ -210,7 +210,7 @@ void MOS6526::reset()
     eventScheduler.cancel(bTickEvent);
 }
 
-uint8_t MOS6526::adjustDataPort(uint8_t data)
+uint8_t MOS652X::adjustDataPort(uint8_t data)
 {
     if (regs[CRA] & 0x02)
     {
@@ -227,7 +227,7 @@ uint8_t MOS6526::adjustDataPort(uint8_t data)
     return data;
 }
 
-uint8_t MOS6526::read(uint_least8_t addr)
+uint8_t MOS652X::read(uint_least8_t addr)
 {
     addr &= 0x0f;
 
@@ -266,7 +266,7 @@ uint8_t MOS6526::read(uint_least8_t addr)
     }
 }
 
-void MOS6526::write(uint_least8_t addr, uint8_t data)
+void MOS652X::write(uint_least8_t addr, uint8_t data)
 {
     addr &= 0x0f;
 
@@ -334,12 +334,12 @@ void MOS6526::write(uint_least8_t addr, uint8_t data)
     timerB.wakeUpAfterSyncWithCpu();
 }
 
-void MOS6526::bTick()
+void MOS652X::bTick()
 {
     timerB.cascade();
 }
 
-void MOS6526::underflowA()
+void MOS652X::underflowA()
 {
     interruptSource->trigger(InterruptSource::INTERRUPT_UNDERFLOW_A);
 
@@ -352,22 +352,22 @@ void MOS6526::underflowA()
     }
 }
 
-void MOS6526::underflowB()
+void MOS652X::underflowB()
 {
     interruptSource->trigger(InterruptSource::INTERRUPT_UNDERFLOW_B);
 }
 
-void MOS6526::todInterrupt()
+void MOS652X::todInterrupt()
 {
     interruptSource->trigger(InterruptSource::INTERRUPT_ALARM);
 }
 
-void MOS6526::spInterrupt()
+void MOS652X::spInterrupt()
 {
     interruptSource->trigger(InterruptSource::INTERRUPT_SP);
 }
 
-void MOS6526::setModel(bool newModel)
+void MOS652X::setModel(bool newModel)
 {
     if (newModel)
         interruptSource.reset(new InterruptSource8521(eventScheduler, *this));

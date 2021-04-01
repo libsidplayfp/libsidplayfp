@@ -22,7 +22,7 @@
 
 #include "interrupt.h"
 
-#include "mos6526.h"
+#include "mos652x.h"
 
 
 namespace libsidplayfp

@@ -33,7 +33,7 @@
 namespace libsidplayfp
 {
 
-class MOS6526;
+class MOS652X;
 
 /**
  * This is the base class for the MOS6526 interrupt sources.
@@ -54,7 +54,7 @@ public:
 
 private:
     /// Pointer to the MOS6526 which this Interrupt belongs to.
-    MOS6526 &parent;
+    MOS652X &parent;
 
 protected:
     /// Event scheduler.
@@ -87,7 +87,7 @@ protected:
      * @param scheduler event scheduler
      * @param parent the MOS6526 which this Interrupt belongs to
      */
-    InterruptSource(EventScheduler &scheduler, MOS6526 &parent) :
+    InterruptSource(EventScheduler &scheduler, MOS652X &parent) :
         Event("CIA Interrupt"),
         parent(parent),
         eventScheduler(scheduler),
