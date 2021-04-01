@@ -105,8 +105,8 @@ public:
      * @param count the size of the buffer measured in 16 bit samples
      *              or 0 if no output is needed (e.g. Hardsid)
      * @return the number of produced samples. If less than requested
-     * and #isPlaying() is true an error occurred, use #error() to get
-     * a detailed message.
+     *         and #isPlaying() is true an error occurred, use #error()
+     *         to get a detailed message.
      */
     uint_least32_t play(short *buffer, uint_least32_t count);
 
@@ -148,6 +148,12 @@ public:
      */
     uint_least32_t time() const;
 
+    /**
+     * Get the current playing time.
+     *
+     * @return the current playing time measured in milliseconds.
+     * @since 2.0
+     */
     uint_least32_t timeMs() const;
 
     /**
@@ -179,8 +185,9 @@ public:
     /**
      * Get the SID registers programmed value.
      *
-     * @param sidNum the SID chip, 0 for the first one, 1 for the second.
+     * @param sidNum the SID chip, 0 for the first one, 1 for the second and 2 for the third.
      * @param regs an array that will be filled with the last values written to the chip.
+     * @return false if the requested chip doesn't exist.
      * @since 2.2
      */
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
