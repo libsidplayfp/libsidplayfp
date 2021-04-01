@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -132,8 +132,9 @@ void c64::setModel(model_t model)
 
 void c64::setCiaModel(bool newModel)
 {
-    cia1.setModel(newModel);
-    cia2.setModel(newModel);
+    MOS652X::model_t ciaModel = newModel ? MOS652X::MOS8521 : MOS652X::MOS6526;
+    cia1.setModel(ciaModel);
+    cia2.setModel(ciaModel);
 }
 
 void c64::setBaseSid(c64sid *s)

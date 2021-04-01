@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -157,6 +157,14 @@ class MOS652X
     friend class TimerB;
     friend class Tod;
 
+public:
+    typedef enum
+    {
+        MOS6526 = 0     ///< Old CIA model, interrupts are delayed by 1 clock
+        ,MOS8521        ///< New CIA model
+        ,MOS6526W4485   ///< A batch of old CIA model with unique serial port behavior
+    } model_t;
+
 private:
     static const char *credit;
 
@@ -275,10 +283,10 @@ protected:
 public:
     /**
      * Select chip model.
-     * 
-     * @param newModel true for new model 8521, false for old 6526
+     *
+     * @param model
      */
-    void setModel(bool newModel);
+    void setModel(model_t model);
 
     /**
      * Reset CIA.
