@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -72,7 +72,9 @@ Player::Player() :
     m_isPlaying(STOPPED),
     m_rand((unsigned int)::time(0))
 {
-    m_c64.setRoms(nullptr, nullptr, nullptr);
+    // We need at least some minimal interrupt handling
+    m_c64.getMemInterface().setKernal(nullptr);
+
     config(m_cfg);
 
     // Get component credits
@@ -93,13 +95,22 @@ inline void checkRom(const uint8_t* rom, std::string &desc)
         desc.clear();
 }
 
-void Player::setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
+void Player::setKernal(const uint8_t* rom)
 {
-    checkRom<kernalCheck>(kernal, m_info.m_kernalDesc);
-    checkRom<basicCheck>(basic, m_info.m_basicDesc);
-    checkRom<chargenCheck>(character, m_info.m_chargenDesc);
+    checkRom<kernalCheck>(rom, m_info.m_kernalDesc);
+    m_c64.getMemInterface().setKernal(rom);
+}
 
-    m_c64.setRoms(kernal, basic, character);
+void Player::setBasic(const uint8_t* rom)
+{
+    checkRom<basicCheck>(rom, m_info.m_basicDesc);
+    m_c64.getMemInterface().setBasic(rom);
+}
+
+void Player::setChargen(const uint8_t* rom)
+{
+    checkRom<chargenCheck>(rom, m_info.m_chargenDesc);
+    m_c64.getMemInterface().setChargen(rom);
 }
 
 bool Player::fastForward(unsigned int percent)

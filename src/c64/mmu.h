@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -90,12 +90,10 @@ public:
 
     void reset();
 
-    void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
-    {
-        kernalRomBank.set(kernal);
-        basicRomBank.set(basic);
-        characterRomBank.set(character);
-    }
+    // ROM banks methods
+    void setKernal(const uint8_t* rom) { kernalRomBank.set(rom); }
+    void setBasic(const uint8_t* rom) { basicRomBank.set(rom); }
+    void setChargen(const uint8_t* rom) { characterRomBank.set(rom); }
 
     // RAM access methods
     uint8_t readMemByte(uint_least16_t addr) override { return ramBank.peek(addr); }

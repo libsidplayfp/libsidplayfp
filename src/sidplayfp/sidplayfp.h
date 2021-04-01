@@ -160,6 +160,18 @@ public:
     void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
 
     /**
+     * Set the ROM banks.
+     *
+     * @param rom pointer to the ROM data.
+     * @since 2.2
+     */
+    //@{
+    void setKernal(const uint8_t* rom);
+    void setBasic(const uint8_t* rom);
+    void setChargen(const uint8_t* rom);
+    //@}
+
+    /**
      * Get the CIA 1 Timer A programmed value.
      */
     uint_least16_t getCia1TimerA() const;
@@ -169,6 +181,7 @@ public:
      *
      * @param sidNum the SID chip, 0 for the first one, 1 for the second.
      * @param regs an array that will be filled with the last values written to the chip.
+     * @since 2.2
      */
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
 };

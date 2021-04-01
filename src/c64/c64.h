@@ -220,11 +220,6 @@ public:
      */
     void setCiaModel(bool newModel);
 
-    void setRoms(const uint8_t* kernal, const uint8_t* basic, const uint8_t* character)
-    {
-        mmu.setRoms(kernal, basic, character);
-    }
-
     /**
      * Get the CPU clock speed.
      *

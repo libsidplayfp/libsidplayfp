@@ -63,15 +63,17 @@ int main(int argc, char* argv[])
 
     sidplayfp m_engine;
 
-    char kernal[8192];
-    char basic[8192];
-    char chargen[4096];
+    char rom[8192];
 
-    loadRom(KERNAL_PATH, kernal);
-    loadRom(BASIC_PATH, basic);
-    loadRom(CHARGEN_PATH, chargen);
+    loadRom(KERNAL_PATH, rom);
+    m_engine.setKernal((const uint8_t*)rom);
 
-    m_engine.setRoms((const uint8_t*)kernal, (const uint8_t*)basic, (const uint8_t*)chargen);
+    loadRom(BASIC_PATH, rom);
+    m_engine.setBasic((const uint8_t*)rom);
+
+    loadRom(CHARGEN_PATH, rom);
+    m_engine.setChargen((const uint8_t*)rom);
+
     SidConfig config = m_engine.config();
     config.powerOnDelay = 0x1267;
 
