@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,6 +114,11 @@ int main(int argc, char* argv[])
                 if (!strcmp(&argv[i][0], "new"))
                 {
                     config.ciaModel = SidConfig::MOS8521;
+                }
+                else
+                if (!strcmp(&argv[i][0], "4485"))
+                {
+                    config.ciaModel = SidConfig::MOS6526W4485;
                 }
             }
             if (!strcmp(&argv[i][1], "-vic"))

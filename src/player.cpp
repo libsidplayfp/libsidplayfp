@@ -280,6 +280,17 @@ void Player::stop()
     }
 }
 
+c64::cia_model_t getCiaModel(SidConfig::cia_model_t model)
+{
+    switch (model)
+    {
+    default:
+    case SidConfig::MOS6526: return c64::OLD;
+    case SidConfig::MOS8521: return c64::NEW;
+    case SidConfig::MOS6526W4485: return c64::OLD_4485;
+    }
+}
+
 bool Player::config(const SidConfig &cfg, bool force)
 {
     // Check if configuration have been changed or forced
@@ -321,11 +332,12 @@ bool Player::config(const SidConfig &cfg, bool force)
             // environment setup call)
             sidCreate(cfg.sidEmulation, cfg.defaultSidModel, cfg.digiBoost, cfg.forceSidModel, addresses);
 
-            // Determine clock speed
+            // Determine c64 model
             const c64::model_t model = c64model(cfg.defaultC64Model, cfg.forceC64Model);
-
             m_c64.setModel(model);
-            m_c64.setCiaModel(cfg.ciaModel);
+
+            const c64::cia_model_t ciaModel = getCiaModel(cfg.ciaModel);
+            m_c64.setCiaModel(ciaModel);
 
             sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
 

@@ -57,7 +57,8 @@ public:
     typedef enum
     {
         MOS6526,
-        MOS8521
+        MOS8521,
+        MOS6526W4485
     } cia_model_t;
 
     /// C64 model
