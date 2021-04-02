@@ -1,3 +1,11 @@
+2.2.0 2021-04-xx
+* reSIDfp: added NEON (by kode54) and SSE2 version of convolution function
+* Exposed last values written to the SID registers. Based on patch by Stian Skjelstad
+* Splitted ROM functions
+* Added CIA 6526 4485 model setting, mostly for testing
+
+
+
 2.1.1 2021-02-27
 * Fixed building hardsid support
 * reSIDfp: shift register regression fixes
