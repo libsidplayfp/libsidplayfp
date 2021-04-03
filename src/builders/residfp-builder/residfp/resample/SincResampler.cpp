@@ -147,6 +147,65 @@ int convolve(const short* a, const short* b, int bLength)
 
     bLength &= 3;
 #elif defined(HAVE_ARM_NEON_H)
+#if (defined(__arm64__) && defined(__APPLE__)) || defined(__aarch64__)
+    int32x4_t acc1Low = vdupq_n_s32(0);
+    int32x4_t acc1High = vdupq_n_s32(0);
+    int32x4_t acc2Low = vdupq_n_s32(0);
+    int32x4_t acc2High = vdupq_n_s32(0);
+
+    const int n = bLength / 16;
+
+    for (int i = 0; i < n; i++)
+    {
+        int16x8_t v11 = vld1q_s16(a);
+        int16x8_t v12 = vld1q_s16(a + 8);
+        int16x8_t v21 = vld1q_s16(b);
+        int16x8_t v22 = vld1q_s16(b + 8);
+
+        acc1Low  = vmlal_s16(acc1Low, vget_low_s16(v11), vget_low_s16(v21));
+        acc1High = vmlal_high_s16(acc1High, v11, v21);
+        acc2Low  = vmlal_s16(acc2Low, vget_low_s16(v12), vget_low_s16(v22));
+        acc2High = vmlal_high_s16(acc2High, v12, v22);
+
+        a += 16;
+        b += 16;
+    }
+
+    bLength &= 15;
+
+    if (bLength >= 8)
+    {
+        int16x8_t v1 = vld1q_s16(a);
+        int16x8_t v2 = vld1q_s16(b);
+
+        acc1Low  = vmlal_s16(acc1Low, vget_low_s16(v1), vget_low_s16(v2));
+        acc1High = vmlal_high_s16(acc1High, v1, v2);
+
+        a += 8;
+        b += 8;
+    }
+
+    bLength &= 7;
+
+    if (bLength >= 4)
+    {
+        int16x4_t v1 = vld1_s16(a);
+        int16x4_t v2 = vld1_s16(b);
+
+        acc1Low  = vmlal_s16(acc1Low, v1, v2);
+
+        a += 4;
+        b += 4;
+    }
+
+    int32x4_t accSumsNeon = vaddq_s32(acc1Low, acc1High);
+    accSumsNeon = vaddq_s32(accSumsNeon, acc2Low);
+    accSumsNeon = vaddq_s32(accSumsNeon, acc2High);
+
+    int out = vaddvq_s32(accSumsNeon);
+
+    bLength &= 3;
+#else
     int32x4_t acc = vdupq_n_s32(0);
     
     const int n = bLength / 4;
@@ -166,6 +225,7 @@ int convolve(const short* a, const short* b, int bLength)
               vgetq_lane_s32(acc, 3);
     
     bLength &= 3;
+#endif
 #else
     int out = 0;
 #endif
