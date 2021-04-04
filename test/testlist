@@ -726,9 +726,9 @@ SID/wb_testsuite/noise_writeback_check_B_to_D_new    --sid new
 SID/wb_testsuite/noise_writeback_check_B_to_E_new    --sid new
 SID/wb_testsuite/noise_writeback_check_B_to_F_new    --sid new
 SID/wb_testsuite/noise_writeback_check_C_to_8_new    --sid new
-#SID/wb_testsuite/noise_writeback_check_C_to_9_new    --sid new
+SID/wb_testsuite/noise_writeback_check_C_to_9_new    --sid new
 SID/wb_testsuite/noise_writeback_check_C_to_A_new    --sid new
-#SID/wb_testsuite/noise_writeback_check_C_to_E_new    --sid new
+SID/wb_testsuite/noise_writeback_check_C_to_E_new    --sid new
 #SID/wb_testsuite/noise_writeback_check_C_to_F_new    --sid new
 SID/wb_testsuite/noise_writeback_check_D_to_8_new    --sid new
 SID/wb_testsuite/noise_writeback_check_D_to_9_new    --sid new
