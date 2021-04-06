@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -25,6 +25,19 @@
 #include "WaveformGenerator.h"
 
 #include "Dac.h"
+
+/*
+ * This fixes tests
+ *  SID/wb_testsuite/noise_writeback_check_8_to_C_old
+ *  SID/wb_testsuite/noise_writeback_check_9_to_C_old
+ *  SID/wb_testsuite/noise_writeback_check_A_to_C_old
+ *  SID/wb_testsuite/noise_writeback_check_C_to_C_old
+ *
+ * but breaks SID/wf12nsr/wf12nsr
+ *
+ * needs more digging...
+ */
+//#define NO_WB_NOI_PUL
 
 namespace reSIDfp
 {
@@ -130,6 +143,10 @@ void WaveformGenerator::write_shift_register()
         // FIXME: Write test program to check the effect of 1 bits and whether
         // neighboring bits are affected.
 
+#ifdef NO_WB_NOI_PUL
+        if (waveform == 0xc)
+            return;
+#endif
         shift_register &= get_noise_writeback();
 
         noise_output &= waveform_output;
@@ -204,10 +221,23 @@ bool do_pre_writeback(unsigned int waveform_prev, unsigned int waveform, bool is
         else if ((waveform != 0x9) && (waveform != 0xe))
             return false;
     }
+#ifdef NO_WB_NOI_PUL
+    if (waveform == 0xc)
+        return false;
+#endif
     // ok do the writeback
     return true;
 }
 
+/*
+ * When noise and pulse are combined all the bits are
+ * connected and the four lower ones are grounded.
+ * This causes the adjacent bits to be pulled down,
+ * with different strength depending on model.
+ *
+ * This is just a rough attempt at modelling the effect.
+ */
+ 
 static unsigned int noise_pulse6581(unsigned int noise)
 {
     return (noise < 0xf00) ? 0x000 : noise & (noise << 1) & (noise << 2);
