@@ -65,7 +65,7 @@ enabled by default
 --with-simd=<sse2/mmx/neon/none>
 enable SIMD code in reSIDfp that might increase resampling performance.
 Be aware that this is processor specific and the compiler could actually produce
-more optimized codewith the appropirate flags. Use only if you know what you're doing.
+more optimized code with the appropriate flags. Use only if you know what you're doing.
 none by default
 
 --enable-testsuite=PATH_TO_TESTSUITE
