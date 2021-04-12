@@ -97,6 +97,12 @@ const uint_least16_t SIDTUNE_R64_MIN_LOAD_ADDR = 0x07e8;
 SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
                  bool separatorIsSlash)
 {
+    return load(fileName, fileNameExt, separatorIsSlash, nullptr);
+}
+
+SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
+                 bool separatorIsSlash, LoaderFunc loader)
+{
     if (fileName == nullptr)
         return nullptr;
 
@@ -105,7 +111,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
     if (strcmp(fileName, "-") == 0)
         return getFromStdIn();
 #endif
-    return getFromFiles(fileName, fileNameExt, separatorIsSlash);
+    return getFromFiles(fileName, fileNameExt, separatorIsSlash, loader);
 }
 
 SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
@@ -358,9 +364,17 @@ void SidTuneBase::createNewFileName(std::string& destString,
 
 SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, bool separatorIsSlash)
 {
+    return getFromFiles(fileName, fileNameExtensions, separatorIsSlash, nullptr);
+}
+
+SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, bool separatorIsSlash, LoaderFunc loader)
+{
     buffer_t fileBuf1;
 
-    loadFile(fileName, fileBuf1);
+    if (loader == nullptr)
+        loader = (LoaderFunc) loadFile;
+
+    loader(fileName, fileBuf1);
 
     // File loaded. Now check if it is in a valid single-file-format.
     std::unique_ptr<SidTuneBase> s(PSID::load(fileBuf1));
@@ -385,7 +399,7 @@ SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNa
                     {
                         buffer_t fileBuf2;
 
-                        loadFile(fileName2.c_str(), fileBuf2);
+                        loader(fileName2.c_str(), fileBuf2);
                         // Check if tunes in wrong order and therefore swap them here
                         if (stringutils::equal(fileNameExtensions[n], ".mus"))
                         {
