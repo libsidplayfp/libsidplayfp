@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -97,11 +97,11 @@ const uint_least16_t SIDTUNE_R64_MIN_LOAD_ADDR = 0x07e8;
 SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
                  bool separatorIsSlash)
 {
-    return load(fileName, fileNameExt, separatorIsSlash, nullptr);
+    return load(nullptr, fileName, fileNameExt, separatorIsSlash);
 }
 
-SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
-                 bool separatorIsSlash, LoaderFunc loader)
+SidTuneBase* SidTuneBase::load(LoaderFunc loader, const char* fileName,
+                 const char **fileNameExt, bool separatorIsSlash)
 {
     if (fileName == nullptr)
         return nullptr;
@@ -111,7 +111,7 @@ SidTuneBase* SidTuneBase::load(const char* fileName, const char **fileNameExt,
     if (strcmp(fileName, "-") == 0)
         return getFromStdIn();
 #endif
-    return getFromFiles(fileName, fileNameExt, separatorIsSlash, loader);
+    return getFromFiles(loader, fileName, fileNameExt, separatorIsSlash);
 }
 
 SidTuneBase* SidTuneBase::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
@@ -364,10 +364,10 @@ void SidTuneBase::createNewFileName(std::string& destString,
 
 SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, bool separatorIsSlash)
 {
-    return getFromFiles(fileName, fileNameExtensions, separatorIsSlash, nullptr);
+    return getFromFiles(nullptr, fileName, fileNameExtensions, separatorIsSlash);
 }
 
-SidTuneBase* SidTuneBase::getFromFiles(const char* fileName, const char **fileNameExtensions, bool separatorIsSlash, LoaderFunc loader)
+SidTuneBase* SidTuneBase::getFromFiles(LoaderFunc loader, const char* fileName, const char **fileNameExtensions, bool separatorIsSlash)
 {
     buffer_t fileBuf1;
 
