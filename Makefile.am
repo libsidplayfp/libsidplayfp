@@ -233,14 +233,14 @@ src/builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
 src/builders/residfp-builder/residfp/EnvelopeGenerator.h \
 src/builders/residfp-builder/residfp/ExternalFilter.cpp \
 src/builders/residfp-builder/residfp/ExternalFilter.h \
-src/builders/residfp-builder/residfp/FilterModelConfig.cpp \
-src/builders/residfp-builder/residfp/FilterModelConfig.h \
 src/builders/residfp-builder/residfp/Filter.cpp \
 src/builders/residfp-builder/residfp/Filter.h \
 src/builders/residfp-builder/residfp/Filter6581.cpp \
 src/builders/residfp-builder/residfp/Filter6581.h \
 src/builders/residfp-builder/residfp/Filter8580.cpp \
 src/builders/residfp-builder/residfp/Filter8580.h \
+src/builders/residfp-builder/residfp/FilterModelConfig6581.cpp \
+src/builders/residfp-builder/residfp/FilterModelConfig6581.h \
 src/builders/residfp-builder/residfp/FilterModelConfig8580.cpp \
 src/builders/residfp-builder/residfp/FilterModelConfig8580.h \
 src/builders/residfp-builder/residfp/Integrator6581.cpp \

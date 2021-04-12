@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef FILTERMODELCONFIG_H
-#define FILTERMODELCONFIG_H
+#ifndef FILTERMODELCONFIG6581_H
+#define FILTERMODELCONFIG6581_H
 
 #include <memory>
 
@@ -38,18 +38,18 @@ class Integrator6581;
 /**
  * Calculate parameters for 6581 filter emulation.
  */
-class FilterModelConfig
+class FilterModelConfig6581
 {
 private:
     static const unsigned int DAC_BITS = 11;
 
 private:
-    static std::unique_ptr<FilterModelConfig> instance;
+    static std::unique_ptr<FilterModelConfig6581> instance;
     // This allows access to the private constructor
 #ifdef HAVE_CXX11
-    friend std::unique_ptr<FilterModelConfig>::deleter_type;
+    friend std::unique_ptr<FilterModelConfig6581>::deleter_type;
 #else
-    friend class std::auto_ptr<FilterModelConfig>;
+    friend class std::auto_ptr<FilterModelConfig6581>;
 #endif
 
     const double voice_voltage_range;
@@ -104,11 +104,11 @@ private:
 private:
     double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
 
-    FilterModelConfig();
-    ~FilterModelConfig();
+    FilterModelConfig6581();
+    ~FilterModelConfig6581();
 
 public:
-    static FilterModelConfig* getInstance();
+    static FilterModelConfig6581* getInstance();
 
     /**
      * The digital range of one voice is 20 bits; create a scaling term

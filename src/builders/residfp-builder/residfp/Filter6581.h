@@ -28,7 +28,7 @@
 #include <memory>
 
 #include "Filter.h"
-#include "FilterModelConfig.h"
+#include "FilterModelConfig6581.h"
 
 #include "sidcxx11.h"
 
@@ -354,14 +354,14 @@ protected:
 
 public:
     Filter6581() :
-        f0_dac(FilterModelConfig::getInstance()->getDAC(0.5)),
-        mixer(FilterModelConfig::getInstance()->getMixer()),
-        summer(FilterModelConfig::getInstance()->getSummer()),
-        gain(FilterModelConfig::getInstance()->getGain()),
-        voiceScaleS11(FilterModelConfig::getInstance()->getVoiceScaleS11()),
-        voiceDC(FilterModelConfig::getInstance()->getVoiceDC()),
-        hpIntegrator(FilterModelConfig::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig::getInstance()->buildIntegrator())
+        f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5)),
+        mixer(FilterModelConfig6581::getInstance()->getMixer()),
+        summer(FilterModelConfig6581::getInstance()->getSummer()),
+        gain(FilterModelConfig6581::getInstance()->getGain()),
+        voiceScaleS11(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
+        voiceDC(FilterModelConfig6581::getInstance()->getVoiceDC()),
+        hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
     {
         input(0);
     }
