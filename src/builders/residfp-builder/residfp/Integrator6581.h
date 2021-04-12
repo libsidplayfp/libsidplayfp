@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef INTEGRATOR_H
-#define INTEGRATOR_H
+#ifndef INTEGRATOR6581_H
+#define INTEGRATOR6581_H
 
 #include <stdint.h>
 #include <cassert>
@@ -156,7 +156,7 @@ namespace reSIDfp
  *
  *     Vg = Vddt - sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
  */
-class Integrator
+class Integrator6581
 {
 private:
     const unsigned short* vcr_Vg;
@@ -181,7 +181,7 @@ private:
     const unsigned short n_snake;
 
 public:
-    Integrator(const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
+    Integrator6581(const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
                const unsigned short* opamp_rev, unsigned short Vddt, unsigned short nVt,
                unsigned short nVmin, unsigned short n_snake, double N16) :
         vcr_Vg(vcr_Vg),
@@ -214,7 +214,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int Integrator::solve(int vi) const
+int Integrator6581::solve(int vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
     assert(vx < Vddt);

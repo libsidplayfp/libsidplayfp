@@ -35,7 +35,7 @@
 namespace reSIDfp
 {
 
-class Integrator;
+class Integrator6581;
 
 /**
  * The SID filter is modeled with a two-integrator-loop biquadratic filter,
@@ -332,10 +332,10 @@ private:
     const int voiceDC;
 
     /// VCR + associated capacitor connected to highpass output.
-    std::unique_ptr<Integrator> const hpIntegrator;
+    std::unique_ptr<Integrator6581> const hpIntegrator;
 
     /// VCR + associated capacitor connected to bandpass output.
-    std::unique_ptr<Integrator> const bpIntegrator;
+    std::unique_ptr<Integrator6581> const bpIntegrator;
 
 protected:
     /**
@@ -384,7 +384,7 @@ public:
 
 #if RESID_INLINING || defined(FILTER6581_CPP)
 
-#include "Integrator.h"
+#include "Integrator6581.h"
 
 namespace reSIDfp
 {

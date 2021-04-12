@@ -33,7 +33,7 @@
 namespace reSIDfp
 {
 
-class Integrator;
+class Integrator6581;
 
 /**
  * Calculate parameters for 6581 filter emulation.
@@ -142,7 +142,7 @@ public:
      *
      * @return the integrator
      */
-    std::unique_ptr<Integrator> buildIntegrator();
+    std::unique_ptr<Integrator6581> buildIntegrator();
 };
 
 } // namespace reSIDfp

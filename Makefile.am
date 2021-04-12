@@ -229,8 +229,6 @@ src_builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
 src/builders/residfp-builder/residfp/array.h \
 src/builders/residfp-builder/residfp/Dac.cpp \
 src/builders/residfp-builder/residfp/Dac.h \
-src/builders/residfp-builder/residfp/Integrator.cpp \
-src/builders/residfp-builder/residfp/Integrator.h \
 src/builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
 src/builders/residfp-builder/residfp/EnvelopeGenerator.h \
 src/builders/residfp-builder/residfp/ExternalFilter.cpp \
@@ -245,6 +243,8 @@ src/builders/residfp-builder/residfp/Filter8580.cpp \
 src/builders/residfp-builder/residfp/Filter8580.h \
 src/builders/residfp-builder/residfp/FilterModelConfig8580.cpp \
 src/builders/residfp-builder/residfp/FilterModelConfig8580.h \
+src/builders/residfp-builder/residfp/Integrator6581.cpp \
+src/builders/residfp-builder/residfp/Integrator6581.h \
 src/builders/residfp-builder/residfp/Integrator8580.cpp \
 src/builders/residfp-builder/residfp/Integrator8580.h \
 src/builders/residfp-builder/residfp/OpAmp.cpp \

@@ -20,6 +20,6 @@
 
 #define INTEGRATOR_CPP
 
-#include "Integrator.h"
+#include "Integrator6581.h"
 
 // This is needed when compiling with --disable-inline

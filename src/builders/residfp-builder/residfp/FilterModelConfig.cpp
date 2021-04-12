@@ -25,7 +25,7 @@
 #include <cmath>
 #include <cassert>
 
-#include "Integrator.h"
+#include "Integrator6581.h"
 #include "OpAmp.h"
 
 namespace reSIDfp
@@ -291,7 +291,7 @@ unsigned short* FilterModelConfig::getDAC(double adjustment) const
     return f0_dac;
 }
 
-std::unique_ptr<Integrator> FilterModelConfig::buildIntegrator()
+std::unique_ptr<Integrator6581> FilterModelConfig::buildIntegrator()
 {
     // Vdd - Vth, normalized so that translated values can be subtracted:
     // Vddt - x = (Vddt - t) - (x - t)
@@ -313,7 +313,7 @@ std::unique_ptr<Integrator> FilterModelConfig::buildIntegrator()
     assert(tmp > -0.5 && tmp < 65535.5);
     const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
 
-    return std::unique_ptr<Integrator>(new Integrator(vcr_Vg, vcr_n_Ids_term, opamp_rev, nVddt, nVt, nVmin, n_snake, N16));
+    return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_Vg, vcr_n_Ids_term, opamp_rev, nVddt, nVt, nVmin, n_snake, N16));
 }
 
 } // namespace reSIDfp
