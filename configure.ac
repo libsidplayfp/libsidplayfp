@@ -95,7 +95,7 @@ dnl libtool-style version-info number
 # Increase the age value only if the changes made to the ABI are backward compatible.
 
 LIBSIDPLAYCUR=8
-LIBSIDPLAYREV=17
+LIBSIDPLAYREV=18
 LIBSIDPLAYAGE=2
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
