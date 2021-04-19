@@ -1,5 +1,6 @@
 <map id="libsidplayfp::ReSID" name="libsidplayfp::ReSID">
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1sidemu.html" title="libsidplayfp::sidemu" alt="" coords="5,155,160,181"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1c64sid.html" title="libsidplayfp::c64sid" alt="" coords="9,80,157,107"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1Bank.html" title="libsidplayfp::Bank" alt="" coords="13,5,152,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="10,229,155,256"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="5,155,160,181"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="9,80,157,107"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="13,5,152,32"/>
 </map>

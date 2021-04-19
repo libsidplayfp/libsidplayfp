@@ -1,10 +1,11 @@
 <map id="sid.h" name="sid.h">
-<area shape="rect" id="node2" href="$resid-config_8h_source.html" title="resid&#45;config.h" alt="" coords="116,229,226,256"/>
-<area shape="rect" id="node4" href="$voice_8h_source.html" title="voice.h" alt="" coords="83,80,152,107"/>
-<area shape="rect" id="node7" href="$filter8580new_8h_source.html" title="filter8580new.h" alt="" coords="243,155,366,181"/>
-<area shape="rect" id="node8" href="$extfilt_8h_source.html" title="extfilt.h" alt="" coords="330,80,402,107"/>
-<area shape="rect" id="node9" href="$pot_8h_source.html" title="pot.h" alt="" coords="426,80,481,107"/>
-<area shape="rect" id="node3" href="$builders_2resid-builder_2resid_2siddefs_8h_source.html" title="siddefs.h" alt="" coords="130,304,212,331"/>
-<area shape="rect" id="node5" href="$wave_8h_source.html" title="wave.h" alt="" coords="30,155,99,181"/>
-<area shape="rect" id="node6" href="$envelope_8h_source.html" title="envelope.h" alt="" coords="124,155,218,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="266,5,319,32"/>
+<area shape="rect" id="node2" href="$resid-config_8h_source.html" title=" " alt="" coords="116,229,226,256"/>
+<area shape="rect" id="node4" href="$voice_8h_source.html" title=" " alt="" coords="83,80,152,107"/>
+<area shape="rect" id="node7" href="$filter8580new_8h_source.html" title=" " alt="" coords="243,155,366,181"/>
+<area shape="rect" id="node8" href="$extfilt_8h_source.html" title=" " alt="" coords="330,80,402,107"/>
+<area shape="rect" id="node9" href="$pot_8h_source.html" title=" " alt="" coords="426,80,481,107"/>
+<area shape="rect" id="node3" href="$builders_2resid-builder_2resid_2siddefs_8h_source.html" title=" " alt="" coords="130,304,212,331"/>
+<area shape="rect" id="node5" href="$wave_8h_source.html" title=" " alt="" coords="30,155,99,181"/>
+<area shape="rect" id="node6" href="$envelope_8h_source.html" title=" " alt="" coords="124,155,218,181"/>
 </map>

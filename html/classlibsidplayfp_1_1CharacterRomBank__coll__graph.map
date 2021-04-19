@@ -1,4 +1,5 @@
 <map id="libsidplayfp::CharacterRomBank" name="libsidplayfp::CharacterRomBank">
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1romBank.html" title="libsidplayfp::romBank\l\&lt; 0x1000 \&gt;" alt="" coords="38,80,203,121"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Bank.html" title="libsidplayfp::Bank" alt="" coords="51,5,190,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,169,237,196"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1romBank.html" title=" " alt="" coords="39,80,204,121"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="52,5,191,32"/>
 </map>
