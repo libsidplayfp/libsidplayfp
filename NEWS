@@ -10,6 +10,12 @@
 
 
 
+2.1.2 2021-04-19
+* configure: don't fail when --with-exsid is passed and libexsid is installed (issue #13)
+* songlength DB: fix parsing of milliseconds with leading zeroes
+
+
+
 2.1.1 2021-02-27
 * Fixed building hardsid support
 * reSIDfp: shift register regression fixes
