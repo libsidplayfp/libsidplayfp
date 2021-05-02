@@ -91,9 +91,9 @@ public:
     void reset();
 
     // ROM banks methods
-    void setKernal(const uint8_t* rom) { kernalRomBank.set(rom); }
-    void setBasic(const uint8_t* rom) { basicRomBank.set(rom); }
-    void setChargen(const uint8_t* rom) { characterRomBank.set(rom); }
+    void setKernal(const uint8_t* rom) override { kernalRomBank.set(rom); }
+    void setBasic(const uint8_t* rom) override { basicRomBank.set(rom); }
+    void setChargen(const uint8_t* rom) override { characterRomBank.set(rom); }
 
     // RAM access methods
     uint8_t readMemByte(uint_least16_t addr) override { return ramBank.peek(addr); }
