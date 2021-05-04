@@ -68,12 +68,12 @@ HardSIDBuilder::~HardSIDBuilder()
 }
 
 // Create a new sid emulation.
-unsigned int HardSIDBuilder::create(unsigned int sids)
+size_t HardSIDBuilder::create(size_t sids)
 {
     m_status = true;
 
     // Check available devices
-    unsigned int count = availDevices();
+    size_t count = availDevices();
     if (count == 0)
     {
         m_errorBuffer = "HARDSID ERROR: No devices found (run HardSIDConfig)";
@@ -113,7 +113,7 @@ HardSIDBuilder_create_error:
     return count;
 }
 
-unsigned int HardSIDBuilder::availDevices() const
+size_t HardSIDBuilder::availDevices() const
 {
     // Available devices
     // @FIXME@ not yet supported on Linux

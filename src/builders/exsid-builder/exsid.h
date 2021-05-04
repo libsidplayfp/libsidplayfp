@@ -28,29 +28,29 @@ private:
 
 public:
     exSIDBuilder(const char * const name);
-    ~exSIDBuilder();
+    ~exSIDBuilder() override;
 
     /**
      * Available sids.
      *
      * @return the number of available sids, 0 = endless.
      */
-    unsigned int availDevices() const;
+    size_t availDevices() const override;
 
-    const char *credits() const;
+    const char *credits() const override;
     void flush();
 
     /**
      * enable/disable filter.
      */
-    void filter(bool enable);
+    void filter(bool enable) override;
 
     /**
      * Create the sid emu.
      *
      * @param sids the number of required sid emu
      */
-    unsigned int create(unsigned int sids);
+    size_t create(size_t sids) override;
 };
 
 #endif // EXSID_H

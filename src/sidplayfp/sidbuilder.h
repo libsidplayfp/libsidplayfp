@@ -82,14 +82,14 @@ public:
      *
      * @return number of used sids, 0 if none.
      */
-    unsigned int usedDevices() const { return sidobjs.size(); }
+    size_t usedDevices() const { return sidobjs.size(); }
 
     /**
      * Available devices.
      *
      * @return the number of available sids, 0 = endless.
      */
-    virtual unsigned int availDevices() const = 0;
+    virtual size_t availDevices() const = 0;
 
     /**
      * Create the sid emu.
@@ -97,7 +97,7 @@ public:
      * @param sids the number of required sid emu
      * @return the number of actually created sid emus
      */
-    virtual unsigned int create(unsigned int sids) = 0;
+    virtual size_t create(size_t sids) = 0;
 
     /**
      * Find a free SID of the required specs

@@ -34,23 +34,23 @@ class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 public:
     ReSIDfpBuilder(const char * const name) :
         sidbuilder(name) {}
-    ~ReSIDfpBuilder();
+    ~ReSIDfpBuilder() override;
 
     /**
      * Available sids.
      *
      * @return the number of available sids, 0 = endless.
      */
-    unsigned int availDevices() const { return 0; }
+    size_t availDevices() const override { return 0; }
 
     /**
      * Create the sid emu.
      *
      * @param sids the number of required sid emu
      */
-    unsigned int create(unsigned int sids);
+    size_t create(size_t sids) override;
 
-    const char *credits() const;
+    const char *credits() const override;
 
     /// @name global settings
     /// Settings that affect all SIDs.
@@ -58,7 +58,7 @@ public:
     /**
      * enable/disable filter.
      */
-    void filter(bool enable);
+    void filter(bool enable) override;
 
     /**
      * Set 6581 filter curve.

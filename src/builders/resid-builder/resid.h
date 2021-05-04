@@ -34,18 +34,18 @@ class SID_EXTERN ReSIDBuilder : public sidbuilder
 public:
     ReSIDBuilder(const char * const name) :
         sidbuilder(name) {}
-    ~ReSIDBuilder();
+    ~ReSIDBuilder() override;
 
     /**
      * Available sids.
      *
      * @return the number of available sids, 0 = endless.
      */
-    unsigned int availDevices() const { return 0; }
+    size_t availDevices() const override { return 0; }
 
-    unsigned int create(unsigned int sids);
+    size_t create(size_t sids) override;
 
-    const char *credits() const;
+    const char *credits() const override;
 
     /// @name global settings
     /// Settings that affect all SIDs
@@ -53,7 +53,7 @@ public:
     /**
      * enable/disable filter.
      */
-    void filter(bool enable);
+    void filter(bool enable) override;
 
     /**
      * The bias is given in millivolts, and a maximum reasonable

@@ -33,12 +33,12 @@ ReSIDfpBuilder::~ReSIDfpBuilder()
 }
 
 // Create a new sid emulation.
-unsigned int ReSIDfpBuilder::create(unsigned int sids)
+size_t ReSIDfpBuilder::create(size_t sids)
 {
     m_status = true;
 
     // Check available devices
-    unsigned int count = availDevices();
+    size_t count = availDevices();
 
     if (count && (count < sids))
         sids = count;

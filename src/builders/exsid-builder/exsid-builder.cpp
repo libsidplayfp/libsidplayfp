@@ -46,12 +46,12 @@ exSIDBuilder::~exSIDBuilder()
 }
 
 // Create a new sid emulation.  Called by libsidplay2 only
-unsigned int exSIDBuilder::create(unsigned int sids)
+size_t exSIDBuilder::create(size_t sids)
 {
     m_status = true;
 
     // Check available devices
-    unsigned int count = availDevices();
+    size_t count = availDevices();
     if (count == 0)
     {
         m_errorBuffer.assign(name()).append(" ERROR: No devices found");
@@ -90,7 +90,7 @@ exSIDBuilder_create_error:
     return count;
 }
 
-unsigned int exSIDBuilder::availDevices() const
+size_t exSIDBuilder::availDevices() const
 {
     return m_count;
 }
