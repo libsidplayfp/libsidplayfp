@@ -1,8 +1,12 @@
-2.2.0 2021-04-xx
-* reSIDfp: added NEON (by kode54) and SSE2 version of convolution function
+2.2.0 2021-05-23
+* reSIDfp: added NEON (by Christopher Snowhill) and SSE2 version of convolution function
+  the configure option has been changed to --with-simd=<sse2/mmx/neon/none>
 * Exposed last values written to the SID registers. Based on patch by Stian Skjelstad
-* Splitted ROM functions
-* Added CIA 6526 4485 model setting, mostly for testing
+* API additions:
+  - Splitted ROM functions
+  - Added CIA 6526 4485 model setting, mostly for testing
+  - Added function for loading database from unicode path on Windows
+  - Added function for loading tunes using a custom loader callback
 
 
 
