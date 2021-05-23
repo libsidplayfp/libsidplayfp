@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -50,6 +50,7 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-types">Protected Types</a> &#124;
@@ -94,6 +95,12 @@ Collaboration diagram for libsidplayfp::SidTuneBase:</div>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a117cb5f599dcde0375a07deeabc2ec99"><td class="memItemLeft" align="right" valign="top"><a id="a117cb5f599dcde0375a07deeabc2ec99"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>LoaderFunc</b>) (const char *fileName, buffer_t &amp;bufferRef)</td></tr>
+<tr class="separator:a117cb5f599dcde0375a07deeabc2ec99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af0aedbd65cce2d5c2df15769201c9063"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#af0aedbd65cce2d5c2df15769201c9063">selectSong</a> (unsigned int songNum)</td></tr>
@@ -115,6 +122,8 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:afdb261e9d3d389365efed3edad8ddf11"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#afdb261e9d3d389365efed3edad8ddf11">load</a> (const char *fileName, const char **fileNameExt, bool separatorIsSlash)</td></tr>
 <tr class="separator:afdb261e9d3d389365efed3edad8ddf11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8654f80a3524c905f87cc44f3cfd804b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a8654f80a3524c905f87cc44f3cfd804b">load</a> (LoaderFunc loader, const char *fileName, const char **fileNameExt, bool separatorIsSlash)</td></tr>
+<tr class="separator:a8654f80a3524c905f87cc44f3cfd804b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ed018474bee0cda1a6d87b17f0277f2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a2ed018474bee0cda1a6d87b17f0277f2">read</a> (const uint_least8_t *sourceBuffer, uint_least32_t bufferLen)</td></tr>
 <tr class="separator:a2ed018474bee0cda1a6d87b17f0277f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -471,7 +480,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div>
 </div>
 <a id="afdb261e9d3d389365efed3edad8ddf11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afdb261e9d3d389365efed3edad8ddf11">&#9670;&nbsp;</a></span>load()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afdb261e9d3d389365efed3edad8ddf11">&#9670;&nbsp;</a></span>load() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -513,6 +522,72 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 <p>To retrieve data from standard input pass in filename "-". If you want to override the default filename extensions use this contructor. Please note, that if the specified "sidTuneFileName" does exist and the loader is able to determine its file format, this function does not try to append any file name extension. See "SidTune.cpp" for the default list of file name extensions.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">fileName</td><td></td></tr>
+    <tr><td class="paramname">fileNameExt</td><td></td></tr>
+    <tr><td class="paramname">separatorIsSlash</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the sid tune </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classlibsidplayfp_1_1loadError.html">loadError</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8654f80a3524c905f87cc44f3cfd804b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8654f80a3524c905f87cc44f3cfd804b">&#9670;&nbsp;</a></span>load() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a> * libsidplayfp::SidTuneBase::load </td>
+          <td>(</td>
+          <td class="paramtype">LoaderFunc&#160;</td>
+          <td class="paramname"><em>loader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **&#160;</td>
+          <td class="paramname"><em>fileNameExt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>separatorIsSlash</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Load a sidtune from a file, using a file access callback.</p>
+<p>Uses the same call methodology as the above function, only a callback is supplied, which will be used to read every file this function accesses.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loader</td><td></td></tr>
     <tr><td class="paramname">fileName</td><td></td></tr>
     <tr><td class="paramname">fileNameExt</td><td></td></tr>
     <tr><td class="paramname">separatorIsSlash</td><td></td></tr>
@@ -758,7 +833,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

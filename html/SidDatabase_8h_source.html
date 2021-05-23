@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -99,29 +99,32 @@
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    ~<a class="code" href="classSidDatabase.html">SidDatabase</a>();</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">bool</span> open(<span class="keyword">const</span> <span class="keywordtype">char</span> *filename);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> close();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    int_least32_t length(<a class="code" href="classSidTune.html">SidTune</a> &amp;tune);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    int_least32_t length(<span class="keyword">const</span> <span class="keywordtype">char</span> *md5, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> song);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    int_least32_t lengthMs(<a class="code" href="classSidTune.html">SidTune</a> &amp;tune);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    int_least32_t lengthMs(<span class="keyword">const</span> <span class="keywordtype">char</span> *md5, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> song);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="classSidDatabase.html#a678d5c33266fa446966934b48650ba39">  104</a></span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="classSidDatabase.html#a678d5c33266fa446966934b48650ba39">error</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> errorString; }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;};</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#endif // SIDDATABASE_H</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#ifdef _WIN32</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">bool</span> open(<span class="keyword">const</span> <span class="keywordtype">wchar_t</span>* filename);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> close();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    int_least32_t length(<a class="code" href="classSidTune.html">SidTune</a> &amp;tune);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    int_least32_t length(<span class="keyword">const</span> <span class="keywordtype">char</span> *md5, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> song);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    int_least32_t lengthMs(<a class="code" href="classSidTune.html">SidTune</a> &amp;tune);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    int_least32_t lengthMs(<span class="keyword">const</span> <span class="keywordtype">char</span> *md5, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> song);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classSidDatabase.html#a678d5c33266fa446966934b48650ba39">  107</a></span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="classSidDatabase.html#a678d5c33266fa446966934b48650ba39">error</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> errorString; }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif // SIDDATABASE_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassSidTune_html"><div class="ttname"><a href="classSidTune.html">SidTune</a></div><div class="ttdef"><b>Definition:</b> SidTune.h:41</div></div>
+<div class="ttc" id="aclassSidTune_html"><div class="ttname"><a href="classSidTune.html">SidTune</a></div><div class="ttdef"><b>Definition:</b> SidTune.h:42</div></div>
 <div class="ttc" id="aclassSidDatabase_html"><div class="ttname"><a href="classSidDatabase.html">SidDatabase</a></div><div class="ttdef"><b>Definition:</b> SidDatabase.h:41</div></div>
-<div class="ttc" id="aclassSidDatabase_html_a678d5c33266fa446966934b48650ba39"><div class="ttname"><a href="classSidDatabase.html#a678d5c33266fa446966934b48650ba39">SidDatabase::error</a></div><div class="ttdeci">const char * error() const</div><div class="ttdef"><b>Definition:</b> SidDatabase.h:104</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1iniParser_html"><div class="ttname"><a href="classlibsidplayfp_1_1iniParser.html">libsidplayfp::iniParser</a></div><div class="ttdef"><b>Definition:</b> iniParser.h:29</div></div>
+<div class="ttc" id="aclassSidDatabase_html_a678d5c33266fa446966934b48650ba39"><div class="ttname"><a href="classSidDatabase.html#a678d5c33266fa446966934b48650ba39">SidDatabase::error</a></div><div class="ttdeci">const char * error() const</div><div class="ttdef"><b>Definition:</b> SidDatabase.h:107</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1iniParser_html"><div class="ttname"><a href="classlibsidplayfp_1_1iniParser.html">libsidplayfp::iniParser</a></div><div class="ttdef"><b>Definition:</b> iniParser.h:30</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

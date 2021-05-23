@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -54,7 +54,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2019 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2021 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Copyright 2000-2001 Simon White</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
@@ -177,22 +177,26 @@
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *error()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_errorString; }</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">void</span> setRoms(<span class="keyword">const</span> uint8_t* kernal, <span class="keyword">const</span> uint8_t* basic, <span class="keyword">const</span> uint8_t* character);</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getCia1TimerA(); }</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;};</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;}</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">#endif // PLAYER_H</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">void</span> setKernal(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> setBasic(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordtype">void</span> setChargen(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getCia1TimerA(); }</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">bool</span> getSidStatus(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, uint8_t regs[32]);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;};</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;}</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">#endif // PLAYER_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassSidInfoImpl_html"><div class="ttname"><a href="classSidInfoImpl.html">SidInfoImpl</a></div><div class="ttdef"><b>Definition:</b> SidInfoImpl.h:52</div></div>
-<div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:74</div></div>
-<div class="ttc" id="aclassSidTune_html"><div class="ttname"><a href="classSidTune.html">SidTune</a></div><div class="ttdef"><b>Definition:</b> SidTune.h:41</div></div>
+<div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:75</div></div>
+<div class="ttc" id="aclassSidTune_html"><div class="ttname"><a href="classSidTune.html">SidTune</a></div><div class="ttdef"><b>Definition:</b> SidTune.h:42</div></div>
 <div class="ttc" id="aclassSidInfo_html"><div class="ttname"><a href="classSidInfo.html">SidInfo</a></div><div class="ttdef"><b>Definition:</b> SidInfo.h:33</div></div>
 <div class="ttc" id="aclassSidConfig_html"><div class="ttname"><a href="classSidConfig.html">SidConfig</a></div><div class="ttdef"><b>Definition:</b> SidConfig.h:39</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a2f91c4b4913df2f7c34579853979c66e"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66e">libsidplayfp::c64::model_t</a></div><div class="ttdeci">model_t</div><div class="ttdef"><b>Definition:</b> c64.h:75</div></div>
-<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">SidConfig::c64_model_t</a></div><div class="ttdeci">c64_model_t</div><div class="ttdoc">C64 model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:64</div></div>
+<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">SidConfig::c64_model_t</a></div><div class="ttdeci">c64_model_t</div><div class="ttdoc">C64 model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:65</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html">libsidplayfp::c64</a></div><div class="ttdef"><b>Definition:</b> c64.h:72</div></div>
 <div class="ttc" id="aclasssidbuilder_html"><div class="ttname"><a href="classsidbuilder.html">sidbuilder</a></div><div class="ttdef"><b>Definition:</b> sidbuilder.h:40</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidrandom_html"><div class="ttname"><a href="classlibsidplayfp_1_1sidrandom.html">libsidplayfp::sidrandom</a></div><div class="ttdef"><b>Definition:</b> sidrandom.h:30</div></div>
@@ -201,7 +205,7 @@
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:50</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

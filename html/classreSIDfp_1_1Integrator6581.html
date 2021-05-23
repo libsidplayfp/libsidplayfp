@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>libsidplayfp: reSIDfp::Integrator Class Reference</title>
+<title>libsidplayfp: reSIDfp::Integrator6581 Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -45,31 +45,31 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>reSIDfp</b></li><li class="navelem"><a class="el" href="classreSIDfp_1_1Integrator.html">Integrator</a></li>  </ul>
+<li class="navelem"><b>reSIDfp</b></li><li class="navelem"><a class="el" href="classreSIDfp_1_1Integrator6581.html">Integrator6581</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classreSIDfp_1_1Integrator-members.html">List of all members</a>  </div>
+<a href="classreSIDfp_1_1Integrator6581-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">reSIDfp::Integrator Class Reference</div>  </div>
+<div class="title">reSIDfp::Integrator6581 Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="Integrator_8h_source.html">Integrator.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="Integrator6581_8h_source.html">Integrator6581.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a18a3bf2cb6081826874a99a34c936850"><td class="memItemLeft" align="right" valign="top"><a id="a18a3bf2cb6081826874a99a34c936850"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Integrator</b> (const unsigned short *vcr_Vg, const unsigned short *vcr_n_Ids_term, const unsigned short *opamp_rev, unsigned short Vddt, unsigned short nVt, unsigned short nVmin, unsigned short n_snake, double N16)</td></tr>
-<tr class="separator:a18a3bf2cb6081826874a99a34c936850"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae433c9ec30455e9fe0f20c02035a1417"><td class="memItemLeft" align="right" valign="top"><a id="ae433c9ec30455e9fe0f20c02035a1417"></a>
+<tr class="memitem:a37422abc1b1a4253ca977960cc7983ec"><td class="memItemLeft" align="right" valign="top"><a id="a37422abc1b1a4253ca977960cc7983ec"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Integrator6581</b> (const unsigned short *vcr_Vg, const unsigned short *vcr_n_Ids_term, const unsigned short *opamp_rev, unsigned short Vddt, unsigned short nVt, unsigned short nVmin, unsigned short n_snake, double N16)</td></tr>
+<tr class="separator:a37422abc1b1a4253ca977960cc7983ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bfa4fb6cbb239af52ff36cbddf03585"><td class="memItemLeft" align="right" valign="top"><a id="a1bfa4fb6cbb239af52ff36cbddf03585"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setVw</b> (unsigned short Vw)</td></tr>
-<tr class="separator:ae433c9ec30455e9fe0f20c02035a1417"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70d1f07745b34502a931098fa3e3aa3a"><td class="memItemLeft" align="right" valign="top"><a id="a70d1f07745b34502a931098fa3e3aa3a"></a>
+<tr class="separator:a1bfa4fb6cbb239af52ff36cbddf03585"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2eb2cba92f2926f2da817676fd4c37a"><td class="memItemLeft" align="right" valign="top"><a id="ab2eb2cba92f2926f2da817676fd4c37a"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>solve</b> (int vi) const</td></tr>
-<tr class="separator:a70d1f07745b34502a931098fa3e3aa3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ab2eb2cba92f2926f2da817676fd4c37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Find output voltage in inverting integrator <a class="el" href="classreSIDfp_1_1SID.html">SID</a> op-amp circuits, using a single fixpoint iteration step.</p>
@@ -127,12 +127,12 @@ vi -----o------+   +-------- vo
 
 Vg = Vddt - sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
 </pre> </div><hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="Integrator_8h_source.html">Integrator.h</a></li>
+<li><a class="el" href="Integrator6581_8h_source.html">Integrator6581.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

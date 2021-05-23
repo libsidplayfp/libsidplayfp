@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -59,19 +59,22 @@
   <tr class="even"><td class="entry"><a class="el" href="classSidTune.html#a278acfd24b52ac67ea7dc9d6c98e3e9e">getInfo</a>(unsigned int songNum)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classSidTune.html#a85329768891916af2efdb3807128fccf">getStatus</a>() const</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classSidTune.html#ad963e5ede53699b582ad65935f506281">load</a>(const char *fileName, bool separatorIsSlash=false)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classSidTune.html#abc90a9a6a68e3b600bdd7e6b2b3db2b4">load</a>(LoaderFunc loader, const char *fileName, bool separatorIsSlash=false)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>LoaderFunc</b> typedef (defined in <a class="el" href="classSidTune.html">SidTune</a>)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>MD5_LENGTH</b> (defined in <a class="el" href="classSidTune.html">SidTune</a>)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classSidTune.html#a92991a4c43be6304441dede556248d61">placeSidTuneInC64mem</a>(libsidplayfp::sidmemory &amp;mem)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classSidTune.html#a0f0bda54788eba46e3e18df78513724b">read</a>(const uint_least8_t *sourceBuffer, uint_least32_t bufferLen)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classSidTune.html#abb7346e021c624c0ec0ede4597981ea6">selectSong</a>(unsigned int songNum)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classSidTune.html#a351d38672e5b08c4f2f0ee7547a96355">setFileNameExtensions</a>(const char **fileNameExt)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classSidTune.html#a3228e0ac60847c1de3bc60705133f913">SidTune</a>(const char *fileName, const char **fileNameExt=0, bool separatorIsSlash=false)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classSidTune.html#aca93d713040a2fdca9f90a1083362712">SidTune</a>(const uint_least8_t *oneFileFormatSidtune, uint_least32_t sidtuneLength)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classSidTune.html#a4dfd33ace6bbd4d60621f293319f9970">statusString</a>() const</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>~SidTune</b>() (defined in <a class="el" href="classSidTune.html">SidTune</a>)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classSidTune.html#a9288dcb6b69955e3f7f611388dd51d0f">SidTune</a>(LoaderFunc loader, const char *fileName, const char **fileNameExt=0, bool separatorIsSlash=false)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classSidTune.html#aca93d713040a2fdca9f90a1083362712">SidTune</a>(const uint_least8_t *oneFileFormatSidtune, uint_least32_t sidtuneLength)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classSidTune.html#a4dfd33ace6bbd4d60621f293319f9970">statusString</a>() const</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~SidTune</b>() (defined in <a class="el" href="classSidTune.html">SidTune</a>)</td><td class="entry"><a class="el" href="classSidTune.html">SidTune</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

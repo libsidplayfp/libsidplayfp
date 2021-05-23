@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -66,8 +66,10 @@
   <tr><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html#a7fc5a61600df31ca581ad8f865a59bdb">readMemByte</a>(uint_least16_t addr) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html#adb8452f788f0b50273b911bbd02bb079">readMemWord</a>(uint_least16_t addr) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>reset</b>() (defined in <a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html#a83f9e2898509ae90216053bd079f47e4">setBasicSubtune</a>(uint8_t tune) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>setRoms</b>(const uint8_t *kernal, const uint8_t *basic, const uint8_t *character) (defined in <a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setBasic</b>(const uint8_t *rom) override (defined in <a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html#a83f9e2898509ae90216053bd079f47e4">setBasicSubtune</a>(uint8_t tune) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>setChargen</b>(const uint8_t *rom) override (defined in <a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html#aa584dc5a4fbcdf7602e69ad264e032da">setKernal</a>(const uint8_t *rom) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html#aa52ac3d3c216a885f4af5e468e8aff3e">writeMemByte</a>(uint_least16_t addr, uint8_t value) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html#a82c95f50fcb10f246cb5abd3da39b49c">writeMemWord</a>(uint_least16_t addr, uint_least16_t value) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~PLA</b>() (defined in <a class="el" href="classlibsidplayfp_1_1PLA.html">libsidplayfp::PLA</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1PLA.html">libsidplayfp::PLA</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
@@ -75,7 +77,7 @@
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

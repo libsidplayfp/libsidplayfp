@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -54,7 +54,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2019 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2021 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Copyright 2000-2001 Simon White</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
@@ -88,108 +88,117 @@
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classSidConfig.html#a7884fb608eba16a52dc26b84cbeb2cac">   43</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">enum</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        MONO = 1,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        STEREO</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classSidConfig.html#a7884fb608eba16a52dc26b84cbeb2caca5a1eb02132b9ce92bb474ce7e5dacceb">   45</a></span>&#160;        MONO = 1,      </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classSidConfig.html#a7884fb608eba16a52dc26b84cbeb2caca6731e971d543248d80ef5f78e8f5bc08">   46</a></span>&#160;        STEREO         </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    } playback_t;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">   50</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">enum</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        MOS6581,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        MOS8580</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7fa9a45846f8bf861d48b00b67ced3dc40e">   52</a></span>&#160;        <a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7fa9a45846f8bf861d48b00b67ced3dc40e">MOS6581</a>,       </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7fa53cc7876c4b0ec32e75489f0252c3b89">   53</a></span>&#160;        MOS8580        </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    } sid_model_t;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classSidConfig.html#a430fc83c903d229f745e348180896300">   57</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">enum</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        MOS6526,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        MOS8521</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    } cia_model_t;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">   64</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">enum</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        PAL,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        NTSC,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        OLD_NTSC,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        DREAN,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        PAL_M</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    } c64_model_t;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">   74</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">enum</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        INTERPOLATE,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        RESAMPLE_INTERPOLATE</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    } sampling_method_t;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classSidConfig.html#aaf1a6641366151182140a4f668db80ab">   86</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> uint_least32_t DEFAULT_SAMPLING_FREQ  = 44100;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classSidConfig.html#a25b78dc23e46b1799b74f3a17f485948">  100</a></span>&#160;    <a class="code" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">c64_model_t</a> <a class="code" href="classSidConfig.html#a25b78dc23e46b1799b74f3a17f485948">defaultC64Model</a>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="classSidConfig.html#adddfdf0356edd995563c5086b9e9f860">  105</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#adddfdf0356edd995563c5086b9e9f860">forceC64Model</a>;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="classSidConfig.html#aef375980e8cd5ab28bed555ecfda471e">  112</a></span>&#160;    <a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">sid_model_t</a> <a class="code" href="classSidConfig.html#aef375980e8cd5ab28bed555ecfda471e">defaultSidModel</a>;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9554892008d8d138f50a2525e0f930b2">  117</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#a9554892008d8d138f50a2525e0f930b2">forceSidModel</a>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classSidConfig.html#adea40f2720565a9d6f5b9bde5b7b581d">  122</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#adea40f2720565a9d6f5b9bde5b7b581d">digiBoost</a>;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="classSidConfig.html#ac9cf09f6593501e0ded9a686c5848451">  129</a></span>&#160;    <a class="code" href="classSidConfig.html#a430fc83c903d229f745e348180896300">cia_model_t</a> <a class="code" href="classSidConfig.html#ac9cf09f6593501e0ded9a686c5848451">ciaModel</a>;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="classSidConfig.html#a82de01986c9d346c0a5368069a6cfb2a">  136</a></span>&#160;    <a class="code" href="classSidConfig.html#a7884fb608eba16a52dc26b84cbeb2cac">playback_t</a> <a class="code" href="classSidConfig.html#a82de01986c9d346c0a5368069a6cfb2a">playback</a>;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
-<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="classSidConfig.html#a577c7513e60a83643d5164b9a4dbc091">  141</a></span>&#160;    uint_least32_t <a class="code" href="classSidConfig.html#a577c7513e60a83643d5164b9a4dbc091">frequency</a>;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
-<div class="line"><a name="l00147"></a><span class="lineno"><a class="line" href="classSidConfig.html#a0ba3afca216282945f9f950adcc9e760">  147</a></span>&#160;    uint_least16_t <a class="code" href="classSidConfig.html#a0ba3afca216282945f9f950adcc9e760">secondSidAddress</a>;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    uint_least16_t thirdSidAddress;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="classSidConfig.html#adc60d41cde7aedb58d24cde2aeff92a0">  155</a></span>&#160;    <a class="code" href="classsidbuilder.html">sidbuilder</a> *<a class="code" href="classSidConfig.html#adc60d41cde7aedb58d24cde2aeff92a0">sidEmulation</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classSidConfig.html#a430fc83c903d229f745e348180896300a6dc32fc51d2ade7d8822cf40b4e41bbc">   59</a></span>&#160;        <a class="code" href="classSidConfig.html#a430fc83c903d229f745e348180896300a6dc32fc51d2ade7d8822cf40b4e41bbc">MOS6526</a>,       </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classSidConfig.html#a430fc83c903d229f745e348180896300a63cb58fdf85e08fb21fa807d25b6603d">   60</a></span>&#160;        <a class="code" href="classSidConfig.html#a430fc83c903d229f745e348180896300a63cb58fdf85e08fb21fa807d25b6603d">MOS8521</a>,       </div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classSidConfig.html#a430fc83c903d229f745e348180896300ab6d8a506a3a10d2721469986951d3837">   61</a></span>&#160;        MOS6526W4485   </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    } cia_model_t;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">   65</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">enum</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ae2b468ddac1a0307a397205666369639">   67</a></span>&#160;        <a class="code" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ae2b468ddac1a0307a397205666369639">PAL</a>,           </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ad72f7d2143fc8babda9920125fb2e723">   68</a></span>&#160;        <a class="code" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ad72f7d2143fc8babda9920125fb2e723">NTSC</a>,          </div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52a9875421f848734c5d886656a2975b397">   69</a></span>&#160;        <a class="code" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52a9875421f848734c5d886656a2975b397">OLD_NTSC</a>,      </div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ab3f3f58a8afe5a17268a77e3ecf18723">   70</a></span>&#160;        <a class="code" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ab3f3f58a8afe5a17268a77e3ecf18723">DREAN</a>,         </div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52a47c6211e055c2255e0baa5301f0cd2d3">   71</a></span>&#160;        PAL_M          </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    } c64_model_t;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">   75</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">enum</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463aa44259ff3b15e62a88c593baa031fb79">   77</a></span>&#160;        <a class="code" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463aa44259ff3b15e62a88c593baa031fb79">INTERPOLATE</a>,            </div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463a9e5157e3bcd9ee55df783bac613cdf43">   78</a></span>&#160;        RESAMPLE_INTERPOLATE    </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    } sampling_method_t;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="classSidConfig.html#aaf1a6641366151182140a4f668db80ab">   87</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> uint_least32_t DEFAULT_SAMPLING_FREQ  = 44100;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classSidConfig.html#a25b78dc23e46b1799b74f3a17f485948">   96</a></span>&#160;    <a class="code" href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">c64_model_t</a> <a class="code" href="classSidConfig.html#a25b78dc23e46b1799b74f3a17f485948">defaultC64Model</a>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classSidConfig.html#adddfdf0356edd995563c5086b9e9f860">  101</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#adddfdf0356edd995563c5086b9e9f860">forceC64Model</a>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="classSidConfig.html#aef375980e8cd5ab28bed555ecfda471e">  106</a></span>&#160;    <a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">sid_model_t</a> <a class="code" href="classSidConfig.html#aef375980e8cd5ab28bed555ecfda471e">defaultSidModel</a>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9554892008d8d138f50a2525e0f930b2">  111</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#a9554892008d8d138f50a2525e0f930b2">forceSidModel</a>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="classSidConfig.html#adea40f2720565a9d6f5b9bde5b7b581d">  116</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#adea40f2720565a9d6f5b9bde5b7b581d">digiBoost</a>;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="classSidConfig.html#ac9cf09f6593501e0ded9a686c5848451">  121</a></span>&#160;    <a class="code" href="classSidConfig.html#a430fc83c903d229f745e348180896300">cia_model_t</a> <a class="code" href="classSidConfig.html#ac9cf09f6593501e0ded9a686c5848451">ciaModel</a>;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="classSidConfig.html#a82de01986c9d346c0a5368069a6cfb2a">  126</a></span>&#160;    <a class="code" href="classSidConfig.html#a7884fb608eba16a52dc26b84cbeb2cac">playback_t</a> <a class="code" href="classSidConfig.html#a82de01986c9d346c0a5368069a6cfb2a">playback</a>;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="classSidConfig.html#a577c7513e60a83643d5164b9a4dbc091">  131</a></span>&#160;    uint_least32_t <a class="code" href="classSidConfig.html#a577c7513e60a83643d5164b9a4dbc091">frequency</a>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="classSidConfig.html#a0ba3afca216282945f9f950adcc9e760">  137</a></span>&#160;    uint_least16_t <a class="code" href="classSidConfig.html#a0ba3afca216282945f9f950adcc9e760">secondSidAddress</a>;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    uint_least16_t thirdSidAddress;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
+<div class="line"><a name="l00145"></a><span class="lineno"><a class="line" href="classSidConfig.html#adc60d41cde7aedb58d24cde2aeff92a0">  145</a></span>&#160;    <a class="code" href="classsidbuilder.html">sidbuilder</a> *<a class="code" href="classSidConfig.html#adc60d41cde7aedb58d24cde2aeff92a0">sidEmulation</a>;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
+<div class="line"><a name="l00150"></a><span class="lineno"><a class="line" href="classSidConfig.html#a6796d8268897503a208631a164717970">  150</a></span>&#160;    uint_least32_t <a class="code" href="classSidConfig.html#a6796d8268897503a208631a164717970">leftVolume</a>;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="classSidConfig.html#a4e8008cba038cbfb2de7ed43e04fd003">  155</a></span>&#160;    uint_least32_t <a class="code" href="classSidConfig.html#a4e8008cba038cbfb2de7ed43e04fd003">rightVolume</a>;</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="classSidConfig.html#a6796d8268897503a208631a164717970">  160</a></span>&#160;    uint_least32_t <a class="code" href="classSidConfig.html#a6796d8268897503a208631a164717970">leftVolume</a>;</div>
+<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9e3389793d9072f5e2097cbb04dfb79f">  160</a></span>&#160;    uint_least16_t <a class="code" href="classSidConfig.html#a9e3389793d9072f5e2097cbb04dfb79f">powerOnDelay</a>;</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno"><a class="line" href="classSidConfig.html#a4e8008cba038cbfb2de7ed43e04fd003">  165</a></span>&#160;    uint_least32_t <a class="code" href="classSidConfig.html#a4e8008cba038cbfb2de7ed43e04fd003">rightVolume</a>;</div>
+<div class="line"><a name="l00165"></a><span class="lineno"><a class="line" href="classSidConfig.html#afb1f9401f74b5801c6f552b43cf16e50">  165</a></span>&#160;    <a class="code" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">sampling_method_t</a> <a class="code" href="classSidConfig.html#afb1f9401f74b5801c6f552b43cf16e50">samplingMethod</a>;</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00170"></a><span class="lineno"><a class="line" href="classSidConfig.html#a9e3389793d9072f5e2097cbb04dfb79f">  170</a></span>&#160;    uint_least16_t <a class="code" href="classSidConfig.html#a9e3389793d9072f5e2097cbb04dfb79f">powerOnDelay</a>;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno"><a class="line" href="classSidConfig.html#afb1f9401f74b5801c6f552b43cf16e50">  177</a></span>&#160;    <a class="code" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">sampling_method_t</a> <a class="code" href="classSidConfig.html#afb1f9401f74b5801c6f552b43cf16e50">samplingMethod</a>;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno"><a class="line" href="classSidConfig.html#a95b15cef0a5ded03a557d422b6752b9e">  183</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#a95b15cef0a5ded03a557d422b6752b9e">fastSampling</a>;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordtype">bool</span> compare(<span class="keyword">const</span> <a class="code" href="classSidConfig.html">SidConfig</a> &amp;config);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <a class="code" href="classSidConfig.html">SidConfig</a>();</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;};</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">#endif // SIDCONFIG_H</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="classSidConfig.html#a95b15cef0a5ded03a557d422b6752b9e">  171</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSidConfig.html#a95b15cef0a5ded03a557d422b6752b9e">fastSampling</a>;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">bool</span> compare(<span class="keyword">const</span> <a class="code" href="classSidConfig.html">SidConfig</a> &amp;config);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <a class="code" href="classSidConfig.html">SidConfig</a>();</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;};</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">#endif // SIDCONFIG_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassSidConfig_html_ac9cf09f6593501e0ded9a686c5848451"><div class="ttname"><a href="classSidConfig.html#ac9cf09f6593501e0ded9a686c5848451">SidConfig::ciaModel</a></div><div class="ttdeci">cia_model_t ciaModel</div><div class="ttdef"><b>Definition:</b> SidConfig.h:129</div></div>
-<div class="ttc" id="aclassSidConfig_html_a4e8008cba038cbfb2de7ed43e04fd003"><div class="ttname"><a href="classSidConfig.html#a4e8008cba038cbfb2de7ed43e04fd003">SidConfig::rightVolume</a></div><div class="ttdeci">uint_least32_t rightVolume</div><div class="ttdef"><b>Definition:</b> SidConfig.h:165</div></div>
-<div class="ttc" id="aclassSidConfig_html_adddfdf0356edd995563c5086b9e9f860"><div class="ttname"><a href="classSidConfig.html#adddfdf0356edd995563c5086b9e9f860">SidConfig::forceC64Model</a></div><div class="ttdeci">bool forceC64Model</div><div class="ttdef"><b>Definition:</b> SidConfig.h:105</div></div>
-<div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:74</div></div>
-<div class="ttc" id="aclassSidConfig_html_a9e3389793d9072f5e2097cbb04dfb79f"><div class="ttname"><a href="classSidConfig.html#a9e3389793d9072f5e2097cbb04dfb79f">SidConfig::powerOnDelay</a></div><div class="ttdeci">uint_least16_t powerOnDelay</div><div class="ttdef"><b>Definition:</b> SidConfig.h:170</div></div>
-<div class="ttc" id="aclassSidConfig_html_adea40f2720565a9d6f5b9bde5b7b581d"><div class="ttname"><a href="classSidConfig.html#adea40f2720565a9d6f5b9bde5b7b581d">SidConfig::digiBoost</a></div><div class="ttdeci">bool digiBoost</div><div class="ttdef"><b>Definition:</b> SidConfig.h:122</div></div>
-<div class="ttc" id="aclassSidConfig_html_a82de01986c9d346c0a5368069a6cfb2a"><div class="ttname"><a href="classSidConfig.html#a82de01986c9d346c0a5368069a6cfb2a">SidConfig::playback</a></div><div class="ttdeci">playback_t playback</div><div class="ttdef"><b>Definition:</b> SidConfig.h:136</div></div>
+<div class="ttc" id="aclassSidConfig_html_ac9cf09f6593501e0ded9a686c5848451"><div class="ttname"><a href="classSidConfig.html#ac9cf09f6593501e0ded9a686c5848451">SidConfig::ciaModel</a></div><div class="ttdeci">cia_model_t ciaModel</div><div class="ttdef"><b>Definition:</b> SidConfig.h:121</div></div>
+<div class="ttc" id="aclassSidConfig_html_a4e8008cba038cbfb2de7ed43e04fd003"><div class="ttname"><a href="classSidConfig.html#a4e8008cba038cbfb2de7ed43e04fd003">SidConfig::rightVolume</a></div><div class="ttdeci">uint_least32_t rightVolume</div><div class="ttdef"><b>Definition:</b> SidConfig.h:155</div></div>
+<div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463aa44259ff3b15e62a88c593baa031fb79"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463aa44259ff3b15e62a88c593baa031fb79">SidConfig::INTERPOLATE</a></div><div class="ttdeci">@ INTERPOLATE</div><div class="ttdoc">Interpolation.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:77</div></div>
+<div class="ttc" id="aclassSidConfig_html_adddfdf0356edd995563c5086b9e9f860"><div class="ttname"><a href="classSidConfig.html#adddfdf0356edd995563c5086b9e9f860">SidConfig::forceC64Model</a></div><div class="ttdeci">bool forceC64Model</div><div class="ttdef"><b>Definition:</b> SidConfig.h:101</div></div>
+<div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:75</div></div>
+<div class="ttc" id="aclassSidConfig_html_a9e3389793d9072f5e2097cbb04dfb79f"><div class="ttname"><a href="classSidConfig.html#a9e3389793d9072f5e2097cbb04dfb79f">SidConfig::powerOnDelay</a></div><div class="ttdeci">uint_least16_t powerOnDelay</div><div class="ttdef"><b>Definition:</b> SidConfig.h:160</div></div>
+<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52ad72f7d2143fc8babda9920125fb2e723"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ad72f7d2143fc8babda9920125fb2e723">SidConfig::NTSC</a></div><div class="ttdeci">@ NTSC</div><div class="ttdoc">American/Japanese NTSC model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:68</div></div>
+<div class="ttc" id="aclassSidConfig_html_adea40f2720565a9d6f5b9bde5b7b581d"><div class="ttname"><a href="classSidConfig.html#adea40f2720565a9d6f5b9bde5b7b581d">SidConfig::digiBoost</a></div><div class="ttdeci">bool digiBoost</div><div class="ttdef"><b>Definition:</b> SidConfig.h:116</div></div>
+<div class="ttc" id="aclassSidConfig_html_a82de01986c9d346c0a5368069a6cfb2a"><div class="ttname"><a href="classSidConfig.html#a82de01986c9d346c0a5368069a6cfb2a">SidConfig::playback</a></div><div class="ttdeci">playback_t playback</div><div class="ttdef"><b>Definition:</b> SidConfig.h:126</div></div>
 <div class="ttc" id="aclassSidConfig_html"><div class="ttname"><a href="classSidConfig.html">SidConfig</a></div><div class="ttdef"><b>Definition:</b> SidConfig.h:39</div></div>
-<div class="ttc" id="aclassSidConfig_html_adc60d41cde7aedb58d24cde2aeff92a0"><div class="ttname"><a href="classSidConfig.html#adc60d41cde7aedb58d24cde2aeff92a0">SidConfig::sidEmulation</a></div><div class="ttdeci">sidbuilder * sidEmulation</div><div class="ttdef"><b>Definition:</b> SidConfig.h:155</div></div>
-<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">SidConfig::c64_model_t</a></div><div class="ttdeci">c64_model_t</div><div class="ttdoc">C64 model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:64</div></div>
+<div class="ttc" id="aclassSidConfig_html_adc60d41cde7aedb58d24cde2aeff92a0"><div class="ttname"><a href="classSidConfig.html#adc60d41cde7aedb58d24cde2aeff92a0">SidConfig::sidEmulation</a></div><div class="ttdeci">sidbuilder * sidEmulation</div><div class="ttdef"><b>Definition:</b> SidConfig.h:145</div></div>
+<div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7fa9a45846f8bf861d48b00b67ced3dc40e"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7fa9a45846f8bf861d48b00b67ced3dc40e">SidConfig::MOS6581</a></div><div class="ttdeci">@ MOS6581</div><div class="ttdoc">Old MOS 6581.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:52</div></div>
+<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52">SidConfig::c64_model_t</a></div><div class="ttdeci">c64_model_t</div><div class="ttdoc">C64 model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:65</div></div>
 <div class="ttc" id="aclasssidbuilder_html"><div class="ttname"><a href="classsidbuilder.html">sidbuilder</a></div><div class="ttdef"><b>Definition:</b> sidbuilder.h:40</div></div>
-<div class="ttc" id="aclassSidConfig_html_afb1f9401f74b5801c6f552b43cf16e50"><div class="ttname"><a href="classSidConfig.html#afb1f9401f74b5801c6f552b43cf16e50">SidConfig::samplingMethod</a></div><div class="ttdeci">sampling_method_t samplingMethod</div><div class="ttdef"><b>Definition:</b> SidConfig.h:177</div></div>
-<div class="ttc" id="aclassSidConfig_html_a25b78dc23e46b1799b74f3a17f485948"><div class="ttname"><a href="classSidConfig.html#a25b78dc23e46b1799b74f3a17f485948">SidConfig::defaultC64Model</a></div><div class="ttdeci">c64_model_t defaultC64Model</div><div class="ttdef"><b>Definition:</b> SidConfig.h:100</div></div>
-<div class="ttc" id="aclassSidConfig_html_a577c7513e60a83643d5164b9a4dbc091"><div class="ttname"><a href="classSidConfig.html#a577c7513e60a83643d5164b9a4dbc091">SidConfig::frequency</a></div><div class="ttdeci">uint_least32_t frequency</div><div class="ttdef"><b>Definition:</b> SidConfig.h:141</div></div>
-<div class="ttc" id="aclassSidConfig_html_aef375980e8cd5ab28bed555ecfda471e"><div class="ttname"><a href="classSidConfig.html#aef375980e8cd5ab28bed555ecfda471e">SidConfig::defaultSidModel</a></div><div class="ttdeci">sid_model_t defaultSidModel</div><div class="ttdef"><b>Definition:</b> SidConfig.h:112</div></div>
-<div class="ttc" id="aclassSidConfig_html_a6796d8268897503a208631a164717970"><div class="ttname"><a href="classSidConfig.html#a6796d8268897503a208631a164717970">SidConfig::leftVolume</a></div><div class="ttdeci">uint_least32_t leftVolume</div><div class="ttdef"><b>Definition:</b> SidConfig.h:160</div></div>
+<div class="ttc" id="aclassSidConfig_html_afb1f9401f74b5801c6f552b43cf16e50"><div class="ttname"><a href="classSidConfig.html#afb1f9401f74b5801c6f552b43cf16e50">SidConfig::samplingMethod</a></div><div class="ttdeci">sampling_method_t samplingMethod</div><div class="ttdef"><b>Definition:</b> SidConfig.h:165</div></div>
+<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52a9875421f848734c5d886656a2975b397"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52a9875421f848734c5d886656a2975b397">SidConfig::OLD_NTSC</a></div><div class="ttdeci">@ OLD_NTSC</div><div class="ttdoc">Older NTSC model with different video chip revision.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:69</div></div>
+<div class="ttc" id="aclassSidConfig_html_a25b78dc23e46b1799b74f3a17f485948"><div class="ttname"><a href="classSidConfig.html#a25b78dc23e46b1799b74f3a17f485948">SidConfig::defaultC64Model</a></div><div class="ttdeci">c64_model_t defaultC64Model</div><div class="ttdef"><b>Definition:</b> SidConfig.h:96</div></div>
+<div class="ttc" id="aclassSidConfig_html_a577c7513e60a83643d5164b9a4dbc091"><div class="ttname"><a href="classSidConfig.html#a577c7513e60a83643d5164b9a4dbc091">SidConfig::frequency</a></div><div class="ttdeci">uint_least32_t frequency</div><div class="ttdef"><b>Definition:</b> SidConfig.h:131</div></div>
+<div class="ttc" id="aclassSidConfig_html_aef375980e8cd5ab28bed555ecfda471e"><div class="ttname"><a href="classSidConfig.html#aef375980e8cd5ab28bed555ecfda471e">SidConfig::defaultSidModel</a></div><div class="ttdeci">sid_model_t defaultSidModel</div><div class="ttdef"><b>Definition:</b> SidConfig.h:106</div></div>
+<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52ae2b468ddac1a0307a397205666369639"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ae2b468ddac1a0307a397205666369639">SidConfig::PAL</a></div><div class="ttdeci">@ PAL</div><div class="ttdoc">European PAL model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:67</div></div>
+<div class="ttc" id="aclassSidConfig_html_a6796d8268897503a208631a164717970"><div class="ttname"><a href="classSidConfig.html#a6796d8268897503a208631a164717970">SidConfig::leftVolume</a></div><div class="ttdeci">uint_least32_t leftVolume</div><div class="ttdef"><b>Definition:</b> SidConfig.h:150</div></div>
 <div class="ttc" id="aclassSidConfig_html_a7884fb608eba16a52dc26b84cbeb2cac"><div class="ttname"><a href="classSidConfig.html#a7884fb608eba16a52dc26b84cbeb2cac">SidConfig::playback_t</a></div><div class="ttdeci">playback_t</div><div class="ttdoc">Playback mode.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:43</div></div>
-<div class="ttc" id="aclassSidConfig_html_a95b15cef0a5ded03a557d422b6752b9e"><div class="ttname"><a href="classSidConfig.html#a95b15cef0a5ded03a557d422b6752b9e">SidConfig::fastSampling</a></div><div class="ttdeci">bool fastSampling</div><div class="ttdef"><b>Definition:</b> SidConfig.h:183</div></div>
-<div class="ttc" id="aclassSidConfig_html_a0ba3afca216282945f9f950adcc9e760"><div class="ttname"><a href="classSidConfig.html#a0ba3afca216282945f9f950adcc9e760">SidConfig::secondSidAddress</a></div><div class="ttdeci">uint_least16_t secondSidAddress</div><div class="ttdef"><b>Definition:</b> SidConfig.h:147</div></div>
-<div class="ttc" id="aclassSidConfig_html_a9554892008d8d138f50a2525e0f930b2"><div class="ttname"><a href="classSidConfig.html#a9554892008d8d138f50a2525e0f930b2">SidConfig::forceSidModel</a></div><div class="ttdeci">bool forceSidModel</div><div class="ttdef"><b>Definition:</b> SidConfig.h:117</div></div>
+<div class="ttc" id="aclassSidConfig_html_a95b15cef0a5ded03a557d422b6752b9e"><div class="ttname"><a href="classSidConfig.html#a95b15cef0a5ded03a557d422b6752b9e">SidConfig::fastSampling</a></div><div class="ttdeci">bool fastSampling</div><div class="ttdef"><b>Definition:</b> SidConfig.h:171</div></div>
+<div class="ttc" id="aclassSidConfig_html_a430fc83c903d229f745e348180896300a6dc32fc51d2ade7d8822cf40b4e41bbc"><div class="ttname"><a href="classSidConfig.html#a430fc83c903d229f745e348180896300a6dc32fc51d2ade7d8822cf40b4e41bbc">SidConfig::MOS6526</a></div><div class="ttdeci">@ MOS6526</div><div class="ttdoc">Old MOS 6526/6526A with interrupts delayed by one cycle.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:59</div></div>
+<div class="ttc" id="aclassSidConfig_html_a0ba3afca216282945f9f950adcc9e760"><div class="ttname"><a href="classSidConfig.html#a0ba3afca216282945f9f950adcc9e760">SidConfig::secondSidAddress</a></div><div class="ttdeci">uint_least16_t secondSidAddress</div><div class="ttdef"><b>Definition:</b> SidConfig.h:137</div></div>
+<div class="ttc" id="aclassSidConfig_html_a9554892008d8d138f50a2525e0f930b2"><div class="ttname"><a href="classSidConfig.html#a9554892008d8d138f50a2525e0f930b2">SidConfig::forceSidModel</a></div><div class="ttdeci">bool forceSidModel</div><div class="ttdef"><b>Definition:</b> SidConfig.h:111</div></div>
 <div class="ttc" id="aclassSidConfig_html_a430fc83c903d229f745e348180896300"><div class="ttname"><a href="classSidConfig.html#a430fc83c903d229f745e348180896300">SidConfig::cia_model_t</a></div><div class="ttdeci">cia_model_t</div><div class="ttdoc">CIA chip model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:57</div></div>
+<div class="ttc" id="aclassSidConfig_html_ae96faaf45bb5149db4c092f939d2cf52ab3f3f58a8afe5a17268a77e3ecf18723"><div class="ttname"><a href="classSidConfig.html#ae96faaf45bb5149db4c092f939d2cf52ab3f3f58a8afe5a17268a77e3ecf18723">SidConfig::DREAN</a></div><div class="ttdeci">@ DREAN</div><div class="ttdoc">Argentinian PAL-N model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:70</div></div>
+<div class="ttc" id="aclassSidConfig_html_a430fc83c903d229f745e348180896300a63cb58fdf85e08fb21fa807d25b6603d"><div class="ttname"><a href="classSidConfig.html#a430fc83c903d229f745e348180896300a63cb58fdf85e08fb21fa807d25b6603d">SidConfig::MOS8521</a></div><div class="ttdeci">@ MOS8521</div><div class="ttdoc">New CSG 8521, often marked 6526 216A.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:60</div></div>
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:50</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

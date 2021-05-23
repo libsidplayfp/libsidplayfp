@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -81,13 +81,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aabd36cbfdecac5ef5e716f0918fa2e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad10c56b2f3350e96c4798e7b0b796fca"><td class="memItemLeft" align="right" valign="top">uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#ad10c56b2f3350e96c4798e7b0b796fca">time</a> () const</td></tr>
 <tr class="separator:ad10c56b2f3350e96c4798e7b0b796fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa03bede3d0e7cfa33ee12725e02abf11"><td class="memItemLeft" align="right" valign="top"><a id="aa03bede3d0e7cfa33ee12725e02abf11"></a>
-uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> () const</td></tr>
+<tr class="memitem:aa03bede3d0e7cfa33ee12725e02abf11"><td class="memItemLeft" align="right" valign="top">uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#aa03bede3d0e7cfa33ee12725e02abf11">timeMs</a> () const</td></tr>
 <tr class="separator:aa03bede3d0e7cfa33ee12725e02abf11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6a9155ee3af4bac3cd775d72db41f57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#ac6a9155ee3af4bac3cd775d72db41f57">setRoms</a> (const uint8_t *kernal, const uint8_t *basic=0, const uint8_t *character=0)</td></tr>
 <tr class="separator:ac6a9155ee3af4bac3cd775d72db41f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb49b5e4734d27af2938eb539ae1a75"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#addb49b5e4734d27af2938eb539ae1a75">setKernal</a> (const uint8_t *rom)</td></tr>
+<tr class="separator:addb49b5e4734d27af2938eb539ae1a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d7b6cdfbc643f27bc411c48e4de0e1d"><td class="memItemLeft" align="right" valign="top"><a id="a2d7b6cdfbc643f27bc411c48e4de0e1d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBasic</b> (const uint8_t *rom)</td></tr>
+<tr class="separator:a2d7b6cdfbc643f27bc411c48e4de0e1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e4044620fa8071f63e842c332d7fd2d"><td class="memItemLeft" align="right" valign="top"><a id="a1e4044620fa8071f63e842c332d7fd2d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const uint8_t *rom)</td></tr>
+<tr class="separator:a1e4044620fa8071f63e842c332d7fd2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47d03ad8f19f0e59742e5b7c1e77596e"><td class="memItemLeft" align="right" valign="top">uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#a47d03ad8f19f0e59742e5b7c1e77596e">getCia1TimerA</a> () const</td></tr>
 <tr class="separator:a47d03ad8f19f0e59742e5b7c1e77596e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b6f80c1f0926a8b5cd96cd62dae1cc7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#a3b6f80c1f0926a8b5cd96cd62dae1cc7">getSidStatus</a> (unsigned int sidNum, uint8_t regs[32])</td></tr>
+<tr class="separator:a3b6f80c1f0926a8b5cd96cd62dae1cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>sidplayfp </p>
@@ -110,7 +119,7 @@ uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> 
 </div><div class="memdoc">
 <p>Get the current engine configuration.</p>
 <dl class="section return"><dt>Returns</dt><dd>a const reference to the current configuration. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a11">demo.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a13">demo.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -193,7 +202,7 @@ uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> 
 </div><div class="memdoc">
 <p>Error message.</p>
 <dl class="section return"><dt>Returns</dt><dd>string error message. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a12">demo.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a14">demo.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -238,6 +247,44 @@ uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> 
       </table>
 </div><div class="memdoc">
 <p>Get the CIA 1 Timer A programmed value. </p>
+
+</div>
+</div>
+<a id="a3b6f80c1f0926a8b5cd96cd62dae1cc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b6f80c1f0926a8b5cd96cd62dae1cc7">&#9670;&nbsp;</a></span>getSidStatus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool sidplayfp::getSidStatus </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>sidNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>regs</em>[32]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the SID registers programmed value.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sidNum</td><td>the SID chip, 0 for the first one, 1 for the second and 2 for the third. </td></tr>
+    <tr><td class="paramname">regs</td><td>an array that will be filled with the last values written to the chip. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>false if the requested chip doesn't exist. </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.2 </dd></dl>
 
 </div>
 </div>
@@ -304,7 +351,7 @@ uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on sucess, false otherwise. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a13">demo.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a15">demo.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -386,8 +433,34 @@ uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> 
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of produced samples. If less than requested and <a class="el" href="classsidplayfp.html#ae2b6b7d7c45ab1970a218bb6d5bf1178">isPlaying()</a> is true an error occurred, use <a class="el" href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">error()</a> to get a detailed message. </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a14">demo.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a16">demo.cpp</a>.</dd>
 </dl>
+
+</div>
+</div>
+<a id="addb49b5e4734d27af2938eb539ae1a75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addb49b5e4734d27af2938eb539ae1a75">&#9670;&nbsp;</a></span>setKernal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sidplayfp::setKernal </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>rom</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set the ROM banks.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rom</td><td>pointer to the ROM data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>2.2 </dd></dl>
 
 </div>
 </div>
@@ -473,6 +546,26 @@ uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> 
 
 </div>
 </div>
+<a id="aa03bede3d0e7cfa33ee12725e02abf11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa03bede3d0e7cfa33ee12725e02abf11">&#9670;&nbsp;</a></span>timeMs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_least32_t sidplayfp::timeMs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the current playing time.</p>
+<dl class="section return"><dt>Returns</dt><dd>the current playing time measured in milliseconds. </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.0 </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="sidplayfp_8h_source.html">sidplayfp.h</a></li>
 <li>sidplayfp.cpp</li>
@@ -480,7 +573,7 @@ uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> 
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

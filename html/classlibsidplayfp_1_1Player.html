@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -98,12 +98,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>mute</b> (unsigned in
 <tr class="memitem:a3364212439a5e3710219dd309b7722bc"><td class="memItemLeft" align="right" valign="top"><a id="a3364212439a5e3710219dd309b7722bc"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () const</td></tr>
 <tr class="separator:a3364212439a5e3710219dd309b7722bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fc0ca47228889c57dcd20501172ed47"><td class="memItemLeft" align="right" valign="top"><a id="a0fc0ca47228889c57dcd20501172ed47"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setRoms</b> (const uint8_t *kernal, const uint8_t *basic, const uint8_t *character)</td></tr>
-<tr class="separator:a0fc0ca47228889c57dcd20501172ed47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ff55eab10074c291713581c8dd7883c"><td class="memItemLeft" align="right" valign="top"><a id="a4ff55eab10074c291713581c8dd7883c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setKernal</b> (const uint8_t *rom)</td></tr>
+<tr class="separator:a4ff55eab10074c291713581c8dd7883c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc879a34a174d5f9c3bea22456df062e"><td class="memItemLeft" align="right" valign="top"><a id="adc879a34a174d5f9c3bea22456df062e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBasic</b> (const uint8_t *rom)</td></tr>
+<tr class="separator:adc879a34a174d5f9c3bea22456df062e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fd710656eb506aaeba035f6419b725f"><td class="memItemLeft" align="right" valign="top"><a id="a8fd710656eb506aaeba035f6419b725f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const uint8_t *rom)</td></tr>
+<tr class="separator:a8fd710656eb506aaeba035f6419b725f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bb49bc1076ec8ebc1069ff6ac2adc72"><td class="memItemLeft" align="right" valign="top"><a id="a9bb49bc1076ec8ebc1069ff6ac2adc72"></a>
 uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getCia1TimerA</b> () const</td></tr>
 <tr class="separator:a9bb49bc1076ec8ebc1069ff6ac2adc72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bbb17aa433973aed935011078ab6f6e"><td class="memItemLeft" align="right" valign="top"><a id="a6bbb17aa433973aed935011078ab6f6e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getSidStatus</b> (unsigned int sidNum, uint8_t regs[32])</td></tr>
+<tr class="separator:a6bbb17aa433973aed935011078ab6f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="player_8h_source.html">player.h</a></li>
@@ -112,7 +121,7 @@ uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getCia1Time
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

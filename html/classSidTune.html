@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -46,6 +46,7 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classSidTune-members.html">List of all members</a>  </div>
@@ -56,16 +57,26 @@
 
 <p><code>#include &lt;<a class="el" href="SidTune_8h_source.html">SidTune.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a9d845f81b3a64f12c722d96aa1648a2e"><td class="memItemLeft" align="right" valign="top"><a id="a9d845f81b3a64f12c722d96aa1648a2e"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>LoaderFunc</b>) (const char *fileName, std::vector&lt; uint8_t &gt; &amp;bufferRef)</td></tr>
+<tr class="separator:a9d845f81b3a64f12c722d96aa1648a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3228e0ac60847c1de3bc60705133f913"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#a3228e0ac60847c1de3bc60705133f913">SidTune</a> (const char *fileName, const char **fileNameExt=0, bool separatorIsSlash=false)</td></tr>
 <tr class="separator:a3228e0ac60847c1de3bc60705133f913"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9288dcb6b69955e3f7f611388dd51d0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#a9288dcb6b69955e3f7f611388dd51d0f">SidTune</a> (LoaderFunc loader, const char *fileName, const char **fileNameExt=0, bool separatorIsSlash=false)</td></tr>
+<tr class="separator:a9288dcb6b69955e3f7f611388dd51d0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca93d713040a2fdca9f90a1083362712"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#aca93d713040a2fdca9f90a1083362712">SidTune</a> (const uint_least8_t *oneFileFormatSidtune, uint_least32_t sidtuneLength)</td></tr>
 <tr class="separator:aca93d713040a2fdca9f90a1083362712"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a351d38672e5b08c4f2f0ee7547a96355"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#a351d38672e5b08c4f2f0ee7547a96355">setFileNameExtensions</a> (const char **fileNameExt)</td></tr>
 <tr class="separator:a351d38672e5b08c4f2f0ee7547a96355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad963e5ede53699b582ad65935f506281"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#ad963e5ede53699b582ad65935f506281">load</a> (const char *fileName, bool separatorIsSlash=false)</td></tr>
 <tr class="separator:ad963e5ede53699b582ad65935f506281"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc90a9a6a68e3b600bdd7e6b2b3db2b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#abc90a9a6a68e3b600bdd7e6b2b3db2b4">load</a> (LoaderFunc loader, const char *fileName, bool separatorIsSlash=false)</td></tr>
+<tr class="separator:abc90a9a6a68e3b600bdd7e6b2b3db2b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f0bda54788eba46e3e18df78513724b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#a0f0bda54788eba46e3e18df78513724b">read</a> (const uint_least8_t *sourceBuffer, uint_least32_t bufferLen)</td></tr>
 <tr class="separator:a0f0bda54788eba46e3e18df78513724b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb7346e021c624c0ec0ede4597981ea6"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSidTune.html#abb7346e021c624c0ec0ede4597981ea6">selectSong</a> (unsigned int songNum)</td></tr>
@@ -100,7 +111,7 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>MD5_LENGT
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3228e0ac60847c1de3bc60705133f913"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3228e0ac60847c1de3bc60705133f913">&#9670;&nbsp;</a></span>SidTune() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3228e0ac60847c1de3bc60705133f913">&#9670;&nbsp;</a></span>SidTune() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -143,8 +154,59 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>MD5_LENGT
 
 </div>
 </div>
+<a id="a9288dcb6b69955e3f7f611388dd51d0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9288dcb6b69955e3f7f611388dd51d0f">&#9670;&nbsp;</a></span>SidTune() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SidTune::SidTune </td>
+          <td>(</td>
+          <td class="paramtype">LoaderFunc&#160;</td>
+          <td class="paramname"><em>loader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **&#160;</td>
+          <td class="paramname"><em>fileNameExt</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>separatorIsSlash</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Load a sidtune from a file, using a file access callback.</p>
+<p>This function does the same as the above, except that it accepts a callback function, which will be used to read all files it accesses.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loader</td><td></td></tr>
+    <tr><td class="paramname">fileName</td><td></td></tr>
+    <tr><td class="paramname">fileNameExt</td><td></td></tr>
+    <tr><td class="paramname">separatorIsSlash</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aca93d713040a2fdca9f90a1083362712"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca93d713040a2fdca9f90a1083362712">&#9670;&nbsp;</a></span>SidTune() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aca93d713040a2fdca9f90a1083362712">&#9670;&nbsp;</a></span>SidTune() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -285,7 +347,7 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>MD5_LENGT
 </div>
 </div>
 <a id="ad963e5ede53699b582ad65935f506281"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad963e5ede53699b582ad65935f506281">&#9670;&nbsp;</a></span>load()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad963e5ede53699b582ad65935f506281">&#9670;&nbsp;</a></span>load() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -312,6 +374,49 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>MD5_LENGT
 <p>Load a sidtune into an existing object from a file.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">fileName</td><td></td></tr>
+    <tr><td class="paramname">separatorIsSlash</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abc90a9a6a68e3b600bdd7e6b2b3db2b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc90a9a6a68e3b600bdd7e6b2b3db2b4">&#9670;&nbsp;</a></span>load() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SidTune::load </td>
+          <td>(</td>
+          <td class="paramtype">LoaderFunc&#160;</td>
+          <td class="paramname"><em>loader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>separatorIsSlash</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Load a sidtune into an existing object from a file, using a file access callback.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loader</td><td></td></tr>
     <tr><td class="paramname">fileName</td><td></td></tr>
     <tr><td class="paramname">separatorIsSlash</td><td></td></tr>
   </table>
@@ -451,7 +556,7 @@ static const int&#160;</td><td class="memItemRight" valign="bottom"><b>MD5_LENGT
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

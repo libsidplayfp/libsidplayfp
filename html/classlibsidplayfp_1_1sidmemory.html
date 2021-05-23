@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -88,6 +88,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af694678b7a303117212284e7e29be28e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4244df6e217508e92636a9b77c7cc064"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidmemory.html#a4244df6e217508e92636a9b77c7cc064">setBasicSubtune</a> (uint8_t tune)=0</td></tr>
 <tr class="separator:a4244df6e217508e92636a9b77c7cc064"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84240aa0d57d6709d0a6e80824fb4ab5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidmemory.html#a84240aa0d57d6709d0a6e80824fb4ab5">setKernal</a> (const uint8_t *rom)=0</td></tr>
+<tr class="separator:a84240aa0d57d6709d0a6e80824fb4ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c6a6c84adbd9d3bdd97dd5d89014b74"><td class="memItemLeft" align="right" valign="top"><a id="a6c6a6c84adbd9d3bdd97dd5d89014b74"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setBasic</b> (const uint8_t *rom)=0</td></tr>
+<tr class="separator:a6c6a6c84adbd9d3bdd97dd5d89014b74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a797f3855c51ce43a8c20ac2e91348bca"><td class="memItemLeft" align="right" valign="top"><a id="a797f3855c51ce43a8c20ac2e91348bca"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const uint8_t *rom)=0</td></tr>
+<tr class="separator:a797f3855c51ce43a8c20ac2e91348bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An interface that allows access to <a class="el" href="classlibsidplayfp_1_1c64.html">c64</a> memory for loading tunes and apply sid specific hacks. </p>
@@ -373,6 +381,41 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a84240aa0d57d6709d0a6e80824fb4ab5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84240aa0d57d6709d0a6e80824fb4ab5">&#9670;&nbsp;</a></span>setKernal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void libsidplayfp::sidmemory::setKernal </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>rom</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Set the ROM banks.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rom</td><td>the ROM data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classlibsidplayfp_1_1MMU.html#aa584dc5a4fbcdf7602e69ad264e032da">libsidplayfp::MMU</a>.</p>
+
+</div>
+</div>
 <a id="ae9506ff3309aaebd82d550ce396d0f0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae9506ff3309aaebd82d550ce396d0f0e">&#9670;&nbsp;</a></span>writeMemByte()</h2>
 
@@ -471,7 +514,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

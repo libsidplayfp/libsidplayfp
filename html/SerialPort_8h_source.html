@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -84,12 +84,12 @@
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>libsidplayfp</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">class </span>MOS6526;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">class </span>MOS652X;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1SerialPort.html">   36</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1SerialPort.html">SerialPort</a> : <span class="keyword">private</span> <a class="code" href="classlibsidplayfp_1_1Event.html">Event</a></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classlibsidplayfp_1_1MOS6526.html">MOS6526</a> &amp;parent;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classlibsidplayfp_1_1MOS652X.html">MOS652X</a> &amp;parent;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;eventScheduler;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
@@ -122,7 +122,7 @@
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> syncCntHistory();</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classlibsidplayfp_1_1SerialPort.html">SerialPort</a>(<a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler, <a class="code" href="classlibsidplayfp_1_1MOS6526.html">MOS6526</a> &amp;parent) :</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classlibsidplayfp_1_1SerialPort.html">SerialPort</a>(<a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler, <a class="code" href="classlibsidplayfp_1_1MOS652X.html">MOS652X</a> &amp;parent) :</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="classlibsidplayfp_1_1Event.html#a3e8651555a5eb65f52c183d2d8574a48">Event</a>(<span class="stringliteral">&quot;Serial Port interrupt&quot;</span>),</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        parent(parent),</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        eventScheduler(scheduler),</div>
@@ -147,15 +147,15 @@
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#endif // SERIALPORT_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6526_html"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6526.html">libsidplayfp::MOS6526</a></div><div class="ttdef"><b>Definition:</b> mos6526.h:152</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventScheduler_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventScheduler.html">libsidplayfp::EventScheduler</a></div><div class="ttdef"><b>Definition:</b> EventScheduler.h:61</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html_a3e8651555a5eb65f52c183d2d8574a48"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html#a3e8651555a5eb65f52c183d2d8574a48">libsidplayfp::Event::Event</a></div><div class="ttdeci">Event(const char *const name)</div><div class="ttdef"><b>Definition:</b> Event.h:59</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SerialPort_html"><div class="ttname"><a href="classlibsidplayfp_1_1SerialPort.html">libsidplayfp::SerialPort</a></div><div class="ttdef"><b>Definition:</b> SerialPort.h:36</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS652X_html"><div class="ttname"><a href="classlibsidplayfp_1_1MOS652X.html">libsidplayfp::MOS652X</a></div><div class="ttdef"><b>Definition:</b> mos652x.h:152</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html">libsidplayfp::Event</a></div><div class="ttdef"><b>Definition:</b> Event.h:38</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventCallback_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventCallback.html">libsidplayfp::EventCallback</a></div><div class="ttdef"><b>Definition:</b> EventCallback.h:35</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

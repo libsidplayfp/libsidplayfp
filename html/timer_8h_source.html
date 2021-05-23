@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.1.2</span>
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
   </td>
  </tr>
@@ -87,7 +87,7 @@
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>libsidplayfp</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">class </span>MOS6526;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">class </span>MOS652X;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
 <div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Timer.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1Timer.html">Timer</a> : <span class="keyword">private</span> <a class="code" href="classlibsidplayfp_1_1Event.html">Event</a></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
@@ -125,7 +125,7 @@
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    uint8_t lastControlValue;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Timer.html#ae77051dd006773e98a35d5bfd678df0b">   92</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1MOS6526.html">MOS6526</a> &amp;<a class="code" href="classlibsidplayfp_1_1Timer.html#ae77051dd006773e98a35d5bfd678df0b">parent</a>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Timer.html#aab4d7ad0bbf7c36dc2d2d0957d4ce558">   92</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1MOS652X.html">MOS652X</a> &amp;<a class="code" href="classlibsidplayfp_1_1Timer.html#aab4d7ad0bbf7c36dc2d2d0957d4ce558">parent</a>;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 <div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Timer.html#a9e017d0b95f7abb5859c9cc86bb28675">   95</a></span>&#160;    int_least32_t <a class="code" href="classlibsidplayfp_1_1Timer.html#a9e017d0b95f7abb5859c9cc86bb28675">state</a>;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
@@ -143,7 +143,7 @@
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> serialPort() {}</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Timer.html#aef62e72b9213af44bf8a9d5578dbda9f">  138</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1Timer.html#aef62e72b9213af44bf8a9d5578dbda9f">Timer</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* name, <a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler, <a class="code" href="classlibsidplayfp_1_1MOS6526.html">MOS6526</a> &amp;<a class="code" href="classlibsidplayfp_1_1Timer.html#ae77051dd006773e98a35d5bfd678df0b">parent</a>) :</div>
+<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Timer.html#a9c4dbf5a9761dae2448c7fa3eebc244f">  138</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1Timer.html#a9c4dbf5a9761dae2448c7fa3eebc244f">Timer</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* name, <a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler, <a class="code" href="classlibsidplayfp_1_1MOS652X.html">MOS652X</a> &amp;<a class="code" href="classlibsidplayfp_1_1Timer.html#aab4d7ad0bbf7c36dc2d2d0957d4ce558">parent</a>) :</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <a class="code" href="classlibsidplayfp_1_1Event.html">Event</a>(name),</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        m_cycleSkippingEvent(<span class="stringliteral">&quot;Skip CIA clock decrement cycles&quot;</span>, *this, &amp;<a class="code" href="classlibsidplayfp_1_1Timer.html">Timer</a>::cycleSkippingEvent),</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        eventScheduler(scheduler),</div>
@@ -151,7 +151,7 @@
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        timer(0),</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        latch(0),</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        lastControlValue(0),</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <a class="code" href="classlibsidplayfp_1_1Timer.html#ae77051dd006773e98a35d5bfd678df0b">parent</a>(<a class="code" href="classlibsidplayfp_1_1Timer.html#ae77051dd006773e98a35d5bfd678df0b">parent</a>),</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <a class="code" href="classlibsidplayfp_1_1Timer.html#aab4d7ad0bbf7c36dc2d2d0957d4ce558">parent</a>(<a class="code" href="classlibsidplayfp_1_1Timer.html#aab4d7ad0bbf7c36dc2d2d0957d4ce558">parent</a>),</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <a class="code" href="classlibsidplayfp_1_1Timer.html#a9e017d0b95f7abb5859c9cc86bb28675">state</a>(0) {}</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="keyword">public</span>:</div>
@@ -235,8 +235,9 @@
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="preprocessor">#endif // TIMER_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_aab4d7ad0bbf7c36dc2d2d0957d4ce558"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#aab4d7ad0bbf7c36dc2d2d0957d4ce558">libsidplayfp::Timer::parent</a></div><div class="ttdeci">MOS652X &amp; parent</div><div class="ttdoc">Pointer to the MOS6526 which this Timer belongs to.</div><div class="ttdef"><b>Definition:</b> timer.h:92</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_a20a7fc3de606e911e59c9a6fea81dd39"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#a20a7fc3de606e911e59c9a6fea81dd39">libsidplayfp::Timer::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> timer.cpp:131</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6526_html"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6526.html">libsidplayfp::MOS6526</a></div><div class="ttdef"><b>Definition:</b> mos6526.h:152</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_a9c4dbf5a9761dae2448c7fa3eebc244f"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#a9c4dbf5a9761dae2448c7fa3eebc244f">libsidplayfp::Timer::Timer</a></div><div class="ttdeci">Timer(const char *name, EventScheduler &amp;scheduler, MOS652X &amp;parent)</div><div class="ttdef"><b>Definition:</b> timer.h:138</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventScheduler_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventScheduler.html">libsidplayfp::EventScheduler</a></div><div class="ttdef"><b>Definition:</b> EventScheduler.h:61</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_a3c0bacc313071142ec320f724148aa54"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#a3c0bacc313071142ec320f724148aa54">libsidplayfp::Timer::getState</a></div><div class="ttdeci">int_least32_t getState() const</div><div class="ttdef"><b>Definition:</b> timer.h:205</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_a2503c7372e8eb180efaa51439a625ab0"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#a2503c7372e8eb180efaa51439a625ab0">libsidplayfp::Timer::getPb</a></div><div class="ttdeci">bool getPb(uint8_t reg) const</div><div class="ttdef"><b>Definition:</b> timer.h:220</div></div>
@@ -249,14 +250,13 @@
 <div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_ab6a911325a6fcf94ac7185852a485314"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#ab6a911325a6fcf94ac7185852a485314">libsidplayfp::Timer::setPbToggle</a></div><div class="ttdeci">void setPbToggle(bool state)</div><div class="ttdef"><b>Definition:</b> timer.h:198</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_ac91560b87270d12e2e99355cc5613b1d"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#ac91560b87270d12e2e99355cc5613b1d">libsidplayfp::Timer::setControlRegister</a></div><div class="ttdeci">void setControlRegister(uint8_t cr)</div><div class="ttdef"><b>Definition:</b> timer.cpp:30</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_a22518b4182d832655bce434517f73747"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#a22518b4182d832655bce434517f73747">libsidplayfp::Timer::getTimer</a></div><div class="ttdeci">uint_least16_t getTimer() const</div><div class="ttdef"><b>Definition:</b> timer.h:212</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_aef62e72b9213af44bf8a9d5578dbda9f"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#aef62e72b9213af44bf8a9d5578dbda9f">libsidplayfp::Timer::Timer</a></div><div class="ttdeci">Timer(const char *name, EventScheduler &amp;scheduler, MOS6526 &amp;parent)</div><div class="ttdef"><b>Definition:</b> timer.h:138</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_ae77051dd006773e98a35d5bfd678df0b"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#ae77051dd006773e98a35d5bfd678df0b">libsidplayfp::Timer::parent</a></div><div class="ttdeci">MOS6526 &amp; parent</div><div class="ttdoc">Pointer to the MOS6526 which this Timer belongs to.</div><div class="ttdef"><b>Definition:</b> timer.h:92</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS652X_html"><div class="ttname"><a href="classlibsidplayfp_1_1MOS652X.html">libsidplayfp::MOS652X</a></div><div class="ttdef"><b>Definition:</b> mos652x.h:152</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Timer_html_ab163bbf33c7a94490ffca85a3de913cc"><div class="ttname"><a href="classlibsidplayfp_1_1Timer.html#ab163bbf33c7a94490ffca85a3de913cc">libsidplayfp::Timer::latchLo</a></div><div class="ttdeci">void latchLo(uint8_t data)</div><div class="ttdef"><b>Definition:</b> timer.cpp:142</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html">libsidplayfp::Event</a></div><div class="ttdef"><b>Definition:</b> Event.h:38</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventCallback_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventCallback.html">libsidplayfp::EventCallback</a></div><div class="ttdef"><b>Definition:</b> EventCallback.h:35</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 19 2021 18:39:44 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
