@@ -458,8 +458,7 @@ CPU/Acid800/cpu_flags
 CPU/Acid800/cpu_illegal
 CPU/Acid800/cpu_insn
 CPU/Acid800/cpu_timing
-# FIXME
-#CPU/Acid800/cpu_timing_ntsc                   --vic ntsc
+CPU/Acid800/cpu_timing_ntsc                   --vic ntsc
 CPU/ane/ane
 CPU/ane/ane-border
 CPU/ane/ane-none

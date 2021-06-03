@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
@@ -486,7 +486,11 @@ event_clock_t MOS656X::clockNTSC()
     case 15:
         sprites.updateMcBase();
 
-        delay = 40;
+        delay = 39;
+        break;
+
+    case 54:
+        setBA(true);
         break;
 
     case 55:
@@ -537,7 +541,7 @@ event_clock_t MOS656X::clockNTSC()
         break;
 
     default:
-        delay = 55 - lineCycle;
+        delay = 54 - lineCycle;
     }
 
     return delay;
@@ -621,7 +625,11 @@ event_clock_t MOS656X::clockOldNTSC()
     case 15:
         sprites.updateMcBase();
 
-        delay = 40;
+        delay = 39;
+        break;
+
+    case 54:
+        setBA(true);
         break;
 
     case 55:
@@ -667,7 +675,7 @@ event_clock_t MOS656X::clockOldNTSC()
         break;
 
     default:
-        delay = 55 - lineCycle;
+        delay = 54 - lineCycle;
     }
 
     return delay;
