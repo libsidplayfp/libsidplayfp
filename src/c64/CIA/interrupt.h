@@ -74,11 +74,16 @@ private:
     bool scheduled;
 
 protected:
-    bool interruptMasked() const { return icr & idr; }
+    inline bool interruptMasked() const { return icr & idr; }
 
-    bool interruptTriggered() const { return idr & INTERRUPT_REQUEST; }
+    inline bool interruptTriggered() const { return idr & INTERRUPT_REQUEST; }
 
-    void triggerInterrupt() { idr |= INTERRUPT_REQUEST; }
+    inline void triggerInterrupt() { idr |= INTERRUPT_REQUEST; }
+
+    /**
+     * Check if interrupts were ackowledged during previous cycle.
+     */
+    inline bool ack0() const { return eventScheduler.getTime(EVENT_CLOCK_PHI2) == (last_clear+1); }
 
 protected:
     /**

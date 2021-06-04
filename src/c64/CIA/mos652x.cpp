@@ -78,7 +78,7 @@ void InterruptSource8521::trigger(uint8_t interruptMask)
 
     if (interruptMasked() && !interruptTriggered())
     {
-        if (eventScheduler.getTime(EVENT_CLOCK_PHI2) == last_clear+1)
+        if (ack0())
         {
             // Interrupt delayed by 1/2 cycle if acknowledged on assert
             schedule();
@@ -98,7 +98,7 @@ void InterruptSource6526::trigger(uint8_t interruptMask)
     // timer b bug
     if (interruptMask == InterruptSource::INTERRUPT_UNDERFLOW_B)
     {
-        tbBug = (eventScheduler.getTime(EVENT_CLOCK_PHI2) == last_clear+1);
+        tbBug = ack0();
     }
 
     InterruptSource::trigger(interruptMask);
