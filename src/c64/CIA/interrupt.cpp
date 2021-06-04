@@ -45,6 +45,11 @@ uint8_t InterruptSource::clear()
 {
     last_clear = eventScheduler.getTime(EVENT_CLOCK_PHI2);
 
+    if (interruptTriggered())
+    {
+        interrupt(false);
+    }
+
     if (scheduled)
     {
         eventScheduler.cancel(*this);

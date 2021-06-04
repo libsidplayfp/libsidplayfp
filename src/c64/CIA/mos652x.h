@@ -115,8 +115,6 @@ public:
     {}
 
     void trigger(uint8_t interruptMask) override;
-
-    uint8_t clear() override;
 };
 
 /**

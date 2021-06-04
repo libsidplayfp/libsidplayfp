@@ -91,16 +91,6 @@ void InterruptSource8521::trigger(uint8_t interruptMask)
     }
 }
 
-uint8_t InterruptSource8521::clear()
-{
-    if (interruptTriggered())
-    {
-        interrupt(false);
-    }
-
-    return InterruptSource::clear();
-}
-
 // Interrupt Source 6526
 
 void InterruptSource6526::trigger(uint8_t interruptMask)
@@ -140,11 +130,6 @@ uint8_t InterruptSource6526::clear()
     {
         triggerBug();
         tbBug = false;
-    }
-
-    if (interruptTriggered())
-    {
-        interrupt(false);
     }
 
     return InterruptSource::clear();
