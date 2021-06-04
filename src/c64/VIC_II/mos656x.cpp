@@ -59,7 +59,7 @@ const char *MOS656X::credits()
             "\tCopyright (C) 2001 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"
-            "\tCopyright (C) 2011-2017 Leandro Nini\n";
+            "\tCopyright (C) 2011-2021 Leandro Nini\n";
 }
 
 
@@ -315,7 +315,7 @@ event_clock_t MOS656X::clockPAL()
     case 6:
         endDma<5>();
 
-        delay = sprites.isDma(0xc0) ? 2 : 4;
+        delay = sprites.isDma(0xc0) ? 2 : 5;
         break;
 
     case 7:
@@ -423,7 +423,7 @@ event_clock_t MOS656X::clockNTSC()
         endDma<3>();
 
         // No sprites before next compulsory cycle
-        if (!sprites.isDma(0xf8))
+        if (!sprites.isDma(0xf0))
             delay = 10;
         break;
 
@@ -442,7 +442,7 @@ event_clock_t MOS656X::clockNTSC()
     case 5:
         endDma<5>();
 
-        delay = sprites.isDma(0xc0) ? 2 : 4;
+        delay = sprites.isDma(0xc0) ? 2 : 6;
         break;
 
     case 6:
@@ -586,7 +586,7 @@ event_clock_t MOS656X::clockOldNTSC()
     case 6:
         endDma<5>();
 
-        delay = sprites.isDma(0xc0) ? 2 : 4;
+        delay = sprites.isDma(0xc0) ? 2 : 5;
         break;
 
     case 7:
@@ -648,7 +648,7 @@ event_clock_t MOS656X::clockOldNTSC()
         startDma<1>();
 
         // No sprites before next compulsory cycle
-        delay = (!sprites.isDma(0x1f)) ? 7 : 2;
+        delay = sprites.isDma(0x1f) ? 2 : 7;
         break;
 
     case 58:
