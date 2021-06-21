@@ -135,7 +135,7 @@ void WaveformGenerator::write_shift_register()
     {
         // Write changes to the shift register output caused by combined waveforms
         // back into the shift register. This happens only when the register is clocked
-        // (see $D1+$81_wave_test [1]) or when the test bit is set.
+        // (see $D1+$81_wave_test [1]) or when the test bit is falling.
         // A bit once set to zero cannot be changed, hence the and'ing.
         //
         // [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
