@@ -114,7 +114,6 @@ void InterruptSource6526::trigger(uint8_t interruptMask)
     if (tbBug)
     {
         triggerBug();
-        tbBug = false;
     }
 
     if (!interruptTriggered())
@@ -129,7 +128,6 @@ uint8_t InterruptSource6526::clear()
     if (tbBug)
     {
         triggerBug();
-        tbBug = false;
     }
 
     return InterruptSource::clear();
@@ -149,7 +147,7 @@ const char *MOS652X::credits()
             "\tCopyright (C) 2001-2004 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"
-            "\tCopyright (C) 2011-2020 Leandro Nini\n";
+            "\tCopyright (C) 2011-2021 Leandro Nini\n";
 }
 
 MOS652X::MOS652X(EventScheduler &scheduler) :

@@ -127,7 +127,7 @@ private:
     bool tbBug;
 
 private:
-    void triggerBug() { idr &= ~INTERRUPT_UNDERFLOW_B; }
+    void triggerBug() { idr &= ~INTERRUPT_UNDERFLOW_B; tbBug = false; }
 
 public:
     InterruptSource6526(EventScheduler &scheduler, MOS652X &parent) :
