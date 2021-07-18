@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.0</span>
+   &#160;<span id="projectnumber">2.2.1</span>
    </div>
   </td>
  </tr>
@@ -333,40 +333,37 @@
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    <span class="keywordflow">switch</span> (envelope_counter)</div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;    {</div>
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    <span class="keywordflow">case</span> 0xff:</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;        new_exponential_counter_period = 1;</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160; </div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    <span class="keywordflow">case</span> 0x5d:</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        new_exponential_counter_period = 2;</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160; </div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;    <span class="keywordflow">case</span> 0x36:</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        new_exponential_counter_period = 4;</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160; </div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    <span class="keywordflow">case</span> 0x1a:</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        new_exponential_counter_period = 8;</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160; </div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    <span class="keywordflow">case</span> 0x0e:</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;        new_exponential_counter_period = 16;</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160; </div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    <span class="keywordflow">case</span> 0x06:</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;        new_exponential_counter_period = 30;</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160; </div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    <span class="keywordflow">case</span> 0x00:</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        new_exponential_counter_period = 1;</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;    }</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;}</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160; </div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160; </div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160; </div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    <span class="keywordflow">case</span> 0x00:</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        new_exponential_counter_period = 1;</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160; </div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    <span class="keywordflow">case</span> 0x5d:</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        new_exponential_counter_period = 2;</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160; </div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    <span class="keywordflow">case</span> 0x36:</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        new_exponential_counter_period = 4;</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    <span class="keywordflow">case</span> 0x1a:</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        new_exponential_counter_period = 8;</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160; </div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="keywordflow">case</span> 0x0e:</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        new_exponential_counter_period = 16;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160; </div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    <span class="keywordflow">case</span> 0x06:</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        new_exponential_counter_period = 30;</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    }</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;}</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160; </div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160; </div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html_a60056e5462a32586e3a9c81a2116f67e"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html#a60056e5462a32586e3a9c81a2116f67e">reSIDfp::EnvelopeGenerator::output</a></div><div class="ttdeci">float output() const</div><div class="ttdef"><b>Definition:</b> EnvelopeGenerator.h:148</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html_ad14b4d0a8b782573a3cade4c2432c62e"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html#ad14b4d0a8b782573a3cade4c2432c62e">reSIDfp::EnvelopeGenerator::EnvelopeGenerator</a></div><div class="ttdeci">EnvelopeGenerator()</div><div class="ttdef"><b>Definition:</b> EnvelopeGenerator.h:153</div></div>
@@ -380,7 +377,7 @@
 <div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html_a818b47958703edf6c96b30ee209f0500"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html#a818b47958703edf6c96b30ee209f0500">reSIDfp::EnvelopeGenerator::writeCONTROL_REG</a></div><div class="ttdeci">void writeCONTROL_REG(unsigned char control)</div><div class="ttdef"><b>Definition:</b> EnvelopeGenerator.cpp:102</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jul 18 2021 19:05:31 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

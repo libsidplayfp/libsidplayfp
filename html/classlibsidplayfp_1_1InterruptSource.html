@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.0</span>
+   &#160;<span id="projectnumber">2.2.1</span>
    </div>
   </td>
  </tr>
@@ -122,6 +122,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>interruptTriggered</b
 <tr class="memitem:a04edb08b2b3fbeb10bb9ef46d8663be0"><td class="memItemLeft" align="right" valign="top"><a id="a04edb08b2b3fbeb10bb9ef46d8663be0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>triggerInterrupt</b> ()</td></tr>
 <tr class="separator:a04edb08b2b3fbeb10bb9ef46d8663be0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a867310bc56caf484adad04f640fa3deb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a867310bc56caf484adad04f640fa3deb">ack0</a> () const</td></tr>
+<tr class="separator:a867310bc56caf484adad04f640fa3deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b98324da3988f79544c75d479e0d66d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a3b98324da3988f79544c75d479e0d66d">InterruptSource</a> (<a class="el" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler, <a class="el" href="classlibsidplayfp_1_1MOS652X.html">MOS652X</a> &amp;parent)</td></tr>
 <tr class="separator:a3b98324da3988f79544c75d479e0d66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71a44b46b2355bf81cc9cfc8e9d9a82f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a71a44b46b2355bf81cc9cfc8e9d9a82f">schedule</a> ()</td></tr>
@@ -230,6 +232,32 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a867310bc56caf484adad04f640fa3deb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a867310bc56caf484adad04f640fa3deb">&#9670;&nbsp;</a></span>ack0()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool libsidplayfp::InterruptSource::ack0 </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Check if interrupts were ackowledged during previous cycle. </p>
+
+</div>
+</div>
 <a id="ad4581eea3c6d1c29ba95cd0d5fb00681"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad4581eea3c6d1c29ba95cd0d5fb00681">&#9670;&nbsp;</a></span>clear()</h2>
 
@@ -255,7 +283,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <p>Clear interrupt state.</p>
 <dl class="section return"><dt>Returns</dt><dd>old interrupt state </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1InterruptSource6526.html#aacec1f59cc4e781b403340d0b2d4913b">libsidplayfp::InterruptSource6526</a>, and <a class="el" href="classlibsidplayfp_1_1InterruptSource8521.html#a697931d6339da52f2e86a39443ae00c6">libsidplayfp::InterruptSource8521</a>.</p>
+<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1InterruptSource6526.html#aacec1f59cc4e781b403340d0b2d4913b">libsidplayfp::InterruptSource6526</a>.</p>
 
 </div>
 </div>
@@ -416,7 +444,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 23 2021 11:25:50 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jul 18 2021 19:05:31 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
