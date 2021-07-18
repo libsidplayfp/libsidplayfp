@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -25,6 +25,7 @@
 
 #include "Event.h"
 #include "EventScheduler.h"
+#include "EventCallback.h"
 
 #include <stdint.h>
 
@@ -37,8 +38,9 @@ class MOS652X;
 
 /**
  * This is the base class for the MOS6526 interrupt sources.
+ * Based on Denise emu code.
  */
-class InterruptSource : protected Event
+class InterruptSource
 {
 public:
     enum
@@ -62,6 +64,7 @@ protected:
 
     /// Clock when clear was called last
     event_clock_t last_clear;
+    event_clock_t last_set;
 
     /// Interrupt control register
     uint8_t icr;
@@ -69,21 +72,42 @@ protected:
     /// Interrupt data register
     uint8_t idr;
 
-private:
+    uint8_t idrTemp;
+
     /// Have we already scheduled CIA->CPU interrupt transition?
     bool scheduled;
 
-protected:
-    inline bool interruptMasked() const { return icr & idr; }
+private:
+    EventCallback<InterruptSource> interruptEvent;
 
+    EventCallback<InterruptSource> updateIdrEvent;
+
+    EventCallback<InterruptSource> setIrqEvent;
+
+protected:
     inline bool interruptTriggered() const { return idr & INTERRUPT_REQUEST; }
 
-    inline void triggerInterrupt() { idr |= INTERRUPT_REQUEST; }
+    inline bool interruptMasked(uint8_t interruptMask) const
+    {
+        return ((interruptMask != INTERRUPT_NONE) ? interruptMask : idr) & icr;
+    }
+
+    virtual void triggerInterrupt() =0;
 
     /**
      * Check if interrupts were ackowledged during previous cycle.
      */
     inline bool ack0() const { return eventScheduler.getTime(EVENT_CLOCK_PHI2) == (last_clear+1); }
+    inline bool write0() const { return eventScheduler.getTime(EVENT_CLOCK_PHI2) == (last_set+1); }
+
+    /**
+     * Signal interrupt to CPU.
+     */
+    void interrupt();
+
+    void updateIdr();
+
+    void setIrq();
 
 protected:
     /**
@@ -93,28 +117,36 @@ protected:
      * @param parent the MOS6526 which this Interrupt belongs to
      */
     InterruptSource(EventScheduler &scheduler, MOS652X &parent) :
-        Event("CIA Interrupt"),
         parent(parent),
         eventScheduler(scheduler),
         last_clear(0),
+        last_set(0),
         icr(0),
         idr(0),
-        scheduled(false)
+        scheduled(false),
+        interruptEvent("CIA Interrupt", *this, &InterruptSource::interrupt),
+        updateIdrEvent("CIA update ICR", *this, &InterruptSource::updateIdr),
+        setIrqEvent("CIA set IRQ", *this, &InterruptSource::setIrq)
     {}
 
     /**
      * Schedules an IRQ asserting state transition for next cycle.
      */
-    void schedule()
+    void schedule(int delay)
     {
         if (!scheduled)
         {
-            eventScheduler.schedule(*this, 1, EVENT_CLOCK_PHI1);
+            eventScheduler.schedule(interruptEvent, delay, EVENT_CLOCK_PHI1);
             scheduled = true;
         }
     }
 
-    void interrupt(bool state);
+    void scheduleIrq()
+    {
+        eventScheduler.schedule(setIrqEvent, 1, EVENT_CLOCK_PHI1);
+    }
+
+    bool isTriggered(uint8_t interruptMask);
 
 public:
     virtual ~InterruptSource() {}
@@ -124,7 +156,7 @@ public:
      * 
      * @param interruptMask Interrupt flag number
      */
-    virtual void trigger(uint8_t interruptMask) { idr |= interruptMask; }
+    virtual void trigger(uint8_t interruptMask) =0;
 
     /**
      * Clear interrupt state.
@@ -141,7 +173,7 @@ public:
     {
         icr = 0;
         idr = 0;
-        eventScheduler.cancel(*this);
+        eventScheduler.cancel(interruptEvent);
         scheduled = false;
     }
 
@@ -150,23 +182,7 @@ public:
      *
      * @param interruptMask control mask bits
      */
-    void set(uint8_t interruptMask)
-    {
-        if (interruptMask & 0x80)
-        {
-            icr |= interruptMask & ~INTERRUPT_REQUEST;
-            trigger(INTERRUPT_NONE);
-        }
-        else
-        {
-            icr &= ~interruptMask;
-        }
-    }
-
-    /**
-     * Signal interrupt to CPU.
-     */
-    void event() override;
+    void set(uint8_t interruptMask);
 };
 
 }

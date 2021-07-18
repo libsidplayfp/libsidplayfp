@@ -74,20 +74,9 @@ void TimerB::underFlow()
 
 void InterruptSource8521::trigger(uint8_t interruptMask)
 {
-    InterruptSource::trigger(interruptMask);
-
-    if (interruptMasked() && !interruptTriggered())
+    if (InterruptSource::isTriggered(interruptMask))
     {
-        if (ack0())
-        {
-            // Interrupt delayed by 1/2 cycle if acknowledged on assert
-            schedule();
-        }
-        else
-        {
-            triggerInterrupt();
-            interrupt(true);
-        }
+        schedule(0);
     }
 }
 
@@ -95,55 +84,34 @@ void InterruptSource8521::trigger(uint8_t interruptMask)
 
 void InterruptSource6526::trigger(uint8_t interruptMask)
 {
-    // timer b bug
-    if (interruptMask == InterruptSource::INTERRUPT_UNDERFLOW_B)
-    {
-        tbBug = ack0();
-    }
-
-    InterruptSource::trigger(interruptMask);
-
-    if (!interruptMasked())
-        return;
-
-    if (eventScheduler.getTime(EVENT_CLOCK_PHI2) == last_clear)
-    {
-        return;
-    }
-
-    if (tbBug)
-    {
-        triggerBug();
-    }
-
-    if (!interruptTriggered())
+    if (InterruptSource::isTriggered(interruptMask))
     {
         // interrupts are delayed by 1 clk on old CIAs
-        schedule();
+        schedule(1);
+    }
+
+    // if timer B underflows during the acknowledge cycle
+    // it triggers an interrupt as expected
+    // but the second bit in icr is not set
+    if ((interruptMask == INTERRUPT_UNDERFLOW_B) && ack0())
+    {
+        idr &= ~INTERRUPT_UNDERFLOW_B;
+        idrTemp &= ~INTERRUPT_UNDERFLOW_B;
     }
 }
 
 uint8_t InterruptSource6526::clear()
 {
-    if (tbBug)
-    {
-        triggerBug();
-    }
+    uint8_t oldIdr = InterruptSource::clear();
+    idr &= INTERRUPT_REQUEST;
 
-    return InterruptSource::clear();
-}
-
-void InterruptSource6526::reset()
-{
-    InterruptSource::reset();
-
-    tbBug = false;
+    return oldIdr;
 }
 
 const char *MOS652X::credits()
 {
     return
-            "MOS652X/8521 (CIA) Emulation:\n"
+            "MOS6526/8521 (CIA) Emulation:\n"
             "\tCopyright (C) 2001-2004 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"

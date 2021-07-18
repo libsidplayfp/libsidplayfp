@@ -26,7 +26,8 @@ supplied contributions or code was derived from their work:
     Thibaut VARENE    - exSID driver and builder
 
 VIC II, CIA and cpu-port emulation is based on VICE code.
-CIA SDR handling is based on Denise emulator implementation.
+CIA SDR and interrupt handling are based on Denise emulator
+implementation.
 
 Credit where credit is due, so if I missed anyone please let me know.
 
