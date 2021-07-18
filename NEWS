@@ -1,3 +1,10 @@
+2.2.1 2021-07-18
+* VIC-II: fix NTSC badline timing and improve cycle skipping
+* CIA: minor refactoring
+* Fixed a few minor PVS-Studio flagged issues 
+
+
+
 2.2.0 2021-05-23
 * reSIDfp: added NEON (by Christopher Snowhill) and SSE2 version of convolution function
   the configure option has been changed to --with-simd=<sse2/mmx/neon/none>
