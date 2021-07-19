@@ -391,22 +391,20 @@ CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-3
 CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-4_7f
 CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-19
 CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-generic-39
-###                                                   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-0    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-0_7f --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-1_7f --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-3    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-4_7f --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-19   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-39   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-0    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-0_7f --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-1_7f --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-3    --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-4_7f --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-19   --cia 4485
-#CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-39   --cia 4485
-###
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-0    --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-0_7f --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-1_7f --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-3    --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-4_7f --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-19   --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia1-sdr-icr-4485-39   --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-0    --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-0_7f --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-1_7f --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-3    --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-4_7f --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-19   --cia 4485
+CIA/shiftregister/cia-sdr-icr/cia2-sdr-icr-4485-39   --cia 4485
 CIA/timerbasics/test                                 --cia old
 CIA/timerbasics/test_new                             --cia new
 CIA/timerbasics/timer                                --cia old
