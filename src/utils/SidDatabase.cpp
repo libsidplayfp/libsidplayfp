@@ -90,7 +90,7 @@ const char *parseTime(const char *str, int_least32_t &result)
         result += milliseconds;
     }
 
-    while (!isspace(*end))
+    while ((*end != 0) && !isspace(*end))
     {
         end++;
     }
