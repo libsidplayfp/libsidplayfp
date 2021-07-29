@@ -69,8 +69,8 @@ more optimized code with the appropriate flags. Use only if you know what you're
 none by default
 
 --enable-testsuite=PATH_TO_TESTSUITE
-add support for running Lorenz testsuite (in prg format). The testsuite is available
-in the svn repository. Intended only for regression tests since it may break normal
+add support for running VICE testsuite (in prg format). The testsuite is available
+in the repository. Intended only for regression tests since it may break normal
 code execution. The path to testsuite must include terminal path separator
 disabled by default
 
@@ -86,7 +86,7 @@ force/disable libgcrypt support for MD5 computation
 default check
 
 --with-exsid
-Build with exsid support. Requires either libexsid or one of libfdti1 or libftd2xx 
+Build with exsid support. Requires either libexsid or one of libfdti1 or libftd2xx
 
 
 If doxygen is installed and detected by the configure script the documentation
