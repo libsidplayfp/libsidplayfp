@@ -48,16 +48,6 @@ namespace MOS6510Debug
 }
 #endif
 
-/*
- * Define this to get correct emulation of SHA/SHX/SHY/SHS instructions
- * (see VICE CPU tests).
- * This will slow down the emulation a bit with no real benefit
- * for SID playing so we keep it disabled.
- */
-#ifdef VICE_TESTSUITE
-#  define CORRECT_SH_INSTRUCTIONS
-#endif
-
 
 /**
  * Cycle-exact 6502/6510 emulation core.
