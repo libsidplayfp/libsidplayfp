@@ -71,8 +71,8 @@ namespace reSIDfp
  *
  * Operation: Calculate EOR result, shift register, set bit 0 = result.
  *
- *                    reset   +-------------------------------------------+
- *                      |     |                                           |
+ *                    reset  +--------------------------------------------+
+ *                      |    |                                            |
  *               test--OR-->EOR<--+                                       |
  *                      |         |                                       |
  *                      2 2 2 1 1 1 1 1 1 1 1 1 1                         |
@@ -110,19 +110,22 @@ private:
 
     unsigned int waveform_output;
 
-    /// Current and previous accumulator value.
+    /// Current accumulator value.
     unsigned int accumulator;
 
-    // Fout  = (Fn*Fclk/16777216)Hz
+    // Fout = (Fn*Fclk/16777216)Hz
     unsigned int freq;
 
-    // 8580 tri/saw pipeline
+    /// 8580 tri/saw pipeline
     unsigned int tri_saw_pipeline;
+
+    /// The OSC3 value
     unsigned int osc3;
 
     /// Remaining time to fully reset shift register.
     unsigned int shift_register_reset;
 
+    // The wave signal TTL when no waveform is selected
     unsigned int floating_output_ttl;
 
     /// The control register bits. Gate is handled by EnvelopeGenerator.
@@ -166,7 +169,7 @@ public:
     void setChipModel(ChipModel chipModel);
 
     /**
-     * SID clocking - 1 cycle.
+     * SID clocking.
      */
     void clock();
 
@@ -175,8 +178,8 @@ public:
      * This must be done after all the oscillators have been clock()'ed,
      * so that they are in the same state.
      *
-     * @param syncDest The oscillator I am syncing
-     * @param syncSource The oscillator syncing me.
+     * @param syncDest The oscillator that will be synced
+     * @param syncSource The sync source oscillator
      */
     void synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const;
 

@@ -60,7 +60,7 @@ private:
     unsigned int rate;
 
     /**
-     * During release mode, the SID arpproximates envelope decay via piecewise
+     * During release mode, the SID approximates envelope decay via piecewise
      * linear decay rate.
      */
     unsigned int exponential_counter;
@@ -181,7 +181,7 @@ public:
      * Write control register.
      *
      * @param control
-     *            control register
+     *            control register value
      */
     void writeCONTROL_REG(unsigned char control);
 
@@ -204,7 +204,7 @@ public:
     /**
      * Return the envelope current value.
      *
-     * @return envelope counter
+     * @return envelope counter value
      */
     unsigned char readENV() const { return env3; }
 };
