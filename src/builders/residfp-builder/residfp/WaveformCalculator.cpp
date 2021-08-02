@@ -41,7 +41,7 @@ WaveformCalculator* WaveformCalculator::getInstance()
  * In parentheses the number of mispredicted bits
  * on a total of 32768.
  *
- * [1] http://svn.code.sf.net/p/sidplay-residfp/code/trunk/combined-waveforms/
+ * [1] https://github.com/libsidplayfp/combined-waveforms
  */
 const CombinedWaveformConfig config[2][4] =
 {
