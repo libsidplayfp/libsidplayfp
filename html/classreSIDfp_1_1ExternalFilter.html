@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.1</span>
+   &#160;<span id="projectnumber">2.2.2</span>
    </div>
   </td>
  </tr>
@@ -71,7 +71,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4e9411c5bc187a2bb014702d9da063fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The audio output stage in a Commodore 64 consists of two STC networks, a low-pass filter with 3 dB frequency 16kHz followed by a DC-blocker which acts as a high-pass filter with a cutoff dependent on the attached audio equipment impedance. Here we suppose an impedance of 10kOhm resulting in a 3 dB attenuation at 1.6Hz.</p>
+<div class="textblock"><p>The audio output stage in a Commodore 64 consists of two STC networks, a low-pass RC filter with 3 dB frequency 16kHz followed by a DC-blocker which acts as a high-pass filter with a cutoff dependent on the attached audio equipment impedance. Here we suppose an impedance of 10kOhm resulting in a 3 dB attenuation at 1.6Hz. To operate properly the 6581 audio output needs a pull-down resistor (1KOhm recommended, not needed on 8580)</p>
 <div class="fragment"><div class="line">                                9/12V</div>
 <div class="line">-----+</div>
 <div class="line">audio|       10k                  |</div>
@@ -81,7 +81,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">         |        |  pF    +-C----o-----C-----+ 10k</div>
 <div class="line">                            470   |           |</div>
 <div class="line">        GND      GND         pF   R 1K        | amp</div>
-<div class="line">                             *    |           +-----</div>
+<div class="line">         *                   *    |           +-----</div>
 <div class="line"> </div>
 <div class="line">                                 GND</div>
 </div><!-- fragment --><p>The STC networks are connected with a <a href="https://en.wikipedia.org/wiki/Bipolar_junction_transistor">BJT</a> based <a href="https://en.wikipedia.org/wiki/Common_collector">common collector</a> used as a voltage follower (featuring a 2SC1815 NPN transistor).</p><ul>
@@ -168,7 +168,7 @@ Public Member Functions</h2></td></tr>
 <p>Setup of the external filter sampling parameters.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">frequency</td><td></td></tr>
+    <tr><td class="paramname">frequency</td><td>the main system clock frequency </td></tr>
   </table>
   </dd>
 </dl>
@@ -182,7 +182,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jul 18 2021 19:05:32 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Aug 7 2021 07:21:34 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

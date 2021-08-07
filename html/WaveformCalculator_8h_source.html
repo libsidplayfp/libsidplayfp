@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.1</span>
+   &#160;<span id="projectnumber">2.2.2</span>
    </div>
   </td>
  </tr>
@@ -94,34 +94,34 @@
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">float</span> stmix;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;} <a class="code" href="structreSIDfp_1_1CombinedWaveformConfig.html">CombinedWaveformConfig</a>;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1WaveformCalculator.html">   92</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;{</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">typedef</span> std::map&lt;const CombinedWaveformConfig*, matrix_t&gt; cw_cache_t;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    cw_cache_t CACHE;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>() {}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a70ffec367dd863bd6f03e61ecc4ba2c0">getInstance</a>();</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1WaveformCalculator.html">  100</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;{</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">typedef</span> std::map&lt;const CombinedWaveformConfig*, matrix_t&gt; cw_cache_t;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    cw_cache_t CACHE;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a003313ae91ac6f2575ab9f7e33a3c774">buildTable</a>(ChipModel model);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;};</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>() {}</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a70ffec367dd863bd6f03e61ecc4ba2c0">getInstance</a>();</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a003313ae91ac6f2575ab9f7e33a3c774">buildTable</a>(ChipModel model);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;};</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html">reSIDfp::WaveformCalculator</a></div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:92</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html">reSIDfp::WaveformCalculator</a></div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:100</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_a003313ae91ac6f2575ab9f7e33a3c774"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#a003313ae91ac6f2575ab9f7e33a3c774">reSIDfp::WaveformCalculator::buildTable</a></div><div class="ttdeci">matrix_t * buildTable(ChipModel model)</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.cpp:173</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_a70ffec367dd863bd6f03e61ecc4ba2c0"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#a70ffec367dd863bd6f03e61ecc4ba2c0">reSIDfp::WaveformCalculator::getInstance</a></div><div class="ttdeci">static WaveformCalculator * getInstance()</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.cpp:29</div></div>
 <div class="ttc" id="astructreSIDfp_1_1CombinedWaveformConfig_html"><div class="ttname"><a href="structreSIDfp_1_1CombinedWaveformConfig.html">reSIDfp::CombinedWaveformConfig</a></div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:37</div></div>
 <div class="ttc" id="aclassmatrix_html"><div class="ttname"><a href="classmatrix.html">matrix</a></div><div class="ttdef"><b>Definition:</b> array.h:42</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jul 18 2021 19:05:31 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Aug 7 2021 07:21:34 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

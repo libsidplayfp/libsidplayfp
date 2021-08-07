@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.1</span>
+   &#160;<span id="projectnumber">2.2.2</span>
    </div>
   </td>
  </tr>
@@ -107,8 +107,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setWaveformModels</b>
 <li>Pulse: The upper 12 bits of the accumulator are used. These bits are compared to the pulse width register by a 12 bit digital comparator; output is either all one or all zero bits. The pulse setting is delayed one cycle after the compare. The test bit, when set to one, holds the pulse waveform output at 0xfff regardless of the pulse width setting.</li>
 <li>Noise: The noise output is taken from intermediate bits of a 23-bit shift register which is clocked by bit 19 of the accumulator. The shift is delayed 2 cycles after bit 19 is set high.</li>
 </ul>
-<p>Operation: Calculate EOR result, shift register, set bit 0 = result. </p><pre class="fragment">               reset   +-------------------------------------------+
-                 |     |                                           |
+<p>Operation: Calculate EOR result, shift register, set bit 0 = result. </p><pre class="fragment">               reset  +--------------------------------------------+
+                 |    |                                            |
           test--OR--&gt;EOR&lt;--+                                       |
                  |         |                                       |
                  2 2 2 1 1 1 1 1 1 1 1 1 1                         |
@@ -159,7 +159,7 @@ Waveform bits:       1   1       9     8   7       6     5   4
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="classreSIDfp_1_1SID.html">SID</a> clocking - 1 cycle. </p>
+<p><a class="el" href="classreSIDfp_1_1SID.html">SID</a> clocking. </p>
 
 </div>
 </div>
@@ -390,8 +390,8 @@ Waveform bits:       1   1       9     8   7       6     5   4
 <p>Synchronize oscillators. This must be done after all the oscillators have been <a class="el" href="classreSIDfp_1_1WaveformGenerator.html#a1871a07011f655e66a7fa0b03b40db10">clock()</a>'ed, so that they are in the same state.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">syncDest</td><td>The oscillator I am syncing </td></tr>
-    <tr><td class="paramname">syncSource</td><td>The oscillator syncing me. </td></tr>
+    <tr><td class="paramname">syncDest</td><td>The oscillator that will be synced </td></tr>
+    <tr><td class="paramname">syncSource</td><td>The sync source oscillator </td></tr>
   </table>
   </dd>
 </dl>
@@ -562,7 +562,7 @@ Waveform bits:       1   1       9     8   7       6     5   4
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jul 18 2021 19:05:32 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Aug 7 2021 07:21:35 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
