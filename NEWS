@@ -1,3 +1,8 @@
+2.2.2 2021-08-07
+* songlengthdb: fix possible corrupted data (issue #32)
+
+
+
 2.2.1 2021-07-18
 * VIC-II: fix NTSC badline timing and improve cycle skipping
 * CIA: minor refactoring
