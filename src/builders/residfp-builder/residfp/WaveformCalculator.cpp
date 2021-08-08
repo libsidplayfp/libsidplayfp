@@ -194,8 +194,11 @@ matrix_t* WaveformCalculator::buildTable(ChipModel model)
         wftable[6][idx] = calculateCombinedWaveform(cfgArray[2], 6, idx);
         wftable[7][idx] = calculateCombinedWaveform(cfgArray[3], 7, idx);
     }
-
+#ifdef HAVE_CXX11
+    return &(CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+#else
     return &(CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+#endif
 }
 
 } // namespace reSIDfp
