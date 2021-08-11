@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -335,19 +335,6 @@ void MOS6510::FetchDataByte()
 #ifdef DEBUG
     instrOperand = Cycle_Data;
 #endif
-}
-
-void MOS6510::FetchDataByteBrk()
-{
-    // For interrupt sequence there is no dummy load
-    // from PC+1
-    // dummy loads are from PC & (likely) PC
-    // see VICE test interrupts/irqdummy/irqdummy
-    //Cycle_Data = cpuRead(Register_ProgramCounter-1);
-    if (!d1x1)
-    {
-        Register_ProgramCounter++;
-    }
 }
 
 /**
@@ -1534,7 +1521,7 @@ void MOS6510::buildInstructionTable()
         // Immediate and Relative Addressing Mode Handler
         case ADCb: case ANDb:  case ANCb_: case ANEb: case ASRb: case ARRb:
         case BCCr: case BCSr:  case BEQr:  case BMIr: case BNEr: case BPLr:
-        case BVCr:  case BVSr:  case CMPb: case CPXb: case CPYb:
+        case BRKn: case BVCr:  case BVSr:  case CMPb: case CPXb: case CPYb:
         case EORb: case LDAb:  case LDXb:  case LDYb: case LXAb: case NOPb_:
         case ORAb: case SBCb_: case SBXb:  case RTIn: case RTSn:
             instrTable[buildCycle++].func = &MOS6510::FetchDataByte;
@@ -1559,7 +1546,7 @@ void MOS6510::buildInstructionTable()
         case ADCzx: case ANDzx:  case CMPzx: case EORzx: case LDAzx: case LDYzx:
         case NOPzx_: case ORAzx: case SBCzx:
         case ASLzx: case DCPzx: case DECzx: case INCzx: case ISBzx: case LSRzx:
-        case RLAzx: case ROLzx: case RORzx: case RRAzx: case SLOzx: case SREzx:
+        case RLAzx:    case ROLzx: case RORzx: case RRAzx: case SLOzx: case SREzx:
             access = READ;
             // fallthrough
         case STAzx: case STYzx:
@@ -1576,10 +1563,6 @@ void MOS6510::buildInstructionTable()
             instrTable[buildCycle++].func = &MOS6510::FetchLowAddrY;
             // operates on 0 page in read mode. Truly side-effect free.
             instrTable[buildCycle++].func = &MOS6510::WasteCycle;
-            break;
-
-        case BRKn:
-            instrTable[buildCycle++].func = &MOS6510::FetchDataByteBrk;
             break;
 
         // Absolute Addressing Mode Handler
