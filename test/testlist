@@ -329,7 +329,8 @@ CIA/ciavarious/cia13
 CIA/ciavarious/cia14
 CIA/ciavarious/cia15
 CIA/dd0drw/dd0drw
-CIA/dd0dtest/dd0dtest
+# FIXME
+#CIA/dd0dtest/dd0dtest
 CIA/mirrors/ciamirrors
 CIA/irqdelay/irqdelay                                --cia old
 CIA/irqdelay/irqdelay-new                            --cia new

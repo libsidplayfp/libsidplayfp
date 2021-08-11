@@ -109,16 +109,6 @@ public:
  */
 class InterruptSource8521 final : public InterruptSource
 {
-protected:
-    void triggerInterrupt() override
-    {
-        idr |= INTERRUPT_REQUEST;
-        idrTemp |= INTERRUPT_REQUEST;
-
-        if (ack0())
-            scheduleIrq();
-    }
-
 public:
     InterruptSource8521(EventScheduler &scheduler, MOS652X &parent) :
         InterruptSource(scheduler, parent)
@@ -132,17 +122,24 @@ public:
  */
 class InterruptSource6526 final : public InterruptSource
 {
-protected:
-    void triggerInterrupt() override { idr |= INTERRUPT_REQUEST; }
+private:
+    /// Timer B bug
+    bool tbBug;
+
+private:
+    void triggerBug() { idr &= ~INTERRUPT_UNDERFLOW_B; tbBug = false; }
 
 public:
     InterruptSource6526(EventScheduler &scheduler, MOS652X &parent) :
-        InterruptSource(scheduler, parent)
+        InterruptSource(scheduler, parent),
+        tbBug(false)
     {}
 
     void trigger(uint8_t interruptMask) override;
 
     uint8_t clear() override;
+
+    void reset() override;
 };
 
 /**

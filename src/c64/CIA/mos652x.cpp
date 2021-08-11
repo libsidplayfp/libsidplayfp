@@ -74,9 +74,20 @@ void TimerB::underFlow()
 
 void InterruptSource8521::trigger(uint8_t interruptMask)
 {
-    if (InterruptSource::isTriggered(interruptMask))
+    InterruptSource::trigger(interruptMask);
+
+    if (interruptMasked() && !interruptTriggered())
     {
-        schedule(0);
+        if (ack0())
+        {
+            // Interrupt delayed by 1/2 cycle if acknowledged on assert
+            schedule();
+        }
+        else
+        {
+            triggerInterrupt();
+            interrupt(true);
+        }
     }
 }
 
@@ -84,34 +95,55 @@ void InterruptSource8521::trigger(uint8_t interruptMask)
 
 void InterruptSource6526::trigger(uint8_t interruptMask)
 {
-    if (InterruptSource::isTriggered(interruptMask))
+    // timer b bug
+    if (interruptMask == InterruptSource::INTERRUPT_UNDERFLOW_B)
     {
-        // interrupts are delayed by 1 clk on old CIAs
-        schedule(1);
+        tbBug = ack0();
     }
 
-    // if timer B underflows during the acknowledge cycle
-    // it triggers an interrupt as expected
-    // but the second bit in icr is not set
-    if ((interruptMask == INTERRUPT_UNDERFLOW_B) && ack0())
+    InterruptSource::trigger(interruptMask);
+
+    if (!interruptMasked())
+        return;
+
+    if (eventScheduler.getTime(EVENT_CLOCK_PHI2) == last_clear)
     {
-        idr &= ~INTERRUPT_UNDERFLOW_B;
-        idrTemp &= ~INTERRUPT_UNDERFLOW_B;
+        return;
+    }
+
+    if (tbBug)
+    {
+        triggerBug();
+    }
+
+    if (!interruptTriggered())
+    {
+        // interrupts are delayed by 1 clk on old CIAs
+        schedule();
     }
 }
 
 uint8_t InterruptSource6526::clear()
 {
-    uint8_t oldIdr = InterruptSource::clear();
-    idr &= INTERRUPT_REQUEST;
+    if (tbBug)
+    {
+        triggerBug();
+    }
 
-    return oldIdr;
+    return InterruptSource::clear();
+}
+
+void InterruptSource6526::reset()
+{
+    InterruptSource::reset();
+
+    tbBug = false;
 }
 
 const char *MOS652X::credits()
 {
     return
-            "MOS6526/8521 (CIA) Emulation:\n"
+            "MOS652X/8521 (CIA) Emulation:\n"
             "\tCopyright (C) 2001-2004 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti S. Lankila\n"
             "\tCopyright (C) 2009-2014 VICE Project\n"

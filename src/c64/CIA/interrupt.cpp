@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -28,67 +28,17 @@
 namespace libsidplayfp
 {
 
-void InterruptSource::interrupt()
+void InterruptSource::event()
 {
-    if (!interruptTriggered())
-    {
-        triggerInterrupt();
-        setIrq();
-    }
+    triggerInterrupt();
+    parent.interrupt(true);
 
     scheduled = false;
 }
 
-void InterruptSource::updateIdr()
+void InterruptSource::interrupt(bool state)
 {
-    idr = idrTemp;
-    if (ack0())
-    {
-        eventScheduler.schedule(updateIdrEvent, 1, EVENT_CLOCK_PHI1);
-        idrTemp = 0;
-    }
-}
-
-void InterruptSource::setIrq()
-{
-    if (!ack0())
-        parent.interrupt(true);
-}
-
-bool InterruptSource::isTriggered(uint8_t interruptMask)
-{
-    idr |= interruptMask;
-    idrTemp |= interruptMask;
-
-    if (interruptMasked(interruptMask))
-        return true;
-
-    if ((interruptMask == INTERRUPT_NONE) && write0())
-    {
-        if (scheduled)
-        {
-            eventScheduler.cancel(interruptEvent);
-            scheduled = false;
-        }
-    }
-    return false;
-}
-
-void InterruptSource::set(uint8_t interruptMask)
-{
-    if (interruptMask & INTERRUPT_REQUEST)
-    {
-        icr |= interruptMask & ~INTERRUPT_REQUEST;
-    }
-    else
-    {
-        icr &= ~interruptMask;
-    }
-
-    if (!ack0())
-        trigger(INTERRUPT_NONE);
-
-    last_set = eventScheduler.getTime(EVENT_CLOCK_PHI2);
+    parent.interrupt(state);
 }
 
 uint8_t InterruptSource::clear()
@@ -96,15 +46,19 @@ uint8_t InterruptSource::clear()
     last_clear = eventScheduler.getTime(EVENT_CLOCK_PHI2);
 
     if (interruptTriggered())
-        parent.interrupt(false);
-
-    if (!eventScheduler.isPending(updateIdrEvent))
     {
-        eventScheduler.schedule(updateIdrEvent, 1, EVENT_CLOCK_PHI1);
-        idrTemp = 0;
+        interrupt(false);
     }
 
-    return idr;
+    if (scheduled)
+    {
+        eventScheduler.cancel(*this);
+        scheduled = false;
+    }
+
+    uint8_t const old = idr;
+    idr = 0;
+    return old;
 }
 
 }
