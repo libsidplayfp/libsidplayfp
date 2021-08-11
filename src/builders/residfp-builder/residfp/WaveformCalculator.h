@@ -24,8 +24,9 @@
 
 #include <map>
 
-#include "siddefs-fp.h"
 #include "array.h"
+#include "sidcxx11.h"
+#include "siddefs-fp.h"
 
 
 namespace reSIDfp
@@ -105,7 +106,7 @@ private:
 private:
     cw_cache_t CACHE;
 
-    WaveformCalculator() {}
+    WaveformCalculator() DEFAULT;
 
 public:
     /**

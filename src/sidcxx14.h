@@ -18,22 +18,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef SIDCXX11_H
-#define SIDCXX11_H
+#ifndef SIDCXX14_H
+#define SIDCXX14_H
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
 
-#ifndef HAVE_CXX11
-#  define nullptr    0
-#  define override
-#  define final
-#  define unique_ptr auto_ptr
-#  define DEFAULT {}
-#else
-#  define DEFAULT = default
-#endif
+#include "sidcxx11.h"
 
+#ifdef HAVE_CXX14
+#  define MAKE_UNIQUE(type, ...) std::make_unique<type>(__VA_ARGS__)
+#else
+#  define MAKE_UNIQUE(type, ...) std::unique_ptr<type>(new type(__VA_ARGS__))
+#endif
 
 #endif
