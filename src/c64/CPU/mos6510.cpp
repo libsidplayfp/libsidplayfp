@@ -343,10 +343,7 @@ void MOS6510::FetchDataByteBrk()
     // from PC+1
     // dummy loads are from PC & (likely) PC
     // see VICE test interrupts/irqdummy/irqdummy
-    // FIXME
-    // this is only true for hw interrupts and not for sw BRK
-    // see http://forum.6502.org/viewtopic.php?f=8&t=6699
-    //Cycle_Data = cpuRead(Register_ProgramCounter);
+    //Cycle_Data = cpuRead(Register_ProgramCounter-1);
     if (!d1x1)
     {
         Register_ProgramCounter++;
