@@ -137,9 +137,10 @@ private:
     /// Tell whether the accumulator MSB was set high on this cycle.
     bool msb_rising;
 
-    bool is6581;
+    bool is6581; //-V730_NOINIT this is initialized in the SID constructor
 
-    float dac[4096];
+    /// The DAC LUT for analog output
+    float* dac; //-V730_NOINIT this is initialized in the SID constructor
 
 private:
     void clock_shift_register(unsigned int bit0);
@@ -160,13 +161,21 @@ public:
     void setWaveformModels(matrix_t* models);
 
     /**
-     * Set the chip model.
-     * This determines the type of the analog DAC emulation:
+     * Set the analog DAC emulation:
      * 8580 is perfectly linear while 6581 is nonlinear.
+     * Must be called before any operation.
      *
-     * @param chipModel
+     * @param dac
      */
-    void setChipModel(ChipModel chipModel);
+    void setDAC(float* dac) { this->dac = dac; }
+
+    /**
+     * Set the chip model.
+     * Must be called before any operation.
+     *
+     * @param is6581 true if MOS6581, false if CSG8580
+     */
+    void setModel(bool is6581) { this->is6581 = is6581; }
 
     /**
      * SID clocking.
@@ -208,8 +217,7 @@ public:
         floating_output_ttl(0),
         test(false),
         sync(false),
-        msb_rising(false),
-        is6581(true) {}
+        msb_rising(false) {}
 
     /**
      * Write FREQ LO register.

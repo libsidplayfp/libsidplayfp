@@ -110,12 +110,8 @@ private:
     /// The ENV3 value, sampled at the first phase of the clock
     unsigned char env3;
 
-    /**
-     * Emulated nonlinearity of the envelope DAC.
-     *
-     * @See Dac
-     */
-    float dac[256];
+    /// The DAC LUT for analog output
+    float* dac; //-V730_NOINIT this is initialized in the SID constructor
 
 private:
     static const unsigned int adsrtable[16];
@@ -127,13 +123,13 @@ private:
 
 public:
     /**
-     * Set chip model.
-     * This determines the type of the analog DAC emulation:
+     * Set the analog DAC emulation:
      * 8580 is perfectly linear while 6581 is nonlinear.
+     * Must be called before any operation.
      *
-     * @param chipModel
+     * @param dac
      */
-    void setChipModel(ChipModel chipModel);
+    void setDAC(float* dac) { this->dac = dac; }
 
     /**
      * SID clocking.
