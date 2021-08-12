@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -282,8 +282,7 @@ void c64::interruptIRQ(bool state)
     }
     else
     {
-        irqCount --;
-        if (irqCount == 0)
+        if ((irqCount > 0) && (--irqCount == 0))
              cpu.clearIRQ();
     }
 }
