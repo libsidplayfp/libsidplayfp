@@ -336,7 +336,10 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         // Calculate the sinc tables.
         const double scale = 32768.0 * wc / cyclesPerSampleD / M_PI;
 
-        const double firN_2 = static_cast<double>(firN / 2);
+        // we're not interested in the fractional part
+        // so use int division before converting to double
+        const int tmp = firN / 2;
+        const double firN_2 = static_cast<double>(tmp);
 
         for (int i = 0; i < firRES; i++)
         {
