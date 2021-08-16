@@ -86,6 +86,7 @@ c64::c64() :
     cia1(*this),
     cia2(*this),
     vic(*this),
+    disconnectedBusBank(mmu),
     mmu(eventScheduler, &ioBank)
 {
     resetIoBank();

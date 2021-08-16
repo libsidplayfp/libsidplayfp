@@ -2,7 +2,6 @@
  * This file is part of libsidplayfp, a SID player engine.
  *
  * Copyright 2012-2021 Leandro Nini <drfiemost@users.sourceforge.net>
- * Copyright 2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,45 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef DISCONNECTEDBUSBANK_H
-#define DISCONNECTEDBUSBANK_H
+#ifndef PLA_H
+#define PLA_H
 
-#include "Bank.h"
-#include "pla.h"
+#include <stdint.h>
 
-#include "sidcxx11.h"
+#include "Event.h"
 
 namespace libsidplayfp
 {
 
 /**
- * IO1/IO2
- *
- * memory mapped registers or machine code routines of optional external devices.
- *
- * I/O Area #1 located at $DE00-$DEFF
- *
- * I/O Area #2 located at $DF00-$DFFF
+ * Interface to PLA functions.
  */
-class DisconnectedBusBank final : public Bank
+class PLA
 {
-private:
-    const PLA &pla;
-
 public:
-    DisconnectedBusBank(PLA &pla) :
-        pla(pla)
-    {}
+    virtual void setCpuPort(uint8_t state) =0;
+    virtual uint8_t getLastReadByte() const =0;
+    virtual event_clock_t getPhi2Time() const =0;
 
-    /**
-     * No device is connected so this is a no-op.
-     */
-    void poke(uint_least16_t, uint8_t) override {}
-
-    /**
-     * No device is connected so this should return the value left on the bus.
-     */
-    uint8_t peek(uint_least16_t) override { return pla.getLastReadByte(); }
+protected:
+    ~PLA() {}
 };
 
 }

@@ -29,6 +29,7 @@
 #include "sidmemory.h"
 #include "EventScheduler.h"
 
+#include "Banks/pla.h"
 #include "Banks/SystemRAMBank.h"
 #include "Banks/SystemROMBanks.h"
 #include "Banks/ZeroRAMBank.h"
@@ -78,9 +79,12 @@ private:
     /// RAM bank 0
     ZeroRAMBank zeroRAMBank;
 
+    /// random seed
+    mutable unsigned int seed;
+
 private:
     void setCpuPort(uint8_t state) override;
-    uint8_t getLastReadByte() const override { return 0; }
+    uint8_t getLastReadByte() const override;
     event_clock_t getPhi2Time() const override { return eventScheduler.getTime(EVENT_CLOCK_PHI2); }
 
     void updateMappingPHI2();

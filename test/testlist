@@ -293,8 +293,7 @@ general/Lorenz-2.15/src/finish
 #general/ram0001/test1
 ### C64 ###
 C64/bankio/bankio
-# expects random values read from I/O Area #2
-#C64/openio/gauntlet
+C64/openio/gauntlet
 C64/raminitpattern/cyberloadtest
 C64/raminitpattern/darkstarbbstest
 C64/raminitpattern/platoontest

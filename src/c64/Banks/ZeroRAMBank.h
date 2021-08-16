@@ -27,6 +27,7 @@
 
 #include "Bank.h"
 #include "SystemRAMBank.h"
+#include "pla.h"
 
 #include "Event.h"
 
@@ -34,20 +35,6 @@
 
 namespace libsidplayfp
 {
-
-/**
- * Interface to PLA functions.
- */
-class PLA
-{
-public:
-    virtual void setCpuPort(uint8_t state) =0;
-    virtual uint8_t getLastReadByte() const =0;
-    virtual event_clock_t getPhi2Time() const =0;
-
-protected:
-    ~PLA() {}
-};
 
 /**
  * Unused data port bits emulation, as investigated by groepaz:
