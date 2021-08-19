@@ -1,3 +1,11 @@
+2.3.0 2021-08-xx
+* Fixed some PVS-Studio warnings. (issues #20 #21 #23 #28)
+* residfp: share dac tables between voices, saves a few Kb and some initialization time (issues #34 #26)
+* CIA: rework interrupt implementation based on Denise emu code, fixes dd0dtest (issue #29)
+* c64: reading from the I/O Area should return the current bus value, since the VIC fetches are not emulated just use some pseudo random numbers. Fixes C64/openio/gauntlet test
+
+
+
 2.2.2 2021-08-07
 * songlengthdb: fix possible corrupted data (issue #32)
 
