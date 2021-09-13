@@ -145,12 +145,14 @@ public:
         isTriggered = true;
 
         // don't latch on the last line, except on the first cycle
-        if ((rasterY != lastLine) || (lineCycle == 0))
+        if ((rasterY == lastLine) && (lineCycle > 0))
         {
-            // Latch current coordinates
-            lpx = getXpos(lineCycle) + 2;
-            lpy = rasterY;
+            return false;
         }
+
+        // Latch current coordinates
+        lpx = getXpos(lineCycle) + 2;
+        lpy = rasterY;
 
         return true;
     }
