@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
@@ -114,6 +114,10 @@ public:
 
         isTriggered = true;
 
+        // On 6569R1 and MOS6567R56A the interrupt is triggered only
+        // when the line is low on the first cycle of the frame.
+        // return true;
+
         switch (cyclesPerLine)
         {
         case 63:
@@ -151,10 +155,10 @@ public:
         }
 
         // Latch current coordinates
-        lpx = getXpos(lineCycle) + 2;
+        lpx = getXpos(lineCycle) + 2; // + 1 for MOS 85XX
         lpy = rasterY;
 
-        return true;
+        return true; // false for 6569R1 and MOS6567R56A
     }
 
     /**
