@@ -106,9 +106,13 @@ public:
      * @param rasterY current y raster position
      * @return true if an IRQ should be triggered
      */
-    bool retrigger(unsigned int lineCycle, unsigned int rasterY)
+    bool retrigger()
     {
-        const bool triggered = trigger(lineCycle, rasterY);
+        if (isTriggered)
+            return false;
+
+        isTriggered = true;
+
         switch (cyclesPerLine)
         {
         case 63:
@@ -119,7 +123,10 @@ public:
             lpx = 0xd5;
             break;
         }
-        return triggered;
+
+        lpy = 0;
+
+        return true;
     }
 
     /**

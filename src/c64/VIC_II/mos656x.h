@@ -274,7 +274,7 @@ private:
             rasterY = 0;
             rasterYIRQEdgeDetector();
             lp.untrigger();
-            if (lpAsserted && lp.retrigger(lineCycle, rasterY))
+            if (lpAsserted && lp.retrigger())
             {
                 activateIRQFlag(IRQ_LIGHTPEN);
             }
