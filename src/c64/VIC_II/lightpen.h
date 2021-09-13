@@ -58,12 +58,13 @@ private:
      */
     uint8_t getXpos(unsigned int lineCycle) const
     {
-        if (lineCycle < 12)
-            lineCycle += cyclesPerLine-1;
+        // FIXME: on NTSC the xpos is not incremented at lineCycle 61
+        if (lineCycle < 13)
+            lineCycle += cyclesPerLine;
 
-        lineCycle -= 12;
-        
-        return lineCycle << 2;
+        int xpos = lineCycle - 13;
+
+        return xpos * 4;
     }
 
 public:
