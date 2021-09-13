@@ -68,7 +68,8 @@ MOS656X::MOS656X(EventScheduler &scheduler) :
     eventScheduler(scheduler),
     sprites(regs),
     badLineStateChangeEvent("Update AEC signal", *this, &MOS656X::badLineStateChange),
-    rasterYIRQEdgeDetectorEvent("RasterY changed", *this, &MOS656X::rasterYIRQEdgeDetector)
+    rasterYIRQEdgeDetectorEvent("RasterY changed", *this, &MOS656X::rasterYIRQEdgeDetector),
+    lightpenTriggerEvent("Trigger lightpen", *this, &MOS656X::lightpenTrigger)
 {
     chip(MOS6569);
 }
@@ -683,15 +684,9 @@ event_clock_t MOS656X::clockOldNTSC()
 
 void MOS656X::triggerLightpen()
 {
-    // Synchronise simulation
-    sync();
-
     lpAsserted = true;
 
-    if (lp.trigger(lineCycle, rasterY))
-    {
-        activateIRQFlag(IRQ_LIGHTPEN);
-    }
+    eventScheduler.schedule(lightpenTriggerEvent, 1);
 }
 
 void MOS656X::clearLightpen()

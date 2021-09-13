@@ -138,6 +138,8 @@ private:
 
     EventCallback<MOS656X> rasterYIRQEdgeDetectorEvent;
 
+    EventCallback<MOS656X> lightpenTriggerEvent;
+
 private:
     event_clock_t clockPAL();
     event_clock_t clockNTSC();
@@ -162,6 +164,17 @@ private:
         rasterYIRQCondition = rasterY == readRasterLineIRQ();
         if (!oldRasterYIRQCondition && rasterYIRQCondition)
             activateIRQFlag(IRQ_RASTER);
+    }
+
+    void lightpenTrigger()
+    {
+        // Synchronise simulation
+        sync();
+
+        if (lp.trigger(lineCycle, rasterY))
+        {
+            activateIRQFlag(IRQ_LIGHTPEN);
+        }
     }
 
     /**
