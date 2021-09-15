@@ -62,9 +62,15 @@ private:
         if (lineCycle < 13)
             lineCycle += cyclesPerLine;
 
-        int xpos = lineCycle - 13;
+        lineCycle -= 13;
 
-        return xpos * 4;
+        // On NTSC the xpos is not incremented at lineCycle 61
+        if ((cyclesPerLine == 65) && (lineCycle > (61 - 13)))
+        {
+            lineCycle--;
+        }
+
+        return lineCycle << 2;
     }
 
 public:
@@ -156,7 +162,7 @@ public:
 
         // On 6569R1 and 6567R56A the interrupt is triggered only
         // when the line is low on the first cycle of the frame.
-        return true; // false for 6569R1 and MOS6567R56A
+        return true; // false for old chip revisions
     }
 
     /**

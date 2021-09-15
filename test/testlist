@@ -750,8 +750,8 @@ SID/wf12nsr/wf12nsr                                  --sid old
 VICII/colorram/test
 VICII/split-tests/bascan/bascan
 VICII/split-tests/lightpen/lightpen                  --vic pal
-#VICII/split-tests/lightpen/lightpen                  --vic ntsc
-#VICII/split-tests/lightpen/lightpen                  --vic oldntsc
+VICII/split-tests/lightpen/lightpen                  --vic ntsc
+VICII/split-tests/lightpen/lightpen                  --vic drean
 #VICII/split-tests/spritescan/spritescan
 VICII/vspbug/vsp_bug
 VICII/spritesteal/spritesteal                        --vic pal
