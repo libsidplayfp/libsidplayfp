@@ -114,10 +114,6 @@ public:
 
         isTriggered = true;
 
-        // On 6569R1 and MOS6567R56A the interrupt is triggered only
-        // when the line is low on the first cycle of the frame.
-        // return true;
-
         switch (cyclesPerLine)
         {
         case 63:
@@ -158,6 +154,8 @@ public:
         lpx = getXpos(lineCycle) + 2; // + 1 for MOS 85XX
         lpy = rasterY;
 
+        // On 6569R1 and 6567R56A the interrupt is triggered only
+        // when the line is low on the first cycle of the frame.
         return true; // false for 6569R1 and MOS6567R56A
     }
 
