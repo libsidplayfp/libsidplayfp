@@ -141,6 +141,12 @@ int main(int argc, char* argv[])
                     config.defaultC64Model = SidConfig::OLD_NTSC;
                     config.forceC64Model = true;
                 }
+                else
+                if (!strcmp(&argv[i][0], "drean"))
+                {
+                    config.defaultC64Model = SidConfig::DREAN;
+                    config.forceC64Model = true;
+                }
             }
         }
         else
