@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.2</span>
+   &#160;<span id="projectnumber">2.3.0</span>
    </div>
   </td>
  </tr>
@@ -54,7 +54,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2020 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2021 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2009-2014 VICE Project</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * Copyright 2001 Simon White</span></div>
@@ -96,84 +96,102 @@
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    uint8_t getXpos(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lineCycle)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">if</span> (lineCycle &lt; 12)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            lineCycle += cyclesPerLine-1;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        lineCycle -= 12;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> lineCycle &lt;&lt; 2;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a7ee607fb1e0d62f64b2cb98ea2f952b6">   76</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a7ee607fb1e0d62f64b2cb98ea2f952b6">setScreenSize</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> height, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> width)</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        lastLine = height - 1;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        cyclesPerLine = width;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a3914586caf06cc7824c6a94a262d3aeb">   85</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a3914586caf06cc7824c6a94a262d3aeb">reset</a>()</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        lpx = 0;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        lpy = 0;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        isTriggered = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a0d8b547282a466ddecb13a59ef25d844">   95</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a0d8b547282a466ddecb13a59ef25d844">getX</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> lpx; }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a11e47f941fcb1b6f356ae563a2643b2f">  100</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a11e47f941fcb1b6f356ae563a2643b2f">getY</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> lpy; }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a10ffa4b5a62e0038f98775e8ba33c935">  109</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a10ffa4b5a62e0038f98775e8ba33c935">retrigger</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lineCycle, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> rasterY)</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    {</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">bool</span> triggered = <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a4973a406aec35acc3bb6ef24900eeb0d">trigger</a>(lineCycle, rasterY);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">switch</span> (cyclesPerLine)</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keywordflow">case</span> 63:</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            lpx = 0xd1;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">case</span> 65:</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            lpx = 0xd5;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        }</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keywordflow">return</span> triggered;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    }</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a4973a406aec35acc3bb6ef24900eeb0d">  132</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a4973a406aec35acc3bb6ef24900eeb0d">trigger</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lineCycle, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> rasterY)</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    {</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">if</span> (isTriggered)</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        isTriggered = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="comment">// FIXME: on NTSC the xpos is not incremented at lineCycle 61</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">if</span> (lineCycle &lt; 13)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            lineCycle += cyclesPerLine;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        lineCycle -= 13;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// On NTSC the xpos is not incremented at lineCycle 61</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">if</span> ((cyclesPerLine == 65) &amp;&amp; (lineCycle &gt; (61 - 13)))</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            lineCycle--;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span> lineCycle &lt;&lt; 2;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a7ee607fb1e0d62f64b2cb98ea2f952b6">   83</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a7ee607fb1e0d62f64b2cb98ea2f952b6">setScreenSize</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> height, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> width)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        lastLine = height - 1;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        cyclesPerLine = width;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a3914586caf06cc7824c6a94a262d3aeb">   92</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a3914586caf06cc7824c6a94a262d3aeb">reset</a>()</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        lpx = 0;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        lpy = 0;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        isTriggered = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a0d8b547282a466ddecb13a59ef25d844">  102</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a0d8b547282a466ddecb13a59ef25d844">getX</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> lpx; }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a11e47f941fcb1b6f356ae563a2643b2f">  107</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a11e47f941fcb1b6f356ae563a2643b2f">getY</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> lpy; }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a3f9680c48f726c770ed5df0e6ab1212c">  116</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a3f9680c48f726c770ed5df0e6ab1212c">retrigger</a>()</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">if</span> (isTriggered)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        isTriggered = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keywordflow">switch</span> (cyclesPerLine)</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        {</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordflow">case</span> 63:</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            lpx = 0xd1;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keywordflow">case</span> 65:</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            lpx = 0xd5;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        lpy = 0;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    }</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="comment">// don&#39;t latch on the last line, except on the first cycle</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <span class="keywordflow">if</span> ((rasterY != lastLine) || (lineCycle == 0))</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        {</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            <span class="comment">// Latch current coordinates</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            lpx = getXpos(lineCycle) + 2;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            lpy = rasterY;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        }</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    }</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00153"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a9c4fae967241427da25e6700790b5f58">  153</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a9c4fae967241427da25e6700790b5f58">untrigger</a>() { isTriggered = <span class="keyword">false</span>; }</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;};</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;}</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a4973a406aec35acc3bb6ef24900eeb0d">  146</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a4973a406aec35acc3bb6ef24900eeb0d">trigger</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lineCycle, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> rasterY)</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <span class="keywordflow">if</span> (isTriggered)</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        isTriggered = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="comment">// don&#39;t latch on the last line, except on the first cycle</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        <span class="keywordflow">if</span> ((rasterY == lastLine) &amp;&amp; (lineCycle &gt; 0))</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        {</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        }</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="comment">// Latch current coordinates</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        lpx = getXpos(lineCycle) + 2; <span class="comment">// + 1 for MOS 85XX</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        lpy = rasterY;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="comment">// On 6569R1 and 6567R56A the interrupt is triggered only</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="comment">// when the line is low on the first cycle of the frame.</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>; <span class="comment">// false for old chip revisions</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Lightpen.html#a9c4fae967241427da25e6700790b5f58">  171</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Lightpen.html#a9c4fae967241427da25e6700790b5f58">untrigger</a>() { isTriggered = <span class="keyword">false</span>; }</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;};</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;}</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a9c4fae967241427da25e6700790b5f58"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a9c4fae967241427da25e6700790b5f58">libsidplayfp::Lightpen::untrigger</a></div><div class="ttdeci">void untrigger()</div><div class="ttdef"><b>Definition:</b> lightpen.h:153</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a9c4fae967241427da25e6700790b5f58"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a9c4fae967241427da25e6700790b5f58">libsidplayfp::Lightpen::untrigger</a></div><div class="ttdeci">void untrigger()</div><div class="ttdef"><b>Definition:</b> lightpen.h:171</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html">libsidplayfp::Lightpen</a></div><div class="ttdef"><b>Definition:</b> lightpen.h:34</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a11e47f941fcb1b6f356ae563a2643b2f"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a11e47f941fcb1b6f356ae563a2643b2f">libsidplayfp::Lightpen::getY</a></div><div class="ttdeci">uint8_t getY() const</div><div class="ttdef"><b>Definition:</b> lightpen.h:100</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a10ffa4b5a62e0038f98775e8ba33c935"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a10ffa4b5a62e0038f98775e8ba33c935">libsidplayfp::Lightpen::retrigger</a></div><div class="ttdeci">bool retrigger(unsigned int lineCycle, unsigned int rasterY)</div><div class="ttdef"><b>Definition:</b> lightpen.h:109</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a7ee607fb1e0d62f64b2cb98ea2f952b6"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a7ee607fb1e0d62f64b2cb98ea2f952b6">libsidplayfp::Lightpen::setScreenSize</a></div><div class="ttdeci">void setScreenSize(unsigned int height, unsigned int width)</div><div class="ttdef"><b>Definition:</b> lightpen.h:76</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a4973a406aec35acc3bb6ef24900eeb0d"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a4973a406aec35acc3bb6ef24900eeb0d">libsidplayfp::Lightpen::trigger</a></div><div class="ttdeci">bool trigger(unsigned int lineCycle, unsigned int rasterY)</div><div class="ttdef"><b>Definition:</b> lightpen.h:132</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a3914586caf06cc7824c6a94a262d3aeb"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a3914586caf06cc7824c6a94a262d3aeb">libsidplayfp::Lightpen::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> lightpen.h:85</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a0d8b547282a466ddecb13a59ef25d844"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a0d8b547282a466ddecb13a59ef25d844">libsidplayfp::Lightpen::getX</a></div><div class="ttdeci">uint8_t getX() const</div><div class="ttdef"><b>Definition:</b> lightpen.h:95</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a11e47f941fcb1b6f356ae563a2643b2f"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a11e47f941fcb1b6f356ae563a2643b2f">libsidplayfp::Lightpen::getY</a></div><div class="ttdeci">uint8_t getY() const</div><div class="ttdef"><b>Definition:</b> lightpen.h:107</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a3f9680c48f726c770ed5df0e6ab1212c"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a3f9680c48f726c770ed5df0e6ab1212c">libsidplayfp::Lightpen::retrigger</a></div><div class="ttdeci">bool retrigger()</div><div class="ttdef"><b>Definition:</b> lightpen.h:116</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a7ee607fb1e0d62f64b2cb98ea2f952b6"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a7ee607fb1e0d62f64b2cb98ea2f952b6">libsidplayfp::Lightpen::setScreenSize</a></div><div class="ttdeci">void setScreenSize(unsigned int height, unsigned int width)</div><div class="ttdef"><b>Definition:</b> lightpen.h:83</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a4973a406aec35acc3bb6ef24900eeb0d"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a4973a406aec35acc3bb6ef24900eeb0d">libsidplayfp::Lightpen::trigger</a></div><div class="ttdeci">bool trigger(unsigned int lineCycle, unsigned int rasterY)</div><div class="ttdef"><b>Definition:</b> lightpen.h:146</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a3914586caf06cc7824c6a94a262d3aeb"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a3914586caf06cc7824c6a94a262d3aeb">libsidplayfp::Lightpen::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> lightpen.h:92</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Lightpen_html_a0d8b547282a466ddecb13a59ef25d844"><div class="ttname"><a href="classlibsidplayfp_1_1Lightpen.html#a0d8b547282a466ddecb13a59ef25d844">libsidplayfp::Lightpen::getX</a></div><div class="ttdeci">uint8_t getX() const</div><div class="ttdef"><b>Definition:</b> lightpen.h:102</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Aug 7 2021 07:21:34 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Sep 16 2021 13:10:08 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

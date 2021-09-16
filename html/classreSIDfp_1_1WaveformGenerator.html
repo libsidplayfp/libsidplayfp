@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.2</span>
+   &#160;<span id="projectnumber">2.3.0</span>
    </div>
   </td>
  </tr>
@@ -64,8 +64,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a442571b13cc9db6ed9f70f7418874827"><td class="memItemLeft" align="right" valign="top"><a id="a442571b13cc9db6ed9f70f7418874827"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setWaveformModels</b> (<a class="el" href="classmatrix.html">matrix_t</a> *models)</td></tr>
 <tr class="separator:a442571b13cc9db6ed9f70f7418874827"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a41e2d594ef993c4bbd305fc31caf1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformGenerator.html#a8a41e2d594ef993c4bbd305fc31caf1f">setChipModel</a> (ChipModel chipModel)</td></tr>
-<tr class="separator:a8a41e2d594ef993c4bbd305fc31caf1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3014c7716fd37ac8eb582a836015a47"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformGenerator.html#aa3014c7716fd37ac8eb582a836015a47">setDAC</a> (float *dac)</td></tr>
+<tr class="separator:aa3014c7716fd37ac8eb582a836015a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb281dd904e9cf5f1c658c87b4f67999"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformGenerator.html#acb281dd904e9cf5f1c658c87b4f67999">setModel</a> (bool is6581)</td></tr>
+<tr class="separator:acb281dd904e9cf5f1c658c87b4f67999"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1871a07011f655e66a7fa0b03b40db10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformGenerator.html#a1871a07011f655e66a7fa0b03b40db10">clock</a> ()</td></tr>
 <tr class="separator:a1871a07011f655e66a7fa0b03b40db10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07d78db11c8877cc122f3544efb5c816"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformGenerator.html#a07d78db11c8877cc122f3544efb5c816">synchronize</a> (<a class="el" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a> *syncDest, const <a class="el" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a> *syncSource) const</td></tr>
@@ -337,25 +339,66 @@ Waveform bits:       1   1       9     8   7       6     5   4
 
 </div>
 </div>
-<a id="a8a41e2d594ef993c4bbd305fc31caf1f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a41e2d594ef993c4bbd305fc31caf1f">&#9670;&nbsp;</a></span>setChipModel()</h2>
+<a id="aa3014c7716fd37ac8eb582a836015a47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3014c7716fd37ac8eb582a836015a47">&#9670;&nbsp;</a></span>setDAC()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void reSIDfp::WaveformGenerator::setChipModel </td>
+          <td class="memname">void reSIDfp::WaveformGenerator::setDAC </td>
           <td>(</td>
-          <td class="paramtype">ChipModel&#160;</td>
-          <td class="paramname"><em>chipModel</em></td><td>)</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>dac</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>Set the chip model. This determines the type of the analog DAC emulation: 8580 is perfectly linear while 6581 is nonlinear.</p>
+<p>Set the analog DAC emulation: 8580 is perfectly linear while 6581 is nonlinear. Must be called before any operation.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">chipModel</td><td></td></tr>
+    <tr><td class="paramname">dac</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acb281dd904e9cf5f1c658c87b4f67999"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb281dd904e9cf5f1c658c87b4f67999">&#9670;&nbsp;</a></span>setModel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reSIDfp::WaveformGenerator::setModel </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is6581</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Set the chip model. Must be called before any operation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">is6581</td><td>true if MOS6581, false if CSG8580 </td></tr>
   </table>
   </dd>
 </dl>
@@ -562,7 +605,7 @@ Waveform bits:       1   1       9     8   7       6     5   4
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Aug 7 2021 07:21:35 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Sep 16 2021 13:10:09 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

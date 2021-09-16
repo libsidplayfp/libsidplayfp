@@ -1,13 +1,13 @@
 <map id="libsidplayfp::TimerB" name="libsidplayfp::TimerB">
-<area shape="rect" id="node1" title=" " alt="" coords="818,43,971,69"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1MOS652X.html" title=" " alt="" coords="1153,152,1323,179"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1Timer.html" title=" " alt="" coords="1417,83,1561,109"/>
-<area shape="rect" id="node10" href="$classlibsidplayfp_1_1TimerA.html" title=" " alt="" coords="1611,132,1764,159"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Event.html" title=" " alt="" coords="37,165,180,192"/>
-<area shape="rect" id="node5" href="$classlibsidplayfp_1_1SerialPort.html" title=" " alt="" coords="596,287,765,313"/>
-<area shape="rect" id="node7" href="$classlibsidplayfp_1_1InterruptSource.html" title=" " alt="" coords="365,165,572,192"/>
-<area shape="rect" id="node9" href="$classlibsidplayfp_1_1Tod.html" title=" " alt="" coords="617,104,745,131"/>
-<area shape="rect" id="node11" href="$classlibsidplayfp_1_1EventCallback.html" title=" " alt="" coords="369,217,568,258"/>
-<area shape="rect" id="node6" title=" " alt="" coords="789,157,1000,198"/>
-<area shape="rect" id="node8" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="5,293,212,320"/>
+<area shape="rect" id="node1" title=" " alt="" coords="754,347,907,373"/>
+<area shape="rect" id="node4" href="$classlibsidplayfp_1_1MOS652X.html" title=" " alt="" coords="1089,155,1259,181"/>
+<area shape="rect" id="node2" href="$classlibsidplayfp_1_1Timer.html" title=" " alt="" coords="1353,104,1497,131"/>
+<area shape="rect" id="node10" href="$classlibsidplayfp_1_1TimerA.html" title=" " alt="" coords="1547,5,1700,32"/>
+<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Event.html" title=" " alt="" coords="397,88,540,115"/>
+<area shape="rect" id="node5" href="$classlibsidplayfp_1_1SerialPort.html" title=" " alt="" coords="746,176,915,203"/>
+<area shape="rect" id="node9" href="$classlibsidplayfp_1_1Tod.html" title=" " alt="" coords="767,59,895,85"/>
+<area shape="rect" id="node11" href="$classlibsidplayfp_1_1EventCallback.html" title=" " alt="" coords="731,110,930,151"/>
+<area shape="rect" id="node6" title=" " alt="" coords="725,278,936,319"/>
+<area shape="rect" id="node7" href="$classlibsidplayfp_1_1InterruptSource.html" title=" " alt="" coords="365,279,572,305"/>
+<area shape="rect" id="node8" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="5,252,212,279"/>
 </map>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.2</span>
+   &#160;<span id="projectnumber">2.3.0</span>
    </div>
   </td>
  </tr>
@@ -54,7 +54,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2012-2013 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2012-2021 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2010 Antti Lankila</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * This program is free software; you can redistribute it and/or modify</span></div>
@@ -76,28 +76,40 @@
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define DISCONNECTEDBUSBANK_H</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;Bank.h&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>libsidplayfp</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1DisconnectedBusBank.html">   41</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1DisconnectedBusBank.html">DisconnectedBusBank</a> final : <span class="keyword">public</span> <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> poke(uint_least16_t, uint8_t)<span class="keyword"> override </span>{}</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    uint8_t peek(uint_least16_t)<span class="keyword"> override </span>{ <span class="keywordflow">return</span> 0; }</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;pla.h&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>libsidplayfp</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1DisconnectedBusBank.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1DisconnectedBusBank.html">DisconnectedBusBank</a> final : <span class="keyword">public</span> <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="classlibsidplayfp_1_1PLA.html">PLA</a> &amp;pla;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classlibsidplayfp_1_1DisconnectedBusBank.html">DisconnectedBusBank</a>(<a class="code" href="classlibsidplayfp_1_1PLA.html">PLA</a> &amp;pla) :</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        pla(pla)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    {}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1DisconnectedBusBank.html#ad3a2fd1b71c68eddb18c1cdddc46dab5">   55</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1DisconnectedBusBank.html#ad3a2fd1b71c68eddb18c1cdddc46dab5">poke</a>(uint_least16_t, uint8_t)<span class="keyword"> override </span>{}</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1DisconnectedBusBank.html#a002e92136832063396d58ca832c7c3b9">   60</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1DisconnectedBusBank.html#a002e92136832063396d58ca832c7c3b9">peek</a>(uint_least16_t)<span class="keyword"> override </span>{ <span class="keywordflow">return</span> pla.getLastReadByte(); }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a></div><div class="ttdef"><b>Definition:</b> Bank.h:35</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1DisconnectedBusBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1DisconnectedBusBank.html">libsidplayfp::DisconnectedBusBank</a></div><div class="ttdef"><b>Definition:</b> DisconnectedBusBank.h:41</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1DisconnectedBusBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1DisconnectedBusBank.html">libsidplayfp::DisconnectedBusBank</a></div><div class="ttdef"><b>Definition:</b> DisconnectedBusBank.h:42</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1PLA_html"><div class="ttname"><a href="classlibsidplayfp_1_1PLA.html">libsidplayfp::PLA</a></div><div class="ttdef"><b>Definition:</b> pla.h:34</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1DisconnectedBusBank_html_ad3a2fd1b71c68eddb18c1cdddc46dab5"><div class="ttname"><a href="classlibsidplayfp_1_1DisconnectedBusBank.html#ad3a2fd1b71c68eddb18c1cdddc46dab5">libsidplayfp::DisconnectedBusBank::poke</a></div><div class="ttdeci">void poke(uint_least16_t, uint8_t) override</div><div class="ttdef"><b>Definition:</b> DisconnectedBusBank.h:55</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1DisconnectedBusBank_html_a002e92136832063396d58ca832c7c3b9"><div class="ttname"><a href="classlibsidplayfp_1_1DisconnectedBusBank.html#a002e92136832063396d58ca832c7c3b9">libsidplayfp::DisconnectedBusBank::peek</a></div><div class="ttdeci">uint8_t peek(uint_least16_t) override</div><div class="ttdef"><b>Definition:</b> DisconnectedBusBank.h:60</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Aug 7 2021 07:21:34 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Sep 16 2021 13:10:08 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

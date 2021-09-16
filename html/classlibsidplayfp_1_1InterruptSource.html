@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.2.2</span>
+   &#160;<span id="projectnumber">2.3.0</span>
    </div>
   </td>
  </tr>
@@ -56,7 +56,7 @@
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classlibsidplayfp_1_1InterruptSource-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">libsidplayfp::InterruptSource Class Reference</div>  </div>
+<div class="title">libsidplayfp::InterruptSource Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -66,10 +66,9 @@ Inheritance diagram for libsidplayfp::InterruptSource:</div>
 <div class="dyncontent">
 <div class="center"><img src="classlibsidplayfp_1_1InterruptSource__inherit__graph.png" border="0" usemap="#libsidplayfp_1_1InterruptSource_inherit__map" alt="Inheritance graph"/></div>
 <map name="libsidplayfp_1_1InterruptSource_inherit__map" id="libsidplayfp_1_1InterruptSource_inherit__map">
-<area shape="rect" title=" " alt="" coords="152,80,359,107"/>
-<area shape="rect" href="classlibsidplayfp_1_1InterruptSource6526.html" title=" " alt="" coords="5,155,244,181"/>
-<area shape="rect" href="classlibsidplayfp_1_1InterruptSource8521.html" title=" " alt="" coords="268,155,507,181"/>
-<area shape="rect" href="classlibsidplayfp_1_1Event.html" title=" " alt="" coords="184,5,327,32"/>
+<area shape="rect" title=" " alt="" coords="152,5,359,32"/>
+<area shape="rect" href="classlibsidplayfp_1_1InterruptSource6526.html" title=" " alt="" coords="5,80,244,107"/>
+<area shape="rect" href="classlibsidplayfp_1_1InterruptSource8521.html" title=" " alt="" coords="268,80,507,107"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -77,9 +76,8 @@ Collaboration diagram for libsidplayfp::InterruptSource:</div>
 <div class="dyncontent">
 <div class="center"><img src="classlibsidplayfp_1_1InterruptSource__coll__graph.png" border="0" usemap="#libsidplayfp_1_1InterruptSource_coll__map" alt="Collaboration graph"/></div>
 <map name="libsidplayfp_1_1InterruptSource_coll__map" id="libsidplayfp_1_1InterruptSource_coll__map">
-<area shape="rect" title=" " alt="" coords="72,95,279,121"/>
-<area shape="rect" href="classlibsidplayfp_1_1Event.html" title=" " alt="" coords="5,5,148,32"/>
-<area shape="rect" href="classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="172,5,379,32"/>
+<area shape="rect" title=" " alt="" coords="5,95,212,121"/>
+<area shape="rect" href="classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="5,5,212,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -100,39 +98,52 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8e9dcf7f195fe8838cfec72547c564c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a8e9dcf7f195fe8838cfec72547c564c2">trigger</a> (uint8_t interruptMask)</td></tr>
-<tr class="separator:a8e9dcf7f195fe8838cfec72547c564c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0980b774099345cfbaeabcb34186597"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#ad0980b774099345cfbaeabcb34186597">trigger</a> (uint8_t interruptMask)=0</td></tr>
+<tr class="separator:ad0980b774099345cfbaeabcb34186597"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4581eea3c6d1c29ba95cd0d5fb00681"><td class="memItemLeft" align="right" valign="top">virtual uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#ad4581eea3c6d1c29ba95cd0d5fb00681">clear</a> ()</td></tr>
 <tr class="separator:ad4581eea3c6d1c29ba95cd0d5fb00681"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd9c4dafe5df89e55ea8a9c6ecbf5e77"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#abd9c4dafe5df89e55ea8a9c6ecbf5e77">reset</a> ()</td></tr>
 <tr class="separator:abd9c4dafe5df89e55ea8a9c6ecbf5e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e861a94c37a0c7b30502ef0f813d772"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a5e861a94c37a0c7b30502ef0f813d772">set</a> (uint8_t interruptMask)</td></tr>
 <tr class="separator:a5e861a94c37a0c7b30502ef0f813d772"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30038f376f7bcdc141ab78ecc3a49f6e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a30038f376f7bcdc141ab78ecc3a49f6e">event</a> () override</td></tr>
-<tr class="separator:a30038f376f7bcdc141ab78ecc3a49f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a3d47fb1577b61d43aabcf5fd765a346e"><td class="memItemLeft" align="right" valign="top"><a id="a3d47fb1577b61d43aabcf5fd765a346e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>interruptMasked</b> () const</td></tr>
-<tr class="separator:a3d47fb1577b61d43aabcf5fd765a346e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0fa41d0bded4f8391445e5398aeec9a"><td class="memItemLeft" align="right" valign="top"><a id="ad0fa41d0bded4f8391445e5398aeec9a"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>interruptTriggered</b> () const</td></tr>
 <tr class="separator:ad0fa41d0bded4f8391445e5398aeec9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04edb08b2b3fbeb10bb9ef46d8663be0"><td class="memItemLeft" align="right" valign="top"><a id="a04edb08b2b3fbeb10bb9ef46d8663be0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>triggerInterrupt</b> ()</td></tr>
-<tr class="separator:a04edb08b2b3fbeb10bb9ef46d8663be0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ce209f9e3ca90c338f0889eb61e9d14"><td class="memItemLeft" align="right" valign="top"><a id="a6ce209f9e3ca90c338f0889eb61e9d14"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>interruptMasked</b> (uint8_t interruptMask) const</td></tr>
+<tr class="separator:a6ce209f9e3ca90c338f0889eb61e9d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9edfc3a4f7dfbc37ec572308571ef715"><td class="memItemLeft" align="right" valign="top"><a id="a9edfc3a4f7dfbc37ec572308571ef715"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>triggerInterrupt</b> ()=0</td></tr>
+<tr class="separator:a9edfc3a4f7dfbc37ec572308571ef715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a867310bc56caf484adad04f640fa3deb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a867310bc56caf484adad04f640fa3deb">ack0</a> () const</td></tr>
 <tr class="separator:a867310bc56caf484adad04f640fa3deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8831c51bcfac7bf03138d474569e3a86"><td class="memItemLeft" align="right" valign="top"><a id="a8831c51bcfac7bf03138d474569e3a86"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>write0</b> () const</td></tr>
+<tr class="separator:a8831c51bcfac7bf03138d474569e3a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae613e1738ab84bed49c9f53fb2f7e5d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#ae613e1738ab84bed49c9f53fb2f7e5d6">interrupt</a> ()</td></tr>
+<tr class="separator:ae613e1738ab84bed49c9f53fb2f7e5d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc94ec96c4b0b2c73b505a5b230620e3"><td class="memItemLeft" align="right" valign="top"><a id="abc94ec96c4b0b2c73b505a5b230620e3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>updateIdr</b> ()</td></tr>
+<tr class="separator:abc94ec96c4b0b2c73b505a5b230620e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac29f2cb795993676beca52a314019d73"><td class="memItemLeft" align="right" valign="top"><a id="ac29f2cb795993676beca52a314019d73"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setIrq</b> ()</td></tr>
+<tr class="separator:ac29f2cb795993676beca52a314019d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f9ff0d5619c4d7c20ebf8a82d814b68"><td class="memItemLeft" align="right" valign="top"><a id="a5f9ff0d5619c4d7c20ebf8a82d814b68"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clearIrq</b> ()</td></tr>
+<tr class="separator:a5f9ff0d5619c4d7c20ebf8a82d814b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b98324da3988f79544c75d479e0d66d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a3b98324da3988f79544c75d479e0d66d">InterruptSource</a> (<a class="el" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler, <a class="el" href="classlibsidplayfp_1_1MOS652X.html">MOS652X</a> &amp;parent)</td></tr>
 <tr class="separator:a3b98324da3988f79544c75d479e0d66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71a44b46b2355bf81cc9cfc8e9d9a82f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a71a44b46b2355bf81cc9cfc8e9d9a82f">schedule</a> ()</td></tr>
-<tr class="separator:a71a44b46b2355bf81cc9cfc8e9d9a82f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfc4b40df8b997b75253aa9ce7837aca"><td class="memItemLeft" align="right" valign="top"><a id="acfc4b40df8b997b75253aa9ce7837aca"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>interrupt</b> (bool state)</td></tr>
-<tr class="separator:acfc4b40df8b997b75253aa9ce7837aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e8651555a5eb65f52c183d2d8574a48 inherit pro_methods_classlibsidplayfp_1_1Event"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1Event.html#a3e8651555a5eb65f52c183d2d8574a48">Event</a> (const char *const name)</td></tr>
-<tr class="separator:a3e8651555a5eb65f52c183d2d8574a48 inherit pro_methods_classlibsidplayfp_1_1Event"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aced73dc40c054e7dd5fefb95273aedba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#aced73dc40c054e7dd5fefb95273aedba">schedule</a> (int delay)</td></tr>
+<tr class="separator:aced73dc40c054e7dd5fefb95273aedba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ef9fd3b6945d7c700a25c26011f5ff8"><td class="memItemLeft" align="right" valign="top"><a id="a8ef9fd3b6945d7c700a25c26011f5ff8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>scheduleIrq</b> ()</td></tr>
+<tr class="separator:a8ef9fd3b6945d7c700a25c26011f5ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c384f7f94cd18cff250513a1a08fb2"><td class="memItemLeft" align="right" valign="top"><a id="a52c384f7f94cd18cff250513a1a08fb2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTriggered</b> (uint8_t interruptMask)</td></tr>
+<tr class="separator:a52c384f7f94cd18cff250513a1a08fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -144,6 +155,9 @@ Protected Attributes</h2></td></tr>
 event_clock_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a1fc7d3442085220eef8f6a4c410b43e3">last_clear</a></td></tr>
 <tr class="memdesc:a1fc7d3442085220eef8f6a4c410b43e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clock when clear was called last. <br /></td></tr>
 <tr class="separator:a1fc7d3442085220eef8f6a4c410b43e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5340865cda98de4637445cdb4f43c86e"><td class="memItemLeft" align="right" valign="top"><a id="a5340865cda98de4637445cdb4f43c86e"></a>
+event_clock_t&#160;</td><td class="memItemRight" valign="bottom"><b>last_set</b></td></tr>
+<tr class="separator:a5340865cda98de4637445cdb4f43c86e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9f5a2af66f6d32cac75c577efdbfa7c"><td class="memItemLeft" align="right" valign="top"><a id="aa9f5a2af66f6d32cac75c577efdbfa7c"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#aa9f5a2af66f6d32cac75c577efdbfa7c">icr</a></td></tr>
 <tr class="memdesc:aa9f5a2af66f6d32cac75c577efdbfa7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interrupt control register. <br /></td></tr>
@@ -152,9 +166,20 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a0dc478bbdb56ab9afd9117aa855bc8e7">idr</a></td></tr>
 <tr class="memdesc:a0dc478bbdb56ab9afd9117aa855bc8e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interrupt data register. <br /></td></tr>
 <tr class="separator:a0dc478bbdb56ab9afd9117aa855bc8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0994336420e46d715d8da3f20cc314ac"><td class="memItemLeft" align="right" valign="top"><a id="a0994336420e46d715d8da3f20cc314ac"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>idrTemp</b></td></tr>
+<tr class="separator:a0994336420e46d715d8da3f20cc314ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8def82bfe6c0c982cf486bf1080c8072"><td class="memItemLeft" align="right" valign="top"><a id="a8def82bfe6c0c982cf486bf1080c8072"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a8def82bfe6c0c982cf486bf1080c8072">scheduled</a></td></tr>
+<tr class="memdesc:a8def82bfe6c0c982cf486bf1080c8072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Have we already scheduled CIA-&gt;CPU interrupt transition? <br /></td></tr>
+<tr class="separator:a8def82bfe6c0c982cf486bf1080c8072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a03cca4894fe1eba817946ae5583b1a"><td class="memItemLeft" align="right" valign="top"><a id="a5a03cca4894fe1eba817946ae5583b1a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1InterruptSource.html#a5a03cca4894fe1eba817946ae5583b1a">asserted</a></td></tr>
+<tr class="memdesc:a5a03cca4894fe1eba817946ae5583b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">is the irq pin asserted? <br /></td></tr>
+<tr class="separator:a5a03cca4894fe1eba817946ae5583b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This is the base class for the MOS6526 interrupt sources. </p>
+<div class="textblock"><p>This is the base class for the MOS6526 interrupt sources. Based on Denise emu code. </p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a82640347fe9ca2e445b5460409a681be"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82640347fe9ca2e445b5460409a681be">&#9670;&nbsp;</a></span>anonymous enum</h2>
@@ -287,8 +312,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 </div>
 </div>
-<a id="a30038f376f7bcdc141ab78ecc3a49f6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30038f376f7bcdc141ab78ecc3a49f6e">&#9670;&nbsp;</a></span>event()</h2>
+<a id="ae613e1738ab84bed49c9f53fb2f7e5d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae613e1738ab84bed49c9f53fb2f7e5d6">&#9670;&nbsp;</a></span>interrupt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -297,7 +322,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void libsidplayfp::InterruptSource::event </td>
+          <td class="memname">void libsidplayfp::InterruptSource::interrupt </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -305,13 +330,11 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 <p>Signal interrupt to CPU. </p>
-
-<p>Implements <a class="el" href="classlibsidplayfp_1_1Event.html#aa83141323947fbc1fcacba0102854a82">libsidplayfp::Event</a>.</p>
 
 </div>
 </div>
@@ -339,12 +362,10 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </div><div class="memdoc">
 <p>Clear pending interrupts, but do not signal to CPU we lost them. It is assumed that all components get <a class="el" href="classlibsidplayfp_1_1InterruptSource.html#abd9c4dafe5df89e55ea8a9c6ecbf5e77">reset()</a> calls in synchronous manner. </p>
 
-<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1InterruptSource6526.html#ab0952bc6befdabc9cdc283afd371f471">libsidplayfp::InterruptSource6526</a>.</p>
-
 </div>
 </div>
-<a id="a71a44b46b2355bf81cc9cfc8e9d9a82f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71a44b46b2355bf81cc9cfc8e9d9a82f">&#9670;&nbsp;</a></span>schedule()</h2>
+<a id="aced73dc40c054e7dd5fefb95273aedba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aced73dc40c054e7dd5fefb95273aedba">&#9670;&nbsp;</a></span>schedule()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -355,7 +376,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
         <tr>
           <td class="memname">void libsidplayfp::InterruptSource::schedule </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>delay</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -374,9 +396,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void libsidplayfp::InterruptSource::set </td>
@@ -386,11 +405,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Set interrupt control mask bits.</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -402,8 +416,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 </div>
 </div>
-<a id="a8e9dcf7f195fe8838cfec72547c564c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e9dcf7f195fe8838cfec72547c564c2">&#9670;&nbsp;</a></span>trigger()</h2>
+<a id="ad0980b774099345cfbaeabcb34186597"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0980b774099345cfbaeabcb34186597">&#9670;&nbsp;</a></span>trigger()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,7 +435,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -433,7 +447,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
   </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1InterruptSource6526.html#a79299e16f351764bb54dd870aceb7d65">libsidplayfp::InterruptSource6526</a>, and <a class="el" href="classlibsidplayfp_1_1InterruptSource8521.html#aea1ba98e004a24798ca0f7df2e8536d6">libsidplayfp::InterruptSource8521</a>.</p>
+<p>Implemented in <a class="el" href="classlibsidplayfp_1_1InterruptSource6526.html#a79299e16f351764bb54dd870aceb7d65">libsidplayfp::InterruptSource6526</a>, and <a class="el" href="classlibsidplayfp_1_1InterruptSource8521.html#aea1ba98e004a24798ca0f7df2e8536d6">libsidplayfp::InterruptSource8521</a>.</p>
 
 </div>
 </div>
@@ -444,7 +458,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Aug 7 2021 07:21:34 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Sep 16 2021 13:10:08 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
