@@ -282,7 +282,7 @@ private:
     inline void txs_instr();
     inline void tya_instr();
     inline void xas_instr();
-    inline void sh_instr(uint8_t offset);
+    inline void sh_instr();
 
     /**
      * @throws haltInstruction

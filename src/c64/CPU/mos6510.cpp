@@ -751,12 +751,21 @@ void MOS6510::hlt_instr() {}
 
 /**
  * Perform the SH* instructions.
- *
- * @param offset the index added to the address
  */
-void MOS6510::sh_instr(uint8_t offset)
+void MOS6510::sh_instr()
 {
-    const uint8_t tmp = Cycle_Data & (endian_16hi8(Cycle_EffectiveAddress - offset) + 1);
+    uint8_t tmp = endian_16hi8(Cycle_EffectiveAddress);
+
+    /*
+     * When the addressing/indexing causes a page boundary crossing
+     * the highbyte of the target address is anded with the value stored.
+     */
+    if (adl_carry)
+    {
+        endian_16hi8(Cycle_EffectiveAddress, tmp & Cycle_Data);
+    }
+    else
+        tmp++;
 
     /*
      * When a DMA is going on (the CPU is halted by the VIC-II)
@@ -767,15 +776,9 @@ void MOS6510::sh_instr(uint8_t offset)
      */
     if (!rdyOnThrowAwayRead)
     {
-        Cycle_Data = tmp;
+        Cycle_Data &= tmp;
     }
 
-    /*
-     * When the addressing/indexing causes a page boundary crossing
-     * the highbyte of the target address becomes equal to the value stored.
-     */
-    if (adl_carry)
-        endian_16hi8(Cycle_EffectiveAddress, tmp);
     PutEffAddrDataByte();
 }
 
@@ -785,7 +788,7 @@ void MOS6510::sh_instr(uint8_t offset)
 void MOS6510::axa_instr()
 {
     Cycle_Data = Register_X & Register_Accumulator;
-    sh_instr(Register_Y);
+    sh_instr();
 }
 
 /**
@@ -795,7 +798,7 @@ void MOS6510::axa_instr()
 void MOS6510::say_instr()
 {
     Cycle_Data = Register_Y;
-    sh_instr(Register_X);
+    sh_instr();
 }
 
 /**
@@ -805,7 +808,7 @@ void MOS6510::say_instr()
 void MOS6510::xas_instr()
 {
     Cycle_Data = Register_X;
-    sh_instr(Register_Y);
+    sh_instr();
 }
 
 /**
@@ -1226,7 +1229,7 @@ void MOS6510::shs_instr()
 {
     Register_StackPointer = Register_Accumulator & Register_X;
     Cycle_Data = Register_StackPointer;
-    sh_instr(Register_Y);
+    sh_instr();
 }
 
 void MOS6510::tax_instr()
