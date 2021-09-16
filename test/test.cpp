@@ -102,6 +102,11 @@ int main(int argc, char* argv[])
                     config.forceSidModel = true;
                     config.defaultSidModel = SidConfig::MOS8580;
                 }
+                else
+                {
+                    std::cerr << "Error: unrecognized SID model" << std::endl;
+                    return -1;
+                }
             }
             if (!strcmp(&argv[i][1], "-cia"))
             {
@@ -119,6 +124,11 @@ int main(int argc, char* argv[])
                 if (!strcmp(&argv[i][0], "4485"))
                 {
                     config.ciaModel = SidConfig::MOS6526W4485;
+                }
+                else
+                {
+                    std::cerr << "Error: unrecognized CIA model" << std::endl;
+                    return -1;
                 }
             }
             if (!strcmp(&argv[i][1], "-vic"))
@@ -146,6 +156,11 @@ int main(int argc, char* argv[])
                 {
                     config.defaultC64Model = SidConfig::DREAN;
                     config.forceC64Model = true;
+                }
+                else
+                {
+                    std::cerr << "Error: unrecognized VIC II model" << std::endl;
+                    return -1;
                 }
             }
         }
