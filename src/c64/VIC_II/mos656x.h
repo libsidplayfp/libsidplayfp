@@ -257,6 +257,8 @@ private:
         {
             rasterY++;
             rasterYIRQEdgeDetector();
+            if ((rasterY == FIRST_DMA_LINE) && !areBadLinesEnabled)
+                areBadLinesEnabled = readDEN();
         }
 
         if (evaluateIsBadLine())

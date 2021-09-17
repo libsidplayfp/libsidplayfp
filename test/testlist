@@ -540,8 +540,7 @@ CPU/shs/shsabsy2
 CPU/shs/shsabsy3
 CPU/shs/shsabsy4
 CPU/shs/shsabsy5
-# FIXME
-#CPU/shxy/shx-test
+CPU/shxy/shx-test
 CPU/shxy/shxy1
 CPU/shxy/shxy2
 CPU/shxy/shxy3
