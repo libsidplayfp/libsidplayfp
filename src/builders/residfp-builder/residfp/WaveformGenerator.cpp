@@ -300,9 +300,6 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
             // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
             clock_shift_register((~shift_register << 17) & (1 << 22));
-
-            // New noise waveform output.
-            set_noise_output();
         }
     }
 }
