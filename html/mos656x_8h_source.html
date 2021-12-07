@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.0</span>
+   &#160;<span id="projectnumber">2.3.1</span>
    </div>
   </td>
  </tr>
@@ -255,90 +255,92 @@
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        {</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;            rasterY++;</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;            rasterYIRQEdgeDetector();</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        }</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        <span class="keywordflow">if</span> (evaluateIsBadLine())</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;            isBadLine = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    }</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160; </div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> vblank()</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    {</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        <span class="keywordflow">if</span> (vblanking)</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;        {</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            vblanking = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            rasterY = 0;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            rasterYIRQEdgeDetector();</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            lp.untrigger();</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            <span class="keywordflow">if</span> (lpAsserted &amp;&amp; lp.retrigger())</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            {</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                activateIRQFlag(IRQ_LIGHTPEN);</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            }</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        }</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    }</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="keyword">template</span>&lt;<span class="keywordtype">int</span> n&gt;</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> startDma()</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    {</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        <span class="keywordflow">if</span> (sprites.isDma(0x01 &lt;&lt; n))</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;            setBA(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    }</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    <span class="keyword">template</span>&lt;<span class="keywordtype">int</span> n&gt;</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> endDma()</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    {</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="keywordflow">if</span> (!sprites.isDma(0x06 &lt;&lt; n))</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            setBA(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    }</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> startBadline()</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    {</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        <span class="keywordflow">if</span> (isBadLine)</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            setBA(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    MOS656X(EventScheduler &amp;scheduler);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    ~MOS656X() {}</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="comment">// Environment Interface</span></div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> interrupt(<span class="keywordtype">bool</span> state) = 0;</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setBA(<span class="keywordtype">bool</span> state) = 0;</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1MOS656X.html#ab636e0e27fb70622db65e84519956602">read</a>(uint_least8_t addr);</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a1b1e29ed5f0c99f7582ea06616b1779f">write</a>(uint_least8_t addr, uint8_t data);</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a7e199bee60953d1f2a789764d6fc0805">event</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#ace3f1fc6ed99ff426a99c5c9d74e9bcd">chip</a>(<a class="code" href="classlibsidplayfp_1_1MOS656X.html#a414e45268873438658930c7091ee66aa">model_t</a> model);</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a86876546f6ab14d21d5b75bf69c911b9">triggerLightpen</a>();</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a491741948e823d65dd902f21b8a796ca">clearLightpen</a>();</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160; </div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a542202aa6f92d219f5fd7eed1d0eea7a">reset</a>();</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160; </div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *credits();</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;};</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="comment">// Template specializations</span></div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            <span class="keywordflow">if</span> ((rasterY == FIRST_DMA_LINE) &amp;&amp; !areBadLinesEnabled)</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                areBadLinesEnabled = readDEN();</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        }</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160; </div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        <span class="keywordflow">if</span> (evaluateIsBadLine())</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            isBadLine = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    }</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> vblank()</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    {</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        <span class="keywordflow">if</span> (vblanking)</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        {</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            vblanking = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            rasterY = 0;</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;            rasterYIRQEdgeDetector();</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            lp.untrigger();</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            <span class="keywordflow">if</span> (lpAsserted &amp;&amp; lp.retrigger())</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            {</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                activateIRQFlag(IRQ_LIGHTPEN);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;            }</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        }</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    }</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    <span class="keyword">template</span>&lt;<span class="keywordtype">int</span> n&gt;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> startDma()</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    {</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <span class="keywordflow">if</span> (sprites.isDma(0x01 &lt;&lt; n))</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;            setBA(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    }</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <span class="keyword">template</span>&lt;<span class="keywordtype">int</span> n&gt;</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> endDma()</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    {</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        <span class="keywordflow">if</span> (!sprites.isDma(0x06 &lt;&lt; n))</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;            setBA(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    }</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> startBadline()</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        <span class="keywordflow">if</span> (isBadLine)</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;            setBA(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    }</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    MOS656X(EventScheduler &amp;scheduler);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    ~MOS656X() {}</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="comment">// Environment Interface</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> interrupt(<span class="keywordtype">bool</span> state) = 0;</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setBA(<span class="keywordtype">bool</span> state) = 0;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1MOS656X.html#ab636e0e27fb70622db65e84519956602">read</a>(uint_least8_t addr);</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a1b1e29ed5f0c99f7582ea06616b1779f">write</a>(uint_least8_t addr, uint8_t data);</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a7e199bee60953d1f2a789764d6fc0805">event</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#ace3f1fc6ed99ff426a99c5c9d74e9bcd">chip</a>(<a class="code" href="classlibsidplayfp_1_1MOS656X.html#a414e45268873438658930c7091ee66aa">model_t</a> model);</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a86876546f6ab14d21d5b75bf69c911b9">triggerLightpen</a>();</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a491741948e823d65dd902f21b8a796ca">clearLightpen</a>();</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MOS656X.html#a542202aa6f92d219f5fd7eed1d0eea7a">reset</a>();</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *credits();</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;};</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> MOS656X::startDma&lt;0&gt;()</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;{</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    setBA(!sprites.isDma(0x01));</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;}</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> MOS656X::endDma&lt;7&gt;()</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;{</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    setBA(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;}</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160; </div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="comment">// Template specializations</span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160; </div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> MOS656X::startDma&lt;0&gt;()</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;{</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;    setBA(!sprites.isDma(0x01));</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;}</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> MOS656X::endDma&lt;7&gt;()</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;{</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    setBA(<span class="keyword">true</span>);</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;}</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160; </div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;<span class="preprocessor">#endif // MOS656X_H</span></div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;}</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;<span class="preprocessor">#endif // MOS656X_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS656X_html_a542202aa6f92d219f5fd7eed1d0eea7a"><div class="ttname"><a href="classlibsidplayfp_1_1MOS656X.html#a542202aa6f92d219f5fd7eed1d0eea7a">libsidplayfp::MOS656X::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> mos656x.cpp:77</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS656X_html_ab636e0e27fb70622db65e84519956602"><div class="ttname"><a href="classlibsidplayfp_1_1MOS656X.html#ab636e0e27fb70622db65e84519956602">libsidplayfp::MOS656X::read</a></div><div class="ttdeci">uint8_t read(uint_least8_t addr)</div><div class="ttdef"><b>Definition:</b> mos656x.cpp:111</div></div>
@@ -357,7 +359,7 @@
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html">libsidplayfp::Event</a></div><div class="ttdef"><b>Definition:</b> Event.h:38</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Sep 16 2021 13:10:08 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
