@@ -1,3 +1,9 @@
+2.3.1 2021-12-07
+* VIC II: check badline enabled condition on raster Y increment. Fixes CPU/shxy/shx-test
+* Disable digiboost for residfp when not required (issue #37)
+
+
+
 2.3.0 2021-09-16
 * residfp: fixed some PVS-Studio warnings. (issues #20 #21 #23 #28)
 * residfp: share dac tables between voices, saves a few Kb and some initialization time (issues #34 #26)
