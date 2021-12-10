@@ -8,12 +8,36 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+      fail-fast: false
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - name: deps
-      run: sudo apt-get install libgcrypt20-dev xa65 libunittest++-dev libftdi1-dev
+    - name: deps [Linux]
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get install \
+          libgcrypt20-dev \
+          xa65 \
+          libunittest++-dev \
+          libftdi1-dev
+    - name: deps [macOS]
+      if: runner.os == 'macOS'
+      run: |
+        export HOMEBREW_NO_INSTALL_CLEANUP=1
+        brew update
+        brew install \
+          autoconf \
+          automake \
+          coreutils \
+          gnu-sed \
+          libgcrypt \
+          xa \
+          unittest-cpp \
+          libftdi
     - uses: actions/checkout@v2
       with:
         submodules: true
@@ -22,4 +46,10 @@ jobs:
     - name: configure
       run: ./configure
     - name: make distcheck
-      run: make distcheck
+      run: |
+        if [ '${{ runner.os }}' == 'macOS' ]; then
+          # Assumes `sed` is GNU sed:
+          # sed: illegal option -- r
+          export PATH="$(brew --prefix)/opt/gnu-sed/libexec/gnubin:$PATH"
+        fi
+        make distcheck
