@@ -89,11 +89,13 @@ TEST(TestSetTestBit)
 TEST(TestNoiseWriteBack1)
 {
     matrix_t* tables = reSIDfp::WaveformCalculator::getInstance()->buildTable(reSIDfp::MOS6581);
+    float dac[4096];
 
     reSIDfp::WaveformGenerator modulator;
 
     reSIDfp::WaveformGenerator generator;
     generator.setWaveformModels(tables);
+    generator.setDAC(dac);
     generator.reset();
 
     generator.writeCONTROL_REG(0x88);
