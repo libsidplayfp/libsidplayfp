@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2009-2014 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
@@ -323,12 +323,12 @@ void MOS652X::setModel(model_t model)
     switch (model)
     {
     case MOS6526W4485:
-        serialPort.setModel4485(true);
-        // fall-through
     case MOS6526:
+        serialPort.setModel4485(model == MOS6526W4485);
         interruptSource.reset(new InterruptSource6526(eventScheduler, *this));
         break;
     case MOS8521:
+        serialPort.setModel4485(false);
         interruptSource.reset(new InterruptSource8521(eventScheduler, *this));
         break;
     }
