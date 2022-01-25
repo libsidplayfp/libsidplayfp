@@ -139,6 +139,9 @@ void MOS6510::setRDY(bool newRDY)
  */
 void MOS6510::PushSR()
 {
+    // Set the B flag, 0 for hardware interrupts
+    // and 1 for BRK and PHP. Bit 5 is always 1
+    // https://wiki.nesdev.org/w/index.php?title=Status_flags#The_B_flag
     Push(flags.get() | (d1x1 ? 0x20 : 0x30));
 }
 
@@ -758,7 +761,7 @@ void MOS6510::sh_instr()
 
     /*
      * When the addressing/indexing causes a page boundary crossing
-     * the highbyte of the target address is anded with the value stored.
+     * the highbyte of the target address is ANDed with the value stored.
      */
     if (adl_carry)
     {

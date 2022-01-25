@@ -58,7 +58,6 @@ private:
      */
     uint8_t getXpos(unsigned int lineCycle) const
     {
-        // FIXME: on NTSC the xpos is not incremented at lineCycle 61
         if (lineCycle < 13)
             lineCycle += cyclesPerLine;
 
