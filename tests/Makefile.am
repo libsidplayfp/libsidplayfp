@@ -7,7 +7,7 @@ AM_CPPFLAGS = \
 -I$(top_srcdir)/src \
 -I$(top_builddir)/src/builders/residfp-builder/residfp
 
-AM_LDFLAGS = @unittest_libs@
+AM_LDFLAGS = $(UNITTEST_LIBS}
 
 TESTS = \
 TestEnvelopeGenerator \
