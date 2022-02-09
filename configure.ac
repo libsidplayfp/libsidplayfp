@@ -258,7 +258,7 @@ AM_CONDITIONAL([ENABLE_TEST], [test x$am_unittest = xtrue])
 
 
 AC_ARG_WITH([gcrypt], AS_HELP_STRING([--with-gcrypt], [Build with the gcrypt library]))
-AS_IF([test "x$with_gcrypt" = "xyes"],
+AS_IF([test "x$with_gcrypt" != "xno"],
   [PKG_CHECK_MODULES(LIBGCRYPT,
     [libgcrypt >= 1.8],
     [USE_LIBGCRYPT=yes
