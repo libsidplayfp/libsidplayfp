@@ -245,10 +245,7 @@ AC_ARG_ENABLE([tests],
     [enable unit tests [default=no]]
   )],
   [[echo Enabling unit tests]
-    PKG_CHECK_MODULES(UNITTEST,
-      [UnitTest++],
-      [AC_DEFINE([ENABLE_TEST], 1, [Define to 1 if you have libUnitTest++ (-lUnitTest++).])]
-    )
+    PKG_CHECK_MODULES(UNITTEST, [UnitTest++])
     [am_unittest=true]
   ],
   [am_unittest=false]
