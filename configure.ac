@@ -262,7 +262,10 @@ AS_IF([test "x$with_gcrypt" != "xno"],
   [PKG_CHECK_MODULES(LIBGCRYPT,
     [libgcrypt >= 1.8],
     [USE_LIBGCRYPT=yes
-    AC_DEFINE([HAVE_LIBGCRYPT], 1, [Define to 1 if you have libgcrypt (-lgcrypt).])]
+    AC_DEFINE([HAVE_LIBGCRYPT], 1, [Define to 1 if you have libgcrypt (-lgcrypt).])],
+    [AS_IF([test "x$with_gcrypt" = "xyes"],
+      [AC_MSG_ERROR([gcrypt requested but not found])]
+    )]
   )]
 )
 AM_CONDITIONAL([LIBGCRYPT], [test x$USE_LIBGCRYPT = xyes])
