@@ -23,6 +23,7 @@
 #define WAVEFORMCALCULATOR_h
 
 #include <map>
+#include <mutex>
 
 #include "array.h"
 #include "sidcxx11.h"
@@ -105,6 +106,7 @@ private:
 
 private:
     cw_cache_t CACHE;
+    std::mutex CACHE_Lock;
 
     WaveformCalculator() DEFAULT;
 

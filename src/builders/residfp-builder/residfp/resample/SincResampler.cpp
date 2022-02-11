@@ -27,6 +27,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <mutex>
 
 #include "siddefs-fp.h"
 
@@ -49,6 +50,7 @@ typedef std::map<std::string, matrix_t> fir_cache_t;
 
 /// Cache for the expensive FIR table computation results.
 fir_cache_t FIR_CACHE;
+std::mutex CACHE_Lock;
 
 /// Maximum error acceptable in I0 is 1e-6, or ~96 dB.
 const double I0E = 1e-6;
@@ -312,6 +314,9 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     std::ostringstream o;
     o << firN << "," << firRES << "," << cyclesPerSampleD;
     const std::string firKey = o.str();
+
+    std::lock_guard<std::mutex> lock(CACHE_Lock);
+
     fir_cache_t::iterator lb = FIR_CACHE.lower_bound(firKey);
 
     // The FIR computation is expensive and we set sampling parameters often, but
