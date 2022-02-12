@@ -47,8 +47,8 @@ This package uses autotools so the usual ./configure && make is enough to build
 the libraries. If cloning the bare sources the package need to be bootstrapped
 in advance with the autoreconf -i command. This step requires the xa cross-assembler
 to compile the 6502 code, usually provided by distributions with the xa65 package
-or available at http://www.floodgap.com/retrotech/xa/, and the macros provided
-by libgcrypt.m4 from the libgcrypt package (https://www.gnupg.org/software/libgcrypt/).
+or available at http://www.floodgap.com/retrotech/xa/.
+
 In addition to the standard build options the following are available:
 
 --enable-debug[=no/yes/full]

@@ -81,9 +81,6 @@ AC_CHECK_DECL(
     )]
 )
 
-AX_LIB_GCRYPT([auto])
-AM_CONDITIONAL([LIBGCRYPT], [test "x$have_libgcrypt" = "xyes"])
-
 
 dnl libtool-style version-info number
 #
@@ -240,24 +237,36 @@ AS_IF([test "x$enable_testsuite" != xno],
 
 AM_CONDITIONAL([TESTSUITE], [test "x$enable_testsuite" != xno])
 
-# FIXME use pkgconfig
+
+PKG_PROG_PKG_CONFIG
+
 AC_ARG_ENABLE([tests],
   [AS_HELP_STRING([--enable-tests],
     [enable unit tests [default=no]]
   )],
   [[echo Enabling unit tests]
-    AC_CHECK_HEADERS([UnitTest++/UnitTest++.h], [], AC_MSG_ERROR([UnitTest++.h header not found]))
-        AS_IF(
-                [test "x${ac_cv_header_UnitTestpp_UnitTestpp_h}" = xyes],
-                AC_CHECK_LIB([UnitTest++], [main], [unittest_libs=-lUnitTest++], AC_MSG_ERROR([UnitTest++ library not found]))
-        )
+    PKG_CHECK_MODULES(UNITTEST, [UnitTest++])
     [am_unittest=true]
   ],
   [am_unittest=false]
 )
 
 AM_CONDITIONAL([ENABLE_TEST], [test x$am_unittest = xtrue])
-AC_SUBST([unittest_libs])
+
+
+AC_ARG_WITH([gcrypt], AS_HELP_STRING([--with-gcrypt], [Build with the gcrypt library]))
+AS_IF([test "x$with_gcrypt" != "xno"],
+  [PKG_CHECK_MODULES(LIBGCRYPT,
+    [libgcrypt >= 1.8],
+    [USE_LIBGCRYPT=yes
+    AC_DEFINE([HAVE_LIBGCRYPT], 1, [Define to 1 if you have libgcrypt (-lgcrypt).])],
+    [AS_IF([test "x$with_gcrypt" = "xyes"],
+      [AC_MSG_ERROR([gcrypt requested but not found])]
+    )]
+  )]
+)
+AM_CONDITIONAL([LIBGCRYPT], [test x$USE_LIBGCRYPT = xyes])
+
 
 NEW_8580_FILTER=1
 AM_CONDITIONAL([NEW_8580_FILTER], [test $NEW_8580_FILTER != 0])
