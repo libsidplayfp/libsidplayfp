@@ -86,7 +86,8 @@ private:
     //@{
     unsigned short* mixer[8];
     unsigned short* summer[5];
-    unsigned short* gain[16];
+    unsigned short* gain_vol[16];
+    unsigned short* gain_res[16];
     //@}
 
     /// DAC lookup table
@@ -121,7 +122,8 @@ public:
      */
     int getVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
 
-    unsigned short** getGain() { return gain; }
+    unsigned short** getGainVol() { return gain_vol; }
+    unsigned short** getGainRes() { return gain_res; }
 
     unsigned short** getSummer() { return summer; }
 

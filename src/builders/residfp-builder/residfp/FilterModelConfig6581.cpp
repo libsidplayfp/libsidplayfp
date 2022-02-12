@@ -196,24 +196,45 @@ FilterModelConfig6581::FilterModelConfig6581() :
         }
     }
 
-    // 4 bit "resistor" ladders in the bandpass resonance gain and the audio
+    // 4 bit "resistor" ladders in the audio
     // output gain necessitate 16 gain tables.
     // From die photographs of the bandpass and volume "resistor" ladders
-    // it follows that gain ~ vol/8 and 1/Q ~ ~res/8 (assuming ideal
+    // it follows that gain ~ vol/12 (assuming ideal
     // op-amps and ideal "resistors").
     for (int n8 = 0; n8 < 16; n8++)
     {
         const int size = 1 << 16;
-        const double n = n8 / 8.0;
+        const double n = n8 / 12.0;
         opampModel.reset();
-        gain[n8] = new unsigned short[size];
+        gain_vol[n8] = new unsigned short[size];
 
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
             const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
             assert(tmp > -0.5 && tmp < 65535.5);
-            gain[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
+            gain_vol[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
+        }
+    }
+
+    // 4 bit "resistor" ladders in the bandpass resonance gain
+    // necessitate 16 gain tables.
+    // From die photographs of the bandpass and volume "resistor" ladders
+    // it follows that 1/Q ~ ~res/8 (assuming ideal
+    // op-amps and ideal "resistors").
+    for (int n8 = 0; n8 < 16; n8++)
+    {
+        const int size = 1 << 16;
+        const double n = n8 / 8.0;
+        opampModel.reset();
+        gain_res[n8] = new unsigned short[size];
+
+        for (int vi = 0; vi < size; vi++)
+        {
+            const double vin = vmin + vi / N16; /* vmin .. vmax */
+            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
+            assert(tmp > -0.5 && tmp < 65535.5);
+            gain_res[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
         }
     }
 
@@ -270,7 +291,8 @@ FilterModelConfig6581::~FilterModelConfig6581()
 
     for (int i = 0; i < 16; i++)
     {
-        delete [] gain[i];
+        delete [] gain_vol[i];
+        delete [] gain_res[i];
     }
 }
 

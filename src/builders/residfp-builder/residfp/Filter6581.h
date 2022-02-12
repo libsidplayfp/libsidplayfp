@@ -326,7 +326,8 @@ private:
 
     unsigned short** mixer;
     unsigned short** summer;
-    unsigned short** gain;
+    unsigned short** gain_res;
+    unsigned short** gain_vol;
 
     const int voiceScaleS11;
     const int voiceDC;
@@ -348,7 +349,7 @@ protected:
      *
      * In the MOS 6581, 1/Q is controlled linearly by res.
      */
-    void updateResonance(unsigned char res) override { currentResonance = gain[~res & 0xf]; }
+    void updateResonance(unsigned char res) override { currentResonance = gain_res[~res & 0xf]; }
 
     void updatedMixing() override;
 
@@ -357,7 +358,8 @@ public:
         f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5)),
         mixer(FilterModelConfig6581::getInstance()->getMixer()),
         summer(FilterModelConfig6581::getInstance()->getSummer()),
-        gain(FilterModelConfig6581::getInstance()->getGain()),
+        gain_res(FilterModelConfig6581::getInstance()->getGainRes()),
+        gain_vol(FilterModelConfig6581::getInstance()->getGainVol()),
         voiceScaleS11(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
         voiceDC(FilterModelConfig6581::getInstance()->getVoiceDC()),
         hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
