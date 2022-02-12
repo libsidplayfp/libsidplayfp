@@ -122,19 +122,16 @@ FilterModelConfig8580* FilterModelConfig8580::getInstance()
 }
 
 FilterModelConfig8580::FilterModelConfig8580() :
-    voice_voltage_range(0.25), // FIXME measure
-    voice_DC_voltage(4.80), // FIXME was 4.76
-    C(22e-9),
-    Vdd(9.09),
-    Vth(0.80),
-    Ut(26.0e-3),
-    uCox(100e-6),
-    Vddt(Vdd - Vth),
-    vmin(opamp_voltage[0].x),
-    vmax(Vddt < opamp_voltage[0].y ? opamp_voltage[0].y : Vddt),
-    denorm(vmax - vmin),
-    norm(1.0 / denorm),
-    N16(norm * ((1 << 16) - 1))
+    FilterModelConfig(
+        0.25,   // voice voltage range FIXME measure
+        4.80,   // voice DC voltage FIXME was 4.76
+        22e-9,  // capacitor value
+        9.09,   // Vdd
+        0.80,   // Vth
+        100e-6, // uCox
+        opamp_voltage[0].x,
+        opamp_voltage[0].y
+    )
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
@@ -246,25 +243,6 @@ FilterModelConfig8580::FilterModelConfig8580() :
             assert(tmp > -0.5 && tmp < 65535.5);
             gain_res[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
         }
-    }
-}
-
-FilterModelConfig8580::~FilterModelConfig8580()
-{
-    for (int i = 0; i < 5; i++)
-    {
-        delete [] summer[i];
-    }
-
-    for (int i = 0; i < 8; i++)
-    {
-        delete [] mixer[i];
-    }
-
-    for (int i = 0; i < 16; i++)
-    {
-        delete [] gain_vol[i];
-        delete [] gain_res[i];
     }
 }
 

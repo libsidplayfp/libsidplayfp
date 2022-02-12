@@ -102,23 +102,20 @@ FilterModelConfig6581* FilterModelConfig6581::getInstance()
 }
 
 FilterModelConfig6581::FilterModelConfig6581() :
-    voice_voltage_range(1.5),
-    voice_DC_voltage(5.0),
-    C(470e-12),
-    Vdd(12.18),
-    Vth(1.31),
-    Ut(26.0e-3),
-    uCox(20e-6),
+    FilterModelConfig(
+        1.5,     // voice voltage range
+        5.0,     // voice DC voltage
+        470e-12, // capacitor value
+        12.18,   // Vdd
+        1.31,    // Vth
+        20e-6,   // uCox
+        opamp_voltage[0].x,
+        opamp_voltage[0].y
+    ),
     WL_vcr(9.0 / 1.0),
     WL_snake(1.0 / 115.0),
-    Vddt(Vdd - Vth),
     dac_zero(6.65),
     dac_scale(2.63),
-    vmin(opamp_voltage[0].x),
-    vmax(Vddt < opamp_voltage[0].y ? opamp_voltage[0].y : Vddt),
-    denorm(vmax - vmin),
-    norm(1.0 / denorm),
-    N16(norm * ((1 << 16) - 1)),
     dac(DAC_BITS)
 {
     dac.kinkedDac(MOS6581);
@@ -274,25 +271,6 @@ FilterModelConfig6581::FilterModelConfig6581() :
         const double tmp = n_Is * log_term * log_term;
         assert(tmp > -0.5 && tmp < 65535.5);
         vcr_n_Ids_term[kVgt_Vx] = static_cast<unsigned short>(tmp + 0.5);
-    }
-}
-
-FilterModelConfig6581::~FilterModelConfig6581()
-{
-    for (int i = 0; i < 5; i++)
-    {
-        delete [] summer[i];
-    }
-
-    for (int i = 0; i < 8; i++)
-    {
-        delete [] mixer[i];
-    }
-
-    for (int i = 0; i < 16; i++)
-    {
-        delete [] gain_vol[i];
-        delete [] gain_res[i];
     }
 }
 
