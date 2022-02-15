@@ -30,7 +30,7 @@
 #include "Dac.h"
 #include "Spline.h"
 
-#include "sidcxx11.h"
+#include "sidcxx14.h"
 
 namespace reSIDfp
 {

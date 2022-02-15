@@ -313,7 +313,7 @@ std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
     assert(tmp > -0.5 && tmp < 65535.5);
     const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
 
-    return std::unique_ptr<Integrator6581>(new Integrator6581(vcr_Vg, vcr_n_Ids_term, opamp_rev, nVddt, nVt, nVmin, n_snake, N16));
+    return MAKE_UNIQUE(Integrator6581, vcr_Vg, vcr_n_Ids_term, opamp_rev, nVddt, nVt, nVmin, n_snake, N16);
 }
 
 } // namespace reSIDfp
