@@ -52,7 +52,7 @@ private:
 
 private:
     FilterModelConfig8580();
-    ~FilterModelConfig8580() {}
+    ~FilterModelConfig8580() DEFAULT;
 
 public:
     static FilterModelConfig8580* getInstance();

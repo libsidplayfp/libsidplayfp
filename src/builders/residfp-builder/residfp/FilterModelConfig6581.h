@@ -79,7 +79,7 @@ private:
     double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
 
     FilterModelConfig6581();
-    ~FilterModelConfig6581() {}
+    ~FilterModelConfig6581() DEFAULT;
 
 public:
     static FilterModelConfig6581* getInstance();
