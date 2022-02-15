@@ -349,7 +349,7 @@ protected:
      *
      * In the MOS 6581, 1/Q is controlled linearly by res.
      */
-    void updateResonance(unsigned char res) override { currentResonance = gain_res[~res & 0xf]; }
+    void updateResonance(unsigned char res) override { currentResonance = gain_res[res]; }
 
     void updatedMixing() override;
 

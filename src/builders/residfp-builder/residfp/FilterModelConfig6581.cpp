@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2010 Dag Lem
  *
@@ -222,7 +222,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     for (int n8 = 0; n8 < 16; n8++)
     {
         const int size = 1 << 16;
-        const double n = n8 / 8.0;
+        const double n = (~n8 & 0xf) / 8.0;
         opampModel.reset();
         gain_res[n8] = new unsigned short[size];
 
