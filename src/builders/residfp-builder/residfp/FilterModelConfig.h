@@ -25,6 +25,8 @@
 
 #include <algorithm>
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
@@ -63,6 +65,10 @@ protected:
 
     /// Reverse op-amp transfer function.
     unsigned short opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
+
+private:
+    FilterModelConfig (const FilterModelConfig&) DELETE;
+    FilterModelConfig& operator= (const FilterModelConfig&) DELETE;
 
 protected:
     /**
