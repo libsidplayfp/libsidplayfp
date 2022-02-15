@@ -62,7 +62,7 @@ protected:
     //@}
 
     /// Reverse op-amp transfer function.
-    unsigned short opamp_rev[1 << 16];
+    unsigned short opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
 
 protected:
     /**
