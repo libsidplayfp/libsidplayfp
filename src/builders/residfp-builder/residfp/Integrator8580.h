@@ -96,6 +96,7 @@ public:
     {
         // Gate voltage is controlled by the switched capacitor voltage divider
         // Ua = Ue * v = 4.76v  1<v<2
+        assert(v > 1.0 && v < 2.0);
         const double Vg = voice_DC_voltage * v;
         const double Vgt = Vg - Vth;
 
