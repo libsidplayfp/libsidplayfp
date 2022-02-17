@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004, 2010 Dag Lem <resid@nimrod.no>
  *
@@ -28,7 +28,7 @@
 
 // uncomment to enable use of the slope factor
 // in the EKV model
-// actually produces worst results, needs investigation
+// actually produces worse results, needs investigation
 //#define SLOPE_FACTOR
 
 #ifdef SLOPE_FACTOR
@@ -175,10 +175,8 @@ private:
 #ifdef SLOPE_FACTOR
     // Slope factor n = 1/k
     // where k is the gate coupling coefficient
-    // k = Cox/(Cox+Cdep) ~ 0.7(depends on gate voltage)
+    // k = Cox/(Cox+Cdep) ~ 0.7 (depends on gate voltage)
     mutable double n;
-#else
-    const int n;
 #endif
     const double N16;
     const unsigned short Vddt;
@@ -198,8 +196,6 @@ public:
         vc(0),
 #ifdef SLOPE_FACTOR
         n(1.4),
-#else
-        n(1),
 #endif
         N16(N16),
         Vddt(Vddt),
@@ -241,9 +237,13 @@ int Integrator6581::solve(int vi) const
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int Vg = static_cast<int>(vcr_Vg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
-    const int Vp = (Vg - nVt) / n; // Pinch-off voltage
-    const int kVg = static_cast<int>(Vp) - nVmin;
+    const int nVg = static_cast<int>(vcr_Vg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
+#ifdef SLOPE_FACTOR
+    const double nVp = static_cast<double>(nVg - nVt) / n; // Pinch-off voltage
+    const int kVg = static_cast<int>(nVp) - nVmin;
+#else
+    const int kVg = (nVg - nVt) - nVmin;
+#endif
 
     // VCR voltages for EKV model table lookup.
     const int Vgs = (vx < kVg) ? kVg - vx : 0;
@@ -254,15 +254,19 @@ int Integrator6581::solve(int vi) const
     // VCR current, scaled by m*2^15*2^15 = m*2^30
     const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[Vgs]) << 15;
     const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[Vgd]) << 15;
+#ifdef SLOPE_FACTOR
     const int n_I_vcr = (If - Ir) * n;
+#else
+    const int n_I_vcr = (If - Ir);
+#endif
 
 #ifdef SLOPE_FACTOR
     // estimate new slope factor based on gate voltage
     const double gamma = 1.0;   // body effect factor
     const double phi = 0.8;     // bulk Fermi potential
     const double Ut = 26.0e-3;  // Thermal voltage
-    const double nVp = Vp / N16;
-    n = 1. + (gamma / (2 * sqrt(nVp + phi + 4*Ut)));
+    const double Vp = nVp / N16;
+    n = 1. + (gamma / (2 * sqrt(Vp + phi + 4*Ut)));
     assert((n > 1.2) && (n < 1.8));
 #endif
 
