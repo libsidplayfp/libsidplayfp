@@ -60,14 +60,16 @@ private:
     unsigned short nVgt;
     unsigned short n_dac;
 
+    const double voice_DC_voltage;
     const double Vth;
     const double nKp;
     const double vmin;
     const double N16;
 
 public:
-    Integrator8580(const unsigned short* opamp_rev, double Vth, double nKp, double vmin, double N16) :
+    Integrator8580(const unsigned short* opamp_rev, double vdv, double Vth, double nKp, double vmin, double N16) :
         opamp_rev(opamp_rev),
+        voice_DC_voltage(vdv),
         vx(0),
         vc(0),
         Vth(Vth),
@@ -94,7 +96,7 @@ public:
     {
         // Gate voltage is controlled by the switched capacitor voltage divider
         // Ua = Ue * v = 4.76v  1<v<2
-        const double Vg = 4.76 * v;
+        const double Vg = voice_DC_voltage * v;
         const double Vgt = Vg - Vth;
 
         // Vg - Vth, normalized so that translated values can be subtracted:
