@@ -24,6 +24,7 @@
 #define FILTERMODELCONFIG_H
 
 #include <algorithm>
+#include <cassert>
 
 #include "sidcxx11.h"
 
@@ -55,12 +56,15 @@ protected:
     /// Fixed point scaling for 16 bit op-amp output.
     const double N16;
 
+    /// Current factor coefficient for op-amp integrators.
+    const double currFactorCoeff;
+
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
-    unsigned short* mixer[8];
-    unsigned short* summer[5];
-    unsigned short* gain_vol[16];
-    unsigned short* gain_res[16];
+    unsigned short* mixer[8];       //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* summer[5];      //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* gain_vol[16];   //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* gain_res[16];   //-V730_NOINIT this is initialized in the derived class constructor
     //@}
 
     /// Reverse op-amp transfer function.
@@ -76,8 +80,8 @@ protected:
      * @param vdv voice DC voltage
      * @param c   capacitor value
      * @param vdd Vdd
-     * @param vth Vth
-     * @param ucox uCox
+     * @param vth threshold voltage
+     * @param ucox u*Cox
      * @param ominv opamp min voltage
      * @param omaxv opamp max voltage
      */
@@ -104,10 +108,7 @@ protected:
         denorm(vmax - vmin),
         norm(1.0 / denorm),
         N16(norm * ((1 << 16) - 1)),
-        mixer(),
-        summer(),
-        gain_vol(),
-        gain_res()
+        currFactorCoeff(denorm * (uCox / 2. * 1.0e-6 / C))
     {}
 
     ~FilterModelConfig()
@@ -144,7 +145,33 @@ public:
     /**
      * The "zero" output level of the voices.
      */
-    int getVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
+    int getNormalizerdVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
+
+    inline const unsigned short* getOpampRev() const { return opamp_rev; }
+    inline double getVddt() const { return Vddt; }
+    inline double getVth() const { return Vth; }
+    inline double getUt() const { return Ut; }
+    inline double getVmin() const { return vmin; }
+    inline double getN16() const { return N16; }
+    inline double getuCox() const { return uCox; }
+    inline double getC() const { return C; }
+    inline double getdenorm() const { return denorm; }
+    inline double getVoiceDCVoltage() const { return voice_DC_voltage; }
+
+    // helper functions
+    inline unsigned short getNormalizedValue(double value) const
+    {
+        const double tmp = N16 * value;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        return static_cast<unsigned short>(tmp + 0.5);
+    }
+
+    inline unsigned short getNormalizedCurrentFactor(double wl) const
+    {
+        const double tmp = (1 << 13) * currFactorCoeff * wl;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        return static_cast<unsigned short>(tmp + 0.5);
+    }
 };
 
 } // namespace reSIDfp

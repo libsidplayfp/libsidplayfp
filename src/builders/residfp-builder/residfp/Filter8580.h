@@ -319,7 +319,7 @@ public:
         gain_res(FilterModelConfig8580::getInstance()->getGainRes()),
         gain_vol(FilterModelConfig8580::getInstance()->getGainVol()),
         voiceScaleS11(FilterModelConfig8580::getInstance()->getVoiceScaleS11()),
-        voiceDC(FilterModelConfig8580::getInstance()->getVoiceDC()),
+        voiceDC(FilterModelConfig8580::getInstance()->getNormalizerdVoiceDC()),
         cp(0.5),
         hpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())

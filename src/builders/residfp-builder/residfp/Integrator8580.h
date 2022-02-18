@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004, 2010 Dag Lem <resid@nimrod.no>
  *
@@ -22,6 +22,8 @@
 
 #ifndef INTEGRATOR8580_H
 #define INTEGRATOR8580_H
+
+#include "FilterModelConfig.h"
 
 #include <stdint.h>
 #include <cassert>
@@ -60,22 +62,14 @@ private:
     unsigned short nVgt;
     unsigned short n_dac;
 
-    const double voice_DC_voltage;
-    const double Vth;
-    const double nKp;
-    const double vmin;
-    const double N16;
+    const FilterModelConfig* fmc;
 
 public:
-    Integrator8580(const unsigned short* opamp_rev, double vdv, double Vth, double nKp, double vmin, double N16) :
-        opamp_rev(opamp_rev),
-        voice_DC_voltage(vdv),
+    Integrator8580(const FilterModelConfig* fmc) :
+        opamp_rev(fmc->getOpampRev()),
         vx(0),
         vc(0),
-        Vth(Vth),
-        nKp(nKp),
-        vmin(vmin),
-        N16(N16)
+        fmc(fmc)
     {
         setV(1.5);
     }
@@ -84,9 +78,7 @@ public:
     {
         // Normalized current factor, 1 cycle at 1MHz.
         // Fit in 5 bits.
-        const double tmp = (1 << 13) * nKp * wl;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        n_dac = static_cast<unsigned short>(tmp + 0.5);
+        n_dac = fmc->getNormalizedCurrentFactor(wl);
     }
 
     /**
@@ -97,14 +89,12 @@ public:
         // Gate voltage is controlled by the switched capacitor voltage divider
         // Ua = Ue * v = 4.76v  1<v<2
         assert(v > 1.0 && v < 2.0);
-        const double Vg = voice_DC_voltage * v;
-        const double Vgt = Vg - Vth;
+        const double Vg = fmc->getVoiceDCVoltage() * v;
+        const double Vgt = Vg - fmc->getVth();
 
         // Vg - Vth, normalized so that translated values can be subtracted:
         // Vgt - x = (Vgt - t) - (x - t)
-        const double tmp = N16 * (Vgt - vmin);
-        assert(tmp > -0.5 && tmp < 65535.5);
-        nVgt = static_cast<unsigned short>(tmp + 0.5);
+        nVgt = fmc->getNormalizedValue(Vgt - fmc->getVmin());
     }
 
     int solve(int vi) const;

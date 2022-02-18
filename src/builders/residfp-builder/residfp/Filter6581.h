@@ -361,7 +361,7 @@ public:
         gain_res(FilterModelConfig6581::getInstance()->getGainRes()),
         gain_vol(FilterModelConfig6581::getInstance()->getGainVol()),
         voiceScaleS11(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
-        voiceDC(FilterModelConfig6581::getInstance()->getVoiceDC()),
+        voiceDC(FilterModelConfig6581::getInstance()->getNormalizerdVoiceDC()),
         hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
     {

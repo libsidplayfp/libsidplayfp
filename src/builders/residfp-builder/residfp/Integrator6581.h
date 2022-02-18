@@ -23,6 +23,8 @@
 #ifndef INTEGRATOR6581_H
 #define INTEGRATOR6581_H
 
+#include "FilterModelConfig.h"
+
 #include <stdint.h>
 #include <cassert>
 
@@ -156,11 +158,11 @@ namespace reSIDfp
  * Assuming triode mode and applying Kirchoff's current law, we get the
  * following equation for Vg:
  *
- *     u*Cox/2*W/L*((Vddt - Vg)^2 - (Vddt - vi)^2 + (Vddt - Vg)^2 - (Vddt - Vw)^2) = 0
- *     2*(Vddt - Vg)^2 - (Vddt - vi)^2 - (Vddt - Vw)^2 = 0
- *     (Vddt - Vg) = sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
+ *     u*Cox/2*W/L*((nVddt - Vg)^2 - (nVddt - vi)^2 + (nVddt - Vg)^2 - (nVddt - Vw)^2) = 0
+ *     2*(nVddt - Vg)^2 - (nVddt - vi)^2 - (nVddt - Vw)^2 = 0
+ *     (nVddt - Vg) = sqrt(((nVddt - vi)^2 + (nVddt - Vw)^2)/2)
  *
- *     Vg = Vddt - sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
+ *     Vg = nVddt - sqrt(((nVddt - vi)^2 + (nVddt - Vw)^2)/2)
  */
 class Integrator6581
 {
@@ -169,41 +171,43 @@ private:
     const unsigned short* vcr_n_Ids_term;
     const unsigned short* opamp_rev;
 
-    unsigned int Vddt_Vw_2;
+    unsigned int nVddt_Vw_2;
     mutable int vx;
     mutable int vc;
+
 #ifdef SLOPE_FACTOR
     // Slope factor n = 1/k
     // where k is the gate coupling coefficient
     // k = Cox/(Cox+Cdep) ~ 0.7 (depends on gate voltage)
     mutable double n;
 #endif
-    const double N16;
-    const unsigned short Vddt;
+    const unsigned short nVddt;
     const unsigned short nVt;
     const unsigned short nVmin;
-    const unsigned short n_snake;
+    const unsigned short nSnake;
+
+    const FilterModelConfig* fmc;
 
 public:
-    Integrator6581(const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
-               const unsigned short* opamp_rev, unsigned short Vddt, unsigned short nVt,
-               unsigned short nVmin, unsigned short n_snake, double N16) :
+    Integrator6581(const FilterModelConfig* fmc,
+               const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
+               double WL_snake) :
         vcr_Vg(vcr_Vg),
         vcr_n_Ids_term(vcr_n_Ids_term),
-        opamp_rev(opamp_rev),
-        Vddt_Vw_2(0),
+        opamp_rev(fmc->getOpampRev()),
+        nVddt_Vw_2(0),
         vx(0),
         vc(0),
 #ifdef SLOPE_FACTOR
         n(1.4),
 #endif
-        N16(N16),
-        Vddt(Vddt),
-        nVt(nVt),
-        nVmin(nVmin),
-        n_snake(n_snake) {}
+        nVddt(fmc->getNormalizedValue(fmc->getVddt() - fmc->getVmin())),
+        nVt(fmc->getNormalizedValue(fmc->getVth() - fmc->getVmin())),
+        nVmin(fmc->getNormalizedValue(fmc->getVmin())),
+        nSnake(fmc->getNormalizedCurrentFactor(WL_snake)),
+        fmc(fmc) {}
 
-    void setVw(unsigned short Vw) { Vddt_Vw_2 = ((Vddt - Vw) * (Vddt - Vw)) >> 1; }
+    void setVw(unsigned short Vw) { nVddt_Vw_2 = ((nVddt - Vw) * (nVddt - Vw)) >> 1; }
 
     int solve(int vi) const;
 };
@@ -219,25 +223,25 @@ RESID_INLINE
 int Integrator6581::solve(int vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
-    assert(vx < Vddt);
+    assert(vx < nVddt);
 
     // Check that transistor is actually in triode mode
     // Vds < Vgs - Vth
     assert(vi < Vddt);
 
     // "Snake" voltages for triode mode calculation.
-    const unsigned int Vgst = Vddt - vx;
-    const unsigned int Vgdt = Vddt - vi;
+    const unsigned int Vgst = nVddt - vx;
+    const unsigned int Vgdt = nVddt - vi;
 
     const unsigned int Vgst_2 = Vgst * Vgst;
     const unsigned int Vgdt_2 = Vgdt * Vgdt;
 
     // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_snake = n_snake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
+    const int n_I_snake = nSnake * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int nVg = static_cast<int>(vcr_Vg[(Vddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
+    const int nVg = static_cast<int>(vcr_Vg[(nVddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
 #ifdef SLOPE_FACTOR
     const double nVp = static_cast<double>(nVg - nVt) / n; // Pinch-off voltage
     const int kVg = static_cast<int>(nVp) - nVmin;
@@ -264,9 +268,8 @@ int Integrator6581::solve(int vi) const
     // estimate new slope factor based on gate voltage
     const double gamma = 1.0;   // body effect factor
     const double phi = 0.8;     // bulk Fermi potential
-    const double Ut = 26.0e-3;  // Thermal voltage
-    const double Vp = nVp / N16;
-    n = 1. + (gamma / (2 * sqrt(Vp + phi + 4*Ut)));
+    const double Vp = nVp / fmc->getN16();
+    n = 1. + (gamma / (2 * sqrt(Vp + phi + 4 * fmc->getUt())));
     assert((n > 1.2) && (n < 1.8));
 #endif
 

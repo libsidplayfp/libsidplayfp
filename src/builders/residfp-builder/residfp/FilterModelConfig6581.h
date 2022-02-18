@@ -40,7 +40,7 @@ class Integrator6581;
 /**
  * Calculate parameters for 6581 filter emulation.
  */
-class FilterModelConfig6581 : public FilterModelConfig
+class FilterModelConfig6581 final : public FilterModelConfig
 {
 private:
     static const unsigned int DAC_BITS = 11;

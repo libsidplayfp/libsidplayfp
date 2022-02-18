@@ -23,7 +23,6 @@
 #include "FilterModelConfig6581.h"
 
 #include <cmath>
-#include <cassert>
 
 #include "Integrator6581.h"
 #include "OpAmp.h"
@@ -165,9 +164,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
-            summer[i][vi] = static_cast<unsigned short>(tmp + 0.5);
+            summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
         }
     }
 
@@ -187,9 +184,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
-            mixer[i][vi] = static_cast<unsigned short>(tmp + 0.5);
+            mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
         }
     }
 
@@ -208,9 +203,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
-            gain_vol[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
+            gain_vol[n8][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
         }
     }
 
@@ -229,9 +222,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            const double tmp = (opampModel.solve(n, vin) - vmin) * N16;
-            assert(tmp > -0.5 && tmp < 65535.5);
-            gain_res[n8][vi] = static_cast<unsigned short>(tmp + 0.5);
+            gain_res[n8][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
         }
     }
 
@@ -242,7 +233,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-        const double Vg = nVddt - sqrt((double)(i << 16));
+        const double Vg = nVddt - sqrt(static_cast<double>(i << 16));
         const double tmp = Vg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         vcr_Vg[i] = static_cast<unsigned short>(tmp + 0.5);
@@ -283,9 +274,7 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         const double fcd = dac.getOutput(i);
-        const double tmp = N16 * (dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
-        assert(tmp > -0.5 && tmp < 65535.5);
-        f0_dac[i] = static_cast<unsigned short>(tmp + 0.5);
+        f0_dac[i] = getNormalizedValue(dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
     }
 
     return f0_dac;
@@ -293,27 +282,7 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
 
 std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
 {
-    // Vdd - Vth, normalized so that translated values can be subtracted:
-    // Vddt - x = (Vddt - t) - (x - t)
-    double tmp = N16 * (Vddt - vmin);
-    assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short nVddt = static_cast<unsigned short>(tmp + 0.5);
-
-    tmp = N16 * (Vth - vmin);
-    assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short nVt = static_cast<unsigned short>(tmp + 0.5);
-
-    tmp = N16 * vmin;
-    assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short nVmin = static_cast<unsigned short>(tmp + 0.5);
-
-    // Normalized snake current factor, 1 cycle at 1MHz.
-    // Fit in 5 bits.
-    tmp = denorm * (1 << 13) * (uCox / 2. * WL_snake * 1.0e-6 / C);
-    assert(tmp > -0.5 && tmp < 65535.5);
-    const unsigned short n_snake = static_cast<unsigned short>(tmp + 0.5);
-
-    return MAKE_UNIQUE(Integrator6581, vcr_Vg, vcr_n_Ids_term, opamp_rev, nVddt, nVt, nVmin, n_snake, N16);
+    return MAKE_UNIQUE(Integrator6581, this, vcr_Vg, vcr_n_Ids_term, WL_snake);
 }
 
 } // namespace reSIDfp

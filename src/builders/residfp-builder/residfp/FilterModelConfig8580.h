@@ -39,7 +39,7 @@ class Integrator8580;
 /**
  * Calculate parameters for 8580 filter emulation.
  */
-class FilterModelConfig8580 : public FilterModelConfig
+class FilterModelConfig8580 final : public FilterModelConfig
 {
 private:
     static std::unique_ptr<FilterModelConfig8580> instance;
