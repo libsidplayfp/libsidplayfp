@@ -233,10 +233,10 @@ FilterModelConfig6581::FilterModelConfig6581() :
     {
         // The table index is right-shifted 16 times in order to fit in
         // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-        const double Vg = nVddt - sqrt(static_cast<double>(i << 16));
-        const double tmp = Vg - nVmin;
+        const double nVg = nVddt - sqrt(static_cast<double>(i << 16));
+        const double tmp = nVg - nVmin;
         assert(tmp > -0.5 && tmp < 65535.5);
-        vcr_Vg[i] = static_cast<unsigned short>(tmp + 0.5);
+        vcr_nVg[i] = static_cast<unsigned short>(tmp + 0.5);
     }
 
     //  EKV model:
@@ -282,7 +282,7 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
 
 std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
 {
-    return MAKE_UNIQUE(Integrator6581, this, vcr_Vg, vcr_n_Ids_term, WL_snake);
+    return MAKE_UNIQUE(Integrator6581, this, vcr_nVg, vcr_n_Ids_term, WL_snake);
 }
 
 } // namespace reSIDfp

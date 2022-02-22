@@ -167,7 +167,7 @@ namespace reSIDfp
 class Integrator6581
 {
 private:
-    const unsigned short* vcr_Vg;
+    const unsigned short* vcr_nVg;
     const unsigned short* vcr_n_Ids_term;
     const unsigned short* opamp_rev;
 
@@ -190,9 +190,9 @@ private:
 
 public:
     Integrator6581(const FilterModelConfig* fmc,
-               const unsigned short* vcr_Vg, const unsigned short* vcr_n_Ids_term,
+               const unsigned short* vcr_nVg, const unsigned short* vcr_n_Ids_term,
                double WL_snake) :
-        vcr_Vg(vcr_Vg),
+        vcr_nVg(vcr_nVg),
         vcr_n_Ids_term(vcr_n_Ids_term),
         opamp_rev(fmc->getOpampRev()),
         nVddt_Vw_2(0),
@@ -227,7 +227,7 @@ int Integrator6581::solve(int vi) const
 
     // Check that transistor is actually in triode mode
     // Vds < Vgs - Vth
-    assert(vi < Vddt);
+    assert(vi < nVddt);
 
     // "Snake" voltages for triode mode calculation.
     const unsigned int Vgst = nVddt - vx;
@@ -241,7 +241,7 @@ int Integrator6581::solve(int vi) const
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int nVg = static_cast<int>(vcr_Vg[(nVddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
+    const int nVg = static_cast<int>(vcr_nVg[(nVddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
 #ifdef SLOPE_FACTOR
     const double nVp = static_cast<double>(nVg - nVt) / n; // Pinch-off voltage
     const int kVg = static_cast<int>(nVp) - nVmin;
@@ -250,14 +250,14 @@ int Integrator6581::solve(int vi) const
 #endif
 
     // VCR voltages for EKV model table lookup.
-    const int Vgs = (vx < kVg) ? kVg - vx : 0;
-    assert(Vgs < (1 << 16));
-    const int Vgd = (vi < kVg) ? kVg - vi : 0;
-    assert(Vgd < (1 << 16));
+    const int kVgt_Vs = (vx < kVg) ? kVg - vx : 0;
+    assert(kVgt_Vs < (1 << 16));
+    const int kVgt_Vd = (vi < kVg) ? kVg - vi : 0;
+    assert(kVgt_Vd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[Vgs]) << 15;
-    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[Vgd]) << 15;
+    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[kVgt_Vs]) << 15;
+    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[kVgt_Vd]) << 15;
 #ifdef SLOPE_FACTOR
     const int n_I_vcr = (If - Ir) * n;
 #else

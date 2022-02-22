@@ -71,7 +71,7 @@ private:
 
     /// VCR - 6581 only.
     //@{
-    unsigned short vcr_Vg[1 << 16];
+    unsigned short vcr_nVg[1 << 16];
     unsigned short vcr_n_Ids_term[1 << 16];
     //@}
 
