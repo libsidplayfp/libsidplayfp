@@ -201,9 +201,9 @@ public:
 #ifdef SLOPE_FACTOR
         n(1.4),
 #endif
-        nVddt(fmc->getNormalizedValue(fmc->getVddt() - fmc->getVmin())),
-        nVt(fmc->getNormalizedValue(fmc->getVth() - fmc->getVmin())),
-        nVmin(fmc->getNormalizedValue(fmc->getVmin())),
+        nVddt(fmc->getNormalizedValue(fmc->getVddt())),
+        nVt(fmc->getNormalizedValue(fmc->getVth())),
+        nVmin(fmc->getNVmin()),
         nSnake(fmc->getNormalizedCurrentFactor(WL_snake)),
         fmc(fmc) {}
 

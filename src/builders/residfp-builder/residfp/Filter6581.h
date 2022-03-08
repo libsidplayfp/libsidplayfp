@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -361,7 +361,7 @@ public:
         gain_res(FilterModelConfig6581::getInstance()->getGainRes()),
         gain_vol(FilterModelConfig6581::getInstance()->getGainVol()),
         voiceScaleS11(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
-        voiceDC(FilterModelConfig6581::getInstance()->getNormalizerdVoiceDC()),
+        voiceDC(FilterModelConfig6581::getInstance()->getNormalizedVoiceDC()),
         hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
     {

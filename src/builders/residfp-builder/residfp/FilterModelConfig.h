@@ -145,23 +145,20 @@ public:
     /**
      * The "zero" output level of the voices.
      */
-    int getNormalizerdVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
+    int getNormalizedVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
 
     inline const unsigned short* getOpampRev() const { return opamp_rev; }
     inline double getVddt() const { return Vddt; }
     inline double getVth() const { return Vth; }
-    inline double getUt() const { return Ut; }
-    inline double getVmin() const { return vmin; }
-    inline double getN16() const { return N16; }
-    inline double getuCox() const { return uCox; }
-    inline double getC() const { return C; }
-    inline double getdenorm() const { return denorm; }
     inline double getVoiceDCVoltage() const { return voice_DC_voltage; }
+    // only used if SLOPE_FACTOR is defined
+    inline double getUt() const { return Ut; }
+    inline double getN16() const { return N16; }
 
     // helper functions
     inline unsigned short getNormalizedValue(double value) const
     {
-        const double tmp = N16 * value;
+        const double tmp = N16 * (value - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);
     }
@@ -169,6 +166,12 @@ public:
     inline unsigned short getNormalizedCurrentFactor(double wl) const
     {
         const double tmp = (1 << 13) * currFactorCoeff * wl;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        return static_cast<unsigned short>(tmp + 0.5);
+    }
+
+    inline double getNVmin() const {
+        const double tmp = N16 * vmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);
     }

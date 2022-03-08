@@ -164,7 +164,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
+            summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
         }
     }
 
@@ -184,7 +184,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
+            mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
         }
     }
 
@@ -203,7 +203,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            gain_vol[n8][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
+            gain_vol[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
         }
     }
 
@@ -222,7 +222,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            gain_res[n8][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
+            gain_res[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
         }
     }
 
@@ -272,7 +272,7 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         const double fcd = dac.getOutput(i);
-        f0_dac[i] = getNormalizedValue(dac_zero + fcd * dac_scale / (1 << DAC_BITS) - vmin);
+        f0_dac[i] = getNormalizedValue(dac_zero + fcd * dac_scale / (1 << DAC_BITS));
     }
 
     return f0_dac;

@@ -97,7 +97,7 @@ public:
 
         // Vg - Vth, normalized so that translated values can be subtracted:
         // Vgt - x = (Vgt - t) - (x - t)
-        nVgt = fmc->getNormalizedValue(Vgt - fmc->getVmin());
+        nVgt = fmc->getNormalizedValue(Vgt);
     }
 
     int solve(int vi) const;

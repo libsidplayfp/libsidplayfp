@@ -175,7 +175,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
+            summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
         }
     }
 
@@ -195,7 +195,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-            mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
+            mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
         }
     }
 
@@ -213,7 +213,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            gain_vol[n8][vi] = getNormalizedValue(opampModel.solve(n, vin) - vmin);
+            gain_vol[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
         }
     }
 
@@ -231,7 +231,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         for (int vi = 0; vi < size; vi++)
         {
             const double vin = vmin + vi / N16; /* vmin .. vmax */
-            gain_res[n8][vi] = getNormalizedValue(opampModel.solve(resGain[n8], vin) - vmin);
+            gain_res[n8][vi] = getNormalizedValue(opampModel.solve(resGain[n8], vin));
         }
     }
 }
