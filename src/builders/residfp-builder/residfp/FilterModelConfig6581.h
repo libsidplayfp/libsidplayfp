@@ -28,7 +28,6 @@
 #include <memory>
 
 #include "Dac.h"
-#include "Spline.h"
 
 #include "sidcxx14.h"
 

@@ -241,6 +241,7 @@ src/builders/residfp-builder/residfp/Filter6581.cpp \
 src/builders/residfp-builder/residfp/Filter6581.h \
 src/builders/residfp-builder/residfp/Filter8580.cpp \
 src/builders/residfp-builder/residfp/Filter8580.h \
+src/builders/residfp-builder/residfp/FilterModelConfig.cpp \
 src/builders/residfp-builder/residfp/FilterModelConfig.h \
 src/builders/residfp-builder/residfp/FilterModelConfig6581.cpp \
 src/builders/residfp-builder/residfp/FilterModelConfig6581.h \

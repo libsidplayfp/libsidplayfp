@@ -26,6 +26,8 @@
 #include <algorithm>
 #include <cassert>
 
+#include "Spline.h"
+
 #include "sidcxx11.h"
 
 namespace reSIDfp
@@ -92,24 +94,9 @@ protected:
         double vdd,
         double vth,
         double ucox,
-        double ominv,
-        double omaxv
-    ) :
-        voice_voltage_range(vvr),
-        voice_DC_voltage(vdv), 
-        C(c),
-        Vdd(vdd),
-        Vth(vth),
-        Ut(26.0e-3),
-        uCox(ucox),
-        Vddt(Vdd - Vth),
-        vmin(ominv),
-        vmax(std::max(Vddt, omaxv)),
-        denorm(vmax - vmin),
-        norm(1.0 / denorm),
-        N16(norm * ((1 << 16) - 1)),
-        currFactorCoeff(denorm * (uCox / 2. * 1.0e-6 / C))
-    {}
+        const Spline::Point *opamp_voltage,
+        int opamp_size
+    );
 
     ~FilterModelConfig()
     {

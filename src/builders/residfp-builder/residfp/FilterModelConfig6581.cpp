@@ -108,8 +108,8 @@ FilterModelConfig6581::FilterModelConfig6581() :
         12.18,   // Vdd
         1.31,    // Vth
         20e-6,   // uCox
-        opamp_voltage[0].x,
-        opamp_voltage[0].y
+        opamp_voltage,
+        OPAMP_SIZE
     ),
     WL_vcr(9.0 / 1.0),
     WL_snake(1.0 / 115.0),
@@ -119,32 +119,9 @@ FilterModelConfig6581::FilterModelConfig6581() :
 {
     dac.kinkedDac(MOS6581);
 
-    // Convert op-amp voltage transfer to 16 bit values.
-
-    Spline::Point scaled_voltage[OPAMP_SIZE];
-
-    for (unsigned int i = 0; i < OPAMP_SIZE; i++)
-    {
-        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y + denorm) / 2.;
-        scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
-    }
-
-    // Create lookup table mapping capacitor voltage to op-amp input voltage:
-
-    Spline s(scaled_voltage, OPAMP_SIZE);
-
-    for (int x = 0; x < (1 << 16); x++)
-    {
-        const Spline::Point out = s.evaluate(x);
-        double tmp = out.x;
-        if (tmp < 0.) tmp = 0.;
-        assert(tmp < 65535.5);
-        opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
-    }
-
     // Create lookup tables for gains / summers.
 
-    OpAmp opampModel(opamp_voltage, OPAMP_SIZE, Vddt);
+    OpAmp opampModel(std::vector<Spline::Point>(std::begin(opamp_voltage), std::end(opamp_voltage)), Vddt);
 
     // The filter summer operates at n ~ 1, and has 5 fundamentally different
     // input configurations (2 - 6 input "resistors").
