@@ -23,7 +23,7 @@
 #ifndef INTEGRATOR6581_H
 #define INTEGRATOR6581_H
 
-#include "FilterModelConfig.h"
+#include "FilterModelConfig6581.h"
 
 #include <stdint.h>
 #include <cassert>
@@ -167,10 +167,6 @@ namespace reSIDfp
 class Integrator6581
 {
 private:
-    const unsigned short* vcr_nVg;
-    const unsigned short* vcr_n_Ids_term;
-    const unsigned short* opamp_rev;
-
     unsigned int nVddt_Vw_2;
     mutable int vx;
     mutable int vc;
@@ -186,15 +182,11 @@ private:
     const unsigned short nVmin;
     const unsigned short nSnake;
 
-    const FilterModelConfig* fmc;
+    const FilterModelConfig6581* fmc;
 
 public:
-    Integrator6581(const FilterModelConfig* fmc,
-               const unsigned short* vcr_nVg, const unsigned short* vcr_n_Ids_term,
+    Integrator6581(const FilterModelConfig6581* fmc,
                double WL_snake) :
-        vcr_nVg(vcr_nVg),
-        vcr_n_Ids_term(vcr_n_Ids_term),
-        opamp_rev(fmc->getOpampRev()),
         nVddt_Vw_2(0),
         vx(0),
         vc(0),
@@ -241,7 +233,7 @@ int Integrator6581::solve(int vi) const
 
     // VCR gate voltage.       // Scaled by m*2^16
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int nVg = static_cast<int>(vcr_nVg[(nVddt_Vw_2 + (Vgdt_2 >> 1)) >> 16]);
+    const int nVg = static_cast<int>(fmc->getVcr_nVg((nVddt_Vw_2 + (Vgdt_2 >> 1)) >> 16));
 #ifdef SLOPE_FACTOR
     const double nVp = static_cast<double>(nVg - nVt) / n; // Pinch-off voltage
     const int kVg = static_cast<int>(nVp) - nVmin;
@@ -256,8 +248,8 @@ int Integrator6581::solve(int vi) const
     assert(kVgt_Vd < (1 << 16));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const unsigned int If = static_cast<unsigned int>(vcr_n_Ids_term[kVgt_Vs]) << 15;
-    const unsigned int Ir = static_cast<unsigned int>(vcr_n_Ids_term[kVgt_Vd]) << 15;
+    const unsigned int If = static_cast<unsigned int>(fmc->getVcr_n_Ids_term(kVgt_Vs)) << 15;
+    const unsigned int Ir = static_cast<unsigned int>(fmc->getVcr_n_Ids_term(kVgt_Vd)) << 15;
 #ifdef SLOPE_FACTOR
     const int n_I_vcr = (If - Ir) * n;
 #else
@@ -279,7 +271,7 @@ int Integrator6581::solve(int vi) const
     // vx = g(vc)
     const int tmp = (vc >> 15) + (1 << 15);
     assert(tmp < (1 << 16));
-    vx = opamp_rev[tmp];
+    vx = fmc->getOpampRev(tmp);
 
     // Return vo.
     return vx - (vc >> 14);

@@ -99,6 +99,12 @@ public:
      * @return the integrator
      */
     std::unique_ptr<Integrator6581> buildIntegrator();
+
+    inline unsigned short getVcr_nVg(int i) const { return vcr_nVg[i]; }
+    inline unsigned short getVcr_n_Ids_term(int i) const { return vcr_n_Ids_term[i]; }
+    // only used if SLOPE_FACTOR is defined
+    inline double getUt() const { return Ut; }
+    inline double getN16() const { return N16; }
 };
 
 } // namespace reSIDfp

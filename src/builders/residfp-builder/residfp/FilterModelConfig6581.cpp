@@ -257,7 +257,7 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
 
 std::unique_ptr<Integrator6581> FilterModelConfig6581::buildIntegrator()
 {
-    return MAKE_UNIQUE(Integrator6581, this, vcr_nVg, vcr_n_Ids_term, WL_snake);
+    return MAKE_UNIQUE(Integrator6581, this, WL_snake);
 }
 
 } // namespace reSIDfp

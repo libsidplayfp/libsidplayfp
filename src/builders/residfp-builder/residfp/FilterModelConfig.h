@@ -134,13 +134,10 @@ public:
      */
     int getNormalizedVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
 
-    inline const unsigned short* getOpampRev() const { return opamp_rev; }
+    inline unsigned short getOpampRev(int i) const { return opamp_rev[i]; }
     inline double getVddt() const { return Vddt; }
     inline double getVth() const { return Vth; }
     inline double getVoiceDCVoltage() const { return voice_DC_voltage; }
-    // only used if SLOPE_FACTOR is defined
-    inline double getUt() const { return Ut; }
-    inline double getN16() const { return N16; }
 
     // helper functions
     inline unsigned short getNormalizedValue(double value) const
