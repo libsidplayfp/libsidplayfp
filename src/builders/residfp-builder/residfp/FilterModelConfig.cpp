@@ -69,8 +69,9 @@ FilterModelConfig::FilterModelConfig(
     for (int x = 0; x < (1 << 16); x++)
     {
         const Spline::Point out = s.evaluate(x);
-        double tmp = out.x;
-        assert(tmp > -0.5 && tmp < 65535.5);
+        // If Vmax > max opamp_voltage the first elements may be negative
+        double tmp = out.x > 0. ? out.x : 0.;
+        assert(tmp < 65535.5);
         opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
     }
 }
