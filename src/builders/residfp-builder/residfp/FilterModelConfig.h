@@ -154,7 +154,7 @@ public:
         return static_cast<unsigned short>(tmp + 0.5);
     }
 
-    inline double getNVmin() const {
+    inline unsigned short getNVmin() const {
         const double tmp = N16 * vmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);
