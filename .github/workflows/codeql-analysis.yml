@@ -35,6 +35,14 @@ jobs:
         # Learn more about CodeQL language support at https://git.io/codeql-language-support
 
     steps:
+    - name: deps
+      run: |
+        sudo apt-get install \
+          libgcrypt20-dev \
+          xa65 \
+          libunittest++-dev \
+          libftdi1-dev
+
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
