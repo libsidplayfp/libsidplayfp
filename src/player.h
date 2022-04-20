@@ -40,6 +40,9 @@
 #  include "config.h"
 #endif
 
+#ifdef HAVE_CXX11
+#  include <atomic>
+#endif
 #include <vector>
 
 class SidTune;
@@ -79,7 +82,11 @@ private:
     /// Error message
     const char *m_errorString;
 
+#ifndef HAVE_CXX11
     volatile state_t m_isPlaying;
+#else
+    std::atomic<state_t> m_isPlaying;
+#endif
 
     sidrandom m_rand;
 
