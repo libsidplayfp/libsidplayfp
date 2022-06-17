@@ -97,6 +97,7 @@ int convolve(const short* a, const short* b, int bLength)
 
     const uintptr_t offset = (uintptr_t)(a) & 0x0f;
 
+    // check for aligned accesses
     if (offset == ((uintptr_t)(b) & 0x0f))
     {
         if (offset)
