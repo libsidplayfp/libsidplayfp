@@ -121,7 +121,7 @@ protected:
      * Create a new InterruptSource.
      *
      * @param scheduler event scheduler
-     * @param parent the MOS6526 which this Interrupt belongs to
+     * @param parent the CIA chip which this Interrupt belongs to
      */
     InterruptSource(EventScheduler &scheduler, MOS652X &parent) :
         parent(parent),
