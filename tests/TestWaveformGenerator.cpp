@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2014-2017 Leandro Nini
+ *  Copyright (C) 2014-2022 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -89,13 +89,11 @@ TEST(TestSetTestBit)
 TEST(TestNoiseWriteBack1)
 {
     matrix_t* tables = reSIDfp::WaveformCalculator::getInstance()->buildTable(reSIDfp::MOS6581);
-    float dac[4096];
 
     reSIDfp::WaveformGenerator modulator;
 
     reSIDfp::WaveformGenerator generator;
     generator.setWaveformModels(tables);
-    generator.setDAC(dac);
     generator.reset();
 
     generator.writeCONTROL_REG(0x88);
