@@ -122,7 +122,7 @@ uint8_t MOS656X::read(uint_least8_t addr)
         return (regs[addr] & 0x7f) | ((rasterY & 0x100) >> 1);
     case 0x12:
         // Raster counter
-        return rasterY & 0xFF;
+        return rasterY & 0xff;
     case 0x13:
         return lp.getX();
     case 0x14:

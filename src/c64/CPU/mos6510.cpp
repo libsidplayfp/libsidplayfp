@@ -370,7 +370,7 @@ void MOS6510::FetchLowAddr()
 void MOS6510::FetchLowAddrX()
 {
     FetchLowAddr();
-    Cycle_EffectiveAddress = (Cycle_EffectiveAddress + Register_X) & 0xFF;
+    Cycle_EffectiveAddress = (Cycle_EffectiveAddress + Register_X) & 0xff;
 }
 
 /**
@@ -382,7 +382,7 @@ void MOS6510::FetchLowAddrX()
 void MOS6510::FetchLowAddrY()
 {
     FetchLowAddr();
-    Cycle_EffectiveAddress = (Cycle_EffectiveAddress + Register_Y) & 0xFF;
+    Cycle_EffectiveAddress = (Cycle_EffectiveAddress + Register_Y) & 0xff;
 }
 
 /**
@@ -475,7 +475,7 @@ void MOS6510::FetchLowPointer()
  */
 void MOS6510::FetchLowPointerX()
 {
-    endian_16lo8(Cycle_Pointer, (Cycle_Pointer + Register_X) & 0xFF);
+    endian_16lo8(Cycle_Pointer, (Cycle_Pointer + Register_X) & 0xff);
 }
 
 /**
@@ -2141,7 +2141,7 @@ void MOS6510::buildInstructionTable()
 void MOS6510::Initialise()
 {
     // Reset stack
-    Register_StackPointer = 0xFF;
+    Register_StackPointer = 0xff;
 
     // Reset Cycle Count
     cycleCount = (BRKn << 3) + 6; // fetchNextOpcode
@@ -2178,13 +2178,13 @@ void MOS6510::reset()
     Initialise();
 
     // Set processor port to the default values
-    cpuWrite(0, 0x2F);
+    cpuWrite(0, 0x2f);
     cpuWrite(1, 0x37);
 
     // Requires External Bits
     // Read from reset vector for program entry point
-    endian_16lo8(Cycle_EffectiveAddress, cpuRead(0xFFFC));
-    endian_16hi8(Cycle_EffectiveAddress, cpuRead(0xFFFD));
+    endian_16lo8(Cycle_EffectiveAddress, cpuRead(0xfffc));
+    endian_16hi8(Cycle_EffectiveAddress, cpuRead(0xfffd));
     Register_ProgramCounter = Cycle_EffectiveAddress;
 }
 
