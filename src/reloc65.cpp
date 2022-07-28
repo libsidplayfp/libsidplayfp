@@ -130,16 +130,16 @@ bool reloc65::reloc(unsigned char **buf, int *fsize)
 
     reloc_globals(extab);
 
-	setWord(tmpBuf, 8, m_tbase);
+    setWord(tmpBuf, 8, m_tbase);
 
-	*buf = segt;
-	*fsize = tlen;
-	return true;
+    *buf = segt;
+    *fsize = tlen;
+    return true;
 }
 
 int reloc65::reldiff(unsigned char s)
 {
-	return s==2 ? m_tdiff : 0;
+    return s==2 ? m_tdiff : 0;
 }
 
 unsigned char* reloc65::reloc_seg(unsigned char *buf, int len, unsigned char *rtab)
