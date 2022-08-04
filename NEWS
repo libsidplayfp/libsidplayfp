@@ -1,3 +1,14 @@
+2.4.0 2022-xx-xx
+* Use pkgconfig for UnitTest++ and libgcrypt support (#46)
+* residfp: correct 6581 volume gain based on schematics (issue #38)
+* residfp: fixed more PVS-Studio warnings. (issue #49)
+* residfp: refactoring, changes and cleanup
+* Synced resid with upstream
+* Fixed a comparison-with-wider-type alert in the MUS loader
+* Other minor changes
+
+
+
 2.3.1 2021-12-07
 * VIC II: check badline enabled condition on raster Y increment. Fixes CPU/shxy/shx-test
 * Disable digiboost for residfp when not required (issue #37)
@@ -22,7 +33,7 @@
 2.2.1 2021-07-18
 * VIC-II: fix NTSC badline timing and improve cycle skipping
 * CIA: minor refactoring
-* Fixed a few minor PVS-Studio flagged issues 
+* Fixed a few minor PVS-Studio flagged issues
 
 
 
