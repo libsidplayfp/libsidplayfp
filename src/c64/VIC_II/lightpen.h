@@ -108,8 +108,6 @@ public:
     /**
      * Retrigger lightpen on vertical blank.
      *
-     * @param lineCycle current line cycle
-     * @param rasterY current y raster position
      * @return true if an IRQ should be triggered
      */
     bool retrigger()
