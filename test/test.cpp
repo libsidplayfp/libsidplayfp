@@ -34,6 +34,8 @@
 #  include "config.h"
 #endif
 
+#include "sidcxx11.h"
+
 /*
  * Adjust these paths to point to existing ROM dumps
  */
@@ -173,7 +175,7 @@ int main(int argc, char* argv[])
     }
 
     m_engine.config(config);
-    std::auto_ptr<SidTune> tune(new SidTune(name.c_str()));
+    std::unique_ptr<SidTune> tune(new SidTune(name.c_str()));
 
     if (!tune->getStatus())
     {

@@ -50,6 +50,10 @@
 
 #define SAMPLERATE 48000
 
+#if __cplusplus < 201103L
+#  define unique_ptr auto_ptr
+#endif
+
 /*
  * Load ROM dump from file.
  * Allocate the buffer if file exists, otherwise return 0.
@@ -89,7 +93,7 @@ int main(int argc, char* argv[])
     }
 
     // Set up a SID builder
-    std::auto_ptr<ReSIDfpBuilder> rs(new ReSIDfpBuilder("Demo"));
+    std::unique_ptr<ReSIDfpBuilder> rs(new ReSIDfpBuilder("Demo"));
 
     // Get the number of SIDs supported by the engine
     unsigned int maxsids = (m_engine.info ()).maxsids();
@@ -105,7 +109,7 @@ int main(int argc, char* argv[])
     }
 
     // Load tune from file
-    std::auto_ptr<SidTune> tune(new SidTune(argv[1]));
+    std::unique_ptr<SidTune> tune(new SidTune(argv[1]));
 
     // CHeck if the tune is valid
     if (!tune->getStatus())
