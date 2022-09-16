@@ -76,7 +76,7 @@ char* loadRom(const char* path, size_t romSize)
  * to play a SID tune from a file.
  * It uses OSS for audio output.
  */
-int main(int argc, char* argv[])
+int main(int, char* argv[])
 {
     sidplayfp m_engine;
 
