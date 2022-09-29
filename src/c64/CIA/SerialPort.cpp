@@ -125,7 +125,6 @@ void SerialPort::handle()
     }
     else
     {
-        eventScheduler.cancel(flipCntEvent);
         eventScheduler.schedule(flipCntEvent, 2);
     }
 
