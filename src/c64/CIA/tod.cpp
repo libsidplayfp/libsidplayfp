@@ -71,7 +71,7 @@ void Tod::write(uint_least8_t reg, uint8_t data)
         data &= 0x0f;
         break;
     case SECONDS: // Time Of Day clock sec
-        // deliberate run on
+        // fallthrough
     case MINUTES: // Time Of Day clock min
         data &= 0x7f;
         break;
