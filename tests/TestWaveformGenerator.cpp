@@ -38,6 +38,14 @@ using namespace UnitTest;
 SUITE(WaveformGenerator)
 {
 
+TEST(TestShiftRegisterInitValue)
+{
+    reSIDfp::WaveformGenerator generator;
+    generator.reset();
+
+    CHECK_EQUAL(0x3fffff, generator.shift_register);
+}
+
 TEST(TestClockShiftRegister)
 {
     reSIDfp::WaveformGenerator generator;
