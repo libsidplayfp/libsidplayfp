@@ -31,6 +31,10 @@
 #include "Resampler.h"
 #include "TwoPassSincResampler.h"
 
+#if __cplusplus < 201103L
+#  define unique_ptr auto_ptr
+#endif
+
 /**
  * Simple sin waveform in, power output measurement function.
  * It would be far better to use FFT.
@@ -40,7 +44,7 @@ int main(int argc, const char* argv[])
     const double RATE = 985248.4;
     const int RINGSIZE = 2048;
 
-    std::auto_ptr<reSIDfp::TwoPassSincResampler> r(reSIDfp::TwoPassSincResampler::create(RATE, 48000.0, 20000.0));
+    std::unique_ptr<reSIDfp::TwoPassSincResampler> r(reSIDfp::TwoPassSincResampler::create(RATE, 48000.0, 20000.0));
 
     std::map<double, double> results;
     clock_t start = clock();
