@@ -357,9 +357,10 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
 
         // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
         // when the sawtooth is selected
-        // FIXME doesn't seem to always happen
-        if ((waveform & 2) && unlikely(waveform & 0xd) && is6581)
-            accumulator &= (waveform_output << 12) | 0x7fffff;
+        if (is6581
+                && (waveform & 0x2)
+                && ((waveform_output & 0x800) == 0))
+            accumulator &= 0x7fffff;
 
         write_shift_register();
     }
