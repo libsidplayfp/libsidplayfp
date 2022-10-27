@@ -224,35 +224,9 @@ bool do_pre_writeback(unsigned int waveform_prev, unsigned int waveform, bool is
     return true;
 }
 
-/*
- * When noise and pulse are combined all the bits are
- * connected and the four lower ones are grounded.
- * This causes the adjacent bits to be pulled down,
- * with different strength depending on model.
- *
- * This is just a rough attempt at modelling the effect.
- */
- 
-static unsigned int noise_pulse6581(unsigned int noise)
-{
-    return (noise < 0xf00) ? 0x000 : noise & (noise << 1) & (noise << 2);
-}
-
-static unsigned int noise_pulse8580(unsigned int noise)
-{
-    return (noise < 0xfc0) ? noise & (noise << 1) : 0xfc0;
-}
-
 void WaveformGenerator::set_no_noise_or_noise_output()
 {
     no_noise_or_noise_output = no_noise | noise_output;
-
-    // pulse+noise
-    if (unlikely((waveform & 0xc) == 0xc))
-        no_noise_or_noise_output = is6581
-            ? noise_pulse6581(no_noise_or_noise_output)
-            : noise_pulse8580(no_noise_or_noise_output);
-
 }
 
 void WaveformGenerator::writeCONTROL_REG(unsigned char control)
@@ -270,7 +244,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
     if (waveform != waveform_prev)
     {
         // Set up waveform table.
-        wave = (*model_wave)[waveform & 0x7];
+        wave = (*model_wave)[waveform & 0x3];
 
         // no_noise and no_pulse are used in set_waveform_output() as bitmasks to
         // only let the noise or pulse influence the output when the noise or pulse

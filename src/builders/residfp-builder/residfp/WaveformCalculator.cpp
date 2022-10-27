@@ -203,18 +203,17 @@ matrix_t* WaveformCalculator::buildTable(ChipModel model)
         return &(lb->second);
     }
 
-    matrix_t wftable(8, 4096);
+    matrix_t wftable(4, 4096);
 
     for (unsigned int idx = 0; idx < 1 << 12; idx++)
     {
+        short const saw = static_cast<short>(idx);
+        short const tri = static_cast<short>((idx & 0x800) == 0 ? idx << 1 : (idx ^ 0xfff) << 1);
+
         wftable[0][idx] = 0xfff;
-        wftable[1][idx] = static_cast<short>((idx & 0x800) == 0 ? idx << 1 : (idx ^ 0xfff) << 1);
-        wftable[2][idx] = static_cast<short>(idx);
-        wftable[3][idx] = calculateCombinedWaveform(cfgArray[0], 3, idx, is8580);
-        wftable[4][idx] = 0xfff;
-        wftable[5][idx] = calculateCombinedWaveform(cfgArray[1], 5, idx, is8580);
-        wftable[6][idx] = calculateCombinedWaveform(cfgArray[2], 6, idx, is8580);
-        wftable[7][idx] = calculateCombinedWaveform(cfgArray[3], 7, idx, is8580);
+        wftable[1][idx] = tri;
+        wftable[2][idx] = saw;
+        wftable[3][idx] = saw & (saw << 1);
     }
 #ifdef HAVE_CXX11
     return &(CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
