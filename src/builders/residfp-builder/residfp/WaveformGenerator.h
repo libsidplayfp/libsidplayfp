@@ -331,6 +331,29 @@ void WaveformGenerator::clock()
     }
 }
 
+/*
+ * When pulse is combined with another waveform
+ * or both saw and triangle are selected
+ * all the bits are connected.
+ * This causes the adjacent bits to be pulled down,
+ * with different strength depending on model
+ * temperature and inputs.
+ *
+ * This is just a rough attempt at modelling the effect.
+ */
+ 
+static unsigned int combine6581(unsigned int osc)
+{
+    // FIXME
+    return (osc < 0xf00) ? 0x000 : osc & (osc << 1) & (osc << 2);
+}
+
+static unsigned int combine8580(unsigned int osc)
+{
+    // FIXME
+    return (osc < 0xfc0) ? osc & (osc << 1) : 0xfc0;
+}
+
 RESID_INLINE
 unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
 {
@@ -339,15 +362,23 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
     {
         const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
 
+        // TODO move into writeCONTROL_REG
+        const bool interconnect = ((waveform & 0x3) == 0x3)
+            || ((waveform & 0x4) && (waveform & (0xf - 0x4)));
+
         // The bit masks no_pulse and no_noise are used to achieve branch-free
         // calculation of the output value.
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
+        if (interconnect)
+            waveform_output = is6581 ? combine6581(waveform_output) : combine8580(waveform_output);
 
         // Triangle/Sawtooth output is delayed half cycle on 8580.
         // This will appear as a one cycle delay on OSC3 as it is latched first phase of the clock.
         if ((waveform & 3) && !is6581)
         {
             osc3 = tri_saw_pipeline & (no_pulse | pulse_output) & no_noise_or_noise_output;
+            if (interconnect)
+                osc3 = is6581 ? combine6581(osc3) : combine8580(osc3);
             tri_saw_pipeline = wave[ix];
         }
         else
