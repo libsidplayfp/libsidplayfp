@@ -351,6 +351,7 @@ CIA/irqdelay/irqdelay-cia2
 CIA/irqdelay/irqdelay-cia2-4
 CIA/irqdelay/irqdelay-cia2-oneshot
 CIA/irqdelay/irqdelay-cia2-oneshot-4
+CIA/pb6pb7/main
 CIA/reload0/reload0a
 CIA/reload0/reload0b
 CIA/shiftregister/cia-icr-test-continues-old         --cia old
