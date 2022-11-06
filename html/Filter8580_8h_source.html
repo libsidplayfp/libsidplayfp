@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.1</span>
+   &#160;<span id="projectnumber">2.4.0</span>
    </div>
   </td>
  </tr>
@@ -54,7 +54,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2020 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2022 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Copyright 2004,2010 Dag Lem &lt;resid@nimrod.no&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
@@ -122,7 +122,7 @@
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        gain_res(FilterModelConfig8580::getInstance()-&gt;getGainRes()),</div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        gain_vol(FilterModelConfig8580::getInstance()-&gt;getGainVol()),</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        voiceScaleS11(FilterModelConfig8580::getInstance()-&gt;getVoiceScaleS11()),</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        voiceDC(FilterModelConfig8580::getInstance()-&gt;getVoiceDC()),</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        voiceDC(FilterModelConfig8580::getInstance()-&gt;getNormalizedVoiceDC()),</div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        cp(0.5),</div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        hpIntegrator(FilterModelConfig8580::getInstance()-&gt;buildIntegrator()),</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        bpIntegrator(FilterModelConfig8580::getInstance()-&gt;buildIntegrator())</div>
@@ -182,7 +182,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 6 2022 10:20:37 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

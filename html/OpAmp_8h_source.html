@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.1</span>
+   &#160;<span id="projectnumber">2.4.0</span>
    </div>
   </td>
  </tr>
@@ -77,53 +77,53 @@
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define OPAMP_H</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;Spline.h&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1OpAmp.html">   68</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1OpAmp.html">OpAmp</a></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">mutable</span> <span class="keywordtype">double</span> x;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> Vddt;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> vmin;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> vmax;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    std::unique_ptr&lt;Spline&gt; <span class="keyword">const</span> opamp;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1OpAmp.html#ad92868a95244ac2844bed8cce370a842">   88</a></span>&#160;    <a class="code" href="classreSIDfp_1_1OpAmp.html#ad92868a95244ac2844bed8cce370a842">OpAmp</a>(<span class="keyword">const</span> <a class="code" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> opamp[], <span class="keywordtype">int</span> opamplength, <span class="keywordtype">double</span> Vddt) :</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        x(0.),</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        Vddt(Vddt),</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        vmin(opamp[0].x),</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        vmax(opamp[opamplength - 1].x),</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        opamp(new <a class="code" href="classreSIDfp_1_1Spline.html">Spline</a>(opamp, opamplength)) {}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> reset()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        x = vmin;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classreSIDfp_1_1OpAmp.html#a045420d246660aa5f79d13a7ad4a6eb1">solve</a>(<span class="keywordtype">double</span> n, <span class="keywordtype">double</span> vi) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;Spline.h&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1OpAmp.html">   69</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1OpAmp.html">OpAmp</a></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">mutable</span> <span class="keywordtype">double</span> x;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> Vddt;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> vmin;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> vmax;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::unique_ptr&lt;Spline&gt; <span class="keyword">const</span> opamp;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1OpAmp.html#a009b8e8162bc2ec64ab97747e2dc3491">   89</a></span>&#160;    <a class="code" href="classreSIDfp_1_1OpAmp.html#a009b8e8162bc2ec64ab97747e2dc3491">OpAmp</a>(<span class="keyword">const</span> std::vector&lt;Spline::Point&gt; &amp;opamp, <span class="keywordtype">double</span> Vddt) :</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        x(0.),</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        Vddt(Vddt),</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        vmin(opamp.front().x),</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        vmax(opamp.back().x),</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        opamp(new <a class="code" href="classreSIDfp_1_1Spline.html">Spline</a>(opamp)) {}</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> reset()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        x = vmin;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classreSIDfp_1_1OpAmp.html#a045420d246660aa5f79d13a7ad4a6eb1">solve</a>(<span class="keywordtype">double</span> n, <span class="keywordtype">double</span> vi) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassreSIDfp_1_1OpAmp_html_a045420d246660aa5f79d13a7ad4a6eb1"><div class="ttname"><a href="classreSIDfp_1_1OpAmp.html#a045420d246660aa5f79d13a7ad4a6eb1">reSIDfp::OpAmp::solve</a></div><div class="ttdeci">double solve(double n, double vi) const</div><div class="ttdef"><b>Definition:</b> OpAmp.cpp:33</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Spline_html"><div class="ttname"><a href="classreSIDfp_1_1Spline.html">reSIDfp::Spline</a></div><div class="ttdef"><b>Definition:</b> Spline.h:38</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1OpAmp_html"><div class="ttname"><a href="classreSIDfp_1_1OpAmp.html">reSIDfp::OpAmp</a></div><div class="ttdef"><b>Definition:</b> OpAmp.h:68</div></div>
-<div class="ttc" id="astructreSIDfp_1_1Spline_1_1Point_html"><div class="ttname"><a href="structreSIDfp_1_1Spline_1_1Point.html">reSIDfp::Spline::Point</a></div><div class="ttdef"><b>Definition:</b> Spline.h:41</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1OpAmp_html_ad92868a95244ac2844bed8cce370a842"><div class="ttname"><a href="classreSIDfp_1_1OpAmp.html#ad92868a95244ac2844bed8cce370a842">reSIDfp::OpAmp::OpAmp</a></div><div class="ttdeci">OpAmp(const Spline::Point opamp[], int opamplength, double Vddt)</div><div class="ttdef"><b>Definition:</b> OpAmp.h:88</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1OpAmp_html"><div class="ttname"><a href="classreSIDfp_1_1OpAmp.html">reSIDfp::OpAmp</a></div><div class="ttdef"><b>Definition:</b> OpAmp.h:69</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1OpAmp_html_a009b8e8162bc2ec64ab97747e2dc3491"><div class="ttname"><a href="classreSIDfp_1_1OpAmp.html#a009b8e8162bc2ec64ab97747e2dc3491">reSIDfp::OpAmp::OpAmp</a></div><div class="ttdeci">OpAmp(const std::vector&lt; Spline::Point &gt; &amp;opamp, double Vddt)</div><div class="ttdef"><b>Definition:</b> OpAmp.h:89</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 6 2022 10:20:37 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

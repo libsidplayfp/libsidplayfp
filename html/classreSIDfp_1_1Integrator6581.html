@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.1</span>
+   &#160;<span id="projectnumber">2.4.0</span>
    </div>
   </td>
  </tr>
@@ -61,9 +61,9 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a37422abc1b1a4253ca977960cc7983ec"><td class="memItemLeft" align="right" valign="top"><a id="a37422abc1b1a4253ca977960cc7983ec"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Integrator6581</b> (const unsigned short *vcr_Vg, const unsigned short *vcr_n_Ids_term, const unsigned short *opamp_rev, unsigned short Vddt, unsigned short nVt, unsigned short nVmin, unsigned short n_snake, double N16)</td></tr>
-<tr class="separator:a37422abc1b1a4253ca977960cc7983ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92156661a65b77125939c3401a282962"><td class="memItemLeft" align="right" valign="top"><a id="a92156661a65b77125939c3401a282962"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Integrator6581</b> (const <a class="el" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a> *fmc, double WL_snake)</td></tr>
+<tr class="separator:a92156661a65b77125939c3401a282962"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bfa4fb6cbb239af52ff36cbddf03585"><td class="memItemLeft" align="right" valign="top"><a id="a1bfa4fb6cbb239af52ff36cbddf03585"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setVw</b> (unsigned short Vw)</td></tr>
 <tr class="separator:a1bfa4fb6cbb239af52ff36cbddf03585"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,18 +121,18 @@ ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
         |      |   |
 vi -----o------+   +-------- vo
 </pre><p>In order to calculalate the current through the VCR, its gate voltage must be determined.</p>
-<p>Assuming triode mode and applying Kirchoff's current law, we get the following equation for Vg: </p><pre class="fragment">u*Cox/2*W/L*((Vddt - Vg)^2 - (Vddt - vi)^2 + (Vddt - Vg)^2 - (Vddt - Vw)^2) = 0
-2*(Vddt - Vg)^2 - (Vddt - vi)^2 - (Vddt - Vw)^2 = 0
-(Vddt - Vg) = sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
+<p>Assuming triode mode and applying Kirchoff's current law, we get the following equation for Vg: </p><pre class="fragment">u*Cox/2*W/L*((nVddt - Vg)^2 - (nVddt - vi)^2 + (nVddt - Vg)^2 - (nVddt - Vw)^2) = 0
+2*(nVddt - Vg)^2 - (nVddt - vi)^2 - (nVddt - Vw)^2 = 0
+(nVddt - Vg) = sqrt(((nVddt - vi)^2 + (nVddt - Vw)^2)/2)
 
-Vg = Vddt - sqrt(((Vddt - vi)^2 + (Vddt - Vw)^2)/2)
+Vg = nVddt - sqrt(((nVddt - vi)^2 + (nVddt - Vw)^2)/2)
 </pre> </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="Integrator6581_8h_source.html">Integrator6581.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 6 2022 10:20:37 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

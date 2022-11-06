@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.1</span>
+   &#160;<span id="projectnumber">2.4.0</span>
    </div>
   </td>
  </tr>
@@ -65,6 +65,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af1ab54c55154e14218fe346a95eacb05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42d7840fd0b9faa2e64472d33ba7d888"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Voice.html#a42d7840fd0b9faa2e64472d33ba7d888">Voice</a> ()</td></tr>
 <tr class="separator:a42d7840fd0b9faa2e64472d33ba7d888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0475864f2aeed3145448670111fdece"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">setWavDAC</a> (float *dac)</td></tr>
+<tr class="separator:ad0475864f2aeed3145448670111fdece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab767f859b91b61c268169fd5135ea18a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">setEnvDAC</a> (float *dac)</td></tr>
+<tr class="separator:ab767f859b91b61c268169fd5135ea18a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad5739e5b8ddba885293161c309363b3"><td class="memItemLeft" align="right" valign="top"><a id="aad5739e5b8ddba885293161c309363b3"></a>
 <a class="el" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>wave</b> () const</td></tr>
 <tr class="separator:aad5739e5b8ddba885293161c309363b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,8 +134,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Amplitude modulated waveform output.</p>
-<p>The waveform DAC generates a voltage between 5 and 12 V (4,76 - 9 V for the 8580) corresponding to oscillator state 0 .. 4095.</p>
-<p>The envelope DAC generates a voltage between waveform gen output and the 5V level, corresponding to envelope state 0 .. 255.</p>
+<p>The waveform DAC generates a voltage between virtual ground and Vdd (5-12 V for the 6581 and 4.75-9 V for the 8580) corresponding to oscillator state 0 .. 4095.</p>
+<p>The envelope DAC generates a voltage between waveform gen output and the virtual ground level, corresponding to envelope state 0 .. 255.</p>
 <p>Ideal range [-2048*255, 2047*255].</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -139,7 +143,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>waveformgenerator output </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the voice analog output </dd></dl>
 
 </div>
 </div>
@@ -166,6 +170,72 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p><a class="el" href="classreSIDfp_1_1SID.html">SID</a> reset. </p>
+
+</div>
+</div>
+<a id="ab767f859b91b61c268169fd5135ea18a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab767f859b91b61c268169fd5135ea18a">&#9670;&nbsp;</a></span>setEnvDAC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reSIDfp::Voice::setEnvDAC </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>dac</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Set the analog DAC emulation for envelope. Must be called before any operation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dac</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad0475864f2aeed3145448670111fdece"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0475864f2aeed3145448670111fdece">&#9670;&nbsp;</a></span>setWavDAC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reSIDfp::Voice::setWavDAC </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>dac</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Set the analog DAC emulation for waveform generator. Must be called before any operation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dac</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -208,7 +278,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 6 2022 10:20:37 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

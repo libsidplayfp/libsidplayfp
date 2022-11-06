@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.1</span>
+   &#160;<span id="projectnumber">2.4.0</span>
    </div>
   </td>
  </tr>
@@ -61,8 +61,8 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad92868a95244ac2844bed8cce370a842"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1OpAmp.html#ad92868a95244ac2844bed8cce370a842">OpAmp</a> (const <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> opamp[], int opamplength, double Vddt)</td></tr>
-<tr class="separator:ad92868a95244ac2844bed8cce370a842"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a009b8e8162bc2ec64ab97747e2dc3491"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1OpAmp.html#a009b8e8162bc2ec64ab97747e2dc3491">OpAmp</a> (const std::vector&lt; <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> &gt; &amp;opamp, double Vddt)</td></tr>
+<tr class="separator:a009b8e8162bc2ec64ab97747e2dc3491"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41231039c8ba825d8dee8356693aa80f"><td class="memItemLeft" align="right" valign="top"><a id="a41231039c8ba825d8dee8356693aa80f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> () const</td></tr>
 <tr class="separator:a41231039c8ba825d8dee8356693aa80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -83,8 +83,8 @@ c = n*(Vddt - vi)^2
 </pre><p>the equations for the root function and its derivative can be written as: </p><pre class="fragment">f = a*(b - vx)^2 - c - (b - vo)^2
 df = 2*((b - vo)*dvo - a*(b - vx))
 </pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad92868a95244ac2844bed8cce370a842"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad92868a95244ac2844bed8cce370a842">&#9670;&nbsp;</a></span>OpAmp()</h2>
+<a id="a009b8e8162bc2ec64ab97747e2dc3491"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a009b8e8162bc2ec64ab97747e2dc3491">&#9670;&nbsp;</a></span>OpAmp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -95,14 +95,8 @@ df = 2*((b - vo)*dvo - a*(b - vx))
         <tr>
           <td class="memname">reSIDfp::OpAmp::OpAmp </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a>&#160;</td>
-          <td class="paramname"><em>opamp</em>[], </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>opamplength</em>, </td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>opamp</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -179,7 +173,7 @@ df = 2*((b - vo)*dvo - a*(b - vx))
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 6 2022 10:20:37 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

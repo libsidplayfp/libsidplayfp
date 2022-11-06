@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.1</span>
+   &#160;<span id="projectnumber">2.4.0</span>
    </div>
   </td>
  </tr>
@@ -84,46 +84,46 @@
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>libsidplayfp</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1IOBank.html">   41</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1IOBank.html">IOBank</a> final : <span class="keyword">public</span> <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a>* map[16];</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> setBank(<span class="keywordtype">int</span> num, <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a>* bank)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        map[num] = bank;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a> *getBank(<span class="keywordtype">int</span> num)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">return</span> map[num];</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1IOBank.html#aed5dff61f394a74875f378810583c821">   57</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1IOBank.html#aed5dff61f394a74875f378810583c821">peek</a>(uint_least16_t addr)<span class="keyword"> override</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordflow">return</span> map[addr &gt;&gt; 8 &amp; 0xf]-&gt;<a class="code" href="classlibsidplayfp_1_1Bank.html#a467285ba24e4dc844e796b0f0c9ed443">peek</a>(addr);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1IOBank.html#ac8c87a8e2d01b87885d492218bdf6f06">   62</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1IOBank.html#ac8c87a8e2d01b87885d492218bdf6f06">poke</a>(uint_least16_t addr, uint8_t data)<span class="keyword"> override</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        map[addr &gt;&gt; 8 &amp; 0xf]-&gt;<a class="code" href="classlibsidplayfp_1_1Bank.html#a50d55f7b4f4e45ea11da64a79466cbe9">poke</a>(addr, data);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1IOBank.html">   39</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1IOBank.html">IOBank</a> final : <span class="keyword">public</span> <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a>* map[16];</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> setBank(<span class="keywordtype">int</span> num, <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a>* bank)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        map[num] = bank;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a> *getBank(<span class="keywordtype">int</span> num)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordflow">return</span> map[num];</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1IOBank.html#aed5dff61f394a74875f378810583c821">   55</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1IOBank.html#aed5dff61f394a74875f378810583c821">peek</a>(uint_least16_t addr)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">return</span> map[addr &gt;&gt; 8 &amp; 0xf]-&gt;<a class="code" href="classlibsidplayfp_1_1Bank.html#a467285ba24e4dc844e796b0f0c9ed443">peek</a>(addr);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1IOBank.html#ac8c87a8e2d01b87885d492218bdf6f06">   60</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1IOBank.html#ac8c87a8e2d01b87885d492218bdf6f06">poke</a>(uint_least16_t addr, uint8_t data)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        map[addr &gt;&gt; 8 &amp; 0xf]-&gt;<a class="code" href="classlibsidplayfp_1_1Bank.html#a50d55f7b4f4e45ea11da64a79466cbe9">poke</a>(addr, data);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclasslibsidplayfp_1_1IOBank_html_aed5dff61f394a74875f378810583c821"><div class="ttname"><a href="classlibsidplayfp_1_1IOBank.html#aed5dff61f394a74875f378810583c821">libsidplayfp::IOBank::peek</a></div><div class="ttdeci">uint8_t peek(uint_least16_t addr) override</div><div class="ttdef"><b>Definition:</b> IOBank.h:57</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1IOBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1IOBank.html">libsidplayfp::IOBank</a></div><div class="ttdef"><b>Definition:</b> IOBank.h:41</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1IOBank_html_aed5dff61f394a74875f378810583c821"><div class="ttname"><a href="classlibsidplayfp_1_1IOBank.html#aed5dff61f394a74875f378810583c821">libsidplayfp::IOBank::peek</a></div><div class="ttdeci">uint8_t peek(uint_least16_t addr) override</div><div class="ttdef"><b>Definition:</b> IOBank.h:55</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1IOBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1IOBank.html">libsidplayfp::IOBank</a></div><div class="ttdef"><b>Definition:</b> IOBank.h:39</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a></div><div class="ttdef"><b>Definition:</b> Bank.h:35</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html_a467285ba24e4dc844e796b0f0c9ed443"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html#a467285ba24e4dc844e796b0f0c9ed443">libsidplayfp::Bank::peek</a></div><div class="ttdeci">virtual uint8_t peek(uint_least16_t address)=0</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1IOBank_html_ac8c87a8e2d01b87885d492218bdf6f06"><div class="ttname"><a href="classlibsidplayfp_1_1IOBank.html#ac8c87a8e2d01b87885d492218bdf6f06">libsidplayfp::IOBank::poke</a></div><div class="ttdeci">void poke(uint_least16_t addr, uint8_t data) override</div><div class="ttdef"><b>Definition:</b> IOBank.h:62</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1IOBank_html_ac8c87a8e2d01b87885d492218bdf6f06"><div class="ttname"><a href="classlibsidplayfp_1_1IOBank.html#ac8c87a8e2d01b87885d492218bdf6f06">libsidplayfp::IOBank::poke</a></div><div class="ttdeci">void poke(uint_least16_t addr, uint8_t data) override</div><div class="ttdef"><b>Definition:</b> IOBank.h:60</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html_a50d55f7b4f4e45ea11da64a79466cbe9"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html#a50d55f7b4f4e45ea11da64a79466cbe9">libsidplayfp::Bank::poke</a></div><div class="ttdeci">virtual void poke(uint_least16_t address, uint8_t value)=0</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 6 2022 10:20:37 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

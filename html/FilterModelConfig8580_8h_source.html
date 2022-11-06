@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.3.1</span>
+   &#160;<span id="projectnumber">2.4.0</span>
    </div>
   </td>
  </tr>
@@ -76,9 +76,9 @@
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef FILTERMODELCONFIG8580_H</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define FILTERMODELCONFIG8580_H</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;FilterModelConfig.h&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;Spline.h&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;sidcxx14.h&quot;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
@@ -87,7 +87,7 @@
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">class </span>Integrator8580;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1FilterModelConfig8580.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1FilterModelConfig8580.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a> final : <span class="keyword">public</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html">FilterModelConfig</a></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">static</span> std::unique_ptr&lt;FilterModelConfig8580&gt; instance;</div>
@@ -98,65 +98,26 @@
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span>std::auto_ptr&lt;<a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>&gt;;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> voice_voltage_range;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> voice_DC_voltage;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> C;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> Vdd;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> Vth;           </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> Ut;            </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> uCox;          </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> Vddt;          </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    ~<a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>() DEFAULT;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>* getInstance();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::unique_ptr&lt;Integrator8580&gt; <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html#acf450873b1da1b0bb8cf8343e1935ea9">buildIntegrator</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">// Derived stuff</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> vmin, vmax;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> denorm, norm;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> N16;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* mixer[8];</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* summer[5];</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* gain_vol[16];</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* gain_res[16];</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> opamp_rev[1 &lt;&lt; 16];</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    ~<a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>();</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>* getInstance();</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1FilterModelConfig8580.html#a030950f1025d7ec6a76e2550342ee8ac">   95</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html#a030950f1025d7ec6a76e2550342ee8ac">getVoiceScaleS11</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>((norm * ((1 &lt;&lt; 11) - 1)) * voice_voltage_range); }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1FilterModelConfig8580.html#a6c19fd6840f7d177961aca0a25cd89ce">  100</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html#a6c19fd6840f7d177961aca0a25cd89ce">getVoiceDC</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(N16 * (voice_DC_voltage - vmin)); }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>** getGainVol() { <span class="keywordflow">return</span> gain_vol; }</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>** getGainRes() { <span class="keywordflow">return</span> gain_res; }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>** getSummer() { <span class="keywordflow">return</span> summer; }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>** getMixer() { <span class="keywordflow">return</span> mixer; }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    std::unique_ptr&lt;Integrator8580&gt; <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html#acf450873b1da1b0bb8cf8343e1935ea9">buildIntegrator</a>();</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;};</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig8580_html_acf450873b1da1b0bb8cf8343e1935ea9"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig8580.html#acf450873b1da1b0bb8cf8343e1935ea9">reSIDfp::FilterModelConfig8580::buildIntegrator</a></div><div class="ttdeci">std::unique_ptr&lt; Integrator8580 &gt; buildIntegrator()</div><div class="ttdef"><b>Definition:</b> FilterModelConfig8580.cpp:271</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig8580_html_a6c19fd6840f7d177961aca0a25cd89ce"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig8580.html#a6c19fd6840f7d177961aca0a25cd89ce">reSIDfp::FilterModelConfig8580::getVoiceDC</a></div><div class="ttdeci">int getVoiceDC() const</div><div class="ttdef"><b>Definition:</b> FilterModelConfig8580.h:100</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig8580_html_acf450873b1da1b0bb8cf8343e1935ea9"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig8580.html#acf450873b1da1b0bb8cf8343e1935ea9">reSIDfp::FilterModelConfig8580::buildIntegrator</a></div><div class="ttdeci">std::unique_ptr&lt; Integrator8580 &gt; buildIntegrator()</div><div class="ttdef"><b>Definition:</b> FilterModelConfig8580.cpp:217</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:36</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig8580_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig8580.html">reSIDfp::FilterModelConfig8580</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig8580.h:40</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig8580_html_a030950f1025d7ec6a76e2550342ee8ac"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig8580.html#a030950f1025d7ec6a76e2550342ee8ac">reSIDfp::FilterModelConfig8580::getVoiceScaleS11</a></div><div class="ttdeci">int getVoiceScaleS11() const</div><div class="ttdef"><b>Definition:</b> FilterModelConfig8580.h:95</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 7 2021 18:06:59 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 6 2022 10:20:37 for libsidplayfp by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
