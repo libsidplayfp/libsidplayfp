@@ -87,8 +87,10 @@ class WaveformGenerator
 {
 private:
     matrix_t* model_wave;
+    matrix_t* model_pulldown;
 
     short* wave;
+    short* pulldown;
 
     // PWout = (PWn/40.95)%
     unsigned int pw;
@@ -156,6 +158,7 @@ private:
 
 public:
     void setWaveformModels(matrix_t* models);
+    void setPulldownModels(matrix_t* models);
 
     /**
      * Set the chip model.
@@ -185,7 +188,9 @@ public:
      */
     WaveformGenerator() :
         model_wave(nullptr),
+        model_pulldown(nullptr),
         wave(nullptr),
+        pulldown(nullptr),
         pw(0),
         shift_register(0),
         shift_pipeline(0),
@@ -370,7 +375,7 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
         // calculation of the output value.
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
         if (interconnect)
-            waveform_output = is6581 ? combine6581(waveform_output) : combine8580(waveform_output);
+            waveform_output = pulldown[waveform_output];
 
         // Triangle/Sawtooth output is delayed half cycle on 8580.
         // This will appear as a one cycle delay on OSC3 as it is latched first phase of the clock.
@@ -378,7 +383,7 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
         {
             osc3 = tri_saw_pipeline & (no_pulse | pulse_output) & no_noise_or_noise_output;
             if (interconnect)
-                osc3 = is6581 ? combine6581(osc3) : combine8580(osc3);
+                osc3 = pulldown[osc3];
             tri_saw_pipeline = wave[ix];
         }
         else
