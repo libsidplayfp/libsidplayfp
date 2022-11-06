@@ -216,18 +216,14 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
         return &(lb->second);
     }
 
-    matrix_t wftable(8, 4096);
+    matrix_t wftable(4, 4096);
 
     for (unsigned int idx = 0; idx < 1 << 12; idx++)
     {
-        wftable[0][idx] = 0;
-        wftable[1][idx] = 0;
-        wftable[2][idx] = 0;
-        wftable[3][idx] = calculatePulldown(cfgArray[0], 3, idx);
-        wftable[4][idx] = 0;
-        wftable[5][idx] = calculatePulldown(cfgArray[1], 5, idx);
-        wftable[6][idx] = calculatePulldown(cfgArray[2], 6, idx);
-        wftable[7][idx] = calculatePulldown(cfgArray[3], 7, idx);
+        wftable[0][idx] = calculatePulldown(cfgArray[0], 3, idx);
+        wftable[1][idx] = calculatePulldown(cfgArray[1], 5, idx);
+        wftable[2][idx] = calculatePulldown(cfgArray[2], 6, idx);
+        wftable[3][idx] = calculatePulldown(cfgArray[3], 7, idx);
     }
 #ifdef HAVE_CXX11
     return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);

@@ -248,9 +248,25 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
     if (waveform != waveform_prev)
     {
-        // Set up waveform table.s
+        // Set up waveform tables
         wave = (*model_wave)[waveform & 0x3];
-        pulldown = (*model_pulldown)[waveform & 0x7];
+        switch (waveform & 0x7)
+        {
+        case 3:
+            pulldown = (*model_pulldown)[0];
+            break;
+        case 5:
+            pulldown = (*model_pulldown)[1];
+            break;
+        case 6:
+            pulldown = (*model_pulldown)[2];
+            break;
+        case 7:
+            pulldown = (*model_pulldown)[3];
+            break;
+        default:
+            pulldown = nullptr;
+        }
 
         // no_noise and no_pulse are used in set_waveform_output() as bitmasks to
         // only let the noise or pulse influence the output when the noise or pulse
@@ -330,7 +346,7 @@ void WaveformGenerator::reset()
     sync = false;
 
     wave = model_wave ? (*model_wave)[0] : nullptr;
-    pulldown = model_pulldown ? (*model_pulldown)[0] : nullptr;
+    pulldown = nullptr;
 
     ring_msb_mask = 0;
     no_noise = 0xfff;

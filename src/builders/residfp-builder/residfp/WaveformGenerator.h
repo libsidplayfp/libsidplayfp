@@ -367,22 +367,19 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
     {
         const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
 
-        // TODO move into writeCONTROL_REG
-        const bool interconnect = ((waveform & 0x3) == 0x3)
-            || ((waveform & 0x4) && (waveform & (0xf - 0x4)));
-
         // The bit masks no_pulse and no_noise are used to achieve branch-free
         // calculation of the output value.
         waveform_output = wave[ix] & (no_pulse | pulse_output) & no_noise_or_noise_output;
-        if (interconnect)
+        if (pulldown != nullptr)
             waveform_output = pulldown[waveform_output];
 
         // Triangle/Sawtooth output is delayed half cycle on 8580.
-        // This will appear as a one cycle delay on OSC3 as it is latched first phase of the clock.
+        // This will appear as a one cycle delay on OSC3 as it is latched
+        // in the first phase of the clock.
         if ((waveform & 3) && !is6581)
         {
             osc3 = tri_saw_pipeline & (no_pulse | pulse_output) & no_noise_or_noise_output;
-            if (interconnect)
+            if (pulldown != nullptr)
                 osc3 = pulldown[osc3];
             tri_saw_pipeline = wave[ix];
         }
