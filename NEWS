@@ -1,8 +1,9 @@
-2.4.0 2022-xx-xx
+2.4.0 2022-11-06
 * Use pkgconfig for UnitTest++ and libgcrypt support (#46)
 * residfp: correct 6581 volume gain based on schematics (issue #38)
 * residfp: fixed more PVS-Studio warnings. (issue #49)
 * residfp: refactoring, changes and cleanup
+* residfp: updated the combined waveform model
 * Synced resid with upstream
 * Fixed a comparison-with-wider-type alert in the MUS loader
 * Other minor changes
