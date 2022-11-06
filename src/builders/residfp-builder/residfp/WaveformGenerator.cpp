@@ -185,6 +185,11 @@ void WaveformGenerator::setWaveformModels(matrix_t* models)
     model_wave = models;
 }
 
+void WaveformGenerator::setPulldownModels(matrix_t* models)
+{
+    model_pulldown = models;
+}
+
 void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const
 {
     // A special case occurs when a sync source is synced itself on the same
@@ -243,8 +248,9 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
     if (waveform != waveform_prev)
     {
-        // Set up waveform table.
+        // Set up waveform table.s
         wave = (*model_wave)[waveform & 0x3];
+        pulldown = (*model_pulldown)[waveform & 0x7];
 
         // no_noise and no_pulse are used in set_waveform_output() as bitmasks to
         // only let the noise or pulse influence the output when the noise or pulse
@@ -324,6 +330,7 @@ void WaveformGenerator::reset()
     sync = false;
 
     wave = model_wave ? (*model_wave)[0] : nullptr;
+    pulldown = model_pulldown ? (*model_pulldown)[0] : nullptr;
 
     ring_msb_mask = 0;
     no_noise = 0xfff;

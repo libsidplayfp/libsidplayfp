@@ -46,16 +46,16 @@ WaveformCalculator* WaveformCalculator::getInstance()
 const CombinedWaveformConfig config[2][4] =
 {
     { /* kevtris chip G (6581 R2) */
-        {0.90522f,  0.f,      0.f,       1.97506f,   1.66937f, 0.63482f }, // error  1687 (278)
-        {0.93088f,  2.4843f,  0.f,       1.0353f,    1.1484f,  0.f      }, // error  6128 (130)
-        {0.912142f, 2.32076f, 1.106015f, 0.053906f,  0.25143f, 0.f      }, // error 10567 (567)
-        {0.901f,    1.0845f,  0.f,       1.056f,     1.1848f,  0.599f   }, // error    36 (12)
+        {0.862147212f,  0.f,          10.8962431f,      2.50848103f   }, // TS  error  1941 (327/28672)
+        {0.932746708f,  2.07508397f,   1.03668225f,     1.14876997f   }, // PT  error  5992 (126/32768)
+        {0.785892785f,  1.68656933f,   0.913057923f,    1.09173143f   }, // PS  error  3795 (575/28672)
+        {0.741343081f,  0.0452554375f, 1.1439606f,      1.05711341f   }, // PTS error   338 ( 29/28672)
     },
     { /* kevtris chip V (8580 R5) */
-        {0.94344f,  0.f,      0.976f,    1.6347f,    2.51537f, 0.73115f }, // error  1300 (184)
-        {0.93303f,  1.7025f,  0.f,       1.0868f,    1.43527f, 0.f      }, // error  7981 (204)
-        {0.95831f,  1.95269f, 0.992986f, 0.0077384f, 0.18408f, 0.f      }, // error  9596 (324)
-        {0.94699f,  1.09668f, 0.99586f,  0.94167f,   2.0139f,  0.5633f  }, // error  2118 (54)
+        {0.715788841f,  0.f,           1.32999945f,     2.2172699f    }, // TS  error   928 (135/32768)
+        {0.955464482f,  1.33896255f,   0.000220529852f, 0.183474064f  }, // PT  error  9113 (198/32768)
+        {0.920648575f,  0.943601072f,  1.13034654f,     1.41881108f   }, // PS  error 12566 (394/32768)
+        {0.90921098f,   0.979807794f,  0.942194462f,    1.40958893f   }, // PTS error  2092 ( 60/32768)
     },
 };
 
@@ -84,59 +84,42 @@ static float quadraticDistance(float distance, int i)
  * @param waveform the waveform to emulate, 1 .. 7
  * @param accumulator the high bits of the accumulator value
  */
-short calculateCombinedWaveform(const CombinedWaveformConfig& config, int waveform, int accumulator, bool is8580)
+short calculatePulldown(const CombinedWaveformConfig& config, int waveform, int accumulator)
 {
+    // saw/tri: if saw is not selected the bits are XORed
+    unsigned int osc =
+        (waveform & 2)
+            ? accumulator
+            : ((accumulator & 0x800) == 0
+                ? accumulator
+                : (accumulator ^ 0xfff)) << 1;
+
+    // saw+tri
+    // If both Saw and Triangle are selected the bits are interconnected
+    if ((waveform & 3) == 3)
+    {
+        /*
+        * Enabling the S waveform pulls the XOR circuit selector transistor down
+        * (which would normally make the descending ramp of the triangle waveform),
+        * so ST does not actually have a sawtooth and triangle waveform combined,
+        * but merely combines two sawtooths, one rising double the speed the other.
+        *
+        * http://www.lemon64.com/forum/viewtopic.php?t=25442&postdays=0&postorder=asc&start=165
+        */
+        osc &= osc << 1;
+    }
+
     float o[12];
 
-    // Saw
     for (unsigned int i = 0; i < 12; i++)
     {
         o[i] = (accumulator & (1 << i)) != 0 ? 1.f : 0.f;
     }
 
-    // If Saw is not selected the bits are XORed
-    if ((waveform & 2) == 0)
-    {
-        const bool top = (accumulator & 0x800) != 0;
-
-        for (int i = 11; i > 0; i--)
-        {
-            o[i] = top ? 1.0f - o[i - 1] : o[i - 1];
-        }
-
-        o[0] = 0.f;
-    }
-
-    // If both Saw and Triangle are selected the bits are interconnected
-    else if ((waveform & 3) == 3)
-    {
-        // bottom bit is grounded via T waveform selector
-        o[0] *= config.stmix;
-
-        for (int i = 1; i < 12; i++)
-        {
-            /*
-             * Enabling the S waveform pulls the XOR circuit selector transistor down
-             * (which would normally make the descending ramp of the triangle waveform),
-             * so ST does not actually have a sawtooth and triangle waveform combined,
-             * but merely combines two sawtooths, one rising double the speed the other.
-             *
-             * http://www.lemon64.com/forum/viewtopic.php?t=25442&postdays=0&postorder=asc&start=165
-             */
-            o[i] = o[i - 1] * (1.f - config.stmix) + o[i] * config.stmix;
-        }
-    }
-
-    // topbit for Saw
-    if ((waveform & 2) == 2)
-    {
-        o[11] *= config.topbit;
-    }
-
     // ST, P* waveforms
 
-    const distance_t distFunc =
-        (waveform & 1) == 1 ? exponentialDistance : is8580 ? quadraticDistance : linearDistance;
+    // TODO move out of the loop
+    const distance_t distFunc = exponentialDistance;
 
     float distancetable[12 * 2 + 1];
     distancetable[12] = 1.f;
@@ -146,34 +129,35 @@ short calculateCombinedWaveform(const CombinedWaveformConfig& config, int wavefo
         distancetable[12+i] = distFunc(config.distance2, i);
     }
 
-    float tmp[12];
+    float pulldown[12];
 
-    for (int i = 0; i < 12; i++)
+    for (int sb = 0; sb < 12; sb++)
     {
         float avg = 0.f;
         float n = 0.f;
 
-        for (int j = 0; j < 12; j++)
+        for (int cb = 0; cb < 12; cb++)
         {
-            const float weight = distancetable[i - j + 12];
-            avg += o[j] * weight;
+            if (cb == sb)
+                continue;
+            const float weight = distancetable[sb - cb + 12];
+            avg += (1.f - o[cb]) * weight;
             n += weight;
         }
 
         // pulse control bit
         if (waveform > 4)
         {
-            const float weight = distancetable[i - 12 + 12];
-            avg += config.pulsestrength * weight;
-            n += weight;
+            avg -= config.pulsestrength;
         }
 
-        tmp[i] = (o[i] + avg / n) * 0.5f;
+        pulldown[sb] = avg / n;
     }
 
     for (int i = 0; i < 12; i++)
     {
-        o[i] = tmp[i];
+        if (o[i] != 0.f)
+            o[i] = 1.f - pulldown[i];
     }
 
     // Get the predicted value
@@ -181,7 +165,7 @@ short calculateCombinedWaveform(const CombinedWaveformConfig& config, int wavefo
 
     for (unsigned int i = 0; i < 12; i++)
     {
-        if (o[i] > config.bias)
+        if (o[i] > config.threshold)
         {
             value |= 1 << i;
         }
@@ -190,15 +174,13 @@ short calculateCombinedWaveform(const CombinedWaveformConfig& config, int wavefo
     return value;
 }
 
-matrix_t* WaveformCalculator::buildTable(ChipModel model)
+matrix_t* WaveformCalculator::buildWaveTable()
 {
-    const bool is8580 = model != MOS6581;
+    const CombinedWaveformConfig* cfgArray = config[0];
 
-    const CombinedWaveformConfig* cfgArray = config[is8580 ? 1 : 0];
+    cw_cache_t::iterator lb = WAVEFORM_CACHE.lower_bound(cfgArray);
 
-    cw_cache_t::iterator lb = CACHE.lower_bound(cfgArray);
-
-    if (lb != CACHE.end() && !(CACHE.key_comp()(cfgArray, lb->first)))
+    if (lb != WAVEFORM_CACHE.end() && !(WAVEFORM_CACHE.key_comp()(cfgArray, lb->first)))
     {
         return &(lb->second);
     }
@@ -216,9 +198,42 @@ matrix_t* WaveformCalculator::buildTable(ChipModel model)
         wftable[3][idx] = saw & (saw << 1);
     }
 #ifdef HAVE_CXX11
-    return &(CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+    return &(WAVEFORM_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
 #else
-    return &(CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+    return &(WAVEFORM_CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+#endif
+}
+
+matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
+{
+    const bool is8580 = model != MOS6581;
+
+    const CombinedWaveformConfig* cfgArray = config[is8580 ? 1 : 0];
+
+    cw_cache_t::iterator lb = PULLDOWN_CACHE.lower_bound(cfgArray);
+
+    if (lb != PULLDOWN_CACHE.end() && !(PULLDOWN_CACHE.key_comp()(cfgArray, lb->first)))
+    {
+        return &(lb->second);
+    }
+
+    matrix_t wftable(8, 4096);
+
+    for (unsigned int idx = 0; idx < 1 << 12; idx++)
+    {
+        wftable[0][idx] = 0;
+        wftable[1][idx] = 0;
+        wftable[2][idx] = 0;
+        wftable[3][idx] = calculatePulldown(cfgArray[0], 3, idx);
+        wftable[4][idx] = 0;
+        wftable[5][idx] = calculatePulldown(cfgArray[1], 5, idx);
+        wftable[6][idx] = calculatePulldown(cfgArray[2], 6, idx);
+        wftable[7][idx] = calculatePulldown(cfgArray[3], 7, idx);
+    }
+#ifdef HAVE_CXX11
+    return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+#else
+    return &(PULLDOWN_CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
 #endif
 }
 
