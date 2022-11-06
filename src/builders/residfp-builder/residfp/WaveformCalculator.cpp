@@ -38,24 +38,23 @@ WaveformCalculator* WaveformCalculator::getInstance()
  *
  * The score here reported is the acoustic error
  * calculated XORing the estimated and the sampled values.
- * In parentheses the number of mispredicted bits
- * on a total of 32768.
+ * In parentheses the number of mispredicted bits.
  *
  * [1] https://github.com/libsidplayfp/combined-waveforms
  */
 const CombinedWaveformConfig config[2][4] =
 {
     { /* kevtris chip G (6581 R2) */
-        {0.862147212f,  0.f,          10.8962431f,      2.50848103f   }, // TS  error  1941 (327/28672)
-        {0.932746708f,  2.07508397f,   1.03668225f,     1.14876997f   }, // PT  error  5992 (126/32768)
-        {0.785892785f,  1.68656933f,   0.913057923f,    1.09173143f   }, // PS  error  3795 (575/28672)
-        {0.741343081f,  0.0452554375f, 1.1439606f,      1.05711341f   }, // PTS error   338 ( 29/28672)
+        {0.862147212f, 0.f,          10.8962431f,    2.50848103f }, // TS  error  1941 (327/28672)
+        {0.932746708f, 2.07508397f,   1.03668225f,   1.14876997f }, // PT  error  5992 (126/32768)
+        {0.785892785f, 1.68656933f,   0.913057923f,  1.09173143f }, // PS  error  3795 (575/28672)
+        {0.741343081f, 0.0452554375f, 1.1439606f,    1.05711341f }, // PTS error   338 ( 29/28672)
     },
     { /* kevtris chip V (8580 R5) */
-        {0.715788841f,  0.f,           1.32999945f,     2.2172699f    }, // TS  error   928 (135/32768)
-        {0.955464482f,  1.33896255f,   0.000220529852f, 0.183474064f  }, // PT  error  9113 (198/32768)
-        {0.920648575f,  0.943601072f,  1.13034654f,     1.41881108f   }, // PS  error 12566 (394/32768)
-        {0.90921098f,   0.979807794f,  0.942194462f,    1.40958893f   }, // PTS error  2092 ( 60/32768)
+        {0.715788841f, 0.f,           1.32999945f,   2.2172699f  }, // TS  error   928 (135/32768)
+        {0.93500334f,  1.05977178f,   1.08629429f,   1.43518543f }, // PT  error  9113 (198/32768)
+        {0.920648575f, 0.943601072f,  1.13034654f,   1.41881108f }, // PS  error 12566 (394/32768)
+        {0.90921098f,  0.979807794f,  0.942194462f,  1.40958893f }, // PTS error  2092 ( 60/32768)
     },
 };
 
@@ -77,6 +76,12 @@ static float quadraticDistance(float distance, int i)
     return 1.f / (1.f + (i*i) * distance);
 }
 
+/// Calculate triangle waveform
+static unsigned int triXor(unsigned int val)
+{
+    return (((val & 0x800) == 0) ? val : (val ^ 0xfff)) << 1;
+}
+
 /**
  * Generate bitstate based on emulation of combined waves.
  *
@@ -87,14 +92,8 @@ static float quadraticDistance(float distance, int i)
 short calculatePulldown(const CombinedWaveformConfig& config, int waveform, int accumulator)
 {
     // saw/tri: if saw is not selected the bits are XORed
-    unsigned int osc =
-        (waveform & 2)
-            ? accumulator
-            : ((accumulator & 0x800) == 0
-                ? accumulator
-                : (accumulator ^ 0xfff)) << 1;
+    unsigned int osc = (waveform & 2) ? accumulator : triXor(accumulator);
 
-    // saw+tri
     // If both Saw and Triangle are selected the bits are interconnected
     if ((waveform & 3) == 3)
     {
@@ -113,7 +112,7 @@ short calculatePulldown(const CombinedWaveformConfig& config, int waveform, int 
 
     for (unsigned int i = 0; i < 12; i++)
     {
-        o[i] = (accumulator & (1 << i)) != 0 ? 1.f : 0.f;
+        o[i] = (accumulator & (1u << i)) != 0 ? 1.f : 0.f;
     }
 
     // ST, P* waveforms
