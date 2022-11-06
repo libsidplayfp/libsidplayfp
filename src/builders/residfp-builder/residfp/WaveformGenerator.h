@@ -112,6 +112,9 @@ private:
 
     unsigned int waveform_output;
 
+    unsigned int shift_latch;
+    unsigned int bit0;
+
     /// Current accumulator value.
     unsigned int accumulator;
 
@@ -142,9 +145,9 @@ private:
     bool is6581; //-V730_NOINIT this is initialized in the SID constructor
 
 private:
-    void clock_shift_register(unsigned int bit0);
-
-    unsigned int get_noise_writeback();
+    //void clock_shift_register(unsigned int bit0);
+    void shift_phase1();
+    void shift_phase2();
 
     void write_shift_register();
 
@@ -306,6 +309,10 @@ void WaveformGenerator::clock()
             set_noise_output();
         }
 
+        //shift_phase1();
+        // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
+        bit0 = (~shift_register << 17) & (1 << 22);
+
         // The test bit sets pulse high.
         pulse_output = 0xfff;
     }
@@ -328,10 +335,19 @@ void WaveformGenerator::clock()
             // Pipeline: Detect rising bit, shift phase 1, shift phase 2.
             shift_pipeline = 2;
         }
-        else if (unlikely(shift_pipeline != 0) && --shift_pipeline == 0)
+        else if (unlikely(shift_pipeline != 0))
         {
-            // bit0 = (bit22 | test) ^ bit17
-            clock_shift_register(((shift_register << 22) ^ (shift_register << 17)) & (1 << 22));
+            switch (--shift_pipeline)
+            {
+            case 0:
+                shift_phase2();
+                break;
+            case 1:
+                //shift_phase1();
+                // bit0 = (bit22 | test | reset) ^ bit17
+                bit0 = ((shift_register << 22) ^ (shift_register << 17)) & (1 << 22);
+                break;
+            }
         }
     }
 }
@@ -346,7 +362,7 @@ void WaveformGenerator::clock()
  *
  * This is just a rough attempt at modelling the effect.
  */
- 
+/*
 static unsigned int combine6581(unsigned int osc)
 {
     // FIXME
@@ -358,7 +374,7 @@ static unsigned int combine8580(unsigned int osc)
     // FIXME
     return (osc < 0xfc0) ? osc & (osc << 1) : 0xfc0;
 }
-
+*/
 RESID_INLINE
 unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
 {

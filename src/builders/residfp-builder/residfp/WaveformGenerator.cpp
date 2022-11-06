@@ -24,19 +24,6 @@
 
 #include "WaveformGenerator.h"
 
-/*
- * This fixes tests
- *  SID/wb_testsuite/noise_writeback_check_8_to_C_old
- *  SID/wb_testsuite/noise_writeback_check_9_to_C_old
- *  SID/wb_testsuite/noise_writeback_check_A_to_C_old
- *  SID/wb_testsuite/noise_writeback_check_C_to_C_old
- *
- * but breaks SID/wf12nsr/wf12nsr
- *
- * needs more digging...
- */
-//#define NO_WB_NOI_PUL
-
 namespace reSIDfp
 {
 
@@ -79,6 +66,32 @@ const unsigned int SHIFT_REGISTER_RESET_6581R4 = 2150000;
 const unsigned int SHIFT_REGISTER_RESET_8580R5 =  986000;
 const unsigned int SHIFT_REGISTER_FADE_8580R5  =  314300;
 
+// shift register output bits mask
+const unsigned int shift_mask =
+    ~(
+        (1 <<  2) |  // Bit 20
+        (1 <<  4) |  // Bit 18
+        (1 <<  8) |  // Bit 14
+        (1 << 11) |  // Bit 11
+        (1 << 13) |  // Bit  9
+        (1 << 17) |  // Bit  5
+        (1 << 20) |  // Bit  2
+        (1 << 22)    // Bit  0
+    );
+
+inline unsigned int get_noise_writeback(unsigned int waveform_output)
+{
+    return
+        ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
+        ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
+        ((waveform_output & (1 <<  9)) >>  1) |  // Bit  9 -> bit 14
+        ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
+        ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
+        ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
+        ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
+        ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
+}
+
 /*
  * This is what happens when the lfsr is clocked:
  *
@@ -109,35 +122,35 @@ const unsigned int SHIFT_REGISTER_FADE_8580R5  =  314300;
  * phi1 |   1   |   X --> X    |   A --> A      <- shift phase 2
  * phi2 |   1   |   X <-> X    |   A <-> A
  */
-void WaveformGenerator::clock_shift_register(unsigned int bit0)
+void WaveformGenerator::shift_phase1()
 {
-    shift_register = (shift_register >> 1) | bit0;
+    //if (unlikely(waveform > 0x8))
+    //{
+    //    // if noise is combined with another waveform the output drives the SR bits
+    //    shift_register = (shift_register & shift_mask) | get_noise_writeback(waveform_output);
+    //    set_noise_output();
+    //}
+    //
+    //shift_latch = shift_register >> 1;
 
-    // New noise waveform output.
-    set_noise_output();
+    // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
+    const unsigned int bit22 = test ? (1 << 22) : (shift_register << 22);
+    bit0 = (bit22 ^ shift_register << 17) & (1 << 22);
 }
 
-unsigned int WaveformGenerator::get_noise_writeback()
+void WaveformGenerator::shift_phase2()
 {
-  return
-    ~(
-        (1 <<  2) |  // Bit 20
-        (1 <<  4) |  // Bit 18
-        (1 <<  8) |  // Bit 14
-        (1 << 11) |  // Bit 11
-        (1 << 13) |  // Bit  9
-        (1 << 17) |  // Bit  5
-        (1 << 20) |  // Bit  2
-        (1 << 22)    // Bit  0
-    ) |
-    ((waveform_output & (1 << 11)) >>  9) |  // Bit 11 -> bit 20
-    ((waveform_output & (1 << 10)) >>  6) |  // Bit 10 -> bit 18
-    ((waveform_output & (1 <<  9)) >>  1) |  // Bit  9 -> bit 14
-    ((waveform_output & (1 <<  8)) <<  3) |  // Bit  8 -> bit 11
-    ((waveform_output & (1 <<  7)) <<  6) |  // Bit  7 -> bit  9
-    ((waveform_output & (1 <<  6)) << 11) |  // Bit  6 -> bit  5
-    ((waveform_output & (1 <<  5)) << 15) |  // Bit  5 -> bit  2
-    ((waveform_output & (1 <<  4)) << 18);   // Bit  4 -> bit  0
+    if (unlikely(waveform > 0x8))
+    {
+        // if noise is combined with another waveform the output drives the SR bits
+        shift_register = (shift_register & shift_mask) | get_noise_writeback(waveform_output);
+    }
+
+    //shift_register = shift_latch | bit0;
+
+    shift_register = (shift_register >> 1) | bit0;
+
+    set_noise_output();
 }
 
 void WaveformGenerator::write_shift_register()
@@ -154,11 +167,7 @@ void WaveformGenerator::write_shift_register()
         // FIXME: Write test program to check the effect of 1 bits and whether
         // neighboring bits are affected.
 
-#ifdef NO_WB_NOI_PUL
-        if (waveform == 0xc)
-            return;
-#endif
-        shift_register &= get_noise_writeback();
+        shift_register &= shift_mask | get_noise_writeback(waveform_output);
 
         noise_output &= waveform_output;
         set_no_noise_or_noise_output();
@@ -200,7 +209,7 @@ void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformG
         syncDest->accumulator = 0;
     }
 }
-
+/*
 bool do_pre_writeback(unsigned int waveform_prev, unsigned int waveform, bool is6581)
 {
     // no writeback without combined waveforms
@@ -228,7 +237,7 @@ bool do_pre_writeback(unsigned int waveform_prev, unsigned int waveform, bool is
     // ok do the writeback
     return true;
 }
-
+*/
 void WaveformGenerator::set_no_noise_or_noise_output()
 {
     no_noise_or_noise_output = no_noise | noise_output;
@@ -279,6 +288,10 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
             // Set reset time for shift register.
             shift_register_reset = is6581 ? SHIFT_REGISTER_RESET_6581R3 : SHIFT_REGISTER_RESET_8580R5;
+
+            //shift_phase1();
+            // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
+            bit0 = (~shift_register << 17) & (1 << 22);
         }
         else
         {
@@ -288,13 +301,16 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             // During first phase of the shift the bits are interconnected
             // and the output of each bit is latched into the following.
             // The output may overwrite the latched value.
-            if (do_pre_writeback(waveform_prev, waveform, is6581))
-            {
-                shift_register &= get_noise_writeback();
-            }
+            //if (do_pre_writeback(waveform_prev, waveform, is6581))
+            //{
+            //    shift_register &= get_noise_writeback();
+            //}
 
             // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
-            clock_shift_register((~shift_register << 17) & (1 << 22));
+            //clock_shift_register((~shift_register << 17) & (1 << 22));
+
+            //shift_pipeline = 1;
+            shift_phase2();
         }
     }
 }
@@ -341,8 +357,11 @@ void WaveformGenerator::reset()
     shift_register = 0x7fffff;
     // when reset is released the shift register is clocked once
     // so the lower bit is zeroed out
-    // bit0 = (bit22 | test) ^ bit17 = 1 ^ 1 = 0
-    clock_shift_register(0);
+    //shift_phase1();
+    // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ 1 = 0
+    bit0 = 0;
+    shift_phase2();
+    set_noise_output();
 
     shift_pipeline = 0;
 
