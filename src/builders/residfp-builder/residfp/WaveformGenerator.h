@@ -112,7 +112,7 @@ private:
 
     unsigned int waveform_output;
 
-    unsigned int shift_latch;
+    //unsigned int shift_latch;
     unsigned int bit0;
 
     /// Current accumulator value.

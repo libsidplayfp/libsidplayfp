@@ -135,7 +135,7 @@ void WaveformGenerator::shift_phase1()
 
     // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
     const unsigned int bit22 = test ? (1 << 22) : (shift_register << 22);
-    bit0 = (bit22 ^ shift_register << 17) & (1 << 22);
+    bit0 = (bit22 ^ (shift_register << 17)) & (1 << 22);
 }
 
 void WaveformGenerator::shift_phase2()
