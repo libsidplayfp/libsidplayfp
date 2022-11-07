@@ -102,10 +102,17 @@ private:
     typedef std::map<const CombinedWaveformConfig*, matrix_t> cw_cache_t;
 
 private:
-    cw_cache_t WAVEFORM_CACHE;
+    matrix_t wftable;
+
     cw_cache_t PULLDOWN_CACHE;
 
-    WaveformCalculator() DEFAULT;
+    WaveformCalculator();
+
+private:
+    /**
+     * Build waveform table.
+     */
+    void buildWaveTable();
 
 public:
     /**
@@ -114,14 +121,14 @@ public:
     static WaveformCalculator* getInstance();
 
     /**
-     * Build waveform tables for use by WaveformGenerator.
+     * Get the waveform table for use by WaveformGenerator.
      *
      * @return Waveform table
      */
-    matrix_t* buildWaveTable();
+    matrix_t* getWaveTable() { return &wftable; }
 
     /**
-     * Build pulldown tables for use by WaveformGenerator.
+     * Build pulldown table for use by WaveformGenerator.
      *
      * @param model Chip model to use
      * @return Pulldown table
