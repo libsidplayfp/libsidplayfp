@@ -274,6 +274,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             pulldown = (*model_pulldown)[3];
             break;
         default:
+            // FIXME handle noise + other waveform case
             pulldown = nullptr;
         }
 
@@ -307,7 +308,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
 
             //shift_phase1();
             // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
-            bit0 = (~shift_register << 17) & (1 << 22);
+            //bit0 = (~shift_register << 17) & (1 << 22);
         }
         else
         {
@@ -325,8 +326,8 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
             //clock_shift_register((~shift_register << 17) & (1 << 22));
 
-            //shift_pipeline = 1;
-            shift_phase2();
+            shift_pipeline = 1;
+            //shift_phase2();
         }
     }
 }

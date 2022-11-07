@@ -226,7 +226,7 @@ void SID::setChipModel(ChipModel model)
     this->model = model;
 
     // calculate waveform-related tables
-    matrix_t* wavetables = WaveformCalculator::getInstance()->buildWaveTable();
+    matrix_t* wavetables = WaveformCalculator::getInstance()->getWaveTable();
     matrix_t* pulldowntables = WaveformCalculator::getInstance()->buildPulldownTable(model);
 
     // calculate envelope DAC table

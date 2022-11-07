@@ -89,33 +89,14 @@ static unsigned int triXor(unsigned int val)
  * @param waveform the waveform to emulate, 1 .. 7
  * @param accumulator the high bits of the accumulator value
  */
-short calculatePulldown(const CombinedWaveformConfig& config, int waveform, int accumulator)
+short calculatePulldown(const CombinedWaveformConfig& config, int accumulator)
 {
-    // saw/tri: if saw is not selected the bits are XORed
-    unsigned int osc = (waveform & 2) ? accumulator : triXor(accumulator);
-
-    // If both Saw and Triangle are selected the bits are interconnected
-    if ((waveform & 3) == 3)
-    {
-        /*
-        * Enabling the S waveform pulls the XOR circuit selector transistor down
-        * (which would normally make the descending ramp of the triangle waveform),
-        * so ST does not actually have a sawtooth and triangle waveform combined,
-        * but merely combines two sawtooths, one rising double the speed the other.
-        *
-        * http://www.lemon64.com/forum/viewtopic.php?t=25442&postdays=0&postorder=asc&start=165
-        */
-        osc &= osc << 1;
-    }
-
     float o[12];
 
     for (unsigned int i = 0; i < 12; i++)
     {
         o[i] = (accumulator & (1u << i)) != 0 ? 1.f : 0.f;
     }
-
-    // ST, P* waveforms
 
     // TODO move out of the loop
     const distance_t distFunc = exponentialDistance;
@@ -144,11 +125,7 @@ short calculatePulldown(const CombinedWaveformConfig& config, int waveform, int 
             n += weight;
         }
 
-        // pulse control bit
-        if (waveform > 4)
-        {
-            avg -= config.pulsestrength;
-        }
+        avg -= config.pulsestrength;
 
         pulldown[sb] = avg / n;
     }
@@ -208,10 +185,10 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
 
     for (unsigned int idx = 0; idx < (1u << 12); idx++)
     {
-        pdTable[0][idx] = calculatePulldown(cfgArray[0], 3, idx); // saw + triangle
-        pdTable[1][idx] = calculatePulldown(cfgArray[1], 5, idx); // pulse + triangle
-        pdTable[2][idx] = calculatePulldown(cfgArray[2], 6, idx); // pulse + saw
-        pdTable[3][idx] = calculatePulldown(cfgArray[3], 7, idx); // pulse + saw + triangle
+        pdTable[0][idx] = calculatePulldown(cfgArray[0], idx); // saw + triangle
+        pdTable[1][idx] = calculatePulldown(cfgArray[1], idx); // pulse + triangle
+        pdTable[2][idx] = calculatePulldown(cfgArray[2], idx); // pulse + saw
+        pdTable[3][idx] = calculatePulldown(cfgArray[3], idx); // pulse + saw + triangle
     }
 #ifdef HAVE_CXX11
     return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
