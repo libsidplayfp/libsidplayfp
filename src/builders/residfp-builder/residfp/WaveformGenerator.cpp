@@ -264,6 +264,9 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         case 3:
             pulldown = (*model_pulldown)[0];
             break;
+        case 4:
+            pulldown = (waveform & 0x8) ? (*model_pulldown)[4] : nullptr;
+            break;
         case 5:
             pulldown = (*model_pulldown)[1];
             break;
@@ -274,8 +277,8 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             pulldown = (*model_pulldown)[3];
             break;
         default:
-            // FIXME handle noise + other waveform case
             pulldown = nullptr;
+            break;
         }
 
         // no_noise and no_pulse are used in set_waveform_output() as bitmasks to

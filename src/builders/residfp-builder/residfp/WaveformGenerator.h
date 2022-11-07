@@ -145,7 +145,6 @@ private:
     bool is6581; //-V730_NOINIT this is initialized in the SID constructor
 
 private:
-    //void clock_shift_register(unsigned int bit0);
     void shift_phase1();
     void shift_phase2();
 
@@ -353,29 +352,6 @@ void WaveformGenerator::clock()
     }
 }
 
-/*
- * When pulse is combined with another waveform
- * or both saw and triangle are selected
- * all the bits are connected.
- * This causes the adjacent bits to be pulled down,
- * with different strength depending on model
- * temperature and inputs.
- *
- * This is just a rough attempt at modelling the effect.
- */
-/*
-static unsigned int combine6581(unsigned int osc)
-{
-    // FIXME
-    return (osc < 0xf00) ? 0x000 : osc & (osc << 1) & (osc << 2);
-}
-
-static unsigned int combine8580(unsigned int osc)
-{
-    // FIXME
-    return (osc < 0xfc0) ? osc & (osc << 1) : 0xfc0;
-}
-*/
 RESID_INLINE
 unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
 {
