@@ -173,41 +173,29 @@ short calculatePulldown(const CombinedWaveformConfig& config, int waveform, int 
     return value;
 }
 
-matrix_t* WaveformCalculator::buildWaveTable()
+WaveformCalculator::WaveformCalculator() :
+    wftable(4, 4096)
 {
-    const CombinedWaveformConfig* cfgArray = config[0];
+    buildWaveTable();
+}
 
-    cw_cache_t::iterator lb = WAVEFORM_CACHE.lower_bound(cfgArray);
-
-    if (lb != WAVEFORM_CACHE.end() && !(WAVEFORM_CACHE.key_comp()(cfgArray, lb->first)))
+void WaveformCalculator::buildWaveTable()
+{
+    for (unsigned int idx = 0; idx < (1u << 12); idx++)
     {
-        return &(lb->second);
-    }
-
-    matrix_t wftable(4, 4096);
-
-    for (unsigned int idx = 0; idx < 1 << 12; idx++)
-    {
-        short const saw = static_cast<short>(idx);
-        short const tri = static_cast<short>((idx & 0x800) == 0 ? idx << 1 : (idx ^ 0xfff) << 1);
+        const short saw = static_cast<short>(idx);
+        const short tri = static_cast<short>(triXor(idx));
 
         wftable[0][idx] = 0xfff;
         wftable[1][idx] = tri;
         wftable[2][idx] = saw;
         wftable[3][idx] = saw & (saw << 1);
     }
-#ifdef HAVE_CXX11
-    return &(WAVEFORM_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
-#else
-    return &(WAVEFORM_CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
-#endif
 }
 
 matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
 {
-    const bool is8580 = model != MOS6581;
-
-    const CombinedWaveformConfig* cfgArray = config[is8580 ? 1 : 0];
+    const CombinedWaveformConfig* cfgArray = config[model == MOS6581 ? 0 : 1];
 
     cw_cache_t::iterator lb = PULLDOWN_CACHE.lower_bound(cfgArray);
 
@@ -216,19 +204,19 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
         return &(lb->second);
     }
 
-    matrix_t wftable(4, 4096);
+    matrix_t pdTable(4, 4096);
 
-    for (unsigned int idx = 0; idx < 1 << 12; idx++)
+    for (unsigned int idx = 0; idx < (1u << 12); idx++)
     {
-        wftable[0][idx] = calculatePulldown(cfgArray[0], 3, idx);
-        wftable[1][idx] = calculatePulldown(cfgArray[1], 5, idx);
-        wftable[2][idx] = calculatePulldown(cfgArray[2], 6, idx);
-        wftable[3][idx] = calculatePulldown(cfgArray[3], 7, idx);
+        pdTable[0][idx] = calculatePulldown(cfgArray[0], 3, idx); // saw + triangle
+        pdTable[1][idx] = calculatePulldown(cfgArray[1], 5, idx); // pulse + triangle
+        pdTable[2][idx] = calculatePulldown(cfgArray[2], 6, idx); // pulse + saw
+        pdTable[3][idx] = calculatePulldown(cfgArray[3], 7, idx); // pulse + saw + triangle
     }
 #ifdef HAVE_CXX11
-    return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+    return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
 #else
-    return &(PULLDOWN_CACHE.insert(lb, cw_cache_t::value_type(cfgArray, wftable))->second);
+    return &(PULLDOWN_CACHE.insert(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
 #endif
 }
 
