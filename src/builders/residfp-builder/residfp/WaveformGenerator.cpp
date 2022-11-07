@@ -265,6 +265,7 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             pulldown = (*model_pulldown)[3];
             break;
         default:
+            // FIXME handle noise + other waveform case
             pulldown = nullptr;
         }
 
