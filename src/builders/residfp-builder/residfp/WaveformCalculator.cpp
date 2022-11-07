@@ -42,19 +42,21 @@ WaveformCalculator* WaveformCalculator::getInstance()
  *
  * [1] https://github.com/libsidplayfp/combined-waveforms
  */
-const CombinedWaveformConfig config[2][4] =
+const CombinedWaveformConfig config[2][6] =
 {
     { /* kevtris chip G (6581 R2) */
         {0.862147212f, 0.f,          10.8962431f,    2.50848103f }, // TS  error  1941 (327/28672)
         {0.932746708f, 2.07508397f,   1.03668225f,   1.14876997f }, // PT  error  5992 (126/32768)
         {0.785892785f, 1.68656933f,   0.913057923f,  1.09173143f }, // PS  error  3795 (575/28672)
         {0.741343081f, 0.0452554375f, 1.1439606f,    1.05711341f }, // PTS error   338 ( 29/28672)
+        {0.96f,        2.5f,          1.1f,          1.2f        }, // NP  guessed
     },
     { /* kevtris chip V (8580 R5) */
         {0.715788841f, 0.f,           1.32999945f,   2.2172699f  }, // TS  error   928 (135/32768)
         {0.93500334f,  1.05977178f,   1.08629429f,   1.43518543f }, // PT  error  9113 (198/32768)
         {0.920648575f, 0.943601072f,  1.13034654f,   1.41881108f }, // PS  error 12566 (394/32768)
         {0.90921098f,  0.979807794f,  0.942194462f,  1.40958893f }, // PTS error  2092 ( 60/32768)
+        {0.95f,        1.15f,         1.f,           1.45f       }, // NP  guessed
     },
 };
 
@@ -89,13 +91,13 @@ static unsigned int triXor(unsigned int val)
  * @param waveform the waveform to emulate, 1 .. 7
  * @param accumulator the high bits of the accumulator value
  */
-short calculatePulldown(const CombinedWaveformConfig& config, int accumulator)
+short calculatePulldown(const CombinedWaveformConfig& config, unsigned int accumulator)
 {
-    float o[12];
+    float bit[12];
 
     for (unsigned int i = 0; i < 12; i++)
     {
-        o[i] = (accumulator & (1u << i)) != 0 ? 1.f : 0.f;
+        bit[i] = (accumulator & (1u << i)) != 0 ? 1.f : 0.f;
     }
 
     // TODO move out of the loop
@@ -121,7 +123,7 @@ short calculatePulldown(const CombinedWaveformConfig& config, int accumulator)
             if (cb == sb)
                 continue;
             const float weight = distancetable[sb - cb + 12];
-            avg += (1.f - o[cb]) * weight;
+            avg += (1.f - bit[cb]) * weight;
             n += weight;
         }
 
@@ -132,8 +134,8 @@ short calculatePulldown(const CombinedWaveformConfig& config, int accumulator)
 
     for (int i = 0; i < 12; i++)
     {
-        if (o[i] != 0.f)
-            o[i] = 1.f - pulldown[i];
+        if (bit[i] != 0.f)
+            bit[i] = 1.f - pulldown[i];
     }
 
     // Get the predicted value
@@ -141,9 +143,9 @@ short calculatePulldown(const CombinedWaveformConfig& config, int accumulator)
 
     for (unsigned int i = 0; i < 12; i++)
     {
-        if (o[i] > config.threshold)
+        if (bit[i] > config.threshold)
         {
-            value |= 1 << i;
+            value |= 1u << i;
         }
     }
 
@@ -181,7 +183,7 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
         return &(lb->second);
     }
 
-    matrix_t pdTable(4, 4096);
+    matrix_t pdTable(5, 4096);
 
     for (unsigned int idx = 0; idx < (1u << 12); idx++)
     {
@@ -189,6 +191,7 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
         pdTable[1][idx] = calculatePulldown(cfgArray[1], idx); // pulse + triangle
         pdTable[2][idx] = calculatePulldown(cfgArray[2], idx); // pulse + saw
         pdTable[3][idx] = calculatePulldown(cfgArray[3], idx); // pulse + saw + triangle
+        pdTable[4][idx] = calculatePulldown(cfgArray[4], idx); // noise + pulse
     }
 #ifdef HAVE_CXX11
     return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
