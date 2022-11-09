@@ -42,7 +42,7 @@ WaveformCalculator* WaveformCalculator::getInstance()
  *
  * [1] https://github.com/libsidplayfp/combined-waveforms
  */
-const CombinedWaveformConfig config[2][6] =
+const CombinedWaveformConfig config[2][5] =
 {
     { /* kevtris chip G (6581 R2) */
         {0.862147212f, 0.f,          10.8962431f,    2.50848103f }, // TS  error  1941 (327/28672)
@@ -85,30 +85,20 @@ static unsigned int triXor(unsigned int val)
 }
 
 /**
- * Generate bitstate based on emulation of combined waves.
+ * Generate bitstate based on emulation of combined waves pulldown.
  *
- * @param config model parameters matrix
- * @param waveform the waveform to emulate, 1 .. 7
+ * @param distancetable
+ * @param pulsestrength
+ * @param threshold
  * @param accumulator the high bits of the accumulator value
  */
-short calculatePulldown(const CombinedWaveformConfig& config, unsigned int accumulator)
+short calculatePulldown(float distancetable[], float pulsestrength, float threshold, unsigned int accumulator)
 {
     float bit[12];
 
     for (unsigned int i = 0; i < 12; i++)
     {
         bit[i] = (accumulator & (1u << i)) != 0 ? 1.f : 0.f;
-    }
-
-    // TODO move out of the loop
-    const distance_t distFunc = exponentialDistance;
-
-    float distancetable[12 * 2 + 1];
-    distancetable[12] = 1.f;
-    for (int i = 12; i > 0; i--)
-    {
-        distancetable[12-i] = distFunc(config.distance1, i);
-        distancetable[12+i] = distFunc(config.distance2, i);
     }
 
     float pulldown[12];
@@ -127,7 +117,7 @@ short calculatePulldown(const CombinedWaveformConfig& config, unsigned int accum
             n += weight;
         }
 
-        avg -= config.pulsestrength;
+        avg -= pulsestrength;
 
         pulldown[sb] = avg / n;
     }
@@ -143,7 +133,7 @@ short calculatePulldown(const CombinedWaveformConfig& config, unsigned int accum
 
     for (unsigned int i = 0; i < 12; i++)
     {
-        if (bit[i] > config.threshold)
+        if (bit[i] > threshold)
         {
             value |= 1u << i;
         }
@@ -185,13 +175,24 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
 
     matrix_t pdTable(5, 4096);
 
-    for (unsigned int idx = 0; idx < (1u << 12); idx++)
+    for (int wav = 0; wav < 5; wav++)
     {
-        pdTable[0][idx] = calculatePulldown(cfgArray[0], idx); // saw + triangle
-        pdTable[1][idx] = calculatePulldown(cfgArray[1], idx); // pulse + triangle
-        pdTable[2][idx] = calculatePulldown(cfgArray[2], idx); // pulse + saw
-        pdTable[3][idx] = calculatePulldown(cfgArray[3], idx); // pulse + saw + triangle
-        pdTable[4][idx] = calculatePulldown(cfgArray[4], idx); // noise + pulse
+        const CombinedWaveformConfig& cfg = cfgArray[wav];
+
+        const distance_t distFunc = exponentialDistance;
+
+        float distancetable[12 * 2 + 1];
+        distancetable[12] = 1.f;
+        for (int i = 12; i > 0; i--)
+        {
+            distancetable[12-i] = distFunc(cfg.distance1, i);
+            distancetable[12+i] = distFunc(cfg.distance2, i);
+        }
+
+        for (unsigned int idx = 0; idx < (1u << 12); idx++)
+        {
+            pdTable[wav][idx] = calculatePulldown(distancetable, cfg.pulsestrength, cfg.threshold, idx);
+        }
     }
 #ifdef HAVE_CXX11
     return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
