@@ -131,31 +131,38 @@ void WaveformGenerator::shift_phase1()
     //    set_noise_output();
     //}
     //
-    //shift_latch = shift_register >> 1;
 
     // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
     const unsigned int bit22 = test ? (1 << 22) : (shift_register << 22);
-    bit0 = (bit22 ^ (shift_register << 17)) & (1 << 22);
+    const unsigned int bit0 = (bit22 ^ (shift_register << 17)) & (1 << 22);
+
+    shift_latch = (shift_register >> 1) | bit0;
 }
 
 void WaveformGenerator::shift_phase2()
 {
-    if (unlikely(waveform > 0x8))
-    {
-        // if noise is combined with another waveform the output drives the SR bits
-        shift_register = (shift_register & shift_mask) | get_noise_writeback(waveform_output);
-    }
+    //if (unlikely(waveform > 0x8))
+    //{
+    //    // if noise is combined with another waveform the output drives the SR bits
+    //    shift_register = (shift_register & shift_mask) | get_noise_writeback(waveform_output);
+    //}
 
-    //shift_register = shift_latch | bit0;
+    //shift_register = (shift_register >> 1) | bit0;
 
-    shift_register = (shift_register >> 1) | bit0;
+    shift_register = shift_latch;
+
+    //if (unlikely(waveform > 0x8))
+    //{
+    //    // if noise is combined with another waveform the output pulls down the SR bits
+    //    shift_register = shift_register & (shift_mask | get_noise_writeback(waveform_output));
+    //}
 
     set_noise_output();
 }
 
 void WaveformGenerator::write_shift_register()
 {
-    if (unlikely(waveform > 0x8) && likely(!test) && likely(shift_pipeline != 1))
+    if (unlikely(waveform > 0x8))
     {
         // Write changes to the shift register output caused by combined waveforms
         // back into the shift register. This happens only when the register is clocked
@@ -163,14 +170,25 @@ void WaveformGenerator::write_shift_register()
         // A bit once set to zero cannot be changed, hence the and'ing.
         //
         // [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
-        //
-        // FIXME: Write test program to check the effect of 1 bits and whether
-        // neighboring bits are affected.
 
-        shift_register &= shift_mask | get_noise_writeback(waveform_output);
-
-        noise_output &= waveform_output;
-        set_no_noise_or_noise_output();
+        if (likely(!test) && likely(shift_pipeline != 1))
+        {
+            // the output pulls down the SR bits
+            shift_register = shift_register & (shift_mask | get_noise_writeback(waveform_output));
+            noise_output &= waveform_output;
+            set_no_noise_or_noise_output();
+        }
+        else
+        {
+#if 1
+            // shift phase 1: the output drives the SR bits
+            shift_register = (shift_register & shift_mask) | get_noise_writeback(waveform_output);
+            noise_output = waveform_output;
+            set_no_noise_or_noise_output();
+            // update latched value
+            shift_phase1();
+#endif
+        }
     }
 }
 
@@ -377,9 +395,9 @@ void WaveformGenerator::reset()
     shift_register = 0x7fffff;
     // when reset is released the shift register is clocked once
     // so the lower bit is zeroed out
-    //shift_phase1();
+    shift_phase1();
     // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ 1 = 0
-    bit0 = 0;
+    //bit0 = 0;
     shift_phase2();
     set_noise_output();
 

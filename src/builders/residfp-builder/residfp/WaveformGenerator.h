@@ -96,6 +96,7 @@ private:
     unsigned int pw;
 
     unsigned int shift_register;
+    unsigned int shift_latch;
 
     /// Emulation of pipeline causing bit 19 to clock the shift register.
     int shift_pipeline;
@@ -112,8 +113,7 @@ private:
 
     unsigned int waveform_output;
 
-    //unsigned int shift_latch;
-    unsigned int bit0;
+    //unsigned int bit0;
 
     /// Current accumulator value.
     unsigned int accumulator;
@@ -204,7 +204,7 @@ public:
         pulse_output(0),
         waveform(0),
         waveform_output(0),
-        bit0(0),
+        //bit0(0),
         accumulator(0x555555),          // Accumulator's even bits are high on powerup
         freq(0),
         tri_saw_pipeline(0x555),
@@ -309,9 +309,9 @@ void WaveformGenerator::clock()
             set_noise_output();
         }
 
-        //shift_phase1();
         // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
-        bit0 = (~shift_register << 17) & (1 << 22);
+        //bit0 = (~shift_register << 17) & (1 << 22);
+        shift_phase1();
 
         // The test bit sets pulse high.
         pulse_output = 0xfff;
@@ -343,9 +343,9 @@ void WaveformGenerator::clock()
                 shift_phase2();
                 break;
             case 1:
-                //shift_phase1();
+                shift_phase1();
                 // bit0 = (bit22 | test | reset) ^ bit17
-                bit0 = ((shift_register << 22) ^ (shift_register << 17)) & (1 << 22);
+                //bit0 = ((shift_register << 22) ^ (shift_register << 17)) & (1 << 22);
                 break;
             }
         }
