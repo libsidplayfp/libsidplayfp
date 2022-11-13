@@ -46,7 +46,7 @@ SidDatabase::SidDatabase() :
 
 SidDatabase::~SidDatabase()
 {
-    // Needed to delete auto_ptr with complete type
+    delete m_parser;
 }
 
 // mm:ss[.SSS]
