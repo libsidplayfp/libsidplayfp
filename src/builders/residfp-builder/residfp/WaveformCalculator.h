@@ -106,9 +106,9 @@ private:
 
     cw_cache_t PULLDOWN_CACHE;
 
+private:
     WaveformCalculator();
 
-private:
     /**
      * Build waveform table.
      */

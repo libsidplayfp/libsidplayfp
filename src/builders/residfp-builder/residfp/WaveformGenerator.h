@@ -331,7 +331,7 @@ void WaveformGenerator::clock()
         else if (unlikely(shift_pipeline != 0) && --shift_pipeline == 0)
         {
             // bit0 = (bit22 | test) ^ bit17
-            clock_shift_register(((shift_register << 22) ^ (shift_register << 17)) & (1 << 22));
+            clock_shift_register(((shift_register << 22) ^ (shift_register << 17)) & (1u << 22));
         }
     }
 }
