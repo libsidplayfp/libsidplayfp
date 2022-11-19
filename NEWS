@@ -1,3 +1,8 @@
+2.4.1 2022-11-19
+* Fixed a memory leak introduced in 2.1.0
+
+
+
 2.4.0 2022-11-06
 * Use pkgconfig for UnitTest++ and libgcrypt support (#46)
 * residfp: correct 6581 volume gain based on schematics (issue #38)
