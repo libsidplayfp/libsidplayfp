@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -37,12 +37,10 @@ namespace reSIDfp
  */
 typedef struct
 {
-    float bias;
+    float threshold;
     float pulsestrength;
-    float topbit;
     float distance1;
     float distance2;
-    float stmix;
 } CombinedWaveformConfig;
 
 /**
@@ -104,9 +102,17 @@ private:
     typedef std::map<const CombinedWaveformConfig*, matrix_t> cw_cache_t;
 
 private:
-    cw_cache_t CACHE;
+    matrix_t wftable;
 
-    WaveformCalculator() DEFAULT;
+    cw_cache_t PULLDOWN_CACHE;
+
+private:
+    WaveformCalculator();
+
+    /**
+     * Build waveform table.
+     */
+    void buildWaveTable();
 
 public:
     /**
@@ -115,12 +121,19 @@ public:
     static WaveformCalculator* getInstance();
 
     /**
-     * Build waveform tables for use by WaveformGenerator.
+     * Get the waveform table for use by WaveformGenerator.
      *
-     * @param model Chip model to use
      * @return Waveform table
      */
-    matrix_t* buildTable(ChipModel model);
+    matrix_t* getWaveTable() { return &wftable; }
+
+    /**
+     * Build pulldown table for use by WaveformGenerator.
+     *
+     * @param model Chip model to use
+     * @return Pulldown table
+     */
+    matrix_t* buildPulldownTable(ChipModel model);
 };
 
 } // namespace reSIDfp
