@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -40,7 +40,7 @@ const char ERR_UNABLE_TO_LOAD_DATABASE[] = "SID DATABASE ERROR: Unable to load t
 class parseError {};
 
 SidDatabase::SidDatabase() :
-    m_parser(0),
+    m_parser(nullptr),
     errorString(ERR_NO_DATABASE_LOADED)
 {}
 
