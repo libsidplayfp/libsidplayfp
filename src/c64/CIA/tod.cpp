@@ -100,7 +100,7 @@ void Tod::write(uint_least8_t reg, uint8_t data)
         // set time
         if (reg == TENTHS)
         {
-            // apparently the tickcounter is reset to 0 when the clock
+            // the tickcounter is kept clear while the clock
             // is not running and then restarted by writing to the 10th
             // seconds register.
             if (isStopped)
@@ -140,9 +140,7 @@ void Tod::event()
     {
         // count 50/60 hz ticks
         todtickcounter++;
-        // wild assumption: counter is 3 bits and is not reset elsewhere
-        // FIXME: this doesnt seem to be 100% correct - apparently it is reset
-        //        in some cases
+        // counter is 3 bits
         todtickcounter &= 7;
         // if the counter matches the TOD frequency ...
         if (todtickcounter == ((cra & 0x80) ? 5 : 6))
