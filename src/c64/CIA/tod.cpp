@@ -157,12 +157,13 @@ void Tod::event()
 void Tod::updateCounters()
 {
     // advance the counters.
-    // - individual counters are all 4 bit
+    // - individual counters are 4 bit
+    //   except for sh and mh which are 3 bits
     uint8_t ts = clock[TENTHS] & 0x0f;
     uint8_t sl = clock[SECONDS] & 0x0f;
-    uint8_t sh = (clock[SECONDS] >> 4) & 0x0f;
+    uint8_t sh = (clock[SECONDS] >> 4) & 0x07;
     uint8_t ml = clock[MINUTES] & 0x0f;
-    uint8_t mh = (clock[MINUTES] >> 4) & 0x0f;
+    uint8_t mh = (clock[MINUTES] >> 4) & 0x07;
     uint8_t hl = clock[HOURS] & 0x0f;
     uint8_t hh = (clock[HOURS] >> 4) & 0x01;
     uint8_t pm = clock[HOURS] & 0x80;
