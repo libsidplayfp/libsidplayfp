@@ -191,27 +191,21 @@ void Tod::updateCounters()
                     {
                         mh = 0;
                         // hours (1-12)
-                        hl = (hl + 1) & 0x0f;
-                        if (hh)
+                        // flip from 09:59:59 to 10:00:00
+                        // or from 12:59:59 to 01:00:00
+                        if (((hl == 2) && (hh == 1))
+                            || ((hl == 9) && (hh == 0)))
                         {
-                            // toggle the am/pm flag when going from 11 to 12 (!)
-                            if (hl == 2)
-                            {
-                                pm ^= 0x80;
-                            }
-                            // wrap 12h -> 1h (FIXME: when hour became x3 ?)
-                            else if (hl == 3)
-                            {
-                                hl = 1;
-                                hh = 0;
-                            }
+                            hl = hh;
+                            hh ^= 1;
                         }
                         else
                         {
-                            if (hl == 10)
+                            hl = (hl + 1) & 0x0f;
+                            // toggle the am/pm flag when reaching 12
+                            if ((hl == 2) && (hh == 1))
                             {
-                                hl = 0;
-                                hh = 1;
+                                pm ^= 0x80;
                             }
                         }
                     }
