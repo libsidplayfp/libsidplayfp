@@ -158,60 +158,60 @@ void Tod::updateCounters()
 {
     // advance the counters.
     // - individual counters are all 4 bit
-    uint8_t t0 = clock[TENTHS] & 0x0f;
-    uint8_t t1 = clock[SECONDS] & 0x0f;
-    uint8_t t2 = (clock[SECONDS] >> 4) & 0x0f;
-    uint8_t t3 = clock[MINUTES] & 0x0f;
-    uint8_t t4 = (clock[MINUTES] >> 4) & 0x0f;
-    uint8_t t5 = clock[HOURS] & 0x0f;
-    uint8_t t6 = (clock[HOURS] >> 4) & 0x01;
+    uint8_t ts = clock[TENTHS] & 0x0f;
+    uint8_t sl = clock[SECONDS] & 0x0f;
+    uint8_t sh = (clock[SECONDS] >> 4) & 0x0f;
+    uint8_t ml = clock[MINUTES] & 0x0f;
+    uint8_t mh = (clock[MINUTES] >> 4) & 0x0f;
+    uint8_t hl = clock[HOURS] & 0x0f;
+    uint8_t hh = (clock[HOURS] >> 4) & 0x01;
     uint8_t pm = clock[HOURS] & 0x80;
 
     // tenth seconds (0-9)
-    t0 = (t0 + 1) & 0x0f;
-    if (t0 == 10)
+    ts = (ts + 1) & 0x0f;
+    if (ts == 10)
     {
-        t0 = 0;
+        ts = 0;
         // seconds (0-59)
-        t1 = (t1 + 1) & 0x0f; // x0...x9
-        if (t1 == 10)
+        sl = (sl + 1) & 0x0f; // x0...x9
+        if (sl == 10)
         {
-            t1 = 0;
-            t2 = (t2 + 1) & 0x07; // 0x...5x
-            if (t2 == 6)
+            sl = 0;
+            sh = (sh + 1) & 0x07; // 0x...5x
+            if (sh == 6)
             {
-                t2 = 0;
+                sh = 0;
                 // minutes (0-59)
-                t3 = (t3 + 1) & 0x0f; // x0...x9
-                if (t3 == 10)
+                ml = (ml + 1) & 0x0f; // x0...x9
+                if (ml == 10)
                 {
-                    t3 = 0;
-                    t4 = (t4 + 1) & 0x07; // 0x...5x
-                    if (t4 == 6)
+                    ml = 0;
+                    mh = (mh + 1) & 0x07; // 0x...5x
+                    if (mh == 6)
                     {
-                        t4 = 0;
+                        mh = 0;
                         // hours (1-12)
-                        t5 = (t5 + 1) & 0x0f;
-                        if (t6)
+                        hl = (hl + 1) & 0x0f;
+                        if (hh)
                         {
                             // toggle the am/pm flag when going from 11 to 12 (!)
-                            if (t5 == 2)
+                            if (hl == 2)
                             {
                                 pm ^= 0x80;
                             }
                             // wrap 12h -> 1h (FIXME: when hour became x3 ?)
-                            else if (t5 == 3)
+                            else if (hl == 3)
                             {
-                                t5 = 1;
-                                t6 = 0;
+                                hl = 1;
+                                hh = 0;
                             }
                         }
                         else
                         {
-                            if (t5 == 10)
+                            if (hl == 10)
                             {
-                                t5 = 0;
-                                t6 = 1;
+                                hl = 0;
+                                hh = 1;
                             }
                         }
                     }
@@ -220,10 +220,10 @@ void Tod::updateCounters()
         }
     }
 
-    clock[TENTHS]  = t0;
-    clock[SECONDS] = t1 | (t2 << 4);
-    clock[MINUTES] = t3 | (t4 << 4);
-    clock[HOURS]   = t5 | (t6 << 4) | pm;
+    clock[TENTHS]  = ts;
+    clock[SECONDS] = sl | (sh << 4);
+    clock[MINUTES] = ml | (mh << 4);
+    clock[HOURS]   = hl | (hh << 4) | pm;
 
     checkAlarm();
 }
