@@ -2200,7 +2200,7 @@ const char *MOS6510::credits()
         "\t(C) 2011-2020 Leandro Nini\n";
 }
 
-void MOS6510::debug(bool enable, FILE *out)
+void MOS6510::debug([[ maybe_unused ]] bool enable, [[ maybe_unused ]] FILE *out)
 {
 #ifdef DEBUG
     dodump = enable;
