@@ -39,11 +39,11 @@ namespace libsidplayfp
 const char TXT_PAL_VBI[]        = "50 Hz VBI (PAL)";
 const char TXT_PAL_VBI_FIXED[]  = "60 Hz VBI (PAL FIXED)";
 const char TXT_PAL_CIA[]        = "CIA (PAL)";
-const char TXT_PAL_UNKNOWN[]    = "UNKNOWN (PAL)";
+[[ maybe_unused ]] const char TXT_PAL_UNKNOWN[]    = "UNKNOWN (PAL)";
 const char TXT_NTSC_VBI[]       = "60 Hz VBI (NTSC)";
 const char TXT_NTSC_VBI_FIXED[] = "50 Hz VBI (NTSC FIXED)";
 const char TXT_NTSC_CIA[]       = "CIA (NTSC)";
-const char TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
+[[ maybe_unused ]] const char TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 
 // Error Strings
 const char ERR_NA[]                   = "NA";

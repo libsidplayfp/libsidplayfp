@@ -47,7 +47,7 @@ private:
     event_clock_t triggerTime;
 
     /// Describe event for humans.
-    const char * const m_name;
+    [[ maybe_unused ]] const char * const m_name;
 
 public:
     /**

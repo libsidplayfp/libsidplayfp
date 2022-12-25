@@ -66,7 +66,7 @@ namespace stringutils
 #if defined(HAVE_STRCASECMP)
         return strcasecmp(s1, s2) == 0;
 #elif defined(HAVE_STRICMP)
-        return stricmp(s1, s2) == 0;
+        return _stricmp(s1, s2) == 0;
 #else
         if (s1 == s2)
             return true;
@@ -96,7 +96,7 @@ namespace stringutils
 #if defined(HAVE_STRNCASECMP)
         return strncasecmp(s1, s2, n) == 0;
 #elif defined(HAVE_STRNICMP)
-        return strnicmp(s1, s2, n) == 0;
+        return _strnicmp(s1, s2, n) == 0;
 #else
         if (s1 == s2 || n == 0)
             return true;
