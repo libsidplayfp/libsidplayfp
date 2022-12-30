@@ -68,12 +68,12 @@ static float exponentialDistance(float distance, int i)
     return pow(distance, -i);
 }
 
-static float linearDistance(float distance, int i)
+MAYBE_UNUSED static float linearDistance(float distance, int i)
 {
     return 1.f / (1.f + i * distance);
 }
 
-static float quadraticDistance(float distance, int i)
+MAYBE_UNUSED static float quadraticDistance(float distance, int i)
 {
     return 1.f / (1.f + (i*i) * distance);
 }

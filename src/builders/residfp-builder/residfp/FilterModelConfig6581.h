@@ -29,7 +29,7 @@
 
 #include "Dac.h"
 
-#include "sidcxx14.h"
+#include "sidcxx11.h"
 
 namespace reSIDfp
 {
