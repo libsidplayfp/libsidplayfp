@@ -111,7 +111,6 @@ src/poweron.bin \
 src/reloc65.cpp \
 src/reloc65.h \
 src/sidcxx11.h \
-src/sidcxx14.h \
 src/sidmd5.h \
 src/sidmemory.h \
 src/SidInfoImpl.h \
