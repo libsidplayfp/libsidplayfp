@@ -32,6 +32,8 @@
 #  include "mos6510debug.h"
 #endif
 
+#include "sidcxx11.h"
+
 
 namespace libsidplayfp
 {
@@ -2200,7 +2202,7 @@ const char *MOS6510::credits()
         "\t(C) 2011-2020 Leandro Nini\n";
 }
 
-void MOS6510::debug(bool enable, FILE *out)
+void MOS6510::debug(MAYBE_UNUSED bool enable, MAYBE_UNUSED FILE *out)
 {
 #ifdef DEBUG
     dodump = enable;
