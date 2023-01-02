@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -131,6 +131,14 @@ void Mixer::doMix()
 
 void Mixer::begin(short *buffer, uint_least32_t count)
 {
+    // sanity check
+    // TODO short buffers make the emulator crash, should investigate why
+    //      in the meantime set a reasonable lower bound
+    // also don't allow odd counts for stereo playback
+    if ((count && (count < 512))
+            || (m_stereo && (count & 1)))
+        throw badBufferSize();
+
     m_sampleIndex  = 0;
     m_sampleCount  = count;
     m_sampleBuffer = buffer;
