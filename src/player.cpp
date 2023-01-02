@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -211,14 +211,17 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
 
     if (m_isPlaying == PLAYING)
     {
-        m_mixer.begin(buffer, count);
-
         try
         {
+            m_mixer.begin(buffer, count);
+
             if (m_mixer.getSid(0) != nullptr)
             {
                 if (count && buffer != nullptr)
                 {
+                    // reset count in case of exceptions
+                    count = 0;
+
                     // Clock chips and mix into output buffer
                     while (m_isPlaying && m_mixer.notFinished())
                     {
@@ -255,6 +258,11 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
         catch (MOS6510::haltInstruction const &)
         {
             m_errorString = "Illegal instruction executed";
+            m_isPlaying = STOPPING;
+        }
+        catch (Mixer::badBufferSize const &)
+        {
+            m_errorString = "Bad buffer size";
             m_isPlaying = STOPPING;
         }
     }

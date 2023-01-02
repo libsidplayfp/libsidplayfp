@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright (C) 2000 Simon White
  *
@@ -41,6 +41,9 @@ class sidemu;
  */
 class Mixer
 {
+public:
+    class badBufferSize {};
+
 public:
     /// Maximum number of supported SIDs
     static const unsigned int MAX_SIDS = 3;
@@ -163,6 +166,8 @@ public:
      *
      * @param buffer output buffer
      * @param count size of the buffer in samples
+     *
+     * @throws badBufferSize
      */
     void begin(short *buffer, uint_least32_t count);
 
