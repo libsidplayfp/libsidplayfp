@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -105,7 +105,7 @@ public:
      * @param count the size of the buffer measured in 16 bit samples
      *              or 0 if no output is needed (e.g. Hardsid)
      * @return the number of produced samples. If less than requested
-     *         and #isPlaying() is true an error occurred, use #error()
+     *         or #isPlaying() is false an error occurred, use #error()
      *         to get a detailed message.
      */
     uint_least32_t play(short *buffer, uint_least32_t count);
