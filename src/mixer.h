@@ -178,8 +178,8 @@ public:
         m_oldRandomValue(0),
         m_fastForwardFactor(1),
         m_sampleCount(0),
-        m_stereo(false),
         m_sampleRate(0),
+        m_stereo(false),
         m_rand(257254)
     {
         m_mix.push_back(&Mixer::mono<1>);
