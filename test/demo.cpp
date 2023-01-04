@@ -161,7 +161,7 @@ int main(int, char* argv[])
     for (int i=0; i<1000; i++)
     {
         uint_least32_t res = m_engine.play(&buffer.front(), bufferSamples);
-        if (!m_engine.isPlaying())
+        if (!m_engine.isPlaying() || (res < bufferSamples))
         {
             std::cerr <<  m_engine.error() << std::endl;
             break;
