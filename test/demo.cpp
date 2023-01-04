@@ -152,7 +152,7 @@ int main(int, char* argv[])
     int bufferSize;
     ioctl(handle, SNDCTL_DSP_GETBLKSIZE, &bufferSize);
 
-    int bufferSamples = bufferSize / sizeof(short);
+    uint_least32_t bufferSamples = static_cast<uint_least32_t>(bufferSize) / sizeof(short);
 
     // Play
     std::vector<short> buffer(bufferSamples);
