@@ -1,3 +1,13 @@
+2.5.0 2023-01-xx
+* residfp: reworked the combined waveforms model by separating pulldown effect from waveform generation
+* CIA: minor rework based on chip reverse engineering
+* Use c++17 where available
+* Added sanity check for buffer size
+* Minor mixer optimizations
+* Other minor changes
+
+
+
 2.4.1 2022-11-19
 * Fixed a memory leak introduced in 2.1.0
 
