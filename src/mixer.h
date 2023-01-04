@@ -27,7 +27,6 @@
 #include "sidcxx11.h"
 
 #include <stdint.h>
-#include <cstdlib>
 
 #include <vector>
 
@@ -41,6 +40,26 @@ class sidemu;
  */
 class Mixer
 {
+private:
+    // random number generator for dithering
+    template <int MAX_VAL>
+    class randomLCG
+    {
+    private:
+        uint32_t rand_seed;
+
+    public:
+        randomLCG(uint32_t seed) :
+            rand_seed(seed)
+        {}
+
+        int get()
+        {
+            rand_seed = (214013 * rand_seed + 2531011);
+            return static_cast<int>((rand_seed >> 16) & (MAX_VAL-1));
+        }
+    };
+
 public:
     class badBufferSize {};
 
@@ -76,7 +95,7 @@ private:
     std::vector<mixer_func_t> m_mix;
     std::vector<scale_func_t> m_scale;
 
-    int oldRandomValue;
+    int m_oldRandomValue;
     int m_fastForwardFactor;
 
     // Mixer settings
@@ -88,14 +107,16 @@ private:
 
     bool m_stereo;
 
+    randomLCG<VOLUME_MAX> m_rand;
+
 private:
     void updateParams();
 
     int triangularDithering()
     {
-        const int prevValue = oldRandomValue;
-        oldRandomValue = rand() & (VOLUME_MAX-1);
-        return oldRandomValue - prevValue;
+        const int prevValue = m_oldRandomValue;
+        m_oldRandomValue = m_rand.get();
+        return m_oldRandomValue - prevValue;
     }
 
     int scale(unsigned int ch)
@@ -154,11 +175,12 @@ public:
      * Create a new mixer.
      */
     Mixer() :
-        oldRandomValue(0),
+        m_oldRandomValue(0),
         m_fastForwardFactor(1),
         m_sampleCount(0),
         m_stereo(false),
-        m_sampleRate(0)
+        m_sampleRate(0),
+        m_rand(257254)
     {
         m_mix.push_back(&Mixer::mono<1>);
     }
