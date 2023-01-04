@@ -60,6 +60,8 @@ public:
 private:
     typedef int_least32_t (Mixer::*mixer_func_t)() const;
 
+    typedef int (Mixer::*scale_func_t)(unsigned int);
+
 public:
     /// Maximum allowed volume, must be a power of 2.
     static const int_least32_t VOLUME_MAX = 1024;
@@ -72,6 +74,7 @@ private:
     std::vector<int_least32_t> m_volume;
 
     std::vector<mixer_func_t> m_mix;
+    std::vector<scale_func_t> m_scale;
 
     int oldRandomValue;
     int m_fastForwardFactor;
@@ -93,6 +96,17 @@ private:
         const int prevValue = oldRandomValue;
         oldRandomValue = rand() & (VOLUME_MAX-1);
         return oldRandomValue - prevValue;
+    }
+
+    int scale(unsigned int ch)
+    {
+        const int_least32_t sample = (this->*(m_mix[ch]))();
+        return (sample * m_volume[ch] + triangularDithering()) / VOLUME_MAX;
+    }
+
+    int noScale(unsigned int ch)
+    {
+        return (this->*(m_mix[ch]))();
     }
 
     /*

@@ -111,12 +111,10 @@ void Mixer::doMix()
         // increment i to mark we ate some samples, finish the boxcar thing.
         i += m_fastForwardFactor;
 
-        const int dither = triangularDithering();
-
         const unsigned int channels = m_stereo ? 2 : 1;
         for (unsigned int ch = 0; ch < channels; ch++)
         {
-            const int_least32_t tmp = ((this->*(m_mix[ch]))() * m_volume[ch] + dither) / VOLUME_MAX;
+            const int_least32_t tmp = (this->*(m_scale[ch]))(ch);
             assert(tmp >= -32768 && tmp <= 32767);
             *buf++ = static_cast<short>(tmp);
             m_sampleIndex++;
@@ -218,6 +216,10 @@ void Mixer::setVolume(int_least32_t left, int_least32_t right)
     m_volume.clear();
     m_volume.push_back(left);
     m_volume.push_back(right);
+
+    m_scale.clear();
+    m_scale.push_back(left  == VOLUME_MAX ? &Mixer::noScale : &Mixer::scale);
+    m_scale.push_back(right == VOLUME_MAX ? &Mixer::noScale : &Mixer::scale);
 }
 
 }
