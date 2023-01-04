@@ -81,6 +81,8 @@ private:
     uint_least32_t m_sampleCount;
     uint_least32_t m_sampleIndex;
 
+    uint_least32_t m_sampleRate;
+
     bool m_stereo;
 
 private:
@@ -107,7 +109,7 @@ private:
      *   C1       C2           C3
      * L 1/1.707  0.707/1.707  0.0
      * R 0.0      0.707/1.707  1/1.707
-     * 
+     *
      * FIXME
      * it seems that scaling down the summed signals is not the correct way of mixing, see:
      * http://dsp.stackexchange.com/questions/3581/algorithms-to-mix-audio-signals-without-clipping
@@ -141,7 +143,8 @@ public:
         oldRandomValue(0),
         m_fastForwardFactor(1),
         m_sampleCount(0),
-        m_stereo(false)
+        m_stereo(false),
+        m_sampleRate(0)
     {
         m_mix.push_back(&Mixer::mono<1>);
     }
@@ -213,6 +216,13 @@ public:
      * @param stereo true for stereo mode, false for mono
      */
     void setStereo(bool stereo);
+
+    /**
+     * Set sample rate.
+     *
+     * @param rate sample rate in Hertz
+     */
+    void setSamplerate(uint_least32_t rate);
 
     /**
      * Check if the buffer have been filled.

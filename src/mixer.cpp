@@ -131,12 +131,16 @@ void Mixer::doMix()
 
 void Mixer::begin(short *buffer, uint_least32_t count)
 {
-    // sanity check
+    // sanity checks
+
+    // don't allow odd counts for stereo playback
+    if (m_stereo && (count & 1))
+        throw badBufferSize();
+
     // TODO short buffers make the emulator crash, should investigate why
-    //      in the meantime set a reasonable lower bound
-    // also don't allow odd counts for stereo playback
-    if ((count && (count < 512))
-            || (m_stereo && (count & 1)))
+    //      in the meantime set a reasonable lower bound of 5ms
+    const uint_least32_t lowerBound = m_sampleRate / (m_stereo ? 100 : 200);
+    if (count && (count < lowerBound))
         throw badBufferSize();
 
     m_sampleIndex  = 0;
@@ -193,6 +197,11 @@ void Mixer::setStereo(bool stereo)
 
         updateParams();
     }
+}
+
+void Mixer::setSamplerate(uint_least32_t rate)
+{
+    m_sampleRate = rate;
 }
 
 bool Mixer::setFastForward(int ff)

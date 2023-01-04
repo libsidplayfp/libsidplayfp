@@ -217,7 +217,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
 
             if (m_mixer.getSid(0) != nullptr)
             {
-                if (count && buffer != nullptr)
+                if (count && (buffer != nullptr))
                 {
                     // reset count in case of exceptions
                     count = 0;
@@ -368,6 +368,7 @@ bool Player::config(const SidConfig &cfg, bool force)
     m_info.m_channels = isStereo ? 2 : 1;
 
     m_mixer.setStereo(isStereo);
+    m_mixer.setSamplerate(cfg.frequency);
     m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
 
     // Update Configuration
