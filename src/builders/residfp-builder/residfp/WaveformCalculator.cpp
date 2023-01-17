@@ -94,11 +94,11 @@ static unsigned int triXor(unsigned int val)
  */
 short calculatePulldown(float distancetable[], float pulsestrength, float threshold, unsigned int accumulator)
 {
-    float bit[12];
+    unsigned char bit[12];
 
     for (unsigned int i = 0; i < 12; i++)
     {
-        bit[i] = (accumulator & (1u << i)) != 0 ? 1.f : 0.f;
+        bit[i] = (accumulator & (1u << i)) != 0 ? 1 : 0;
     }
 
     float pulldown[12];
@@ -113,7 +113,7 @@ short calculatePulldown(float distancetable[], float pulsestrength, float thresh
             if (cb == sb)
                 continue;
             const float weight = distancetable[sb - cb + 12];
-            avg += (1.f - bit[cb]) * weight;
+            avg += static_cast<float>(1 - bit[cb]) * weight;
             n += weight;
         }
 
@@ -122,18 +122,13 @@ short calculatePulldown(float distancetable[], float pulsestrength, float thresh
         pulldown[sb] = avg / n;
     }
 
-    for (int i = 0; i < 12; i++)
-    {
-        if (bit[i] != 0.f)
-            bit[i] = 1.f - pulldown[i];
-    }
-
     // Get the predicted value
     short value = 0;
 
     for (unsigned int i = 0; i < 12; i++)
     {
-        if (bit[i] > threshold)
+        const float bitValue = bit[i] != 0 ? 1.f - pulldown[i] : 0.f;
+        if (bitValue > threshold)
         {
             value |= 1u << i;
         }
