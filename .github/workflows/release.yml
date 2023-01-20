@@ -25,7 +25,7 @@ jobs:
       run: |
         make dist
         RELEASE_TARBALL=$(ls libsidplayfp-*.tar.gz)
-        echo ::set-output name=filename::${RELEASE_TARBALL}
+        echo "filename=${RELEASE_TARBALL}" >> $GITHUB_OUTPUT
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
