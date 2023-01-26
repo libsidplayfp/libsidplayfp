@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -91,7 +91,6 @@ c64::c64() :
 {
     resetIoBank();
 }
-
 
 void c64::resetIoBank()
 {
@@ -188,6 +187,12 @@ bool c64::addExtraSid(c64sid *s, int address)
 
 template<class T>
 void Delete(T &s) { delete s.second; }
+
+c64::~c64()
+{
+    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), Delete<sidBankMap_t::value_type>);
+    extraSidBanks.clear();
+}
 
 void c64::clearSids()
 {
