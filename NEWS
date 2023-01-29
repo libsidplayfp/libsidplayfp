@@ -1,3 +1,9 @@
+2.4.2 2023-01-29
+* Fixed a memory leak
+* Minor fixes
+
+
+
 2.4.1 2022-11-19
 * Fixed a memory leak introduced in 2.1.0
 
