@@ -23,6 +23,7 @@
 #include "FilterModelConfig.h"
 
 #include <vector>
+#include <iostream>
 
 namespace reSIDfp
 {
@@ -58,7 +59,11 @@ FilterModelConfig::FilterModelConfig(
 
     for (int i = 0; i < opamp_size; i++)
     {
-        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y + denorm) / 2.;
+        scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y) / 2.;
+//std::cout << scaled_voltage[i].x <<std::endl;
+        // We add 32768 to get a positive number in the range [0-65535]
+        scaled_voltage[i].x += static_cast<double>(1u << 15);
+
         scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
     }
 
@@ -69,7 +74,7 @@ FilterModelConfig::FilterModelConfig(
     for (int x = 0; x < (1 << 16); x++)
     {
         const Spline::Point out = s.evaluate(x);
-        // If Vmax > max opamp_voltage the first elements may be negative
+        // When interpolating outside range the first elements may be negative
         double tmp = out.x > 0. ? out.x : 0.;
         assert(tmp < 65535.5);
         opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
