@@ -72,8 +72,8 @@ AC_CHECK_DECL(
     [strcasecmp],
     [AC_CHECK_FUNCS([strcasecmp])],
     [AC_CHECK_DECL(
-        [stricmp],
-        [AC_CHECK_FUNCS([stricmp])]
+        [_stricmp],
+        [AC_CHECK_FUNCS([_stricmp])]
     )]
 )
 
@@ -81,8 +81,8 @@ AC_CHECK_DECL(
     [strncasecmp],
     [AC_CHECK_FUNCS([strncasecmp])],
     [AC_CHECK_DECL(
-        [strnicmp],
-        [AC_CHECK_FUNCS([strnicmp])]
+        [_strnicmp],
+        [AC_CHECK_FUNCS([_strnicmp])]
     )]
 )
 
