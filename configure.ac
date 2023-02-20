@@ -70,20 +70,12 @@ dnl Checks for non-standard functions.
 
 AC_CHECK_DECL(
     [strcasecmp],
-    [AC_CHECK_FUNCS([strcasecmp])],
-    [AC_CHECK_DECL(
-        [_stricmp],
-        [AC_CHECK_FUNCS([_stricmp])]
-    )]
+    [AC_CHECK_FUNCS([strcasecmp])]
 )
 
 AC_CHECK_DECL(
     [strncasecmp],
-    [AC_CHECK_FUNCS([strncasecmp])],
-    [AC_CHECK_DECL(
-        [_strnicmp],
-        [AC_CHECK_FUNCS([_strnicmp])]
-    )]
+    [AC_CHECK_FUNCS([strncasecmp])]
 )
 
 
