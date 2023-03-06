@@ -75,7 +75,7 @@ private:
     //@}
 
 private:
-    double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
+    double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment * 2.); }
 
     FilterModelConfig6581();
     ~FilterModelConfig6581() DEFAULT;
