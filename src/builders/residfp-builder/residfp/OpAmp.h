@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -86,12 +86,16 @@ public:
      *
      * @param opamp opamp mapping table as pairs of points (in -> out)
      * @param Vddt transistor dt parameter (in volts)
+     * @param vmin
+     * @param vmax
      */
-    OpAmp(const std::vector<Spline::Point> &opamp, double Vddt) :
+    OpAmp(const std::vector<Spline::Point> &opamp, double Vddt,
+            double vmin, double vmax
+    ) :
         x(0.),
         Vddt(Vddt),
-        vmin(opamp.front().x),
-        vmax(opamp.back().x),
+        vmin(vmin),
+        vmax(vmax),
         opamp(new Spline(opamp)) {}
 
     /**

@@ -133,7 +133,13 @@ FilterModelConfig8580::FilterModelConfig8580() :
 {
     // Create lookup tables for gains / summers.
 
-    OpAmp opampModel(std::vector<Spline::Point>(std::begin(opamp_voltage), std::end(opamp_voltage)), Vddt);
+    OpAmp opampModel(
+        std::vector<Spline::Point>(
+            std::begin(opamp_voltage),
+            std::end(opamp_voltage)),
+        Vddt,
+        vmin,
+        vmax);
 
     // The filter summer operates at n ~ 1, and has 5 fundamentally different
     // input configurations (2 - 6 input "resistors").

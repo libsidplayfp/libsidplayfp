@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2010 Dag Lem
  *
@@ -121,7 +121,13 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     // Create lookup tables for gains / summers.
 
-    OpAmp opampModel(std::vector<Spline::Point>(std::begin(opamp_voltage), std::end(opamp_voltage)), Vddt);
+    OpAmp opampModel(
+        std::vector<Spline::Point>(
+            std::begin(opamp_voltage),
+            std::end(opamp_voltage)),
+        Vddt,
+        vmin,
+        vmax);
 
     // The filter summer operates at n ~ 1, and has 5 fundamentally different
     // input configurations (2 - 6 input "resistors").
