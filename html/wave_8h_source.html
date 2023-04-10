@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -427,7 +427,7 @@
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment">// in the output.</span></div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment">// Example:</span></div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment">//             1 1</span></div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="comment">// Bit #       1 0 9 8 7 6 5 4 3 2 1 0</span></div>
 <div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment">//             -----------------------</span></div>
@@ -480,11 +480,11 @@
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="comment">// Sawtooth+Triangle:</span></div>
 <div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="comment">// The accumulator is used to look up an OSC3 sample.</span></div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="comment">// Pulse+Triangle:</span></div>
 <div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;<span class="comment">// The accumulator is used to look up an OSC3 sample. When ring modulation is</span></div>
 <div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="comment">// selected, the accumulator MSB is substituted with MSB EOR NOT sync_source MSB.</span></div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="comment">// Pulse+Sawtooth:</span></div>
 <div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="comment">// The accumulator is used to look up an OSC3 sample.</span></div>
 <div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="comment">// The sample is output if the pulse output is on.</span></div>
@@ -492,7 +492,7 @@
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;<span class="comment">// Pulse+Sawtooth+Triangle:</span></div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;<span class="comment">// The accumulator is used to look up an OSC3 sample.</span></div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;<span class="comment">// The sample is output if the pulse output is on.</span></div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;<span class="comment">// Combined waveforms including noise:</span></div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;<span class="comment">// All waveform combinations including noise output zero after a few cycles,</span></div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="comment">// since the waveform bits are and&#39;ed into the shift register via the shift</span></div>
@@ -615,7 +615,7 @@
 <div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;<span class="comment">// The digital waveform output is converted to an analog signal by a 12-bit</span></div>
 <div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;<span class="comment">// DAC. Re-vectorized die photographs reveal that the DAC is an R-2R ladder</span></div>
 <div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;<span class="comment">// built up as follows:</span></div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;<span class="comment">//        12V     11  10   9   8   7   6   5   4   3   2   1   0    GND</span></div>
 <div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;<span class="comment">// Strange  |      |   |   |   |   |   |   |   |   |   |   |   |     |  Missing</span></div>
 <div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;<span class="comment">// part    2R     2R  2R  2R  2R  2R  2R  2R  2R  2R  2R  2R  2R    2R  term.</span></div>
@@ -656,7 +656,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

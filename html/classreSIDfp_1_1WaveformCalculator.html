@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -62,8 +62,10 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a003313ae91ac6f2575ab9f7e33a3c774"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmatrix.html">matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformCalculator.html#a003313ae91ac6f2575ab9f7e33a3c774">buildTable</a> (ChipModel model)</td></tr>
-<tr class="separator:a003313ae91ac6f2575ab9f7e33a3c774"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cc8f7337506dad1ea099d7e802d9d69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmatrix.html">matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">getWaveTable</a> ()</td></tr>
+<tr class="separator:a6cc8f7337506dad1ea099d7e802d9d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9eb51edd13d5c8f0b0eb3f4cfc06609"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmatrix.html">matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformCalculator.html#af9eb51edd13d5c8f0b0eb3f4cfc06609">buildPulldownTable</a> (ChipModel model)</td></tr>
+<tr class="separator:af9eb51edd13d5c8f0b0eb3f4cfc06609"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -97,14 +99,14 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
 </ul>
 <p>Also in the 6581 the MSB of the oscillator, used as input for the triangle xor logic and the pulse adder's last bit, is connected directly to the waveform selector, while in the 8580 it is latched at sid_clk2 before being forwarded to the selector. Thus in the 6581 if the sawtooth MSB is pulled down it might affect the oscillator's adder driving the top bit low. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a003313ae91ac6f2575ab9f7e33a3c774"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a003313ae91ac6f2575ab9f7e33a3c774">&#9670;&nbsp;</a></span>buildTable()</h2>
+<a id="af9eb51edd13d5c8f0b0eb3f4cfc06609"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9eb51edd13d5c8f0b0eb3f4cfc06609">&#9670;&nbsp;</a></span>buildPulldownTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classmatrix.html">matrix_t</a> * reSIDfp::WaveformCalculator::buildTable </td>
+          <td class="memname"><a class="el" href="classmatrix.html">matrix_t</a> * reSIDfp::WaveformCalculator::buildPulldownTable </td>
           <td>(</td>
           <td class="paramtype">ChipModel&#160;</td>
           <td class="paramname"><em>model</em></td><td>)</td>
@@ -112,14 +114,14 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Build waveform tables for use by <a class="el" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>.</p>
+<p>Build pulldown table for use by <a class="el" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">model</td><td>Chip model to use </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Waveform table </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Pulldown table </dd></dl>
 
 </div>
 </div>
@@ -149,6 +151,33 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
 
 </div>
 </div>
+<a id="a6cc8f7337506dad1ea099d7e802d9d69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cc8f7337506dad1ea099d7e802d9d69">&#9670;&nbsp;</a></span>getWaveTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmatrix.html">matrix_t</a>* reSIDfp::WaveformCalculator::getWaveTable </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the waveform table for use by <a class="el" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>.</p>
+<dl class="section return"><dt>Returns</dt><dd>Waveform table </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="WaveformCalculator_8h_source.html">WaveformCalculator.h</a></li>
 <li>WaveformCalculator.cpp</li>
@@ -156,7 +185,7 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

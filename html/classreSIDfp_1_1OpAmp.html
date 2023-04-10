@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -61,10 +61,9 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a009b8e8162bc2ec64ab97747e2dc3491"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1OpAmp.html#a009b8e8162bc2ec64ab97747e2dc3491">OpAmp</a> (const std::vector&lt; <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> &gt; &amp;opamp, double Vddt)</td></tr>
-<tr class="separator:a009b8e8162bc2ec64ab97747e2dc3491"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41231039c8ba825d8dee8356693aa80f"><td class="memItemLeft" align="right" valign="top"><a id="a41231039c8ba825d8dee8356693aa80f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> () const</td></tr>
+<tr class="memitem:a5ce5d3f70e0c8a6ec6f345fe7ae80536"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1OpAmp.html#a5ce5d3f70e0c8a6ec6f345fe7ae80536">OpAmp</a> (const std::vector&lt; <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> &gt; &amp;opamp, double Vddt, double vmin, double vmax)</td></tr>
+<tr class="separator:a5ce5d3f70e0c8a6ec6f345fe7ae80536"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41231039c8ba825d8dee8356693aa80f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1OpAmp.html#a41231039c8ba825d8dee8356693aa80f">reset</a> () const</td></tr>
 <tr class="separator:a41231039c8ba825d8dee8356693aa80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a045420d246660aa5f79d13a7ad4a6eb1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1OpAmp.html#a045420d246660aa5f79d13a7ad4a6eb1">solve</a> (double n, double vi) const</td></tr>
 <tr class="separator:a045420d246660aa5f79d13a7ad4a6eb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -76,15 +75,16 @@ vi ---R1--o--[A&gt;--o-- vo
           vx
 </pre><p> From Kirchoff's current law it follows that </p><pre class="fragment">IR1f + IR2r = 0
 </pre><p> Substituting the triode mode transistor model K*W/L*(Vgst^2 - Vgdt^2) for the currents, we get: </p><pre class="fragment">n*((Vddt - vx)^2 - (Vddt - vi)^2) + (Vddt - vx)^2 - (Vddt - vo)^2 = 0
-</pre><p> Our root function f can thus be written as: </p><pre class="fragment">f = (n + 1)*(Vddt - vx)^2 - n*(Vddt - vi)^2 - (Vddt - vo)^2 = 0
+</pre><p> where n is the ratio between R1 and R2.</p>
+<p>Our root function f can thus be written as: </p><pre class="fragment">f = (n + 1)*(Vddt - vx)^2 - n*(Vddt - vi)^2 - (Vddt - vo)^2 = 0
 </pre><p> Using substitution constants </p><pre class="fragment">a = n + 1
 b = Vddt
 c = n*(Vddt - vi)^2
 </pre><p> the equations for the root function and its derivative can be written as: </p><pre class="fragment">f = a*(b - vx)^2 - c - (b - vo)^2
 df = 2*((b - vo)*dvo - a*(b - vx))
 </pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a009b8e8162bc2ec64ab97747e2dc3491"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a009b8e8162bc2ec64ab97747e2dc3491">&#9670;&nbsp;</a></span>OpAmp()</h2>
+<a id="a5ce5d3f70e0c8a6ec6f345fe7ae80536"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ce5d3f70e0c8a6ec6f345fe7ae80536">&#9670;&nbsp;</a></span>OpAmp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -102,7 +102,19 @@ df = 2*((b - vo)*dvo - a*(b - vx))
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>Vddt</em>&#160;</td>
+          <td class="paramname"><em>Vddt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>vmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>vmax</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -120,8 +132,9 @@ df = 2*((b - vo)*dvo - a*(b - vx))
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">opamp</td><td>opamp mapping table as pairs of points (in -&gt; out) </td></tr>
-    <tr><td class="paramname">opamplength</td><td>length of the opamp array </td></tr>
-    <tr><td class="paramname">kVddt</td><td>transistor dt parameter (in volts) </td></tr>
+    <tr><td class="paramname">Vddt</td><td>transistor dt parameter (in volts) </td></tr>
+    <tr><td class="paramname">vmin</td><td></td></tr>
+    <tr><td class="paramname">vmax</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -129,6 +142,32 @@ df = 2*((b - vo)*dvo - a*(b - vx))
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a41231039c8ba825d8dee8356693aa80f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41231039c8ba825d8dee8356693aa80f">&#9670;&nbsp;</a></span>reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reSIDfp::OpAmp::reset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Reset root position </p>
+
+</div>
+</div>
 <a id="a045420d246660aa5f79d13a7ad4a6eb1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a045420d246660aa5f79d13a7ad4a6eb1">&#9670;&nbsp;</a></span>solve()</h2>
 
@@ -158,11 +197,11 @@ df = 2*((b - vo)*dvo - a*(b - vx))
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">n</td><td>the ratio of input/output loading </td></tr>
-    <tr><td class="paramname">vi</td><td>input </td></tr>
+    <tr><td class="paramname">vi</td><td>input voltage </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>vo </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>vo output voltage </dd></dl>
 
 </div>
 </div>
@@ -173,7 +212,7 @@ df = 2*((b - vo)*dvo - a*(b - vx))
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

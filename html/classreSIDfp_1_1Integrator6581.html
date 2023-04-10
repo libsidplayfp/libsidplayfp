@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -98,7 +98,7 @@ Ids = K*W/L*(2*Vgst - Vds)*Vds
 </pre><p> This turns out to be a general equation which covers both the triode and saturation modes (where the second term is 0 in saturation mode). The equation is also symmetrical, i.e. it can calculate negative currents without any change of parameters (since the terms for drain and source are identical except for the sign).</p>
 <p>FIXME: Subthreshold as function of Vgs, Vgd. </p><pre class="fragment">Ids = I0*W/L*e^(Vgst/(Ut/k))   , Vgst &lt; 0               (subthreshold mode)
 </pre><p> where I0 = (2 * uCox * Ut^2) / k</p>
-<p>The remaining problem with the textbook model is that the transition from subthreshold the triode/saturation is not continuous.</p>
+<p>The remaining problem with the textbook model is that the transition from subthreshold to triode/saturation is not continuous.</p>
 <p>Realizing that the subthreshold and triode/saturation modes may both be defined by independent (and equal) terms of Vgs and Vds, respectively, the corresponding terms can be blended into (equal) continuous functions suitable for table lookup.</p>
 <p>The EKV model (Enz, Krummenacher and Vittoz) essentially performs this blending using an elegant mathematical formulation: </p><pre class="fragment">Ids = Is * (if - ir)
 Is = ((2 * u*Cox * Ut^2)/k) * W/L
@@ -132,7 +132,7 @@ Vg = nVddt - sqrt(((nVddt - vi)^2 + (nVddt - Vw)^2)/2)
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

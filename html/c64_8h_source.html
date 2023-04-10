@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -184,78 +184,79 @@
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
 <div class="line"><a name="l00203"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1c64.html#ad4ee389e7cabb5b2d09a9f3d35568c98">  203</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> *<a class="code" href="classlibsidplayfp_1_1c64.html#ad4ee389e7cabb5b2d09a9f3d35568c98">getEventScheduler</a>() { <span class="keywordflow">return</span> &amp;eventScheduler; }</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    uint_least32_t getTime()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> getTimeMs() / 1000; }</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    uint_least32_t getTimeMs()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>uint_least32_t<span class="keyword">&gt;</span>((eventScheduler.<a class="code" href="classlibsidplayfp_1_1EventScheduler.html#a7cfec9ca446544a27160ce08ef58f6e9">getTime</a>(EVENT_CLOCK_PHI1) * 1000) / cpuFrequency); }</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
-<div class="line"><a name="l00214"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1c64.html#ace79467ce648b126236b7ed56761648e">  214</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#ace79467ce648b126236b7ed56761648e">clock</a>() { eventScheduler.<a class="code" href="classlibsidplayfp_1_1EventScheduler.html#a852fdb487394f1a94a2ba608f6b2b430">clock</a>(); }</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordtype">void</span> debug(<span class="keywordtype">bool</span> enable, FILE *out) { cpu.debug(enable, out); }</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordtype">void</span> reset();</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keywordtype">void</span> resetCpu() { cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a93b574044361532623bad2b1b1e505fd">reset</a>(); }</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a9ca98b7c75e8e45162ef67ac62604c0f">setModel</a>(<a class="code" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66e">model_t</a> model);</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a4fa1cd0cc5d3813d5d392d3e1349bcdb">setCiaModel</a>(<a class="code" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673">cia_model_t</a> model);</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1c64.html#a8321a0a6dd619d9b93717efc47dd293b">  236</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a8321a0a6dd619d9b93717efc47dd293b">getMainCpuSpeed</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cpuFrequency; }</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a6dffc2a11eddd9b9d57b332724da32f0">setBaseSid</a>(<a class="code" href="classlibsidplayfp_1_1c64sid.html">c64sid</a> *s);</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a455ed17a420ac0d3cfa62bb31da3bce5">addExtraSid</a>(<a class="code" href="classlibsidplayfp_1_1c64sid.html">c64sid</a> *s, <span class="keywordtype">int</span> address);</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#aaf087513c7c7a97e6120ea81292e6e69">clearSids</a>();</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1c64.html#a728e22e6108d211e526b12a5b7966457">  265</a></span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classlibsidplayfp_1_1c64.html#a728e22e6108d211e526b12a5b7966457">cpuCredits</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a55127f0f7facd846ae219c10949724de">credits</a>(); }</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* ciaCredits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cia1.<a class="code" href="classlibsidplayfp_1_1MOS652X.html#a6e493d6604a2dbc76d0f3fa38e0da9c2">credits</a>(); }</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* vicCredits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> vic.credits(); }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    sidmemory&amp; getMemInterface() { <span class="keywordflow">return</span> mmu; }</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cia1.getTimerA(); }</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;};</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="keywordtype">void</span> c64::interruptIRQ(<span class="keywordtype">bool</span> state)</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;{</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <span class="keywordflow">if</span> (state)</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    {</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;        <span class="keywordflow">if</span> (irqCount == 0)</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#acf7bb99335d74e444d6ae844729e6635">triggerIRQ</a>();</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160; </div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        irqCount ++;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    }</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    {</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        irqCount --;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        <span class="keywordflow">if</span> (irqCount == 0)</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;             cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#aebb119bbd24eb565d0b7c448b41084b2">clearIRQ</a>();</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    }</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;}</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="keywordtype">void</span> c64::setBA(<span class="keywordtype">bool</span> state)</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;{</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="comment">// only react to changes in state</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordflow">if</span> (state == oldBAState)</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    oldBAState = state;</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="comment">// Signal changes in BA to interested parties</span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a233ef751de522b0e56a7734807027e60">setRDY</a>(state);</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;}</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="keywordtype">void</span> c64::lightpen(<span class="keywordtype">bool</span> state)</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;{</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keywordflow">if</span> (!state)</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        vic.<a class="code" href="classlibsidplayfp_1_1MOS656X.html#a86876546f6ab14d21d5b75bf69c911b9">triggerLightpen</a>();</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        vic.<a class="code" href="classlibsidplayfp_1_1MOS656X.html#a491741948e823d65dd902f21b8a796ca">clearLightpen</a>();</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;}</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;}</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// C64_H</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    uint_least32_t getTimeMs()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>uint_least32_t<span class="keyword">&gt;</span>((eventScheduler.<a class="code" href="classlibsidplayfp_1_1EventScheduler.html#a7cfec9ca446544a27160ce08ef58f6e9">getTime</a>(EVENT_CLOCK_PHI1) * 1000) / cpuFrequency);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    }</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00215"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1c64.html#ace79467ce648b126236b7ed56761648e">  215</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#ace79467ce648b126236b7ed56761648e">clock</a>() { eventScheduler.<a class="code" href="classlibsidplayfp_1_1EventScheduler.html#a852fdb487394f1a94a2ba608f6b2b430">clock</a>(); }</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160; </div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordtype">void</span> debug(<span class="keywordtype">bool</span> enable, FILE *out) { cpu.debug(enable, out); }</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keywordtype">void</span> reset();</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordtype">void</span> resetCpu() { cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a93b574044361532623bad2b1b1e505fd">reset</a>(); }</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a9ca98b7c75e8e45162ef67ac62604c0f">setModel</a>(<a class="code" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66e">model_t</a> model);</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a4fa1cd0cc5d3813d5d392d3e1349bcdb">setCiaModel</a>(<a class="code" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673">cia_model_t</a> model);</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1c64.html#a8321a0a6dd619d9b93717efc47dd293b">  237</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a8321a0a6dd619d9b93717efc47dd293b">getMainCpuSpeed</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cpuFrequency; }</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a6dffc2a11eddd9b9d57b332724da32f0">setBaseSid</a>(<a class="code" href="classlibsidplayfp_1_1c64sid.html">c64sid</a> *s);</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1c64.html#a455ed17a420ac0d3cfa62bb31da3bce5">addExtraSid</a>(<a class="code" href="classlibsidplayfp_1_1c64sid.html">c64sid</a> *s, <span class="keywordtype">int</span> address);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1c64.html#aaf087513c7c7a97e6120ea81292e6e69">clearSids</a>();</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
+<div class="line"><a name="l00266"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1c64.html#a728e22e6108d211e526b12a5b7966457">  266</a></span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="classlibsidplayfp_1_1c64.html#a728e22e6108d211e526b12a5b7966457">cpuCredits</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a55127f0f7facd846ae219c10949724de">credits</a>(); }</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* ciaCredits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cia1.<a class="code" href="classlibsidplayfp_1_1MOS652X.html#a6e493d6604a2dbc76d0f3fa38e0da9c2">credits</a>(); }</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* vicCredits()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> vic.credits(); }</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    sidmemory&amp; getMemInterface() { <span class="keywordflow">return</span> mmu; }</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cia1.getTimerA(); }</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;};</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="keywordtype">void</span> c64::interruptIRQ(<span class="keywordtype">bool</span> state)</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;{</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordflow">if</span> (state)</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    {</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        <span class="keywordflow">if</span> (irqCount == 0)</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;            cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#acf7bb99335d74e444d6ae844729e6635">triggerIRQ</a>();</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        irqCount ++;</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;    }</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    {</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        irqCount --;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        <span class="keywordflow">if</span> (irqCount == 0)</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;             cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#aebb119bbd24eb565d0b7c448b41084b2">clearIRQ</a>();</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    }</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;}</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160; </div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="keywordtype">void</span> c64::setBA(<span class="keywordtype">bool</span> state)</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;{</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="comment">// only react to changes in state</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordflow">if</span> (state == oldBAState)</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    oldBAState = state;</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <span class="comment">// Signal changes in BA to interested parties</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    cpu.<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a233ef751de522b0e56a7734807027e60">setRDY</a>(state);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;}</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="keywordtype">void</span> c64::lightpen(<span class="keywordtype">bool</span> state)</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;{</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keywordflow">if</span> (!state)</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        vic.<a class="code" href="classlibsidplayfp_1_1MOS656X.html#a86876546f6ab14d21d5b75bf69c911b9">triggerLightpen</a>();</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        vic.<a class="code" href="classlibsidplayfp_1_1MOS656X.html#a491741948e823d65dd902f21b8a796ca">clearLightpen</a>();</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;}</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;}</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// C64_H</span></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1ColorRAMBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1ColorRAMBank.html">libsidplayfp::ColorRAMBank</a></div><div class="ttdef"><b>Definition:</b> ColorRAMBank.h:43</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1DisconnectedBusBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1DisconnectedBusBank.html">libsidplayfp::DisconnectedBusBank</a></div><div class="ttdef"><b>Definition:</b> DisconnectedBusBank.h:43</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventScheduler_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventScheduler.html">libsidplayfp::EventScheduler</a></div><div class="ttdef"><b>Definition:</b> EventScheduler.h:62</div></div>
@@ -265,13 +266,13 @@
 <div class="ttc" id="aclasslibsidplayfp_1_1MMU_html"><div class="ttname"><a href="classlibsidplayfp_1_1MMU.html">libsidplayfp::MMU</a></div><div class="ttdef"><b>Definition:</b> mmu.h:51</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MMU_html_a3ab559bb00ca8dd6995f0122c643d85f"><div class="ttname"><a href="classlibsidplayfp_1_1MMU.html#a3ab559bb00ca8dd6995f0122c643d85f">libsidplayfp::MMU::cpuWrite</a></div><div class="ttdeci">void cpuWrite(uint_least16_t addr, uint8_t data)</div><div class="ttdef"><b>Definition:</b> mmu.h:139</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MMU_html_ae413dfec1023391ca8b3b60990773713"><div class="ttname"><a href="classlibsidplayfp_1_1MMU.html#ae413dfec1023391ca8b3b60990773713">libsidplayfp::MMU::cpuRead</a></div><div class="ttdeci">uint8_t cpuRead(uint_least16_t addr) const</div><div class="ttdef"><b>Definition:</b> mmu.h:131</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a233ef751de522b0e56a7734807027e60"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a233ef751de522b0e56a7734807027e60">libsidplayfp::MOS6510::setRDY</a></div><div class="ttdeci">void setRDY(bool newRDY)</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:120</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a24e3857c641e9736eec20f6170b28534"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a24e3857c641e9736eec20f6170b28534">libsidplayfp::MOS6510::triggerNMI</a></div><div class="ttdeci">void triggerNMI()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:185</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a55127f0f7facd846ae219c10949724de"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a55127f0f7facd846ae219c10949724de">libsidplayfp::MOS6510::credits</a></div><div class="ttdeci">static const char * credits()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2194</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a6e0e2cada45a0b34cfa157e97bc81a8f"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a6e0e2cada45a0b34cfa157e97bc81a8f">libsidplayfp::MOS6510::triggerRST</a></div><div class="ttdeci">void triggerRST()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:171</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a93b574044361532623bad2b1b1e505fd"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a93b574044361532623bad2b1b1e505fd">libsidplayfp::MOS6510::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2175</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_acf7bb99335d74e444d6ae844729e6635"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#acf7bb99335d74e444d6ae844729e6635">libsidplayfp::MOS6510::triggerIRQ</a></div><div class="ttdeci">void triggerIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:201</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_aebb119bbd24eb565d0b7c448b41084b2"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#aebb119bbd24eb565d0b7c448b41084b2">libsidplayfp::MOS6510::clearIRQ</a></div><div class="ttdeci">void clearIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:217</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a233ef751de522b0e56a7734807027e60"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a233ef751de522b0e56a7734807027e60">libsidplayfp::MOS6510::setRDY</a></div><div class="ttdeci">void setRDY(bool newRDY)</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:122</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a24e3857c641e9736eec20f6170b28534"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a24e3857c641e9736eec20f6170b28534">libsidplayfp::MOS6510::triggerNMI</a></div><div class="ttdeci">void triggerNMI()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:187</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a55127f0f7facd846ae219c10949724de"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a55127f0f7facd846ae219c10949724de">libsidplayfp::MOS6510::credits</a></div><div class="ttdeci">static const char * credits()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2196</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a6e0e2cada45a0b34cfa157e97bc81a8f"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a6e0e2cada45a0b34cfa157e97bc81a8f">libsidplayfp::MOS6510::triggerRST</a></div><div class="ttdeci">void triggerRST()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:173</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a93b574044361532623bad2b1b1e505fd"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a93b574044361532623bad2b1b1e505fd">libsidplayfp::MOS6510::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2177</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_acf7bb99335d74e444d6ae844729e6635"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#acf7bb99335d74e444d6ae844729e6635">libsidplayfp::MOS6510::triggerIRQ</a></div><div class="ttdeci">void triggerIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:203</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_aebb119bbd24eb565d0b7c448b41084b2"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#aebb119bbd24eb565d0b7c448b41084b2">libsidplayfp::MOS6510::clearIRQ</a></div><div class="ttdeci">void clearIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:219</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS652X_html_a6e493d6604a2dbc76d0f3fa38e0da9c2"><div class="ttname"><a href="classlibsidplayfp_1_1MOS652X.html#a6e493d6604a2dbc76d0f3fa38e0da9c2">libsidplayfp::MOS652X::credits</a></div><div class="ttdeci">static const char * credits()</div><div class="ttdef"><b>Definition:</b> mos652x.cpp:111</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS656X_html_a491741948e823d65dd902f21b8a796ca"><div class="ttname"><a href="classlibsidplayfp_1_1MOS656X.html#a491741948e823d65dd902f21b8a796ca">libsidplayfp::MOS656X::clearLightpen</a></div><div class="ttdeci">void clearLightpen()</div><div class="ttdef"><b>Definition:</b> mos656x.cpp:692</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS656X_html_a86876546f6ab14d21d5b75bf69c911b9"><div class="ttname"><a href="classlibsidplayfp_1_1MOS656X.html#a86876546f6ab14d21d5b75bf69c911b9">libsidplayfp::MOS656X::triggerLightpen</a></div><div class="ttdeci">void triggerLightpen()</div><div class="ttdef"><b>Definition:</b> mos656x.cpp:685</div></div>
@@ -286,11 +287,11 @@
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a455ed17a420ac0d3cfa62bb31da3bce5"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a455ed17a420ac0d3cfa62bb31da3bce5">libsidplayfp::c64::addExtraSid</a></div><div class="ttdeci">bool addExtraSid(c64sid *s, int address)</div><div class="ttdef"><b>Definition:</b> c64.cpp:157</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a4fa1cd0cc5d3813d5d392d3e1349bcdb"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a4fa1cd0cc5d3813d5d392d3e1349bcdb">libsidplayfp::c64::setCiaModel</a></div><div class="ttdeci">void setCiaModel(cia_model_t model)</div><div class="ttdef"><b>Definition:</b> c64.cpp:146</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a6dffc2a11eddd9b9d57b332724da32f0"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a6dffc2a11eddd9b9d57b332724da32f0">libsidplayfp::c64::setBaseSid</a></div><div class="ttdeci">void setBaseSid(c64sid *s)</div><div class="ttdef"><b>Definition:</b> c64.cpp:152</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a728e22e6108d211e526b12a5b7966457"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a728e22e6108d211e526b12a5b7966457">libsidplayfp::c64::cpuCredits</a></div><div class="ttdeci">const char * cpuCredits() const</div><div class="ttdef"><b>Definition:</b> c64.h:265</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a8321a0a6dd619d9b93717efc47dd293b"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a8321a0a6dd619d9b93717efc47dd293b">libsidplayfp::c64::getMainCpuSpeed</a></div><div class="ttdeci">double getMainCpuSpeed() const</div><div class="ttdef"><b>Definition:</b> c64.h:236</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a728e22e6108d211e526b12a5b7966457"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a728e22e6108d211e526b12a5b7966457">libsidplayfp::c64::cpuCredits</a></div><div class="ttdeci">const char * cpuCredits() const</div><div class="ttdef"><b>Definition:</b> c64.h:266</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a8321a0a6dd619d9b93717efc47dd293b"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a8321a0a6dd619d9b93717efc47dd293b">libsidplayfp::c64::getMainCpuSpeed</a></div><div class="ttdeci">double getMainCpuSpeed() const</div><div class="ttdef"><b>Definition:</b> c64.h:237</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_a9ca98b7c75e8e45162ef67ac62604c0f"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#a9ca98b7c75e8e45162ef67ac62604c0f">libsidplayfp::c64::setModel</a></div><div class="ttdeci">void setModel(model_t model)</div><div class="ttdef"><b>Definition:</b> c64.cpp:136</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_aaf087513c7c7a97e6120ea81292e6e69"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#aaf087513c7c7a97e6120ea81292e6e69">libsidplayfp::c64::clearSids</a></div><div class="ttdeci">void clearSids()</div><div class="ttdef"><b>Definition:</b> c64.cpp:197</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1c64_html_ace79467ce648b126236b7ed56761648e"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#ace79467ce648b126236b7ed56761648e">libsidplayfp::c64::clock</a></div><div class="ttdeci">void clock()</div><div class="ttdef"><b>Definition:</b> c64.h:214</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1c64_html_ace79467ce648b126236b7ed56761648e"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#ace79467ce648b126236b7ed56761648e">libsidplayfp::c64::clock</a></div><div class="ttdeci">void clock()</div><div class="ttdef"><b>Definition:</b> c64.h:215</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_ad4ee389e7cabb5b2d09a9f3d35568c98"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#ad4ee389e7cabb5b2d09a9f3d35568c98">libsidplayfp::c64::getEventScheduler</a></div><div class="ttdeci">EventScheduler * getEventScheduler()</div><div class="ttdef"><b>Definition:</b> c64.h:203</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_af7652923a8924a078a543bc904b64673"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673">libsidplayfp::c64::cia_model_t</a></div><div class="ttdeci">cia_model_t</div><div class="ttdef"><b>Definition:</b> c64.h:85</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1c64_html_af7652923a8924a078a543bc904b64673a56060aed7e57c6b5ac25350811650862"><div class="ttname"><a href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673a56060aed7e57c6b5ac25350811650862">libsidplayfp::c64::OLD_4485</a></div><div class="ttdeci">@ OLD_4485</div><div class="ttdoc">Old CIA, special batch labeled 4485.</div><div class="ttdef"><b>Definition:</b> c64.h:88</div></div>
@@ -305,7 +306,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

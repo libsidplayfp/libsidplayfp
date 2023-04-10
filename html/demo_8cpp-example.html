@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -45,7 +45,7 @@
 <div class="fragment"><div class="line"><span class="comment">/*</span></div>
 <div class="line"><span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><span class="comment"> *</span></div>
-<div class="line"><span class="comment"> * Copyright 2012-2014 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><span class="comment"> * Copyright 2012-2023 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><span class="comment"> *</span></div>
 <div class="line"><span class="comment"> * This program is free software; you can redistribute it and/or modify</span></div>
 <div class="line"><span class="comment"> * it under the terms of the GNU General Public License as published by</span></div>
@@ -197,7 +197,12 @@
 <div class="line">    std::vector&lt;short&gt; buffer(bufferSamples);</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;1000; i++)</div>
 <div class="line">    {</div>
-<div class="line">        m_engine.<a name="a16"></a><a class="code" href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">play</a>(&amp;buffer.front(), bufferSamples);</div>
+<div class="line">        uint_least32_t res = m_engine.<a name="a16"></a><a class="code" href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">play</a>(&amp;buffer.front(), bufferSamples);</div>
+<div class="line">        <span class="keywordflow">if</span> (!m_engine.<a name="a17"></a><a class="code" href="classsidplayfp.html#ae2b6b7d7c45ab1970a218bb6d5bf1178">isPlaying</a>() || (res &lt; bufferSamples))</div>
+<div class="line">        {</div>
+<div class="line">            std::cerr &lt;&lt;  m_engine.<a class="code" href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">error</a>() &lt;&lt; std::endl;</div>
+<div class="line">            <span class="keywordflow">break</span>;</div>
+<div class="line">        }</div>
 <div class="line">        ::write(handle, &amp;buffer.front(), bufferSize);</div>
 <div class="line">    }</div>
 <div class="line"> </div>
@@ -220,10 +225,11 @@
 <div class="ttc" id="aclasssidplayfp_html_a8ad05fe52bd34636832684c6c08ca994"><div class="ttname"><a href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">sidplayfp::error</a></div><div class="ttdeci">const char * error() const</div><div class="ttdef"><b>Definition:</b> sidplayfp.cpp:84</div></div>
 <div class="ttc" id="aclasssidplayfp_html_ac436fcda23b37c6fb03e319d9705947b"><div class="ttname"><a href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">sidplayfp::play</a></div><div class="ttdeci">uint_least32_t play(short *buffer, uint_least32_t count)</div><div class="ttdef"><b>Definition:</b> sidplayfp.cpp:59</div></div>
 <div class="ttc" id="aclasssidplayfp_html_ac6a9155ee3af4bac3cd775d72db41f57"><div class="ttname"><a href="classsidplayfp.html#ac6a9155ee3af4bac3cd775d72db41f57">sidplayfp::setRoms</a></div><div class="ttdeci">void setRoms(const uint8_t *kernal, const uint8_t *basic=0, const uint8_t *character=0)</div><div class="ttdef"><b>Definition:</b> sidplayfp.cpp:113</div></div>
+<div class="ttc" id="aclasssidplayfp_html_ae2b6b7d7c45ab1970a218bb6d5bf1178"><div class="ttname"><a href="classsidplayfp.html#ae2b6b7d7c45ab1970a218bb6d5bf1178">sidplayfp::isPlaying</a></div><div class="ttdeci">bool isPlaying() const</div><div class="ttdef"><b>Definition:</b> sidplayfp.cpp:104</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

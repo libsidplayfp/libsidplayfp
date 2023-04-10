@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -50,6 +50,7 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classlibsidplayfp_1_1Mixer-members.html">List of all members</a>  </div>
@@ -60,6 +61,11 @@
 
 <p><code>#include &lt;<a class="el" href="mixer_8h_source.html">mixer.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1Mixer_1_1badBufferSize.html">badBufferSize</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4217c87734e1693f18b6dde6cfbb02ec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1Mixer.html#a4217c87734e1693f18b6dde6cfbb02ec">Mixer</a> ()</td></tr>
@@ -84,6 +90,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a62d3d527cc0b63327f3b484ae8c5c9bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f501b2bfcc4d0b496e9e2b181fb1084"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1Mixer.html#a5f501b2bfcc4d0b496e9e2b181fb1084">setStereo</a> (bool stereo)</td></tr>
 <tr class="separator:a5f501b2bfcc4d0b496e9e2b181fb1084"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99815bc7986fcb1f3689e91e1edccd7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1Mixer.html#a99815bc7986fcb1f3689e91e1edccd7f">setSamplerate</a> (uint_least32_t rate)</td></tr>
+<tr class="separator:a99815bc7986fcb1f3689e91e1edccd7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a464647aef6260daeea89c71420cda0c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1Mixer.html#a464647aef6260daeea89c71420cda0c0">notFinished</a> () const</td></tr>
 <tr class="separator:a464647aef6260daeea89c71420cda0c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92d036045d92f4bce5f37ebf885ac291"><td class="memItemLeft" align="right" valign="top">uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1Mixer.html#a92d036045d92f4bce5f37ebf885ac291">samplesGenerated</a> () const</td></tr>
@@ -193,7 +201,13 @@ static const int_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buffer</td><td>output buffer </td></tr>
-    <tr><td class="paramname">count</td><td>size of the buffer in samples </td></tr>
+    <tr><td class="paramname">count</td><td>size of the buffer in samples</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classlibsidplayfp_1_1Mixer_1_1badBufferSize.html">badBufferSize</a></td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -384,6 +398,31 @@ static const int_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a
 
 </div>
 </div>
+<a id="a99815bc7986fcb1f3689e91e1edccd7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99815bc7986fcb1f3689e91e1edccd7f">&#9670;&nbsp;</a></span>setSamplerate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void libsidplayfp::Mixer::setSamplerate </td>
+          <td>(</td>
+          <td class="paramtype">uint_least32_t&#160;</td>
+          <td class="paramname"><em>rate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set sample rate.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rate</td><td>sample rate in Hertz </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a5f501b2bfcc4d0b496e9e2b181fb1084"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5f501b2bfcc4d0b496e9e2b181fb1084">&#9670;&nbsp;</a></span>setStereo()</h2>
 
@@ -452,7 +491,7 @@ static const int_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

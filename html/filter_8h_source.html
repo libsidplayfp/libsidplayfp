@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.4.2</span>
+   &#160;<span id="projectnumber">2.5.0a</span>
    </div>
   </td>
  </tr>
@@ -113,7 +113,7 @@
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// Tommi Lempinen has done an impressive work on re-vectorizing and annotating</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// the die photographs, substantially simplifying further analysis of the</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">// filter circuit.</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">// The filter schematics below are reverse engineered from these re-vectorized</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">// and annotated die photographs. While the filter first depicted in reSID 0.9</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// is a correct model of the basic filter, the schematics are now completed</span></div>
@@ -125,7 +125,7 @@
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// SID filter / mixer / output</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">// ---------------------------</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">//                ---------------------------------------------------</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">//               |                                                   |</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">//               |                         --1R1-- \--  D7           |</span></div>
@@ -137,7 +137,7 @@
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">//               |   |                     --8R1-- \--| D4           | (7.0R1)</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">//               |   |                                |              |</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">// $17           |   |                    (CAP2B)     |  (CAP1B)     |</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// 0=to mixer    |    --R8--    ---R8--        ---C---|       ---C---| </span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// 0=to mixer    |    --R8--    ---R8--        ---C---|       ---C---|</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">// 1=to filter   |          |  |       |      |       |      |       |</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">//                ------R8--|-----[A&gt;--|--Rw-----[A&gt;--|--Rw-----[A&gt;--|</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">//     ve (EXT IN)          |          |              |              |</span></div>
@@ -200,8 +200,8 @@
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment">// of 12V, the NMOS FET will enter saturation mode (a.k.a. active mode), and</span></div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">// the NMOS FET will not operate anywhere like a resistor.</span></div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">// </span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">// NMOS FET voltage controlled resistor (VCR)</span></div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">// ------------------------------------------</span></div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">//</span></div>
@@ -224,7 +224,7 @@
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="comment">// vo  - output</span></div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="comment">// Rn  - &quot;resistors&quot;, implemented with custom NMOS FETs</span></div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="comment">// Vw  - voltage from 11-bit DAC (frequency cutoff control)</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">// Notes:</span></div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="comment">// An approximate value for R24 can be found by using the formula for the</span></div>
@@ -251,9 +251,9 @@
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment">// Note that these are only approximate values for one particular SID chip,</span></div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">// due to process variations the values can be substantially different in</span></div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="comment">// other chips.</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">// </span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">// </span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="comment">// Filter frequency cutoff DAC</span></div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment">// ---------------------------</span></div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="comment">//</span></div>
@@ -274,12 +274,12 @@
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="comment">// which varies with the input signals to the VCRs. This can be seen from the</span></div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment">// VCR figure above.</span></div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment">// </span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment">// </span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment">// &quot;Op-amp&quot; (self-biased NMOS inverter)</span></div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">// ------------------------------------</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">//                  </span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">//                  </span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment">//                        12V</span></div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment">//                         |</span></div>
@@ -1493,7 +1493,7 @@
 <div class="line"><a name="l01440"></a><span class="lineno"> 1440</span>&#160;<span class="comment">The Shichman-Hodges transistor model routinely used in textbooks may</span></div>
 <div class="line"><a name="l01441"></a><span class="lineno"> 1441</span>&#160;<span class="comment">be written as follows:</span></div>
 <div class="line"><a name="l01442"></a><span class="lineno"> 1442</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l01443"></a><span class="lineno"> 1443</span>&#160;<span class="comment">  Ids = 0                          , Vgst &lt; 0               (subthreshold mode) </span></div>
+<div class="line"><a name="l01443"></a><span class="lineno"> 1443</span>&#160;<span class="comment">  Ids = 0                          , Vgst &lt; 0               (subthreshold mode)</span></div>
 <div class="line"><a name="l01444"></a><span class="lineno"> 1444</span>&#160;<span class="comment">  Ids = K/2*W/L*(2*Vgst - Vds)*Vds , Vgst &gt;= 0, Vds &lt; Vgst  (triode mode)</span></div>
 <div class="line"><a name="l01445"></a><span class="lineno"> 1445</span>&#160;<span class="comment">  Ids = K/2*W/L*Vgst^2             , Vgst &gt;= 0, Vds &gt;= Vgst (saturation mode)</span></div>
 <div class="line"><a name="l01446"></a><span class="lineno"> 1446</span>&#160;<span class="comment"></span> </div>
@@ -1522,7 +1522,7 @@
 <div class="line"><a name="l01469"></a><span class="lineno"> 1469</span>&#160;<span class="comment">and source are identical except for the sign).</span></div>
 <div class="line"><a name="l01470"></a><span class="lineno"> 1470</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l01471"></a><span class="lineno"> 1471</span>&#160;<span class="comment">FIXME: Subthreshold as function of Vgs, Vgd.</span></div>
-<div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;<span class="comment">  Ids = I0*e^(Vgst/(n*VT))       , Vgst &lt; 0               (subthreshold mode) </span></div>
+<div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;<span class="comment">  Ids = I0*e^(Vgst/(n*VT))       , Vgst &lt; 0               (subthreshold mode)</span></div>
 <div class="line"><a name="l01473"></a><span class="lineno"> 1473</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l01474"></a><span class="lineno"> 1474</span>&#160;<span class="comment">The remaining problem with the textbook model is that the transition</span></div>
 <div class="line"><a name="l01475"></a><span class="lineno"> 1475</span>&#160;<span class="comment">from subthreshold the triode/saturation is not continuous.</span></div>
@@ -1552,10 +1552,10 @@
 <div class="line"><a name="l01499"></a><span class="lineno"> 1499</span>&#160;<span class="comment">as shown in the circuit diagram below.</span></div>
 <div class="line"><a name="l01500"></a><span class="lineno"> 1500</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l01501"></a><span class="lineno"> 1501</span>&#160;<span class="comment">                   Vw</span></div>
-<div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;<span class="comment">                   </span></div>
+<div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l01503"></a><span class="lineno"> 1503</span>&#160;<span class="comment">                   |</span></div>
 <div class="line"><a name="l01504"></a><span class="lineno"> 1504</span>&#160;<span class="comment">           Vdd     |</span></div>
-<div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;<span class="comment">              |---|  </span></div>
+<div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;<span class="comment">              |---|</span></div>
 <div class="line"><a name="l01506"></a><span class="lineno"> 1506</span>&#160;<span class="comment">             _|_   |</span></div>
 <div class="line"><a name="l01507"></a><span class="lineno"> 1507</span>&#160;<span class="comment">           --    --| Vg</span></div>
 <div class="line"><a name="l01508"></a><span class="lineno"> 1508</span>&#160;<span class="comment">          |      __|__</span></div>
@@ -1642,7 +1642,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 29 2023 09:47:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
