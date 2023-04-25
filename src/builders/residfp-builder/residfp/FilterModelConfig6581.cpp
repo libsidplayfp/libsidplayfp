@@ -171,9 +171,9 @@ FilterModelConfig6581::FilterModelConfig6581() :
         }
     }
 
-    // 4 bit "resistor" ladders in the audio
-    // output gain necessitate 16 gain tables.
-    // From die photographs of the bandpass and volume "resistor" ladders
+    // 4 bit "resistor" ladders in the audio output gain
+    // necessitate 16 gain tables.
+    // From die photographs of the volume "resistor" ladders
     // it follows that gain ~ vol/12 (assuming ideal
     // op-amps and ideal "resistors").
     for (int n8 = 0; n8 < 16; n8++)
@@ -192,7 +192,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     // 4 bit "resistor" ladders in the bandpass resonance gain
     // necessitate 16 gain tables.
-    // From die photographs of the bandpass and volume "resistor" ladders
+    // From die photographs of the bandpass "resistor" ladders
     // it follows that 1/Q ~ ~res/8 (assuming ideal
     // op-amps and ideal "resistors").
     for (int n8 = 0; n8 < 16; n8++)
