@@ -20,7 +20,7 @@ else
 endif
 
 if HAVE_VISIBILITY
-  AM_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
+  VISIBILITY_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
 endif
 
 AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
@@ -35,6 +35,8 @@ $(EXSID_CFLAGS) \
 $(PTHREAD_CFLAGS) \
 $(FTDI_CFLAGS) \
 @debug_flags@
+
+AM_CXXFLAGS = $(VISIBILITY_CXXFLAGS) $(OPENMP_CXXFLAGS)
 
 #=========================================================
 EXTRA_DIST = \

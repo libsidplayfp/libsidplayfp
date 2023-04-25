@@ -89,6 +89,9 @@ default check
 --with-exsid
 Build with exsid support. Requires either libexsid or one of libfdti1 or libftd2xx
 
+--disable-openmp
+do not use OpenMP
+
 
 If doxygen is installed and detected by the configure script the documentation
 can be built by invoking "make doc".
