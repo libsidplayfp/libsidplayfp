@@ -263,15 +263,6 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
         #pragma omp section
         {
-#ifdef _OPENMP
-            OpAmp opampModel(
-                std::vector<Spline::Point>(
-                    std::begin(opamp_voltage),
-                    std::end(opamp_voltage)),
-                Vddt,
-                vmin,
-                vmax);
-#endif
             const double nVddt = N16 * (Vddt - vmin);
 
             for (unsigned int i = 0; i < (1 << 16); i++)
@@ -286,15 +277,6 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
         #pragma omp section
         {
-#ifdef _OPENMP
-            OpAmp opampModel(
-                std::vector<Spline::Point>(
-                    std::begin(opamp_voltage),
-                    std::end(opamp_voltage)),
-                Vddt,
-                vmin,
-                vmax);
-#endif
             //  EKV model:
             //
             //  Ids = Is * (if - ir)
