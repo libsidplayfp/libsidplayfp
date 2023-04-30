@@ -39,9 +39,9 @@
 /*
  * Adjust these paths to point to existing ROM dumps
  */
-#define KERNAL_PATH "/usr/share/vice/C64/kernal"
-#define BASIC_PATH "/usr/share/vice/C64/basic"
-#define CHARGEN_PATH "/usr/share/vice/C64/chargen"
+#define KERNAL_PATH "/usr/share/vice/C64/kernal-901227-03.bin"
+#define BASIC_PATH "/usr/share/vice/C64/basic-901226-01.bin"
+#define CHARGEN_PATH "/usr/share/vice/C64/chargen-901225-01.bin"
 
 void loadRom(const char* path, char* buffer)
 {

@@ -1,8 +1,8 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
- * Copyright 2009-2014 VICE Project
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2009-2023 VICE Project
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -136,16 +136,28 @@ void Tod::event()
 
     if (!isStopped)
     {
-        // count 50/60 hz ticks
-        todtickcounter++;
-        // counter is 3 bits
-        todtickcounter &= 7;
-        // if the counter matches the TOD frequency ...
-        if (todtickcounter == ((cra & 0x80) ? 5 : 6))
+        /*
+         * The divider which divides the 50 or 60 Hz power supply ticks into
+         * 10 Hz uses a 3-bit ring counter, which goes 000, 001, 011, 111, 110,
+         * 100.
+         * For 50 Hz: matches at 110 (like "4")
+         * For 60 Hz: matches at 100 (like "5")
+         * (the middle bit of the match value is CRA7)
+         * After a match there is a 1 tick delay (until the next power supply
+         * tick) and then the 1/10 seconds counter increases, and the ring
+         * resets to 000.
+         */
+        // todtickcounter bits are mirrored to save an ANDing
+        if (todtickcounter == (0x1 | ((cra & 0x80) >> 6)))
         {
             // reset the counter and update the timer
             todtickcounter = 0;
             updateCounters();
+        }
+        else
+        {
+            // Count 50/60 Hz power supply ticks
+            todtickcounter = (todtickcounter >> 1) | ((~todtickcounter << 2) & 0x4);
         }
     }
 }
