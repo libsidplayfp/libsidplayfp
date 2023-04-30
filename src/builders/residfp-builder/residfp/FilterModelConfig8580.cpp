@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2010 Dag Lem
  *
@@ -121,8 +121,8 @@ FilterModelConfig8580* FilterModelConfig8580::getInstance()
 
 FilterModelConfig8580::FilterModelConfig8580() :
     FilterModelConfig(
-        0.25,   // voice voltage range FIXME measure
-        4.80,   // voice DC voltage FIXME was 4.76
+        0.30,   // voice voltage range FIXME measure
+        4.84,   // voice DC voltage FIXME measure
         22e-9,  // capacitor value
         9.09,   // Vdd
         0.80,   // Vth
