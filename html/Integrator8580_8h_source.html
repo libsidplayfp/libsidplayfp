@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.5.0a</span>
+   &#160;<span id="projectnumber">2.5.0a2</span>
    </div>
   </td>
  </tr>
@@ -54,7 +54,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2022 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2023 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Copyright 2004, 2010 Dag Lem &lt;resid@nimrod.no&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
@@ -118,7 +118,7 @@
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="comment">// Gate voltage is controlled by the switched capacitor voltage divider</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">// Ua = Ue * v = 4.76v  1&lt;v&lt;2</span></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        assert(v &gt; 1.0 &amp;&amp; v &lt; 2.0);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vg = fmc-&gt;getVoiceDCVoltage() * v;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vg = 4.76 * v;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vgt = Vg - fmc-&gt;getVth();</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">// Vg - Vth, normalized so that translated values can be subtracted:</span></div>
@@ -176,7 +176,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 10 2023 18:17:25 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon May 1 2023 12:05:04 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
