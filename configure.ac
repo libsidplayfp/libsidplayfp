@@ -66,6 +66,8 @@ AS_IF([test "x${ac_cv_header_stdint_h}" != "xyes"],
   [AC_MSG_ERROR([Required header stdint.h not found])]
 )
 
+AC_OPENMP
+
 dnl Checks for non-standard functions.
 
 AC_CHECK_DECL(
