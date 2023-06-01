@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -49,26 +49,26 @@ public:
     /// SID chip model
     typedef enum
     {
-        MOS6581,       ///< Old MOS 6581
-        MOS8580        ///< New CSG 8580/MOS 6582
+        MOS6581,       ///< Old SID (MOS 6581)
+        MOS8580        ///< New SID (CSG 8580/MOS 6582)
     } sid_model_t;
 
     /// CIA chip model
     typedef enum
     {
-        MOS6526,       ///< Old MOS 6526/6526A with interrupts delayed by one cycle
-        MOS8521,       ///< New CSG 8521, often marked 6526 216A
-        MOS6526W4485   ///< Old MOS 6526, peculiar batch from week 4485 with different serial port behavior @since 2.2
+        MOS6526,       ///< Old CIA with interrupts delayed by one cycle (MOS 6526/6526A)
+        MOS8521,       ///< New CIA (CSG 8521/MOS 6526 216A)
+        MOS6526W4485   ///< Old CIA, peculiar batch with different serial port behavior (MOS 6526 4485) @since 2.2
     } cia_model_t;
 
     /// C64 model
     typedef enum
     {
-        PAL,           ///< European PAL model
-        NTSC,          ///< American/Japanese NTSC model
-        OLD_NTSC,      ///< Older NTSC model with different video chip revision
-        DREAN,         ///< Argentinian PAL-N model
-        PAL_M          ///< Brasilian PAL-M model
+        PAL,           ///< European PAL model (MOS 6569)
+        NTSC,          ///< American/Japanese NTSC model (MOS 6567 R8)
+        OLD_NTSC,      ///< Older NTSC model with different video chip revision (MOS 6567 R56A)
+        DREAN,         ///< Argentinian PAL-N model (MOS 6572)
+        PAL_M          ///< Brasilian PAL-M model (MOS 6573)
     } c64_model_t;
 
     /// Sampling method
