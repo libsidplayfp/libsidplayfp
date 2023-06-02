@@ -1,5 +1,8 @@
-2.5.0 2023-01-xx
+2.5.0 2023-06-02
 * residfp: reworked the combined waveforms model by separating pulldown effect from waveform generation
+* residfp: tweaked the 8580 filter parameters for increased volume and less distortion (#45)
+* Updated to latest resid
+* Use OpenMP to speedup LUTs initialization
 * CIA: minor rework based on chip reverse engineering
 * Use c++17 where available
 * Added sanity check for buffer size
