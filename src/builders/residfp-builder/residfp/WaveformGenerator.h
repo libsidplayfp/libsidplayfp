@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -96,6 +96,7 @@ private:
     unsigned int pw;
 
     unsigned int shift_register;
+    unsigned int shift_latch;
 
     /// Emulation of pipeline causing bit 19 to clock the shift register.
     int shift_pipeline;
@@ -136,15 +137,16 @@ private:
     bool sync;
     //@}
 
+    bool test_or_reset;
+
     /// Tell whether the accumulator MSB was set high on this cycle.
     bool msb_rising;
 
     bool is6581; //-V730_NOINIT this is initialized in the SID constructor
 
 private:
-    void clock_shift_register(unsigned int bit0);
-
-    unsigned int get_noise_writeback();
+    void shift_phase1();
+    void shift_phase2();
 
     void write_shift_register();
 
@@ -306,6 +308,8 @@ void WaveformGenerator::clock()
             set_noise_output();
         }
 
+        shift_phase1();
+
         // The test bit sets pulse high.
         pulse_output = 0xfff;
     }
@@ -328,10 +332,17 @@ void WaveformGenerator::clock()
             // Pipeline: Detect rising bit, shift phase 1, shift phase 2.
             shift_pipeline = 2;
         }
-        else if (unlikely(shift_pipeline != 0) && --shift_pipeline == 0)
+        else if (unlikely(shift_pipeline != 0))
         {
-            // bit0 = (bit22 | test) ^ bit17
-            clock_shift_register(((shift_register << 22) ^ (shift_register << 17)) & (1u << 22));
+            switch (--shift_pipeline)
+            {
+            case 0:
+                shift_phase2();
+                break;
+            case 1:
+                shift_phase1();
+                break;
+            }
         }
     }
 }

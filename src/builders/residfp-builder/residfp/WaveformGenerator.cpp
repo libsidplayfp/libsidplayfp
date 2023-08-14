@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -23,6 +23,7 @@
 #define WAVEFORMGENERATOR_CPP
 
 #include "WaveformGenerator.h"
+#include <iostream>
 
 /*
  * This fixes tests
@@ -121,15 +122,26 @@ const unsigned int shift_mask =
  * phi1 |   1   |   X --> X    |   A --> A      <- shift phase 2
  * phi2 |   1   |   X <-> X    |   A <-> A
  */
-void WaveformGenerator::clock_shift_register(unsigned int bit0)
+void WaveformGenerator::shift_phase1()
 {
-    shift_register = (shift_register >> 1) | bit0;
+    //std::cout << "shift_phase1" << std::endl;
+    test_or_reset = test;
+    shift_latch = shift_register;
+}
 
-    // New noise waveform output.
+void WaveformGenerator::shift_phase2()
+{
+    //std::cout << "shift_phase2" << std::endl;
+    // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
+    const unsigned int bit22 = test_or_reset ? (1 << 22) : (shift_latch << 22);
+    const unsigned int bit0 = (bit22 ^ (shift_latch << 17)) & (1 << 22);
+
+    shift_register = (shift_latch >> 1) | bit0;
+//std::cout << std::hex << shift_register << std::endl;
     set_noise_output();
 }
 
-unsigned int WaveformGenerator::get_noise_writeback()
+inline unsigned int get_noise_writeback(unsigned int waveform_output)
 {
   return
     ((waveform_output & (1u << 11)) >>  9) |  // Bit 11 -> bit 20
@@ -144,7 +156,7 @@ unsigned int WaveformGenerator::get_noise_writeback()
 
 void WaveformGenerator::write_shift_register()
 {
-    if (unlikely(waveform > 0x8) && likely(!test) && likely(shift_pipeline != 1))
+    if (unlikely(waveform > 0x8))
     {
         // Write changes to the shift register output caused by combined waveforms
         // back into the shift register. This happens only when the register is clocked
@@ -153,14 +165,20 @@ void WaveformGenerator::write_shift_register()
         //
         // [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
 
-#ifdef NO_WB_NOI_PUL
-        if (waveform == 0xc)
-            return;
-#endif
-        shift_register &= shift_mask | get_noise_writeback();
-
-        noise_output &= waveform_output;
-        set_no_noise_or_noise_output();
+        if (likely(shift_pipeline != 1))
+        {
+            // the output pulls down the SR bits
+            shift_register = shift_register & (shift_mask | get_noise_writeback(waveform_output));
+            noise_output &= waveform_output;
+            set_no_noise_or_noise_output();
+        }
+        else
+        {
+            // shift phase 1: the output drives the SR bits
+            shift_latch = (shift_latch & shift_mask) | get_noise_writeback(waveform_output);
+            noise_output = waveform_output;
+            set_no_noise_or_noise_output();
+        }
     }
 }
 
@@ -301,13 +319,12 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             // During first phase of the shift the bits are interconnected
             // and the output of each bit is loaded into the following.
             // The output may overwrite the latched value.
-            if (do_pre_writeback(waveform_prev, waveform, is6581))
-            {
-                shift_register = (shift_register & shift_mask) | get_noise_writeback();
-            }
+            //if (do_pre_writeback(waveform_prev, waveform, is6581))
+            //{
+            //    shift_register = (shift_register & shift_mask) | get_noise_writeback();
+            //}
 
-            // bit0 = (bit22 | test) ^ bit17 = 1 ^ bit17 = ~bit17
-            clock_shift_register((~shift_register << 17) & (1 << 22));
+            shift_pipeline = 1;
         }
     }
 }
@@ -355,7 +372,9 @@ void WaveformGenerator::reset()
     // when reset is released the shift register is clocked once
     // so the lower bit is zeroed out
     // bit0 = (bit22 | test) ^ bit17 = 1 ^ 1 = 0
-    clock_shift_register(0);
+    test_or_reset = true;
+    shift_latch = shift_register;
+    shift_phase2();
 
     shift_pipeline = 0;
 
