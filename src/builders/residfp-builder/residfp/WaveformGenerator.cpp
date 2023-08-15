@@ -23,7 +23,6 @@
 #define WAVEFORMGENERATOR_CPP
 
 #include "WaveformGenerator.h"
-#include <iostream>
 
 /*
  * This fixes tests
@@ -122,22 +121,16 @@ const unsigned int shift_mask =
  * phi1 |   1   |   X --> X    |   A --> A      <- shift phase 2
  * phi2 |   1   |   X <-> X    |   A <-> A
  */
-void WaveformGenerator::shift_phase1()
-{
-    //std::cout << "shift_phase1" << std::endl;
-    test_or_reset = test;
-    shift_latch = shift_register;
-}
-
 void WaveformGenerator::shift_phase2()
 {
-    //std::cout << "shift_phase2" << std::endl;
     // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
-    const unsigned int bit22 = test_or_reset ? (1 << 22) : (shift_latch << 22);
+    const unsigned int bit22 = ((test_or_reset ? 1 : 0) | shift_latch) << 22;
     const unsigned int bit0 = (bit22 ^ (shift_latch << 17)) & (1 << 22);
 
     shift_register = (shift_latch >> 1) | bit0;
-//std::cout << std::hex << shift_register << std::endl;
+#ifdef TRACE
+    std::cout << std::hex << shift_latch << " -> " << shift_register << std::endl;
+#endif
     set_noise_output();
 }
 
@@ -159,26 +152,27 @@ void WaveformGenerator::write_shift_register()
     if (unlikely(waveform > 0x8))
     {
         // Write changes to the shift register output caused by combined waveforms
-        // back into the shift register. This happens only when the register is clocked
-        // (see $D1+$81_wave_test [1]) or when the test bit is falling.
-        // A bit once set to zero cannot be changed, hence the and'ing.
-        //
-        // [1] ftp://ftp.untergrund.net/users/nata/sid_test/$D1+$81_wave_test.7z
-
-        if (likely(shift_pipeline != 1))
+        // back into the shift register.
+        if (likely(shift_pipeline != 1) && !test)
         {
+#ifdef TRACE
+        std::cout << "write shift_register" << std::endl;
+#endif
             // the output pulls down the SR bits
             shift_register = shift_register & (shift_mask | get_noise_writeback(waveform_output));
             noise_output &= waveform_output;
-            set_no_noise_or_noise_output();
         }
         else
         {
+#ifdef TRACE
+        std::cout << "write shift_latch" << std::endl;
+#endif
             // shift phase 1: the output drives the SR bits
             shift_latch = (shift_latch & shift_mask) | get_noise_writeback(waveform_output);
             noise_output = waveform_output;
-            set_no_noise_or_noise_output();
         }
+
+        set_no_noise_or_noise_output();
     }
 }
 
@@ -308,6 +302,12 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
             // Flush shift pipeline.
             shift_pipeline = 0;
 
+            // Latch the shift register value.
+            shift_latch = shift_register;
+#ifdef TRACE
+            std::cout << "shift phase 1 (test)" << std::endl;
+#endif
+
             // Set reset time for shift register.
             shift_register_reset = is6581 ? SHIFT_REGISTER_RESET_6581R3 : SHIFT_REGISTER_RESET_8580R5;
         }
@@ -315,15 +315,6 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         {
             // When the test bit is falling, the second phase of the shift is
             // completed by enabling SRAM write.
-
-            // During first phase of the shift the bits are interconnected
-            // and the output of each bit is loaded into the following.
-            // The output may overwrite the latched value.
-            //if (do_pre_writeback(waveform_prev, waveform, is6581))
-            //{
-            //    shift_register = (shift_register & shift_mask) | get_noise_writeback();
-            //}
-
             shift_pipeline = 1;
         }
     }

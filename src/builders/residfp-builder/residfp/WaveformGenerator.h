@@ -28,6 +28,10 @@
 
 #include "sidcxx11.h"
 
+#include <iostream>
+
+//#define TRACE 1
+
 namespace reSIDfp
 {
 
@@ -96,6 +100,8 @@ private:
     unsigned int pw;
 
     unsigned int shift_register;
+
+    /// Shift register is latched when transitioning to shift phase 1.
     unsigned int shift_latch;
 
     /// Emulation of pipeline causing bit 19 to clock the shift register.
@@ -128,7 +134,7 @@ private:
     /// Remaining time to fully reset shift register.
     unsigned int shift_register_reset;
 
-    // The wave signal TTL when no waveform is selected
+    // The wave signal TTL when no waveform is selected.
     unsigned int floating_output_ttl;
 
     /// The control register bits. Gate is handled by EnvelopeGenerator.
@@ -137,6 +143,7 @@ private:
     bool sync;
     //@}
 
+    /// Test bit is latched at phi2 for the noise XOR.
     bool test_or_reset;
 
     /// Tell whether the accumulator MSB was set high on this cycle.
@@ -145,7 +152,6 @@ private:
     bool is6581; //-V730_NOINIT this is initialized in the SID constructor
 
 private:
-    void shift_phase1();
     void shift_phase2();
 
     void write_shift_register();
@@ -302,13 +308,18 @@ void WaveformGenerator::clock()
     {
         if (unlikely(shift_register_reset != 0) && unlikely(--shift_register_reset == 0))
         {
+#ifdef TRACE
+            std::cout << "shiftregBitfade" << std::endl;
+#endif
             shiftregBitfade();
+            shift_latch = shift_register;
 
             // New noise waveform output.
             set_noise_output();
         }
 
-        shift_phase1();
+        // Latch the test bit value for shift phase 2.
+        test_or_reset = true;
 
         // The test bit sets pulse high.
         pulse_output = 0xfff;
@@ -337,10 +348,18 @@ void WaveformGenerator::clock()
             switch (--shift_pipeline)
             {
             case 0:
+#ifdef TRACE
+                std::cout << "shift phase 2" << std::endl;
+#endif
                 shift_phase2();
                 break;
             case 1:
-                shift_phase1();
+#ifdef TRACE
+                std::cout << "shift phase 1" << std::endl;
+#endif
+                // Start shift phase 1.
+                test_or_reset = false;
+                shift_latch = shift_register;
                 break;
             }
         }
