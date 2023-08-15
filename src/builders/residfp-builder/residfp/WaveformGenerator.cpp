@@ -24,19 +24,6 @@
 
 #include "WaveformGenerator.h"
 
-/*
- * This fixes tests
- *  SID/wb_testsuite/noise_writeback_check_8_to_C_old
- *  SID/wb_testsuite/noise_writeback_check_9_to_C_old
- *  SID/wb_testsuite/noise_writeback_check_A_to_C_old
- *  SID/wb_testsuite/noise_writeback_check_C_to_C_old
- *
- * but breaks SID/wf12nsr/wf12nsr
- *
- * needs more digging...
- */
-//#define NO_WB_NOI_PUL
-
 namespace reSIDfp
 {
 
@@ -151,12 +138,15 @@ void WaveformGenerator::write_shift_register()
 {
     if (unlikely(waveform > 0x8))
     {
+        if (waveform == 0xc)
+            return; // breaks SID/wf12nsr/wf12nsr
+
         // Write changes to the shift register output caused by combined waveforms
         // back into the shift register.
         if (likely(shift_pipeline != 1) && !test)
         {
 #ifdef TRACE
-        std::cout << "write shift_register" << std::endl;
+            std::cout << "write shift_register" << std::endl;
 #endif
             // the output pulls down the SR bits
             shift_register = shift_register & (shift_mask | get_noise_writeback(waveform_output));
@@ -165,7 +155,7 @@ void WaveformGenerator::write_shift_register()
         else
         {
 #ifdef TRACE
-        std::cout << "write shift_latch" << std::endl;
+            std::cout << "write shift_latch" << std::endl;
 #endif
             // shift phase 1: the output drives the SR bits
             shift_latch = (shift_latch & shift_mask) | get_noise_writeback(waveform_output);
@@ -210,26 +200,6 @@ void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformG
     {
         syncDest->accumulator = 0;
     }
-}
-
-bool do_pre_writeback(unsigned int waveform_prev, unsigned int waveform, bool is6581)
-{
-    // no writeback without combined waveforms
-    if (waveform <= 8)
-        return false;
-    // What's happening here?
-    if (is6581 &&
-            ((((waveform_prev & 0x3) == 0x1) && ((waveform & 0x3) == 0x2))
-            || (((waveform_prev & 0x3) == 0x2) && ((waveform & 0x3) == 0x1))))
-        return false;
-    if (waveform_prev == 0xc)
-        return false;
-#ifdef NO_WB_NOI_PUL
-    if (waveform == 0xc)
-        return false;
-#endif
-    // ok do the writeback
-    return true;
 }
 
 void WaveformGenerator::set_no_noise_or_noise_output()
