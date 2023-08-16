@@ -28,9 +28,12 @@
 
 #include "sidcxx11.h"
 
-#include <iostream>
-
+// print SR debugging info
 //#define TRACE 1
+
+#ifdef TRACE
+#  include <iostream>
+#endif
 
 namespace reSIDfp
 {

@@ -162,6 +162,11 @@ inline unsigned int get_noise_writeback(unsigned int waveform_output)
     ((waveform_output & (1u <<  4)) << 18);   // Bit  4 -> bit  0
 }
 
+/*
+ * Perform the actual shifting, moving the latched value into following bits.
+ * The XORing for bit0 is done in this cycle using the test bit latched during
+ * the previous phi2 cycle.
+ */
 void WaveformGenerator::shift_phase2(unsigned int waveform_old, unsigned int waveform_new)
 {
     if (do_writeback(waveform_old, waveform_new, is6581))
@@ -331,7 +336,6 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         {
             // When the test bit is falling, the second phase of the shift is
             // completed by enabling SRAM write.
-            //shift_pipeline = 1;
             shift_phase2(waveform_prev, waveform);
         }
     }
