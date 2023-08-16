@@ -114,6 +114,9 @@ inline bool do_writeback(unsigned int waveform_old, unsigned int waveform_new, b
     // no writeback without combined waveforms
     if (waveform_new <= 8)
         return false;
+    if (waveform_old <= 8)
+        return false; // fixes SID/noisewriteback/noise_writeback_test2-{old,new}
+
     // What's happening here?
     if (is6581 &&
             ((((waveform_old & 0x3) == 0x1) && ((waveform_new & 0x3) == 0x2))
@@ -128,7 +131,7 @@ inline bool do_writeback(unsigned int waveform_old, unsigned int waveform_new, b
         // noise_writeback_check_E_to_9_old
         return false;
     }
-    if ((waveform_old == 0xc) && (waveform_new == 0xA))
+    if (waveform_old == 0xc)
     {
         // fixes
         // noise_writeback_check_C_to_A_new
