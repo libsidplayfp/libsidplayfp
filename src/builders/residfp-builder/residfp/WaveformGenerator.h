@@ -152,7 +152,7 @@ private:
     bool is6581; //-V730_NOINIT this is initialized in the SID constructor
 
 private:
-    void shift_phase2();
+    void shift_phase2(unsigned int waveform_old, unsigned int waveform_new);
 
     void write_shift_register();
 
@@ -351,7 +351,7 @@ void WaveformGenerator::clock()
 #ifdef TRACE
                 std::cout << "shift phase 2" << std::endl;
 #endif
-                shift_phase2();
+                shift_phase2(waveform, waveform);
                 break;
             case 1:
 #ifdef TRACE

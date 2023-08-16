@@ -108,17 +108,42 @@ const unsigned int shift_mask =
  * phi1 |   1   |   X --> X    |   A --> A      <- shift phase 2
  * phi2 |   1   |   X <-> X    |   A <-> A
  */
-void WaveformGenerator::shift_phase2()
-{
-    // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
-    const unsigned int bit22 = ((test_or_reset ? 1 : 0) | shift_latch) << 22;
-    const unsigned int bit0 = (bit22 ^ (shift_latch << 17)) & (1 << 22);
 
-    shift_register = (shift_latch >> 1) | bit0;
-#ifdef TRACE
-    std::cout << std::hex << shift_latch << " -> " << shift_register << std::endl;
-#endif
-    set_noise_output();
+inline bool do_writeback(unsigned int waveform_old, unsigned int waveform_new, bool is6581)
+{
+    // no writeback without combined waveforms
+    if (waveform_new <= 8)
+        return false;
+    // What's happening here?
+    if (is6581 &&
+            ((((waveform_old & 0x3) == 0x1) && ((waveform_new & 0x3) == 0x2))
+            || (((waveform_old & 0x3) == 0x2) && ((waveform_new & 0x3) == 0x1))))
+    {
+        // fixes
+        // noise_writeback_check_9_to_A_old
+        // noise_writeback_check_9_to_E_old
+        // noise_writeback_check_A_to_9_old
+        // noise_writeback_check_A_to_D_old
+        // noise_writeback_check_D_to_A_old
+        // noise_writeback_check_E_to_9_old
+        return false;
+    }
+    if ((waveform_old == 0xc) && (waveform_new == 0xA))
+    {
+        // fixes
+        // noise_writeback_check_C_to_A_new
+        return false;
+    }
+    if (waveform_new == 0xc)
+    {
+        // fixes
+        // noise_writeback_check_9_to_C_old
+        // noise_writeback_check_A_to_C_old
+        return false;
+    }
+
+    // ok do the writeback
+    return true;
 }
 
 inline unsigned int get_noise_writeback(unsigned int waveform_output)
@@ -132,6 +157,25 @@ inline unsigned int get_noise_writeback(unsigned int waveform_output)
     ((waveform_output & (1u <<  6)) << 11) |  // Bit  6 -> bit  5
     ((waveform_output & (1u <<  5)) << 15) |  // Bit  5 -> bit  2
     ((waveform_output & (1u <<  4)) << 18);   // Bit  4 -> bit  0
+}
+
+void WaveformGenerator::shift_phase2(unsigned int waveform_old, unsigned int waveform_new)
+{
+    if (do_writeback(waveform_old, waveform_new, is6581))
+    {
+        // if noise is combined with another waveform the output drives the SR bits
+        shift_latch = (shift_register & shift_mask) | get_noise_writeback(waveform_output);
+    }
+
+    // bit0 = (bit22 | test | reset) ^ bit17 = 1 ^ bit17 = ~bit17
+    const unsigned int bit22 = ((test_or_reset ? 1 : 0) | shift_latch) << 22;
+    const unsigned int bit0 = (bit22 ^ (shift_latch << 17)) & (1 << 22);
+
+    shift_register = (shift_latch >> 1) | bit0;
+#ifdef TRACE
+    std::cout << std::hex << shift_latch << " -> " << shift_register << std::endl;
+#endif
+    set_noise_output();
 }
 
 void WaveformGenerator::write_shift_register()
@@ -158,7 +202,6 @@ void WaveformGenerator::write_shift_register()
             std::cout << "write shift_latch" << std::endl;
 #endif
             // shift phase 1: the output drives the SR bits
-            shift_latch = (shift_latch & shift_mask) | get_noise_writeback(waveform_output);
             noise_output = waveform_output;
         }
 
@@ -285,7 +328,8 @@ void WaveformGenerator::writeCONTROL_REG(unsigned char control)
         {
             // When the test bit is falling, the second phase of the shift is
             // completed by enabling SRAM write.
-            shift_pipeline = 1;
+            //shift_pipeline = 1;
+            shift_phase2(waveform_prev, waveform);
         }
     }
 }
@@ -335,7 +379,7 @@ void WaveformGenerator::reset()
     // bit0 = (bit22 | test) ^ bit17 = 1 ^ 1 = 0
     test_or_reset = true;
     shift_latch = shift_register;
-    shift_phase2();
+    shift_phase2(0, 0);
 
     shift_pipeline = 0;
 
