@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2014-2022 Leandro Nini
+ *  Copyright (C) 2014-2023 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -52,7 +52,11 @@ TEST(TestClockShiftRegister)
     generator.reset();
 
     generator.shift_register = 0x35555e;
-    generator.clock_shift_register(0);
+    // shift phase 1
+    generator.test_or_reset = false;
+    generator.shift_latch = generator.shift_register;
+    // shift phase 2
+    generator.shift_phase2(0, 0);
 
     CHECK_EQUAL(0x9e0, generator.noise_output);
 }
