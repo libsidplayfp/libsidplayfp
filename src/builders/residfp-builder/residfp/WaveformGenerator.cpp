@@ -111,11 +111,28 @@ const unsigned int shift_mask =
 
 inline bool do_writeback(unsigned int waveform_old, unsigned int waveform_new, bool is6581)
 {
-    // no writeback without combined waveforms
+#if 1
+    // FIXME this breaks SID/noiselfsrinit/simple
     if (waveform_new <= 8)
+        // fixes
+        // noise_writeback_check_9_to_8_old
+        // noise_writeback_check_A_to_8_old
+        // noise_writeback_check_B_to_8_old
+        // noise_writeback_check_D_to_8_old
+        // noise_writeback_check_E_to_8_old
+        // noise_writeback_check_F_to_8_old
+        // noise_writeback_check_9_to_8_new
+        // noise_writeback_check_A_to_8_new
+        // noise_writeback_check_D_to_8_new
+        // noise_writeback_check_E_to_8_new
+        // noise_writeback_test1-{old,new}
         return false;
+
+#endif
+    // no writeback without combined waveforms
     if (waveform_old <= 8)
-        return false; // fixes SID/noisewriteback/noise_writeback_test2-{old,new}
+        // fixes SID/noisewriteback/noise_writeback_test2-{old,new}
+        return false;
 
     // What's happening here?
     if (is6581 &&
@@ -190,8 +207,16 @@ void WaveformGenerator::write_shift_register()
 {
     if (unlikely(waveform > 0x8))
     {
+#if 1
+        // FIXME this breaks SID/wf12nsr/wf12nsr
         if (waveform == 0xc)
-            return; // breaks SID/wf12nsr/wf12nsr
+            // fixes
+            // noise_writeback_check_8_to_C_old
+            // noise_writeback_check_9_to_C_old
+            // noise_writeback_check_A_to_C_old
+            // noise_writeback_check_C_to_C_old
+            return;
+#endif
 
         // Write changes to the shift register output caused by combined waveforms
         // back into the shift register.
