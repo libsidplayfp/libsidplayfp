@@ -757,6 +757,8 @@ SID/wb_testsuite/noise_writeback_check_F_to_F_new    --sid new
 SID/writedelay/writedelay                            --sid old
 SID/wf12nsr/wf12nsr                                  --sid old
 SID/wf12nsr/wf12nsr-8580                             --sid new
+SID/noiselfsrinit/simple                             --sid old
+SID/noiselfsrinit/scan                               --sid old
 ### VICII ###
 VICII/colorram/test
 VICII/split-tests/bascan/bascan
