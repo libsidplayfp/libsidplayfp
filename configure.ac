@@ -80,6 +80,8 @@ AC_CHECK_DECL(
     [AC_CHECK_FUNCS([strncasecmp])]
 )
 
+# od on macOS doesn't support the -w parameter
+AC_CHECK_PROGS([OD], [god od])
 
 dnl libtool-style version-info number
 #

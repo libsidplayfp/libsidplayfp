@@ -13,12 +13,6 @@ if MINGW32
   W32_LDFLAGS = -no-undefined
 endif
 
-if MACOS
-  OD = god
-else
-  OD = od
-endif
-
 if HAVE_VISIBILITY
   VISIBILITY_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
 endif
@@ -465,6 +459,7 @@ src/sidtune/sidplayer2.bin
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
 .a65.bin:
+	[ -n "$(OD)" ] || { echo "od not found"; false; } && \
 	o65file=`echo $@ | sed 's/bin/o65/'`;\
 	xa -R -G $< -o $$o65file &&\
 	${OD} -v -An -w8 -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g' > $@ &&\
