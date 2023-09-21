@@ -461,6 +461,7 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 .a65.bin:
 	o65file=`echo $@ | sed 's/bin/o65/'`;\
 	[ -n "$(OD)" ] || { echo "od not found"; false; } &&\
-	xa -R -G $< -o $$o65file &&\
+	[ -n "$(XA)" ] || { echo "xa not found"; false; } &&\
+	${XA} -R -G $< -o $$o65file &&\
 	${OD} -v -An -w8 -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g' > $@ &&\
 	${RM} $$o65file

@@ -81,6 +81,8 @@ AC_CHECK_DECL(
     [AC_CHECK_FUNCS([strncasecmp])]
 )
 
+AC_CHECK_PROGS([XA], [xa])
+
 # od on macOS doesn't support the -w parameter
 AC_CACHE_CHECK([for od that supports -w], [ac_cv_path_OD],
   [AC_PATH_PROGS_FEATURE_CHECK([OD], [od god],
