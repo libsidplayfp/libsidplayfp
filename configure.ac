@@ -3,6 +3,7 @@ m4_define([lib_minor], [6])
 m4_define([lib_level], [0a])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
+AC_PREREQ([2.62])
 AC_INIT([libsidplayfp],[lib_version],[],[],[https://github.com/libsidplayfp/libsidplayfp/])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIRS([m4 src/builders/exsid-builder/driver/m4])
@@ -80,6 +81,14 @@ AC_CHECK_DECL(
     [AC_CHECK_FUNCS([strncasecmp])]
 )
 
+AC_CHECK_PROGS([XA], [xa])
+
+# od on macOS doesn't support the -w parameter
+AC_CACHE_CHECK([for od that supports -w], [ac_cv_path_OD],
+  [AC_PATH_PROGS_FEATURE_CHECK([OD], [od god],
+    [[$ac_path_OD -w > /dev/null 2>&1 && ac_cv_path_OD=$ac_path_OD]])]
+)
+AC_SUBST([OD], [$ac_cv_path_OD])
 
 dnl libtool-style version-info number
 #
