@@ -120,6 +120,68 @@ const unsigned int shift_mask =
  * -----+-------+--------------+--------------
  * phi1 |   1   |   X --> X    |   A --> A      <- shift phase 2
  * phi2 |   1   |   X <-> X    |   A <-> A
+ *
+ *
+ * Normal cycles
+ * -------------
+ * Normally, when noise is selected along with another waveform,
+ * c1 and c2 are closed and the output bits pull down the corresponding
+ * shift register bits.
+ * 
+ *        noi_out_x             noi_out_x+1
+ *          ^                     ^
+ *          |                     |
+ *          +-------------+       +-------------+
+ *          |             |       |             |
+ *          +---o<|---+   |       +---o<|---+   |
+ *          |         |   |       |         |   |
+ *       c2 |      c1 |   |    c2 |      c1 |   |
+ *          |         |   |       |         |   |
+ *  >---/---+---|>o---+   +---/---+---|>o---+   +---/--->
+ *      LC                    LC                    LC
+ *
+ *
+ * Shift phase 1
+ * -------------
+ * During shift phase 1 c1 and c2 are open, the SR bits are floating
+ * and will be driven by the output of combined waveforms,
+ * or slowly turn high.
+ *
+ *        noi_out_x             noi_out_x+1
+ *          ^                     ^
+ *          |                     |
+ *          +-------------+       +-------------+
+ *          |             |       |             |
+ *          +---o<|---+   |       +---o<|---+   |
+ *          |         |   |       |         |   |
+ *       c2 /      c1 /   |    c2 /      c1 /   |
+ *          |         |   |       |         |   |
+ *  >-------+---|>o---+   +-------+---|>o---+   +------->
+ *      LC                    LC                    LC
+ *
+ *
+ * Shift phase 2 (phi1)
+ * --------------------
+ * During the first half cycle of shift phase 2 c1 is closed
+ * so the value from of noi_out_x-1 enters the bit.
+ *
+ *        noi_out_x             noi_out_x+1
+ *          ^                     ^
+ *          |                     |
+ *          +-------------+       +-------------+
+ *          |             |       |             |
+ *          +---o<|---+   |       +---o<|---+   |
+ *          |         |   |       |         |   |
+ *       c2 /      c1 |   |    c2 /      c1 |   |
+ *          |         |   |       |         |   |
+ *  >---/---+---|>o---+   +---/---+---|>o---+   +---/--->
+ *      LC                    LC                    LC
+ *
+ *
+ * Shift phase 2 (phi2)
+ * --------------------
+ * On the second half of shift phase 2 c2 closes and
+ * we're back to normal cycles.
  */
 void WaveformGenerator::clock_shift_register(unsigned int bit0)
 {
