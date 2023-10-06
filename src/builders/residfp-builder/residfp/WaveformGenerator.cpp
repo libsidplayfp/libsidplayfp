@@ -173,9 +173,20 @@ const unsigned int shift_mask =
 
 inline bool do_writeback(unsigned int waveform_old, unsigned int waveform_new, bool is6581)
 {
-#if 1
-    // FIXME this breaks SID/noiselfsrinit/simple
-    if (waveform_new <= 8)
+    // no writeback without combined waveforms
+
+    if (waveform_old <= 8)
+        // fixes SID/noisewriteback/noise_writeback_test2-{old,new}
+        return false;
+
+    if (waveform_new < 8)
+        return false;
+
+    if ((waveform_new == 8)
+        // breaks noise_writeback_check_F_to_8_old
+        // but fixes simple and scan
+        && (waveform_old != 0xf))
+    {
         // fixes
         // noise_writeback_check_9_to_8_old
         // noise_writeback_check_A_to_8_old
@@ -189,12 +200,7 @@ inline bool do_writeback(unsigned int waveform_old, unsigned int waveform_new, b
         // noise_writeback_check_E_to_8_new
         // noise_writeback_test1-{old,new}
         return false;
-
-#endif
-    // no writeback without combined waveforms
-    if (waveform_old <= 8)
-        // fixes SID/noisewriteback/noise_writeback_test2-{old,new}
-        return false;
+    }
 
     // What's happening here?
     if (is6581 &&
@@ -269,7 +275,7 @@ void WaveformGenerator::write_shift_register()
 {
     if (unlikely(waveform > 0x8))
     {
-#if 1
+#if 0
         // FIXME this breaks SID/wf12nsr/wf12nsr
         if (waveform == 0xc)
             // fixes
