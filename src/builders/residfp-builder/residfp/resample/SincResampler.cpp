@@ -30,6 +30,8 @@
 
 #include "siddefs-fp.h"
 
+#include "sidcxx11.h"
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -41,6 +43,9 @@
 #elif defined(HAVE_ARM_NEON_H)
 #  include <arm_neon.h>
 #endif
+#ifdef HAVE_CXX11
+#  include <mutex>
+#endif
 
 namespace reSIDfp
 {
@@ -49,6 +54,9 @@ typedef std::map<std::string, matrix_t> fir_cache_t;
 
 /// Cache for the expensive FIR table computation results.
 fir_cache_t FIR_CACHE;
+#ifdef HAVE_CXX11
+std::mutex FIR_CACHE_Lock;
+#endif
 
 /// Maximum error acceptable in I0 is 1e-6, or ~96 dB.
 const double I0E = 1e-6;
@@ -313,6 +321,11 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
     std::ostringstream o;
     o << firN << "," << firRES << "," << cyclesPerSampleD;
     const std::string firKey = o.str();
+
+#ifdef HAVE_CXX11
+    std::lock_guard<std::mutex> lock(FIR_CACHE_Lock);
+#endif
+
     fir_cache_t::iterator lb = FIR_CACHE.lower_bound(firKey);
 
     // The FIR computation is expensive and we set sampling parameters often, but
