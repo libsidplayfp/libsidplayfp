@@ -22,10 +22,8 @@
 #ifndef WAVEFORMCALCULATOR_h
 #define WAVEFORMCALCULATOR_h
 
-#include <map>
-
 #include "array.h"
-#include "sidcxx11.h"
+
 #include "siddefs-fp.h"
 
 
@@ -99,12 +97,7 @@ typedef struct
 class WaveformCalculator
 {
 private:
-    typedef std::map<const CombinedWaveformConfig*, matrix_t> cw_cache_t;
-
-private:
     matrix_t wftable;
-
-    cw_cache_t PULLDOWN_CACHE;
 
 private:
     WaveformCalculator();

@@ -22,10 +22,15 @@
 
 #include "FilterModelConfig6581.h"
 
-#include <cmath>
-
 #include "Integrator6581.h"
 #include "OpAmp.h"
+
+#include "sidcxx11.h"
+
+#ifdef HAVE_CXX11
+#  include <mutex>
+#endif
+#include <cmath>
 
 namespace reSIDfp
 {
@@ -90,8 +95,16 @@ const Spline::Point opamp_voltage[OPAMP_SIZE] =
 
 std::unique_ptr<FilterModelConfig6581> FilterModelConfig6581::instance(nullptr);
 
+#ifdef HAVE_CXX11
+std::mutex Instance6581_Lock;
+#endif
+
 FilterModelConfig6581* FilterModelConfig6581::getInstance()
 {
+#ifdef HAVE_CXX11
+    std::lock_guard<std::mutex> lock(Instance6581_Lock);
+#endif
+
     if (!instance.get())
     {
         instance.reset(new FilterModelConfig6581());
