@@ -35,18 +35,9 @@ unsigned int exSID::sid = 0;
 
 const char* exSID::getCredits()
 {
-    static std::string credits;
-
-    if (credits.empty())
-    {
-        // Setup credits
-        std::ostringstream ss;
-        ss << "exSID V" << VERSION << " Engine:\n";
-        ss << "\t(C) 2015-2017,2021 Thibaut VARENE\n";
-        credits = ss.str();
-    }
-
-	return credits.c_str();
+    return
+        "exSID V" VERSION " Engine:\n"
+        "\t(C) 2015-2017,2021 Thibaut VARENE\n";
 }
 
 exSID::exSID(sidbuilder *builder) :
