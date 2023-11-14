@@ -239,7 +239,6 @@ void run(int i, const char* tuneName)
     cfg.playback = SidConfig::MONO;
     cfg.sidEmulation = createEngine((m_engine.info()).maxsids());
 
-
     if (!m_engine.config(cfg))
     {
         std::cerr <<  m_engine.error() << std::endl;
@@ -266,14 +265,19 @@ void run(int i, const char* tuneName)
         handle.write((char*)&buffer.front(), buffer.size() * sizeof(short));
     }
     handle.close();
-
 }
 
 /*
  * Multithreading test application.
  */
-int main(int, char* argv[])
+int main(int argc, char* argv[])
 {
+    if (argc != 2)
+    {
+        std::cerr << "Missing argument" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     /*
     { // Load ROM files
     char *kernal = loadRom(KERNAL_PATH, 8192);
