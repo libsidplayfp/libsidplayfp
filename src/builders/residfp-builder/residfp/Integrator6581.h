@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004, 2010 Dag Lem <resid@nimrod.no>
  *
@@ -184,6 +184,8 @@ private:
 
     const FilterModelConfig6581* fmc;
 
+    mutable int min, max;
+
 public:
     Integrator6581(const FilterModelConfig6581* fmc,
                double WL_snake) :
@@ -197,7 +199,9 @@ public:
         nVt(fmc->getNormalizedValue(fmc->getVth())),
         nVmin(fmc->getNVmin()),
         nSnake(fmc->getNormalizedCurrentFactor(WL_snake)),
-        fmc(fmc) {}
+        fmc(fmc) {
+            min = max = 0;
+        }
 
     void setVw(unsigned short Vw) { nVddt_Vw_2 = ((nVddt - Vw) * (nVddt - Vw)) >> 1; }
 
@@ -242,10 +246,10 @@ int Integrator6581::solve(int vi) const
 #endif
 
     // VCR voltages for EKV model table lookup.
-    const int kVgt_Vs = (vx < kVgt) ? kVgt - vx : 0;
-    assert(kVgt_Vs < (1 << 16));
-    const int kVgt_Vd = (vi < kVgt) ? kVgt - vi : 0;
-    assert(kVgt_Vd < (1 << 16));
+    int kVgt_Vs = (kVgt - vx) + (1 << 15);
+    assert((kVgt_Vs >= 0) && (kVgt_Vs < (1 << 16)));
+    int kVgt_Vd = (kVgt - vi) + (1 << 15);
+    assert((kVgt_Vd >= 0) && (kVgt_Vd < (1 << 16)));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
     const unsigned int If = static_cast<unsigned int>(fmc->getVcr_n_Ids_term(kVgt_Vs)) << 15;
