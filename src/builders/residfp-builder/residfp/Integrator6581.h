@@ -184,8 +184,6 @@ private:
 
     const FilterModelConfig6581* fmc;
 
-    mutable int min, max;
-
 public:
     Integrator6581(const FilterModelConfig6581* fmc,
                double WL_snake) :
@@ -199,9 +197,7 @@ public:
         nVt(fmc->getNormalizedValue(fmc->getVth())),
         nVmin(fmc->getNVmin()),
         nSnake(fmc->getNormalizedCurrentFactor(WL_snake)),
-        fmc(fmc) {
-            min = max = 0;
-        }
+        fmc(fmc) {}
 
     void setVw(unsigned short Vw) { nVddt_Vw_2 = ((nVddt - Vw) * (nVddt - Vw)) >> 1; }
 
@@ -246,9 +242,9 @@ int Integrator6581::solve(int vi) const
 #endif
 
     // VCR voltages for EKV model table lookup.
-    int kVgt_Vs = (kVgt - vx) + (1 << 15);
+    const int kVgt_Vs = (kVgt - vx) + (1 << 15);
     assert((kVgt_Vs >= 0) && (kVgt_Vs < (1 << 16)));
-    int kVgt_Vd = (kVgt - vi) + (1 << 15);
+    const int kVgt_Vd = (kVgt - vi) + (1 << 15);
     assert((kVgt_Vd >= 0) && (kVgt_Vd < (1 << 16)));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
