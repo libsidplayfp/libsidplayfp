@@ -1,3 +1,10 @@
+2.5.1 2023-12-23
+* Check for {g,}od at configure time (#87)
+* residfp: fix a 6581 filter bug where values could actually go negative
+* Sync resid with upstream
+
+
+
 2.5.0 2023-06-02
 * residfp: reworked the combined waveforms model by separating pulldown effect from waveform generation
 * residfp: tweaked the 8580 filter parameters for increased volume and less distortion (#45)
