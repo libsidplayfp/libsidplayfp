@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.5.0</span>
+   &#160;<span id="projectnumber">2.5.1</span>
    </div>
   </td>
  </tr>
@@ -1852,87 +1852,85 @@
 <div class="line"><a name="l01799"></a><span class="lineno"> 1799</span>&#160;  <span class="keywordtype">int</span> kVg = vcr_kVg[(Vddt_Vw_2 + (Vgdt_2 &gt;&gt; 1)) &gt;&gt; 16];</div>
 <div class="line"><a name="l01800"></a><span class="lineno"> 1800</span>&#160; </div>
 <div class="line"><a name="l01801"></a><span class="lineno"> 1801</span>&#160;  <span class="comment">// VCR voltages for EKV model table lookup.</span></div>
-<div class="line"><a name="l01802"></a><span class="lineno"> 1802</span>&#160;  <span class="keywordtype">int</span> Vgs = kVg - vx;</div>
-<div class="line"><a name="l01803"></a><span class="lineno"> 1803</span>&#160;  <span class="keywordflow">if</span> (Vgs &lt; 0) Vgs = 0;</div>
-<div class="line"><a name="l01804"></a><span class="lineno"> 1804</span>&#160;  <span class="keywordtype">int</span> Vgd = kVg - vi;</div>
-<div class="line"><a name="l01805"></a><span class="lineno"> 1805</span>&#160;  <span class="keywordflow">if</span> (Vgd &lt; 0) Vgd = 0;</div>
-<div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160; </div>
-<div class="line"><a name="l01807"></a><span class="lineno"> 1807</span>&#160;  <span class="comment">// VCR current, scaled by m*2^15*2^15 = m*2^30</span></div>
-<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;  <span class="keywordtype">int</span> n_I_vcr = int(<span class="keywordtype">unsigned</span>(vcr_n_Ids_term[Vgs] - vcr_n_Ids_term[Vgd]) &lt;&lt; 15);</div>
-<div class="line"><a name="l01809"></a><span class="lineno"> 1809</span>&#160; </div>
-<div class="line"><a name="l01810"></a><span class="lineno"> 1810</span>&#160;  <span class="comment">// Change in capacitor charge.</span></div>
-<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;  vc -= (n_I_snake + n_I_vcr)*dt;</div>
-<div class="line"><a name="l01812"></a><span class="lineno"> 1812</span>&#160; </div>
-<div class="line"><a name="l01813"></a><span class="lineno"> 1813</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l01814"></a><span class="lineno"> 1814</span>&#160;<span class="comment">  // FIXME: Determine whether this check is necessary.</span></div>
-<div class="line"><a name="l01815"></a><span class="lineno"> 1815</span>&#160;<span class="comment">  if (vc &lt; mf.vc_min) {</span></div>
-<div class="line"><a name="l01816"></a><span class="lineno"> 1816</span>&#160;<span class="comment">    vc = mf.vc_min;</span></div>
-<div class="line"><a name="l01817"></a><span class="lineno"> 1817</span>&#160;<span class="comment">  }</span></div>
-<div class="line"><a name="l01818"></a><span class="lineno"> 1818</span>&#160;<span class="comment">  else if (vc &gt; mf.vc_max) {</span></div>
-<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;<span class="comment">    vc = mf.vc_max;</span></div>
-<div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160;<span class="comment">  }</span></div>
-<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l01822"></a><span class="lineno"> 1822</span>&#160; </div>
-<div class="line"><a name="l01823"></a><span class="lineno"> 1823</span>&#160;  <span class="comment">// vx = g(vc)</span></div>
-<div class="line"><a name="l01824"></a><span class="lineno"> 1824</span>&#160;  vx = mf.opamp_rev[(vc &gt;&gt; 15) + (1 &lt;&lt; 15)];</div>
-<div class="line"><a name="l01825"></a><span class="lineno"> 1825</span>&#160; </div>
-<div class="line"><a name="l01826"></a><span class="lineno"> 1826</span>&#160;  <span class="comment">// Return vo.</span></div>
-<div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;  <span class="keywordflow">return</span> vx + (vc &gt;&gt; 14);</div>
-<div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;}</div>
-<div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160; </div>
-<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;<span class="comment">The 8580 integrator is similar to those found in 6581</span></div>
-<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;<span class="comment">but the resistance is formed by multiple NMOS transistors</span></div>
-<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;<span class="comment">in parallel controlled by the fc bits where the gate voltage</span></div>
-<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;<span class="comment">is driven by a temperature dependent voltage divider.</span></div>
-<div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;<span class="comment">                 ---C---</span></div>
-<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;<span class="comment">                |       |</span></div>
-<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;<span class="comment">  vi -----Rfc------[A&gt;----- vo</span></div>
-<div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;<span class="comment">                vx</span></div>
-<div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;<span class="comment">  IRfc + ICr = 0</span></div>
-<div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;<span class="comment">  IRfc + C*(vc - vc0)/dt = 0</span></div>
-<div class="line"><a name="l01843"></a><span class="lineno"> 1843</span>&#160;<span class="comment">  dt/C*(IRfc) + vc - vc0 = 0</span></div>
-<div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160;<span class="comment">  vc = vc0 - n*(IRfc(vi,vx))</span></div>
-<div class="line"><a name="l01845"></a><span class="lineno"> 1845</span>&#160;<span class="comment">  vc = vc0 - n*(IRfc(vi,g(vc)))</span></div>
-<div class="line"><a name="l01846"></a><span class="lineno"> 1846</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l01847"></a><span class="lineno"> 1847</span>&#160;<span class="comment">IRfc = K/2*W/L*(Vgst^2 - Vgdt^2) = n*((Vgt - vx)^2 - (Vgt - vi)^2)</span></div>
-<div class="line"><a name="l01848"></a><span class="lineno"> 1848</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l01849"></a><span class="lineno"> 1849</span>&#160;RESID_INLINE</div>
-<div class="line"><a name="l01850"></a><span class="lineno"> 1850</span>&#160;<span class="keywordtype">int</span> Filter::solve_integrate_8580(<span class="keywordtype">int</span> dt, <span class="keywordtype">int</span> vi, <span class="keywordtype">int</span>&amp; vx, <span class="keywordtype">int</span>&amp; vc, model_filter_t&amp; mf)</div>
-<div class="line"><a name="l01851"></a><span class="lineno"> 1851</span>&#160;{</div>
-<div class="line"><a name="l01852"></a><span class="lineno"> 1852</span>&#160;  <span class="comment">// Note that all variables are translated and scaled in order to fit</span></div>
-<div class="line"><a name="l01853"></a><span class="lineno"> 1853</span>&#160;  <span class="comment">// in 16 bits. It is not necessary to explicitly translate the variables here,</span></div>
-<div class="line"><a name="l01854"></a><span class="lineno"> 1854</span>&#160;  <span class="comment">// since they are all used in subtractions which cancel out the translation:</span></div>
-<div class="line"><a name="l01855"></a><span class="lineno"> 1855</span>&#160;  <span class="comment">// (a - t) - (b - t) = a - b</span></div>
-<div class="line"><a name="l01856"></a><span class="lineno"> 1856</span>&#160; </div>
-<div class="line"><a name="l01857"></a><span class="lineno"> 1857</span>&#160;  <span class="comment">// Dac voltages.</span></div>
-<div class="line"><a name="l01858"></a><span class="lineno"> 1858</span>&#160;  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Vgst = nVgt - vx;</div>
-<div class="line"><a name="l01859"></a><span class="lineno"> 1859</span>&#160;  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Vgdt = (vi &lt; nVgt) ? nVgt - vi : 0;  <span class="comment">// triode/saturation mode</span></div>
-<div class="line"><a name="l01860"></a><span class="lineno"> 1860</span>&#160; </div>
-<div class="line"><a name="l01861"></a><span class="lineno"> 1861</span>&#160;  <span class="comment">// Dac current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30</span></div>
-<div class="line"><a name="l01862"></a><span class="lineno"> 1862</span>&#160;  <span class="keywordtype">int</span> n_I_rfc = n_dac*(int(Vgst*Vgst - Vgdt*Vgdt) &gt;&gt; 15);</div>
-<div class="line"><a name="l01863"></a><span class="lineno"> 1863</span>&#160; </div>
-<div class="line"><a name="l01864"></a><span class="lineno"> 1864</span>&#160;  <span class="comment">// Change in capacitor charge.</span></div>
-<div class="line"><a name="l01865"></a><span class="lineno"> 1865</span>&#160;  vc -= n_I_rfc*dt;</div>
-<div class="line"><a name="l01866"></a><span class="lineno"> 1866</span>&#160; </div>
-<div class="line"><a name="l01867"></a><span class="lineno"> 1867</span>&#160;  <span class="comment">// vx = g(vc)</span></div>
-<div class="line"><a name="l01868"></a><span class="lineno"> 1868</span>&#160;  vx = mf.opamp_rev[(vc &gt;&gt; 15) + (1 &lt;&lt; 15)];</div>
-<div class="line"><a name="l01869"></a><span class="lineno"> 1869</span>&#160; </div>
-<div class="line"><a name="l01870"></a><span class="lineno"> 1870</span>&#160;  <span class="comment">// Return vo.</span></div>
-<div class="line"><a name="l01871"></a><span class="lineno"> 1871</span>&#160;  <span class="keywordflow">return</span> vx + (vc &gt;&gt; 14);</div>
-<div class="line"><a name="l01872"></a><span class="lineno"> 1872</span>&#160;}</div>
+<div class="line"><a name="l01802"></a><span class="lineno"> 1802</span>&#160;  <span class="keywordtype">int</span> Vgs = kVg - vx + (1 &lt;&lt; 15);</div>
+<div class="line"><a name="l01803"></a><span class="lineno"> 1803</span>&#160;  <span class="keywordtype">int</span> Vgd = kVg - vi + (1 &lt;&lt; 15);</div>
+<div class="line"><a name="l01804"></a><span class="lineno"> 1804</span>&#160; </div>
+<div class="line"><a name="l01805"></a><span class="lineno"> 1805</span>&#160;  <span class="comment">// VCR current, scaled by m*2^15*2^15 = m*2^30</span></div>
+<div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160;  <span class="keywordtype">int</span> n_I_vcr = int(<span class="keywordtype">unsigned</span>(vcr_n_Ids_term[Vgs] - vcr_n_Ids_term[Vgd]) &lt;&lt; 15);</div>
+<div class="line"><a name="l01807"></a><span class="lineno"> 1807</span>&#160; </div>
+<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;  <span class="comment">// Change in capacitor charge.</span></div>
+<div class="line"><a name="l01809"></a><span class="lineno"> 1809</span>&#160;  vc -= (n_I_snake + n_I_vcr)*dt;</div>
+<div class="line"><a name="l01810"></a><span class="lineno"> 1810</span>&#160; </div>
+<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l01812"></a><span class="lineno"> 1812</span>&#160;<span class="comment">  // FIXME: Determine whether this check is necessary.</span></div>
+<div class="line"><a name="l01813"></a><span class="lineno"> 1813</span>&#160;<span class="comment">  if (vc &lt; mf.vc_min) {</span></div>
+<div class="line"><a name="l01814"></a><span class="lineno"> 1814</span>&#160;<span class="comment">    vc = mf.vc_min;</span></div>
+<div class="line"><a name="l01815"></a><span class="lineno"> 1815</span>&#160;<span class="comment">  }</span></div>
+<div class="line"><a name="l01816"></a><span class="lineno"> 1816</span>&#160;<span class="comment">  else if (vc &gt; mf.vc_max) {</span></div>
+<div class="line"><a name="l01817"></a><span class="lineno"> 1817</span>&#160;<span class="comment">    vc = mf.vc_max;</span></div>
+<div class="line"><a name="l01818"></a><span class="lineno"> 1818</span>&#160;<span class="comment">  }</span></div>
+<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160; </div>
+<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;  <span class="comment">// vx = g(vc)</span></div>
+<div class="line"><a name="l01822"></a><span class="lineno"> 1822</span>&#160;  vx = mf.opamp_rev[(vc &gt;&gt; 15) + (1 &lt;&lt; 15)];</div>
+<div class="line"><a name="l01823"></a><span class="lineno"> 1823</span>&#160; </div>
+<div class="line"><a name="l01824"></a><span class="lineno"> 1824</span>&#160;  <span class="comment">// Return vo.</span></div>
+<div class="line"><a name="l01825"></a><span class="lineno"> 1825</span>&#160;  <span class="keywordflow">return</span> vx + (vc &gt;&gt; 14);</div>
+<div class="line"><a name="l01826"></a><span class="lineno"> 1826</span>&#160;}</div>
+<div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160; </div>
+<div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;<span class="comment">The 8580 integrator is similar to those found in 6581</span></div>
+<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;<span class="comment">but the resistance is formed by multiple NMOS transistors</span></div>
+<div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;<span class="comment">in parallel controlled by the fc bits where the gate voltage</span></div>
+<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;<span class="comment">is driven by a temperature dependent voltage divider.</span></div>
+<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;<span class="comment">                 ---C---</span></div>
+<div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;<span class="comment">                |       |</span></div>
+<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;<span class="comment">  vi -----Rfc------[A&gt;----- vo</span></div>
+<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;<span class="comment">                vx</span></div>
+<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;<span class="comment">  IRfc + ICr = 0</span></div>
+<div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160;<span class="comment">  IRfc + C*(vc - vc0)/dt = 0</span></div>
+<div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;<span class="comment">  dt/C*(IRfc) + vc - vc0 = 0</span></div>
+<div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;<span class="comment">  vc = vc0 - n*(IRfc(vi,vx))</span></div>
+<div class="line"><a name="l01843"></a><span class="lineno"> 1843</span>&#160;<span class="comment">  vc = vc0 - n*(IRfc(vi,g(vc)))</span></div>
+<div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160;<span class="comment"></span> </div>
+<div class="line"><a name="l01845"></a><span class="lineno"> 1845</span>&#160;<span class="comment">IRfc = K/2*W/L*(Vgst^2 - Vgdt^2) = n*((Vgt - vx)^2 - (Vgt - vi)^2)</span></div>
+<div class="line"><a name="l01846"></a><span class="lineno"> 1846</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l01847"></a><span class="lineno"> 1847</span>&#160;RESID_INLINE</div>
+<div class="line"><a name="l01848"></a><span class="lineno"> 1848</span>&#160;<span class="keywordtype">int</span> Filter::solve_integrate_8580(<span class="keywordtype">int</span> dt, <span class="keywordtype">int</span> vi, <span class="keywordtype">int</span>&amp; vx, <span class="keywordtype">int</span>&amp; vc, model_filter_t&amp; mf)</div>
+<div class="line"><a name="l01849"></a><span class="lineno"> 1849</span>&#160;{</div>
+<div class="line"><a name="l01850"></a><span class="lineno"> 1850</span>&#160;  <span class="comment">// Note that all variables are translated and scaled in order to fit</span></div>
+<div class="line"><a name="l01851"></a><span class="lineno"> 1851</span>&#160;  <span class="comment">// in 16 bits. It is not necessary to explicitly translate the variables here,</span></div>
+<div class="line"><a name="l01852"></a><span class="lineno"> 1852</span>&#160;  <span class="comment">// since they are all used in subtractions which cancel out the translation:</span></div>
+<div class="line"><a name="l01853"></a><span class="lineno"> 1853</span>&#160;  <span class="comment">// (a - t) - (b - t) = a - b</span></div>
+<div class="line"><a name="l01854"></a><span class="lineno"> 1854</span>&#160; </div>
+<div class="line"><a name="l01855"></a><span class="lineno"> 1855</span>&#160;  <span class="comment">// Dac voltages.</span></div>
+<div class="line"><a name="l01856"></a><span class="lineno"> 1856</span>&#160;  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Vgst = nVgt - vx;</div>
+<div class="line"><a name="l01857"></a><span class="lineno"> 1857</span>&#160;  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> Vgdt = (vi &lt; nVgt) ? nVgt - vi : 0;  <span class="comment">// triode/saturation mode</span></div>
+<div class="line"><a name="l01858"></a><span class="lineno"> 1858</span>&#160; </div>
+<div class="line"><a name="l01859"></a><span class="lineno"> 1859</span>&#160;  <span class="comment">// Dac current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30</span></div>
+<div class="line"><a name="l01860"></a><span class="lineno"> 1860</span>&#160;  <span class="keywordtype">int</span> n_I_rfc = n_dac*(int(Vgst*Vgst - Vgdt*Vgdt) &gt;&gt; 15);</div>
+<div class="line"><a name="l01861"></a><span class="lineno"> 1861</span>&#160; </div>
+<div class="line"><a name="l01862"></a><span class="lineno"> 1862</span>&#160;  <span class="comment">// Change in capacitor charge.</span></div>
+<div class="line"><a name="l01863"></a><span class="lineno"> 1863</span>&#160;  vc -= n_I_rfc*dt;</div>
+<div class="line"><a name="l01864"></a><span class="lineno"> 1864</span>&#160; </div>
+<div class="line"><a name="l01865"></a><span class="lineno"> 1865</span>&#160;  <span class="comment">// vx = g(vc)</span></div>
+<div class="line"><a name="l01866"></a><span class="lineno"> 1866</span>&#160;  vx = mf.opamp_rev[(vc &gt;&gt; 15) + (1 &lt;&lt; 15)];</div>
+<div class="line"><a name="l01867"></a><span class="lineno"> 1867</span>&#160; </div>
+<div class="line"><a name="l01868"></a><span class="lineno"> 1868</span>&#160;  <span class="comment">// Return vo.</span></div>
+<div class="line"><a name="l01869"></a><span class="lineno"> 1869</span>&#160;  <span class="keywordflow">return</span> vx + (vc &gt;&gt; 14);</div>
+<div class="line"><a name="l01870"></a><span class="lineno"> 1870</span>&#160;}</div>
+<div class="line"><a name="l01871"></a><span class="lineno"> 1871</span>&#160; </div>
+<div class="line"><a name="l01872"></a><span class="lineno"> 1872</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// RESID_INLINING || defined(RESID_FILTER_CC)</span></div>
 <div class="line"><a name="l01873"></a><span class="lineno"> 1873</span>&#160; </div>
-<div class="line"><a name="l01874"></a><span class="lineno"> 1874</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// RESID_INLINING || defined(RESID_FILTER_CC)</span></div>
+<div class="line"><a name="l01874"></a><span class="lineno"> 1874</span>&#160;} <span class="comment">// namespace reSID</span></div>
 <div class="line"><a name="l01875"></a><span class="lineno"> 1875</span>&#160; </div>
-<div class="line"><a name="l01876"></a><span class="lineno"> 1876</span>&#160;} <span class="comment">// namespace reSID</span></div>
-<div class="line"><a name="l01877"></a><span class="lineno"> 1877</span>&#160; </div>
-<div class="line"><a name="l01878"></a><span class="lineno"> 1878</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// not RESID_FILTER_H</span></div>
+<div class="line"><a name="l01876"></a><span class="lineno"> 1876</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// not RESID_FILTER_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 2 2023 12:55:20 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sat Dec 23 2023 10:10:37 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

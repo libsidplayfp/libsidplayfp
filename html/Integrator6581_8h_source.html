@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.5.0</span>
+   &#160;<span id="projectnumber">2.5.1</span>
    </div>
   </td>
  </tr>
@@ -54,7 +54,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2022 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2023 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Copyright 2004, 2010 Dag Lem &lt;resid@nimrod.no&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
@@ -173,10 +173,10 @@
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="comment">// VCR voltages for EKV model table lookup.</span></div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> kVgt_Vs = (vx &lt; kVgt) ? kVgt - vx : 0;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    assert(kVgt_Vs &lt; (1 &lt;&lt; 16));</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> kVgt_Vd = (vi &lt; kVgt) ? kVgt - vi : 0;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    assert(kVgt_Vd &lt; (1 &lt;&lt; 16));</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> kVgt_Vs = (kVgt - vx) + (1 &lt;&lt; 15);</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    assert((kVgt_Vs &gt;= 0) &amp;&amp; (kVgt_Vs &lt; (1 &lt;&lt; 16)));</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> kVgt_Vd = (kVgt - vi) + (1 &lt;&lt; 15);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    assert((kVgt_Vd &gt;= 0) &amp;&amp; (kVgt_Vd &lt; (1 &lt;&lt; 16)));</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="comment">// VCR current, scaled by m*2^15*2^15 = m*2^30</span></div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> If = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(fmc-&gt;getVcr_n_Ids_term(kVgt_Vs)) &lt;&lt; 15;</div>
@@ -219,7 +219,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 2 2023 12:55:20 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sat Dec 23 2023 10:10:37 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
