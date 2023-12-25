@@ -38,12 +38,12 @@ dnl Use C++ for tests.
 AC_LANG([C++])
 
 AX_CXX_COMPILE_STDCXX_17([noext], [optional])
-AS_IF([test $ax_cv_cxx_compile_cxx17__std_cpp17 != "yes"],
+AS_IF([test $ax_cv_cxx_compile_cxx17__std_cpp17 != "yes"], [
     AX_CXX_COMPILE_STDCXX_14([noext], [optional])
     AS_IF([test $ax_cv_cxx_compile_cxx14__std_cpp14 != "yes"],
         AX_CXX_COMPILE_STDCXX_11([noext], [optional])
     )
-)
+])
 
 dnl check for hidden visibility support
 AX_CHECK_COMPILE_FLAG([-fvisibility=hidden -fvisibility-inlines-hidden], [has_visibility=yes], [has_visibility=no])
