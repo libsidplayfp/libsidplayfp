@@ -115,8 +115,8 @@ FilterModelConfig6581* FilterModelConfig6581::getInstance()
 
 FilterModelConfig6581::FilterModelConfig6581() :
     FilterModelConfig(
-        1.5,     // voice voltage range
-        5.075,   // voice DC voltage
+        1.785,   // voice voltage range
+        5.215,   // voice DC voltage // FIXME depends on evelope, varies from 5.0V to 5.215V
         470e-12, // capacitor value
         12.18,   // Vdd
         1.31,    // Vth

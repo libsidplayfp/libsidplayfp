@@ -135,8 +135,8 @@ FilterModelConfig8580* FilterModelConfig8580::getInstance()
 
 FilterModelConfig8580::FilterModelConfig8580() :
     FilterModelConfig(
-        0.30,   // voice voltage range FIXME measure
-        4.84,   // voice DC voltage FIXME measure
+        0.237,  // voice voltage range
+        4.76,   // voice DC voltage
         22e-9,  // capacitor value
         9.09,   // Vdd
         0.80,   // Vth

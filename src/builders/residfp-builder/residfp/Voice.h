@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -54,12 +54,13 @@ public:
     /**
      * Amplitude modulated waveform output.
      *
-     * The waveform DAC generates a voltage between virtual ground and Vdd
-     * (5-12 V for the 6581 and 4.75-9 V for the 8580)
+     * The waveform DAC generates a voltage between
+     * 3.43-7 V for the 6581 and 4.5-5 V for the 8580
      * corresponding to oscillator state 0 .. 4095.
      *
-     * The envelope DAC generates a voltage between waveform gen output and
-     * the virtual ground level, corresponding to envelope state 0 .. 255.
+     * The envelope DAC generates a voltage between
+     * 3.43-7 V for the 6581 and 4.51-4.99 V for the 8580
+     * corresponding to envelope state 0 .. 255.
      *
      * Ideal range [-2048*255, 2047*255].
      *
