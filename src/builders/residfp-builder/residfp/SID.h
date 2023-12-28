@@ -87,6 +87,9 @@ private:
     /// SID voices
     std::unique_ptr<Voice> voice[3];
 
+    /// Used to amplify the output by x/2 to get an adequate playback volume
+    int scaleFactor;
+
     /// Time to live for the last written value
     int busValueTtl;
 
@@ -318,7 +321,9 @@ int SID::output() const
     const int v2 = voice[1]->output(voice[0]->wave());
     const int v3 = voice[2]->output(voice[1]->wave());
 
-    return externalFilter->clock(filter->clock(v1, v2, v3));
+    const int input = (scaleFactor * static_cast<unsigned int>(filter->clock(v1, v2, v3))) / 2;
+
+    return externalFilter->clock(input);
 }
 
 
