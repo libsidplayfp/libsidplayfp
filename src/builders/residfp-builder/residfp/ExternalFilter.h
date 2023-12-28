@@ -35,7 +35,7 @@ namespace reSIDfp
  * equipment impedance. Here we suppose an impedance of 10kOhm resulting
  * in a 3 dB attenuation at 1.6Hz.
  * To operate properly the 6581 audio output needs a pull-down resistor
- *(1KOhm recommended, not needed on 8580)
+ * (1KOhm recommended, not needed on 8580)
  *
  * ~~~
  *                                 9/12V
@@ -80,7 +80,7 @@ public:
      *
      * @param input
      */
-    int clock(unsigned short input);
+    int clock(int input);
 
     /**
      * Constructor.
@@ -108,9 +108,9 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int ExternalFilter::clock(unsigned short input)
+int ExternalFilter::clock(int input)
 {
-    const int Vi = (static_cast<unsigned int>(input)<<11) - (1 << (11+15));
+    const int Vi = (input<<11) - (1 << (11+15));
     const int dVlp = (w0lp_1_s7 * (Vi - Vlp) >> 7);
     const int dVhp = (w0hp_1_s17 * (Vlp - Vhp) >> 17);
     Vlp += dVlp;

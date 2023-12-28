@@ -211,11 +211,13 @@ void SID::setChipModel(ChipModel model)
     {
     case MOS6581:
         filter = filter6581.get();
+        scaleFactor = 3;
         modelTTL = BUS_TTL_6581;
         break;
 
     case MOS8580:
         filter = filter8580.get();
+        scaleFactor = 5;
         modelTTL = BUS_TTL_8580;
         break;
 
