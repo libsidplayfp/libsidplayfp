@@ -330,7 +330,6 @@ private:
     unsigned short** gain_vol;
 
     const int voiceScaleS11;
-    const int voiceDC;
 
     /// VCR + associated capacitor connected to highpass output.
     std::unique_ptr<Integrator6581> const hpIntegrator;
@@ -361,7 +360,6 @@ public:
         gain_res(FilterModelConfig6581::getInstance()->getGainRes()),
         gain_vol(FilterModelConfig6581::getInstance()->getGainVol()),
         voiceScaleS11(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
-        voiceDC(FilterModelConfig6581::getInstance()->getNormalizedVoiceDC()),
         hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
     {
@@ -371,6 +369,19 @@ public:
     ~Filter6581();
 
     unsigned short clock(int voice1, int voice2, int voice3) override;
+
+    int getVoiceScaleS11() const override { return voiceScaleS11; }
+
+    /**
+     * On 6581 the DC offset varies between 5.0V and 5.125V depending on
+     * the envelope value. We assume for simplicity a linear relation.
+     * TODO use a LUT
+     */
+    int getVoiceDC(int env) const override
+    {
+        const double voiceDC = 5.0 + (0.2145 * static_cast<double>(env) / 255.);
+        return FilterModelConfig6581::getInstance()->getNormalizedVoiceDC(voiceDC);
+    }
 
     void input(int sample) override { ve = (sample * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 
@@ -394,10 +405,8 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
 {
-    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
-    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? voice3 : 0;
 
     int Vi = 0;
     int Vo = 0;

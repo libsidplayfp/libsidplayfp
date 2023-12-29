@@ -29,7 +29,6 @@ namespace reSIDfp
 
 FilterModelConfig::FilterModelConfig(
     double vvr,
-    double vdv,
     double c,
     double vdd,
     double vth,
@@ -38,7 +37,6 @@ FilterModelConfig::FilterModelConfig(
     int opamp_size
 ) :
     voice_voltage_range(vvr),
-    voice_DC_voltage(vdv),
     C(c),
     Vdd(vdd),
     Vth(vth),

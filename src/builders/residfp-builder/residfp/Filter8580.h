@@ -319,7 +319,7 @@ public:
         gain_res(FilterModelConfig8580::getInstance()->getGainRes()),
         gain_vol(FilterModelConfig8580::getInstance()->getGainVol()),
         voiceScaleS11(FilterModelConfig8580::getInstance()->getVoiceScaleS11()),
-        voiceDC(FilterModelConfig8580::getInstance()->getNormalizedVoiceDC()),
+        voiceDC(FilterModelConfig8580::getInstance()->getNormalizedVoiceDC(4.76)),
         cp(0.5),
         hpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())
@@ -331,6 +331,10 @@ public:
     ~Filter8580();
 
     unsigned short clock(int voice1, int voice2, int voice3) override;
+
+    int getVoiceScaleS11() const override { return voiceScaleS11; }
+
+    int getVoiceDC(int env) const override { return voiceDC; }
 
     void input(int sample) override { ve = (sample * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 
@@ -352,10 +356,8 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
 {
-    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
-    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? voice3 : 0;
 
     int Vi = 0;
     int Vo = 0;

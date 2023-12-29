@@ -37,7 +37,6 @@ class FilterModelConfig
 {
 protected:
     const double voice_voltage_range;
-    const double voice_DC_voltage;
 
     /// Capacitor value.
     const double C;
@@ -89,7 +88,6 @@ protected:
      */
     FilterModelConfig(
         double vvr,
-        double vdv,
         double c,
         double vdd,
         double vth,
@@ -127,12 +125,18 @@ public:
      * The digital range of one voice is 20 bits; create a scaling term
      * for multiplication which fits in 11 bits.
      */
-    int getVoiceScaleS11() const { return static_cast<int>((norm * ((1 << 11) - 1)) * voice_voltage_range); }
+    inline int getVoiceScaleS11() const
+    {
+        return static_cast<int>((norm * ((1 << 11) - 1)) * voice_voltage_range);
+    }
 
     /**
      * The "zero" output level of the voices.
      */
-    int getNormalizedVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
+    inline int getNormalizedVoiceDC(double voiceDC) const
+    {
+        return static_cast<int>(N16 * (voiceDC - vmin));
+    }
 
     inline unsigned short getOpampRev(int i) const { return opamp_rev[i]; }
     inline double getVddt() const { return Vddt; }

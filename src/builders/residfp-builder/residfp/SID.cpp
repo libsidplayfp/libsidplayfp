@@ -105,10 +105,6 @@ const unsigned int OSC_DAC_BITS = 12;
  * whereas that digi-compatible 8580 has it very narrow.
  * On my 6581R4AR has 0x3A as the only value giving the same output level as 1.prg
  */
-//@{
-const unsigned int OFFSET_6581 = 0x380;
-const unsigned int OFFSET_8580 = 0x9c0;
-//@}
 
 /**
  * Bus value stays alive for some time after each operation.
@@ -249,7 +245,7 @@ void SID::setChipModel(ChipModel model)
         Dac dacBuilder(OSC_DAC_BITS);
         dacBuilder.kinkedDac(model);
 
-        const double offset = dacBuilder.getOutput(is6581 ? OFFSET_6581 : OFFSET_8580);
+        const double offset = dacBuilder.getOutput(0x800);
 
         for (unsigned int i = 0; i < (1 << OSC_DAC_BITS); i++)
         {

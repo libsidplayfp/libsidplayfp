@@ -129,6 +129,10 @@ public:
      */
     virtual unsigned short clock(int v1, int v2, int v3) = 0;
 
+    virtual int getVoiceScaleS11() const = 0;
+
+    virtual int getVoiceDC(int env) const = 0;
+
     /**
      * Enable filter.
      *
