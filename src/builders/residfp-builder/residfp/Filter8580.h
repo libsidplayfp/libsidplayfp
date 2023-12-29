@@ -286,7 +286,6 @@ private:
     unsigned short** gain_res;
     unsigned short** gain_vol;
 
-    const int voiceScaleS11;
     const int voiceDC;
 
     double cp;
@@ -312,13 +311,18 @@ protected:
 
     void updatedMixing() override;
 
+    int getVoiceDC(int env) const override
+    {
+        return voiceDC;
+    }
+
 public:
     Filter8580() :
+        Filter(FilterModelConfig8580::getInstance()->getVoiceScaleS11()),
         mixer(FilterModelConfig8580::getInstance()->getMixer()),
         summer(FilterModelConfig8580::getInstance()->getSummer()),
         gain_res(FilterModelConfig8580::getInstance()->getGainRes()),
         gain_vol(FilterModelConfig8580::getInstance()->getGainVol()),
-        voiceScaleS11(FilterModelConfig8580::getInstance()->getVoiceScaleS11()),
         voiceDC(FilterModelConfig8580::getInstance()->getNormalizedVoiceDC(4.76)),
         cp(0.5),
         hpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
@@ -331,10 +335,6 @@ public:
     ~Filter8580();
 
     unsigned short clock(int voice1, int voice2, int voice3) override;
-
-    int getVoiceScaleS11() const override { return voiceScaleS11; }
-
-    int getVoiceDC(int env) const override { return voiceDC; }
 
     void input(int sample) override { ve = (sample * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 

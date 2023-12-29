@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -238,14 +238,11 @@ void SID::setChipModel(ChipModel model)
         }
     }
 
-    // calculate oscillator DAC table
-    const bool is6581 = model == MOS6581;
-
     {
         Dac dacBuilder(OSC_DAC_BITS);
         dacBuilder.kinkedDac(model);
 
-        const double offset = dacBuilder.getOutput(0x800);
+        const double offset = static_cast<double>(1 << (OSC_DAC_BITS - 1));
 
         for (unsigned int i = 0; i < (1 << OSC_DAC_BITS); i++)
         {
@@ -253,6 +250,9 @@ void SID::setChipModel(ChipModel model)
             oscDAC[i] = static_cast<float>(dacValue - offset);
         }
     }
+
+    // calculate oscillator DAC table
+    const bool is6581 = model == MOS6581;
 
     // set voice tables
     for (int i = 0; i < 3; i++)

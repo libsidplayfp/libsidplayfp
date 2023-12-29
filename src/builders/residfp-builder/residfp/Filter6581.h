@@ -329,8 +329,6 @@ private:
     unsigned short** gain_res;
     unsigned short** gain_vol;
 
-    const int voiceScaleS11;
-
     /// VCR + associated capacitor connected to highpass output.
     std::unique_ptr<Integrator6581> const hpIntegrator;
 
@@ -352,26 +350,6 @@ protected:
 
     void updatedMixing() override;
 
-public:
-    Filter6581() :
-        f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5)),
-        mixer(FilterModelConfig6581::getInstance()->getMixer()),
-        summer(FilterModelConfig6581::getInstance()->getSummer()),
-        gain_res(FilterModelConfig6581::getInstance()->getGainRes()),
-        gain_vol(FilterModelConfig6581::getInstance()->getGainVol()),
-        voiceScaleS11(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
-        hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
-    {
-        input(0);
-    }
-
-    ~Filter6581();
-
-    unsigned short clock(int voice1, int voice2, int voice3) override;
-
-    int getVoiceScaleS11() const override { return voiceScaleS11; }
-
     /**
      * On 6581 the DC offset varies between 5.0V and 5.125V depending on
      * the envelope value. We assume for simplicity a linear relation.
@@ -382,6 +360,24 @@ public:
         const double voiceDC = 5.0 + (0.2145 * static_cast<double>(env) / 255.);
         return FilterModelConfig6581::getInstance()->getNormalizedVoiceDC(voiceDC);
     }
+
+public:
+    Filter6581() :
+        Filter(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
+        f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5)),
+        mixer(FilterModelConfig6581::getInstance()->getMixer()),
+        summer(FilterModelConfig6581::getInstance()->getSummer()),
+        gain_res(FilterModelConfig6581::getInstance()->getGainRes()),
+        gain_vol(FilterModelConfig6581::getInstance()->getGainVol()),
+        hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
+    {
+        input(0);
+    }
+
+    ~Filter6581();
+
+    unsigned short clock(int voice1, int voice2, int voice3) override;
 
     void input(int sample) override { ve = (sample * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 

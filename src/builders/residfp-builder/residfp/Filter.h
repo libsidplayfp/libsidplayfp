@@ -79,6 +79,9 @@ private:
     unsigned char filt;
 
 protected:
+    const int voiceScaleS11;
+
+protected:
     /**
      * Set filter cutoff frequency.
      */
@@ -94,8 +97,10 @@ protected:
      */
     virtual void updatedMixing() = 0;
 
+    virtual int getVoiceDC(int env) const = 0;
+
 public:
-    Filter() :
+    Filter(int voiceScaleS11) :
         currentGain(nullptr),
         currentMixer(nullptr),
         currentSummer(nullptr),
@@ -114,6 +119,7 @@ public:
         bp(false),
         lp(false),
         vol(0),
+        voiceScaleS11(voiceScaleS11),
         enabled(true),
         filt(0) {}
 
@@ -129,9 +135,10 @@ public:
      */
     virtual unsigned short clock(int v1, int v2, int v3) = 0;
 
-    virtual int getVoiceScaleS11() const = 0;
-
-    virtual int getVoiceDC(int env) const = 0;
+    int getNormalizedVoice(int val, int env) const
+    {
+        return (val * voiceScaleS11 / (1 << 15)) + getVoiceDC(env);
+    }
 
     /**
      * Enable filter.

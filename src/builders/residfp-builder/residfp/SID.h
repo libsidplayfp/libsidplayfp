@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -317,17 +317,15 @@ void SID::ageBusValue(unsigned int n)
 RESID_INLINE
 int SID::output() const
 {
-    const int voiceScaleS11 = filter->getVoiceScaleS11();
-
     const int env1 = voice[0]->envelope()->output();
     const int env2 = voice[1]->envelope()->output();
     const int env3 = voice[2]->envelope()->output();
 
-    const int v1 = (voice[0]->output(voice[2]->wave()) * voiceScaleS11 >> 15) + filter->getVoiceDC(env1);
-    const int v2 = (voice[1]->output(voice[0]->wave()) * voiceScaleS11 >> 15) + filter->getVoiceDC(env2);
-    const int v3 = (voice[2]->output(voice[1]->wave()) * voiceScaleS11 >> 15) + filter->getVoiceDC(env3);
+    const int v1 = filter->getNormalizedVoice(voice[0]->output(voice[2]->wave()), env1);
+    const int v2 = filter->getNormalizedVoice(voice[1]->output(voice[0]->wave()), env2);
+    const int v3 = filter->getNormalizedVoice(voice[2]->output(voice[1]->wave()), env3);
 
-    const int input = (scaleFactor * static_cast<unsigned int>(filter->clock(v1, v2, v3))) / 2;
+    const int input = (scaleFactor * static_cast<int>(filter->clock(v1, v2, v3))) / 2;
 
     return externalFilter->clock(input);
 }
