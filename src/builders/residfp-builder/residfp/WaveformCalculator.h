@@ -31,35 +31,24 @@ namespace reSIDfp
 {
 
 /**
- * Combined waveform model parameters.
- */
-typedef struct
-{
-    float threshold;
-    float pulsestrength;
-    float distance1;
-    float distance2;
-} CombinedWaveformConfig;
-
-/**
  * Combined waveform calculator for WaveformGenerator.
  * By combining waveforms, the bits of each waveform are effectively short
- * circuited. A zero bit in one waveform will result in a zero output bit
- * (thus the infamous claim that the waveforms are AND'ed).
+ * circuited, a zero bit in one waveform will result in a zero output bit,
+ * thus the claim that the waveforms are AND'ed.
  * However, a zero bit in one waveform may also affect the neighboring bits
  * in the output.
  *
  * Example:
- * 
+ *
  *                 1 1
  *     Bit #       1 0 9 8 7 6 5 4 3 2 1 0
  *                 -----------------------
  *     Sawtooth    0 0 0 1 1 1 1 1 1 0 0 0
- *     
+ *
  *     Triangle    0 0 1 1 1 1 1 1 0 0 0 0
- *     
+ *
  *     AND         0 0 0 1 1 1 1 1 0 0 0 0
- *     
+ *
  *     Output      0 0 0 0 1 1 1 0 0 0 0 0
  *
  *

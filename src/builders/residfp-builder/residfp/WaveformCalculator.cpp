@@ -32,6 +32,21 @@
 namespace reSIDfp
 {
 
+/**
+ * Combined waveform model parameters.
+ */
+typedef float (*distance_t)(float, int);
+
+typedef struct
+{
+    distance_t distFunc;
+    float threshold;
+    float topbit;
+    float pulsestrength;
+    float distance1;
+    float distance2;
+} CombinedWaveformConfig;
+
 typedef std::map<const CombinedWaveformConfig*, matrix_t> cw_cache_t;
 
 cw_cache_t PULLDOWN_CACHE;
@@ -45,36 +60,6 @@ WaveformCalculator* WaveformCalculator::getInstance()
     return &instance;
 }
 
-/**
- * Parameters derived with the Monte Carlo method based on
- * samplings by kevtris. Code and data available in the project repository [1].
- *
- * The score here reported is the acoustic error
- * calculated XORing the estimated and the sampled values.
- * In parentheses the number of mispredicted bits.
- *
- * [1] https://github.com/libsidplayfp/combined-waveforms
- */
-const CombinedWaveformConfig config[2][5] =
-{
-    { /* kevtris chip G (6581 R2) */
-        {0.862147212f, 0.f,          10.8962431f,    2.50848103f }, // TS  error  1941 (327/28672)
-        {0.932746708f, 2.07508397f,   1.03668225f,   1.14876997f }, // PT  error  5992 (126/32768)
-        {0.860927045f, 2.43506575f,   0.908603609f,  1.07907593f }, // PS  error  3693 (521/28672)
-        {0.741343081f, 0.0452554375f, 1.1439606f,    1.05711341f }, // PTS error   338 ( 29/28672)
-        {0.96f,        2.5f,          1.1f,          1.2f        }, // NP  guessed
-    },
-    { /* kevtris chip V (8580 R5) */
-        {0.715788841f, 0.f,           1.32999945f,   2.2172699f  }, // TS  error   928 (135/32768)
-        {0.93500334f,  1.05977178f,   1.08629429f,   1.43518543f }, // PT  error  7991 (212/32768)
-        {0.920648575f, 0.943601072f,  1.13034654f,   1.41881108f }, // PS  error 12566 (394/32768)
-        {0.90921098f,  0.979807794f,  0.942194462f,  1.40958893f }, // PTS error  2092 ( 60/32768)
-        {0.95f,        1.15f,         1.f,           1.45f       }, // NP  guessed
-    },
-};
-
-typedef float (*distance_t)(float, int);
-
 // Distance functions
 static float exponentialDistance(float distance, int i)
 {
@@ -86,10 +71,79 @@ MAYBE_UNUSED static float linearDistance(float distance, int i)
     return 1.f / (1.f + i * distance);
 }
 
-MAYBE_UNUSED static float quadraticDistance(float distance, int i)
+static float quadraticDistance(float distance, int i)
 {
     return 1.f / (1.f + (i*i) * distance);
 }
+
+/**
+ * Parameters derived with the Monte Carlo method based on
+ * samplings from real machines.
+ * Code and data available in the project repository [1].
+ * Sampling program made by Dag Lem [2].
+ *
+ * The score here reported is the acoustic error
+ * calculated XORing the estimated and the sampled values.
+ * In parentheses the number of mispredicted bits.
+ *
+ * [1] https://github.com/libsidplayfp/combined-waveforms
+ * [2] https://github.com/daglem/reDIP-SID/blob/master/research/combsample.d64
+ */
+const CombinedWaveformConfig config[2][5] =
+{
+    { /* 6581 R3 4785 sampled by Trurl */
+        // TS  error 2298 (339/32768)
+        { exponentialDistance, 0.776678205f, 1.18439901f, 0.f, 2.25732255f, 5.12803745f },
+        // PT  error  582 (57/32768)
+        { linearDistance, 1.01866758f, 1.f, 2.69177628f, 0.0233543925f, 0.0850229636f },
+        // PS  error 9242 (679/32768)
+        { linearDistance, 2.20329857f, 1.04501438f, 10.5146885f, 0.277294368f, 0.143747061f },
+        // PTS error 2799 (71/32768)
+        { linearDistance, 1.35652959f, 1.09051275f, 3.21098137f, 0.16658926f, 0.370252877f },
+        // NP  guessed
+        { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
+    },
+#if 0
+    // weak cw
+    { /* 6581 R2 4383 sampled by ltx128 */
+        // TS  error 1858 (204/32768)
+        { exponentialDistance, 0.886832297f, 1.f, 0.f, 2.14438701f, 9.51839447f },
+        // PT  error  612 (102/32768)
+        { linearDistance, 1.01262534f, 1.f, 2.46070528f, 0.0537485816f, 0.0986242667f },
+        // PS  error 8135 (575/32768)
+        { linearDistance, 2.14896345f, 1.0216713f, 10.5400085f, 0.244498149f, 0.126134038f },
+        // PTS error 2505 (63/32768)
+        { linearDistance, 1.29061747f, 0.9754318f, 3.15377498f, 0.0968349651f, 0.318573922f },
+        // NP  guessed
+        { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
+    },
+    // strong cw
+    { /* 6581 R2 0384 sampled by Trurl */
+        // TS  error 20337 (1579/32768)
+        { exponentialDistance, 0.000637792516f, 1.56725872f, 0.f, 0.00036806846f, 1.51800942f },
+        // PT  error  5194 (240/32768)
+        { linearDistance, 0.924824238f, 1.f, 1.96749473f, 0.0891806409f, 0.234794483f },
+        // PS  error 31015 (2181/32768)
+        { linearDistance, 1.2328074f, 0.73079139f, 3.9719491f, 0.00156516861f, 0.314677745f },
+        // PTS error  9874 (201/32768)
+        { linearDistance, 1.08558261f, 0.857638359f, 1.52781796f, 0.152927235f, 1.02657032f },
+        // NP  guessed
+        { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
+    },
+#endif
+    { /* 8580 R5 5092 25 sampled by reFX-Mike */
+        // TS  error 1212 (183/32768)
+        { exponentialDistance, 0.684999049f, 0.916620493f, 0.f, 1.14715648f, 2.02339816f },
+        // PT  error 6153 (295/32768)
+        { exponentialDistance,  0.940367579, 1.f, 1.26695442f, 0.976729453f, 1.57954705f },
+        // PS  error 7620 (454/32768)
+        { quadraticDistance, 0.963866293f, 1.22095084f, 1.01380754f, 0.0110885892f, 0.381492466f },
+        // PTS error 3701 (117/32768)
+        { linearDistance, 0.976761818f, 0.202727556f, 0.988633931f, 0.939373314f, 9.37139416f },
+        // NP  guessed
+        { exponentialDistance, 0.95f, 1.f, 1.15f, 1.f, 1.45f },
+    },
+};
 
 /// Calculate triangle waveform
 static unsigned int triXor(unsigned int val)
@@ -105,7 +159,7 @@ static unsigned int triXor(unsigned int val)
  * @param threshold
  * @param accumulator the high bits of the accumulator value
  */
-short calculatePulldown(float distancetable[], float pulsestrength, float threshold, unsigned int accumulator)
+short calculatePulldown(float distancetable[], float topbit, float pulsestrength, float threshold, unsigned int accumulator)
 {
     unsigned char bit[12];
 
@@ -113,6 +167,8 @@ short calculatePulldown(float distancetable[], float pulsestrength, float thresh
     {
         bit[i] = (accumulator & (1u << i)) != 0 ? 1 : 0;
     }
+
+    bit[11] *= topbit;
 
     float pulldown[12];
 
@@ -187,7 +243,7 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
     {
         const CombinedWaveformConfig& cfg = cfgArray[wav];
 
-        const distance_t distFunc = exponentialDistance;
+        const distance_t distFunc = cfg.distFunc;
 
         float distancetable[12 * 2 + 1];
         distancetable[12] = 1.f;
@@ -199,7 +255,7 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
 
         for (unsigned int idx = 0; idx < (1u << 12); idx++)
         {
-            pdTable[wav][idx] = calculatePulldown(distancetable, cfg.pulsestrength, cfg.threshold, idx);
+            pdTable[wav][idx] = calculatePulldown(distancetable, cfg.topbit, cfg.pulsestrength, cfg.threshold, idx);
         }
     }
 #ifdef HAVE_CXX11
