@@ -252,14 +252,17 @@ AC_ARG_ENABLE([tests],
   [AS_HELP_STRING([--enable-tests],
     [enable unit tests [default=no]]
   )],
-  [[echo Enabling unit tests]
-    PKG_CHECK_MODULES(UNITTEST, [UnitTest++])
-    [am_unittest=true]
-  ],
-  [am_unittest=false]
+  [],
+  [enable_tests=no]
 )
 
-AM_CONDITIONAL([ENABLE_TEST], [test x$am_unittest = xtrue])
+AS_IF([test "x$enable_tests" != "xno"],
+  [[echo Enabling unit tests]
+    PKG_CHECK_MODULES(UNITTEST, [UnitTest++])
+  ]
+)
+
+AM_CONDITIONAL([ENABLE_TEST], [test x$enable_tests = xyes])
 
 
 AC_ARG_WITH([gcrypt], AS_HELP_STRING([--with-gcrypt], [Build with the gcrypt library]))

@@ -127,7 +127,7 @@ int convolve(const short* a, const short* b, int bLength)
         for (int i = 0; i < n; i++)
         {
             const __m128i tmp = _mm_madd_epi16(*(__m128i*)a, *(__m128i*)b);
-            acc = _mm_add_epi16(acc, tmp);
+            acc = _mm_add_epi32(acc, tmp);
             a += 8;
             b += 8;
         }
