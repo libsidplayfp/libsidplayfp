@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.5.1</span>
+   &#160;<span id="projectnumber">2.6.0</span>
    </div>
   </td>
  </tr>
@@ -123,169 +123,173 @@
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    std::unique_ptr&lt;Voice&gt; voice[3];</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">int</span> busValueTtl;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">int</span> scaleFactor;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">int</span> modelTTL;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">int</span> busValueTtl;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nextVoiceSync;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">int</span> modelTTL;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    ChipModel model;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nextVoiceSync;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> busValue;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    ChipModel model;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">bool</span> muted[3];</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> busValue;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">float</span> envDAC[256];</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">float</span> oscDAC[4096];</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">void</span> ageBusValue(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">int</span> output() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">void</span> voiceSync(<span class="keywordtype">bool</span> sync);</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <a class="code" href="classreSIDfp_1_1SID.html">SID</a>();</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    ~<a class="code" href="classreSIDfp_1_1SID.html">SID</a>();</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a12f630d1885705cec7367bf628e3fa11">setChipModel</a>(ChipModel model);</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1SID.html#a5b3244a59b1e46cd2c6b6753e1d814b9">  160</a></span>&#160;    ChipModel <a class="code" href="classreSIDfp_1_1SID.html#a5b3244a59b1e46cd2c6b6753e1d814b9">getChipModel</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> model; }</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#ab6f2b50ec167ca44cb1bd17567add55e">reset</a>();</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a276dad479403e5f2a64993553d240153">input</a>(<span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="classreSIDfp_1_1SID.html#a30d28739a358f5269e29f2984075cad7">read</a>(<span class="keywordtype">int</span> offset);</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a3b16d87dbd316842d1ad6aea64c1f932">write</a>(<span class="keywordtype">int</span> offset, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> value);</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1SID.html#af323dd07e595c9ab0946b530ff8c59d1">  213</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#af323dd07e595c9ab0946b530ff8c59d1">mute</a>(<span class="keywordtype">int</span> channel, <span class="keywordtype">bool</span> enable) { muted[channel] = enable; }</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a398b11d4fe42860ed7678c0617f4488f">setSamplingParameters</a>(<span class="keywordtype">double</span> clockFrequency, SamplingMethod method, <span class="keywordtype">double</span> samplingFrequency, <span class="keywordtype">double</span> highestAccurateFrequency);</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">clock</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cycles, <span class="keywordtype">short</span>* buf);</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#aec85a284b5290053c92b18d9f1f190bc">clockSilent</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cycles);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a7fb0172b1031c193cad856a64705ae5a">setFilter6581Curve</a>(<span class="keywordtype">double</span> filterCurve);</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a836dd3d32a9cb3e78b68428023871988">setFilter8580Curve</a>(<span class="keywordtype">double</span> filterCurve);</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#aaec36399746c8542e8e5ebf147a84600">enableFilter</a>(<span class="keywordtype">bool</span> enable);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;};</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="preprocessor">#if RESID_INLINING || defined(SID_CPP)</span></div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="preprocessor">#include &quot;Filter.h&quot;</span></div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#include &quot;ExternalFilter.h&quot;</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor">#include &quot;Voice.h&quot;</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#include &quot;resample/Resampler.h&quot;</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;{</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">bool</span> muted[3];</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">float</span> envDAC[256];</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">float</span> oscDAC[4096];</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">void</span> ageBusValue(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordtype">int</span> output() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordtype">void</span> voiceSync(<span class="keywordtype">bool</span> sync);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <a class="code" href="classreSIDfp_1_1SID.html">SID</a>();</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    ~<a class="code" href="classreSIDfp_1_1SID.html">SID</a>();</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a12f630d1885705cec7367bf628e3fa11">setChipModel</a>(ChipModel model);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1SID.html#a5b3244a59b1e46cd2c6b6753e1d814b9">  163</a></span>&#160;    ChipModel <a class="code" href="classreSIDfp_1_1SID.html#a5b3244a59b1e46cd2c6b6753e1d814b9">getChipModel</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> model; }</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#ab6f2b50ec167ca44cb1bd17567add55e">reset</a>();</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a276dad479403e5f2a64993553d240153">input</a>(<span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="classreSIDfp_1_1SID.html#a30d28739a358f5269e29f2984075cad7">read</a>(<span class="keywordtype">int</span> offset);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a3b16d87dbd316842d1ad6aea64c1f932">write</a>(<span class="keywordtype">int</span> offset, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> value);</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00216"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1SID.html#af323dd07e595c9ab0946b530ff8c59d1">  216</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#af323dd07e595c9ab0946b530ff8c59d1">mute</a>(<span class="keywordtype">int</span> channel, <span class="keywordtype">bool</span> enable) { muted[channel] = enable; }</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a398b11d4fe42860ed7678c0617f4488f">setSamplingParameters</a>(<span class="keywordtype">double</span> clockFrequency, SamplingMethod method, <span class="keywordtype">double</span> samplingFrequency, <span class="keywordtype">double</span> highestAccurateFrequency);</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">clock</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cycles, <span class="keywordtype">short</span>* buf);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160; </div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#aec85a284b5290053c92b18d9f1f190bc">clockSilent</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cycles);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a7fb0172b1031c193cad856a64705ae5a">setFilter6581Curve</a>(<span class="keywordtype">double</span> filterCurve);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#a836dd3d32a9cb3e78b68428023871988">setFilter8580Curve</a>(<span class="keywordtype">double</span> filterCurve);</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1SID.html#aaec36399746c8542e8e5ebf147a84600">enableFilter</a>(<span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;};</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="preprocessor">#if RESID_INLINING || defined(SID_CPP)</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#include &quot;Filter.h&quot;</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="preprocessor">#include &quot;ExternalFilter.h&quot;</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">#include &quot;Voice.h&quot;</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="preprocessor">#include &quot;resample/Resampler.h&quot;</span></div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;RESID_INLINE</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="keywordtype">void</span> SID::ageBusValue(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> n)</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;{</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keywordflow">if</span> (likely(busValueTtl != 0))</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    {</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        busValueTtl -= n;</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        <span class="keywordflow">if</span> (unlikely(busValueTtl &lt;= 0))</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        {</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            busValue = 0;</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            busValueTtl = 0;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;}</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;RESID_INLINE</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="keywordtype">int</span> SID::output()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> v1 = voice[0]-&gt;output(voice[2]-&gt;wave());</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> v2 = voice[1]-&gt;output(voice[0]-&gt;wave());</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> v3 = voice[2]-&gt;output(voice[1]-&gt;wave());</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keywordflow">return</span> externalFilter-&gt;clock(filter-&gt;<a class="code" href="classreSIDfp_1_1Filter.html#a0aab735341ebd438cfbc7a08568176ed">clock</a>(v1, v2, v3));</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;}</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;{</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;RESID_INLINE</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="keywordtype">void</span> SID::ageBusValue(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> n)</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;{</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <span class="keywordflow">if</span> (likely(busValueTtl != 0))</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    {</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        busValueTtl -= n;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        <span class="keywordflow">if</span> (unlikely(busValueTtl &lt;= 0))</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            busValue = 0;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;            busValueTtl = 0;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        }</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    }</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;}</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;RESID_INLINE</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="keywordtype">int</span> SID::output()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> v1 = voice[0]-&gt;output(voice[2]-&gt;wave());</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> v2 = voice[1]-&gt;output(voice[0]-&gt;wave());</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> v3 = voice[2]-&gt;output(voice[1]-&gt;wave());</div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;RESID_INLINE</div>
-<div class="line"><a name="l00326"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">  326</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">SID::clock</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cycles, <span class="keywordtype">short</span>* buf)</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;{</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    ageBusValue(cycles);</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keywordtype">int</span> s = 0;</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keywordflow">while</span> (cycles != 0)</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    {</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> delta_t = std::min(nextVoiceSync, cycles);</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        <span class="keywordflow">if</span> (likely(delta_t &gt; 0))</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        {</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; delta_t; i++)</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;            {</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                <span class="comment">// clock waveform generators</span></div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;                voice[0]-&gt;wave()-&gt;clock();</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;                voice[1]-&gt;wave()-&gt;clock();</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                voice[2]-&gt;wave()-&gt;clock();</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                <span class="comment">// clock envelope generators</span></div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                voice[0]-&gt;envelope()-&gt;clock();</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                voice[1]-&gt;envelope()-&gt;clock();</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;                voice[2]-&gt;envelope()-&gt;clock();</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1SID.html#a276dad479403e5f2a64993553d240153">input</a> = (scaleFactor * <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(filter-&gt;<a class="code" href="classreSIDfp_1_1Filter.html#a0aab735341ebd438cfbc7a08568176ed">clock</a>(v1, v2, v3))) / 2;</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordflow">return</span> externalFilter-&gt;clock(<a class="code" href="classreSIDfp_1_1SID.html#a276dad479403e5f2a64993553d240153">input</a>);</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;}</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;RESID_INLINE</div>
+<div class="line"><a name="l00331"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">  331</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">SID::clock</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cycles, <span class="keywordtype">short</span>* buf)</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;{</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    ageBusValue(cycles);</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keywordtype">int</span> s = 0;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keywordflow">while</span> (cycles != 0)</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    {</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> delta_t = std::min(nextVoiceSync, cycles);</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        <span class="keywordflow">if</span> (likely(delta_t &gt; 0))</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; delta_t; i++)</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;            {</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                <span class="comment">// clock waveform generators</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                voice[0]-&gt;wave()-&gt;clock();</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                voice[1]-&gt;wave()-&gt;clock();</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;                voice[2]-&gt;wave()-&gt;clock();</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;                <span class="keywordflow">if</span> (unlikely(resampler-&gt;input(output())))</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;                {</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;                    buf[s++] = resampler-&gt;getOutput();</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;                }</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;            }</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;            cycles -= delta_t;</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;            nextVoiceSync -= delta_t;</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;        }</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        <span class="keywordflow">if</span> (unlikely(nextVoiceSync == 0))</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        {</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;            voiceSync(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;                <span class="comment">// clock envelope generators</span></div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;                voice[0]-&gt;envelope()-&gt;clock();</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;                voice[1]-&gt;envelope()-&gt;clock();</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;                voice[2]-&gt;envelope()-&gt;clock();</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                <span class="keywordflow">if</span> (unlikely(resampler-&gt;input(output())))</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;                {</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;                    buf[s++] = resampler-&gt;getOutput();</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;                }</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;            }</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160; </div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;            cycles -= delta_t;</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;            nextVoiceSync -= delta_t;</div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;        }</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    }</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordflow">return</span> s;</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;}</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;        <span class="keywordflow">if</span> (unlikely(nextVoiceSync == 0))</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;        {</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;            voiceSync(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        }</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    }</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keywordflow">return</span> s;</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;}</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160; </div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html"><div class="ttname"><a href="classreSIDfp_1_1Filter.html">reSIDfp::Filter</a></div><div class="ttdef"><b>Definition:</b> Filter.h:33</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a0aab735341ebd438cfbc7a08568176ed"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a0aab735341ebd438cfbc7a08568176ed">reSIDfp::Filter::clock</a></div><div class="ttdeci">virtual unsigned short clock(int v1, int v2, int v3)=0</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SIDError_html"><div class="ttname"><a href="classreSIDfp_1_1SIDError.html">reSIDfp::SIDError</a></div><div class="ttdef"><b>Definition:</b> SID.h:47</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SID_html"><div class="ttname"><a href="classreSIDfp_1_1SID.html">reSIDfp::SID</a></div><div class="ttdef"><b>Definition:</b> SID.h:61</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SID_html_a12f630d1885705cec7367bf628e3fa11"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a12f630d1885705cec7367bf628e3fa11">reSIDfp::SID::setChipModel</a></div><div class="ttdeci">void setChipModel(ChipModel model)</div><div class="ttdef"><b>Definition:</b> SID.cpp:208</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_a276dad479403e5f2a64993553d240153"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a276dad479403e5f2a64993553d240153">reSIDfp::SID::input</a></div><div class="ttdeci">void input(int value)</div><div class="ttdef"><b>Definition:</b> SID.cpp:291</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_a30d28739a358f5269e29f2984075cad7"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a30d28739a358f5269e29f2984075cad7">reSIDfp::SID::read</a></div><div class="ttdeci">unsigned char read(int offset)</div><div class="ttdef"><b>Definition:</b> SID.cpp:297</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_a398b11d4fe42860ed7678c0617f4488f"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a398b11d4fe42860ed7678c0617f4488f">reSIDfp::SID::setSamplingParameters</a></div><div class="ttdeci">void setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency)</div><div class="ttdef"><b>Definition:</b> SID.cpp:451</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_a3b16d87dbd316842d1ad6aea64c1f932"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a3b16d87dbd316842d1ad6aea64c1f932">reSIDfp::SID::write</a></div><div class="ttdeci">void write(int offset, unsigned char value)</div><div class="ttdef"><b>Definition:</b> SID.cpp:332</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_a5b3244a59b1e46cd2c6b6753e1d814b9"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a5b3244a59b1e46cd2c6b6753e1d814b9">reSIDfp::SID::getChipModel</a></div><div class="ttdeci">ChipModel getChipModel() const</div><div class="ttdef"><b>Definition:</b> SID.h:160</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_a276dad479403e5f2a64993553d240153"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a276dad479403e5f2a64993553d240153">reSIDfp::SID::input</a></div><div class="ttdeci">void input(int value)</div><div class="ttdef"><b>Definition:</b> SID.cpp:293</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_a30d28739a358f5269e29f2984075cad7"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a30d28739a358f5269e29f2984075cad7">reSIDfp::SID::read</a></div><div class="ttdeci">unsigned char read(int offset)</div><div class="ttdef"><b>Definition:</b> SID.cpp:299</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_a398b11d4fe42860ed7678c0617f4488f"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a398b11d4fe42860ed7678c0617f4488f">reSIDfp::SID::setSamplingParameters</a></div><div class="ttdeci">void setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency)</div><div class="ttdef"><b>Definition:</b> SID.cpp:453</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_a3b16d87dbd316842d1ad6aea64c1f932"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a3b16d87dbd316842d1ad6aea64c1f932">reSIDfp::SID::write</a></div><div class="ttdeci">void write(int offset, unsigned char value)</div><div class="ttdef"><b>Definition:</b> SID.cpp:334</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_a5b3244a59b1e46cd2c6b6753e1d814b9"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a5b3244a59b1e46cd2c6b6753e1d814b9">reSIDfp::SID::getChipModel</a></div><div class="ttdeci">ChipModel getChipModel() const</div><div class="ttdef"><b>Definition:</b> SID.h:163</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SID_html_a7fb0172b1031c193cad856a64705ae5a"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a7fb0172b1031c193cad856a64705ae5a">reSIDfp::SID::setFilter6581Curve</a></div><div class="ttdeci">void setFilter6581Curve(double filterCurve)</div><div class="ttdef"><b>Definition:</b> SID.cpp:158</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SID_html_a836dd3d32a9cb3e78b68428023871988"><div class="ttname"><a href="classreSIDfp_1_1SID.html#a836dd3d32a9cb3e78b68428023871988">reSIDfp::SID::setFilter8580Curve</a></div><div class="ttdeci">void setFilter8580Curve(double filterCurve)</div><div class="ttdef"><b>Definition:</b> SID.cpp:163</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SID_html_aaec36399746c8542e8e5ebf147a84600"><div class="ttname"><a href="classreSIDfp_1_1SID.html#aaec36399746c8542e8e5ebf147a84600">reSIDfp::SID::enableFilter</a></div><div class="ttdeci">void enableFilter(bool enable)</div><div class="ttdef"><b>Definition:</b> SID.cpp:168</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_ab6f2b50ec167ca44cb1bd17567add55e"><div class="ttname"><a href="classreSIDfp_1_1SID.html#ab6f2b50ec167ca44cb1bd17567add55e">reSIDfp::SID::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> SID.cpp:270</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_abcf854f6e1774606f7a29435beb09afc"><div class="ttname"><a href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">reSIDfp::SID::clock</a></div><div class="ttdeci">int clock(unsigned int cycles, short *buf)</div><div class="ttdef"><b>Definition:</b> SID.h:326</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_aec85a284b5290053c92b18d9f1f190bc"><div class="ttname"><a href="classreSIDfp_1_1SID.html#aec85a284b5290053c92b18d9f1f190bc">reSIDfp::SID::clockSilent</a></div><div class="ttdeci">void clockSilent(unsigned int cycles)</div><div class="ttdef"><b>Definition:</b> SID.cpp:470</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SID_html_af323dd07e595c9ab0946b530ff8c59d1"><div class="ttname"><a href="classreSIDfp_1_1SID.html#af323dd07e595c9ab0946b530ff8c59d1">reSIDfp::SID::mute</a></div><div class="ttdeci">void mute(int channel, bool enable)</div><div class="ttdef"><b>Definition:</b> SID.h:213</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_ab6f2b50ec167ca44cb1bd17567add55e"><div class="ttname"><a href="classreSIDfp_1_1SID.html#ab6f2b50ec167ca44cb1bd17567add55e">reSIDfp::SID::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> SID.cpp:272</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_abcf854f6e1774606f7a29435beb09afc"><div class="ttname"><a href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">reSIDfp::SID::clock</a></div><div class="ttdeci">int clock(unsigned int cycles, short *buf)</div><div class="ttdef"><b>Definition:</b> SID.h:331</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_aec85a284b5290053c92b18d9f1f190bc"><div class="ttname"><a href="classreSIDfp_1_1SID.html#aec85a284b5290053c92b18d9f1f190bc">reSIDfp::SID::clockSilent</a></div><div class="ttdeci">void clockSilent(unsigned int cycles)</div><div class="ttdef"><b>Definition:</b> SID.cpp:472</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SID_html_af323dd07e595c9ab0946b530ff8c59d1"><div class="ttname"><a href="classreSIDfp_1_1SID.html#af323dd07e595c9ab0946b530ff8c59d1">reSIDfp::SID::mute</a></div><div class="ttdeci">void mute(int channel, bool enable)</div><div class="ttdef"><b>Definition:</b> SID.h:216</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 23 2023 10:11:21 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jan 1 2024 07:59:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

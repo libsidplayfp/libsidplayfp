@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.5.1</span>
+   &#160;<span id="projectnumber">2.6.0</span>
    </div>
   </td>
  </tr>
@@ -75,58 +75,42 @@
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifndef WAVEFORMCALCULATOR_h</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define WAVEFORMCALCULATOR_h</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;array.h&quot;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;array.h&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;siddefs-fp.h&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structreSIDfp_1_1CombinedWaveformConfig.html">   38</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">float</span> threshold;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">float</span> pulsestrength;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">float</span> distance1;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">float</span> distance2;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <a class="code" href="structreSIDfp_1_1CombinedWaveformConfig.html">CombinedWaveformConfig</a>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1WaveformCalculator.html">   99</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;{</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">typedef</span> std::map&lt;const CombinedWaveformConfig*, matrix_t&gt; cw_cache_t;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a> wftable;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;siddefs-fp.h&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1WaveformCalculator.html">   86</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;{</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a> wftable;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>();</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a70ffec367dd863bd6f03e61ecc4ba2c0">getInstance</a>();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">  105</a></span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">getWaveTable</a>() { <span class="keywordflow">return</span> &amp;wftable; }</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    cw_cache_t PULLDOWN_CACHE;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>();</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1WaveformCalculator.html">WaveformCalculator</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a70ffec367dd863bd6f03e61ecc4ba2c0">getInstance</a>();</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#af9eb51edd13d5c8f0b0eb3f4cfc06609">buildPulldownTable</a>(ChipModel model);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">  123</a></span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">getWaveTable</a>() { <span class="keywordflow">return</span> &amp;wftable; }</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a>* <a class="code" href="classreSIDfp_1_1WaveformCalculator.html#af9eb51edd13d5c8f0b0eb3f4cfc06609">buildPulldownTable</a>(ChipModel model);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;};</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassmatrix_html"><div class="ttname"><a href="classmatrix.html">matrix&lt; short &gt;</a></div></div>
-<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html">reSIDfp::WaveformCalculator</a></div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:100</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_a6cc8f7337506dad1ea099d7e802d9d69"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">reSIDfp::WaveformCalculator::getWaveTable</a></div><div class="ttdeci">matrix_t * getWaveTable()</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:123</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_a70ffec367dd863bd6f03e61ecc4ba2c0"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#a70ffec367dd863bd6f03e61ecc4ba2c0">reSIDfp::WaveformCalculator::getInstance</a></div><div class="ttdeci">static WaveformCalculator * getInstance()</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.cpp:31</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_af9eb51edd13d5c8f0b0eb3f4cfc06609"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#af9eb51edd13d5c8f0b0eb3f4cfc06609">reSIDfp::WaveformCalculator::buildPulldownTable</a></div><div class="ttdeci">matrix_t * buildPulldownTable(ChipModel model)</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.cpp:158</div></div>
-<div class="ttc" id="astructreSIDfp_1_1CombinedWaveformConfig_html"><div class="ttname"><a href="structreSIDfp_1_1CombinedWaveformConfig.html">reSIDfp::CombinedWaveformConfig</a></div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:39</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html">reSIDfp::WaveformCalculator</a></div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:87</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_a6cc8f7337506dad1ea099d7e802d9d69"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">reSIDfp::WaveformCalculator::getWaveTable</a></div><div class="ttdeci">matrix_t * getWaveTable()</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.h:105</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_a70ffec367dd863bd6f03e61ecc4ba2c0"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#a70ffec367dd863bd6f03e61ecc4ba2c0">reSIDfp::WaveformCalculator::getInstance</a></div><div class="ttdeci">static WaveformCalculator * getInstance()</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.cpp:57</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformCalculator_html_af9eb51edd13d5c8f0b0eb3f4cfc06609"><div class="ttname"><a href="classreSIDfp_1_1WaveformCalculator.html#af9eb51edd13d5c8f0b0eb3f4cfc06609">reSIDfp::WaveformCalculator::buildPulldownTable</a></div><div class="ttdeci">matrix_t * buildPulldownTable(ChipModel model)</div><div class="ttdef"><b>Definition:</b> WaveformCalculator.cpp:225</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 23 2023 10:11:21 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jan 1 2024 07:59:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

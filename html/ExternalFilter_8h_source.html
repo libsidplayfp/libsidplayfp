@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.5.1</span>
+   &#160;<span id="projectnumber">2.6.0</span>
    </div>
   </td>
  </tr>
@@ -93,7 +93,7 @@
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">int</span> w0hp_1_s17;</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1ExternalFilter.html#aec92ebc1be10e7ea533bd9634100100f">clock</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> input);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1ExternalFilter.html#a34b228fff9a0b9d248f7bbf0106c45da">clock</a>(<span class="keywordtype">int</span> input);</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="classreSIDfp_1_1ExternalFilter.html#a66014b71ab74301c04a0d6ffd65e855f">ExternalFilter</a>();</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
@@ -110,9 +110,9 @@
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;{</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;RESID_INLINE</div>
-<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1ExternalFilter.html#aec92ebc1be10e7ea533bd9634100100f">  111</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1ExternalFilter.html#aec92ebc1be10e7ea533bd9634100100f">ExternalFilter::clock</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> input)</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1ExternalFilter.html#a34b228fff9a0b9d248f7bbf0106c45da">  111</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1ExternalFilter.html#a34b228fff9a0b9d248f7bbf0106c45da">ExternalFilter::clock</a>(<span class="keywordtype">int</span> input)</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;{</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> Vi = (<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(input)&lt;&lt;11) - (1 &lt;&lt; (11+15));</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> Vi = (input&lt;&lt;11) - (1 &lt;&lt; (11+15));</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> dVlp = (w0lp_1_s7 * (Vi - Vlp) &gt;&gt; 7);</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> dVhp = (w0hp_1_s17 * (Vlp - Vhp) &gt;&gt; 17);</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    Vlp += dVlp;</div>
@@ -126,14 +126,14 @@
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1ExternalFilter_html"><div class="ttname"><a href="classreSIDfp_1_1ExternalFilter.html">reSIDfp::ExternalFilter</a></div><div class="ttdef"><b>Definition:</b> ExternalFilter.h:65</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1ExternalFilter_html_a34b228fff9a0b9d248f7bbf0106c45da"><div class="ttname"><a href="classreSIDfp_1_1ExternalFilter.html#a34b228fff9a0b9d248f7bbf0106c45da">reSIDfp::ExternalFilter::clock</a></div><div class="ttdeci">int clock(int input)</div><div class="ttdef"><b>Definition:</b> ExternalFilter.h:111</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1ExternalFilter_html_a4e9411c5bc187a2bb014702d9da063fe"><div class="ttname"><a href="classreSIDfp_1_1ExternalFilter.html#a4e9411c5bc187a2bb014702d9da063fe">reSIDfp::ExternalFilter::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> ExternalFilter.cpp:61</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1ExternalFilter_html_a57fcd2a32f856ffbcd63ec8a9709b3ed"><div class="ttname"><a href="classreSIDfp_1_1ExternalFilter.html#a57fcd2a32f856ffbcd63ec8a9709b3ed">reSIDfp::ExternalFilter::setClockFrequency</a></div><div class="ttdeci">void setClockFrequency(double frequency)</div><div class="ttdef"><b>Definition:</b> ExternalFilter.cpp:48</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1ExternalFilter_html_a66014b71ab74301c04a0d6ffd65e855f"><div class="ttname"><a href="classreSIDfp_1_1ExternalFilter.html#a66014b71ab74301c04a0d6ffd65e855f">reSIDfp::ExternalFilter::ExternalFilter</a></div><div class="ttdeci">ExternalFilter()</div><div class="ttdef"><b>Definition:</b> ExternalFilter.cpp:41</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1ExternalFilter_html_aec92ebc1be10e7ea533bd9634100100f"><div class="ttname"><a href="classreSIDfp_1_1ExternalFilter.html#aec92ebc1be10e7ea533bd9634100100f">reSIDfp::ExternalFilter::clock</a></div><div class="ttdeci">int clock(unsigned short input)</div><div class="ttdef"><b>Definition:</b> ExternalFilter.h:111</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Dec 23 2023 10:11:21 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jan 1 2024 07:59:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
