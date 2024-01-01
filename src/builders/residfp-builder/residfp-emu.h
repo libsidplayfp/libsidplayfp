@@ -68,9 +68,10 @@ public:
 
     void model(SidConfig::sid_model_t model, bool digiboost) override;
 
-    // Specific to resid
+    // Specific to residfp
     void filter(bool enable);
     void filter6581Curve(double filterCurve);
+    void filter6581Range(double adjustment);
     void filter8580Curve(double filterCurve);
 };
 

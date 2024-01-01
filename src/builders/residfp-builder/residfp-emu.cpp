@@ -66,6 +66,11 @@ void ReSIDfp::filter6581Curve(double filterCurve)
    m_sid.setFilter6581Curve(filterCurve);
 }
 
+void ReSIDfp::filter6581Range(double adjustment)
+{
+   m_sid.setFilter6581Range(adjustment);
+}
+
 void ReSIDfp::filter8580Curve(double filterCurve)
 {
    m_sid.setFilter8580Curve(filterCurve);

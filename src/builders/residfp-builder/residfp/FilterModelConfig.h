@@ -47,7 +47,7 @@ protected:
     const double Vdd;
     const double Vth;           ///< Threshold voltage
     const double Ut;            ///< Thermal voltage: Ut = kT/q = 8.61734315e-5*T ~ 26mV
-    const double uCox;          ///< Transconductance coefficient: u*Cox
+    double uCox;                ///< Transconductance coefficient: u*Cox
     const double Vddt;          ///< Vdd - Vth
     //@}
 

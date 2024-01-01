@@ -164,6 +164,11 @@ void SID::setFilter6581Curve(double filterCurve)
     filter6581->setFilterCurve(filterCurve);
 }
 
+void SID::setFilter6581Range(double adjustment)
+{
+    filter6581->setFilterRange(adjustment);
+}
+
 void SID::setFilter8580Curve(double filterCurve)
 {
     filter8580->setFilterCurve(filterCurve);

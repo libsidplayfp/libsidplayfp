@@ -74,6 +74,8 @@ private:
     unsigned short vcr_n_Ids_term[1 << 16];
     //@}
 
+    void updateVCRIds();
+
 private:
     double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
 
@@ -82,6 +84,8 @@ private:
 
 public:
     static FilterModelConfig6581* getInstance();
+
+    void setFilterRange(double adjustment);
 
     /**
      * Construct an 11 bit cutoff frequency DAC output voltage table.

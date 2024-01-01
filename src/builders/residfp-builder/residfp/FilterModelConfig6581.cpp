@@ -30,6 +30,7 @@
 #ifdef HAVE_CXX11
 #  include <mutex>
 #endif
+#include <algorithm>
 #include <cmath>
 
 namespace reSIDfp
@@ -111,6 +112,19 @@ FilterModelConfig6581* FilterModelConfig6581::getInstance()
     }
 
     return instance.get();
+}
+
+void FilterModelConfig6581::setFilterRange(double adjustment)
+{
+    // clamp into a sane range
+    const double new_uCox = std::max(std::min(adjustment, 2.0), 0.05) * 20e-6;
+
+    // Ignore small changes
+    if (std::abs(uCox - new_uCox) < 1e-12)
+        return;
+
+    uCox = new_uCox;
+    updateVCRIds();
 }
 
 FilterModelConfig6581::FilterModelConfig6581() :
@@ -225,32 +239,37 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
         #pragma omp section
         {
-            //  EKV model:
-            //
-            //  Ids = Is * (if - ir)
-            //  Is = (2 * u*Cox * Ut^2)/k * W/L
-            //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
-            //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
-
-            // moderate inversion characteristic current
-            const double Is = (2. * uCox * Ut * Ut) * WL_vcr;
-
-            // Normalized current factor for 1 cycle at 1MHz.
-            const double N15 = norm * ((1 << 15) - 1);
-            const double n_Is = N15 * 1.0e-6 / C * Is;
-
-            // kVgt_Vx = k*(Vg - Vt) - Vx
-            // I.e. if k != 1.0, Vg must be scaled accordingly.
-            for (int i = 0; i < (1 << 16); i++)
-            {
-                const int kVgt_Vx = i - (1 << 15);
-                const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
-                // Scaled by m*2^15
-                const double tmp = n_Is * log_term * log_term;
-                assert(tmp > -0.5 && tmp < 65535.5);
-                vcr_n_Ids_term[i] = static_cast<unsigned short>(tmp + 0.5);
-            }
+            updateVCRIds();
         }
+    }
+}
+
+void FilterModelConfig6581::updateVCRIds()
+{
+    //  EKV model:
+    //
+    //  Ids = Is * (if - ir)
+    //  Is = (2 * u*Cox * Ut^2)/k * W/L
+    //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
+    //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
+
+    // moderate inversion characteristic current
+    const double Is = (2. * uCox * Ut * Ut) * WL_vcr;
+
+    // Normalized current factor for 1 cycle at 1MHz.
+    const double N15 = norm * ((1 << 15) - 1);
+    const double n_Is = N15 * 1.0e-6 / C * Is;
+
+    // kVgt_Vx = k*(Vg - Vt) - Vx
+    // I.e. if k != 1.0, Vg must be scaled accordingly.
+    for (int i = 0; i < (1 << 16); i++)
+    {
+        const int kVgt_Vx = i - (1 << 15);
+        const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
+        // Scaled by m*2^15
+        const double tmp = n_Is * log_term * log_term;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        vcr_n_Ids_term[i] = static_cast<unsigned short>(tmp + 0.5);
     }
 }
 
