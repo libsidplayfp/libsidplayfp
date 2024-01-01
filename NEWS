@@ -1,3 +1,12 @@
+2.6.0 2024-01-01
+* residfp is now thread-safe (#71)
+* residfp: fixed SSE2 version of convolve (#105)
+* residfp: updated combined waveforms model (#97)
+* residfp: amplify the output by a model dependent scale factor (#78, #79)
+* a couple of autotools fixes (#103, #104, #108)
+
+
+
 2.5.1 2023-12-23
 * Check for {g,}od at configure time (#87)
 * residfp: fix a 6581 filter bug where values could actually go negative
