@@ -152,7 +152,11 @@ SID::SID() :
 
 SID::~SID()
 {
-    // Needed to delete auto_ptr with complete type
+    delete filter6581;
+    delete filter8580;
+    delete externalFilter;
+    delete potX;
+    delete potY;
 }
 
 void SID::setFilter6581Curve(double filterCurve)
@@ -210,13 +214,13 @@ void SID::setChipModel(ChipModel model)
     switch (model)
     {
     case MOS6581:
-        filter = filter6581.get();
+        filter = filter6581;
         scaleFactor = 3;
         modelTTL = BUS_TTL_6581;
         break;
 
     case MOS8580:
-        filter = filter8580.get();
+        filter = filter8580;
         scaleFactor = 5;
         modelTTL = BUS_TTL_8580;
         break;

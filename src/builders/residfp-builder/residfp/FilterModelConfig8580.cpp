@@ -287,9 +287,9 @@ FilterModelConfig8580::FilterModelConfig8580() :
     }
 }
 
-std::unique_ptr<Integrator8580> FilterModelConfig8580::buildIntegrator()
+Integrator8580* FilterModelConfig8580::buildIntegrator()
 {
-    return MAKE_UNIQUE(Integrator8580, this);
+    return new Integrator8580(this);
 }
 
 } // namespace reSIDfp

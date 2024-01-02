@@ -64,25 +64,25 @@ private:
     Filter* filter;
 
     /// Filter used, if model is set to 6581
-    std::unique_ptr<Filter6581> const filter6581;
+    Filter6581* const filter6581;
 
     /// Filter used, if model is set to 8580
-    std::unique_ptr<Filter8580> const filter8580;
+    Filter8580* const filter8580;
 
     /**
      * External filter that provides high-pass and low-pass filtering
      * to adjust sound tone slightly.
      */
-    std::unique_ptr<ExternalFilter> const externalFilter;
+    ExternalFilter* const externalFilter;
 
     /// Resampler used by audio generation code.
     std::unique_ptr<Resampler> resampler;
 
     /// Paddle X register support
-    std::unique_ptr<Potentiometer> const potX;
+    Potentiometer* const potX;
 
     /// Paddle Y register support
-    std::unique_ptr<Potentiometer> const potY;
+    Potentiometer* const potY;
 
     /// SID voices
     std::unique_ptr<Voice> voice[3];

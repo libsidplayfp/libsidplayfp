@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -24,8 +24,6 @@
 #define FILTER6581_H
 
 #include "siddefs-fp.h"
-
-#include <memory>
 
 #include "Filter.h"
 #include "FilterModelConfig6581.h"
@@ -333,10 +331,10 @@ private:
     const int voiceDC;
 
     /// VCR + associated capacitor connected to highpass output.
-    std::unique_ptr<Integrator6581> const hpIntegrator;
+    Integrator6581* const hpIntegrator;
 
     /// VCR + associated capacitor connected to bandpass output.
-    std::unique_ptr<Integrator6581> const bpIntegrator;
+    Integrator6581* const bpIntegrator;
 
 protected:
     /**

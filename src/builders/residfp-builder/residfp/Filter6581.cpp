@@ -32,6 +32,9 @@ namespace reSIDfp
 Filter6581::~Filter6581()
 {
     delete [] f0_dac;
+
+    delete hpIntegrator;
+    delete bpIntegrator;
 }
 
 void Filter6581::updatedCenterFrequency()

@@ -25,8 +25,6 @@
 
 #include "siddefs-fp.h"
 
-#include <memory>
-
 #include "Filter.h"
 #include "FilterModelConfig8580.h"
 #include "Integrator8580.h"
@@ -292,10 +290,10 @@ private:
     double cp;
 
     /// VCR + associated capacitor connected to highpass output.
-    std::unique_ptr<Integrator8580> const hpIntegrator;
+    Integrator8580* const hpIntegrator;
 
     /// VCR + associated capacitor connected to bandpass output.
-    std::unique_ptr<Integrator8580> const bpIntegrator;
+    Integrator8580* const bpIntegrator;
 
 protected:
     /**
