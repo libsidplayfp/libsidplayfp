@@ -20,14 +20,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#define FILTER8580_CPP
-
 #include "Filter8580.h"
 
 #include "Integrator8580.h"
 
 namespace reSIDfp
 {
+
+unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
+{
+    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
+    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
+    // Voice 3 is silenced by voice3off if it is not routed through the filter.
+    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
+
+    int Vi = 0;
+    int Vo = 0;
+
+    (filt1 ? Vi : Vo) += voice1;
+    (filt2 ? Vi : Vo) += voice2;
+    (filt3 ? Vi : Vo) += voice3;
+    (filtE ? Vi : Vo) += ve;
+
+    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
+    Vbp = hpIntegrator->solve(Vhp);
+    Vlp = bpIntegrator->solve(Vbp);
+
+    if (lp) Vo += Vlp;
+    if (bp) Vo += Vbp;
+    if (hp) Vo += Vhp;
+
+    return currentGain[currentMixer[Vo]];
+}
 
 /**
  * W/L ratio of frequency DAC bit 0,
