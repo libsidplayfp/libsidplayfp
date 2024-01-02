@@ -116,8 +116,11 @@ FilterModelConfig6581* FilterModelConfig6581::getInstance()
 
 void FilterModelConfig6581::setFilterRange(double adjustment)
 {
-    // clamp into a sane range
-    const double new_uCox = std::max(std::min(adjustment, 2.0), 0.05) * 20e-6;
+    // clamp into allowed range
+     adjustment = std::max(std::min(adjustment, 1.0), 0.);
+
+     // Get the new uCox value, in the range [1,40]
+     const double new_uCox = 1. + 39. * adjustment;
 
     // Ignore small changes
     if (std::abs(uCox - new_uCox) < 1e-12)
