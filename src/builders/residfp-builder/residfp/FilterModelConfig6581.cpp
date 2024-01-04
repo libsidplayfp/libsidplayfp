@@ -120,7 +120,7 @@ void FilterModelConfig6581::setFilterRange(double adjustment)
      adjustment = std::max(std::min(adjustment, 1.0), 0.);
 
      // Get the new uCox value, in the range [1,40]
-     const double new_uCox = 1. + 39. * adjustment;
+     const double new_uCox = (1. + 39. * adjustment) * 1e-6;
 
     // Ignore small changes
     if (std::abs(uCox - new_uCox) < 1e-12)
