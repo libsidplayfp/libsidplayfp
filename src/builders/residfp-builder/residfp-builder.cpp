@@ -76,6 +76,11 @@ void ReSIDfpBuilder::filter6581Curve(double filterCurve)
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSIDfp, double>(&libsidplayfp::ReSIDfp::filter6581Curve, filterCurve));
 }
 
+void ReSIDfpBuilder::filter6581Range(double filterRange)
+{
+    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSIDfp, double>(&libsidplayfp::ReSIDfp::filter6581Range, filterRange));
+}
+
 void ReSIDfpBuilder::filter8580Curve(double filterCurve)
 {
     std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::ReSIDfp, double>(&libsidplayfp::ReSIDfp::filter8580Curve, filterCurve));
