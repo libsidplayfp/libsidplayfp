@@ -242,6 +242,7 @@ src/builders/residfp-builder/residfp/FilterModelConfig6581.cpp \
 src/builders/residfp-builder/residfp/FilterModelConfig6581.h \
 src/builders/residfp-builder/residfp/FilterModelConfig8580.cpp \
 src/builders/residfp-builder/residfp/FilterModelConfig8580.h \
+src/builders/residfp-builder/residfp/Integrator.h \
 src/builders/residfp-builder/residfp/Integrator6581.cpp \
 src/builders/residfp-builder/residfp/Integrator6581.h \
 src/builders/residfp-builder/residfp/Integrator8580.cpp \

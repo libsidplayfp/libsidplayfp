@@ -98,7 +98,7 @@ public:
      *
      * @return the integrator
      */
-    Integrator6581* buildIntegrator();
+    Integrator* buildIntegrator() override;
 
     inline unsigned short getVcr_nVg(int i) const { return vcr_nVg[i]; }
     inline unsigned short getVcr_n_Ids_term(int i) const { return vcr_n_Ids_term[i]; }
