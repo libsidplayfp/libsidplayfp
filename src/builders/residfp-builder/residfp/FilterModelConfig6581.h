@@ -68,10 +68,10 @@ private:
     /// DAC lookup table
     Dac dac;
 
-    /// VCR - 6581 only.
+    /// Voltage Controlled Resistors
     //@{
     unsigned short vcr_nVg[1 << 16];
-    unsigned short vcr_n_Ids_term[1 << 16];
+    unsigned short vcr_n_Ids_term[1 << 16]; // FIXME move out
     //@}
 
     void updateVCRIds();
