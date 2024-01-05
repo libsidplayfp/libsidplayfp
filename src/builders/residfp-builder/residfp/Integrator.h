@@ -3,7 +3,7 @@
  *
  * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
- * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
+ * Copyright 2004, 2010 Dag Lem <resid@nimrod.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,30 +20,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Filter6581.h"
-
-#include "Integrator6581.h"
+#ifndef INTEGRATOR_H
+#define INTEGRATOR_H
 
 namespace reSIDfp
 {
 
-Filter6581::~Filter6581()
+class Integrator
 {
-    delete [] f0_dac;
-}
+protected:
+    mutable int vx;
+    mutable int vc;
 
-void Filter6581::updateCenterFrequency()
-{
-    const unsigned short Vw = f0_dac[getFC()];
-    static_cast<Integrator6581*>(hpIntegrator)->setVw(Vw);
-    static_cast<Integrator6581*>(bpIntegrator)->setVw(Vw);
-}
+    Integrator() :
+        vx(0),
+        vc(0) {}
 
-void Filter6581::setFilterCurve(double curvePosition)
-{
-    delete [] f0_dac;
-    f0_dac = FilterModelConfig6581::getInstance()->getDAC(curvePosition);
-    updateCenterFrequency();
-}
+public:
+    virtual int solve(int vi) const = 0;
+};
 
 } // namespace reSIDfp
+
+#endif

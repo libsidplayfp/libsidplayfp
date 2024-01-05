@@ -23,8 +23,7 @@
 #ifndef FILTER6581_H
 #define FILTER6581_H
 
-#include "siddefs-fp.h"
-
+#include "Integrator.h"
 #include "Filter.h"
 #include "FilterModelConfig6581.h"
 
@@ -322,55 +321,19 @@ class Filter6581 final : public Filter
 private:
     const unsigned short* f0_dac;
 
-    unsigned short** mixer;
-    unsigned short** summer;
-    unsigned short** gain_res;
-    unsigned short** gain_vol;
-
-    const int voiceScaleS11;
-    const int voiceDC;
-
-    /// VCR + associated capacitor connected to highpass output.
-    Integrator6581* const hpIntegrator;
-
-    /// VCR + associated capacitor connected to bandpass output.
-    Integrator6581* const bpIntegrator;
-
 protected:
     /**
      * Set filter cutoff frequency.
      */
-    void updatedCenterFrequency() override;
-
-    /**
-     * Set filter resonance.
-     *
-     * In the MOS 6581, 1/Q is controlled linearly by res.
-     */
-    void updateResonance(unsigned char res) override { currentResonance = gain_res[res]; }
-
-    void updatedMixing() override;
+    void updateCenterFrequency() override;
 
 public:
     Filter6581() :
-        f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5)),
-        mixer(FilterModelConfig6581::getInstance()->getMixer()),
-        summer(FilterModelConfig6581::getInstance()->getSummer()),
-        gain_res(FilterModelConfig6581::getInstance()->getGainRes()),
-        gain_vol(FilterModelConfig6581::getInstance()->getGainVol()),
-        voiceScaleS11(FilterModelConfig6581::getInstance()->getVoiceScaleS11()),
-        voiceDC(FilterModelConfig6581::getInstance()->getNormalizedVoiceDC()),
-        hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator())
-    {
-        input(0);
-    }
+        Filter(FilterModelConfig6581::getInstance()),
+        f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5))
+    {}
 
     ~Filter6581();
-
-    unsigned short clock(int voice1, int voice2, int voice3) override;
-
-    void input(int sample) override { ve = (sample * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 
     /**
      * Set filter curve type based on single parameter.

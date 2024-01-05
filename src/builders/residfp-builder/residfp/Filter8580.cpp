@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -27,32 +27,6 @@
 namespace reSIDfp
 {
 
-unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
-{
-    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
-    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
-    // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
-
-    int Vi = 0;
-    int Vo = 0;
-
-    (filt1 ? Vi : Vo) += voice1;
-    (filt2 ? Vi : Vo) += voice2;
-    (filt3 ? Vi : Vo) += voice3;
-    (filtE ? Vi : Vo) += ve;
-
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
-    Vbp = hpIntegrator->solve(Vhp);
-    Vlp = bpIntegrator->solve(Vbp);
-
-    if (lp) Vo += Vlp;
-    if (bp) Vo += Vbp;
-    if (hp) Vo += Vhp;
-
-    return currentGain[currentMixer[Vo]];
-}
-
 /**
  * W/L ratio of frequency DAC bit 0,
  * other bit are proportional.
@@ -61,22 +35,18 @@ unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
  */
 const double DAC_WL0 = 0.00615;
 
-Filter8580::~Filter8580()
-{
-    delete hpIntegrator;
-    delete bpIntegrator;
-}
+Filter8580::~Filter8580() {}
 
-void Filter8580::updatedCenterFrequency()
+void Filter8580::updateCenterFrequency()
 {
     double wl;
     double dacWL = DAC_WL0;
-    if (fc)
+    if (getFC())
     {
         wl = 0.;
         for (unsigned int i = 0; i < 11; i++)
         {
-            if (fc & (1 << i))
+            if (getFC() & (1 << i))
             {
                 wl += dacWL;
             }
@@ -88,32 +58,8 @@ void Filter8580::updatedCenterFrequency()
         wl = dacWL/2.;
     }
 
-    hpIntegrator->setFc(wl);
-    bpIntegrator->setFc(wl);
-}
-
-void Filter8580::updatedMixing()
-{
-    currentGain = gain_vol[vol];
-
-    unsigned int ni = 0;
-    unsigned int no = 0;
-
-    (filt1 ? ni : no)++;
-    (filt2 ? ni : no)++;
-
-    if (filt3) ni++;
-    else if (!voice3off) no++;
-
-    (filtE ? ni : no)++;
-
-    currentSummer = summer[ni];
-
-    if (lp) no++;
-    if (bp) no++;
-    if (hp) no++;
-
-    currentMixer = mixer[no];
+    static_cast<Integrator8580*>(hpIntegrator)->setFc(wl);
+    static_cast<Integrator8580*>(bpIntegrator)->setFc(wl);
 }
 
 void Filter8580::setFilterCurve(double curvePosition)
@@ -122,8 +68,8 @@ void Filter8580::setFilterCurve(double curvePosition)
     // 1.2 <= cp <= 1.8
     cp = 1.8 - curvePosition * 3./5.;
 
-    hpIntegrator->setV(cp);
-    bpIntegrator->setV(cp);
+    static_cast<Integrator8580*>(hpIntegrator)->setV(cp);
+    static_cast<Integrator8580*>(bpIntegrator)->setV(cp);
 }
 
 } // namespace reSIDfp

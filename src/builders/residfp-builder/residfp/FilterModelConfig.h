@@ -33,6 +33,8 @@
 namespace reSIDfp
 {
 
+class Integrator;
+
 class FilterModelConfig
 {
 protected:
@@ -122,6 +124,8 @@ public:
     unsigned short** getGainRes() { return gain_res; }
     unsigned short** getSummer() { return summer; }
     unsigned short** getMixer() { return mixer; }
+
+    virtual Integrator* buildIntegrator() = 0;
 
     /**
      * The digital range of one voice is 20 bits; create a scaling term

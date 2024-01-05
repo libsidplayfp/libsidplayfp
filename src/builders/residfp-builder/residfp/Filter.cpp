@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -20,10 +20,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#define FILTER_CPP
+
 #include "Filter.h"
 
 namespace reSIDfp
 {
+
+Filter::~Filter()
+{
+    delete hpIntegrator;
+    delete bpIntegrator;
+}
+
+void Filter::updateMixing()
+{
+    currentGain = gain_vol[vol];
+
+    unsigned int ni = 0;
+    unsigned int no = 0;
+
+    (filt1 ? ni : no)++;
+    (filt2 ? ni : no)++;
+
+    if (filt3) ni++;
+    else if (!voice3off) no++;
+
+    (filtE ? ni : no)++;
+
+    currentSummer = summer[ni];
+
+    if (lp) no++;
+    if (bp) no++;
+    if (hp) no++;
+
+    currentMixer = mixer[no];
+}
 
 void Filter::enable(bool enable)
 {
@@ -50,13 +82,13 @@ void Filter::reset()
 void Filter::writeFC_LO(unsigned char fc_lo)
 {
     fc = (fc & 0x7f8) | (fc_lo & 0x007);
-    updatedCenterFrequency();
+    updateCenterFrequency();
 }
 
 void Filter::writeFC_HI(unsigned char fc_hi)
 {
     fc = (fc_hi << 3 & 0x7f8) | (fc & 0x007);
-    updatedCenterFrequency();
+    updateCenterFrequency();
 }
 
 void Filter::writeRES_FILT(unsigned char res_filt)
@@ -73,7 +105,7 @@ void Filter::writeRES_FILT(unsigned char res_filt)
         filtE = (filt & 0x08) != 0;
     }
 
-    updatedMixing();
+    updateMixing();
 }
 
 void Filter::writeMODE_VOL(unsigned char mode_vol)
@@ -84,7 +116,7 @@ void Filter::writeMODE_VOL(unsigned char mode_vol)
     hp = (mode_vol & 0x40) != 0;
     voice3off = (mode_vol & 0x80) != 0;
 
-    updatedMixing();
+    updateMixing();
 }
 
 } // namespace reSIDfp

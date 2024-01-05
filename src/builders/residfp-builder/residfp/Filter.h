@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2017 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -23,15 +23,37 @@
 #ifndef FILTER_H
 #define FILTER_H
 
+#include "FilterModelConfig.h"
+
+#include "siddefs-fp.h"
+
 namespace reSIDfp
 {
+
+class Integrator;
 
 /**
  * SID filter base class
  */
 class Filter
 {
+private:
+    unsigned short** mixer;
+    unsigned short** summer;
+    unsigned short** gain_res;
+    unsigned short** gain_vol;
+
+    const int voiceScaleS11;
+    const int voiceDC;
+
 protected:
+    /// VCR + associated capacitor connected to highpass output.
+    Integrator* const hpIntegrator;
+
+    /// VCR + associated capacitor connected to bandpass output.
+    Integrator* const bpIntegrator;
+
+private:
     /// Current volume amplifier setting.
     unsigned short* currentGain;
 
@@ -71,7 +93,6 @@ protected:
     /// Current volume.
     unsigned char vol;
 
-private:
     /// Filter enabled.
     bool enabled;
 
@@ -80,22 +101,37 @@ private:
 
 protected:
     /**
-     * Set filter cutoff frequency.
+     * Update filter cutoff frequency.
      */
-    virtual void updatedCenterFrequency() = 0;
+    virtual void updateCenterFrequency() = 0;
 
     /**
-     * Set filter resonance.
+     * Update filter resonance.
+     *
+     * @param res the new resonance value
      */
-    virtual void updateResonance(unsigned char res) = 0;
+    void updateResonance(unsigned char res)  { currentResonance = gain_res[res]; }
 
     /**
      * Mixing configuration modified (offsets change)
      */
-    virtual void updatedMixing() = 0;
+    void updateMixing();
+
+    /**
+     * Get the filter cutoff register value
+     */
+    unsigned int getFC() const { return fc; }
 
 public:
-    Filter() :
+    Filter(FilterModelConfig* fmc) :
+        mixer(fmc->getMixer()),
+        summer(fmc->getSummer()),
+        gain_res(fmc->getGainRes()),
+        gain_vol(fmc->getGainVol()),
+        voiceScaleS11(fmc->getVoiceScaleS11()),
+        voiceDC(fmc->getNormalizedVoiceDC()),
+        hpIntegrator(fmc->buildIntegrator()),
+        bpIntegrator(fmc->buildIntegrator()),
         currentGain(nullptr),
         currentMixer(nullptr),
         currentSummer(nullptr),
@@ -115,9 +151,12 @@ public:
         lp(false),
         vol(0),
         enabled(true),
-        filt(0) {}
+        filt(0)
+    {
+        input(0);
+    }
 
-    virtual ~Filter() {}
+    virtual ~Filter();
 
     /**
      * SID clocking - 1 cycle
@@ -127,7 +166,7 @@ public:
      * @param v3 voice 3 in
      * @return filtered output
      */
-    virtual unsigned short clock(int v1, int v2, int v3) = 0;
+    unsigned short clock(int v1, int v2, int v3);
 
     /**
      * Enable filter.
@@ -169,9 +208,52 @@ public:
      */
     void writeMODE_VOL(unsigned char mode_vol);
 
-    virtual void input(int input) = 0;
+    /**
+     * Apply a signal to EXT-IN
+     *
+     * @param input
+     */
+    void input(int input) { ve = (input * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
 };
 
 } // namespace reSIDfp
+
+#if RESID_INLINING || defined(FILTER_CPP)
+
+#include "Integrator.h"
+
+namespace reSIDfp
+{
+
+RESID_INLINE
+unsigned short Filter::clock(int voice1, int voice2, int voice3)
+{
+    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
+    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
+    // Voice 3 is silenced by voice3off if it is not routed through the filter.
+    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
+
+    int Vi = 0;
+    int Vo = 0;
+
+    (filt1 ? Vi : Vo) += voice1;
+    (filt2 ? Vi : Vo) += voice2;
+    (filt3 ? Vi : Vo) += voice3;
+    (filtE ? Vi : Vo) += ve;
+
+    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
+    Vbp = hpIntegrator->solve(Vhp);
+    Vlp = bpIntegrator->solve(Vbp);
+
+    if (lp) Vo += Vlp;
+    if (bp) Vo += Vbp;
+    if (hp) Vo += Vhp;
+
+    return currentGain[currentMixer[Vo]];
+}
+
+} // namespace reSIDfp
+
+#endif
 
 #endif
