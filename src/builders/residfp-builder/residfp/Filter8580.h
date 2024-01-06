@@ -287,10 +287,9 @@ protected:
 
 public:
     Filter8580() :
-        Filter(FilterModelConfig8580::getInstance()),
-        cp(0.5)
+        Filter(FilterModelConfig8580::getInstance())
     {
-        setFilterCurve(cp);
+        setFilterCurve(0.5);
     }
 
     ~Filter8580();

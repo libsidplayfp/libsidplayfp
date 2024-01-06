@@ -122,37 +122,7 @@ protected:
     unsigned int getFC() const { return fc; }
 
 public:
-    Filter(FilterModelConfig* fmc) :
-        fmc(fmc),
-        mixer(fmc->getMixer()),
-        summer(fmc->getSummer()),
-        gain_res(fmc->getGainRes()),
-        gain_vol(fmc->getGainVol()),
-        hpIntegrator(fmc->buildIntegrator()),
-        bpIntegrator(fmc->buildIntegrator()),
-        currentGain(nullptr),
-        currentMixer(nullptr),
-        currentSummer(nullptr),
-        currentResonance(nullptr),
-        Vhp(0),
-        Vbp(0),
-        Vlp(0),
-        ve(0),
-        fc(0),
-        filt1(false),
-        filt2(false),
-        filt3(false),
-        filtE(false),
-        voice3off(false),
-        hp(false),
-        bp(false),
-        lp(false),
-        vol(0),
-        enabled(true),
-        filt(0)
-    {
-        input(0);
-    }
+    Filter(FilterModelConfig* fmc);
 
     virtual ~Filter();
 

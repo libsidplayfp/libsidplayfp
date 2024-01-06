@@ -100,24 +100,7 @@ protected:
         int opamp_size
     );
 
-    ~FilterModelConfig()
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            delete [] mixer[i];
-        }
-
-        for (int i = 0; i < 5; i++)
-        {
-            delete [] summer[i];
-        }
-
-        for (int i = 0; i < 16; i++)
-        {
-            delete [] gain_vol[i];
-            delete [] gain_res[i];
-        }
-    }
+    ~FilterModelConfig();
 
 public:
     unsigned short** getGainVol() { return gain_vol; }
