@@ -38,13 +38,12 @@ class Integrator;
 class Filter
 {
 private:
+    FilterModelConfig* fmc;
+
     unsigned short** mixer;
     unsigned short** summer;
     unsigned short** gain_res;
     unsigned short** gain_vol;
-
-    const int voiceScaleS11;
-    const int voiceDC;
 
 protected:
     /// VCR + associated capacitor connected to highpass output.
@@ -110,7 +109,7 @@ protected:
      *
      * @param res the new resonance value
      */
-    void updateResonance(unsigned char res)  { currentResonance = gain_res[res]; }
+    void updateResonance(unsigned char res) { currentResonance = gain_res[res]; }
 
     /**
      * Mixing configuration modified (offsets change)
@@ -124,12 +123,11 @@ protected:
 
 public:
     Filter(FilterModelConfig* fmc) :
+        fmc(fmc),
         mixer(fmc->getMixer()),
         summer(fmc->getSummer()),
         gain_res(fmc->getGainRes()),
         gain_vol(fmc->getGainVol()),
-        voiceScaleS11(fmc->getVoiceScaleS11()),
-        voiceDC(fmc->getNormalizedVoiceDC()),
         hpIntegrator(fmc->buildIntegrator()),
         bpIntegrator(fmc->buildIntegrator()),
         currentGain(nullptr),
@@ -211,9 +209,9 @@ public:
     /**
      * Apply a signal to EXT-IN
      *
-     * @param input
+     * @param input a 16 bit sample
      */
-    void input(int input) { ve = (input * voiceScaleS11 * 3 >> 11) + mixer[0][0]; }
+    void input(int input) { ve = fmc->getNormalizedVoice(input * (1 << 4)); }
 };
 
 } // namespace reSIDfp
@@ -228,10 +226,10 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter::clock(int voice1, int voice2, int voice3)
 {
-    voice1 = (voice1 * voiceScaleS11 >> 15) + voiceDC;
-    voice2 = (voice2 * voiceScaleS11 >> 15) + voiceDC;
+    voice1 = fmc->getNormalizedVoice(voice1);
+    voice2 = fmc->getNormalizedVoice(voice2);
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? (voice3 * voiceScaleS11 >> 15) + voiceDC : 0;
+    voice3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
 
     int Vi = 0;
     int Vo = 0;
