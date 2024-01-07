@@ -31,24 +31,24 @@ void Filter::updateMixing()
 {
     currentGain = gain_vol[vol];
 
-    unsigned int ni = 0;
-    unsigned int no = 0;
+    unsigned int Nsum = 0;
+    unsigned int Nmix = 0;
 
-    (filt1 ? ni : no)++;
-    (filt2 ? ni : no)++;
+    (filt1 ? Nsum : Nmix)++;
+    (filt2 ? Nsum : Nmix)++;
 
-    if (filt3) ni++;
-    else if (!voice3off) no++;
+    if (filt3) Nsum++;
+    else if (!voice3off) Nmix++;
 
-    (filtE ? ni : no)++;
+    (filtE ? Nsum : Nmix)++;
 
-    currentSummer = summer[ni];
+    currentSummer = summer[Nsum];
 
-    if (lp) no++;
-    if (bp) no++;
-    if (hp) no++;
+    if (lp) Nmix++;
+    if (bp) Nmix++;
+    if (hp) Nmix++;
 
-    currentMixer = mixer[no];
+    currentMixer = mixer[Nmix];
 }
 
 void Filter::writeFC_LO(unsigned char fc_lo)
@@ -106,7 +106,7 @@ Filter::Filter(FilterModelConfig* fmc) :
     Vhp(0),
     Vbp(0),
     Vlp(0),
-    ve(0),
+    Ve(0),
     fc(0),
     filt1(false),
     filt2(false),

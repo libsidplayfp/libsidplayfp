@@ -75,7 +75,7 @@ private:
     int Vlp;
 
     /// Filter external input.
-    int ve;
+    int Ve;
 
     /// Filter cutoff frequency.
     unsigned int fc;
@@ -181,7 +181,7 @@ public:
      *
      * @param input a 16 bit sample
      */
-    void input(int input) { ve = fmc->getNormalizedVoice(input * (1 << 4)); }
+    void input(int input) { Ve = fmc->getNormalizedVoice(input * (1 << 4)); }
 };
 
 } // namespace reSIDfp
@@ -196,28 +196,28 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter::clock(float voice1, float voice2, float voice3)
 {
-    int v1 = fmc->getNormalizedVoice(voice1);
-    int v2 = fmc->getNormalizedVoice(voice2);
+    const int V1 = fmc->getNormalizedVoice(voice1);
+    const int V2 = fmc->getNormalizedVoice(voice2);
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    int v3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
+    const int V3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
 
-    int Vi = 0;
-    int Vo = 0;
+    int Vsum = 0;
+    int Vmix = 0;
 
-    (filt1 ? Vi : Vo) += v1;
-    (filt2 ? Vi : Vo) += v2;
-    (filt3 ? Vi : Vo) += v3;
-    (filtE ? Vi : Vo) += ve;
+    (filt1 ? Vsum : Vmix) += V1;
+    (filt2 ? Vsum : Vmix) += V2;
+    (filt3 ? Vsum : Vmix) += V3;
+    (filtE ? Vsum : Vmix) += Ve;
 
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];
+    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
     Vbp = hpIntegrator->solve(Vhp);
     Vlp = bpIntegrator->solve(Vbp);
 
-    if (lp) Vo += Vlp;
-    if (bp) Vo += Vbp;
-    if (hp) Vo += Vhp;
+    if (lp) Vmix += Vlp;
+    if (bp) Vmix += Vbp;
+    if (hp) Vmix += Vhp;
 
-    return currentGain[currentMixer[Vo]];
+    return currentGain[currentMixer[Vmix]];
 }
 
 } // namespace reSIDfp
