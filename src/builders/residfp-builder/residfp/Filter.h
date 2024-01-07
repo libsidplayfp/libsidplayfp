@@ -138,7 +138,7 @@ public:
      * @param v3 voice 3 in
      * @return filtered output
      */
-    unsigned short clock(float v1, float v2, float v3);
+    float clock(float v1, float v2, float v3);
 
     /**
      * Enable filter.
@@ -198,7 +198,7 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-unsigned short Filter::clock(float voice1, float voice2, float voice3)
+float Filter::clock(float voice1, float voice2, float voice3)
 {
     const float V1 = fmc->getVoiceVoltage(voice1);
     const float V2 = fmc->getVoiceVoltage(voice2);
@@ -223,7 +223,7 @@ unsigned short Filter::clock(float voice1, float voice2, float voice3)
     if (hp) Vmix += Vhp;
 
     const float Imix = Vmix * Mmix;
-    return fmc->getNormalizedValue(currentVolume[currentMixer[fmc->getNormalizedValue(Imix)]]);
+    return currentVolume[currentMixer[fmc->getNormalizedValue(Imix)]];
 }
 
 } // namespace reSIDfp

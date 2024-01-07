@@ -87,9 +87,6 @@ private:
     /// SID voices
     std::unique_ptr<Voice> voice[3];
 
-    /// Used to amplify the output by x/2 to get an adequate playback volume
-    int scaleFactor;
-
     /// Time to live for the last written value
     int busValueTtl;
 
@@ -104,6 +101,9 @@ private:
 
     /// Currently selected combined waveforms strength.
     CombinedWaveforms cws;
+
+    /// Used to amplify the output by x/2 to get an adequate playback volume
+    float scaleFactor;
 
     /// Last written value
     unsigned char busValue;
@@ -339,10 +339,9 @@ int SID::output() const
     const float v2 = voice[1]->output(voice[0]->wave());
     const float v3 = voice[2]->output(voice[1]->wave());
 
-    const int input = static_cast<int>(filter->clock(v1, v2, v3));
-    const int output = externalFilter->clock(input);
+    const float input = scaleFactor * (filter->clock(v1, v2, v3));
 
-    return (scaleFactor * output) / 2;
+    return static_cast<int>(externalFilter->clock(input));
 }
 
 
