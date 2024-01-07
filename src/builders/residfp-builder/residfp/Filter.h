@@ -41,9 +41,9 @@ private:
     FilterModelConfig* fmc;
 
     unsigned short** mixer;
-    unsigned short** summer;
-    unsigned short** resonance;
-    unsigned short** volume;
+    float** summer;
+    float** resonance;
+    float** volume;
 
 protected:
     /// VCR + associated capacitor connected to highpass output.
@@ -57,25 +57,29 @@ private:
     unsigned short* currentMixer;
 
     /// Filter input summer setting.
-    unsigned short* currentSummer;
+    float* currentSummer;
 
     /// Filter resonance value.
-    unsigned short* currentResonance;
+    float* currentResonance;
 
     /// Current volume amplifier setting.
-    unsigned short* currentVolume;
+    float* currentVolume;
 
     /// Filter highpass state.
-    int Vhp;
+    float Vhp;
 
     /// Filter bandpass state.
-    int Vbp;
+    float Vbp;
 
     /// Filter lowpass state.
-    int Vlp;
+    float Vlp;
 
     /// Filter external input.
-    int Ve;
+    float Ve;
+
+    float Msum;
+
+    float Mmix;
 
     /// Filter cutoff frequency.
     unsigned int fc;
@@ -181,7 +185,7 @@ public:
      *
      * @param input a 16 bit sample
      */
-    void input(int input) { Ve = fmc->getNormalizedVoice(input/65536.); }
+    void input(int input) { Ve = fmc->getVoiceVoltage(input/65536.); }
 };
 
 } // namespace reSIDfp
@@ -196,28 +200,34 @@ namespace reSIDfp
 RESID_INLINE
 unsigned short Filter::clock(float voice1, float voice2, float voice3)
 {
-    const int V1 = fmc->getNormalizedVoice(voice1);
-    const int V2 = fmc->getNormalizedVoice(voice2);
+    const float V1 = fmc->getVoiceVoltage(voice1);
+    const float V2 = fmc->getVoiceVoltage(voice2);
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    const int V3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
+    const float V3 = (filt3 || !voice3off) ? fmc->getVoiceVoltage(voice3) : 0.f;
 
-    int Vsum = 0;
-    int Vmix = 0;
+    float Vsum = 0.f;
+    float Vmix = 0.f;
 
     (filt1 ? Vsum : Vmix) += V1;
     (filt2 ? Vsum : Vmix) += V2;
     (filt3 ? Vsum : Vmix) += V3;
     (filtE ? Vsum : Vmix) += Ve;
 
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
-    Vbp = hpIntegrator->solve(Vhp);
-    Vlp = bpIntegrator->solve(Vbp);
+    // FIXME
+    const float Isum = (currentResonance[fmc->getNormalizedValue(Vbp)] + Vlp + Vsum) * Msum;
+    Vhp = currentSummer[fmc->getNormalizedValue(Isum)];
+    const int nVhp = fmc->getNormalizedValue(Vhp);
+    const int nVbp = hpIntegrator->solve(nVhp);
+    Vbp = fmc->getDenormalizedValue(nVbp);
+    const int nVlp = bpIntegrator->solve(nVbp);
+    Vlp = fmc->getDenormalizedValue(nVlp);
 
     if (lp) Vmix += Vlp;
     if (bp) Vmix += Vbp;
     if (hp) Vmix += Vhp;
 
-    return currentVolume[currentMixer[Vmix]];
+    const float Imix = Vmix * Mmix;
+    return fmc->getNormalizedValue(currentVolume[currentMixer[fmc->getNormalizedValue(Imix)]]);
 }
 
 } // namespace reSIDfp

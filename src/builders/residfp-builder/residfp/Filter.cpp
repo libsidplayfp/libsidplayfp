@@ -49,6 +49,9 @@ void Filter::updateMixing()
     if (hp) Nmix++;
 
     currentMixer = mixer[Nmix];
+
+    Msum = 1.f / static_cast<float>(2 + Nsum);
+    Mmix = Nmix ? 1.f / static_cast<float>(Nmix) : 0.f;
 }
 
 void Filter::writeFC_LO(unsigned char fc_lo)
@@ -103,11 +106,13 @@ Filter::Filter(FilterModelConfig* fmc) :
     currentSummer(nullptr),
     currentResonance(nullptr),
     currentVolume(nullptr),
-    Vhp(0),
-    Vbp(0),
-    Vlp(0),
-    Ve(0),
+    Vhp(0.f),
+    Vbp(0.f),
+    Vlp(0.f),
+    Ve(0.f),
     fc(0),
+    Msum(0.f),
+    Mmix(0.f),
     filt1(false),
     filt2(false),
     filt3(false),
