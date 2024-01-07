@@ -134,7 +134,7 @@ public:
      * @param v3 voice 3 in
      * @return filtered output
      */
-    unsigned short clock(int v1, int v2, int v3);
+    unsigned short clock(float v1, float v2, float v3);
 
     /**
      * Enable filter.
@@ -194,19 +194,19 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-unsigned short Filter::clock(int voice1, int voice2, int voice3)
+unsigned short Filter::clock(float voice1, float voice2, float voice3)
 {
-    voice1 = fmc->getNormalizedVoice(voice1);
-    voice2 = fmc->getNormalizedVoice(voice2);
+    int v1 = fmc->getNormalizedVoice(voice1);
+    int v2 = fmc->getNormalizedVoice(voice2);
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    voice3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
+    int v3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
 
     int Vi = 0;
     int Vo = 0;
 
-    (filt1 ? Vi : Vo) += voice1;
-    (filt2 ? Vi : Vo) += voice2;
-    (filt3 ? Vi : Vo) += voice3;
+    (filt1 ? Vi : Vo) += v1;
+    (filt2 ? Vi : Vo) += v2;
+    (filt3 ? Vi : Vo) += v3;
     (filtE ? Vi : Vo) += ve;
 
     Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vi];

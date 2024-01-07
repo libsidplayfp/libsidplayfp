@@ -60,8 +60,8 @@ protected:
     /// Current factor coefficient for op-amp integrators.
     const double currFactorCoeff;
 
-    const int voice_voltage_range;
-    const int voice_DC_voltage;
+    const double voice_voltage_range;
+    const double voice_DC_voltage;
 
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
@@ -77,6 +77,11 @@ protected:
 private:
     FilterModelConfig (const FilterModelConfig&) DELETE;
     FilterModelConfig& operator= (const FilterModelConfig&) DELETE;
+
+    inline double getVoiceVoltage(float value) const
+    {
+        return value * voice_voltage_range + voice_DC_voltage;
+    }
 
 protected:
     /**
@@ -135,9 +140,9 @@ public:
         return static_cast<unsigned short>(tmp + 0.5);
     }
 
-    inline int getNormalizedVoice(int value) const
+    inline int getNormalizedVoice(float value) const
     {
-        return (value * voice_voltage_range >> 15) + voice_DC_voltage;
+        return static_cast<int>(getNormalizedValue(getVoiceVoltage(value)));
     }
 };
 
