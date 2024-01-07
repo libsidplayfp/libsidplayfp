@@ -319,7 +319,7 @@ class Integrator6581;
 class Filter6581 final : public Filter
 {
 private:
-    const unsigned short* f0_dac;
+    const float* f0_dac;
 
 protected:
     /**

@@ -55,8 +55,8 @@ namespace reSIDfp
 class Integrator8580 : public Integrator
 {
 private:
-    unsigned short nVgt;
-    unsigned short n_dac;
+    float Vgt;
+    float n_dac;
 
     const FilterModelConfig8580* fmc;
 
@@ -72,9 +72,8 @@ public:
      */
     void setFc(double wl)
     {
-        // Normalized current factor, 1 cycle at 1MHz.
-        // Fit in 5 bits.
-        n_dac = fmc->getNormalizedCurrentFactor(wl);
+        // Current factor, 1 cycle at 1MHz.
+        n_dac = fmc->getCurrentFactor(wl);
     }
 
     /**
@@ -86,14 +85,10 @@ public:
         // Ua = Ue * v = 4.76v  1<v<2
         assert(v > 1.0 && v < 2.0);
         const double Vg = 4.76 * v;
-        const double Vgt = Vg - fmc->getVth();
-
-        // Vg - Vth, normalized so that translated values can be subtracted:
-        // Vgt - x = (Vgt - t) - (x - t)
-        nVgt = fmc->getNormalizedValue(Vgt);
+        Vgt = Vg - fmc->getVth();
     }
 
-    int solve(int vi) const override;
+    float solve(float vi) const override;
 };
 
 } // namespace reSIDfp

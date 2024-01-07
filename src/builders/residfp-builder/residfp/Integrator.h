@@ -29,15 +29,15 @@ namespace reSIDfp
 class Integrator
 {
 protected:
-    mutable int vx;
-    mutable int vc;
+    mutable float Vx;
+    mutable float Vc;
 
     Integrator() :
-        vx(0),
-        vc(0) {}
+        Vx(0.f),
+        Vc(0.f) {}
 
 public:
-    virtual int solve(int vi) const = 0;
+    virtual float solve(float vi) const = 0;
 
     virtual ~Integrator() {}
 };

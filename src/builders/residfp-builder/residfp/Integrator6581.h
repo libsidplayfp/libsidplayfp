@@ -166,6 +166,13 @@ class Integrator6581 : public Integrator
 private:
     const double wlSnake;
 
+    const double Vddt;
+    const double Vt;
+    const double Vmin;
+
+    // (Vddt - Vw)^2
+    double Vddt_Vw_2;
+
 #ifdef SLOPE_FACTOR
     // Slope factor n = 1/k
     // where k is the gate coupling coefficient
@@ -173,30 +180,24 @@ private:
     mutable double n;
 #endif
 
-    unsigned int nVddt_Vw_2;
-
-    const unsigned short nVddt;
-    const unsigned short nVt;
-    const unsigned short nVmin;
-
     const FilterModelConfig6581* fmc;
 
 public:
     Integrator6581(const FilterModelConfig6581* fmc,
-               double WL_snake) :
+                   double WL_snake) :
         wlSnake(WL_snake),
+        Vddt(fmc->getVddt()),
+        Vt(fmc->getVth()),
+        Vmin(fmc->getVmin()),
+        Vddt_Vw_2(0.),
 #ifdef SLOPE_FACTOR
         n(1.4),
 #endif
-        nVddt_Vw_2(0),
-        nVddt(fmc->getNormalizedValue(fmc->getVddt())),
-        nVt(fmc->getNormalizedValue(fmc->getVth())),
-        nVmin(fmc->getNVmin()),
         fmc(fmc) {}
 
-    void setVw(unsigned short Vw) { nVddt_Vw_2 = ((nVddt - Vw) * (nVddt - Vw)) >> 1; }
+    void setVw(float Vw) { Vddt_Vw_2 = (Vddt - Vw) * (Vddt - Vw); }
 
-    int solve(int vi) const override;
+    float solve(float Vi) const override;
 };
 
 } // namespace reSIDfp

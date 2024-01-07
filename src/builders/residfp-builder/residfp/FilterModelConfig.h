@@ -73,7 +73,7 @@ protected:
     //@}
 
     /// Reverse op-amp transfer function.
-    unsigned short opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
+    float opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
 
 private:
     FilterModelConfig (const FilterModelConfig&) DELETE;
@@ -211,35 +211,30 @@ public:
 
     virtual Integrator* buildIntegrator() = 0;
 
-    inline unsigned short getOpampRev(int i) const { return opamp_rev[i]; }
     inline double getVddt() const { return Vddt; }
     inline double getVth() const { return Vth; }
+    inline double getVmin() const { return vmin; }
+
+    inline float getOpampRev(double Vc) const
+    {
+        const double tmp = 32768. + N16 * Vc/2.;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        const int i = static_cast<int>(tmp + 0.5);
+        return opamp_rev[i];
+    }
 
     // helper functions
     inline unsigned short getNormalizedValue(double value) const
     {
-        if (!value) return 0;
+        if (value == 0.) return 0;
         const double tmp = N16 * (value - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);
     }
 
-    inline double getDenormalizedValue(unsigned short value) const
+    inline double getCurrentFactor(double wl) const
     {
-        return vmin + value / N16;
-    }
-
-    inline unsigned short getNormalizedCurrentFactor(double wl) const
-    {
-        const double tmp = (1 << 13) * currFactorCoeff * wl;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
-    }
-
-    inline unsigned short getNVmin() const {
-        const double tmp = N16 * vmin;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
+        return currFactorCoeff * wl;
     }
 
     inline double getVoiceVoltage(float value) const

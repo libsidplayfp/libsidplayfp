@@ -227,15 +227,9 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
         #pragma omp section
         {
-            const double nVddt = N16 * (Vddt - vmin);
-
             for (unsigned int i = 0; i < (1 << 16); i++)
             {
-                // The table index is right-shifted 16 times in order to fit in
-                // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-                const double tmp = nVddt - sqrt(static_cast<double>(i << 16));
-                assert(tmp > -0.5 && tmp < 65535.5);
-                vcr_nVg[i] = static_cast<unsigned short>(tmp + 0.5);
+                vcr_Vg[i] = Vddt - sqrt(i);
             }
         }
 
@@ -252,9 +246,8 @@ FilterModelConfig6581::FilterModelConfig6581() :
             // will be multiplied by uCox later
             const double Is = (2. * Ut * Ut) * WL_vcr;
 
-            // Normalized current factor for 1 cycle at 1MHz.
-            const double N15 = norm * ((1 << 15) - 1);
-            const double n_Is = N15 * 1.0e-6 / C * Is;
+            // Current factor for 1 cycle at 1MHz.
+            const double Cf = 1.0e-6 / C * Is;
 
             // kVgt_Vx = k*(Vg - Vt) - Vx
             // I.e. if k != 1.0, Vg must be scaled accordingly.
@@ -262,23 +255,22 @@ FilterModelConfig6581::FilterModelConfig6581() :
             {
                 const int kVgt_Vx = i - (1 << 15);
                 const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
-                // Scaled by m*2^15
-                vcr_n_Ids_term[i] = n_Is * log_term * log_term;
+                vcr_Ids_term[i] = Cf * log_term * log_term;
             }
         }
     }
 }
 
-unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
+float* FilterModelConfig6581::getDAC(double adjustment) const
 {
     const double dac_zero = getDacZero(adjustment);
 
-    unsigned short* f0_dac = new unsigned short[1 << DAC_BITS];
+    float* f0_dac = new float[1 << DAC_BITS];
 
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         const double fcd = dac.getOutput(i);
-        f0_dac[i] = getNormalizedValue(dac_zero + fcd * dac_scale);
+        f0_dac[i] = dac_zero + fcd * dac_scale;
     }
 
     return f0_dac;

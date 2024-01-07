@@ -47,6 +47,7 @@ FilterModelConfig::FilterModelConfig(
     denorm(vmax - vmin),
     norm(1.0 / denorm),
     N16(norm * ((1 << 16) - 1)),
+    currFactorCoeff(uCox / 2. * 1.0e-6 / C),
     voice_voltage_range(vvr),
     voice_DC_voltage(vdv)
 {
@@ -60,9 +61,9 @@ FilterModelConfig::FilterModelConfig(
     {
         scaled_voltage[i].x = N16 * (opamp_voltage[i].x - opamp_voltage[i].y) / 2.;
         // We add 32768 to get a positive number in the range [0-65535]
-        scaled_voltage[i].x += static_cast<double>(1u << 15);
+        scaled_voltage[i].x += 32768.;
 
-        scaled_voltage[i].y = N16 * (opamp_voltage[i].x - vmin);
+        scaled_voltage[i].y = opamp_voltage[i].x;
     }
 
     // Create lookup table mapping capacitor voltage to op-amp input voltage:
@@ -73,9 +74,7 @@ FilterModelConfig::FilterModelConfig(
     {
         const Spline::Point out = s.evaluate(x);
         // When interpolating outside range the first elements may be negative
-        double tmp = out.x > 0. ? out.x : 0.;
-        assert(tmp < 65535.5);
-        opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
+        opamp_rev[x] = out.x > 0. ? out.x : 0.;
     }
 }
 

@@ -213,14 +213,10 @@ unsigned short Filter::clock(float voice1, float voice2, float voice3)
     (filt3 ? Vsum : Vmix) += V3;
     (filtE ? Vsum : Vmix) += Ve;
 
-    // FIXME
     const float Isum = (currentResonance[fmc->getNormalizedValue(Vbp)] + Vlp + Vsum) * Msum;
     Vhp = currentSummer[fmc->getNormalizedValue(Isum)];
-    const int nVhp = fmc->getNormalizedValue(Vhp);
-    const int nVbp = hpIntegrator->solve(nVhp);
-    Vbp = fmc->getDenormalizedValue(nVbp);
-    const int nVlp = bpIntegrator->solve(nVbp);
-    Vlp = fmc->getDenormalizedValue(nVlp);
+    Vbp = hpIntegrator->solve(Vhp);
+    Vlp = bpIntegrator->solve(Vbp);
 
     if (lp) Vmix += Vlp;
     if (bp) Vmix += Vbp;
