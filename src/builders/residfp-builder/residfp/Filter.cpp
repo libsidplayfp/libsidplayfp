@@ -27,12 +27,6 @@
 namespace reSIDfp
 {
 
-Filter::~Filter()
-{
-    delete hpIntegrator;
-    delete bpIntegrator;
-}
-
 void Filter::updateMixing()
 {
     currentGain = gain_vol[vol];
@@ -55,28 +49,6 @@ void Filter::updateMixing()
     if (hp) no++;
 
     currentMixer = mixer[no];
-}
-
-void Filter::enable(bool enable)
-{
-    enabled = enable;
-
-    if (enabled)
-    {
-        writeRES_FILT(filt);
-    }
-    else
-    {
-        filt1 = filt2 = filt3 = filtE = false;
-    }
-}
-
-void Filter::reset()
-{
-    writeFC_LO(0);
-    writeFC_HI(0);
-    writeMODE_VOL(0);
-    writeRES_FILT(0);
 }
 
 void Filter::writeFC_LO(unsigned char fc_lo)
@@ -117,6 +89,66 @@ void Filter::writeMODE_VOL(unsigned char mode_vol)
     voice3off = (mode_vol & 0x80) != 0;
 
     updateMixing();
+}
+
+Filter::Filter(FilterModelConfig* fmc) :
+    fmc(fmc),
+    mixer(fmc->getMixer()),
+    summer(fmc->getSummer()),
+    gain_res(fmc->getGainRes()),
+    gain_vol(fmc->getGainVol()),
+    hpIntegrator(fmc->buildIntegrator()),
+    bpIntegrator(fmc->buildIntegrator()),
+    currentGain(nullptr),
+    currentMixer(nullptr),
+    currentSummer(nullptr),
+    currentResonance(nullptr),
+    Vhp(0),
+    Vbp(0),
+    Vlp(0),
+    ve(0),
+    fc(0),
+    filt1(false),
+    filt2(false),
+    filt3(false),
+    filtE(false),
+    voice3off(false),
+    hp(false),
+    bp(false),
+    lp(false),
+    vol(0),
+    enabled(true),
+    filt(0)
+{
+    input(0);
+}
+
+Filter::~Filter()
+{
+    delete hpIntegrator;
+    delete bpIntegrator;
+}
+
+void Filter::enable(bool enable)
+{
+    enabled = enable;
+
+    if (enabled)
+    {
+        writeRES_FILT(filt);
+    }
+    else
+    {
+        filt1 = filt2 = filt3 = filtE = false;
+    }
+}
+
+void Filter::reset()
+{
+    writeFC_LO(0);
+    writeFC_HI(0);
+    writeMODE_VOL(0);
+    writeRES_FILT(0);
 }
 
 } // namespace reSIDfp

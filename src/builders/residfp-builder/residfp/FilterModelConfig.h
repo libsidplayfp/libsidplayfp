@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -38,9 +38,6 @@ class Integrator;
 class FilterModelConfig
 {
 protected:
-    const double voice_voltage_range;
-    const double voice_DC_voltage;
-
     /// Capacitor value.
     const double C;
 
@@ -62,6 +59,9 @@ protected:
 
     /// Current factor coefficient for op-amp integrators.
     const double currFactorCoeff;
+
+    const int voice_voltage_range;
+    const int voice_DC_voltage;
 
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
@@ -100,24 +100,7 @@ protected:
         int opamp_size
     );
 
-    ~FilterModelConfig()
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            delete [] mixer[i];
-        }
-
-        for (int i = 0; i < 5; i++)
-        {
-            delete [] summer[i];
-        }
-
-        for (int i = 0; i < 16; i++)
-        {
-            delete [] gain_vol[i];
-            delete [] gain_res[i];
-        }
-    }
+    ~FilterModelConfig();
 
 public:
     unsigned short** getGainVol() { return gain_vol; }
@@ -126,17 +109,6 @@ public:
     unsigned short** getMixer() { return mixer; }
 
     virtual Integrator* buildIntegrator() = 0;
-
-    /**
-     * The digital range of one voice is 20 bits; create a scaling term
-     * for multiplication which fits in 11 bits.
-     */
-    int getVoiceScaleS11() const { return static_cast<int>((norm * ((1 << 11) - 1)) * voice_voltage_range); }
-
-    /**
-     * The "zero" output level of the voices.
-     */
-    int getNormalizedVoiceDC() const { return static_cast<int>(N16 * (voice_DC_voltage - vmin)); }
 
     inline unsigned short getOpampRev(int i) const { return opamp_rev[i]; }
     inline double getVddt() const { return Vddt; }
@@ -161,6 +133,11 @@ public:
         const double tmp = N16 * vmin;
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);
+    }
+
+    inline int getNormalizedVoice(int value) const
+    {
+        return (value * voice_voltage_range >> 15) + voice_DC_voltage;
     }
 };
 

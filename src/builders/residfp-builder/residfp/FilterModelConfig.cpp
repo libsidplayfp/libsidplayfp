@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -37,8 +37,6 @@ FilterModelConfig::FilterModelConfig(
     const Spline::Point *opamp_voltage,
     int opamp_size
 ) :
-    voice_voltage_range(vvr),
-    voice_DC_voltage(vdv),
     C(c),
     Vdd(vdd),
     Vth(vth),
@@ -50,7 +48,9 @@ FilterModelConfig::FilterModelConfig(
     denorm(vmax - vmin),
     norm(1.0 / denorm),
     N16(norm * ((1 << 16) - 1)),
-    currFactorCoeff(denorm * (uCox / 2. * 1.0e-6 / C))
+    currFactorCoeff(denorm * (uCox / 2. * 1.0e-6 / C)),
+    voice_voltage_range(static_cast<int>((norm * ((1 << 11) - 1)) * vvr)),
+    voice_DC_voltage(static_cast<int>(N16 * (vdv - vmin)))
 {
     // Convert op-amp voltage transfer to 16 bit values.
 
@@ -76,6 +76,25 @@ FilterModelConfig::FilterModelConfig(
         double tmp = out.x > 0. ? out.x : 0.;
         assert(tmp < 65535.5);
         opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
+    }
+}
+
+FilterModelConfig::~FilterModelConfig()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        delete [] mixer[i];
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        delete [] summer[i];
+    }
+
+    for (int i = 0; i < 16; i++)
+    {
+        delete [] gain_vol[i];
+        delete [] gain_res[i];
     }
 }
 
