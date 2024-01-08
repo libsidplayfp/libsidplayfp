@@ -29,6 +29,8 @@
 #include "OpAmp.h"
 #include "Spline.h"
 
+#include "siddefs-fp.h"
+
 #include "sidcxx11.h"
 
 namespace reSIDfp
@@ -226,7 +228,7 @@ public:
     // helper functions
     inline unsigned short getNormalizedValue(double value) const
     {
-        if (value == 0.) return 0;
+        if (unlikely(value == 0.)) return 0;
         const double tmp = N16 * (value - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);

@@ -339,9 +339,10 @@ int SID::output() const
     const float v2 = voice[1]->output(voice[0]->wave());
     const float v3 = voice[2]->output(voice[1]->wave());
 
-    const float input = scaleFactor * (filter->clock(v1, v2, v3));
+    const float input = filter->clock(v1, v2, v3);
+    const float output = externalFilter->clock(input);
 
-    return static_cast<int>(externalFilter->clock(input));
+    return static_cast<int>(scaleFactor * output);
 }
 
 
