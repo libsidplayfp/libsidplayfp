@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -39,8 +39,8 @@ inline double getRC(double res, double cap)
 }
 
 ExternalFilter::ExternalFilter() :
-    w0lp(0.),
-    w0hp(0.)
+    w0lp(0.f),
+    w0hp(0.f)
 {
     reset();
 }

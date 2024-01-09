@@ -22,8 +22,6 @@
 #ifndef RESAMPLER_H
 #define RESAMPLER_H
 
-#include <cmath>
-
 #include "sidcxx11.h"
 
 #include "siddefs-fp.h"
@@ -38,22 +36,7 @@ namespace reSIDfp
 class Resampler
 {
 protected:
-    inline short softClip(int x) const
-    {
-        constexpr int threshold = 28000;
-        if (likely(x < threshold))
-            return x;
-
-        constexpr double t = threshold / 32768.;
-        constexpr double a = 1. - t;
-        constexpr double b = 1. / a;
-
-        double value = static_cast<double>(x - threshold) / 32768.;
-        value = t + a * tanh(b * value);
-        return static_cast<short>(value * 32768.);
-    }
-
-    virtual int output() const = 0;
+    virtual float output() const = 0;
 
     Resampler() {}
 
@@ -66,16 +49,16 @@ public:
      * @param sample input sample
      * @return true when a sample is ready
      */
-    virtual bool input(int sample) = 0;
+    virtual bool input(float sample) = 0;
 
     /**
      * Output a sample from resampler.
      *
      * @return resampled sample
      */
-    short getOutput() const
+    float getOutput() const
     {
-        return softClip(output());
+        return output();
     }
 
     virtual void reset() = 0;

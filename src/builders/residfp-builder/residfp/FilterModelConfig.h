@@ -206,10 +206,10 @@ protected:
     }
 
 public:
+    unsigned short** getMixer() { return mixer; }
+    float** getSummer() { return summer; }
     float** getVolume() { return volume; }
     float** getResonance() { return resonance; }
-    float** getSummer() { return summer; }
-    unsigned short** getMixer() { return mixer; }
 
     virtual Integrator* buildIntegrator() = 0;
 

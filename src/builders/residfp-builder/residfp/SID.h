@@ -23,6 +23,7 @@
 #ifndef SIDFP_H
 #define SIDFP_H
 
+#include <cmath>
 #include <memory>
 
 #include "siddefs-fp.h"
@@ -138,7 +139,7 @@ private:
      *
      * @return the output sample
      */
-    int output() const;
+    float output() const;
 
     /**
      * Calculate the numebr of cycles according to current parameters
@@ -333,7 +334,7 @@ void SID::ageBusValue(unsigned int n)
 }
 
 RESID_INLINE
-int SID::output() const
+float SID::output() const
 {
     const float v1 = voice[0]->output(voice[2]->wave());
     const float v2 = voice[1]->output(voice[0]->wave());
@@ -342,9 +343,27 @@ int SID::output() const
     const float input = filter->clock(v1, v2, v3);
     const float output = externalFilter->clock(input);
 
-    return static_cast<int>(scaleFactor * output);
+    return output;
 }
 
+#ifndef HAVE_CXX11
+#define constexpr const
+#endif
+
+inline short softClip(float sample)
+{
+    const float x = abs(sample);
+    constexpr float threshold = 28000.f;
+    if (likely(x < threshold))
+        return sample;
+
+    constexpr float a = 32768.f - threshold;
+    constexpr float b = 32768.f / a;
+
+    const float v = (x - threshold) / 32768.f;
+    const float output = threshold + a * tanh(b * v);
+    return static_cast<short>(sample < 0.f ? -output : output);
+}
 
 RESID_INLINE
 int SID::clock(unsigned int cycles, short* buf)
@@ -372,7 +391,7 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    buf[s++] = resampler->getOutput();
+                    buf[s++] = softClip(scaleFactor * resampler->getOutput());
                 }
             }
 
