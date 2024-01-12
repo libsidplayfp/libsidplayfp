@@ -49,8 +49,8 @@ FilterModelConfig::FilterModelConfig(
     norm(1.0 / denorm),
     N16(norm * ((1 << 16) - 1)),
     currFactorCoeff(denorm * (uCox / 2. * 1.0e-6 / C)),
-    voice_voltage_range(static_cast<int>((norm * ((1 << 11) - 1)) * vvr)),
-    voice_DC_voltage(static_cast<int>(N16 * (vdv - vmin)))
+    voice_voltage_range(vvr),
+    voice_DC_voltage(vdv)
 {
     // Convert op-amp voltage transfer to 16 bit values.
 

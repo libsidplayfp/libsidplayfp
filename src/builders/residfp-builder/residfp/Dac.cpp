@@ -108,8 +108,6 @@ void Dac::kinkedDac(ChipModel chipModel)
     }
 
     // Normalize to integerish behavior
-    Vsum /= 1 << dacLength;
-
     for (unsigned int i = 0; i < dacLength; i++)
     {
         dac[i] /= Vsum;

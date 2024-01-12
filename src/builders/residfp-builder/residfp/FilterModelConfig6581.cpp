@@ -157,27 +157,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
                 vmin,
                 vmax);
 #endif
-            // The filter summer operates at n ~ 1, and has 5 fundamentally different
-            // input configurations (2 - 6 input "resistors").
-            //
-            // Note that all "on" transistors are modeled as one. This is not
-            // entirely accurate, since the input for each transistor is different,
-            // and transistors are not linear components. However modeling all
-            // transistors separately would be extremely costly.
-            for (int i = 0; i < 5; i++)
-            {
-                const int idiv = 2 + i;        // 2 - 6 input "resistors".
-                const int size = idiv << 16;
-                const double n = idiv;
-                opampModel.reset();
-                summer[i] = new unsigned short[size];
-
-                for (int vi = 0; vi < size; vi++)
-                {
-                    const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-                    summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
-                }
-            }
+            buildSummerTable(opampModel);
         }
 
         #pragma omp section
@@ -191,25 +171,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
                 vmin,
                 vmax);
 #endif
-            // The audio mixer operates at n ~ 8/6, and has 8 fundamentally different
-            // input configurations (0 - 7 input "resistors").
-            //
-            // All "on", transistors are modeled as one - see comments above for
-            // the filter summer.
-            for (int i = 0; i < 8; i++)
-            {
-                const int idiv = (i == 0) ? 1 : i;
-                const int size = (i == 0) ? 1 : i << 16;
-                const double n = i * 8.0 / 6.0;
-                opampModel.reset();
-                mixer[i] = new unsigned short[size];
-
-                for (int vi = 0; vi < size; vi++)
-                {
-                    const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-                    mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
-                }
-            }
+            builMixerTable(opampModel, 8.0 / 6.0);
         }
 
         #pragma omp section
@@ -223,55 +185,28 @@ FilterModelConfig6581::FilterModelConfig6581() :
                 vmin,
                 vmax);
 #endif
-            // 4 bit "resistor" ladders in the audio output gain
-            // necessitate 16 gain tables.
-            // From die photographs of the volume "resistor" ladders
-            // it follows that gain ~ vol/12 (assuming ideal
-            // op-amps and ideal "resistors").
+            builGainVolTable(opampModel, 12.0);
+        }
+
+        #pragma omp section
+        {
+#ifdef _OPENMP
+            OpAmp opampModel(
+                std::vector<Spline::Point>(
+                    std::begin(opamp_voltage),
+                    std::end(opamp_voltage)),
+                Vddt,
+                vmin,
+                vmax);
+#endif
+            // build temp n table
+            double resGain[16];
             for (int n8 = 0; n8 < 16; n8++)
             {
-                const int size = 1 << 16;
-                const double n = n8 / 12.0;
-                opampModel.reset();
-                gain_vol[n8] = new unsigned short[size];
-
-                for (int vi = 0; vi < size; vi++)
-                {
-                    const double vin = vmin + vi / N16; /* vmin .. vmax */
-                    gain_vol[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
-                }
+                resGain[n8] = (~n8 & 0xf) / 8.0;
             }
-        }
 
-        #pragma omp section
-        {
-#ifdef _OPENMP
-            OpAmp opampModel(
-                std::vector<Spline::Point>(
-                    std::begin(opamp_voltage),
-                    std::end(opamp_voltage)),
-                Vddt,
-                vmin,
-                vmax);
-#endif
-            // 4 bit "resistor" ladders in the bandpass resonance gain
-            // necessitate 16 gain tables.
-            // From die photographs of the bandpass "resistor" ladders
-            // it follows that 1/Q ~ ~res/8 (assuming ideal
-            // op-amps and ideal "resistors").
-            for (int n8 = 0; n8 < 16; n8++)
-            {
-                const int size = 1 << 16;
-                const double n = (~n8 & 0xf) / 8.0;
-                opampModel.reset();
-                gain_res[n8] = new unsigned short[size];
-
-                for (int vi = 0; vi < size; vi++)
-                {
-                    const double vin = vmin + vi / N16; /* vmin .. vmax */
-                    gain_res[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
-                }
-            }
+            builGainResTable(opampModel, resGain);
         }
 
         #pragma omp section
@@ -328,7 +263,7 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
     for (unsigned int i = 0; i < (1 << DAC_BITS); i++)
     {
         const double fcd = dac.getOutput(i);
-        f0_dac[i] = getNormalizedValue(dac_zero + fcd * dac_scale / (1 << DAC_BITS));
+        f0_dac[i] = getNormalizedValue(dac_zero + fcd * dac_scale);
     }
 
     return f0_dac;
