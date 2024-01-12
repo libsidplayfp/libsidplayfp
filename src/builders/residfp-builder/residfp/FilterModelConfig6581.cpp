@@ -249,6 +249,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
             //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
 
             // moderate inversion characteristic current
+            // will be multiplied by uCox later
             const double Is = (2. * Ut * Ut) * WL_vcr;
 
             // Normalized current factor for 1 cycle at 1MHz.
