@@ -271,6 +271,13 @@ public:
     void setFilter6581Curve(double filterCurve);
 
     /**
+    * Set filter range parameter for 6581 model
+    *
+    * @see Filter6581::setFilterRange(double)
+    */
+    void setFilter6581Range ( double adjustment );
+
+    /**
      * Set filter curve parameter for 8580 model.
      *
      * @see Filter8580::setFilterCurve(double)

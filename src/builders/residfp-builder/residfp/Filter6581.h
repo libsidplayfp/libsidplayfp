@@ -338,9 +338,18 @@ public:
     /**
      * Set filter curve type based on single parameter.
      *
-     * @param curvePosition 0 .. 1, where 0 sets center frequency high ("light") and 1 sets it low ("dark"), default is 0.5
+     * @param curvePosition 0 .. 1, where 0 sets center frequency high ("bright") and 1 sets it low ("dark").
+     *                      Default is 0.5
      */
     void setFilterCurve(double curvePosition);
+
+    /**
+     * Set filter offset and range based on single parameter.
+     *
+     * @param adjustment 0 .. 1, where 0 sets center frequency low ("dark"), 1 sets it high ("bright").
+     *                   This also affects the range. Default is 0.5
+     */
+    void setFilterRange(double adjustment);
 };
 
 } // namespace reSIDfp
