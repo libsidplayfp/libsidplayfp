@@ -73,6 +73,7 @@ public:
     void filter6581Curve(double filterCurve);
     void filter6581Range(double adjustment);
     void filter8580Curve(double filterCurve);
+    void combinedWaveforms(SidConfig::sid_cw_t cws);
 };
 
 }

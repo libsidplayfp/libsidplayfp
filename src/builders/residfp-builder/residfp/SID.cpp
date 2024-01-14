@@ -138,7 +138,8 @@ SID::SID() :
     externalFilter(new ExternalFilter()),
     resampler(nullptr),
     potX(new Potentiometer()),
-    potY(new Potentiometer())
+    potY(new Potentiometer()),
+    cws(AVERAGE)
 {
     voice[0].reset(new Voice());
     voice[1].reset(new Voice());
@@ -238,7 +239,7 @@ void SID::setChipModel(ChipModel model)
 
     // calculate waveform-related tables
     matrix_t* wavetables = WaveformCalculator::getInstance()->getWaveTable();
-    matrix_t* pulldowntables = WaveformCalculator::getInstance()->buildPulldownTable(model);
+    matrix_t* pulldowntables = WaveformCalculator::getInstance()->buildPulldownTable(model, cws);
 
     // calculate envelope DAC table
     {
@@ -276,6 +277,25 @@ void SID::setChipModel(ChipModel model)
         voice[i]->wave()->setWaveformModels(wavetables);
         voice[i]->wave()->setPulldownModels(pulldowntables);
     }
+}
+
+void SID::setCombinedWaveforms(CombinedWaveforms cws)
+{
+    switch (cws)
+    {
+    case AVERAGE:
+    case WEAK:
+    case STRONG:
+        break;
+
+    default:
+        throw SIDError("Unknown combined waveforms type");
+    }
+
+    this->cws = cws;
+
+    // rebuild waveform-related tables
+    matrix_t* pulldowntables = WaveformCalculator::getInstance()->buildPulldownTable(model, cws);
 }
 
 void SID::reset()
