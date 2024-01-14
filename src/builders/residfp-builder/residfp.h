@@ -80,6 +80,14 @@ public:
      * @param filterCurve curve center frequency (default 12500)
      */
     void filter8580Curve(double filterCurve);
+
+    /**
+     * Set combined waveforms strength.
+     *
+     * @param cws 
+     */
+    void combinedWaveformsStrength(SidConfig::sid_cw_t cws);
+
     //@}
 };
 
