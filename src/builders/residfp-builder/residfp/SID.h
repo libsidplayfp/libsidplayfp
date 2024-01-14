@@ -102,6 +102,9 @@ private:
     /// Currently active chip model.
     ChipModel model;
 
+    /// Currently selected combined waveforms strength.
+    CombinedWaveforms cws;
+
     /// Last written value
     unsigned char busValue;
 
@@ -161,6 +164,14 @@ public:
      * Get currently emulated chip model.
      */
     ChipModel getChipModel() const { return model; }
+
+    /**
+     * Set combined waveforms strength.
+     *
+     * @param cws strength of combined waveforms
+     * @throw SIDError
+     */
+    void setCombinedWaveforms(CombinedWaveforms cws);
 
     /**
      * SID reset.

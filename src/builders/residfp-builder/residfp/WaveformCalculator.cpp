@@ -89,7 +89,7 @@ static float quadraticDistance(float distance, int i)
  * [1] https://github.com/libsidplayfp/combined-waveforms
  * [2] https://github.com/daglem/reDIP-SID/blob/master/research/combsample.d64
  */
-const CombinedWaveformConfig config[2][5] =
+const CombinedWaveformConfig configAverage[2][5] =
 {
     { /* 6581 R3 4785 sampled by Trurl */
         // TS  error 2298 (339/32768)
@@ -103,8 +103,22 @@ const CombinedWaveformConfig config[2][5] =
         // NP  guessed
         { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
     },
-#if 0
-    // weak cw
+    { /* 8580 R5 5092 25 sampled by reFX-Mike */
+        // TS  error 1212 (183/32768)
+        { exponentialDistance, 0.684999049f, 0.916620493f, 0.f, 1.14715648f, 2.02339816f },
+        // PT  error 6153 (295/32768)
+        { exponentialDistance,  0.940367579, 1.f, 1.26695442f, 0.976729453f, 1.57954705f },
+        // PS  error 7620 (454/32768)
+        { quadraticDistance, 0.963866293f, 1.22095084f, 1.01380754f, 0.0110885892f, 0.381492466f },
+        // PTS error 3701 (117/32768)
+        { linearDistance, 0.976761818f, 0.202727556f, 0.988633931f, 0.939373314f, 9.37139416f },
+        // NP  guessed
+        { exponentialDistance, 0.95f, 1.f, 1.15f, 1.f, 1.45f },
+    },
+};
+
+const CombinedWaveformConfig configWeak[2][5] =
+{
     { /* 6581 R2 4383 sampled by ltx128 */
         // TS  error 1858 (204/32768)
         { exponentialDistance, 0.886832297f, 1.f, 0.f, 2.14438701f, 9.51839447f },
@@ -117,7 +131,22 @@ const CombinedWaveformConfig config[2][5] =
         // NP  guessed
         { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
     },
-    // strong cw
+    { /* 8580 R5 5092 25 sampled by reFX-Mike */
+        // TS  error 1212 (183/32768)
+        { exponentialDistance, 0.684999049f, 0.916620493f, 0.f, 1.14715648f, 2.02339816f },
+        // PT  error 6153 (295/32768)
+        { exponentialDistance,  0.940367579, 1.f, 1.26695442f, 0.976729453f, 1.57954705f },
+        // PS  error 7620 (454/32768)
+        { quadraticDistance, 0.963866293f, 1.22095084f, 1.01380754f, 0.0110885892f, 0.381492466f },
+        // PTS error 3701 (117/32768)
+        { linearDistance, 0.976761818f, 0.202727556f, 0.988633931f, 0.939373314f, 9.37139416f },
+        // NP  guessed
+        { exponentialDistance, 0.95f, 1.f, 1.15f, 1.f, 1.45f },
+    },
+};
+
+const CombinedWaveformConfig configStrong[2][5] =
+{
     { /* 6581 R2 0384 sampled by Trurl */
         // TS  error 20337 (1579/32768)
         { exponentialDistance, 0.000637792516f, 1.56725872f, 0.f, 0.00036806846f, 1.51800942f },
@@ -130,7 +159,6 @@ const CombinedWaveformConfig config[2][5] =
         // NP  guessed
         { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
     },
-#endif
     { /* 8580 R5 5092 25 sampled by reFX-Mike */
         // TS  error 1212 (183/32768)
         { exponentialDistance, 0.684999049f, 0.916620493f, 0.f, 1.14715648f, 2.02339816f },
@@ -222,13 +250,28 @@ WaveformCalculator::WaveformCalculator() :
     }
 }
 
-matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model)
+matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model, CombinedWaveforms cws)
 {
 #ifdef HAVE_CXX11
     std::lock_guard<std::mutex> lock(PULLDOWN_CACHE_Lock);
 #endif
 
-    const CombinedWaveformConfig* cfgArray = config[model == MOS6581 ? 0 : 1];
+    const int modelIdx = model == MOS6581 ? 0 : 1;
+    const CombinedWaveformConfig* cfgArray;
+
+    switch (cws)
+    {
+    default:
+    case AVERAGE:
+        cfgArray = configAverage[modelIdx];
+        break;
+    case WEAK:
+        cfgArray = configWeak[modelIdx];
+        break;
+    case STRONG:
+        cfgArray = configStrong[modelIdx];
+        break;
+    }
 
     cw_cache_t::iterator lb = PULLDOWN_CACHE.lower_bound(cfgArray);
 
