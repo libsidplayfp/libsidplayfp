@@ -115,7 +115,7 @@ public:
         const double tmp = kVg_Vx * N16 + 32768.;
         assert(tmp > -0.5 && tmp < 65535.5);
         const int i = static_cast<int>(tmp + 0.5);
-        return vcr_Ids_term[i];
+        return vcr_Ids_term[i] * uCox;
     }
 
     // only used if SLOPE_FACTOR is defined
