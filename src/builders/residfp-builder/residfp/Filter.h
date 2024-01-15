@@ -42,8 +42,8 @@ private:
 
     unsigned short** mixer;
     unsigned short** summer;
-    unsigned short** gain_res;
-    unsigned short** gain_vol;
+    unsigned short** resonance;
+    unsigned short** volume;
 
 protected:
     /// VCR + associated capacitor connected to highpass output.
@@ -53,9 +53,6 @@ protected:
     Integrator* const bpIntegrator;
 
 private:
-    /// Current volume amplifier setting.
-    unsigned short* currentGain;
-
     /// Current filter/voice mixer setting.
     unsigned short* currentMixer;
 
@@ -64,6 +61,9 @@ private:
 
     /// Filter resonance value.
     unsigned short* currentResonance;
+
+    /// Current volume amplifier setting.
+    unsigned short* currentVolume;
 
     /// Filter highpass state.
     int Vhp;
@@ -109,7 +109,7 @@ protected:
      *
      * @param res the new resonance value
      */
-    void updateResonance(unsigned char res) { currentResonance = gain_res[res]; }
+    void updateResonance(unsigned char res) { currentResonance = resonance[res]; }
 
     /**
      * Mixing configuration modified (offsets change)
@@ -217,7 +217,7 @@ unsigned short Filter::clock(float voice1, float voice2, float voice3)
     if (bp) Vmix += Vbp;
     if (hp) Vmix += Vhp;
 
-    return currentGain[currentMixer[Vmix]];
+    return currentVolume[currentMixer[Vmix]];
 }
 
 } // namespace reSIDfp

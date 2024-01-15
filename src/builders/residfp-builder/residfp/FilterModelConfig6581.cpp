@@ -201,7 +201,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
                 vmin,
                 vmax);
 #endif
-            builGainVolTable(opampModel, 12.0);
+            buildVolumeTable(opampModel, 12.0);
         }
 
         #pragma omp section
@@ -216,13 +216,13 @@ FilterModelConfig6581::FilterModelConfig6581() :
                 vmax);
 #endif
             // build temp n table
-            double resGain[16];
+            double resonance_n[16];
             for (int n8 = 0; n8 < 16; n8++)
             {
-                resGain[n8] = (~n8 & 0xf) / 8.0;
+                resonance_n[n8] = (~n8 & 0xf) / 8.0;
             }
 
-            builGainResTable(opampModel, resGain);
+            buildResonanceTable(opampModel, resonance_n);
         }
 
         #pragma omp section

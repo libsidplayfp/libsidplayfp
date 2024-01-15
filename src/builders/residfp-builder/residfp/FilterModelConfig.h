@@ -68,8 +68,8 @@ protected:
     //@{
     unsigned short* mixer[8];       //-V730_NOINIT this is initialized in the derived class constructor
     unsigned short* summer[5];      //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* gain_vol[16];   //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* gain_res[16];   //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* volume[16];   //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* resonance[16];   //-V730_NOINIT this is initialized in the derived class constructor
     //@}
 
     /// Reverse op-amp transfer function.
@@ -168,19 +168,19 @@ protected:
      * it follows that gain ~ vol/12 (6581) or vol/16 (8580)
      * (assuming ideal op-amps and ideal "resistors").
      */
-    inline void builGainVolTable(const OpAmp& opampModel, double nDivisor)
+    inline void buildVolumeTable(const OpAmp& opampModel, double nDivisor)
     {
         for (int n8 = 0; n8 < 16; n8++)
         {
             const int size = 1 << 16;
             const double n = n8 / nDivisor;
             opampModel.reset();
-            gain_vol[n8] = new unsigned short[size];
+            volume[n8] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi / N16; /* vmin .. vmax */
-                gain_vol[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
+                volume[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
     }
@@ -192,25 +192,25 @@ protected:
      * it follows that 1/Q ~ ~res/8 (6581) or 2^((4 - res)/8) (8580)
      * (assuming ideal op-amps and ideal "resistors").
      */
-    inline void builGainResTable(const OpAmp& opampModel, const double resGain[16])
+    inline void buildResonanceTable(const OpAmp& opampModel, const double resonance_n[16])
     {
         for (int n8 = 0; n8 < 16; n8++)
         {
             const int size = 1 << 16;
             opampModel.reset();
-            gain_res[n8] = new unsigned short[size];
+            resonance[n8] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi / N16; /* vmin .. vmax */
-                gain_res[n8][vi] = getNormalizedValue(opampModel.solve(resGain[n8], vin));
+                resonance[n8][vi] = getNormalizedValue(opampModel.solve(resonance_n[n8], vin));
             }
         }
     }
 
 public:
-    unsigned short** getGainVol() { return gain_vol; }
-    unsigned short** getGainRes() { return gain_res; }
+    unsigned short** getVolume() { return volume; }
+    unsigned short** getResonance() { return resonance; }
     unsigned short** getSummer() { return summer; }
     unsigned short** getMixer() { return mixer; }
 

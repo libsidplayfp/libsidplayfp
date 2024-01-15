@@ -93,8 +93,8 @@ FilterModelConfig::~FilterModelConfig()
 
     for (int i = 0; i < 16; i++)
     {
-        delete [] gain_vol[i];
-        delete [] gain_res[i];
+        delete [] volume[i];
+        delete [] resonance[i];
     }
 }
 

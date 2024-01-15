@@ -197,7 +197,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
                 vmin,
                 vmax);
 #endif
-            builGainVolTable(opampModel, 16.0);
+            buildVolumeTable(opampModel, 16.0);
         }
 
         #pragma omp section
@@ -211,7 +211,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
                 vmin,
                 vmax);
 #endif
-            builGainResTable(opampModel, resGain);
+            buildResonanceTable(opampModel, resGain);
         }
     }
 }

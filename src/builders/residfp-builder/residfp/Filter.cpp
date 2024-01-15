@@ -29,7 +29,7 @@ namespace reSIDfp
 
 void Filter::updateMixing()
 {
-    currentGain = gain_vol[vol];
+    currentVolume = volume[vol];
 
     unsigned int Nsum = 0;
     unsigned int Nmix = 0;
@@ -95,14 +95,14 @@ Filter::Filter(FilterModelConfig* fmc) :
     fmc(fmc),
     mixer(fmc->getMixer()),
     summer(fmc->getSummer()),
-    gain_res(fmc->getGainRes()),
-    gain_vol(fmc->getGainVol()),
+    resonance(fmc->getResonance()),
+    volume(fmc->getVolume()),
     hpIntegrator(fmc->buildIntegrator()),
     bpIntegrator(fmc->buildIntegrator()),
-    currentGain(nullptr),
     currentMixer(nullptr),
     currentSummer(nullptr),
     currentResonance(nullptr),
+    currentVolume(nullptr),
     Vhp(0),
     Vbp(0),
     Vlp(0),
