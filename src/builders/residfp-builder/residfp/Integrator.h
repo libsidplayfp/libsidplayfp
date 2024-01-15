@@ -38,6 +38,8 @@ protected:
 
 public:
     virtual int solve(int vi) const = 0;
+
+    virtual ~Integrator() {}
 };
 
 } // namespace reSIDfp
