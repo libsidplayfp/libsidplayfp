@@ -296,6 +296,11 @@ void SID::setCombinedWaveforms(CombinedWaveforms cws)
 
     // rebuild waveform-related tables
     matrix_t* pulldowntables = WaveformCalculator::getInstance()->buildPulldownTable(model, cws);
+
+    for (int i = 0; i < 3; i++)
+    {
+        voice[i]->wave()->setPulldownModels(pulldowntables);
+    }
 }
 
 void SID::reset()
