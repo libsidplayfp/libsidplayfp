@@ -121,7 +121,7 @@ protected:
         for (int i = 0; i < 5; i++)
         {
             const int size = 1 << 16;
-            const double n = 2. + i;        // 2 - 6 input "resistors".
+            const double n = 2 + i;        // 2 - 6 input "resistors".
             opampModel.reset();
             summer[i] = new float[size];
 
