@@ -41,17 +41,17 @@ FilterModelConfig::FilterModelConfig(
     Vdd(vdd),
     Vth(vth),
     Ut(26.0e-3),
-    uCox(ucox),
     Vddt(Vdd - Vth),
     vmin(opamp_voltage[0].x),
     vmax(std::max(Vddt, opamp_voltage[0].y)),
     denorm(vmax - vmin),
     norm(1.0 / denorm),
     N16(norm * ((1 << 16) - 1)),
-    currFactorCoeff(denorm * (uCox / 2. * 1.0e-6 / C)),
     voice_voltage_range(vvr),
     voice_DC_voltage(vdv)
 {
+    setUCox(ucox);
+
     // Convert op-amp voltage transfer to 16 bit values.
 
     std::vector<Spline::Point> scaled_voltage(opamp_size);
@@ -96,6 +96,12 @@ FilterModelConfig::~FilterModelConfig()
         delete [] volume[i];
         delete [] resonance[i];
     }
+}
+
+void FilterModelConfig::setUCox(double new_uCox)
+{
+    uCox = new_uCox;
+    currFactorCoeff = denorm * (uCox / 2. * 1.0e-6 / C);
 }
 
 } // namespace reSIDfp

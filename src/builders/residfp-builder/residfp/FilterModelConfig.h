@@ -59,7 +59,7 @@ protected:
     const double N16;
 
     /// Current factor coefficient for op-amp integrators.
-    const double currFactorCoeff;
+    double currFactorCoeff;
 
     const double voice_voltage_range;
     const double voice_DC_voltage;
@@ -107,6 +107,8 @@ protected:
     );
 
     ~FilterModelConfig();
+
+    void setUCox(double new_uCox);
 
     /**
      * The filter summer operates at n ~ 1, and has 5 fundamentally different
