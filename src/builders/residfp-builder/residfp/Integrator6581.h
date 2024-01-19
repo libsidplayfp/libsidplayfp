@@ -164,7 +164,7 @@ namespace reSIDfp
 class Integrator6581 : public Integrator
 {
 private:
-    unsigned int nVddt_Vw_2;
+    const double wlSnake;
 
 #ifdef SLOPE_FACTOR
     // Slope factor n = 1/k
@@ -172,24 +172,26 @@ private:
     // k = Cox/(Cox+Cdep) ~ 0.7 (depends on gate voltage)
     mutable double n;
 #endif
+
+    unsigned int nVddt_Vw_2;
+
     const unsigned short nVddt;
     const unsigned short nVt;
     const unsigned short nVmin;
-    const unsigned short nSnake;
 
     const FilterModelConfig6581* fmc;
 
 public:
     Integrator6581(const FilterModelConfig6581* fmc,
                double WL_snake) :
-        nVddt_Vw_2(0),
+        wlSnake(WL_snake),
 #ifdef SLOPE_FACTOR
         n(1.4),
 #endif
+        nVddt_Vw_2(0),
         nVddt(fmc->getNormalizedValue(fmc->getVddt())),
         nVt(fmc->getNormalizedValue(fmc->getVth())),
         nVmin(fmc->getNVmin()),
-        nSnake(fmc->getNormalizedCurrentFactor(WL_snake)),
         fmc(fmc) {}
 
     void setVw(unsigned short Vw) { nVddt_Vw_2 = ((nVddt - Vw) * (nVddt - Vw)) >> 1; }
