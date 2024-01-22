@@ -181,7 +181,7 @@ public:
      *
      * @param input a 16 bit sample
      */
-    void input(int input) { Ve = fmc->getNormalizedVoice(input * (1 << 4)); }
+    void input(int input) { Ve = fmc->getNormalizedVoice(input/65536.); }
 };
 
 } // namespace reSIDfp
