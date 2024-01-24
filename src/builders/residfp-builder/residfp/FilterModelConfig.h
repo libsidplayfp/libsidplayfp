@@ -123,15 +123,14 @@ protected:
     {
         for (int i = 0; i < 5; i++)
         {
-            const int idiv = 2 + i;        // 2 - 6 input "resistors".
-            const int size = idiv << 16;
-            const double n = idiv;
+            const int size = 1 << 16;
+            const double n = 2 + i;        // 2 - 6 input "resistors".
             opampModel.reset();
             summer[i] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
+                const double vin = vmin + vi / N16; /* vmin .. vmax */
                 summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
@@ -149,15 +148,14 @@ protected:
     {
         for (int i = 0; i < 8; i++)
         {
-            const int idiv = (i == 0) ? 1 : i;
-            const int size = (i == 0) ? 1 : i << 16;
+            const int size = 1 << 16;
             const double n = i * nRatio;
             opampModel.reset();
             mixer[i] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
+                const double vin = vmin + vi / N16; /* vmin .. vmax */
                 mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
