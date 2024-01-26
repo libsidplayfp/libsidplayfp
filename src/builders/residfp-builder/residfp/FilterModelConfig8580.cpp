@@ -183,7 +183,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
                 vmin,
                 vmax);
 #endif
-            builMixerTable(opampModel, 8.0 / 5.0);
+            buildMixerTable(opampModel, 8.0 / 5.0);
         }
 
         #pragma omp section

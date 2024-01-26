@@ -145,7 +145,7 @@ protected:
      * All "on", transistors are modeled as one - see comments above for
      * the filter summer.
      */
-    inline void builMixerTable(const OpAmp& opampModel, double nRatio)
+    inline void buildMixerTable(const OpAmp& opampModel, double nRatio)
     {
         for (int i = 0; i < 8; i++)
         {
