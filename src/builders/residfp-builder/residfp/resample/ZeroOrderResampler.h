@@ -52,9 +52,9 @@ private:
 public:
     ZeroOrderResampler(double clockFrequency, double samplingFrequency) :
         cachedSample(0),
+        outputValue(0),
         cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.)),
-        sampleOffset(0),
-        outputValue(0) {}
+        sampleOffset(0) {}
 
     bool input(float sample) override
     {
