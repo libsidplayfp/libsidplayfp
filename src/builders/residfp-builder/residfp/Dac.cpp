@@ -26,7 +26,7 @@ namespace reSIDfp
 {
 
 Dac::Dac(unsigned int bits) :
-    leakage(0.05),
+    leakage(0.01),
     dac(new double[bits]),
     dacLength(bits)
 {}
