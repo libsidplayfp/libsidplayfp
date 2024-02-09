@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2016 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -26,6 +26,7 @@ namespace reSIDfp
 {
 
 Dac::Dac(unsigned int bits) :
+    leakage(0.01),
     dac(new double[bits]),
     dacLength(bits)
 {}
@@ -41,10 +42,8 @@ double Dac::getOutput(unsigned int input) const
 
     for (unsigned int i = 0; i < dacLength; i++)
     {
-        if ((input & (1 << i)) != 0)
-        {
-            dacValue += dac[i];
-        }
+        const bool transistor_on = (input & (1 << i)) != 0;
+        dacValue += transistor_on ? dac[i] : dac[i] * leakage;
     }
 
     return dacValue;
