@@ -1,3 +1,11 @@
+2.7.0 2024-02-xx
+* residfp: refactor residfp filter (#109)
+* residfp: added ability to adjust the uCox parameter at runtime (#101)
+* residfp: allow setting the combined waveforms strength (#110)
+* resid/residfp: emulate oscillator leakage (#102)
+
+
+
 2.6.0 2024-01-01
 * residfp is now thread-safe (#71)
 * residfp: fixed SSE2 version of convolve (#105)
