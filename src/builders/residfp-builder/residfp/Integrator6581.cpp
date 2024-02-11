@@ -27,70 +27,60 @@
 namespace reSIDfp
 {
 
-int Integrator6581::solve(int vi) const
+float Integrator6581::solve(float Vi) const
 {
     // Make sure Vgst>0 so we're not in subthreshold mode
-    assert(vx < nVddt);
+    assert(Vx < Vddt);
 
     // Check that transistor is actually in triode mode
     // Vds < Vgs - Vth
-    assert(vi < nVddt);
+    assert(Vi < Vddt);
 
     // "Snake" voltages for triode mode calculation.
-    const unsigned int Vgst = nVddt - vx;
-    const unsigned int Vgdt = nVddt - vi;
+    const double Vgst = Vddt - Vx;
+    const double Vgdt = Vddt - Vi;
 
-    const unsigned int Vgst_2 = Vgst * Vgst;
-    const unsigned int Vgdt_2 = Vgdt * Vgdt;
+    const double Vgst_2 = Vgst * Vgst;
+    const double Vgdt_2 = Vgdt * Vgdt;
 
-    // "Snake" current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_snake = fmc->getNormalizedCurrentFactor(wlSnake) * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
+    // "Snake" current
+    const double I_snake = fmc->getCurrentFactor(wlSnake) * (Vgst_2 - Vgdt_2);
 
-    // VCR gate voltage.       // Scaled by m*2^16
+    // VCR gate voltage.
     // Vg = Vddt - sqrt(((Vddt - Vw)^2 + Vgdt^2)/2)
-    const int nVg = static_cast<int>(fmc->getVcr_nVg((nVddt_Vw_2 + (Vgdt_2 >> 1)) >> 16));
+    const double Vg = fmc->getVcr_Vg((Vddt_Vw_2 + Vgdt_2)/2.);
 #ifdef SLOPE_FACTOR
-    const double nVp = static_cast<double>(nVg - nVt) / n; // Pinch-off voltage
-    const int kVgt = static_cast<int>(nVp + 0.5) - nVmin;
+    const double kVgt = (Vg - Vt) / n; // Pinch-off voltage
 #else
-    const int kVgt = (nVg - nVt) - nVmin;
+    const double kVgt = Vg - Vt;
 #endif
 
-    // VCR voltages for EKV model table lookup.
-    const int kVgt_Vs = (kVgt - vx) + (1 << 15);
-    assert((kVgt_Vs >= 0) && (kVgt_Vs < (1 << 16)));
-    const int kVgt_Vd = (kVgt - vi) + (1 << 15);
-    assert((kVgt_Vd >= 0) && (kVgt_Vd < (1 << 16)));
+    // VCR current
+    const double If = fmc->getVcr_Ids_term(kVgt - Vx);
+    const double Ir = fmc->getVcr_Ids_term(kVgt - Vi);
 
-    // VCR current, scaled by m*2^15*2^15 = m*2^30
-    const unsigned int If = static_cast<unsigned int>(fmc->getVcr_n_Ids_term(kVgt_Vs)) << 15;
-    const unsigned int Ir = static_cast<unsigned int>(fmc->getVcr_n_Ids_term(kVgt_Vd)) << 15;
 #ifdef SLOPE_FACTOR
-    const double iVcr = static_cast<double>(If - Ir);
-    const int n_I_vcr = static_cast<int>(iVcr * n);
+    const double I_vcr = (If - Ir) * n;
 #else
-    const int n_I_vcr = If - Ir;
+    const double I_vcr = If - Ir;
 #endif
 
 #ifdef SLOPE_FACTOR
     // estimate new slope factor based on gate voltage
     const double gamma = 1.0;   // body effect factor
     const double phi = 0.8;     // bulk Fermi potential
-    const double Vp = nVp / fmc->getN16();
-    n = 1. + (gamma / (2. * sqrt(Vp + phi + 4. * fmc->getUt())));
+    n = 1. + (gamma / (2. * sqrt(kVgt + phi + 4. * fmc->getUt())));
     assert((n > 1.2) && (n < 1.8));
 #endif
 
     // Change in capacitor charge.
-    vc += n_I_snake + n_I_vcr;
+    Vc += I_snake + I_vcr;
 
-    // vx = g(vc)
-    const int tmp = (vc >> 15) + (1 << 15);
-    assert(tmp < (1 << 16));
-    vx = fmc->getOpampRev(tmp);
+    // Vx = g(Vc)
+    Vx = fmc->getOpampRev(Vc);
 
-    // Return vo.
-    return vx - (vc >> 14);
+    // Return Vo.
+    return Vx - Vc;
 }
 
 } // namespace reSIDfp

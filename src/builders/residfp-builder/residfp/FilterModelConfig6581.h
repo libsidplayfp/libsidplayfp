@@ -53,13 +53,13 @@ private:
     friend class std::auto_ptr<FilterModelConfig6581>;
 #endif
 
-    /// Transistor parameters.
+    /// Transistor parameters
     //@{
     const double WL_vcr;        ///< W/L for VCR
     const double WL_snake;      ///< W/L for "snake"
     //@}
 
-    /// DAC parameters.
+    /// DAC parameters
     //@{
     const double dac_zero;
     const double dac_scale;
@@ -70,8 +70,8 @@ private:
 
     /// Voltage Controlled Resistors
     //@{
-    unsigned short vcr_nVg[1 << 16];
-    double vcr_n_Ids_term[1 << 16];
+    float vcr_Vg[1 << 16];
+    float vcr_Ids_term[1 << 16];
     //@}
 
 private:
@@ -93,7 +93,7 @@ public:
      * @param adjustment
      * @return the DAC table
      */
-    unsigned short* getDAC(double adjustment) const;
+    float* getDAC(double adjustment) const;
 
     /**
      * Construct an integrator solver.
@@ -102,13 +102,22 @@ public:
      */
     Integrator* buildIntegrator() override;
 
-    inline unsigned short getVcr_nVg(int i) const { return vcr_nVg[i]; }
-    inline unsigned short getVcr_n_Ids_term(int i) const
+    inline float getVcr_Vg(double Vx) const
     {
-        const double tmp = vcr_n_Ids_term[i] * uCox;
+        const double tmp = Vx;
         assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
+        const int i = static_cast<int>(tmp + 0.5);
+        return vcr_Vg[i];
     }
+
+    inline float getVcr_Ids_term(double kVg_Vx) const
+    {
+        const double tmp = kVg_Vx * N16 + 32768.;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        const int i = static_cast<int>(tmp + 0.5);
+        return vcr_Ids_term[i] * uCox;
+    }
+
     // only used if SLOPE_FACTOR is defined
     inline double getUt() const { return Ut; }
     inline double getN16() const { return N16; }

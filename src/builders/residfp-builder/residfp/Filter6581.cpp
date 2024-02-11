@@ -34,7 +34,7 @@ Filter6581::~Filter6581()
 
 void Filter6581::updateCenterFrequency()
 {
-    const unsigned short Vw = f0_dac[getFC()];
+    const float Vw = f0_dac[getFC()];
     static_cast<Integrator6581*>(hpIntegrator)->setVw(Vw);
     static_cast<Integrator6581*>(bpIntegrator)->setVw(Vw);
 }

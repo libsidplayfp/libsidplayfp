@@ -23,31 +23,29 @@
 namespace reSIDfp
 {
 
-int Integrator8580::solve(int vi) const
+float Integrator8580::solve(float Vi) const
 {
     // Make sure we're not in subthreshold mode
-    assert(vx < nVgt);
+    assert(Vx < Vgt);
 
     // DAC voltages
-    const unsigned int Vgst = nVgt - vx;
-    const unsigned int Vgdt = (vi < nVgt) ? nVgt - vi : 0;  // triode/saturation mode
+    const double Vgst = Vgt - Vx;
+    const double Vgdt = (Vi < Vgt) ? Vgt - Vi : 0.;  // triode/saturation mode
 
-    const unsigned int Vgst_2 = Vgst * Vgst;
-    const unsigned int Vgdt_2 = Vgdt * Vgdt;
+    const double Vgst_2 = Vgst * Vgst;
+    const double Vgdt_2 = Vgdt * Vgdt;
 
-    // DAC current, scaled by (1/m)*2^13*m*2^16*m*2^16*2^-15 = m*2^30
-    const int n_I_dac = n_dac * (static_cast<int>(Vgst_2 - Vgdt_2) >> 15);
+    // DAC current
+    const double I_dac = n_dac * (Vgst_2 - Vgdt_2);
 
     // Change in capacitor charge.
-    vc += n_I_dac;
+    Vc += I_dac;
 
-    // vx = g(vc)
-    const int tmp = (vc >> 15) + (1 << 15);
-    assert(tmp < (1 << 16));
-    vx = fmc->getOpampRev(tmp);
+    // Vx = g(Vc)
+    Vx = fmc->getOpampRev(Vc);
 
-    // Return vo.
-    return vx - (vc >> 14);
+    // Return Vo.
+    return Vx - Vc;
 }
 
 } // namespace reSIDfp

@@ -23,6 +23,7 @@
 #ifndef SIDFP_H
 #define SIDFP_H
 
+#include <cmath>
 #include <memory>
 
 #include "siddefs-fp.h"
@@ -87,9 +88,6 @@ private:
     /// SID voices
     std::unique_ptr<Voice> voice[3];
 
-    /// Used to amplify the output by x/2 to get an adequate playback volume
-    int scaleFactor;
-
     /// Time to live for the last written value
     int busValueTtl;
 
@@ -104,6 +102,9 @@ private:
 
     /// Currently selected combined waveforms strength.
     CombinedWaveforms cws;
+
+    /// Used to amplify the output by x/2 to get an adequate playback volume
+    float scaleFactor;
 
     /// Last written value
     unsigned char busValue;
@@ -138,7 +139,7 @@ private:
      *
      * @return the output sample
      */
-    int output() const;
+    float output() const;
 
     /**
      * Calculate the numebr of cycles according to current parameters
@@ -333,18 +334,36 @@ void SID::ageBusValue(unsigned int n)
 }
 
 RESID_INLINE
-int SID::output() const
+float SID::output() const
 {
     const float v1 = voice[0]->output(voice[2]->wave());
     const float v2 = voice[1]->output(voice[0]->wave());
     const float v3 = voice[2]->output(voice[1]->wave());
 
-    const int input = static_cast<int>(filter->clock(v1, v2, v3));
-    const int output = externalFilter->clock(input);
+    const float input = filter->clock(v1, v2, v3);
+    const float output = externalFilter->clock(input);
 
-    return (scaleFactor * output) / 2;
+    return output;
 }
 
+#ifndef HAVE_CXX11
+#define constexpr const
+#endif
+
+inline short softClip(float sample)
+{
+    const float x = abs(sample);
+    constexpr float threshold = 28000.f;
+    if (likely(x < threshold))
+        return sample;
+
+    constexpr float a = 32768.f - threshold;
+    constexpr float b = 32768.f / a;
+
+    const float v = (x - threshold) / 32768.f;
+    const float output = threshold + a * tanh(b * v);
+    return static_cast<short>(sample < 0.f ? -output : output);
+}
 
 RESID_INLINE
 int SID::clock(unsigned int cycles, short* buf)
@@ -372,7 +391,7 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    buf[s++] = resampler->getOutput();
+                    buf[s++] = softClip(scaleFactor * resampler->getOutput());
                 }
             }
 

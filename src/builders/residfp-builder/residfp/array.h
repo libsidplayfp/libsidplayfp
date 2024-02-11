@@ -82,5 +82,6 @@ public:
 };
 
 typedef matrix<short> matrix_t;
+typedef matrix<float> matrixf_t;
 
 #endif

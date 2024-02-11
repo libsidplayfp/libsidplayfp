@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -65,14 +65,14 @@ class ExternalFilter
 {
 private:
     /// Lowpass filter voltage
-    int Vlp;
+    float Vlp;
 
     /// Highpass filter voltage
-    int Vhp;
+    float Vhp;
 
-    int w0lp_1_s7;
+    float w0lp;
 
-    int w0hp_1_s17;
+    float w0hp;
 
 public:
     /**
@@ -80,7 +80,7 @@ public:
      *
      * @param input
      */
-    int clock(int input);
+    float clock(float Vi);
 
     /**
      * Constructor.
@@ -108,14 +108,13 @@ namespace reSIDfp
 {
 
 RESID_INLINE
-int ExternalFilter::clock(int input)
+float ExternalFilter::clock(float Vi)
 {
-    const int Vi = (input<<11) - (1 << (11+15));
-    const int dVlp = (w0lp_1_s7 * (Vi - Vlp) >> 7);
-    const int dVhp = (w0hp_1_s17 * (Vlp - Vhp) >> 17);
+    const float dVlp = w0lp * (Vi - Vlp);
+    const float dVhp = w0hp * (Vlp - Vhp);
     Vlp += dVlp;
     Vhp += dVhp;
-    return (Vlp - Vhp) >> 11;
+    return Vlp - Vhp;
 }
 
 } // namespace reSIDfp

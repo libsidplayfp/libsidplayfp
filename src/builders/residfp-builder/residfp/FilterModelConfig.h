@@ -29,6 +29,8 @@
 #include "OpAmp.h"
 #include "Spline.h"
 
+#include "siddefs-fp.h"
+
 #include "sidcxx11.h"
 
 namespace reSIDfp
@@ -67,22 +69,17 @@ protected:
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
     unsigned short* mixer[8];       //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* summer[5];      //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* volume[16];   //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* resonance[16];   //-V730_NOINIT this is initialized in the derived class constructor
+    float* summer[5];               //-V730_NOINIT this is initialized in the derived class constructor
+    float* volume[16];              //-V730_NOINIT this is initialized in the derived class constructor
+    float* resonance[16];             //-V730_NOINIT this is initialized in the derived class constructor
     //@}
 
     /// Reverse op-amp transfer function.
-    unsigned short opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
+    float opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
 
 private:
     FilterModelConfig (const FilterModelConfig&) DELETE;
     FilterModelConfig& operator= (const FilterModelConfig&) DELETE;
-
-    inline double getVoiceVoltage(float value) const
-    {
-        return value * voice_voltage_range + voice_DC_voltage;
-    }
 
 protected:
     /**
@@ -123,16 +120,15 @@ protected:
     {
         for (int i = 0; i < 5; i++)
         {
-            const int idiv = 2 + i;        // 2 - 6 input "resistors".
-            const int size = idiv << 16;
-            const double n = idiv;
+            const int size = 1 << 16;
+            const double n = 2 + i;        // 2 - 6 input "resistors".
             opampModel.reset();
-            summer[i] = new unsigned short[size];
+            summer[i] = new float[size];
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
-                summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
+                const double vin = vmin + vi / N16; /* vmin .. vmax */
+                summer[i][vi] = opampModel.solve(n, vin);
             }
         }
     }
@@ -149,15 +145,14 @@ protected:
     {
         for (int i = 0; i < 8; i++)
         {
-            const int idiv = (i == 0) ? 1 : i;
-            const int size = (i == 0) ? 1 : i << 16;
+            const int size = 1 << 16;
             const double n = i * nRatio;
             opampModel.reset();
             mixer[i] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = vmin + vi / N16 / idiv; /* vmin .. vmax */
+                const double vin = vmin + vi / N16; /* vmin .. vmax */
                 mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
@@ -177,12 +172,12 @@ protected:
             const int size = 1 << 16;
             const double n = n8 / nDivisor;
             opampModel.reset();
-            volume[n8] = new unsigned short[size];
+            volume[n8] = new float[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi / N16; /* vmin .. vmax */
-                volume[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
+                volume[n8][vi] = opampModel.solve(n, vin);
             }
         }
     }
@@ -200,52 +195,53 @@ protected:
         {
             const int size = 1 << 16;
             opampModel.reset();
-            resonance[n8] = new unsigned short[size];
+            resonance[n8] = new float[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi / N16; /* vmin .. vmax */
-                resonance[n8][vi] = getNormalizedValue(opampModel.solve(resonance_n[n8], vin));
+                resonance[n8][vi] = opampModel.solve(resonance_n[n8], vin);
             }
         }
     }
 
 public:
-    unsigned short** getVolume() { return volume; }
-    unsigned short** getResonance() { return resonance; }
-    unsigned short** getSummer() { return summer; }
     unsigned short** getMixer() { return mixer; }
+    float** getSummer() { return summer; }
+    float** getVolume() { return volume; }
+    float** getResonance() { return resonance; }
 
     virtual Integrator* buildIntegrator() = 0;
 
-    inline unsigned short getOpampRev(int i) const { return opamp_rev[i]; }
     inline double getVddt() const { return Vddt; }
     inline double getVth() const { return Vth; }
+    inline double getVmin() const { return vmin; }
+
+    inline float getOpampRev(double Vc) const
+    {
+        const double tmp = 32768. + N16 * Vc/2.;
+        assert(tmp > -0.5 && tmp < 65535.5);
+        const int i = static_cast<int>(tmp + 0.5);
+        return opamp_rev[i];
+    }
 
     // helper functions
     inline unsigned short getNormalizedValue(double value) const
     {
+        if (unlikely(value == 0.)) return 0;
         const double tmp = N16 * (value - vmin);
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);
     }
 
-    inline unsigned short getNormalizedCurrentFactor(double wl) const
+    inline double getCurrentFactor(double wl) const
     {
-        const double tmp = (1 << 13) * currFactorCoeff * wl;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
+        return currFactorCoeff * wl;
     }
 
-    inline unsigned short getNVmin() const {
-        const double tmp = N16 * vmin;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
-    }
-
-    inline int getNormalizedVoice(float value) const
+    inline double getVoiceVoltage(float value) const
     {
-        return static_cast<int>(getNormalizedValue(getVoiceVoltage(value)));
+        return value * voice_voltage_range + voice_DC_voltage;
     }
 };
 
