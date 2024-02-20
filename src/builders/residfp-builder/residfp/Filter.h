@@ -179,7 +179,7 @@ public:
     /**
      * Apply a signal to EXT-IN
      *
-     * @param input a 16 bit sample
+     * @param input a signed 16 bit sample
      */
     void input(int input) { Ve = fmc->getNormalizedVoice(input/65536.); }
 };
