@@ -340,9 +340,7 @@ int SID::output() const
     const float v3 = voice[2]->output(voice[1]->wave());
 
     const int input = static_cast<int>(filter->clock(v1, v2, v3));
-    const int output = externalFilter->clock(input);
-
-    return (scaleFactor * output) / 2;
+    return externalFilter->clock(input);
 }
 
 
@@ -372,7 +370,7 @@ int SID::clock(unsigned int cycles, short* buf)
 
                 if (unlikely(resampler->input(output())))
                 {
-                    buf[s++] = resampler->getOutput();
+                    buf[s++] = resampler->getOutput(scaleFactor);
                 }
             }
 

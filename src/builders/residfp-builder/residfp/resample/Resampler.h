@@ -73,9 +73,10 @@ public:
      *
      * @return resampled sample
      */
-    short getOutput() const
+    short getOutput(int scaleFactor) const
     {
-        return softClip(output());
+        const int out = (scaleFactor * output()) / 2;
+        return softClip(out);
     }
 
     virtual void reset() = 0;
