@@ -445,6 +445,7 @@ CIA/tod/read-latch
 CIA/tod/stability
 CIA/tod/stability-ntsc                --vic ntsc
 CIA/tod/write-stop
+CIA/tod/ampmtest
 ### CPU ###
 CPU/64doc/dadc
 CPU/64doc/dincsbc
