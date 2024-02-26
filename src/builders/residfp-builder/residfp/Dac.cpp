@@ -22,6 +22,8 @@
 
 #include "Dac.h"
 
+#include "sidcxx11.h"
+
 namespace reSIDfp
 {
 
@@ -51,7 +53,7 @@ double Dac::getOutput(unsigned int input) const
 
 void Dac::kinkedDac(ChipModel chipModel)
 {
-    const double R_INFINITY = 1e6;
+    constexpr double R_INFINITY = 1e6;
 
     // Non-linearity parameter, 8580 DACs are perfectly linear
     const double _2R_div_R = chipModel == MOS6581 ? 2.20 : 2.00;

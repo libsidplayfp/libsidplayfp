@@ -42,7 +42,7 @@ class Integrator6581;
 class FilterModelConfig6581 final : public FilterModelConfig
 {
 private:
-    static const unsigned int DAC_BITS = 11;
+    static constexpr unsigned int DAC_BITS = 11;
 
 private:
     static std::unique_ptr<FilterModelConfig6581> instance;

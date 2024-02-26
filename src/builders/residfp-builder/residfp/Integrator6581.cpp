@@ -22,6 +22,7 @@
 
 #ifdef SLOPE_FACTOR
 #  include <cmath>
+#  include "sidcxx11.h"
 #endif
 
 namespace reSIDfp
@@ -74,9 +75,9 @@ int Integrator6581::solve(int vi) const
 
 #ifdef SLOPE_FACTOR
     // estimate new slope factor based on gate voltage
-    const double gamma = 1.0;   // body effect factor
-    const double phi = 0.8;     // bulk Fermi potential
-    const double Vp = nVp / fmc->getN16();
+    constexpr double gamma = 1.0;   // body effect factor
+    constexpr double phi = 0.8;     // bulk Fermi potential
+    constexpr double Vp = nVp / fmc->getN16();
     n = 1. + (gamma / (2. * sqrt(Vp + phi + 4. * fmc->getUt())));
     assert((n > 1.2) && (n < 1.8));
 #endif
