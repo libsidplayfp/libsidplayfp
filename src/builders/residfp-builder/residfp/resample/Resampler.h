@@ -38,7 +38,7 @@ namespace reSIDfp
 class Resampler
 {
 protected:
-    inline short softClip(int x) const
+    static inline short softClip(int x)
     {
         constexpr int threshold = 28000;
         if (likely(x < threshold))
