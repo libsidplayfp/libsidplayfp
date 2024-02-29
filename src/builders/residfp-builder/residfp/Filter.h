@@ -77,6 +77,12 @@ private:
     /// Filter external input.
     int Ve;
 
+    /// Number of summer inputs
+    int sum_div;
+
+    /// number of mixer inputs
+    int mix_div;
+
     /// Filter cutoff frequency.
     unsigned int fc;
 
@@ -209,7 +215,8 @@ unsigned short Filter::clock(float voice1, float voice2, float voice3)
     (filt3 ? Vsum : Vmix) += V3;
     (filtE ? Vsum : Vmix) += Ve;
 
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
+    const int Isum = currentResonance[Vbp] + Vlp + Vsum;
+    Vhp = currentSummer[Isum / sum_div];
     Vbp = hpIntegrator->solve(Vhp);
     Vlp = bpIntegrator->solve(Vbp);
 
@@ -217,7 +224,7 @@ unsigned short Filter::clock(float voice1, float voice2, float voice3)
     if (bp) Vmix += Vbp;
     if (hp) Vmix += Vhp;
 
-    return currentVolume[currentMixer[Vmix]];
+    return currentVolume[currentMixer[Vmix / mix_div]];
 }
 
 } // namespace reSIDfp
