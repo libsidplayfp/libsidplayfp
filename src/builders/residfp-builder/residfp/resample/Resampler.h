@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,9 +48,9 @@ protected:
         constexpr double a = 1. - t;
         constexpr double b = 1. / a;
 
-        double value = static_cast<double>(x - threshold) / 32768.;
+        double value = static_cast<double>(abs(x) - threshold) / 32768.;
         value = t + a * tanh(b * value);
-        return static_cast<short>(value * 32768.);
+        return static_cast<short>(value * (x < 0 ? -32768. : 32768.));
     }
 
     virtual int output() const = 0;
