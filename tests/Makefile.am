@@ -17,7 +17,8 @@ TestSpline \
 TestDac \
 TestPSID \
 TestMUS \
-TestMos6510
+TestMos6510 \
+TestResampler
 
 check_PROGRAMS = $(TESTS)
 
@@ -50,5 +51,9 @@ TestMUS_LDADD = $(top_builddir)/src/libsidplayfp.la
 TestMos6510_SOURCES = \
 Main.cpp \
 TestMos6510.cpp
+
+TestResampler_SOURCES = \
+Main.cpp \
+TestResampler.cpp
 
 endif
