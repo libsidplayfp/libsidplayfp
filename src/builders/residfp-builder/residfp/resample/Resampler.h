@@ -44,14 +44,15 @@ private:
     static inline int softClipImpl(int x)
     {
         constexpr int threshold = 28000;
-        if (likely(x < threshold))
+        const int abs_x = abs(x);
+        if (likely(abs_x < threshold))
             return x;
 
         constexpr double t = threshold / 32768.;
         constexpr double a = 1. - t;
         constexpr double b = 1. / a;
 
-        double value = static_cast<double>(abs(x) - threshold) / 32768.;
+        double value = static_cast<double>(abs_x - threshold) / 32768.;
         value = t + a * tanh(b * value);
         return static_cast<int>(value * (x < 0 ? -32768. : 32768.));
     }
