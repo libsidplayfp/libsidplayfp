@@ -25,6 +25,8 @@
 
 #include "../src/builders/residfp-builder/residfp/resample/Resampler.h"
 
+#include <limits>
+
 using namespace UnitTest;
 using namespace reSIDfp;
 
@@ -33,10 +35,11 @@ SUITE(Resampler)
 
 TEST(TestSoftClip)
 {
+    CHECK(Resampler::softClipImpl(0) == 0);
     CHECK(Resampler::softClipImpl(28000) == 28000);
-    CHECK(Resampler::softClipImpl(42000) <= 32767);
+    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::max()) <= 32767);
     CHECK(Resampler::softClipImpl(-28000) == -28000);
-    CHECK(Resampler::softClipImpl(-42000) >= -32768);
+    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::min()) >= -32768);
 }
 
 }

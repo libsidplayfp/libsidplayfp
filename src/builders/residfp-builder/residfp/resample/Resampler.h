@@ -23,6 +23,7 @@
 #define RESAMPLER_H
 
 #include <cmath>
+#include <cassert>
 
 #include "sidcxx11.h"
 
@@ -38,23 +39,30 @@ namespace reSIDfp
 class Resampler
 {
 private:
+    template<int m>
+    static inline int clipper(int x)
+    {
+        assert(x >= 0);
+        constexpr int threshold = 28000;
+        if (likely(x < threshold))
+            return x;
+
+        constexpr double max_val = static_cast<double>(m);
+        constexpr double t = threshold / max_val;
+        constexpr double a = 1. - t;
+        constexpr double b = 1. / a;
+
+        double value = static_cast<double>(x - threshold) / max_val;
+        value = t + a * tanh(b * value);
+        return static_cast<int>(value * max_val);
+    }
+
     /*
      * Soft Clipping implementation, splitted for test.
      */
     static inline int softClipImpl(int x)
     {
-        constexpr int threshold = 28000;
-        const int abs_x = abs(x);
-        if (likely(abs_x < threshold))
-            return x;
-
-        constexpr double t = threshold / 32768.;
-        constexpr double a = 1. - t;
-        constexpr double b = 1. / a;
-
-        double value = static_cast<double>(abs_x - threshold) / 32768.;
-        value = t + a * tanh(b * value);
-        return static_cast<int>(value * (x < 0 ? -32768. : 32768.));
+        return x < 0 ? -clipper<32768>(-x) : clipper<32767>(x);
     }
 
 protected:
