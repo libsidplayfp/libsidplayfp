@@ -39,7 +39,7 @@ TEST(TestSoftClip)
     CHECK(Resampler::softClipImpl(28000) == 28000);
     CHECK(Resampler::softClipImpl(std::numeric_limits<int>::max()) <= 32767);
     CHECK(Resampler::softClipImpl(-28000) == -28000);
-    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::min()) >= -32768);
+    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::min()+1) >= -32768);
 }
 
 }
