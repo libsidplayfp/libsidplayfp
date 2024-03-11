@@ -40,7 +40,7 @@ jobs:
           xa \
           unittest-cpp \
           libftdi
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
     - name: bootstrap
