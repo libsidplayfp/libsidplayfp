@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -34,13 +34,6 @@
 #  include "config.h"
 #endif
 
-#ifdef HAVE_EMMINTRIN_H
-#  include <emmintrin.h>
-#elif defined HAVE_MMINTRIN_H
-#  include <mmintrin.h>
-#elif defined(HAVE_ARM_NEON_H)
-#  include <arm_neon.h>
-#endif
 #ifdef HAVE_CXX11
 #  include <mutex>
 #endif
@@ -96,150 +89,13 @@ double I0(double x)
  * @param bLength length of the sinc buffer
  * @return convolved result
  */
-int convolve(const short* a, const short* b, int bLength)
+int convolve(const int* a, const short* b, int bLength)
 {
-#ifdef HAVE_EMMINTRIN_H
     int out = 0;
-
-    const uintptr_t offset = (uintptr_t)(a) & 0x0f;
-
-    // check for aligned accesses
-    if (offset == ((uintptr_t)(b) & 0x0f))
-    {
-        if (offset)
-        {
-            const int l = (0x10 - offset)/2;
-
-            for (int i = 0; i < l; i++)
-            {
-                out += *a++ * *b++;
-            }
-
-            bLength -= offset;
-        }
-
-        __m128i acc = _mm_setzero_si128();
-
-        const int n = bLength / 8;
-
-        for (int i = 0; i < n; i++)
-        {
-            const __m128i tmp = _mm_madd_epi16(*(__m128i*)a, *(__m128i*)b);
-            acc = _mm_add_epi32(acc, tmp);
-            a += 8;
-            b += 8;
-        }
-
-        __m128i vsum = _mm_add_epi32(acc, _mm_srli_si128(acc, 8));
-        vsum = _mm_add_epi32(vsum, _mm_srli_si128(vsum, 4));
-        out += _mm_cvtsi128_si32(vsum);
-
-        bLength &= 7;
-    }
-#elif defined HAVE_MMINTRIN_H
-    __m64 acc = _mm_setzero_si64();
-
-    const int n = bLength / 4;
-
-    for (int i = 0; i < n; i++)
-    {
-        const __m64 tmp = _mm_madd_pi16(*(__m64*)a, *(__m64*)b);
-        acc = _mm_add_pi16(acc, tmp);
-        a += 4;
-        b += 4;
-    }
-
-    int out = _mm_cvtsi64_si32(acc) + _mm_cvtsi64_si32(_mm_srli_si64(acc, 32));
-    _mm_empty();
-
-    bLength &= 3;
-#elif defined(HAVE_ARM_NEON_H)
-#if (defined(__arm64__) && defined(__APPLE__)) || defined(__aarch64__)
-    int32x4_t acc1Low = vdupq_n_s32(0);
-    int32x4_t acc1High = vdupq_n_s32(0);
-    int32x4_t acc2Low = vdupq_n_s32(0);
-    int32x4_t acc2High = vdupq_n_s32(0);
-
-    const int n = bLength / 16;
-
-    for (int i = 0; i < n; i++)
-    {
-        int16x8_t v11 = vld1q_s16(a);
-        int16x8_t v12 = vld1q_s16(a + 8);
-        int16x8_t v21 = vld1q_s16(b);
-        int16x8_t v22 = vld1q_s16(b + 8);
-
-        acc1Low  = vmlal_s16(acc1Low, vget_low_s16(v11), vget_low_s16(v21));
-        acc1High = vmlal_high_s16(acc1High, v11, v21);
-        acc2Low  = vmlal_s16(acc2Low, vget_low_s16(v12), vget_low_s16(v22));
-        acc2High = vmlal_high_s16(acc2High, v12, v22);
-
-        a += 16;
-        b += 16;
-    }
-
-    bLength &= 15;
-
-    if (bLength >= 8)
-    {
-        int16x8_t v1 = vld1q_s16(a);
-        int16x8_t v2 = vld1q_s16(b);
-
-        acc1Low  = vmlal_s16(acc1Low, vget_low_s16(v1), vget_low_s16(v2));
-        acc1High = vmlal_high_s16(acc1High, v1, v2);
-
-        a += 8;
-        b += 8;
-    }
-
-    bLength &= 7;
-
-    if (bLength >= 4)
-    {
-        int16x4_t v1 = vld1_s16(a);
-        int16x4_t v2 = vld1_s16(b);
-
-        acc1Low  = vmlal_s16(acc1Low, v1, v2);
-
-        a += 4;
-        b += 4;
-    }
-
-    int32x4_t accSumsNeon = vaddq_s32(acc1Low, acc1High);
-    accSumsNeon = vaddq_s32(accSumsNeon, acc2Low);
-    accSumsNeon = vaddq_s32(accSumsNeon, acc2High);
-
-    int out = vaddvq_s32(accSumsNeon);
-
-    bLength &= 3;
-#else
-    int32x4_t acc = vdupq_n_s32(0);
-
-    const int n = bLength / 4;
-
-    for (int i = 0; i < n; i++)
-    {
-        const int16x4_t h_vec = vld1_s16(a);
-        const int16x4_t x_vec = vld1_s16(b);
-        acc = vmlal_s16(acc, h_vec, x_vec);
-        a += 4;
-        b += 4;
-    }
-
-    int out = vgetq_lane_s32(acc, 0) +
-              vgetq_lane_s32(acc, 1) +
-              vgetq_lane_s32(acc, 2) +
-              vgetq_lane_s32(acc, 3);
-
-    bLength &= 3;
-#endif
-#else
-    int out = 0;
-#endif
 
     for (int i = 0; i < bLength; i++)
     {
-        out += *a++ * *b++;
+        out += *a++ * static_cast<int>(*b++);
     }
 
     return (out + (1 << 14)) >> 15;
@@ -377,14 +233,7 @@ bool SincResampler::input(int input)
 {
     bool ready = false;
 
-    /*
-     * Clip the input as it may overflow the 16 bit range.
-     *
-     * Approximate measured input ranges:
-     * 6581: [-24262,+25080]  (Kawasaki_Synthesizer_Demo)
-     * 8580: [-21514,+35232]  (64_Forever, Drum_Fool)
-     */
-    sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = softClip(input);
+    sample[sampleIndex] = sample[sampleIndex + RINGSIZE] = input;
     sampleIndex = (sampleIndex + 1) & (RINGSIZE - 1);
 
     if (sampleOffset < 1024)
