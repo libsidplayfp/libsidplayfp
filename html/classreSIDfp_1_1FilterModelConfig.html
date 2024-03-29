@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.6.0</span>
+   &#160;<span id="projectnumber">2.7.0</span>
    </div>
   </td>
  </tr>
@@ -55,7 +55,7 @@
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classreSIDfp_1_1FilterModelConfig-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">reSIDfp::FilterModelConfig Class Reference</div>  </div>
+<div class="title">reSIDfp::FilterModelConfig Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
@@ -71,22 +71,21 @@ Inheritance diagram for reSIDfp::FilterModelConfig:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5545971158f5b954e96e5eaeaed2e19b"><td class="memItemLeft" align="right" valign="top"><a id="a5545971158f5b954e96e5eaeaed2e19b"></a>
-unsigned short **&#160;</td><td class="memItemRight" valign="bottom"><b>getGainVol</b> ()</td></tr>
-<tr class="separator:a5545971158f5b954e96e5eaeaed2e19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e77d157a1f5597eb26bf6f0988ed8f1"><td class="memItemLeft" align="right" valign="top"><a id="a6e77d157a1f5597eb26bf6f0988ed8f1"></a>
-unsigned short **&#160;</td><td class="memItemRight" valign="bottom"><b>getGainRes</b> ()</td></tr>
-<tr class="separator:a6e77d157a1f5597eb26bf6f0988ed8f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a406439a20bce88f75c0de9e506b0050a"><td class="memItemLeft" align="right" valign="top"><a id="a406439a20bce88f75c0de9e506b0050a"></a>
+unsigned short **&#160;</td><td class="memItemRight" valign="bottom"><b>getVolume</b> ()</td></tr>
+<tr class="separator:a406439a20bce88f75c0de9e506b0050a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac95b90da86e082521bbc34431975c651"><td class="memItemLeft" align="right" valign="top"><a id="ac95b90da86e082521bbc34431975c651"></a>
+unsigned short **&#160;</td><td class="memItemRight" valign="bottom"><b>getResonance</b> ()</td></tr>
+<tr class="separator:ac95b90da86e082521bbc34431975c651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e1a71233338351849721e0b640d225b"><td class="memItemLeft" align="right" valign="top"><a id="a7e1a71233338351849721e0b640d225b"></a>
 unsigned short **&#160;</td><td class="memItemRight" valign="bottom"><b>getSummer</b> ()</td></tr>
 <tr class="separator:a7e1a71233338351849721e0b640d225b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9f18e5c5e88823bf1137e02e21ac6b3"><td class="memItemLeft" align="right" valign="top"><a id="af9f18e5c5e88823bf1137e02e21ac6b3"></a>
 unsigned short **&#160;</td><td class="memItemRight" valign="bottom"><b>getMixer</b> ()</td></tr>
 <tr class="separator:af9f18e5c5e88823bf1137e02e21ac6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50da610402b5903e8979deefceb5b2dc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a50da610402b5903e8979deefceb5b2dc">getVoiceScaleS11</a> () const</td></tr>
-<tr class="separator:a50da610402b5903e8979deefceb5b2dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b688f13a8adf39c4bad4f0f47548784"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a3b688f13a8adf39c4bad4f0f47548784">getNormalizedVoiceDC</a> () const</td></tr>
-<tr class="separator:a3b688f13a8adf39c4bad4f0f47548784"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86f4e6772c35bedfef7d0feb77de67ca"><td class="memItemLeft" align="right" valign="top"><a id="a86f4e6772c35bedfef7d0feb77de67ca"></a>
+virtual <a class="el" href="classreSIDfp_1_1Integrator.html">Integrator</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>buildIntegrator</b> ()=0</td></tr>
+<tr class="separator:a86f4e6772c35bedfef7d0feb77de67ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9026239d179458593b8f6e7ca1797503"><td class="memItemLeft" align="right" valign="top"><a id="a9026239d179458593b8f6e7ca1797503"></a>
 unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>getOpampRev</b> (int i) const</td></tr>
 <tr class="separator:a9026239d179458593b8f6e7ca1797503"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,20 +104,28 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>getNormaliz
 <tr class="memitem:aa5e2f1bd66ac1c2fe6c12bb4797bd993"><td class="memItemLeft" align="right" valign="top"><a id="aa5e2f1bd66ac1c2fe6c12bb4797bd993"></a>
 unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>getNVmin</b> () const</td></tr>
 <tr class="separator:aa5e2f1bd66ac1c2fe6c12bb4797bd993"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c954f76a8b36d98b9cd0c012dda923"><td class="memItemLeft" align="right" valign="top"><a id="a68c954f76a8b36d98b9cd0c012dda923"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getNormalizedVoice</b> (float value) const</td></tr>
+<tr class="separator:a68c954f76a8b36d98b9cd0c012dda923"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a9d7dc3ee5756c672ddd0062127396e72"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a9d7dc3ee5756c672ddd0062127396e72">FilterModelConfig</a> (double vvr, double vdv, double c, double vdd, double vth, double ucox, const <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> *opamp_voltage, int opamp_size)</td></tr>
 <tr class="separator:a9d7dc3ee5756c672ddd0062127396e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b5197973c726843799f77d5ca1babc7"><td class="memItemLeft" align="right" valign="top"><a id="a1b5197973c726843799f77d5ca1babc7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setUCox</b> (double new_uCox)</td></tr>
+<tr class="separator:a1b5197973c726843799f77d5ca1babc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0daf275c616a76e3273196b6422508a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#af0daf275c616a76e3273196b6422508a">buildSummerTable</a> (const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;opampModel)</td></tr>
+<tr class="separator:af0daf275c616a76e3273196b6422508a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac756d2d0aed4be6b2eb43fbd484bf0ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#ac756d2d0aed4be6b2eb43fbd484bf0ef">buildMixerTable</a> (const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;opampModel, double nRatio)</td></tr>
+<tr class="separator:ac756d2d0aed4be6b2eb43fbd484bf0ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02a9955078695bb77a64f0a9b4923564"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a02a9955078695bb77a64f0a9b4923564">buildVolumeTable</a> (const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;opampModel, double nDivisor)</td></tr>
+<tr class="separator:a02a9955078695bb77a64f0a9b4923564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26df5fb2fb25b06ccd83dcb8a9f4bcda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a26df5fb2fb25b06ccd83dcb8a9f4bcda">buildResonanceTable</a> (const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;opampModel, const double resonance_n[16])</td></tr>
+<tr class="separator:a26df5fb2fb25b06ccd83dcb8a9f4bcda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a504f264030b6ee9ac270ff4442d0419a"><td class="memItemLeft" align="right" valign="top"><a id="a504f264030b6ee9ac270ff4442d0419a"></a>
-const double&#160;</td><td class="memItemRight" valign="bottom"><b>voice_voltage_range</b></td></tr>
-<tr class="separator:a504f264030b6ee9ac270ff4442d0419a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16f3562d8b243c9f688c52300e3de119"><td class="memItemLeft" align="right" valign="top"><a id="a16f3562d8b243c9f688c52300e3de119"></a>
-const double&#160;</td><td class="memItemRight" valign="bottom"><b>voice_DC_voltage</b></td></tr>
-<tr class="separator:a16f3562d8b243c9f688c52300e3de119"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ac01f081df474d94667726ef92262a3"><td class="memItemLeft" align="right" valign="top"><a id="a7ac01f081df474d94667726ef92262a3"></a>
 const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a7ac01f081df474d94667726ef92262a3">C</a></td></tr>
 <tr class="memdesc:a7ac01f081df474d94667726ef92262a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Capacitor value. <br /></td></tr>
@@ -135,10 +142,10 @@ const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a1a0f538aae2acf8ba08f8cdbc7d7b219">Ut</a></td></tr>
 <tr class="memdesc:a1a0f538aae2acf8ba08f8cdbc7d7b219"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thermal voltage: Ut = kT/q = 8.61734315e-5*T ~ 26mV. <br /></td></tr>
 <tr class="separator:a1a0f538aae2acf8ba08f8cdbc7d7b219"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a718f213fd666029cac6b5e1f8cde14e2"><td class="memItemLeft" align="right" valign="top"><a id="a718f213fd666029cac6b5e1f8cde14e2"></a>
-const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a718f213fd666029cac6b5e1f8cde14e2">uCox</a></td></tr>
-<tr class="memdesc:a718f213fd666029cac6b5e1f8cde14e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transconductance coefficient: u*Cox. <br /></td></tr>
-<tr class="separator:a718f213fd666029cac6b5e1f8cde14e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a489748ed7997e7a80b9b3d7f7a38fec0"><td class="memItemLeft" align="right" valign="top"><a id="a489748ed7997e7a80b9b3d7f7a38fec0"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">uCox</a></td></tr>
+<tr class="memdesc:a489748ed7997e7a80b9b3d7f7a38fec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transconductance coefficient: u*Cox. <br /></td></tr>
+<tr class="separator:a489748ed7997e7a80b9b3d7f7a38fec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68c69e5d6b8bea6ccc49f3a956b5b038"><td class="memItemLeft" align="right" valign="top"><a id="a68c69e5d6b8bea6ccc49f3a956b5b038"></a>
 const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a68c69e5d6b8bea6ccc49f3a956b5b038">Vddt</a></td></tr>
 <tr class="memdesc:a68c69e5d6b8bea6ccc49f3a956b5b038"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vdd - Vth. <br /></td></tr>
@@ -159,10 +166,16 @@ const double&#160;</td><td class="memItemRight" valign="bottom"><b>norm</b></td>
 const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">N16</a></td></tr>
 <tr class="memdesc:adec22dcd54967be1860668fc89e1f98c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed point scaling for 16 bit op-amp output. <br /></td></tr>
 <tr class="separator:adec22dcd54967be1860668fc89e1f98c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cacab31816b796fa5bbf60064d61d9e"><td class="memItemLeft" align="right" valign="top"><a id="a4cacab31816b796fa5bbf60064d61d9e"></a>
-const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a4cacab31816b796fa5bbf60064d61d9e">currFactorCoeff</a></td></tr>
-<tr class="memdesc:a4cacab31816b796fa5bbf60064d61d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current factor coefficient for op-amp integrators. <br /></td></tr>
-<tr class="separator:a4cacab31816b796fa5bbf60064d61d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a786df89ade7eab189eb0b65fec383d09"><td class="memItemLeft" align="right" valign="top"><a id="a786df89ade7eab189eb0b65fec383d09"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a786df89ade7eab189eb0b65fec383d09">currFactorCoeff</a></td></tr>
+<tr class="memdesc:a786df89ade7eab189eb0b65fec383d09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current factor coefficient for op-amp integrators. <br /></td></tr>
+<tr class="separator:a786df89ade7eab189eb0b65fec383d09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a504f264030b6ee9ac270ff4442d0419a"><td class="memItemLeft" align="right" valign="top"><a id="a504f264030b6ee9ac270ff4442d0419a"></a>
+const double&#160;</td><td class="memItemRight" valign="bottom"><b>voice_voltage_range</b></td></tr>
+<tr class="separator:a504f264030b6ee9ac270ff4442d0419a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16f3562d8b243c9f688c52300e3de119"><td class="memItemLeft" align="right" valign="top"><a id="a16f3562d8b243c9f688c52300e3de119"></a>
+const double&#160;</td><td class="memItemRight" valign="bottom"><b>voice_DC_voltage</b></td></tr>
+<tr class="separator:a16f3562d8b243c9f688c52300e3de119"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a125d314577eb3772644fac0f35efcdb6"><td class="memItemLeft" align="right" valign="top"><a id="a125d314577eb3772644fac0f35efcdb6"></a>
 unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a125d314577eb3772644fac0f35efcdb6">mixer</a> [8]</td></tr>
 <tr class="memdesc:a125d314577eb3772644fac0f35efcdb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lookup tables for gain and summer op-amps in output stage / filter. <br /></td></tr>
@@ -170,12 +183,12 @@ unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="memitem:a5d2680f0a55481b0409321637112d834"><td class="memItemLeft" align="right" valign="top"><a id="a5d2680f0a55481b0409321637112d834"></a>
 unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><b>summer</b> [5]</td></tr>
 <tr class="separator:a5d2680f0a55481b0409321637112d834"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b72581679a2d357b4e32fb722d53f52"><td class="memItemLeft" align="right" valign="top"><a id="a2b72581679a2d357b4e32fb722d53f52"></a>
-unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><b>gain_vol</b> [16]</td></tr>
-<tr class="separator:a2b72581679a2d357b4e32fb722d53f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59026baaaa80f0164b8581c6df64a27f"><td class="memItemLeft" align="right" valign="top"><a id="a59026baaaa80f0164b8581c6df64a27f"></a>
-unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><b>gain_res</b> [16]</td></tr>
-<tr class="separator:a59026baaaa80f0164b8581c6df64a27f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74fdb648b728ebe98ec366a3fdbc69a3"><td class="memItemLeft" align="right" valign="top"><a id="a74fdb648b728ebe98ec366a3fdbc69a3"></a>
+unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><b>volume</b> [16]</td></tr>
+<tr class="separator:a74fdb648b728ebe98ec366a3fdbc69a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a757ea7781efe257dcc6beb7b4982af01"><td class="memItemLeft" align="right" valign="top"><a id="a757ea7781efe257dcc6beb7b4982af01"></a>
+unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><b>resonance</b> [16]</td></tr>
+<tr class="separator:a757ea7781efe257dcc6beb7b4982af01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94ccd0a6fa287c87eeb104d4a59bdcbd"><td class="memItemLeft" align="right" valign="top"><a id="a94ccd0a6fa287c87eeb104d4a59bdcbd"></a>
 unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a94ccd0a6fa287c87eeb104d4a59bdcbd">opamp_rev</a> [1&lt;&lt; 16]</td></tr>
 <tr class="memdesc:a94ccd0a6fa287c87eeb104d4a59bdcbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse op-amp transfer function. <br /></td></tr>
@@ -268,8 +281,8 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3b688f13a8adf39c4bad4f0f47548784"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b688f13a8adf39c4bad4f0f47548784">&#9670;&nbsp;</a></span>getNormalizedVoiceDC()</h2>
+<a id="ac756d2d0aed4be6b2eb43fbd484bf0ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac756d2d0aed4be6b2eb43fbd484bf0ef">&#9670;&nbsp;</a></span>buildMixerTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -278,24 +291,36 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int reSIDfp::FilterModelConfig::getNormalizedVoiceDC </td>
+          <td class="memname">void reSIDfp::FilterModelConfig::buildMixerTable </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;&#160;</td>
+          <td class="paramname"><em>opampModel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>nRatio</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The "zero" output level of the voices. </p>
+<p>The audio mixer operates at n ~ 8/6 (6581) or 8/5 (8580), and has 8 fundamentally different input configurations (0 - 7 input "resistors").</p>
+<p>All "on", transistors are modeled as one - see comments above for the filter summer. </p>
 
 </div>
 </div>
-<a id="a50da610402b5903e8979deefceb5b2dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50da610402b5903e8979deefceb5b2dc">&#9670;&nbsp;</a></span>getVoiceScaleS11()</h2>
+<a id="a26df5fb2fb25b06ccd83dcb8a9f4bcda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26df5fb2fb25b06ccd83dcb8a9f4bcda">&#9670;&nbsp;</a></span>buildResonanceTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -304,19 +329,95 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int reSIDfp::FilterModelConfig::getVoiceScaleS11 </td>
+          <td class="memname">void reSIDfp::FilterModelConfig::buildResonanceTable </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;&#160;</td>
+          <td class="paramname"><em>opampModel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>resonance_n</em>[16]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The digital range of one voice is 20 bits; create a scaling term for multiplication which fits in 11 bits. </p>
+<p>4 bit "resistor" ladders in the bandpass resonance gain necessitate 16 gain tables. From die photographs of the bandpass "resistor" ladders it follows that 1/Q ~ ~res/8 (6581) or 2^((4 - res)/8) (8580) (assuming ideal op-amps and ideal "resistors"). </p>
+
+</div>
+</div>
+<a id="af0daf275c616a76e3273196b6422508a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0daf275c616a76e3273196b6422508a">&#9670;&nbsp;</a></span>buildSummerTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reSIDfp::FilterModelConfig::buildSummerTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;&#160;</td>
+          <td class="paramname"><em>opampModel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The filter summer operates at n ~ 1, and has 5 fundamentally different input configurations (2 - 6 input "resistors").</p>
+<p>Note that all "on" transistors are modeled as one. This is not entirely accurate, since the input for each transistor is different, and transistors are not linear components. However modeling all transistors separately would be extremely costly. </p>
+
+</div>
+</div>
+<a id="a02a9955078695bb77a64f0a9b4923564"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02a9955078695bb77a64f0a9b4923564">&#9670;&nbsp;</a></span>buildVolumeTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reSIDfp::FilterModelConfig::buildVolumeTable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;&#160;</td>
+          <td class="paramname"><em>opampModel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>nDivisor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>4 bit "resistor" ladders in the audio output gain necessitate 16 gain tables. From die photographs of the volume "resistor" ladders it follows that gain ~ vol/12 (6581) or vol/16 (8580) (assuming ideal op-amps and ideal "resistors"). </p>
 
 </div>
 </div>
@@ -327,7 +428,7 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 1 2024 07:59:27 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Mar 29 2024 17:03:13 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.6.0</span>
+   &#160;<span id="projectnumber">2.7.0</span>
    </div>
   </td>
  </tr>
@@ -64,8 +64,8 @@
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6cc8f7337506dad1ea099d7e802d9d69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmatrix.html">matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformCalculator.html#a6cc8f7337506dad1ea099d7e802d9d69">getWaveTable</a> ()</td></tr>
 <tr class="separator:a6cc8f7337506dad1ea099d7e802d9d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9eb51edd13d5c8f0b0eb3f4cfc06609"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmatrix.html">matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformCalculator.html#af9eb51edd13d5c8f0b0eb3f4cfc06609">buildPulldownTable</a> (ChipModel model)</td></tr>
-<tr class="separator:af9eb51edd13d5c8f0b0eb3f4cfc06609"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e89f0c4e00a2f75dc90080b17ed2ef2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classmatrix.html">matrix_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1WaveformCalculator.html#a6e89f0c4e00a2f75dc90080b17ed2ef2">buildPulldownTable</a> (ChipModel model, CombinedWaveforms cws)</td></tr>
+<tr class="separator:a6e89f0c4e00a2f75dc90080b17ed2ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -99,8 +99,8 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
 </ul>
 <p>Also in the 6581 the MSB of the oscillator, used as input for the triangle xor logic and the pulse adder's last bit, is connected directly to the waveform selector, while in the 8580 it is latched at sid_clk2 before being forwarded to the selector. Thus in the 6581 if the sawtooth MSB is pulled down it might affect the oscillator's adder driving the top bit low. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="af9eb51edd13d5c8f0b0eb3f4cfc06609"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9eb51edd13d5c8f0b0eb3f4cfc06609">&#9670;&nbsp;</a></span>buildPulldownTable()</h2>
+<a id="a6e89f0c4e00a2f75dc90080b17ed2ef2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e89f0c4e00a2f75dc90080b17ed2ef2">&#9670;&nbsp;</a></span>buildPulldownTable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -109,8 +109,18 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
           <td class="memname"><a class="el" href="classmatrix.html">matrix_t</a> * reSIDfp::WaveformCalculator::buildPulldownTable </td>
           <td>(</td>
           <td class="paramtype">ChipModel&#160;</td>
-          <td class="paramname"><em>model</em></td><td>)</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">CombinedWaveforms&#160;</td>
+          <td class="paramname"><em>cws</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -118,6 +128,7 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">model</td><td>Chip model to use </td></tr>
+    <tr><td class="paramname">cws</td><td>strength of combined waveforms </td></tr>
   </table>
   </dd>
 </dl>
@@ -185,7 +196,7 @@ Output      0 0 0 0 1 1 1 0 0 0 0 0
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 1 2024 07:59:27 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Mar 29 2024 17:03:13 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.6.0</span>
+   &#160;<span id="projectnumber">2.7.0</span>
    </div>
   </td>
  </tr>
@@ -100,14 +100,14 @@
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    RESID_INLINE</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#af1ab54c55154e14218fe346a95eacb05">   70</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1Voice.html#af1ab54c55154e14218fe346a95eacb05">output</a>(<span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>* ringModulator)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#aa4e14d7e8445b6269cb9a42faf88b5be">   70</a></span>&#160;    <span class="keywordtype">float</span> <a class="code" href="classreSIDfp_1_1Voice.html#aa4e14d7e8445b6269cb9a42faf88b5be">output</a>(<span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>* ringModulator)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> wav = waveformGenerator-&gt;output(ringModulator);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> env = envelopeGenerator-&gt;output();</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">// DAC imperfections are emulated by using the digital output</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">// as an index into a DAC lookup table.</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(wavDAC[wav] * envDAC[env]);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> wavDAC[wav] * envDAC[env];</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#a42d7840fd0b9faa2e64472d33ba7d888">   83</a></span>&#160;    <a class="code" href="classreSIDfp_1_1Voice.html#a42d7840fd0b9faa2e64472d33ba7d888">Voice</a>() :</div>
@@ -142,15 +142,15 @@
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html"><div class="ttname"><a href="classreSIDfp_1_1Voice.html">reSIDfp::Voice</a></div><div class="ttdef"><b>Definition:</b> Voice.h:41</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html_a42d7840fd0b9faa2e64472d33ba7d888"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#a42d7840fd0b9faa2e64472d33ba7d888">reSIDfp::Voice::Voice</a></div><div class="ttdeci">Voice()</div><div class="ttdef"><b>Definition:</b> Voice.h:83</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html_a603af72953ef2853bf11a7efecf26b24"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#a603af72953ef2853bf11a7efecf26b24">reSIDfp::Voice::writeCONTROL_REG</a></div><div class="ttdeci">void writeCONTROL_REG(unsigned char control)</div><div class="ttdef"><b>Definition:</b> Voice.h:112</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Voice_html_aa4e14d7e8445b6269cb9a42faf88b5be"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#aa4e14d7e8445b6269cb9a42faf88b5be">reSIDfp::Voice::output</a></div><div class="ttdeci">RESID_INLINE float output(const WaveformGenerator *ringModulator) const</div><div class="ttdef"><b>Definition:</b> Voice.h:70</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html_ab27c1291f0e34137e9d5a0dcf6b69ae9"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ab27c1291f0e34137e9d5a0dcf6b69ae9">reSIDfp::Voice::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> Voice.h:121</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html_ab767f859b91b61c268169fd5135ea18a"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">reSIDfp::Voice::setEnvDAC</a></div><div class="ttdeci">void setEnvDAC(float *dac)</div><div class="ttdef"><b>Definition:</b> Voice.h:101</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html_ad0475864f2aeed3145448670111fdece"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">reSIDfp::Voice::setWavDAC</a></div><div class="ttdeci">void setWavDAC(float *dac)</div><div class="ttdef"><b>Definition:</b> Voice.h:93</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html_af1ab54c55154e14218fe346a95eacb05"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#af1ab54c55154e14218fe346a95eacb05">reSIDfp::Voice::output</a></div><div class="ttdeci">RESID_INLINE int output(const WaveformGenerator *ringModulator) const</div><div class="ttdef"><b>Definition:</b> Voice.h:70</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1WaveformGenerator_html"><div class="ttname"><a href="classreSIDfp_1_1WaveformGenerator.html">reSIDfp::WaveformGenerator</a></div><div class="ttdef"><b>Definition:</b> WaveformGenerator.h:94</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 1 2024 07:59:27 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Mar 29 2024 17:03:13 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

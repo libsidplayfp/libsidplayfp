@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.6.0</span>
+   &#160;<span id="projectnumber">2.7.0</span>
    </div>
   </td>
  </tr>
@@ -98,8 +98,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aefc1a54435ea4ca29d3a858d1f1355bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39605424f1d18a4833cab61cbf210985"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#a39605424f1d18a4833cab61cbf210985">filter6581Curve</a> (double filterCurve)</td></tr>
 <tr class="separator:a39605424f1d18a4833cab61cbf210985"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09503b7a07ad44e640c932d1873373e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#a09503b7a07ad44e640c932d1873373e6">filter6581Range</a> (double filterRange)</td></tr>
+<tr class="separator:a09503b7a07ad44e640c932d1873373e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13e3a98493cdea5222f0db11b6703f01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#a13e3a98493cdea5222f0db11b6703f01">filter8580Curve</a> (double filterCurve)</td></tr>
 <tr class="separator:a13e3a98493cdea5222f0db11b6703f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad79cb4ce2508ae34de8202d246e14d3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#ad79cb4ce2508ae34de8202d246e14d3a">combinedWaveformsStrength</a> (<a class="el" href="classSidConfig.html#ac8c66f2f3221d2413b53e9c8389b1535">SidConfig::sid_cw_t</a> cws)</td></tr>
+<tr class="separator:ad79cb4ce2508ae34de8202d246e14d3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsidbuilder"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsidbuilder')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classsidbuilder.html">sidbuilder</a></td></tr>
 <tr class="memitem:a82d8e43843f2c422763a86269a4c9e49 inherit pub_methods_classsidbuilder"><td class="memItemLeft" align="right" valign="top"><a id="a82d8e43843f2c422763a86269a4c9e49"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>sidbuilder</b> (const char *const <a class="el" href="classsidbuilder.html#a1208ea0bbffea1fe63ea5774607591c7">name</a>)</td></tr>
@@ -167,6 +171,31 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
 <dl class="section return"><dt>Returns</dt><dd>the number of available sids, 0 = endless. </dd></dl>
 
 <p>Implements <a class="el" href="classsidbuilder.html#a58bb5c7f4fdb8ee563a3e33cb32e2968">sidbuilder</a>.</p>
+
+</div>
+</div>
+<a id="ad79cb4ce2508ae34de8202d246e14d3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad79cb4ce2508ae34de8202d246e14d3a">&#9670;&nbsp;</a></span>combinedWaveformsStrength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReSIDfpBuilder::combinedWaveformsStrength </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSidConfig.html#ac8c66f2f3221d2413b53e9c8389b1535">SidConfig::sid_cw_t</a>&#160;</td>
+          <td class="paramname"><em>cws</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set combined waveforms strength.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cws</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -288,6 +317,31 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
 
 </div>
 </div>
+<a id="a09503b7a07ad44e640c932d1873373e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09503b7a07ad44e640c932d1873373e6">&#9670;&nbsp;</a></span>filter6581Range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReSIDfpBuilder::filter6581Range </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>filterRange</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set 6581 filter curve.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filterCurve</td><td>from 0.0 (dark) to 1.0 (light) (default 0.5) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a13e3a98493cdea5222f0db11b6703f01"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a13e3a98493cdea5222f0db11b6703f01">&#9670;&nbsp;</a></span>filter8580Curve()</h2>
 
@@ -320,7 +374,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 1 2024 07:59:27 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Mar 29 2024 17:03:13 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

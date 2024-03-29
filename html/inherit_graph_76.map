@@ -1,7 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classsidbuilder.html" title=" " alt="" coords="5,81,92,108"/>
-<area shape="rect" id="node2" href="$classHardSIDBuilder.html" title=" " alt="" coords="140,5,261,32"/>
-<area shape="rect" id="node3" href="$classReSIDBuilder.html" title=" " alt="" coords="147,56,254,83"/>
-<area shape="rect" id="node4" href="$classReSIDfpBuilder.html" title=" " alt="" coords="141,107,261,133"/>
-<area shape="rect" id="node5" href="$classexSIDBuilder.html" title=" " alt="" coords="147,157,254,184"/>
+<area shape="rect" id="node1" href="$classsidbuilder_1_1applyParameter.html" title=" " alt="" coords="5,5,203,47"/>
 </map>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.6.0</span>
+   &#160;<span id="projectnumber">2.7.0</span>
    </div>
   </td>
  </tr>
@@ -58,6 +58,24 @@
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="Integrator8580_8h_source.html">Integrator8580.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for reSIDfp::Integrator8580:</div>
+<div class="dyncontent">
+<div class="center"><img src="classreSIDfp_1_1Integrator8580__inherit__graph.png" border="0" usemap="#areSIDfp_1_1Integrator8580_inherit__map" alt="Inheritance graph"/></div>
+<map name="areSIDfp_1_1Integrator8580_inherit__map" id="areSIDfp_1_1Integrator8580_inherit__map">
+<area shape="rect" title=" " alt="" coords="5,80,180,107"/>
+<area shape="rect" href="classreSIDfp_1_1Integrator.html" title=" " alt="" coords="21,5,164,32"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for reSIDfp::Integrator8580:</div>
+<div class="dyncontent">
+<div class="center"><img src="classreSIDfp_1_1Integrator8580__coll__graph.png" border="0" usemap="#areSIDfp_1_1Integrator8580_coll__map" alt="Collaboration graph"/></div>
+<map name="areSIDfp_1_1Integrator8580_coll__map" id="areSIDfp_1_1Integrator8580_coll__map">
+<area shape="rect" title=" " alt="" coords="5,80,180,107"/>
+<area shape="rect" href="classreSIDfp_1_1Integrator.html" title=" " alt="" coords="21,5,164,32"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -68,9 +86,19 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a943dbfbceedab1d75342348e26353389"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec485c8ed6d1ae6bc0096e9a4971827c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Integrator8580.html#aec485c8ed6d1ae6bc0096e9a4971827c">setV</a> (double v)</td></tr>
 <tr class="separator:aec485c8ed6d1ae6bc0096e9a4971827c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a017bf7ef0127de2fcffa13226042fa3e"><td class="memItemLeft" align="right" valign="top"><a id="a017bf7ef0127de2fcffa13226042fa3e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>solve</b> (int vi) const</td></tr>
-<tr class="separator:a017bf7ef0127de2fcffa13226042fa3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e77670d735acbbdeaf75232225e2e18"><td class="memItemLeft" align="right" valign="top"><a id="a2e77670d735acbbdeaf75232225e2e18"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>solve</b> (int vi) const override</td></tr>
+<tr class="separator:a2e77670d735acbbdeaf75232225e2e18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_classreSIDfp_1_1Integrator"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classreSIDfp_1_1Integrator')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classreSIDfp_1_1Integrator.html">reSIDfp::Integrator</a></td></tr>
+<tr class="memitem:a22eb82e6a554eff2eb758f7313901f4d inherit pro_attribs_classreSIDfp_1_1Integrator"><td class="memItemLeft" align="right" valign="top"><a id="a22eb82e6a554eff2eb758f7313901f4d"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>vx</b></td></tr>
+<tr class="separator:a22eb82e6a554eff2eb758f7313901f4d inherit pro_attribs_classreSIDfp_1_1Integrator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0710642d2e4cd7b40f637f756957a7cb inherit pro_attribs_classreSIDfp_1_1Integrator"><td class="memItemLeft" align="right" valign="top"><a id="a0710642d2e4cd7b40f637f756957a7cb"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>vc</b></td></tr>
+<tr class="separator:a0710642d2e4cd7b40f637f756957a7cb inherit pro_attribs_classreSIDfp_1_1Integrator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>8580 integrator </p><pre class="fragment">              +---C---+
@@ -140,13 +168,14 @@ vc = vc0 - n*(IRfc(vi,g(vc)))
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="Integrator8580_8h_source.html">Integrator8580.h</a></li>
+<li>Integrator8580.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 1 2024 07:59:27 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Mar 29 2024 17:03:13 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
