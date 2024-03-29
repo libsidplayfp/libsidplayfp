@@ -1,4 +1,4 @@
-2.7.0 2024-02-xx
+2.7.0 2024-03-29
 * residfp: refactor residfp filter (#109)
 * residfp: added ability to adjust the uCox parameter at runtime (#101)
 * residfp: allow setting the combined waveforms strength (#110)
