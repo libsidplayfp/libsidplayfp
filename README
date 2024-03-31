@@ -10,7 +10,7 @@ C64 system and the SID chips.
 
 Copyright (c) 2000-2001 Simon White
 Copyright (c) 2007-2010 Antti Lankila
-Copyright (c) 2010-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+Copyright (c) 2010-2024 Leandro Nini <drfiemost@users.sourceforge.net>
 
 -----------------------------------------------------------------------------
 
@@ -62,6 +62,12 @@ enabled by default
 --enable-branch-hints
 enable branch hints in reSID engine so the compiler can produce more optimized code
 enabled by default
+
+--with-simd=<sse4/neon/none>
+enable SIMD code in reSIDfp that might increase resampling performance.
+Be aware that this is processor specific and the compiler could actually produce
+more optimized code with the appropriate flags. Use only if you know what you're doing.
+none by default
 
 --enable-testsuite=PATH_TO_TESTSUITE
 add support for running VICE testsuite (in prg format). The testsuite is available

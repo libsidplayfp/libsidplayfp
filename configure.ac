@@ -140,6 +140,31 @@ AS_IF([test x"$enable_inline" != "xno"],
   [RESID_INLINE=""; RESID_INLINING=0]
 )
 
+AC_ARG_WITH(
+    [simd],
+    [AS_HELP_STRING([--with-simd], [Build with SIMD optimizations [@<:@sse4/neon/none, default=none@:>@]])],
+    [],
+    [with_simd=none]
+)
+
+AS_IF([test x"$with_simd" != xnone],
+    # Testing for intrinsic headers requires compiler
+    # support activated by specific flags.
+    # These are most likely defined in CXXFLAGS
+    # but AC_CHECK_HEADERS uses only CPPFLAGS
+    # so we need a workaround.
+    [saveCPPFLAGS=$CPPFLAGS
+    CPPFLAGS="$CPPFLAGS $CXXFLAGS"
+
+    AS_CASE([$with_simd],
+        [sse4], [AC_CHECK_HEADERS([smmintrin.h])],
+        [neon], [AC_CHECK_HEADERS([arm_neon.h])],
+        [AC_MSG_ERROR([Unrecognized SIMD specified])]
+    )
+
+    CPPFLAGS=$saveCPPFLAGS]
+)
+
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 [AC_COMPILE_IFELSE(
   [AC_LANG_PROGRAM([],
