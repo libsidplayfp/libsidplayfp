@@ -100,51 +100,48 @@ int convolve(const int* a, const short* b, int bLength)
 #ifdef HAVE_SMMINTRIN_H
     int out = 0;
 
-    const uintptr_t offset = (uintptr_t)(a) & 0x0f;
+    const uintptr_t offset = (uintptr_t)(b) & 0x0f;
 
     // check for aligned accesses
-    if (offset == ((uintptr_t)(b) & 0x0f))
+    if (offset)
     {
-        if (offset)
+        const int l = (0x10 - offset) / 2;
+
+        for (int i = 0; i < l; i++)
         {
-            const int l = (0x10 - offset)/2;
-
-            for (int i = 0; i < l; i++)
-            {
-                out += *a++ * static_cast<int>(*b++);
-            }
-
-            bLength -= offset;
+            out += *a++ * static_cast<int>(*b++);
         }
 
-        __m128i acc = _mm_setzero_si128();
-
-        const int n = bLength / 8;
-
-        for (int i = 0; i < n; i++)
-        {
-            __m128i tmp = (*(__m128i*)b);
-
-            __m128i _b = _mm_cvtepi16_epi32(tmp);
-            __m128i prod = _mm_mullo_epi32(*(__m128i*)a, _b);
-            acc = _mm_add_epi32(acc, prod);
-            a += 4;
-
-            tmp = _mm_srli_si128(tmp, 8);
-            _b = _mm_cvtepi16_epi32(tmp);
-            prod = _mm_mullo_epi32(*(__m128i*)a, _b);
-            acc = _mm_add_epi32(acc, prod);
-            a += 4;
-
-            b += 8;
-        }
-
-        __m128i vsum = _mm_add_epi32(acc, _mm_srli_si128(acc, 8));
-        vsum = _mm_add_epi32(vsum, _mm_srli_si128(vsum, 4));
-        out += _mm_cvtsi128_si32(vsum);
-
-        bLength &= 7;
+        bLength -= l;
     }
+
+    __m128i acc = _mm_setzero_si128();
+
+    const int n = bLength / 8;
+
+    for (int i = 0; i < n; i++)
+    {
+        const __m128i tmp_b = _mm_stream_load_si128((__m128i*)b);
+
+        __m128i val_b = _mm_cvtepi16_epi32(tmp_b);
+        __m128i prod = _mm_mullo_epi32(*(__m128i*)a, val_b);
+        acc = _mm_add_epi32(acc, prod);
+        a += 4;
+
+        val_b = _mm_cvtepi16_epi32(_mm_srli_si128(tmp_b, 8));
+        prod = _mm_mullo_epi32(*(__m128i*)a, val_b);
+        acc = _mm_add_epi32(acc, prod);
+        a += 4;
+
+        b += 8;
+    }
+
+    __m128i vsum = _mm_add_epi32(acc, _mm_srli_si128(acc, 8));
+    vsum = _mm_add_epi32(vsum, _mm_srli_si128(vsum, 4));
+    out += _mm_cvtsi128_si32(vsum);
+
+    bLength &= 7;
+
 /*#elif defined(HAVE_ARM_NEON_H)
 #if (defined(__arm64__) && defined(__APPLE__)) || defined(__aarch64__)
     int32x4_t acc1Low = vdupq_n_s32(0);
