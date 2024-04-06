@@ -142,7 +142,7 @@ AS_IF([test x"$enable_inline" != "xno"],
 
 AC_ARG_WITH(
     [simd],
-    [AS_HELP_STRING([--with-simd], [Build with SIMD optimizations [@<:@sse2/mmx/neon/none, default=none@:>@]])],
+    [AS_HELP_STRING([--with-simd], [Build with SIMD optimizations [@<:@sse4/neon/none, default=none@:>@]])],
     [],
     [with_simd=none]
 )
@@ -157,8 +157,7 @@ AS_IF([test x"$with_simd" != xnone],
     CPPFLAGS="$CPPFLAGS $CXXFLAGS"
 
     AS_CASE([$with_simd],
-        [sse2], [AC_CHECK_HEADERS([emmintrin.h])],
-        [mmx],  [AC_CHECK_HEADERS([mmintrin.h])],
+        [sse4], [AC_CHECK_HEADERS([smmintrin.h])],
         [neon], [AC_CHECK_HEADERS([arm_neon.h])],
         [AC_MSG_ERROR([Unrecognized SIMD specified])]
     )
