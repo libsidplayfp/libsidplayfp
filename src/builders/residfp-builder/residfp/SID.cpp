@@ -141,7 +141,7 @@ SID::SID() :
     resampler(nullptr),
     potX(new Potentiometer()),
     potY(new Potentiometer()),
-    cws(AVERAGE)
+    cws(STRONG)
 {
     voice[0].reset(new Voice());
     voice[1].reset(new Voice());
