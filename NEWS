@@ -1,3 +1,11 @@
+2.7.1 2024-05-19
+* Sync resid with upstream
+* Make strong CWs the default (#127)
+* Downtune the leakage parameter a bit (#126)
+* Fix UBSan complaint abount uninitialized var 'is6581'
+
+
+
 2.7.0 2024-03-29
 * residfp: refactor residfp filter (#109)
 * residfp: added ability to adjust the uCox parameter at runtime (#101)
