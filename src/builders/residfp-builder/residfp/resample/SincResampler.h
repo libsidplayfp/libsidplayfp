@@ -25,12 +25,7 @@
 
 #include "Resampler.h"
 
-#include <string>
-#include <map>
-
 #include "../array.h"
-
-#include "sidcxx11.h"
 
 namespace reSIDfp
 {
@@ -101,6 +96,7 @@ public:
      * @param highestAccurateFrequency
      */
     SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency);
+    ~SincResampler();
 
     bool input(int input) override;
 

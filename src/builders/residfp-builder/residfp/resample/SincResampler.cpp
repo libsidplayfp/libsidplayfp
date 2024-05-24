@@ -25,8 +25,6 @@
 #include <cassert>
 #include <cstring>
 #include <cmath>
-#include <iostream>
-#include <sstream>
 
 #include "siddefs-fp.h"
 
@@ -40,17 +38,8 @@
 #  include <arm_neon.h>
 #endif
 
-#include <mutex>
-
 namespace reSIDfp
 {
-
-typedef std::map<std::string, matrix_t> fir_cache_t;
-
-/// Cache for the expensive FIR table computation results.
-fir_cache_t FIR_CACHE;
-
-std::mutex FIR_CACHE_Lock;
 
 /// Maximum error acceptable in I0 is 1e-6, or ~96 dB.
 constexpr double I0E = 1e-6;
@@ -301,26 +290,9 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         // The filter test program indicates that the filter performs well, though.
     }
 
-    // Create the map key
-    std::ostringstream o;
-    o << firN << "," << firRES << "," << cyclesPerSampleD;
-    const std::string firKey = o.str();
-
-    std::lock_guard<std::mutex> lock(FIR_CACHE_Lock);
-
-    fir_cache_t::iterator lb = FIR_CACHE.lower_bound(firKey);
-
-    // The FIR computation is expensive and we set sampling parameters often, but
-    // from a very small set of choices. Thus, caching is used to speed initialization.
-    if (lb != FIR_CACHE.end() && !(FIR_CACHE.key_comp()(firKey, lb->first)))
-    {
-        firTable = &(lb->second);
-    }
-    else
     {
         // Allocate memory for FIR tables.
-        matrix_t tempTable(firRES, firN);
-        firTable = &(FIR_CACHE.emplace_hint(lb, fir_cache_t::value_type(firKey, tempTable))->second);
+        firTable = new matrix_t(firRES, firN);
 
         // The cutoff frequency is midway through the transition band, in effect the same as nyquist.
         const double wc = M_PI;
@@ -351,6 +323,11 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
             }
         }
     }
+}
+
+SincResampler::~SincResampler()
+{
+    delete firTable;
 }
 
 bool SincResampler::input(int input)
