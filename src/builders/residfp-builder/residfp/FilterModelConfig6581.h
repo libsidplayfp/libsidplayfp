@@ -47,11 +47,7 @@ private:
 private:
     static std::unique_ptr<FilterModelConfig6581> instance;
     // This allows access to the private constructor
-#ifdef HAVE_CXX11
     friend std::unique_ptr<FilterModelConfig6581>::deleter_type;
-#else
-    friend class std::auto_ptr<FilterModelConfig6581>;
-#endif
 
     /// Transistor parameters.
     //@{
@@ -78,7 +74,7 @@ private:
     double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
 
     FilterModelConfig6581();
-    ~FilterModelConfig6581() DEFAULT;
+    ~FilterModelConfig6581() = default;
 
 public:
     static FilterModelConfig6581* getInstance();

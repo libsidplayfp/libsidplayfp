@@ -27,27 +27,12 @@
 
 #include "sidcxx11.h"
 
-#ifdef HAVE_CXX11
-#  include <mutex>
-#endif
+#include <mutex>
 #include <algorithm>
 #include <cmath>
 
 namespace reSIDfp
 {
-
-#ifndef HAVE_CXX11
-/**
- * Compute log(1+x) without losing precision for small values of x
- *
- * @note when compiling with -ffastm-math the compiler will
- * optimize the expression away leaving a plain log(1. + x)
- */
-inline double log1p(double x)
-{
-    return log(1. + x) - (((1. + x) - 1.) - x) / (1. + x);
-}
-#endif
 
 const unsigned int OPAMP_SIZE = 33;
 
@@ -96,15 +81,11 @@ const Spline::Point opamp_voltage[OPAMP_SIZE] =
 
 std::unique_ptr<FilterModelConfig6581> FilterModelConfig6581::instance(nullptr);
 
-#ifdef HAVE_CXX11
 std::mutex Instance6581_Lock;
-#endif
 
 FilterModelConfig6581* FilterModelConfig6581::getInstance()
 {
-#ifdef HAVE_CXX11
     std::lock_guard<std::mutex> lock(Instance6581_Lock);
-#endif
 
     if (!instance.get())
     {

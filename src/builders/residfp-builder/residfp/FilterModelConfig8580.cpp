@@ -27,10 +27,8 @@
 
 #include "sidcxx11.h"
 
-#ifdef HAVE_CXX11
-#  include <mutex>
-#endif
- 
+#include <mutex>
+
 namespace reSIDfp
 {
 
@@ -115,15 +113,11 @@ const Spline::Point opamp_voltage[OPAMP_SIZE] =
 
 std::unique_ptr<FilterModelConfig8580> FilterModelConfig8580::instance(nullptr);
 
-#ifdef HAVE_CXX11
 std::mutex Instance8580_Lock;
-#endif
 
 FilterModelConfig8580* FilterModelConfig8580::getInstance()
 {
-#ifdef HAVE_CXX11
     std::lock_guard<std::mutex> lock(Instance8580_Lock);
-#endif
 
     if (!instance.get())
     {

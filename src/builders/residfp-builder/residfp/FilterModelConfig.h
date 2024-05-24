@@ -76,8 +76,8 @@ protected:
     unsigned short opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
 
 private:
-    FilterModelConfig (const FilterModelConfig&) DELETE;
-    FilterModelConfig& operator= (const FilterModelConfig&) DELETE;
+    FilterModelConfig(const FilterModelConfig&) = delete;
+    FilterModelConfig& operator= (const FilterModelConfig&) = delete;
 
     inline double getVoiceVoltage(float value) const
     {

@@ -39,9 +39,7 @@ namespace libsidplayfp
 template <int N>
 class romBank : public Bank
 {
-#ifdef HAVE_CXX11
     static_assert((N != 0) && ((N & (N - 1)) == 0), "N must be a power of two");
-#endif
 
 protected:
     /// The ROM array

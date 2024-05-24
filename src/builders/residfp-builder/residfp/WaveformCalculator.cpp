@@ -24,9 +24,7 @@
 #include "sidcxx11.h"
 
 #include <map>
-#ifdef HAVE_CXX11
-#  include <mutex>
-#endif
+#include <mutex>
 #include <cmath>
 
 namespace reSIDfp
@@ -50,9 +48,8 @@ typedef struct
 typedef std::map<const CombinedWaveformConfig*, matrix_t> cw_cache_t;
 
 cw_cache_t PULLDOWN_CACHE;
-#ifdef HAVE_CXX11
+
 std::mutex PULLDOWN_CACHE_Lock;
-#endif
 
 WaveformCalculator* WaveformCalculator::getInstance()
 {
@@ -252,9 +249,7 @@ WaveformCalculator::WaveformCalculator() :
 
 matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model, CombinedWaveforms cws)
 {
-#ifdef HAVE_CXX11
     std::lock_guard<std::mutex> lock(PULLDOWN_CACHE_Lock);
-#endif
 
     const int modelIdx = model == MOS6581 ? 0 : 1;
     const CombinedWaveformConfig* cfgArray;
@@ -301,11 +296,8 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model, CombinedWavefo
             pdTable[wav][idx] = calculatePulldown(distancetable, cfg.topbit, cfg.pulsestrength, cfg.threshold, idx);
         }
     }
-#ifdef HAVE_CXX11
+
     return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
-#else
-    return &(PULLDOWN_CACHE.insert(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
-#endif
 }
 
 } // namespace reSIDfp
