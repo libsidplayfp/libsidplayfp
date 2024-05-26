@@ -102,8 +102,8 @@ const char *exSIDBuilder::credits() const
 
 void exSIDBuilder::flush()
 {
-    for (emuset_t::iterator it=sidobjs.begin(); it != sidobjs.end(); ++it)
-        static_cast<libsidplayfp::exSID*>(*it)->flush();
+    for (auto sidobj : sidobjs)
+        static_cast<libsidplayfp::exSID*>(sidobj)->flush();
 }
 
 void exSIDBuilder::filter (bool enable)
