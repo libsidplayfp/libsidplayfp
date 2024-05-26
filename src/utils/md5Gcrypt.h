@@ -41,7 +41,7 @@ private:
 public:
     md5Gcrypt()
     {
-        if (gcry_check_version(GCRYPT_VERSION) == 0)
+        if (gcry_check_version(GCRYPT_VERSION) == nullptr)
             throw md5Error();
 
         // Disable secure memory.

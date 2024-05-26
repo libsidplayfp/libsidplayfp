@@ -88,7 +88,7 @@ private:
         void (MOS6510::*func)();
         bool nosteal;
         ProcessorCycle() :
-            func(0),
+            func(nullptr),
             nosteal(false) {}
     };
 
