@@ -82,7 +82,7 @@ private:
      *
      * https://en.wikipedia.org/wiki/Subthreshold_conduction
      */
-    double const leakage;
+    double leakage;
 
     /// analog values
     double * const dac;

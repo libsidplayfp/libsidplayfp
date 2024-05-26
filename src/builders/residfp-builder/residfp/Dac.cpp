@@ -27,8 +27,10 @@
 namespace reSIDfp
 {
 
+constexpr double MOSFET_LEAKAGE_6581 = 0.0075;
+constexpr double MOSFET_LEAKAGE_8580 = 0.0035;
+
 Dac::Dac(unsigned int bits) :
-    leakage(0.0075),
     dac(new double[bits]),
     dacLength(bits)
 {}
@@ -60,6 +62,8 @@ void Dac::kinkedDac(ChipModel chipModel)
 
     // 6581 DACs are not terminated by a 2R resistor
     const bool term = chipModel == MOS8580;
+
+    leakage = chipModel == MOS6581 ? MOSFET_LEAKAGE_6581 : MOSFET_LEAKAGE_8580;
 
     double Vsum = 0.;
 
