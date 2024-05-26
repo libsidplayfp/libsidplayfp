@@ -15,10 +15,10 @@
 
 #include "exsid-emu.h"
 
+#include <cstdio>
 #include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
 #include <sstream>
+#include <unistd.h>
 
 #ifdef HAVE_EXSID
 #  include <exSID.h>

@@ -14,13 +14,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <stdio.h>
-#include <cstring>
-#include <string>
-#include <memory>
-#include <sstream>
 #include <algorithm>
+#include <cstdio>
+#include <cstring>
+#include <memory>
 #include <new>
+#include <sstream>
+#include <string>
 
 #include "exsid.h"
 #include "exsid-emu.h"

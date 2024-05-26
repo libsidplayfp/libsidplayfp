@@ -22,9 +22,9 @@
 
 #include "p00.h"
 
-#include <stdint.h>
-#include <cstring>
 #include <cctype>
+#include <cstdint>
+#include <cstring>
 #include <memory>
 
 #include "sidplayfp/SidTuneInfo.h"
