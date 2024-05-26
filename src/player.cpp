@@ -32,6 +32,8 @@
 
 #include "sidcxx11.h"
 
+#include <ctime>
+
 namespace libsidplayfp
 {
 
@@ -70,7 +72,7 @@ Player::Player() :
     m_tune(nullptr),
     m_errorString(ERR_NA),
     m_isPlaying(STOPPED),
-    m_rand((unsigned int)::time(nullptr))
+    m_rand((unsigned int)std::time(nullptr))
 {
     // We need at least some minimal interrupt handling
     m_c64.getMemInterface().setKernal(nullptr);
