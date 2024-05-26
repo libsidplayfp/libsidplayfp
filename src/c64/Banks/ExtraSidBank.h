@@ -63,7 +63,7 @@ private:
     static unsigned int mapperIndex(int address) { return address >> 5 & (MAPPER_SIZE - 1); }
 
 public:
-    virtual ~ExtraSidBank() {}
+    virtual ~ExtraSidBank() = default;
 
     void reset()
     {

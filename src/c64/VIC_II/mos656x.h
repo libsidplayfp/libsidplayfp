@@ -314,7 +314,7 @@ private:
 
 protected:
     MOS656X(EventScheduler &scheduler);
-    ~MOS656X() {}
+    ~MOS656X() = default;
 
     // Environment Interface
     virtual void interrupt(bool state) = 0;

@@ -72,7 +72,7 @@ public:
     const char* name() const { return m_name; }
 
 protected:
-    ~Event() {}
+    ~Event() = default;
 };
 
 }

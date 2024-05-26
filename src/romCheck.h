@@ -57,7 +57,7 @@ private:
     unsigned int m_size;
 
 private:
-    romCheck();
+    romCheck() = delete;
 
     /**
      * Calculate the md5 digest.

@@ -299,7 +299,7 @@ private:
 
 protected:
     MOS6510(EventScheduler &scheduler);
-    ~MOS6510() {}
+    ~MOS6510() = default;
 
     /**
      * Get data from system environment.

@@ -40,7 +40,7 @@ private:
     uint8_t lastpoke[0x20];
 
 protected:
-    virtual ~c64sid() {}
+    virtual ~c64sid() = default;
 
     virtual uint8_t read(uint_least8_t addr) = 0;
     virtual void write(uint_least8_t addr, uint8_t data) = 0;

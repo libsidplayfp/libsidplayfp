@@ -73,8 +73,8 @@ public:
 
 private:
     // prevent copying
-    SidInfoImpl(const SidInfoImpl&);
-    SidInfoImpl& operator=(SidInfoImpl&);
+    SidInfoImpl(const SidInfoImpl&) = delete;
+    SidInfoImpl& operator=(SidInfoImpl&) = delete;
 
 public:
     SidInfoImpl() :

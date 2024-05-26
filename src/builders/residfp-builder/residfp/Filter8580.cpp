@@ -35,7 +35,7 @@ namespace reSIDfp
  */
 const double DAC_WL0 = 0.00615;
 
-Filter8580::~Filter8580() {}
+Filter8580::~Filter8580() = default;
 
 void Filter8580::updateCenterFrequency()
 {

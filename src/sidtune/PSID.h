@@ -58,7 +58,7 @@ protected:
     PSID() {}
 
 public:
-    ~PSID() override {}
+    ~PSID() override = default;
 
     /**
      * @return pointer to a SidTune or 0 if not a PSID file
@@ -72,8 +72,8 @@ public:
 
 private:
     // prevent copying
-    PSID(const PSID&);
-    PSID& operator=(PSID&);
+    PSID(const PSID&) = delete;
+    PSID& operator=(PSID&) = delete;
 };
 
 }

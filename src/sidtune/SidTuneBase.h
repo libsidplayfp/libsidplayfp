@@ -71,7 +71,7 @@ protected:
     static const char ERR_INVALID[];
 
 public:  // ----------------------------------------------------------------
-    virtual ~SidTuneBase() {}
+    virtual ~SidTuneBase() = default;
 
     typedef void (*LoaderFunc)(const char* fileName, buffer_t& bufferRef);
 
@@ -273,8 +273,8 @@ private:  // ---------------------------------------------------------------
 
 private:
     // prevent copying
-    SidTuneBase(const SidTuneBase&);
-    SidTuneBase& operator=(SidTuneBase&);
+    SidTuneBase(const SidTuneBase&) = delete;
+    SidTuneBase& operator=(SidTuneBase&) = delete;
 };
 
 }

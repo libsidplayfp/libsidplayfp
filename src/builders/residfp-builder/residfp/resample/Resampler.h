@@ -76,7 +76,7 @@ protected:
     Resampler() {}
 
 public:
-    virtual ~Resampler() {}
+    virtual ~Resampler() = default;
 
     /**
      * Input a sample into resampler. Output "true" when resampler is ready with new sample.

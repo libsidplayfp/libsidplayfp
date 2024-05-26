@@ -56,7 +56,7 @@ protected:
                                 buffer_t& buf, bool isSlashedFileName) override;
 
 public:
-    ~MUS() override {}
+    ~MUS() override = default;
 
     static SidTuneBase* load(buffer_t& dataBuf, bool init = false);
     static SidTuneBase* load(buffer_t& musBuf,
@@ -68,8 +68,8 @@ public:
 
 private:
     // prevent copying
-    MUS(const MUS&);
-    MUS& operator=(MUS&);
+    MUS(const MUS&) = delete;
+    MUS& operator=(MUS&) = delete;
 };
 
 }

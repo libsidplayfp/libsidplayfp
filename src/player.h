@@ -131,7 +131,7 @@ private:
 
 public:
     Player();
-    ~Player() {}
+    ~Player() = default;
 
     const SidConfig &config() const { return m_cfg; }
 

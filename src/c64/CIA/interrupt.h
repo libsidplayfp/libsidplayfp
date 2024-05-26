@@ -158,7 +158,7 @@ protected:
     bool isTriggered(uint8_t interruptMask);
 
 public:
-    virtual ~InterruptSource() {}
+    virtual ~InterruptSource() = default;
 
     /**
      * Trigger an interrupt.
