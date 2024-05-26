@@ -56,7 +56,7 @@ public:
             throw md5Error();
     }
 
-    ~md5Gcrypt() { gcry_md_close(hd); }
+    ~md5Gcrypt() override { gcry_md_close(hd); }
 
     void append(const void* data, int nbytes) override { gcry_md_write(hd, data, nbytes); }
 

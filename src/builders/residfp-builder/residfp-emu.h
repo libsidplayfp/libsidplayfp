@@ -48,7 +48,7 @@ public:
 
 public:
     ReSIDfp(sidbuilder *builder);
-    ~ReSIDfp();
+    ~ReSIDfp() override;
 
     bool getStatus() const { return m_status; }
 

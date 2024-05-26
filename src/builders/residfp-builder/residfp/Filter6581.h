@@ -333,7 +333,7 @@ public:
         f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5))
     {}
 
-    ~Filter6581();
+    ~Filter6581() override;
 
     /**
      * Set filter curve type based on single parameter.

@@ -292,7 +292,7 @@ public:
         setFilterCurve(0.5);
     }
 
-    ~Filter8580();
+    ~Filter8580() override;
 
     /**
      * Set filter curve type based on single parameter.

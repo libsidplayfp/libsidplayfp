@@ -45,7 +45,7 @@ public:
      */
     static SidTuneBase* load(const char *fileName, buffer_t& dataBuf);
 
-    virtual ~p00() {}
+    ~p00() override {}
 
 private:
     // prevent copying

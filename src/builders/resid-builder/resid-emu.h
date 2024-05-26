@@ -51,7 +51,7 @@ public:
 
 public:
     ReSID(sidbuilder *builder);
-    ~ReSID();
+    ~ReSID() override;
 
     bool getStatus() const { return m_status; }
 

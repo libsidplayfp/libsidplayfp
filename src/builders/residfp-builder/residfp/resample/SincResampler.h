@@ -96,7 +96,7 @@ public:
      * @param highestAccurateFrequency
      */
     SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency);
-    ~SincResampler();
+    ~SincResampler() override;
 
     bool input(int input) override;
 

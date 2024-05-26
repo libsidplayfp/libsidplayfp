@@ -87,7 +87,7 @@ public:
         m_status(true),
         isLocked(false),
         m_error("N/A") {}
-    virtual ~sidemu() {}
+    ~sidemu() override {}
 
     /**
      * Clock the SID chip.

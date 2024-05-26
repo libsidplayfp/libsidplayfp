@@ -36,7 +36,7 @@ class NullSid final : public c64sid
 {
 private:
     NullSid() {}
-    virtual ~NullSid() {}
+    ~NullSid() override {}
 
 public:
     /**

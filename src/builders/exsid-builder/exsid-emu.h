@@ -60,7 +60,7 @@ public:
 
 public:
     exSID(sidbuilder *builder);
-    ~exSID();
+    ~exSID() override;
 
     bool getStatus() const { return m_status; }
 
