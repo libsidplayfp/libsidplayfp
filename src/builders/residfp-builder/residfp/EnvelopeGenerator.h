@@ -47,7 +47,7 @@ private:
      * The envelope state machine's distinct states. In addition to this,
      * envelope has a hold mode, which freezes envelope counter to zero.
      */
-    enum State
+    enum class State
     {
         ATTACK, DECAY_SUSTAIN, RELEASE
     };
@@ -141,8 +141,8 @@ public:
         state_pipeline(0),
         envelope_pipeline(0),
         exponential_pipeline(0),
-        state(RELEASE),
-        next_state(RELEASE),
+        state(State::RELEASE),
+        next_state(State::RELEASE),
         counter_enabled(true),
         gate(false),
         resetLfsr(false),
@@ -218,15 +218,15 @@ void EnvelopeGenerator::clock()
     {
         if (likely(counter_enabled))
         {
-            if (state == ATTACK)
+            if (state == State::ATTACK)
             {
                 if (++envelope_counter==0xff)
                 {
-                    next_state = DECAY_SUSTAIN;
+                    next_state = State::DECAY_SUSTAIN;
                     state_pipeline = 3;
                 }
             }
-            else if ((state == DECAY_SUSTAIN) || (state == RELEASE))
+            else if ((state == State::DECAY_SUSTAIN) || (state == State::RELEASE))
             {
                 if (--envelope_counter==0x00)
                 {
@@ -241,8 +241,8 @@ void EnvelopeGenerator::clock()
     {
         exponential_counter = 0;
 
-        if (((state == DECAY_SUSTAIN) && (envelope_counter != sustain))
-            || (state == RELEASE))
+        if (((state == State::DECAY_SUSTAIN) && (envelope_counter != sustain))
+            || (state == State::RELEASE))
         {
             // The envelope counter can flip from 0x00 to 0xff by changing state to
             // attack, then to release. The envelope counter will then continue
@@ -257,7 +257,7 @@ void EnvelopeGenerator::clock()
         lfsr = 0x7fff;
         resetLfsr = false;
 
-        if (state == ATTACK)
+        if (state == State::ATTACK)
         {
             // The first envelope step in the attack state also resets the exponential
             // counter. This has been verified by sampling ENV3.
@@ -344,7 +344,7 @@ void EnvelopeGenerator::state_change()
 
     switch (next_state)
     {
-    case ATTACK:
+    case State::ATTACK:
         if (state_pipeline == 1)
         {
             // The decay rate is "accidentally" enabled during first cycle of attack phase
@@ -352,24 +352,24 @@ void EnvelopeGenerator::state_change()
         }
         else if (state_pipeline == 0)
         {
-            state = ATTACK;
+            state = State::ATTACK;
             // The attack rate is correctly enabled during second cycle of attack phase
             rate = adsrtable[attack];
             counter_enabled = true;
         }
         break;
-    case DECAY_SUSTAIN:
+    case State::DECAY_SUSTAIN:
         if (state_pipeline == 0)
         {
-            state = DECAY_SUSTAIN;
+            state = State::DECAY_SUSTAIN;
             rate = adsrtable[decay];
         }
         break;
-    case RELEASE:
-        if (((state == ATTACK) && (state_pipeline == 0))
-            || ((state == DECAY_SUSTAIN) && (state_pipeline == 1)))
+    case State::RELEASE:
+        if (((state == State::ATTACK) && (state_pipeline == 0))
+            || ((state == State::DECAY_SUSTAIN) && (state_pipeline == 1)))
         {
-            state = RELEASE;
+            state = State::RELEASE;
             rate = adsrtable[release];
         }
         break;

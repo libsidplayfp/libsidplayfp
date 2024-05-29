@@ -54,12 +54,12 @@ namespace libsidplayfp
 class Player
 {
 private:
-    typedef enum
+    enum class state_t
     {
         STOPPED,
         PLAYING,
         STOPPING
-    } state_t;
+    };
 
 private:
     /// Commodore 64 emulator
@@ -145,7 +145,7 @@ public:
 
     uint_least32_t play(short *buffer, uint_least32_t samples);
 
-    bool isPlaying() const { return m_isPlaying != STOPPED; }
+    bool isPlaying() const { return m_isPlaying != state_t::STOPPED; }
 
     void stop();
 
