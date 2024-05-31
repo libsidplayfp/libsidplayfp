@@ -37,7 +37,7 @@
 using namespace UnitTest;
 using namespace libsidplayfp;
 
-class testcpu final : public MOS6510
+class testcpu final : public MOS6510, public CPUDataBus
 {
 private:
     uint8_t mem[65536];
@@ -52,7 +52,7 @@ protected:
 
 public:
     testcpu(EventScheduler &scheduler) :
-        MOS6510(scheduler)
+        MOS6510(scheduler, *this)
     {
         mem[0xFFFC] = 0x00;
         mem[0xFFFD] = 0x10;
