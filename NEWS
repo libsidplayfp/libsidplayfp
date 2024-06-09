@@ -1,4 +1,4 @@
-2.8.0 2024-06-xx
+2.8.0 2024-06-09
 * Optimized event scheduler (#131)
 * Stop pretendig we support pre-c++11 compilers (#130)
 * Fixed thread unsafety for psid_driver (#132)
