@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">2.8.0</span>
    </div>
   </td>
  </tr>
@@ -79,64 +79,58 @@
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#  include &quot;config.h&quot;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#ifdef HAVE_CXX11</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#  include &lt;atomic&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classcounter.html">   36</a></span>&#160;<span class="keyword">class </span><a class="code" href="classcounter.html">counter</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef HAVE_CXX11</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">volatile</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> c;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::atomic&lt;unsigned int&gt; c;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classcounter.html">   34</a></span>&#160;<span class="keyword">class </span><a class="code" href="classcounter.html">counter</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    std::atomic&lt;unsigned int&gt; c;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classcounter.html">counter</a>() : c(1) {}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> increase() { ++c; }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> decrease() { <span class="keywordflow">return</span> --c; }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="classcounter.html">counter</a>() : c(1) {}</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> increase() { ++c; }</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> decrease() { <span class="keywordflow">return</span> --c; }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classmatrix.html">   55</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmatrix.html">matrix</a></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    T* data;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="classcounter.html">counter</a>* count;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x, y;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="classmatrix.html">matrix</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y) :</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        data(<span class="keyword">new</span> T[x * y]),</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        count(<span class="keyword">new</span> <a class="code" href="classcounter.html">counter</a>()),</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        x(x),</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        y(y) {}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classmatrix.html">   49</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmatrix.html">matrix</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    T* data;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="classcounter.html">counter</a>* count;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x, y;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classmatrix.html">matrix</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y) :</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        data(<span class="keyword">new</span> T[x * y]),</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        count(<span class="keyword">new</span> <a class="code" href="classcounter.html">counter</a>()),</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        x(x),</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        y(y) {}</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="classmatrix.html">matrix</a>(<span class="keyword">const</span> <a class="code" href="classmatrix.html">matrix</a>&amp; p) :</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        data(p.data),</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        count(p.count),</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        x(p.x),</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        y(p.y) { count-&gt;increase(); }</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="classmatrix.html">matrix</a>(<span class="keyword">const</span> <a class="code" href="classmatrix.html">matrix</a>&amp; p) :</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        data(p.data),</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        count(p.count),</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        x(p.x),</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        y(p.y) { count-&gt;increase(); }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    ~<a class="code" href="classmatrix.html">matrix</a>() { <span class="keywordflow">if</span> (count-&gt;decrease() == 0) { <span class="keyword">delete</span> count; <span class="keyword">delete</span> [] data; } }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> length()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> x * y; }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    T* operator[](<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> a) { <span class="keywordflow">return</span> &amp;data[a * y]; }</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    ~<a class="code" href="classmatrix.html">matrix</a>() { <span class="keywordflow">if</span> (count-&gt;decrease() == 0) { <span class="keyword">delete</span> count; <span class="keyword">delete</span> [] data; } }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> length()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> x * y; }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    T* operator[](<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> a) { <span class="keywordflow">return</span> &amp;data[a * y]; }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    T <span class="keyword">const</span>* operator[](<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> a)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;data[a * y]; }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">typedef</span> <a class="code" href="classmatrix.html">matrix&lt;short&gt;</a> <a class="code" href="classmatrix.html">matrix_t</a>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclasscounter_html"><div class="ttname"><a href="classcounter.html">counter</a></div><div class="ttdef"><b>Definition:</b> array.h:37</div></div>
-<div class="ttc" id="aclassmatrix_html"><div class="ttname"><a href="classmatrix.html">matrix</a></div><div class="ttdef"><b>Definition:</b> array.h:56</div></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    T <span class="keyword">const</span>* operator[](<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> a)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;data[a * y]; }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;};</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">typedef</span> <a class="code" href="classmatrix.html">matrix&lt;short&gt;</a> <a class="code" href="classmatrix.html">matrix_t</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclasscounter_html"><div class="ttname"><a href="classcounter.html">counter</a></div><div class="ttdef"><b>Definition:</b> array.h:35</div></div>
+<div class="ttc" id="aclassmatrix_html"><div class="ttname"><a href="classmatrix.html">matrix</a></div><div class="ttdef"><b>Definition:</b> array.h:50</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 19 2024 08:17:40 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Jun 9 2024 14:09:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

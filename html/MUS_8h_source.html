@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">2.8.0</span>
    </div>
   </td>
  </tr>
@@ -104,11 +104,11 @@
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> setPlayerAddress();</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MUS.html#a4bc56fa1d24b0dccc1f1e0709dcb123c">acceptSidTune</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* dataFileName, <span class="keyword">const</span> <span class="keywordtype">char</span>* infoFileName,</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MUS.html#a4bc56fa1d24b0dccc1f1e0709dcb123c">acceptSidTune</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* dataFileName, <span class="keyword">const</span> <span class="keywordtype">char</span>* infoFileName,</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                                buffer_t&amp; buf, <span class="keywordtype">bool</span> isSlashedFileName) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>() {}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    ~<a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">static</span> <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>* load(buffer_t&amp; dataBuf, <span class="keywordtype">bool</span> init = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">static</span> <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>* load(buffer_t&amp; musBuf,</div>
@@ -116,27 +116,27 @@
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                                uint_least32_t <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html#af4c2ca2b8c0c9e66ccc69879ea77c1e5">fileOffset</a>,</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                                <span class="keywordtype">bool</span> init = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MUS.html#ada331ef441e65fbe73d5c8aa6c758c22">placeSidTuneInC64mem</a>(<a class="code" href="classlibsidplayfp_1_1sidmemory.html">sidmemory</a>&amp; mem) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MUS.html#ada331ef441e65fbe73d5c8aa6c758c22">placeSidTuneInC64mem</a>(<a class="code" href="classlibsidplayfp_1_1sidmemory.html">sidmemory</a>&amp; mem) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// prevent copying</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>(<span class="keyword">const</span> <a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>&amp;);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>&amp; operator=(<a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>&amp;);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>(<span class="keyword">const</span> <a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>&amp; operator=(<a class="code" href="classlibsidplayfp_1_1MUS.html">MUS</a>&amp;) = <span class="keyword">delete</span>;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;};</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// MUS_H</span></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MUS_html"><div class="ttname"><a href="classlibsidplayfp_1_1MUS.html">libsidplayfp::MUS</a></div><div class="ttdef"><b>Definition:</b> MUS.h:34</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MUS_html_a4bc56fa1d24b0dccc1f1e0709dcb123c"><div class="ttname"><a href="classlibsidplayfp_1_1MUS.html#a4bc56fa1d24b0dccc1f1e0709dcb123c">libsidplayfp::MUS::acceptSidTune</a></div><div class="ttdeci">virtual void acceptSidTune(const char *dataFileName, const char *infoFileName, buffer_t &amp;buf, bool isSlashedFileName) override</div><div class="ttdef"><b>Definition:</b> MUS.cpp:104</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MUS_html_ada331ef441e65fbe73d5c8aa6c758c22"><div class="ttname"><a href="classlibsidplayfp_1_1MUS.html#ada331ef441e65fbe73d5c8aa6c758c22">libsidplayfp::MUS::placeSidTuneInC64mem</a></div><div class="ttdeci">virtual void placeSidTuneInC64mem(sidmemory &amp;mem) override</div><div class="ttdef"><b>Definition:</b> MUS.cpp:111</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MUS_html_a4bc56fa1d24b0dccc1f1e0709dcb123c"><div class="ttname"><a href="classlibsidplayfp_1_1MUS.html#a4bc56fa1d24b0dccc1f1e0709dcb123c">libsidplayfp::MUS::acceptSidTune</a></div><div class="ttdeci">void acceptSidTune(const char *dataFileName, const char *infoFileName, buffer_t &amp;buf, bool isSlashedFileName) override</div><div class="ttdef"><b>Definition:</b> MUS.cpp:104</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MUS_html_ada331ef441e65fbe73d5c8aa6c758c22"><div class="ttname"><a href="classlibsidplayfp_1_1MUS.html#ada331ef441e65fbe73d5c8aa6c758c22">libsidplayfp::MUS::placeSidTuneInC64mem</a></div><div class="ttdeci">void placeSidTuneInC64mem(sidmemory &amp;mem) override</div><div class="ttdef"><b>Definition:</b> MUS.cpp:111</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html">libsidplayfp::SidTuneBase</a></div><div class="ttdef"><b>Definition:</b> SidTuneBase.h:61</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_af4c2ca2b8c0c9e66ccc69879ea77c1e5"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#af4c2ca2b8c0c9e66ccc69879ea77c1e5">libsidplayfp::SidTuneBase::fileOffset</a></div><div class="ttdeci">uint_least32_t fileOffset</div><div class="ttdoc">For files with header: offset to real data.</div><div class="ttdef"><b>Definition:</b> SidTuneBase.h:183</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidmemory_html"><div class="ttname"><a href="classlibsidplayfp_1_1sidmemory.html">libsidplayfp::sidmemory</a></div><div class="ttdef"><b>Definition:</b> sidmemory.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 19 2024 08:17:40 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Jun 9 2024 14:09:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

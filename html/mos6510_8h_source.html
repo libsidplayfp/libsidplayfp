@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">2.8.0</span>
    </div>
   </td>
  </tr>
@@ -122,10 +122,10 @@
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">struct </span>ProcessorCycle</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        void (<a class="code" href="classlibsidplayfp_1_1MOS6510.html">MOS6510</a>::*func)();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        void (*func)(<a class="code" href="classlibsidplayfp_1_1MOS6510.html">MOS6510</a>&amp;);</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordtype">bool</span> nosteal;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        ProcessorCycle() :</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            func(0),</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            func(<span class="keyword">nullptr</span>),</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            nosteal(<span class="keyword">false</span>) {}</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    };</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
@@ -176,15 +176,15 @@
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">struct </span>ProcessorCycle instrTable[0x101 &lt;&lt; 3];</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="classlibsidplayfp_1_1EventCallback.html">EventCallback&lt;MOS6510&gt;</a> m_nosteal;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <a class="code" href="classlibsidplayfp_1_1EventCallback.html">EventCallback&lt;MOS6510&gt;</a> m_steal;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <a class="code" href="classlibsidplayfp_1_1EventCallback.html">EventCallback&lt;MOS6510&gt;</a> clearInt;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">void</span> eventWithoutSteals();</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> eventWithSteals();</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordtype">void</span> removeIRQ();</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordtype">void</span> eventWithoutSteals();</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordtype">void</span> eventWithSteals();</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordtype">void</span> removeIRQ();</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <a class="code" href="classlibsidplayfp_1_1FastEventCallback.html">FastEventCallback&lt;MOS6510, &amp;MOS6510::eventWithoutSteals&gt;</a> m_nosteal;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <a class="code" href="classlibsidplayfp_1_1FastEventCallback.html">FastEventCallback&lt;MOS6510, &amp;MOS6510::eventWithSteals&gt;</a> m_steal;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <a class="code" href="classlibsidplayfp_1_1FastEventCallback.html">FastEventCallback&lt;MOS6510, &amp;MOS6510::removeIRQ&gt;</a> clearInt;</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> Initialise();</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
@@ -320,7 +320,7 @@
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    <a class="code" href="classlibsidplayfp_1_1MOS6510.html#a246ea81ccccd514d085052514cdf24c2">MOS6510</a>(EventScheduler &amp;scheduler);</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    ~<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a246ea81ccccd514d085052514cdf24c2">MOS6510</a>() {}</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    ~<a class="code" href="classlibsidplayfp_1_1MOS6510.html#a246ea81ccccd514d085052514cdf24c2">MOS6510</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
 <div class="line"><a name="l00310"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1MOS6510.html#a046e755d2ec690ced4158758592cdd7c">  310</a></span>&#160;    <span class="keyword">virtual</span> uint8_t <a class="code" href="classlibsidplayfp_1_1MOS6510.html#a046e755d2ec690ced4158758592cdd7c">cpuRead</a>(uint_least16_t addr) =0;</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
@@ -344,26 +344,26 @@
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;}</div>
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// MOS6510_H</span></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1EventCallback_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventCallback.html">libsidplayfp::EventCallback</a></div><div class="ttdef"><b>Definition:</b> EventCallback.h:36</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventScheduler_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventScheduler.html">libsidplayfp::EventScheduler</a></div><div class="ttdef"><b>Definition:</b> EventScheduler.h:62</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1FastEventCallback_html"><div class="ttname"><a href="classlibsidplayfp_1_1FastEventCallback.html">libsidplayfp::FastEventCallback</a></div><div class="ttdef"><b>Definition:</b> EventCallback.h:57</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Flags_html"><div class="ttname"><a href="classlibsidplayfp_1_1Flags.html">libsidplayfp::Flags</a></div><div class="ttdef"><b>Definition:</b> flags.h:35</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_1_1haltInstruction_html"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510_1_1haltInstruction.html">libsidplayfp::MOS6510::haltInstruction</a></div><div class="ttdef"><b>Definition:</b> mos6510.h:68</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html">libsidplayfp::MOS6510</a></div><div class="ttdef"><b>Definition:</b> mos6510.h:62</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a046e755d2ec690ced4158758592cdd7c"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a046e755d2ec690ced4158758592cdd7c">libsidplayfp::MOS6510::cpuRead</a></div><div class="ttdeci">virtual uint8_t cpuRead(uint_least16_t addr)=0</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a233ef751de522b0e56a7734807027e60"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a233ef751de522b0e56a7734807027e60">libsidplayfp::MOS6510::setRDY</a></div><div class="ttdeci">void setRDY(bool newRDY)</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:122</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a246ea81ccccd514d085052514cdf24c2"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a246ea81ccccd514d085052514cdf24c2">libsidplayfp::MOS6510::MOS6510</a></div><div class="ttdeci">MOS6510(EventScheduler &amp;scheduler)</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:1466</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a24e3857c641e9736eec20f6170b28534"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a24e3857c641e9736eec20f6170b28534">libsidplayfp::MOS6510::triggerNMI</a></div><div class="ttdeci">void triggerNMI()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:187</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a55127f0f7facd846ae219c10949724de"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a55127f0f7facd846ae219c10949724de">libsidplayfp::MOS6510::credits</a></div><div class="ttdeci">static const char * credits()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2196</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a6e0e2cada45a0b34cfa157e97bc81a8f"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a6e0e2cada45a0b34cfa157e97bc81a8f">libsidplayfp::MOS6510::triggerRST</a></div><div class="ttdeci">void triggerRST()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:173</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a233ef751de522b0e56a7734807027e60"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a233ef751de522b0e56a7734807027e60">libsidplayfp::MOS6510::setRDY</a></div><div class="ttdeci">void setRDY(bool newRDY)</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:128</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a246ea81ccccd514d085052514cdf24c2"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a246ea81ccccd514d085052514cdf24c2">libsidplayfp::MOS6510::MOS6510</a></div><div class="ttdeci">MOS6510(EventScheduler &amp;scheduler)</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:1472</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a24e3857c641e9736eec20f6170b28534"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a24e3857c641e9736eec20f6170b28534">libsidplayfp::MOS6510::triggerNMI</a></div><div class="ttdeci">void triggerNMI()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:193</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a55127f0f7facd846ae219c10949724de"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a55127f0f7facd846ae219c10949724de">libsidplayfp::MOS6510::credits</a></div><div class="ttdeci">static const char * credits()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2202</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a6e0e2cada45a0b34cfa157e97bc81a8f"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a6e0e2cada45a0b34cfa157e97bc81a8f">libsidplayfp::MOS6510::triggerRST</a></div><div class="ttdeci">void triggerRST()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:179</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a84022aa54ab81c38c1bb59202eee7ebc"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a84022aa54ab81c38c1bb59202eee7ebc">libsidplayfp::MOS6510::cpuWrite</a></div><div class="ttdeci">virtual void cpuWrite(uint_least16_t addr, uint8_t data)=0</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a93b574044361532623bad2b1b1e505fd"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a93b574044361532623bad2b1b1e505fd">libsidplayfp::MOS6510::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2177</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_a93b574044361532623bad2b1b1e505fd"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#a93b574044361532623bad2b1b1e505fd">libsidplayfp::MOS6510::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:2183</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_ac40337fd4f6de74a53254916be202634"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#ac40337fd4f6de74a53254916be202634">libsidplayfp::MOS6510::SR_INTERRUPT</a></div><div class="ttdeci">static const int SR_INTERRUPT</div><div class="ttdoc">Status register interrupt bit.</div><div class="ttdef"><b>Definition:</b> mos6510.h:83</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_acf7bb99335d74e444d6ae844729e6635"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#acf7bb99335d74e444d6ae844729e6635">libsidplayfp::MOS6510::triggerIRQ</a></div><div class="ttdeci">void triggerIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:203</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_aebb119bbd24eb565d0b7c448b41084b2"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#aebb119bbd24eb565d0b7c448b41084b2">libsidplayfp::MOS6510::clearIRQ</a></div><div class="ttdeci">void clearIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:219</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_acf7bb99335d74e444d6ae844729e6635"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#acf7bb99335d74e444d6ae844729e6635">libsidplayfp::MOS6510::triggerIRQ</a></div><div class="ttdeci">void triggerIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:209</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1MOS6510_html_aebb119bbd24eb565d0b7c448b41084b2"><div class="ttname"><a href="classlibsidplayfp_1_1MOS6510.html#aebb119bbd24eb565d0b7c448b41084b2">libsidplayfp::MOS6510::clearIRQ</a></div><div class="ttdeci">void clearIRQ()</div><div class="ttdef"><b>Definition:</b> mos6510.cpp:225</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 19 2024 08:17:40 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Jun 9 2024 14:09:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

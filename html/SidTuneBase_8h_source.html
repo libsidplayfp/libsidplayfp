@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">2.8.0</span>
    </div>
   </td>
  </tr>
@@ -117,7 +117,7 @@
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> ERR_INVALID[];</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">public</span>:  <span class="comment">// ----------------------------------------------------------------</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>() {}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">typedef</span> void (*LoaderFunc)(<span class="keyword">const</span> <span class="keywordtype">char</span>* fileName, buffer_t&amp; bufferRef);</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
@@ -186,8 +186,8 @@
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="comment">// prevent copying</span></div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>(<span class="keyword">const</span> <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>&amp;);</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>&amp; operator=(<a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>&amp;);</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>(<span class="keyword">const</span> <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>&amp; operator=(<a class="code" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>&amp;) = <span class="keyword">delete</span>;</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;};</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;}</div>
@@ -218,7 +218,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 19 2024 08:17:40 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Jun 9 2024 14:09:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

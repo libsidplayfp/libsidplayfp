@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">2.8.0</span>
    </div>
   </td>
  </tr>
@@ -50,8 +50,8 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classlibsidplayfp_1_1sidemu-members.html">List of all members</a>  </div>
@@ -89,12 +89,6 @@ Collaboration diagram for libsidplayfp::sidemu:</div>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a23ffb0dbb631750e5bfcbc389bf3e19b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>OUTPUTBUFFERSIZE</b> = 5000
- }</td></tr>
-<tr class="separator:a23ffb0dbb631750e5bfcbc389bf3e19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a8542ff85e27a6c92a604c09cb06eb9d2"><td class="memItemLeft" align="right" valign="top"><a id="a8542ff85e27a6c92a604c09cb06eb9d2"></a>
@@ -137,6 +131,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 <tr class="memitem:a99f248456e703914a0150e53c1697d9d inherit pub_methods_classlibsidplayfp_1_1c64sid"><td class="memItemLeft" align="right" valign="top"><a id="a99f248456e703914a0150e53c1697d9d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>getStatus</b> (uint8_t regs[0x20]) const</td></tr>
 <tr class="separator:a99f248456e703914a0150e53c1697d9d inherit pub_methods_classlibsidplayfp_1_1c64sid"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="memItemLeft" align="right" valign="top"><a id="ab9d62b5bcf5bc66ec28b0125372ca71f"></a>
+static constexpr unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#ab9d62b5bcf5bc66ec28b0125372ca71f">OUTPUTBUFFERSIZE</a> = 5000</td></tr>
+<tr class="memdesc:ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer size. 5000 is roughly 5 ms at 96 kHz. <br /></td></tr>
+<tr class="separator:ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -188,23 +189,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (ui
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Inherit this class to create a new SID emulation. </p>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a23ffb0dbb631750e5bfcbc389bf3e19b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23ffb0dbb631750e5bfcbc389bf3e19b">&#9670;&nbsp;</a></span>anonymous enum</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">anonymous enum</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Buffer size. 5000 is roughly 5 ms at 96 kHz </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a366012b04072abd614058cb5e6fd09c1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a366012b04072abd614058cb5e6fd09c1">&#9670;&nbsp;</a></span>buffer()</h2>
 
@@ -538,7 +523,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (ui
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 19 2024 08:17:40 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Jun 9 2024 14:09:17 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

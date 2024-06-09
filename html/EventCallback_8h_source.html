@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">2.8.0</span>
    </div>
   </td>
  </tr>
@@ -105,17 +105,34 @@
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {}</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// EVENTCALLBACK_H</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span>&lt; <span class="keyword">class</span> This, <span class="keywordtype">void</span>(This::*Callback)() &gt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1FastEventCallback.html">   56</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1FastEventCallback.html">FastEventCallback</a> final : <span class="keyword">public</span> <a class="code" href="classlibsidplayfp_1_1Event.html">Event</a></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    This &amp;m_this;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> event()<span class="keyword"> override </span>{ (m_this.*Callback)(); }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="classlibsidplayfp_1_1FastEventCallback.html">FastEventCallback</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> <a class="code" href="classlibsidplayfp_1_1Event.html#a0ce90b2ff1c50384fc49c4df877ad7fd">name</a>, This &amp;<span class="keywordtype">object</span>) :</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;       <a class="code" href="classlibsidplayfp_1_1Event.html#a3e8651555a5eb65f52c183d2d8574a48">Event</a>(<a class="code" href="classlibsidplayfp_1_1Event.html#a0ce90b2ff1c50384fc49c4df877ad7fd">name</a>),</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;       m_this(<span class="keywordtype">object</span>)</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    {}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;};</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// EVENTCALLBACK_H</span></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventCallback_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventCallback.html">libsidplayfp::EventCallback</a></div><div class="ttdef"><b>Definition:</b> EventCallback.h:36</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html">libsidplayfp::Event</a></div><div class="ttdef"><b>Definition:</b> Event.h:39</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html_a0ce90b2ff1c50384fc49c4df877ad7fd"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html#a0ce90b2ff1c50384fc49c4df877ad7fd">libsidplayfp::Event::name</a></div><div class="ttdeci">const char * name() const</div><div class="ttdef"><b>Definition:</b> Event.h:72</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html_a3e8651555a5eb65f52c183d2d8574a48"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html#a3e8651555a5eb65f52c183d2d8574a48">libsidplayfp::Event::Event</a></div><div class="ttdeci">Event(const char *const name)</div><div class="ttdef"><b>Definition:</b> Event.h:58</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1FastEventCallback_html"><div class="ttname"><a href="classlibsidplayfp_1_1FastEventCallback.html">libsidplayfp::FastEventCallback</a></div><div class="ttdef"><b>Definition:</b> EventCallback.h:57</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 19 2024 08:17:40 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Jun 9 2024 14:09:16 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
