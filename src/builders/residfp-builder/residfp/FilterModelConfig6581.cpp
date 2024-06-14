@@ -27,8 +27,9 @@
 
 #include "sidcxx11.h"
 
-#include <mutex>
 #include <algorithm>
+#include <mutex>
+#include <thread>
 #include <cmath>
 
 namespace reSIDfp
@@ -131,123 +132,123 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
     // Create lookup tables for gains / summers.
 
-#ifndef _OPENMP
-    OpAmp opampModel(
-        std::vector<Spline::Point>(
-            std::begin(opamp_voltage),
-            std::end(opamp_voltage)),
-        Vddt,
-        vmin,
-        vmax);
-#endif
-
-    #pragma omp parallel sections
+    //
+    // We spawn six threads to calculate these tables in parallel
+    //
+    auto filterSummer = [this]
     {
-        #pragma omp section
+        OpAmp opampModel(
+            std::vector<Spline::Point>(
+                std::begin(opamp_voltage),
+                std::end(opamp_voltage)),
+            Vddt,
+            vmin,
+            vmax);
+
+        buildSummerTable(opampModel);
+    };
+
+    auto filterMixer = [this]
+    {
+        OpAmp opampModel(
+            std::vector<Spline::Point>(
+                std::begin(opamp_voltage),
+                std::end(opamp_voltage)),
+            Vddt,
+            vmin,
+            vmax);
+
+        buildMixerTable(opampModel, 8.0 / 6.0);
+    };
+
+    auto filterGain = [this]
+    {
+        OpAmp opampModel(
+            std::vector<Spline::Point>(
+                std::begin(opamp_voltage),
+                std::end(opamp_voltage)),
+            Vddt,
+            vmin,
+            vmax);
+
+        buildVolumeTable(opampModel, 12.0);
+    };
+
+    auto filterResonance = [this]
+    {
+        OpAmp opampModel(
+            std::vector<Spline::Point>(
+                std::begin(opamp_voltage),
+                std::end(opamp_voltage)),
+            Vddt,
+            vmin,
+            vmax);
+
+        // build temp n table
+        double resonance_n[16];
+        for (int n8 = 0; n8 < 16; n8++)
         {
-#ifdef _OPENMP
-            OpAmp opampModel(
-                std::vector<Spline::Point>(
-                    std::begin(opamp_voltage),
-                    std::end(opamp_voltage)),
-                Vddt,
-                vmin,
-                vmax);
-#endif
-            buildSummerTable(opampModel);
+            resonance_n[n8] = (~n8 & 0xf) / 8.0;
         }
 
-        #pragma omp section
+        buildResonanceTable(opampModel, resonance_n);
+    };
+
+    auto filterVcrVg = [this]
+    {
+        const double nVddt = N16 * (Vddt - vmin);
+
+        for (unsigned int i = 0; i < (1 << 16); i++)
         {
-#ifdef _OPENMP
-            OpAmp opampModel(
-                std::vector<Spline::Point>(
-                    std::begin(opamp_voltage),
-                    std::end(opamp_voltage)),
-                Vddt,
-                vmin,
-                vmax);
-#endif
-            buildMixerTable(opampModel, 8.0 / 6.0);
+            // The table index is right-shifted 16 times in order to fit in
+            // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
+            const double tmp = nVddt - sqrt(static_cast<double>(i << 16));
+            assert(tmp > -0.5 && tmp < 65535.5);
+            vcr_nVg[i] = static_cast<unsigned short>(tmp + 0.5);
         }
+    };
 
-        #pragma omp section
+    auto filterVcrIds = [this]
+    {
+        //  EKV model:
+        //
+        //  Ids = Is * (if - ir)
+        //  Is = (2 * u*Cox * Ut^2)/k * W/L
+        //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
+        //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
+
+        // moderate inversion characteristic current
+        // will be multiplied by uCox later
+        const double Is = (2. * Ut * Ut) * WL_vcr;
+
+        // Normalized current factor for 1 cycle at 1MHz.
+        const double N15 = norm * ((1 << 15) - 1);
+        const double n_Is = N15 * 1.0e-6 / C * Is;
+
+        // kVgt_Vx = k*(Vg - Vt) - Vx
+        // I.e. if k != 1.0, Vg must be scaled accordingly.
+        for (int i = 0; i < (1 << 16); i++)
         {
-#ifdef _OPENMP
-            OpAmp opampModel(
-                std::vector<Spline::Point>(
-                    std::begin(opamp_voltage),
-                    std::end(opamp_voltage)),
-                Vddt,
-                vmin,
-                vmax);
-#endif
-            buildVolumeTable(opampModel, 12.0);
+            const int kVgt_Vx = i - (1 << 15);
+            const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
+            // Scaled by m*2^15
+            vcr_n_Ids_term[i] = n_Is * log_term * log_term;
         }
+    };
 
-        #pragma omp section
-        {
-#ifdef _OPENMP
-            OpAmp opampModel(
-                std::vector<Spline::Point>(
-                    std::begin(opamp_voltage),
-                    std::end(opamp_voltage)),
-                Vddt,
-                vmin,
-                vmax);
-#endif
-            // build temp n table
-            double resonance_n[16];
-            for (int n8 = 0; n8 < 16; n8++)
-            {
-                resonance_n[n8] = (~n8 & 0xf) / 8.0;
-            }
+    auto thdSummer = std::thread(filterSummer);
+    auto thdMixer = std::thread(filterMixer);
+    auto thdGain = std::thread(filterGain);
+    auto thdResonance = std::thread(filterResonance);
+    auto thdVcrVg = std::thread(filterVcrVg);
+    auto thdVcrIds = std::thread(filterVcrIds);
 
-            buildResonanceTable(opampModel, resonance_n);
-        }
-
-        #pragma omp section
-        {
-            const double nVddt = N16 * (Vddt - vmin);
-
-            for (unsigned int i = 0; i < (1 << 16); i++)
-            {
-                // The table index is right-shifted 16 times in order to fit in
-                // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-                const double tmp = nVddt - sqrt(static_cast<double>(i << 16));
-                assert(tmp > -0.5 && tmp < 65535.5);
-                vcr_nVg[i] = static_cast<unsigned short>(tmp + 0.5);
-            }
-        }
-
-        #pragma omp section
-        {
-            //  EKV model:
-            //
-            //  Ids = Is * (if - ir)
-            //  Is = (2 * u*Cox * Ut^2)/k * W/L
-            //  if = ln^2(1 + e^((k*(Vg - Vt) - Vs)/(2*Ut))
-            //  ir = ln^2(1 + e^((k*(Vg - Vt) - Vd)/(2*Ut))
-
-            // moderate inversion characteristic current
-            // will be multiplied by uCox later
-            const double Is = (2. * Ut * Ut) * WL_vcr;
-
-            // Normalized current factor for 1 cycle at 1MHz.
-            const double N15 = norm * ((1 << 15) - 1);
-            const double n_Is = N15 * 1.0e-6 / C * Is;
-
-            // kVgt_Vx = k*(Vg - Vt) - Vx
-            // I.e. if k != 1.0, Vg must be scaled accordingly.
-            for (int i = 0; i < (1 << 16); i++)
-            {
-                const int kVgt_Vx = i - (1 << 15);
-                const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
-                // Scaled by m*2^15
-                vcr_n_Ids_term[i] = n_Is * log_term * log_term;
-            }
-        }
-    }
+    thdSummer.join();
+    thdMixer.join();
+    thdGain.join();
+    thdResonance.join();
+    thdVcrVg.join();
+    thdVcrIds.join();
 }
 
 unsigned short* FilterModelConfig6581::getDAC(double adjustment) const

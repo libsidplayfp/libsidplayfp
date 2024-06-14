@@ -30,7 +30,7 @@ $(PTHREAD_CFLAGS) \
 $(FTDI_CFLAGS) \
 @debug_flags@
 
-AM_CXXFLAGS = $(VISIBILITY_CXXFLAGS) $(OPENMP_CXXFLAGS)
+AM_CXXFLAGS = $(VISIBILITY_CXXFLAGS)
 
 #=========================================================
 EXTRA_DIST = \
