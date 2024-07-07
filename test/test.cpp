@@ -57,7 +57,7 @@ void loadRom(const char* path, char* buffer)
 
 int main(int argc, char* argv[])
 {
-    if (argc == 0)
+    if (argc < 2)
     {
         std::cerr << "Missing test name" << std::endl;
         return -1;
