@@ -68,8 +68,8 @@ protected:
     //@{
     unsigned short* mixer[8];       //-V730_NOINIT this is initialized in the derived class constructor
     unsigned short* summer[5];      //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* volume[16];   //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* resonance[16];   //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* volume[16];     //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* resonance[16];  //-V730_NOINIT this is initialized in the derived class constructor
     //@}
 
     /// Reverse op-amp transfer function.
