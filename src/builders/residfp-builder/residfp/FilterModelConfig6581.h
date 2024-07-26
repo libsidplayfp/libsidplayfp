@@ -67,7 +67,7 @@ private:
     /// Voltage Controlled Resistors
     //@{
     unsigned short vcr_nVg[1 << 16];
-    double vcr_n_Ids_term[1 << 16];
+    float vcr_n_Ids_term[1 << 16];
     //@}
 
 private:

@@ -232,7 +232,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
             const int kVgt_Vx = i - (1 << 15);
             const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
             // Scaled by m*2^15
-            vcr_n_Ids_term[i] = n_Is * log_term * log_term;
+            vcr_n_Ids_term[i] = static_cast<float>(n_Is * log_term * log_term);
         }
     };
 
