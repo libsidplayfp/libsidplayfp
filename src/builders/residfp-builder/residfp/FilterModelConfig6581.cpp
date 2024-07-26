@@ -202,7 +202,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         {
             // The table index is right-shifted 16 times in order to fit in
             // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-            const double tmp = nVddt - sqrt(static_cast<double>(i << 16));
+            const double tmp = nVddt - std::sqrt(static_cast<double>(i << 16));
             assert(tmp > -0.5 && tmp < 65535.5);
             vcr_nVg[i] = static_cast<unsigned short>(tmp + 0.5);
         }
@@ -230,7 +230,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for (int i = 0; i < (1 << 16); i++)
         {
             const int kVgt_Vx = i - (1 << 15);
-            const double log_term = log1p(exp((kVgt_Vx / N16) / (2. * Ut)));
+            const double log_term = std::log1p(std::exp((kVgt_Vx / N16) / (2. * Ut)));
             // Scaled by m*2^15
             vcr_n_Ids_term[i] = static_cast<float>(n_Is * log_term * log_term);
         }
