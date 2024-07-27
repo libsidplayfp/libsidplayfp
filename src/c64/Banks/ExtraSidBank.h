@@ -45,7 +45,7 @@ private:
      * Size of mapping table. Each 32 bytes another SID chip base address
      * can be assigned to.
      */
-    static const int MAPPER_SIZE = 8;
+    static constexpr int MAPPER_SIZE = 8;
 
 private:
     /**

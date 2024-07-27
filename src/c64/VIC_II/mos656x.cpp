@@ -39,9 +39,9 @@ namespace libsidplayfp
 {
 
 /// Cycle # at which the VIC takes the bus in a bad line (BA goes low).
-const unsigned int VICII_FETCH_CYCLE = 11;
+constexpr unsigned int VICII_FETCH_CYCLE = 11;
 
-const unsigned int VICII_SCREEN_TEXTCOLS = 40;
+constexpr unsigned int VICII_SCREEN_TEXTCOLS = 40;
 
 const MOS656X::model_data_t MOS656X::modelData[] =
 {

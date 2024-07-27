@@ -44,10 +44,10 @@ namespace libsidplayfp
  * The constants here defined are based on VICE testsuite which
  * refers to some real case usage of the opcodes.
  */
-const uint8_t lxa_magic = 0xee;
-const uint8_t ane_magic = 0xef;
+constexpr uint8_t lxa_magic = 0xee;
+constexpr uint8_t ane_magic = 0xef;
 
-const int interruptDelay = 2;
+constexpr int interruptDelay = 2;
 
 //-------------------------------------------------------------------------//
 

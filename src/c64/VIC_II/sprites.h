@@ -28,7 +28,7 @@
 
 #include <cstring>
 
-#define SPRITES 8
+constexpr int SPRITES = 8;
 
 namespace libsidplayfp
 {

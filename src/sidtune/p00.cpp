@@ -35,8 +35,8 @@
 namespace libsidplayfp
 {
 
-#define X00_ID_LEN   8
-#define X00_NAME_LEN 17
+constexpr int X00_ID_LEN = 8;
+constexpr int X00_NAME_LEN = 17;
 
 // File format from PC64. PC64 automatically generates
 // the filename from the cbm name (16 to 8 conversion)

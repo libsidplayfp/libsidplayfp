@@ -34,7 +34,7 @@
 namespace libsidplayfp
 {
 
-const int PSID_MAXSTRLEN = 32;
+constexpr int PSID_MAXSTRLEN = 32;
 
 
 // Header has been extended for 'RSID' format
@@ -101,12 +101,12 @@ const char TXT_FORMAT_RSID[]  = "Real C64 one-file format (RSID)";
 const char TXT_UNKNOWN_PSID[] = "Unsupported PSID version";
 const char TXT_UNKNOWN_RSID[] = "Unsupported RSID version";
 
-const int psid_headerSize = 118;
-const int psidv2_headerSize = psid_headerSize + 6;
+constexpr int psid_headerSize = 118;
+constexpr int psidv2_headerSize = psid_headerSize + 6;
 
 // Magic fields
-const uint32_t PSID_ID = 0x50534944;
-const uint32_t RSID_ID = 0x52534944;
+constexpr uint32_t PSID_ID = 0x50534944;
+constexpr uint32_t RSID_ID = 0x52534944;
 
 /**
  * Decode SID model flags.
