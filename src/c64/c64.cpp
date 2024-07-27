@@ -113,9 +113,6 @@ void c64::resetIoBank()
     ioBank.setBank(0xf, &disconnectedBusBank);
 }
 
-template<typename T>
-void resetSID(T &e) { e.second->reset(); }
-
 void c64::reset()
 {
     eventScheduler.reset();
@@ -128,7 +125,7 @@ void c64::reset()
     colorRAMBank.reset();
     mmu.reset();
 
-    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), resetSID<sidBankMap_t::value_type>);
+    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), [](sidBankMap_t::value_type &e) { e.second->reset(); });
 
     irqCount = 0;
     oldBAState = true;

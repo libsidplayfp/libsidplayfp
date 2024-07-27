@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -31,44 +31,14 @@
 namespace libsidplayfp
 {
 
-void clockChip(sidemu *s) { s->clock(); }
-
-class bufferPos
-{
-public:
-    bufferPos(int i) : pos(i) {}
-    void operator()(sidemu *s) { s->bufferpos(pos); }
-
-private:
-    int pos;
-};
-
-class bufferMove
-{
-public:
-    bufferMove(int p, int s) : pos(p), samples(s) {}
-    void operator()(short *dest)
-    {
-        const short* src = dest + pos;
-        for (int j = 0; j < samples; j++)
-        {
-            dest[j] = src[j];
-        }
-    }
-
-private:
-    int pos;
-    int samples;
-};
-
 void Mixer::clockChips()
 {
-    std::for_each(m_chips.begin(), m_chips.end(), clockChip);
+    std::for_each(m_chips.begin(), m_chips.end(), [](sidemu *s) { s->clock(); });
 }
 
 void Mixer::resetBufs()
 {
-    std::for_each(m_chips.begin(), m_chips.end(), bufferPos(0));
+    std::for_each(m_chips.begin(), m_chips.end(), [](sidemu *s) { s->bufferpos(0); });
 }
 
 void Mixer::doMix()
@@ -123,8 +93,14 @@ void Mixer::doMix()
 
     // move the unhandled data to start of buffer, if any.
     const int samplesLeft = sampleCount - i;
-    std::for_each(m_buffers.begin(), m_buffers.end(), bufferMove(i, samplesLeft));
-    std::for_each(m_chips.begin(), m_chips.end(), bufferPos(samplesLeft));
+    std::for_each(m_buffers.begin(), m_buffers.end(), [i, samplesLeft](short *dest) {
+        const short* src = dest + i;
+        for (int j = 0; j < samplesLeft; j++)
+        {
+            dest[j] = src[j];
+        }
+    });
+    std::for_each(m_chips.begin(), m_chips.end(), [samplesLeft](sidemu *s) { s->bufferpos(samplesLeft); });
 }
 
 void Mixer::begin(short *buffer, uint_least32_t count)

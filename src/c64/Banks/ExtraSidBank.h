@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2014 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,8 +58,6 @@ private:
     sids_t sids;
 
 private:
-    static void resetSID(sids_t::value_type &e) { e->reset(0xf); }
-
     static unsigned int mapperIndex(int address) { return address >> 5 & (MAPPER_SIZE - 1); }
 
 public:
@@ -67,7 +65,7 @@ public:
 
     void reset()
     {
-        std::for_each(sids.begin(), sids.end(), resetSID);
+        std::for_each(sids.begin(), sids.end(), [](sids_t::value_type &e) { e->reset(0xf); });
     }
 
     void resetSIDMapper(Bank *bank)
