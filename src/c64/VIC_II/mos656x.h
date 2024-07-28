@@ -68,16 +68,16 @@ private:
     static const model_data_t modelData[];
 
     /// raster IRQ flag
-    static const int IRQ_RASTER = 1 << 0;
+    static constexpr int IRQ_RASTER = 1 << 0;
 
     /// Light-Pen IRQ flag
-    static const int IRQ_LIGHTPEN = 1 << 3;
+    static constexpr int IRQ_LIGHTPEN = 1 << 3;
 
     /// First line when we check for bad lines
-    static const unsigned int FIRST_DMA_LINE = 0x30;
+    static constexpr unsigned int FIRST_DMA_LINE = 0x30;
 
     /// Last line when we check for bad lines
-    static const unsigned int LAST_DMA_LINE = 0xf7;
+    static constexpr unsigned int LAST_DMA_LINE = 0xf7;
 
 private:
     /// Current model clock function.

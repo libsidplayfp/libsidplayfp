@@ -28,8 +28,6 @@
 
 #include <cstring>
 
-constexpr int SPRITES = 8;
-
 namespace libsidplayfp
 {
 
@@ -39,6 +37,8 @@ namespace libsidplayfp
 class Sprites
 {
 private:
+    static constexpr int SPRITES = 8;
+
     const uint8_t &enable, &y_expansion;
 
     uint8_t exp_flop;
