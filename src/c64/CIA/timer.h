@@ -76,23 +76,23 @@ private:
     event_clock_t ciaEventPauseTime;
 
     /// PB6/PB7 Flipflop to signal underflows.
-    bool pbToggle;
+    bool pbToggle = false;
 
     /// Current timer value.
-    uint_least16_t timer;
+    uint_least16_t timer = 0;
 
     /// Timer start value (Latch).
-    uint_least16_t latch;
+    uint_least16_t latch = 0;
 
     /// Copy of regs[CRA/B]
-    uint8_t lastControlValue;
+    uint8_t lastControlValue = 0;
 
 protected:
     /// Pointer to the MOS6526 which this Timer belongs to.
     MOS652X &parent;
 
     /// CRA/CRB control register / state.
-    int_least32_t state;
+    int_least32_t state = 0;
 
 private:
     /**
@@ -139,12 +139,7 @@ protected:
         Event(name),
         m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
         eventScheduler(scheduler),
-        pbToggle(false),
-        timer(0),
-        latch(0),
-        lastControlValue(0),
-        parent(parent),
-        state(0) {}
+        parent(parent) {}
 
 public:
     /**

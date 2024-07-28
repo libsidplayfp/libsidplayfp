@@ -247,10 +247,7 @@ int SincResampler::fir(int subcycle)
 }
 
 SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
-    sampleIndex(0),
-    cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.)),
-    sampleOffset(0),
-    outputValue(0)
+    cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.))
 {
     // 16 bits -> -96dB stopband attenuation.
     const double A = -20. * log10(1.0 / (1 << BITS));

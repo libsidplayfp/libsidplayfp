@@ -53,7 +53,11 @@ private:
     EventScheduler &eventScheduler;
 
     /// CPU port signals
-    bool loram, hiram, charen;
+    //@{
+    bool loram = false;
+    bool hiram = false;
+    bool charen = false;
+    //@}
 
     friend uint8_t readIO(MMU &self, uint_least16_t addr);
     using ReadFunc = uint8_t (*)(MMU &self, uint_least16_t addr);
@@ -83,7 +87,7 @@ private:
     ZeroRAMBank zeroRAMBank;
 
     /// random seed
-    mutable unsigned int seed;
+    mutable unsigned int seed = 3686734;
 
 private:
     void setCpuPort(uint8_t state) override;

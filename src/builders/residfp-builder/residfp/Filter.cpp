@@ -98,27 +98,7 @@ Filter::Filter(FilterModelConfig* fmc) :
     resonance(fmc->getResonance()),
     volume(fmc->getVolume()),
     hpIntegrator(fmc->buildIntegrator()),
-    bpIntegrator(fmc->buildIntegrator()),
-    currentMixer(nullptr),
-    currentSummer(nullptr),
-    currentResonance(nullptr),
-    currentVolume(nullptr),
-    Vhp(0),
-    Vbp(0),
-    Vlp(0),
-    Ve(0),
-    fc(0),
-    filt1(false),
-    filt2(false),
-    filt3(false),
-    filtE(false),
-    voice3off(false),
-    hp(false),
-    bp(false),
-    lp(false),
-    vol(0),
-    enabled(true),
-    filt(0)
+    bpIntegrator(fmc->buildIntegrator())
 {
     input(0);
 }

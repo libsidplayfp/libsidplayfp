@@ -54,49 +54,58 @@ protected:
 
 private:
     /// Current filter/voice mixer setting.
-    unsigned short* currentMixer;
+    unsigned short* currentMixer = nullptr;
 
     /// Filter input summer setting.
-    unsigned short* currentSummer;
+    unsigned short* currentSummer = nullptr;
 
     /// Filter resonance value.
-    unsigned short* currentResonance;
+    unsigned short* currentResonance = nullptr;
 
     /// Current volume amplifier setting.
-    unsigned short* currentVolume;
+    unsigned short* currentVolume = nullptr;
 
     /// Filter highpass state.
-    int Vhp;
+    int Vhp = 0;
 
     /// Filter bandpass state.
-    int Vbp;
+    int Vbp = 0;
 
     /// Filter lowpass state.
-    int Vlp;
+    int Vlp = 0;
 
     /// Filter external input.
-    int Ve;
+    int Ve = 0;
 
     /// Filter cutoff frequency.
-    unsigned int fc;
+    unsigned int fc = 0;
 
     /// Routing to filter or outside filter
-    bool filt1, filt2, filt3, filtE;
+    //@{
+    bool filt1 = false;
+    bool filt2 = false;
+    bool filt3 = false;
+    bool filtE = false;
+    //@}
 
     /// Switch voice 3 off.
-    bool voice3off;
+    bool voice3off = false;
 
     /// Highpass, bandpass, and lowpass filter modes.
-    bool hp, bp, lp;
+    //@{
+    bool hp = false;
+    bool bp = false;
+    bool lp = false;
+    //@}
 
     /// Current volume.
-    unsigned char vol;
+    unsigned char vol = 0;
 
     /// Filter enabled.
-    bool enabled;
+    bool enabled = true;
 
     /// Selects which inputs to route through filter.
-    unsigned char filt;
+    unsigned char filt = 0;
 
 protected:
     /**

@@ -55,7 +55,7 @@ private:
     /// Table of the fir filter coefficients
     matrix_t* firTable;
 
-    int sampleIndex;
+    int sampleIndex = 0;
 
     /// Filter resolution
     int firRES;
@@ -65,9 +65,9 @@ private:
 
     const int cyclesPerSample;
 
-    int sampleOffset;
+    int sampleOffset = 0;
 
-    int outputValue;
+    int outputValue = 0;
 
     int sample[RINGSIZE * 2];
 

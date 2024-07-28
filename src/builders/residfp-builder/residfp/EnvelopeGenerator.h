@@ -54,61 +54,61 @@ private:
 
 private:
     /// XOR shift register for ADSR prescaling.
-    unsigned int lfsr;
+    unsigned int lfsr = 0x7fff;
 
     /// Comparison value (period) of the rate counter before next event.
-    unsigned int rate;
+    unsigned int rate = 0;
 
     /**
      * During release mode, the SID approximates envelope decay via piecewise
      * linear decay rate.
      */
-    unsigned int exponential_counter;
+    unsigned int exponential_counter = 0;
 
     /**
      * Comparison value (period) of the exponential decay counter before next
      * decrement.
      */
-    unsigned int exponential_counter_period;
-    unsigned int new_exponential_counter_period;
+    unsigned int exponential_counter_period = 1;
+    unsigned int new_exponential_counter_period = 0;
 
-    unsigned int state_pipeline;
+    unsigned int state_pipeline = 0;
 
     ///
-    unsigned int envelope_pipeline;
+    unsigned int envelope_pipeline = 0;
 
-    unsigned int exponential_pipeline;
+    unsigned int exponential_pipeline = 0;
 
     /// Current envelope state
-    State state;
-    State next_state;
+    State state = State::RELEASE;
+    State next_state = State::RELEASE;
 
     /// Whether counter is enabled. Only switching to ATTACK can release envelope.
-    bool counter_enabled;
+    bool counter_enabled = true;
 
     /// Gate bit
-    bool gate;
+    bool gate = false;
 
     ///
-    bool resetLfsr;
+    bool resetLfsr = false;
 
     /// The current digital value of envelope output.
-    unsigned char envelope_counter;
+    unsigned char envelope_counter = 0xaa;
 
     /// Attack register
-    unsigned char attack;
+    unsigned char attack = 0;
 
     /// Decay register
-    unsigned char decay;
+    unsigned char decay = 0;
 
     /// Sustain register
-    unsigned char sustain;
+    unsigned char sustain = 0;
 
     /// Release register
-    unsigned char release;
+    unsigned char release = 0;
 
     /// The ENV3 value, sampled at the first phase of the clock
-    unsigned char env3;
+    unsigned char env3 = 0;
 
 private:
     static const unsigned int adsrtable[16];
@@ -128,31 +128,6 @@ public:
      * Get the Envelope Generator digital output.
      */
     unsigned int output() const { return envelope_counter; }
-
-    /**
-     * Constructor.
-     */
-    EnvelopeGenerator() :
-        lfsr(0x7fff),
-        rate(0),
-        exponential_counter(0),
-        exponential_counter_period(1),
-        new_exponential_counter_period(0),
-        state_pipeline(0),
-        envelope_pipeline(0),
-        exponential_pipeline(0),
-        state(State::RELEASE),
-        next_state(State::RELEASE),
-        counter_enabled(true),
-        gate(false),
-        resetLfsr(false),
-        envelope_counter(0xaa),
-        attack(0),
-        decay(0),
-        sustain(0),
-        release(0),
-        env3(0)
-    {}
 
     /**
      * SID reset.

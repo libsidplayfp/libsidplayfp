@@ -72,7 +72,7 @@ class OpAmp
 {
 private:
     /// Current root position (cached as guess to speed up next iteration)
-    mutable double x;
+    mutable double x = 0.;
 
     const double Vddt;
     const double vmin;
@@ -92,7 +92,6 @@ public:
     OpAmp(const std::vector<Spline::Point> &opamp, double Vddt,
             double vmin, double vmax
     ) :
-        x(0.),
         Vddt(Vddt),
         vmin(vmin),
         vmax(vmax),

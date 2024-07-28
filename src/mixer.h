@@ -95,17 +95,17 @@ private:
     std::vector<mixer_func_t> m_mix;
     std::vector<scale_func_t> m_scale;
 
-    int m_oldRandomValue;
-    int m_fastForwardFactor;
+    int m_oldRandomValue = 0;
+    int m_fastForwardFactor = 1;
 
     // Mixer settings
-    short         *m_sampleBuffer;
-    uint_least32_t m_sampleCount;
-    uint_least32_t m_sampleIndex;
+    short         *m_sampleBuffer = nullptr;
+    uint_least32_t m_sampleCount = 0;
+    uint_least32_t m_sampleIndex = 0;
 
-    uint_least32_t m_sampleRate;
+    uint_least32_t m_sampleRate = 0;
 
-    bool m_stereo;
+    bool m_stereo = false;
 
     randomLCG<VOLUME_MAX> m_rand;
 
@@ -175,11 +175,6 @@ public:
      * Create a new mixer.
      */
     Mixer() :
-        m_oldRandomValue(0),
-        m_fastForwardFactor(1),
-        m_sampleCount(0),
-        m_sampleRate(0),
-        m_stereo(false),
         m_rand(257254)
     {
         m_mix.push_back(&Mixer::mono<1>);

@@ -58,29 +58,24 @@ protected:
     static const char ERR_INVALID_CHIP[];
 
 protected:
-    EventScheduler *eventScheduler;
+    EventScheduler *eventScheduler = nullptr;
 
-    event_clock_t m_accessClk;
+    event_clock_t m_accessClk = 0;
 
     /// The sample buffer
-    short *m_buffer;
+    short *m_buffer = nullptr;
 
     /// Current position in buffer
-    int m_bufferpos;
+    int m_bufferpos = 0;
 
-    bool m_status;
-    bool isLocked;
+    bool m_status = true;
+    bool isLocked = false;
 
     std::string m_error;
 
 public:
     sidemu(sidbuilder *builder) :
         m_builder(builder),
-        eventScheduler(nullptr),
-        m_buffer(nullptr),
-        m_bufferpos(0),
-        m_status(true),
-        isLocked(false),
         m_error("N/A") {}
     ~sidemu() override = default;
 

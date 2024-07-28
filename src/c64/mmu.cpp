@@ -43,12 +43,8 @@ class Bank;
 
 MMU::MMU(EventScheduler &scheduler, IOBank* ioBank) :
     eventScheduler(scheduler),
-    loram(false),
-    hiram(false),
-    charen(false),
     ioBank(ioBank),
-    zeroRAMBank(*this, ramBank),
-    seed(3686734)
+    zeroRAMBank(*this, ramBank)
 {
     cpuReadMap[0] = &readBank<ZeroRAMBank, &MMU::zeroRAMBank>;
     cpuWriteMap[0] = &zeroRAMBank;
