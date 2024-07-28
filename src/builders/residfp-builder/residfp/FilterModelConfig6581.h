@@ -106,7 +106,7 @@ public:
         return static_cast<unsigned short>(tmp + 0.5);
     }
     // only used if SLOPE_FACTOR is defined
-    inline double getUt() const { return Ut; }
+    inline constexpr double getUt() const { return Ut; }
     inline double getN16() const { return N16; }
 };
 

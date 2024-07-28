@@ -40,7 +40,6 @@ FilterModelConfig::FilterModelConfig(
     C(c),
     Vdd(vdd),
     Vth(vth),
-    Ut(26.0e-3),
     Vddt(Vdd - Vth),
     vmin(opamp_voltage[0].x),
     vmax(std::max(Vddt, opamp_voltage[0].y)),
