@@ -58,7 +58,7 @@ private:
 
     bool forceFinish;
 
-    bool model4485;
+    bool model4485 = false;
 
 private:
     void event() override;
@@ -77,8 +77,7 @@ public:
         eventScheduler(scheduler),
         flipCntEvent("flip CNT", *this, &SerialPort::flipCnt),
         flipFakeEvent("flip fake", *this, &SerialPort::flipFake),
-        startSdrEvent("start SDR", *this, &SerialPort::doStartSdr),
-        model4485(false)
+        startSdrEvent("start SDR", *this, &SerialPort::doStartSdr)
     {}
 
     void reset();
