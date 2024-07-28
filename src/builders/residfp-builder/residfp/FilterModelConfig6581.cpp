@@ -99,7 +99,11 @@ FilterModelConfig6581* FilterModelConfig6581::getInstance()
 void FilterModelConfig6581::setFilterRange(double adjustment)
 {
     // clamp into allowed range
+#ifdef HAVE_CXX17
+     adjustment = std::clamp(adjustment, 0.0, 1.0);
+#else
      adjustment = std::max(std::min(adjustment, 1.0), 0.);
+#endif
 
      // Get the new uCox value, in the range [1,40]
      const double new_uCox = (1. + 39. * adjustment) * 1e-6;
