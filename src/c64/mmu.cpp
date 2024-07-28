@@ -31,12 +31,12 @@ namespace libsidplayfp
 template<class BankType, BankType MMU::* Bank>
 uint8_t readBank(MMU &self, uint_least16_t addr)
 {
-  return (self.*Bank).peek(addr);
+    return (self.*Bank).peek(addr);
 }
 
 uint8_t readIO(MMU &self, uint_least16_t addr)
 {
-  return self.ioBank->peek(addr);
+    return self.ioBank->peek(addr);
 }
 
 class Bank;
@@ -115,5 +115,5 @@ uint8_t MMU::getLastReadByte() const
     seed = random(seed);
     return seed;
 }
-    
+
 }
