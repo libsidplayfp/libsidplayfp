@@ -45,14 +45,14 @@ namespace libsidplayfp
 class MOS656X : private Event
 {
 public:
-    typedef enum
+    enum class model_t
     {
         MOS6567R56A = 0  ///< OLD NTSC CHIP
         ,MOS6567R8       ///< NTSC-M
         ,MOS6569         ///< PAL-B
         ,MOS6572         ///< PAL-N
         ,MOS6573         ///< PAL-M
-    } model_t;
+    };
 
 private:
     typedef event_clock_t (MOS656X::*ClockFunc)();

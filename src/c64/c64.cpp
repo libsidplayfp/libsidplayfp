@@ -54,18 +54,18 @@ typedef struct
 
 const model_data_t modelData[] =
 {
-    {4433618.75,  18., 50., MOS656X::MOS6569},      // PAL-B
-    {3579545.455, 14., 60., MOS656X::MOS6567R8},    // NTSC-M
-    {3579545.455, 14., 60., MOS656X::MOS6567R56A},  // Old NTSC-M
-    {3582056.25,  14., 50., MOS656X::MOS6572},      // PAL-N
-    {3575611.49,  14., 50., MOS656X::MOS6573},      // PAL-M
+    {4433618.75,  18., 50., MOS656X::model_t::MOS6569},      // PAL-B
+    {3579545.455, 14., 60., MOS656X::model_t::MOS6567R8},    // NTSC-M
+    {3579545.455, 14., 60., MOS656X::model_t::MOS6567R56A},  // Old NTSC-M
+    {3582056.25,  14., 50., MOS656X::model_t::MOS6572},      // PAL-N
+    {3575611.49,  14., 50., MOS656X::model_t::MOS6573},      // PAL-M
 };
 
 const cia_model_data_t ciaModelData[] =
 {
-    {MOS652X::MOS6526},      // Old
-    {MOS652X::MOS8521},      // New
-    {MOS652X::MOS6526W4485}, // Old week 4485
+    {MOS652X::model_t::MOS6526},      // Old
+    {MOS652X::model_t::MOS8521},      // New
+    {MOS652X::model_t::MOS6526W4485}, // Old week 4485
 };
 
 double c64::getCpuFreq(model_t model)
