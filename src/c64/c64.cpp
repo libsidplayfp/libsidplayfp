@@ -183,12 +183,9 @@ bool c64::addExtraSid(c64sid *s, int address)
     return true;
 }
 
-template<class T>
-void Delete(T &s) { delete s.second; }
-
 c64::~c64()
 {
-    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), Delete<sidBankMap_t::value_type>);
+    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), [](sidBankMap_t::value_type &s) { delete s.second; });
     extraSidBanks.clear();
 }
 
@@ -198,7 +195,7 @@ void c64::clearSids()
 
     resetIoBank();
 
-    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), Delete<sidBankMap_t::value_type>);
+    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), [](sidBankMap_t::value_type &s) { delete s.second; });
 
     extraSidBanks.clear();
 }

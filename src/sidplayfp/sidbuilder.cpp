@@ -57,12 +57,9 @@ void sidbuilder::unlock(libsidplayfp::sidemu *device)
     }
 }
 
-template<class T>
-void Delete(T s) { delete s; }
-
 void sidbuilder::remove()
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), Delete<emuset_t::value_type>);
+    std::for_each(sidobjs.begin(), sidobjs.end(), [](emuset_t::value_type s) { delete s; });
 
     sidobjs.clear();
 }

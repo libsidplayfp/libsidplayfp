@@ -108,5 +108,10 @@ void exSIDBuilder::flush()
 
 void exSIDBuilder::filter (bool enable)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::exSID, bool>(&libsidplayfp::exSID::filter, enable));
+    std::for_each(
+        sidobjs.begin(),
+        sidobjs.end(),
+        [enable](libsidplayfp::sidemu *e)
+            { static_cast<libsidplayfp::exSID*>(e)->filter(enable); }
+    );
 }
