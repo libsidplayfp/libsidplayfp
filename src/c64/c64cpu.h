@@ -76,7 +76,7 @@ protected:
     void cpuWrite(uint_least16_t addr, uint8_t data) override
     {
 #ifdef PRINTSCREENCODES
-        if (addr >= 1024 && addr <= 2047)
+        if (addr >= 0x0400 && addr <= 0x07ff)
         {
             std::cout << CHRtab[data];
         }

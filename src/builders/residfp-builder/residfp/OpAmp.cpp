@@ -28,7 +28,7 @@
 namespace reSIDfp
 {
 
-const double EPSILON = 1e-8;
+constexpr double EPSILON = 1e-8;
 
 double OpAmp::solve(double n, double vi) const
 {

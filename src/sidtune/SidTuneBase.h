@@ -64,7 +64,7 @@ protected:
 
 protected:
     /// Also PSID file format limit.
-    static const unsigned int MAX_SONGS = 256;
+    static constexpr unsigned int MAX_SONGS = 256;
 
     // Generic error messages
     static const char ERR_TRUNCATED[];
