@@ -35,6 +35,10 @@
 #  define unique_ptr auto_ptr
 #endif
 
+#ifndef M_PI
+#  define M_PI    3.14159265358979323846
+#endif
+
 /**
  * Simple sin waveform in, power output measurement function.
  * It would be far better to use FFT.
