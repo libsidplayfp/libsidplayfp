@@ -22,6 +22,10 @@
 
 #include "SincResampler.h"
 
+#ifdef HAVE_CXX20
+#  include <numbers>
+#endif
+
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -252,11 +256,21 @@ int SincResampler::fir(int subcycle)
 SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
     cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.))
 {
+#ifdef HAVE_CXX20
+    constexpr double PI = std::numbers::pi;
+#else
+#  ifdef M_PI
+        constexpr double PI = M_PI;
+#else
+        constexpr double PI = 3.14159265358979323846;
+#  endif
+#endif
+
     // 16 bits -> -96dB stopband attenuation.
     const double A = -20. * std::log10(1.0 / (1 << BITS));
     // A fraction of the bandwidth is allocated to the transition band, which we double
     // because we design the filter to transition halfway at nyquist.
-    const double dw = (1. - 2.*highestAccurateFrequency / samplingFrequency) * M_PI * 2.;
+    const double dw = (1. - 2.*highestAccurateFrequency / samplingFrequency) * PI * 2.;
 
     // For calculation of beta and N see the reference for the kaiserord
     // function in the MATLAB Signal Processing Toolbox:
@@ -296,10 +310,10 @@ SincResampler::SincResampler(double clockFrequency, double samplingFrequency, do
         firTable = new matrix_t(firRES, firN);
 
         // The cutoff frequency is midway through the transition band, in effect the same as nyquist.
-        const double wc = M_PI;
+        const double wc = PI;
 
         // Calculate the sinc tables.
-        const double scale = 32768.0 * wc * inv_cyclesPerSampleD / M_PI;
+        const double scale = 32768.0 * wc * inv_cyclesPerSampleD / PI;
 
         // we're not interested in the fractional part
         // so use int division before converting to double
