@@ -25,6 +25,7 @@
 #include <cassert>
 #include <cstring>
 #include <cmath>
+#include <cstdint>
 
 #include "siddefs-fp.h"
 
@@ -95,9 +96,11 @@ int convolve(const int* a, const short* b, int bLength)
 
         for (int i = 0; i < l; i++)
         {
-            out += *a++ * static_cast<int>(*b++);
+            out += a[i] * static_cast<int>(b[i]);
         }
 
+        a += l;
+        b += l;
         bLength -= l;
     }
 
@@ -214,7 +217,7 @@ int convolve(const int* a, const short* b, int bLength)
 
     for (int i = 0; i < bLength; i++)
     {
-        out += *a++ * static_cast<int>(*b++);
+        out += a[i] * static_cast<int>(b[i]);
     }
 
     return (out + (1 << 14)) >> 15;
