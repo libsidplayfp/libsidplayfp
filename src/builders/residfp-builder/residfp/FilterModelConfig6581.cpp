@@ -241,19 +241,27 @@ FilterModelConfig6581::FilterModelConfig6581() :
         }
     };
 
-    auto thdSummer = std::thread(filterSummer);
-    auto thdMixer = std::thread(filterMixer);
-    auto thdGain = std::thread(filterGain);
-    auto thdResonance = std::thread(filterResonance);
-    auto thdVcrVg = std::thread(filterVcrVg);
-    auto thdVcrIds = std::thread(filterVcrIds);
+#ifdef HAVE_CXX20
+    using sidThread = std::jthread;
+#else
+    using sidThread = std::thread;
+#endif
 
+    sidThread thdSummer(filterSummer);
+    sidThread thdMixer(filterMixer);
+    sidThread thdGain(filterGain);
+    sidThread thdResonance(filterResonance);
+    sidThread thdVcrVg(filterVcrVg);
+    sidThread thdVcrIds(filterVcrIds);
+
+#ifndef HAVE_CXX20
     thdSummer.join();
     thdMixer.join();
     thdGain.join();
     thdResonance.join();
     thdVcrVg.join();
     thdVcrIds.join();
+#endif
 }
 
 unsigned short* FilterModelConfig6581::getDAC(double adjustment) const

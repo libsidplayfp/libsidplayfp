@@ -26,6 +26,10 @@
 #endif
 
 
+#ifdef HAVE_CXX20
+#  define HAVE_CXX17
+#endif
+
 #ifdef HAVE_CXX17
 #  define HAVE_CXX14
 #  define MAYBE_UNUSED [[ maybe_unused ]]
