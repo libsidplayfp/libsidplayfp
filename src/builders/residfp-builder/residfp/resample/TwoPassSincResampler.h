@@ -56,7 +56,7 @@ public:
         // Calculation according to Laurent Ganier. It evaluates to about 120 kHz at typical settings.
         // Some testing around the chosen value seems to confirm that this does work.
         double const intermediateFrequency = 2. * highestAccurateFrequency
-            + sqrt(2. * highestAccurateFrequency * clockFrequency
+            + std::sqrt(2. * highestAccurateFrequency * clockFrequency
                 * (samplingFrequency - 2. * highestAccurateFrequency) / samplingFrequency);
         return new TwoPassSincResampler(clockFrequency, samplingFrequency, highestAccurateFrequency, intermediateFrequency);
     }
