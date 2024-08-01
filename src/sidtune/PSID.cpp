@@ -187,9 +187,10 @@ void PSID::readHeader(const buffer_t &dataBuf, psidHeader &hdr)
     hdr.songs            = endian_big16(&dataBuf[14]);
     hdr.start            = endian_big16(&dataBuf[16]);
     hdr.speed            = endian_big32(&dataBuf[18]);
-    memcpy(hdr.name,     &dataBuf[22], PSID_MAXSTRLEN);
-    memcpy(hdr.author,   &dataBuf[54], PSID_MAXSTRLEN);
-    memcpy(hdr.released, &dataBuf[86], PSID_MAXSTRLEN);
+
+    std::memcpy(hdr.name,     &dataBuf[22], PSID_MAXSTRLEN);
+    std::memcpy(hdr.author,   &dataBuf[54], PSID_MAXSTRLEN);
+    std::memcpy(hdr.released, &dataBuf[86], PSID_MAXSTRLEN);
 
     if (hdr.version >= 2)
     {

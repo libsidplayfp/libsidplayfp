@@ -36,7 +36,7 @@
 
 #include "sidcxx11.h"
 
-#include <string.h>
+#include <cstring>
 
 namespace libsidplayfp
 {
@@ -119,7 +119,7 @@ public:
     }
     void fillRam(uint_least16_t start, const uint8_t* source, unsigned int size) override
     {
-        memcpy(ramBank.ram+start, source, size);
+        std::memcpy(ramBank.ram+start, source, size);
     }
 
     // SID specific hacks

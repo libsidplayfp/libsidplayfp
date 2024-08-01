@@ -126,8 +126,8 @@ SidTuneBase* p00::load(const char *fileName, buffer_t& dataBuf)
         return nullptr;
 
     X00Header pHeader;
-    memcpy(pHeader.id, &dataBuf[0], X00_ID_LEN);
-    memcpy(pHeader.name, &dataBuf[X00_ID_LEN], X00_NAME_LEN);
+    std::memcpy(pHeader.id, &dataBuf[0], X00_ID_LEN);
+    std::memcpy(pHeader.name, &dataBuf[X00_ID_LEN], X00_NAME_LEN);
     pHeader.length = dataBuf[X00_ID_LEN + X00_NAME_LEN];
 
     if (strcmp(pHeader.id, P00_ID))

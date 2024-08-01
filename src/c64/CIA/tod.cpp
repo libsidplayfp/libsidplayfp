@@ -35,10 +35,10 @@ void Tod::reset()
     cycles = 0;
     todtickcounter = 0;
 
-    memset(clock, 0, sizeof(clock));
+    std::memset(clock, 0, sizeof(clock));
     clock[HOURS] = 1; // the most common value
-    memcpy(latch, clock, sizeof(latch));
-    memset(alarm, 0, sizeof(alarm));
+    std::memcpy(latch, clock, sizeof(latch));
+    std::memset(alarm, 0, sizeof(alarm));
 
     isLatched = false;
     isStopped = true;
@@ -237,7 +237,7 @@ void Tod::updateCounters()
 
 void Tod::checkAlarm()
 {
-    if (!memcmp(alarm, clock, sizeof(alarm)))
+    if (!std::memcmp(alarm, clock, sizeof(alarm)))
     {
         parent.todInterrupt();
     }

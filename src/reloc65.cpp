@@ -99,7 +99,7 @@ bool reloc65::reloc(unsigned char **buf, int *fsize)
 {
     unsigned char *tmpBuf = *buf;
 
-    if (memcmp(tmpBuf, o65hdr, 5) != 0)
+    if (std::memcmp(tmpBuf, o65hdr, 5) != 0)
     {
         return false;
     }
