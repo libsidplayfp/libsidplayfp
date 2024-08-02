@@ -231,10 +231,11 @@ FilterModelConfig6581::FilterModelConfig6581() :
 
         // kVgt_Vx = k*(Vg - Vt) - Vx
         // I.e. if k != 1.0, Vg must be scaled accordingly.
+        const double  r_N16_2Ut = 1.0 / (N16 * 2.0 * Ut);
         for (int i = 0; i < (1 << 16); i++)
         {
             const int kVgt_Vx = i - (1 << 15);
-            const double log_term = std::log1p(std::exp((kVgt_Vx / N16) / (2. * Ut)));
+            const double log_term = std::log1p(std::exp(kVgt_Vx * r_N16_2Ut));
             // Scaled by m*2^15
             vcr_n_Ids_term[i] = n_Is * log_term * log_term;
         }
