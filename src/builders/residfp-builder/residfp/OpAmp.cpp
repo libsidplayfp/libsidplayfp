@@ -64,7 +64,7 @@ double OpAmp::solve(double n, double vi) const
         // Newton-Raphson step: xk1 = xk - f(xk)/f'(xk)
         x -= f / df;
 
-        if (unlikely(fabs(x - xk) < EPSILON))
+        if (unlikely(std::fabs(x - xk) < EPSILON))
         {
             out = opamp->evaluate(x);
             return out.x;

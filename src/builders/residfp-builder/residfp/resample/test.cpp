@@ -57,7 +57,7 @@ int main(int, const char*[])
 
         for (int j = 0; j < RINGSIZE; j ++)
         {
-            int signal = static_cast<int>(32768.0 * sin(k++ * omega) * sqrt(2));
+            int signal = static_cast<int>(32768.0 * std::sin(k++ * omega) * sqrt(2));
             r->input(signal);
         }
 
@@ -67,7 +67,7 @@ int main(int, const char*[])
         /* Now, during measurement stage, put 100 cycles of waveform through filter. */
         for (int j = 0; j < 100000; j ++)
         {
-            int signal = static_cast<int>(32768.0 * sin(k++ * omega) * sqrt(2));
+            int signal = static_cast<int>(32768.0 * std::sin(k++ * omega) * std::sqrt(2));
 
             if (r->input(signal))
             {
@@ -77,7 +77,7 @@ int main(int, const char*[])
             }
         }
 
-        results.insert(std::make_pair(freq, 10 * log10(pwr / n)));
+        results.insert(std::make_pair(freq, 10 * std::log10(pwr / n)));
     }
 
     clock_t end = clock();
