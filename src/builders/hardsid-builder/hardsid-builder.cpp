@@ -137,7 +137,12 @@ void HardSIDBuilder::flush()
 
 void HardSIDBuilder::filter(bool enable)
 {
-    std::for_each(sidobjs.begin(), sidobjs.end(), applyParameter<libsidplayfp::HardSID, bool>(&libsidplayfp::HardSID::filter, enable));
+    std::for_each(
+        sidobjs.begin(),
+        sidobjs.end(),
+        [enable](libsidplayfp::sidemu *e)
+            { static_cast<libsidplayfp::HardSID*>(e)->filter(enable); }
+    );
 }
 
 #ifdef _WIN32
