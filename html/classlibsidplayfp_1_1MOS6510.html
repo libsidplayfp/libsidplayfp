@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -54,23 +54,13 @@
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classlibsidplayfp_1_1MOS6510-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">libsidplayfp::MOS6510 Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">libsidplayfp::MOS6510 Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="mos6510_8h_source.html">mos6510.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for libsidplayfp::MOS6510:</div>
-<div class="dyncontent">
-<div class="center"><img src="classlibsidplayfp_1_1MOS6510__inherit__graph.png" border="0" usemap="#alibsidplayfp_1_1MOS6510_inherit__map" alt="Inheritance graph"/></div>
-<map name="alibsidplayfp_1_1MOS6510_inherit__map" id="alibsidplayfp_1_1MOS6510_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,5,173,32"/>
-<area shape="rect" href="classlibsidplayfp_1_1c64cpu.html" title=" " alt="" coords="13,80,165,107"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -79,6 +69,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a3417e2ed21951d282bcc2f7647458db4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1MOS6510.html#a3417e2ed21951d282bcc2f7647458db4">MOS6510</a> (<a class="el" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler, <a class="el" href="classlibsidplayfp_1_1CPUDataBus.html">CPUDataBus</a> &amp;bus)</td></tr>
+<tr class="separator:a3417e2ed21951d282bcc2f7647458db4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa31d72965d0a020fdaa78d8ec15eb5c7"><td class="memItemLeft" align="right" valign="top"><a id="aa31d72965d0a020fdaa78d8ec15eb5c7"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cpuRead</b> (uint_least16_t addr)</td></tr>
+<tr class="separator:aa31d72965d0a020fdaa78d8ec15eb5c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafea000c8ba212ed7ed15599abb5fd12"><td class="memItemLeft" align="right" valign="top"><a id="aafea000c8ba212ed7ed15599abb5fd12"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>cpuWrite</b> (uint_least16_t addr, uint8_t data)</td></tr>
+<tr class="separator:aafea000c8ba212ed7ed15599abb5fd12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93b574044361532623bad2b1b1e505fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1MOS6510.html#a93b574044361532623bad2b1b1e505fd">reset</a> ()</td></tr>
 <tr class="separator:a93b574044361532623bad2b1b1e505fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2de95b74fa23f3adc61f0e2e25d523b"><td class="memItemLeft" align="right" valign="top"><a id="ad2de95b74fa23f3adc61f0e2e25d523b"></a>
@@ -106,43 +104,36 @@ Static Public Attributes</h2></td></tr>
 static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1MOS6510.html#ac40337fd4f6de74a53254916be202634">SR_INTERRUPT</a> = 2</td></tr>
 <tr class="memdesc:ac40337fd4f6de74a53254916be202634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Status register interrupt bit. <br /></td></tr>
 <tr class="separator:ac40337fd4f6de74a53254916be202634"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a246ea81ccccd514d085052514cdf24c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1MOS6510.html#a246ea81ccccd514d085052514cdf24c2">MOS6510</a> (<a class="el" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;scheduler)</td></tr>
-<tr class="separator:a246ea81ccccd514d085052514cdf24c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a046e755d2ec690ced4158758592cdd7c"><td class="memItemLeft" align="right" valign="top">virtual uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1MOS6510.html#a046e755d2ec690ced4158758592cdd7c">cpuRead</a> (uint_least16_t addr)=0</td></tr>
-<tr class="separator:a046e755d2ec690ced4158758592cdd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84022aa54ab81c38c1bb59202eee7ebc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1MOS6510.html#a84022aa54ab81c38c1bb59202eee7ebc">cpuWrite</a> (uint_least16_t addr, uint8_t data)=0</td></tr>
-<tr class="separator:a84022aa54ab81c38c1bb59202eee7ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cycle-exact 6502/6510 emulation core.</p>
 <p>Code is based on work by Simon A. White <a href="#" onclick="location.href='mai'+'lto:'+'sid'+'pl'+'ay2'+'@y'+'aho'+'o.'+'com'; return false;">sidpl<span style="display: none;">.nosp@m.</span>ay2@<span style="display: none;">.nosp@m.</span>yahoo<span style="display: none;">.nosp@m.</span>.com</a>. Original Java port by Ken Händel. Later on, it has been hacked to improve compatibility with Lorenz suite on VICE's test suite.</p>
 <dl class="section author"><dt>Author</dt><dd>alankila </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a246ea81ccccd514d085052514cdf24c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a246ea81ccccd514d085052514cdf24c2">&#9670;&nbsp;</a></span>MOS6510()</h2>
+<a id="a3417e2ed21951d282bcc2f7647458db4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3417e2ed21951d282bcc2f7647458db4">&#9670;&nbsp;</a></span>MOS6510()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">libsidplayfp::MOS6510::MOS6510 </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> &amp;&#160;</td>
-          <td class="paramname"><em>scheduler</em></td><td>)</td>
+          <td class="paramname"><em>scheduler</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classlibsidplayfp_1_1CPUDataBus.html">CPUDataBus</a> &amp;&#160;</td>
+          <td class="paramname"><em>bus</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Create new CPU emu.</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -170,88 +161,6 @@ Protected Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Inform CPU that IRQ is no longer pulled low. </p>
-
-</div>
-</div>
-<a id="a046e755d2ec690ced4158758592cdd7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a046e755d2ec690ced4158758592cdd7c">&#9670;&nbsp;</a></span>cpuRead()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual uint8_t libsidplayfp::MOS6510::cpuRead </td>
-          <td>(</td>
-          <td class="paramtype">uint_least16_t&#160;</td>
-          <td class="paramname"><em>addr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get data from system environment.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">address</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>data byte CPU requested </dd></dl>
-
-<p>Implemented in <a class="el" href="classlibsidplayfp_1_1c64cpu.html#ab7fe530d604462882ee8de8eb91ecd5c">libsidplayfp::c64cpu</a>.</p>
-
-</div>
-</div>
-<a id="a84022aa54ab81c38c1bb59202eee7ebc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84022aa54ab81c38c1bb59202eee7ebc">&#9670;&nbsp;</a></span>cpuWrite()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void libsidplayfp::MOS6510::cpuWrite </td>
-          <td>(</td>
-          <td class="paramtype">uint_least16_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Write data to system environment.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">address</td><td></td></tr>
-    <tr><td class="paramname">data</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implemented in <a class="el" href="classlibsidplayfp_1_1c64cpu.html#a48868f4ce2425e9ee5e79fe6604827a4">libsidplayfp::c64cpu</a>.</p>
 
 </div>
 </div>
@@ -385,7 +294,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

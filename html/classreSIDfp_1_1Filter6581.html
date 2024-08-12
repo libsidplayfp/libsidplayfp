@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -220,7 +220,7 @@ NMOS FET voltage controlled resistor (VCR)</h2>
 <div class="line">vo  - output</div>
 <div class="line">Rn  - <span class="stringliteral">&quot;resistors&quot;</span>, implemented with custom NMOS FETs</div>
 <div class="line">Vw  - voltage from 11-bit DAC (frequency cutoff control)</div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a5968f88984e1491edf3c7b4346bb353f"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(int input)</div><div class="ttdef"><b>Definition:</b> Filter.h:184</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a5968f88984e1491edf3c7b4346bb353f"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(int input)</div><div class="ttdef"><b>Definition:</b> Filter.h:193</div></div>
 </div><!-- fragment --><p> Notes:</p>
 <p>An approximate value for R24 can be found by using the formula for the filter cutoff frequency: </p><pre class="fragment">FCmin = 1/(2*pi*Rmax*C)
 </pre><p> Assuming that a the setting for minimum cutoff frequency in combination with a low level input signal ensures that only negligible current will flow through the transistor in the schematics above, values for FCmin and C can be substituted in this formula to find Rmax. Using C = 470pF and FCmin = 220Hz (measured value), we get: </p><pre class="fragment">FCmin = 1/(2*pi*Rmax*C)
@@ -385,7 +385,7 @@ Output buffer (NMOS voltage follower)</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

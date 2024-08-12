@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -102,7 +102,7 @@
 <div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">   62</a></span>&#160;    <span class="keywordtype">void</span>* <a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(uint_least16_t address)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (<span class="keywordtype">void</span>*)&amp;<a class="code" href="classlibsidplayfp_1_1romBank.html#ab6ef710688a12a7f39e1d9e701e66103">rom</a>[address &amp; (N-1)]; }</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1romBank.html#a0d031f1a6ac79f1266154a01d0a24ede">   68</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1romBank.html#a0d031f1a6ac79f1266154a01d0a24ede">set</a>(<span class="keyword">const</span> uint8_t* source) { <span class="keywordflow">if</span> (source != <span class="keyword">nullptr</span>) memcpy(<a class="code" href="classlibsidplayfp_1_1romBank.html#ab6ef710688a12a7f39e1d9e701e66103">rom</a>, source, N); }</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1romBank.html#a0d031f1a6ac79f1266154a01d0a24ede">   68</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1romBank.html#a0d031f1a6ac79f1266154a01d0a24ede">set</a>(<span class="keyword">const</span> uint8_t* source) { <span class="keywordflow">if</span> (source != <span class="keyword">nullptr</span>) std::memcpy(<a class="code" href="classlibsidplayfp_1_1romBank.html#ab6ef710688a12a7f39e1d9e701e66103">rom</a>, source, N); }</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1romBank.html#aa7e0b6740cf11e030906d48d25f1a7f4">   73</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1romBank.html#aa7e0b6740cf11e030906d48d25f1a7f4">poke</a>(uint_least16_t, uint8_t)<span class="keyword"> override </span>{}</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
@@ -175,17 +175,17 @@
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <a class="code" href="classlibsidplayfp_1_1romBank.html#a0d031f1a6ac79f1266154a01d0a24ede">romBank&lt;0x2000&gt;::set</a>(basic);</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="comment">// Backup BASIC Warm Start</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        memcpy(trap, <a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xa7ae), <span class="keyword">sizeof</span>(trap));</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        std::memcpy(trap, <a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xa7ae), <span class="keyword">sizeof</span>(trap));</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        memcpy(subTune, <a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xbf53), <span class="keyword">sizeof</span>(subTune));</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        std::memcpy(subTune, <a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xbf53), <span class="keyword">sizeof</span>(subTune));</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    }</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">void</span> reset()</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    {</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="comment">// Restore original BASIC Warm Start</span></div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        memcpy(<a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xa7ae), trap, <span class="keyword">sizeof</span>(trap));</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        std::memcpy(<a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xa7ae), trap, <span class="keyword">sizeof</span>(trap));</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        memcpy(<a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xbf53), subTune, <span class="keyword">sizeof</span>(subTune));</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        std::memcpy(<a class="code" href="classlibsidplayfp_1_1romBank.html#ae93f698851cfbba3eb8d595635cc6bb7">getPtr</a>(0xbf53), subTune, <span class="keyword">sizeof</span>(subTune));</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    }</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
 <div class="line"><a name="l00180"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1BasicRomBank.html#a8649b35b8a93b549e094e5da80513fbe">  180</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1BasicRomBank.html#a8649b35b8a93b549e094e5da80513fbe">installTrap</a>(uint_least16_t addr)</div>
@@ -233,7 +233,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

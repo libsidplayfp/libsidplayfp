@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -65,8 +65,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aad12cfaa21b261826339994eb61c0808"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07c062ea2465158e8e35f1f719fccabc"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1EnvelopeGenerator.html#a07c062ea2465158e8e35f1f719fccabc">output</a> () const</td></tr>
 <tr class="separator:a07c062ea2465158e8e35f1f719fccabc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad14b4d0a8b782573a3cade4c2432c62e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1EnvelopeGenerator.html#ad14b4d0a8b782573a3cade4c2432c62e">EnvelopeGenerator</a> ()</td></tr>
-<tr class="separator:ad14b4d0a8b782573a3cade4c2432c62e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20ebe9bb9287bb325d14b516a8f0b3d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1EnvelopeGenerator.html#a20ebe9bb9287bb325d14b516a8f0b3d8">reset</a> ()</td></tr>
 <tr class="separator:a20ebe9bb9287bb325d14b516a8f0b3d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a818b47958703edf6c96b30ee209f0500"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1EnvelopeGenerator.html#a818b47958703edf6c96b30ee209f0500">writeCONTROL_REG</a> (unsigned char control)</td></tr>
@@ -81,34 +79,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A 15 bit <a href="https://en.wikipedia.org/wiki/Linear_feedback_shift_register">LFSR</a> is used to implement the envelope rates, in effect dividing the clock to the envelope counter by the currently selected rate period.</p>
 <p>In addition, another 5 bit counter is used to implement the exponential envelope decay, in effect further dividing the clock to the envelope counter. The period of this counter is set to 1, 2, 4, 8, 16, 30 at the envelope counter values 255, 93, 54, 26, 14, 6, respectively. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad14b4d0a8b782573a3cade4c2432c62e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad14b4d0a8b782573a3cade4c2432c62e">&#9670;&nbsp;</a></span>EnvelopeGenerator()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">reSIDfp::EnvelopeGenerator::EnvelopeGenerator </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Constructor. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aad12cfaa21b261826339994eb61c0808"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aad12cfaa21b261826339994eb61c0808">&#9670;&nbsp;</a></span>clock()</h2>
 
@@ -280,7 +251,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -152,10 +152,10 @@ Protected Attributes</h2></td></tr>
 std::unique_ptr&lt; <a class="el" href="classlibsidplayfp_1_1SidTuneInfoImpl.html">SidTuneInfoImpl</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>info</b></td></tr>
 <tr class="separator:af89f2048c42a830278fdf58aae8fc151"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27141d3ff061a861af6212f79fd23f6f"><td class="memItemLeft" align="right" valign="top"><a id="a27141d3ff061a861af6212f79fd23f6f"></a>
-uint_least8_t&#160;</td><td class="memItemRight" valign="bottom"><b>songSpeed</b> [<a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a05be0decb411c4ebc04fb3a78024211c">MAX_SONGS</a>]</td></tr>
+uint_least8_t&#160;</td><td class="memItemRight" valign="bottom"><b>songSpeed</b> [<a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a9c50b44c6d57c6e31567c4f058afb8c9">MAX_SONGS</a>]</td></tr>
 <tr class="separator:a27141d3ff061a861af6212f79fd23f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02a163e112e5e9265be1446403db1778"><td class="memItemLeft" align="right" valign="top"><a id="a02a163e112e5e9265be1446403db1778"></a>
-SidTuneInfo::clock_t&#160;</td><td class="memItemRight" valign="bottom"><b>clockSpeed</b> [<a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a05be0decb411c4ebc04fb3a78024211c">MAX_SONGS</a>]</td></tr>
+SidTuneInfo::clock_t&#160;</td><td class="memItemRight" valign="bottom"><b>clockSpeed</b> [<a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a9c50b44c6d57c6e31567c4f058afb8c9">MAX_SONGS</a>]</td></tr>
 <tr class="separator:a02a163e112e5e9265be1446403db1778"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4c2ca2b8c0c9e66ccc69879ea77c1e5"><td class="memItemLeft" align="right" valign="top"><a id="af4c2ca2b8c0c9e66ccc69879ea77c1e5"></a>
 uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#af4c2ca2b8c0c9e66ccc69879ea77c1e5">fileOffset</a></td></tr>
@@ -167,10 +167,10 @@ buffer_t&#160;</td><td class="memItemRight" valign="bottom"><b>cache</b></td></t
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
-<tr class="memitem:a05be0decb411c4ebc04fb3a78024211c"><td class="memItemLeft" align="right" valign="top"><a id="a05be0decb411c4ebc04fb3a78024211c"></a>
-static const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a05be0decb411c4ebc04fb3a78024211c">MAX_SONGS</a> = 256</td></tr>
-<tr class="memdesc:a05be0decb411c4ebc04fb3a78024211c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Also <a class="el" href="classlibsidplayfp_1_1PSID.html">PSID</a> file format limit. <br /></td></tr>
-<tr class="separator:a05be0decb411c4ebc04fb3a78024211c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c50b44c6d57c6e31567c4f058afb8c9"><td class="memItemLeft" align="right" valign="top"><a id="a9c50b44c6d57c6e31567c4f058afb8c9"></a>
+static constexpr unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a9c50b44c6d57c6e31567c4f058afb8c9">MAX_SONGS</a> = 256</td></tr>
+<tr class="memdesc:a9c50b44c6d57c6e31567c4f058afb8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Also <a class="el" href="classlibsidplayfp_1_1PSID.html">PSID</a> file format limit. <br /></td></tr>
+<tr class="separator:a9c50b44c6d57c6e31567c4f058afb8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a000b311d031858b5998ba6fdb977e3a7"><td class="memItemLeft" align="right" valign="top"><a id="a000b311d031858b5998ba6fdb977e3a7"></a>
 static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_TRUNCATED</b> [] = &quot;SIDTUNE ERROR: File is most likely truncated&quot;</td></tr>
 <tr class="separator:a000b311d031858b5998ba6fdb977e3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -826,7 +826,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -91,7 +91,7 @@
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="classmatrix.html">matrix_t</a>* firTable;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">int</span> sampleIndex;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">int</span> sampleIndex = 0;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">int</span> firRES;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
@@ -99,9 +99,9 @@
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> cyclesPerSample;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">int</span> sampleOffset;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">int</span> sampleOffset = 0;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">int</span> outputValue;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">int</span> outputValue = 0;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">int</span> sample[RINGSIZE * 2];</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
@@ -125,12 +125,12 @@
 <div class="ttc" id="aclassmatrix_html"><div class="ttname"><a href="classmatrix.html">matrix&lt; short &gt;</a></div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Resampler_html"><div class="ttname"><a href="classreSIDfp_1_1Resampler.html">reSIDfp::Resampler</a></div><div class="ttdef"><b>Definition:</b> Resampler.h:40</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SincResampler_html"><div class="ttname"><a href="classreSIDfp_1_1SincResampler.html">reSIDfp::SincResampler</a></div><div class="ttdef"><b>Definition:</b> SincResampler.h:49</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SincResampler_html_a05ea66f27347b49f9d6394666309baad"><div class="ttname"><a href="classreSIDfp_1_1SincResampler.html#a05ea66f27347b49f9d6394666309baad">reSIDfp::SincResampler::input</a></div><div class="ttdeci">bool input(int input) override</div><div class="ttdef"><b>Definition:</b> SincResampler.cpp:333</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1SincResampler_html_a18dddd2eacd3f9ae8b91ac03309a462e"><div class="ttname"><a href="classreSIDfp_1_1SincResampler.html#a18dddd2eacd3f9ae8b91ac03309a462e">reSIDfp::SincResampler::SincResampler</a></div><div class="ttdeci">SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency)</div><div class="ttdef"><b>Definition:</b> SincResampler.cpp:249</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SincResampler_html_a05ea66f27347b49f9d6394666309baad"><div class="ttname"><a href="classreSIDfp_1_1SincResampler.html#a05ea66f27347b49f9d6394666309baad">reSIDfp::SincResampler::input</a></div><div class="ttdeci">bool input(int input) override</div><div class="ttdef"><b>Definition:</b> SincResampler.cpp:334</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1SincResampler_html_a18dddd2eacd3f9ae8b91ac03309a462e"><div class="ttname"><a href="classreSIDfp_1_1SincResampler.html#a18dddd2eacd3f9ae8b91ac03309a462e">reSIDfp::SincResampler::SincResampler</a></div><div class="ttdeci">SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency)</div><div class="ttdef"><b>Definition:</b> SincResampler.cpp:252</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

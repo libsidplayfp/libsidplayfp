@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -172,13 +172,12 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>chargenDesc</
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a7bde528cb7701f8278eeb2747c6a5ee1"><td class="memItemLeft" align="right" valign="top"><a id="a7bde528cb7701f8278eeb2747c6a5ee1"></a>
-const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
+const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b> { PACKAGE_NAME }</td></tr>
 <tr class="separator:a7bde528cb7701f8278eeb2747c6a5ee1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff0aa0135df40dc7fa728d1294876e87"><td class="memItemLeft" align="right" valign="top"><a id="aff0aa0135df40dc7fa728d1294876e87"></a>
-const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_version</b></td></tr>
+const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_version</b> { PACKAGE_VERSION }</td></tr>
 <tr class="separator:aff0aa0135df40dc7fa728d1294876e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f4f1af3cf05bf72c48c997352f613d7"><td class="memItemLeft" align="right" valign="top"><a id="a3f4f1af3cf05bf72c48c997352f613d7"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_credits</b></td></tr>
+<tr class="memitem:a3f4f1af3cf05bf72c48c997352f613d7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_credits</b></td></tr>
 <tr class="separator:a3f4f1af3cf05bf72c48c997352f613d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1746c064de1382cdb690aeab44f9f091"><td class="memItemLeft" align="right" valign="top"><a id="a1746c064de1382cdb690aeab44f9f091"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_speedString</b></td></tr>
@@ -193,30 +192,52 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_basicDesc</b
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_chargenDesc</b></td></tr>
 <tr class="separator:a1061fc916a1cb35e0020f89fc406817c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d4889982e6c6a1ff204cdc6630990fa"><td class="memItemLeft" align="right" valign="top"><a id="a2d4889982e6c6a1ff204cdc6630990fa"></a>
-const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_maxsids</b></td></tr>
+const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_maxsids</b> = <a class="el" href="classlibsidplayfp_1_1Mixer.html#ab0ac928b54ce2896e3573b8295ac21e7">libsidplayfp::Mixer::MAX_SIDS</a></td></tr>
 <tr class="separator:a2d4889982e6c6a1ff204cdc6630990fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc12fd5facff57d1e5afe6be69bdda2b"><td class="memItemLeft" align="right" valign="top"><a id="abc12fd5facff57d1e5afe6be69bdda2b"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_channels</b></td></tr>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_channels</b> = 1</td></tr>
 <tr class="separator:abc12fd5facff57d1e5afe6be69bdda2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a765313e348e5938c911e9186ec9db200"><td class="memItemLeft" align="right" valign="top"><a id="a765313e348e5938c911e9186ec9db200"></a>
-uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_driverAddr</b></td></tr>
+uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_driverAddr</b> = 0</td></tr>
 <tr class="separator:a765313e348e5938c911e9186ec9db200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0861f5e1e5a1ad3f525341fc763979c"><td class="memItemLeft" align="right" valign="top"><a id="ad0861f5e1e5a1ad3f525341fc763979c"></a>
-uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_driverLength</b></td></tr>
+uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_driverLength</b> = 0</td></tr>
 <tr class="separator:ad0861f5e1e5a1ad3f525341fc763979c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a873202827b108967a5b3f974e9007041"><td class="memItemLeft" align="right" valign="top"><a id="a873202827b108967a5b3f974e9007041"></a>
-uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_powerOnDelay</b></td></tr>
+uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_powerOnDelay</b> = 0</td></tr>
 <tr class="separator:a873202827b108967a5b3f974e9007041"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The implementation of the <a class="el" href="classSidInfo.html">SidInfo</a> interface. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a3f4f1af3cf05bf72c48c997352f613d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f4f1af3cf05bf72c48c997352f613d7">&#9670;&nbsp;</a></span>m_credits</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; SidInfoImpl::m_credits</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">        PACKAGE_NAME <span class="stringliteral">&quot; V&quot;</span> PACKAGE_VERSION <span class="stringliteral">&quot; Engine:\n&quot;</span></div>
+<div class="line">            <span class="stringliteral">&quot;\tCopyright (C) 2000 Simon White\n&quot;</span></div>
+<div class="line">            <span class="stringliteral">&quot;\tCopyright (C) 2007-2010 Antti Lankila\n&quot;</span></div>
+<div class="line">            <span class="stringliteral">&quot;\tCopyright (C) 2010-2024 Leandro Nini\n&quot;</span></div>
+<div class="line">            <span class="stringliteral">&quot;\t&quot;</span> PACKAGE_URL <span class="stringliteral">&quot;\n&quot;</span></div>
+<div class="line">    }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="SidInfoImpl_8h_source.html">SidInfoImpl.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.8.0</span>
+   &#160;<span id="projectnumber">2.9.0</span>
    </div>
   </td>
  </tr>
@@ -106,7 +106,7 @@
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="comment">// Calculation according to Laurent Ganier. It evaluates to about 120 kHz at typical settings.</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">// Some testing around the chosen value seems to confirm that this does work.</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">double</span> <span class="keyword">const</span> intermediateFrequency = 2. * highestAccurateFrequency</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            + sqrt(2. * highestAccurateFrequency * clockFrequency</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            + std::sqrt(2. * highestAccurateFrequency * clockFrequency</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                * (samplingFrequency - 2. * highestAccurateFrequency) / samplingFrequency);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classreSIDfp_1_1TwoPassSincResampler.html">TwoPassSincResampler</a>(clockFrequency, samplingFrequency, highestAccurateFrequency, intermediateFrequency);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
@@ -138,7 +138,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 9 2024 14:09:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 15:07:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
