@@ -1,3 +1,10 @@
+2.9.0 2024-08-12
+* residfp: use c++11 threads for building filter tables (#92)
+* residfp: code modernization and minor performance optimizations
+* Performance optimizations (#133, #137)
+
+
+
 2.8.0 2024-06-09
 * Optimized event scheduler (#131)
 * Stop pretendig we support pre-c++11 compilers (#130)
