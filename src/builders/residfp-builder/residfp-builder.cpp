@@ -68,50 +68,30 @@ const char *ReSIDfpBuilder::credits() const
 
 void ReSIDfpBuilder::filter(bool enable)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [enable](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::ReSIDfp*>(e)->filter(enable); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::ReSIDfp*>(e)->filter(enable);
 }
 
 void ReSIDfpBuilder::filter6581Curve(double filterCurve)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [filterCurve](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Curve(filterCurve); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Curve(filterCurve);
 }
 
 void ReSIDfpBuilder::filter6581Range(double filterRange)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [filterRange](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Range(filterRange); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Range(filterRange);
 }
 
 void ReSIDfpBuilder::filter8580Curve(double filterCurve)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [filterCurve](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::ReSIDfp*>(e)->filter8580Curve(filterCurve); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::ReSIDfp*>(e)->filter8580Curve(filterCurve);
 }
 
 void ReSIDfpBuilder::combinedWaveformsStrength(SidConfig::sid_cw_t cws)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [cws](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::ReSIDfp*>(e)->combinedWaveforms(cws); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::ReSIDfp*>(e)->combinedWaveforms(cws);
 }

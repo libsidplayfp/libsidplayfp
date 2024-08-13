@@ -102,16 +102,12 @@ const char *exSIDBuilder::credits() const
 
 void exSIDBuilder::flush()
 {
-    for (auto sidobj : sidobjs)
-        static_cast<libsidplayfp::exSID*>(sidobj)->flush();
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::exSID*>(e)->flush();
 }
 
 void exSIDBuilder::filter (bool enable)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [enable](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::exSID*>(e)->filter(enable); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::exSID*>(e)->filter(enable);
 }

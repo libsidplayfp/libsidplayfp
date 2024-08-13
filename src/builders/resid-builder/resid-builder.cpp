@@ -67,20 +67,12 @@ const char *ReSIDBuilder::credits() const
 
 void ReSIDBuilder::filter(bool enable)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [enable](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::ReSID*>(e)->filter(enable); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::ReSID*>(e)->filter(enable);
 }
 
 void ReSIDBuilder::bias(double dac_bias)
 {
-    std::for_each(
-        sidobjs.begin(),
-        sidobjs.end(),
-        [dac_bias](libsidplayfp::sidemu *e)
-            { static_cast<libsidplayfp::ReSID*>(e)->bias(dac_bias); }
-    );
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::ReSID*>(e)->bias(dac_bias);
 }
