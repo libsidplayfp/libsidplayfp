@@ -256,7 +256,7 @@ int SincResampler::fir(int subcycle)
 SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
     cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.))
 {
-#ifdef HAVE_CXX20
+#if defined(HAVE_CXX20) && defined(__cpp_lib_constexpr_cmath)
     constexpr double PI = std::numbers::pi;
 #else
 #  ifdef M_PI
