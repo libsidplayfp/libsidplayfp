@@ -241,7 +241,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         }
     };
 
-#ifdef HAVE_CXX20
+#if defined(HAVE_CXX20) && defined(__cpp_lib_jthread)
     using sidThread = std::jthread;
 #else
     using sidThread = std::thread;
@@ -254,7 +254,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
     sidThread thdVcrVg(filterVcrVg);
     sidThread thdVcrIds(filterVcrIds);
 
-#ifndef HAVE_CXX20
+#if !defined(HAVE_CXX20) || !defined(__cpp_lib_jthread)
     thdSummer.join();
     thdMixer.join();
     thdGain.join();

@@ -197,7 +197,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
         buildResonanceTable(opampModel, resGain);
     };
 
-#ifdef HAVE_CXX20
+#if defined(HAVE_CXX20) && defined(__cpp_lib_jthread)
     using sidThread = std::jthread;
 #else
     using sidThread = std::thread;
@@ -208,7 +208,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
     sidThread thdGain(filterGain);
     sidThread thdResonance(filterResonance);
 
-#ifndef HAVE_CXX20
+#if !defined(HAVE_CXX20) || !defined(__cpp_lib_jthread)
     thdSummer.join();
     thdMixer.join();
     thdGain.join();
