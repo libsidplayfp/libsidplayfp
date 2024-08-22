@@ -88,27 +88,27 @@ static float quadraticDistance(float distance, int i)
  */
 const CombinedWaveformConfig configAverage[2][5] =
 {
-    { /* 6581 R3 4785 sampled by Trurl */
-        // TS  error 2298 (339/32768)
-        { exponentialDistance, 0.776678205f, 1.18439901f, 0.f, 2.25732255f, 5.12803745f },
-        // PT  error  582 (57/32768)
-        { linearDistance, 1.01866758f, 1.f, 2.69177628f, 0.0233543925f, 0.0850229636f },
-        // PS  error 9242 (679/32768)
-        { linearDistance, 2.20329857f, 1.04501438f, 10.5146885f, 0.277294368f, 0.143747061f },
-        // PTS error 2799 (71/32768)
-        { linearDistance, 1.35652959f, 1.09051275f, 3.21098137f, 0.16658926f, 0.370252877f },
+    { /* 6581 R3 0486S sampled by Trurl */
+        // TS  error  3555 (324/32768)
+        { exponentialDistance,  0.877322257f, 1.11349654f, 0.f, 2.14537621f, 9.08618164f },
+        // PT  error  4608 (128/32768)
+        { linearDistance, 0.940469623f, 1.f, 1.7949537f, 0.0329838842f, 0.232237294f },
+        // PS  error 19352 (763/32768)
+        { linearDistance, 1.66494179f, 1.03760982f, 5.62705326f, 0.291590303f, 0.283631504f },
+        // PTS error  5068 ( 94/32768)
+        { linearDistance, 1.09762526f, 0.975265801f, 1.52196741f, 0.151528224f, 0.841949463f },
         // NP  guessed
         { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
     },
-    { /* 8580 R5 5092 25 sampled by reFX-Mike */
-        // TS  error 1212 (183/32768)
-        { exponentialDistance, 0.684999049f, 0.916620493f, 0.f, 1.14715648f, 2.02339816f },
-        // PT  error 6153 (295/32768)
-        { exponentialDistance,  0.940367579, 1.f, 1.26695442f, 0.976729453f, 1.57954705f },
-        // PS  error 7620 (454/32768)
-        { quadraticDistance, 0.963866293f, 1.22095084f, 1.01380754f, 0.0110885892f, 0.381492466f },
-        // PTS error 3701 (117/32768)
-        { linearDistance, 0.976761818f, 0.202727556f, 0.988633931f, 0.939373314f, 9.37139416f },
+    { /* 8580 R5 1088 sampled by reFX-Mike */
+        // TS  error 10788 (354/32768)
+        { exponentialDistance, 0.841851234f, 1.09233654f, 0.f, 1.85262764f, 6.22224379f },
+        // PT  error 10635 (289/32768)
+        { exponentialDistance, 0.929835618f, 1.f, 1.12836814f, 1.10453653f, 1.48065746f },
+        // PS  error 12259 (555/32768)
+        { quadraticDistance, 0.911715686f, 0.995952725f, 1.22720313f, 0.000117408723f, 0.189491063f },
+        // PTS error  7665 (126/32768)
+        { exponentialDistance, 0.863748789f, 0.980024457f, 0.8020401f, 0.972693145f, 1.51878834f },
         // NP  guessed
         { exponentialDistance, 0.95f, 1.f, 1.15f, 1.f, 1.45f },
     },
@@ -128,15 +128,15 @@ const CombinedWaveformConfig configWeak[2][5] =
         // NP  guessed
         { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
     },
-    { /* 8580 R5 1087 sampled by reFX-Mike */
-        // TS  error 1627 (137/32768)
-        { exponentialDistance, 0.795011938f, 1.54905677f, 0.f, 1.79432333f, 2.24898171f },
-        // PT  error 7898 (162/32768)
-        { exponentialDistance, 0.9482705f, 1.f, 1.21793139f, 1.04166055f, 1.37272894f },
-        // PS  error 9804 (337/32768)
-        { quadraticDistance, 0.954935849f, 1.00321376f, 1.28759611f, 0.000331178948f, 0.151375741f },
-        // PTS error 3184 (56/32768)
-        { linearDistance, 0.945096612f, 1.06510091f, 0.905796111f, 1.05054963f, 1.4661454f },
+    { /* 8580 R5 4887 sampled by reFX-Mike */
+        // TS  error  745 (77/32768)
+        { exponentialDistance, 0.816124022f, 1.31208789f, 0.f, 1.92347884f, 2.35027933f },
+        // PT  error 7289 (156/32768)
+        { exponentialDistance, 0.93188405f, 1.f, 1.01624966f, 1.06709433f, 1.38722277f },
+        // PS  error 9997 (345/32768)
+        { quadraticDistance, 0.978222013f, 1.01747012f, 1.32468057f, 0.00975347217f, 0.147304252f },
+        // PTS error 4843 (63/32768)
+        { exponentialDistance, 0.944473684f, 1.06448221f, 1.00853336f, 0.980868518f, 1.4067347f },
         // NP  guessed
         { exponentialDistance, 0.95f, 1.f, 1.15f, 1.f, 1.45f },
     },
