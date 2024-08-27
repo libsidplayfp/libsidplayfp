@@ -56,7 +56,7 @@ public:
      *
      * @return the integrator
      */
-    Integrator* buildIntegrator() override;
+    Integrator8580* buildIntegrator();
 };
 
 } // namespace reSIDfp

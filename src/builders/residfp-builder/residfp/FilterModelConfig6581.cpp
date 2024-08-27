@@ -279,7 +279,7 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
     return f0_dac;
 }
 
-Integrator* FilterModelConfig6581::buildIntegrator()
+Integrator6581* FilterModelConfig6581::buildIntegrator()
 {
     return new Integrator6581(this, WL_snake);
 }
