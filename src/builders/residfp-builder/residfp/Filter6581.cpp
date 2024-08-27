@@ -46,11 +46,17 @@ unsigned short Filter6581::clock(float voice1, float voice2, float voice3)
     Vbp = hpIntegrator->solve(Vhp);
     Vlp = bpIntegrator->solve(Vbp);
 
-    if (lp) Vmix += Vlp;
-    if (bp) Vmix += Vbp;
-    if (hp) Vmix += Vhp;
+    int Vfilt = 0;
+    if (lp) Vfilt += Vlp;
+    if (bp) Vfilt += Vbp;
+    if (hp) Vfilt += Vhp;
 
-    return currentVolume[currentMixer[Vmix]];
+    // The filter input resistors are slightly bigger than the voice ones
+    // Scale the values accordingly
+    constexpr int filterGain = static_cast<int>(0.93 * (1 << 12));
+    Vfilt = (Vfilt * filterGain) >> 12;
+
+    return currentVolume[currentMixer[Vmix + Vfilt]];
 }
 
 Filter6581::~Filter6581()
