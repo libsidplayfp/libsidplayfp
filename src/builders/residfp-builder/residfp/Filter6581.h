@@ -319,6 +319,12 @@ class Integrator6581;
 class Filter6581 final : public Filter
 {
 private:
+    /// VCR + associated capacitor connected to highpass output.
+    Integrator6581* const hpIntegrator;
+
+    /// VCR + associated capacitor connected to bandpass output.
+    Integrator6581* const bpIntegrator;
+
     const unsigned short* f0_dac;
 
 protected:
@@ -330,10 +336,14 @@ protected:
 public:
     Filter6581() :
         Filter(FilterModelConfig6581::getInstance()),
+        hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
         f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5))
     {}
 
     ~Filter6581() override;
+
+    unsigned short clock(float v1, float v2, float v3) override;
 
     /**
      * Set filter curve type based on single parameter.

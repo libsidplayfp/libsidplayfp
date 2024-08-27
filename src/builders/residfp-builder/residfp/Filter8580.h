@@ -277,6 +277,12 @@ class Integrator8580;
 class Filter8580 final : public Filter
 {
 private:
+    /// VCR + associated capacitor connected to highpass output.
+    Integrator8580* const hpIntegrator;
+
+    /// VCR + associated capacitor connected to bandpass output.
+    Integrator8580* const bpIntegrator;
+
     double cp;
 
 protected:
@@ -287,12 +293,16 @@ protected:
 
 public:
     Filter8580() :
-        Filter(FilterModelConfig8580::getInstance())
+        Filter(FilterModelConfig8580::getInstance()),
+        hpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
+        bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())
     {
         setFilterCurve(0.5);
     }
 
     ~Filter8580() override;
+
+    unsigned short clock(float v1, float v2, float v3) override;
 
     /**
      * Set filter curve type based on single parameter.

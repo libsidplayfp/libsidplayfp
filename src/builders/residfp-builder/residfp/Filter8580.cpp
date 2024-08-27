@@ -27,6 +27,32 @@
 namespace reSIDfp
 {
 
+unsigned short Filter8580::clock(float voice1, float voice2, float voice3)
+{
+    const int V1 = fmc->getNormalizedVoice(voice1);
+    const int V2 = fmc->getNormalizedVoice(voice2);
+    // Voice 3 is silenced by voice3off if it is not routed through the filter.
+    const int V3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
+
+    int Vsum = 0;
+    int Vmix = 0;
+
+    (filt1 ? Vsum : Vmix) += V1;
+    (filt2 ? Vsum : Vmix) += V2;
+    (filt3 ? Vsum : Vmix) += V3;
+    (filtE ? Vsum : Vmix) += Ve;
+
+    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
+    Vbp = hpIntegrator->solve(Vhp);
+    Vlp = bpIntegrator->solve(Vbp);
+
+    if (lp) Vmix += Vlp;
+    if (bp) Vmix += Vbp;
+    if (hp) Vmix += Vhp;
+
+    return currentVolume[currentMixer[Vmix]];
+}
+
 /**
  * W/L ratio of frequency DAC bit 0,
  * other bit are proportional.
@@ -35,7 +61,11 @@ namespace reSIDfp
  */
 const double DAC_WL0 = 0.00615;
 
-Filter8580::~Filter8580() = default;
+Filter8580::~Filter8580()
+{
+    delete hpIntegrator;
+    delete bpIntegrator;
+}
 
 void Filter8580::updateCenterFrequency()
 {

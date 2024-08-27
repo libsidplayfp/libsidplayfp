@@ -96,17 +96,9 @@ Filter::Filter(FilterModelConfig* fmc) :
     mixer(fmc->getMixer()),
     summer(fmc->getSummer()),
     resonance(fmc->getResonance()),
-    volume(fmc->getVolume()),
-    hpIntegrator(fmc->buildIntegrator()),
-    bpIntegrator(fmc->buildIntegrator())
+    volume(fmc->getVolume())
 {
     input(0);
-}
-
-Filter::~Filter()
-{
-    delete hpIntegrator;
-    delete bpIntegrator;
 }
 
 void Filter::enable(bool enable)

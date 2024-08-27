@@ -216,7 +216,7 @@ FilterModelConfig8580::FilterModelConfig8580() :
 #endif
 }
 
-Integrator* FilterModelConfig8580::buildIntegrator()
+Integrator8580* FilterModelConfig8580::buildIntegrator()
 {
     return new Integrator8580(this);
 }
