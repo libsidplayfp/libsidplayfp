@@ -88,8 +88,8 @@ void Filter8580::updateCenterFrequency()
         wl = dacWL/2.;
     }
 
-    static_cast<Integrator8580*>(hpIntegrator)->setFc(wl);
-    static_cast<Integrator8580*>(bpIntegrator)->setFc(wl);
+    hpIntegrator->setFc(wl);
+    bpIntegrator->setFc(wl);
 }
 
 void Filter8580::setFilterCurve(double curvePosition)
@@ -98,8 +98,8 @@ void Filter8580::setFilterCurve(double curvePosition)
     // 1.2 <= cp <= 1.8
     cp = 1.8 - curvePosition * 3./5.;
 
-    static_cast<Integrator8580*>(hpIntegrator)->setV(cp);
-    static_cast<Integrator8580*>(bpIntegrator)->setV(cp);
+    hpIntegrator->setV(cp);
+    bpIntegrator->setV(cp);
 }
 
 } // namespace reSIDfp

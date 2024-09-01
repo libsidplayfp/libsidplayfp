@@ -69,8 +69,8 @@ Filter6581::~Filter6581()
 void Filter6581::updateCenterFrequency()
 {
     const unsigned short Vw = f0_dac[getFC()];
-    static_cast<Integrator6581*>(hpIntegrator)->setVw(Vw);
-    static_cast<Integrator6581*>(bpIntegrator)->setVw(Vw);
+    hpIntegrator->setVw(Vw);
+    bpIntegrator->setVw(Vw);
 }
 
 void Filter6581::setFilterCurve(double curvePosition)
