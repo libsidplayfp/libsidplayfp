@@ -29,10 +29,10 @@ namespace reSIDfp
 
 unsigned short Filter8580::clock(float voice1, float voice2, float voice3)
 {
-    const int V1 = fmc->getNormalizedVoice(voice1);
-    const int V2 = fmc->getNormalizedVoice(voice2);
+    const int V1 = fmc.getNormalizedVoice(voice1);
+    const int V2 = fmc.getNormalizedVoice(voice2);
     // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    const int V3 = (filt3 || !voice3off) ? fmc->getNormalizedVoice(voice3) : 0;
+    const int V3 = (filt3 || !voice3off) ? fmc.getNormalizedVoice(voice3) : 0;
 
     int Vsum = 0;
     int Vmix = 0;

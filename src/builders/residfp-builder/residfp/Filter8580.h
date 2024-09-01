@@ -293,7 +293,7 @@ protected:
 
 public:
     Filter8580() :
-        Filter(FilterModelConfig8580::getInstance()),
+        Filter(*FilterModelConfig8580::getInstance()),
         hpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())
     {

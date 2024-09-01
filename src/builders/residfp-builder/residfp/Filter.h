@@ -42,7 +42,7 @@ private:
     unsigned short** volume;
 
 protected:
-    FilterModelConfig* fmc;
+    FilterModelConfig& fmc;
 
     /// Current filter/voice mixer setting.
     unsigned short* currentMixer = nullptr;
@@ -123,7 +123,7 @@ protected:
     unsigned int getFC() const { return fc; }
 
 public:
-    Filter(FilterModelConfig* fmc);
+    Filter(FilterModelConfig& fmc);
 
     virtual ~Filter() = default;
 
@@ -182,7 +182,7 @@ public:
      *
      * @param input a signed 16 bit sample
      */
-    void input(int input) { Ve = fmc->getNormalizedVoice(input/65536.f); }
+    void input(int input) { Ve = fmc.getNormalizedVoice(input/65536.f); }
 };
 
 } // namespace reSIDfp

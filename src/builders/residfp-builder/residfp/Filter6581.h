@@ -336,7 +336,7 @@ protected:
 
 public:
     Filter6581() :
-        Filter(FilterModelConfig6581::getInstance()),
+        Filter(*FilterModelConfig6581::getInstance()),
         hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
         bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
         f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5))
