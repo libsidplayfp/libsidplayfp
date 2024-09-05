@@ -44,7 +44,7 @@ int Integrator8580::solve(int vi) const
     // vx = g(vc)
     const int tmp = (vc >> 15) + (1 << 15);
     assert(tmp < (1 << 16));
-    vx = fmc->getOpampRev(tmp);
+    vx = fmc.getOpampRev(tmp);
 
     // Return vo.
     return vx - (vc >> 14);
