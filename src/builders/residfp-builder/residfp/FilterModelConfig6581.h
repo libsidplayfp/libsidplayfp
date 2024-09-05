@@ -91,12 +91,7 @@ public:
      */
     unsigned short* getDAC(double adjustment) const;
 
-    /**
-     * Construct an integrator solver.
-     *
-     * @return the integrator
-     */
-    Integrator6581* buildIntegrator();
+    inline double getWL_snake() const { return WL_snake; }
 
     inline unsigned short getVcr_nVg(int i) const { return vcr_nVg[i]; }
     inline unsigned short getVcr_n_Ids_term(int i) const

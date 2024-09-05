@@ -182,9 +182,8 @@ private:
     FilterModelConfig6581& fmc;
 
 public:
-    Integrator6581(FilterModelConfig6581& fmc,
-               double WL_snake) :
-        wlSnake(WL_snake),
+    Integrator6581(FilterModelConfig6581& fmc) :
+        wlSnake(fmc.getWL_snake()),
 #ifdef SLOPE_FACTOR
         n(1.4),
 #endif

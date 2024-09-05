@@ -278,10 +278,10 @@ class Filter8580 final : public Filter
 {
 private:
     /// VCR + associated capacitor connected to highpass output.
-    Integrator8580* const hpIntegrator;
+    Integrator8580 hpIntegrator;
 
     /// VCR + associated capacitor connected to bandpass output.
-    Integrator8580* const bpIntegrator;
+    Integrator8580 bpIntegrator;
 
     double cp;
 
@@ -294,8 +294,8 @@ protected:
 public:
     Filter8580() :
         Filter(*FilterModelConfig8580::getInstance()),
-        hpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig8580::getInstance()->buildIntegrator())
+        hpIntegrator(*FilterModelConfig8580::getInstance()),
+        bpIntegrator(*FilterModelConfig8580::getInstance())
     {
         setFilterCurve(0.5);
     }

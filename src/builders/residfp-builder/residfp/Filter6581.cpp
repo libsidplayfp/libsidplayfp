@@ -43,8 +43,8 @@ unsigned short Filter6581::clock(float voice1, float voice2, float voice3)
     (filtE ? Vsum : Vmix) += Ve;
 
     Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
-    Vbp = hpIntegrator->solve(Vhp);
-    Vlp = bpIntegrator->solve(Vbp);
+    Vbp = hpIntegrator.solve(Vhp);
+    Vlp = bpIntegrator.solve(Vbp);
 
     int Vfilt = 0;
     if (lp) Vfilt += Vlp;
@@ -61,16 +61,14 @@ unsigned short Filter6581::clock(float voice1, float voice2, float voice3)
 
 Filter6581::~Filter6581()
 {
-    delete hpIntegrator;
-    delete bpIntegrator;
     delete [] f0_dac;
 }
 
 void Filter6581::updateCenterFrequency()
 {
     const unsigned short Vw = f0_dac[getFC()];
-    hpIntegrator->setVw(Vw);
-    bpIntegrator->setVw(Vw);
+    hpIntegrator.setVw(Vw);
+    bpIntegrator.setVw(Vw);
 }
 
 void Filter6581::setFilterCurve(double curvePosition)

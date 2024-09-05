@@ -23,9 +23,9 @@
 #ifndef FILTER6581_H
 #define FILTER6581_H
 
-#include "Integrator.h"
 #include "Filter.h"
 #include "FilterModelConfig6581.h"
+#include "Integrator6581.h"
 
 #include "sidcxx11.h"
 
@@ -321,10 +321,10 @@ class Filter6581 final : public Filter
 {
 private:
     /// VCR + associated capacitor connected to highpass output.
-    Integrator6581* const hpIntegrator;
+    Integrator6581 hpIntegrator;
 
     /// VCR + associated capacitor connected to bandpass output.
-    Integrator6581* const bpIntegrator;
+    Integrator6581 bpIntegrator;
 
     const unsigned short* f0_dac;
 
@@ -337,8 +337,8 @@ protected:
 public:
     Filter6581() :
         Filter(*FilterModelConfig6581::getInstance()),
-        hpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
-        bpIntegrator(FilterModelConfig6581::getInstance()->buildIntegrator()),
+        hpIntegrator(*FilterModelConfig6581::getInstance()),
+        bpIntegrator(*FilterModelConfig6581::getInstance()),
         f0_dac(FilterModelConfig6581::getInstance()->getDAC(0.5))
     {}
 

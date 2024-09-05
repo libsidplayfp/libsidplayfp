@@ -216,9 +216,4 @@ FilterModelConfig8580::FilterModelConfig8580() :
 #endif
 }
 
-Integrator8580* FilterModelConfig8580::buildIntegrator()
-{
-    return new Integrator8580(*this);
-}
-
 } // namespace reSIDfp

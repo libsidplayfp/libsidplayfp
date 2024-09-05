@@ -43,8 +43,8 @@ unsigned short Filter8580::clock(float voice1, float voice2, float voice3)
     (filtE ? Vsum : Vmix) += Ve;
 
     Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
-    Vbp = hpIntegrator->solve(Vhp);
-    Vlp = bpIntegrator->solve(Vbp);
+    Vbp = hpIntegrator.solve(Vhp);
+    Vlp = bpIntegrator.solve(Vbp);
 
     if (lp) Vmix += Vlp;
     if (bp) Vmix += Vbp;
@@ -61,11 +61,7 @@ unsigned short Filter8580::clock(float voice1, float voice2, float voice3)
  */
 const double DAC_WL0 = 0.00615;
 
-Filter8580::~Filter8580()
-{
-    delete hpIntegrator;
-    delete bpIntegrator;
-}
+Filter8580::~Filter8580() = default;
 
 void Filter8580::updateCenterFrequency()
 {
@@ -88,8 +84,8 @@ void Filter8580::updateCenterFrequency()
         wl = dacWL/2.;
     }
 
-    hpIntegrator->setFc(wl);
-    bpIntegrator->setFc(wl);
+    hpIntegrator.setFc(wl);
+    bpIntegrator.setFc(wl);
 }
 
 void Filter8580::setFilterCurve(double curvePosition)
@@ -98,8 +94,8 @@ void Filter8580::setFilterCurve(double curvePosition)
     // 1.2 <= cp <= 1.8
     cp = 1.8 - curvePosition * 3./5.;
 
-    hpIntegrator->setV(cp);
-    bpIntegrator->setV(cp);
+    hpIntegrator.setV(cp);
+    bpIntegrator.setV(cp);
 }
 
 } // namespace reSIDfp
