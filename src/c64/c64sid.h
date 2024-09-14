@@ -43,7 +43,7 @@ protected:
     virtual ~c64sid() = default;
 
     virtual uint8_t read(uint_least8_t addr) = 0;
-    virtual void write(uint_least8_t addr, uint8_t data) = 0;
+    virtual void writeReg(uint_least8_t addr, uint8_t data) = 0;
 
 public:
     virtual void reset(uint8_t volume) = 0;
@@ -54,7 +54,7 @@ public:
     void poke(uint_least16_t address, uint8_t value) override
     {
         lastpoke[address & 0x1f] = value;
-        write(address & 0x1f, value);
+        writeReg(address & 0x1f, value);
     }
     uint8_t peek(uint_least16_t address) override { return read(address & 0x1f); }
 

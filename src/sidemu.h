@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -23,8 +23,6 @@
 #ifndef SIDEMU_H
 #define SIDEMU_H
 
-#include <string>
-
 #include "sidplayfp/SidConfig.h"
 #include "sidplayfp/siddefs.h"
 #include "Event.h"
@@ -34,6 +32,8 @@
 
 #include "sidcxx11.h"
 
+#include <string>
+#include <bitset>
 
 class sidbuilder;
 
@@ -71,12 +71,23 @@ protected:
     bool m_status = true;
     bool isLocked = false;
 
+    /// Flags for muted voices
+    std::bitset<3> isMuted;
+
     std::string m_error;
+
+protected:
+    virtual void write(uint_least8_t addr, uint8_t data) = 0;
+
+    void writeReg(uint_least8_t addr, uint8_t data) override final;
 
 public:
     sidemu(sidbuilder *builder) :
         m_builder(builder),
-        m_error("N/A") {}
+        m_error("N/A")
+    {
+        isMuted.reset();
+    }
     ~sidemu() override = default;
 
     /**
@@ -99,7 +110,7 @@ public:
     /**
      * Mute/unmute voice.
      */
-    virtual void voice(unsigned int num, bool mute) = 0;
+    void voice(unsigned int voice, bool mute);
 
     /**
      * Set SID model.
