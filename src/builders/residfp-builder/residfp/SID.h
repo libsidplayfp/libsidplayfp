@@ -108,9 +108,6 @@ private:
     /// Last written value
     unsigned char busValue;
 
-    /// Flags for muted channels
-    bool muted[3];
-
     /**
      * Emulated nonlinearity of the envelope DAC.
      *
@@ -217,14 +214,6 @@ public:
      * @param value value to write
      */
     void write(int offset, unsigned char value);
-
-    /**
-     * SID voice muting.
-     *
-     * @param channel channel to modify
-     * @param enable is muted?
-     */
-    void mute(int channel, bool enable) { muted[channel] = enable; }
 
     /**
      * Setting of SID sampling parameters.
