@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2013-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2013-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ protected:
 public:
     virtual void reset(uint8_t volume) = 0;
 
-    void reset() { memset(lastpoke, 0, 0x20); reset(0); }
+    void reset() { std::memset(lastpoke, 0, 0x20); reset(0); }
 
     // Bank functions
     void poke(uint_least16_t address, uint8_t value) override
