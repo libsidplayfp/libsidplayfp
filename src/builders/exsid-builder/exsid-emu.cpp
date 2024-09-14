@@ -61,8 +61,6 @@ exSID::exSID(sidbuilder *builder) :
 
     m_status = true;
     sid++;
-  
-    muted[0] = muted[1] = muted[2] = false;
 }
 
 exSID::~exSID()
@@ -139,15 +137,7 @@ void exSID::write(uint_least8_t addr, uint8_t data)
 
     const unsigned int cycles = delay();
 
-    if (addr % 7 == 4 && muted[addr / 7])
-        data = 0;
-
     exSID_clkdwrite(exsid, cycles, addr, data);
-}
-
-void exSID::voice(unsigned int num, bool mute)
-{
-    muted[num] = mute;
 }
 
 void exSID::model(SidConfig::sid_model_t model, MAYBE_UNUSED bool digiboost)

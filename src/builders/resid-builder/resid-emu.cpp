@@ -131,16 +131,6 @@ void ReSID::sampling(float systemclock, float freq,
     m_status = true;
 }
 
-void ReSID::voice(unsigned int num, bool mute)
-{
-    if (mute)
-        m_voiceMask &= ~(1<<num);
-    else
-        m_voiceMask |= 1<<num;
-
-    m_sid.set_voice_mask(m_voiceMask);
-}
-
 // Set the emulated SID model
 void ReSID::model(SidConfig::sid_model_t model, bool digiboost)
 {

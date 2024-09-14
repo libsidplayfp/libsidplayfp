@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -28,6 +28,30 @@ namespace libsidplayfp
 const char sidemu::ERR_UNSUPPORTED_FREQ[] = "Unable to set desired output frequency.";
 const char sidemu::ERR_INVALID_SAMPLING[] = "Invalid sampling method.";
 const char sidemu::ERR_INVALID_CHIP[]     = "Invalid chip model.";
+
+void sidemu::writeReg(uint_least8_t addr, uint8_t data)
+{
+    switch (addr)
+    {
+    case 0x04:
+        if (isMuted[0]) data &= 0x0f;
+        break;
+    case 0x0b:
+        if (isMuted[1]) data &= 0x0f;
+        break;
+    case 0x12:
+        if (isMuted[2]) data &= 0x0f;
+        break;
+    }
+
+    write(addr, data);
+}
+
+void sidemu::voice(unsigned int voice, bool mute)
+{
+    if (voice < 4)
+        isMuted[voice] = mute;
+}
 
 bool sidemu::lock(EventScheduler *scheduler)
 {
