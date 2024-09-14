@@ -72,7 +72,7 @@ protected:
     bool isLocked = false;
 
     /// Flags for muted voices
-    std::bitset<3> isMuted;
+    std::bitset<4> isMuted;
 
     std::string m_error;
 
@@ -109,6 +109,9 @@ public:
 
     /**
      * Mute/unmute voice.
+     *
+     * @param voice SID voice channels from 0 to 2, or 3 for samples
+     * @param mute true to mute channel
      */
     void voice(unsigned int voice, bool mute);
 
