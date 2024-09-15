@@ -142,6 +142,15 @@ public:
     void mute(unsigned int sidNum, unsigned int voice, bool enable);
 
     /**
+     * Enable/disable SID filter.
+     *
+     * @param sidNum the SID chip, 0 for the first one, 1 for the second or 2 for the third.
+     * @param enable true enable the filter, false disable it.
+     * @since 2.10
+     */
+    void filter(unsigned int sidNum, bool enable);
+
+    /**
      * Get the current playing time.
      *
      * @return the current playing time measured in seconds.

@@ -42,6 +42,9 @@ void sidemu::writeReg(uint_least8_t addr, uint8_t data)
     case 0x12:
         if (isMuted[2]) data &= 0x0f;
         break;
+    case 0x17:
+        if (isFilterDisabled) data &= 0xf0;
+        break;
     case 0x18:
         if (isMuted[3]) data |= 0x0f;
         break;
@@ -54,6 +57,11 @@ void sidemu::voice(unsigned int voice, bool mute)
 {
     if (voice < 4)
         isMuted[voice] = mute;
+}
+
+void sidemu::filter(bool enable)
+{
+    isFilterDisabled = !enable;
 }
 
 bool sidemu::lock(EventScheduler *scheduler)

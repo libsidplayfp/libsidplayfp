@@ -71,6 +71,8 @@ protected:
     bool m_status = true;
     bool isLocked = false;
 
+    bool isFilterDisabled = false;
+
     /// Flags for muted voices
     std::bitset<4> isMuted;
 
@@ -114,6 +116,11 @@ public:
      * @param mute true to mute channel
      */
     void voice(unsigned int voice, bool mute);
+
+    /**
+     * Enable/disable filter.
+     */
+    void filter(bool enable);
 
     /**
      * Set SID model.
