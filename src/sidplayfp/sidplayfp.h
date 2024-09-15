@@ -135,8 +135,8 @@ public:
     /**
      * Mute/unmute a SID channel.
      *
-     * @param sidNum the SID chip, 0 for the first one, 1 for the second.
-     * @param voice the channel to mute/unmute.
+     * @param sidNum the SID chip, 0 for the first one, 1 for the second or 2 for the third.
+     * @param voice the channel to mute/unmute, 0 to 2 for the voices or 3 for samples.
      * @param enable true unmutes the channel, false mutes it.
      */
     void mute(unsigned int sidNum, unsigned int voice, bool enable);
