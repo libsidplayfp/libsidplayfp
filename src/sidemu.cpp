@@ -43,7 +43,8 @@ void sidemu::writeReg(uint_least8_t addr, uint8_t data)
         if (isMuted[2]) data &= 0x0f;
         break;
     case 0x18:
-        if (isMuted[3]) data &= 0xf0;
+        if (isMuted[3]) data |= 0x0f;
+        break;
     }
 
     write(addr, data);
