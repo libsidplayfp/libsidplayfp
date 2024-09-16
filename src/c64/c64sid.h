@@ -25,6 +25,8 @@
 
 #include "sidcxx11.h"
 
+#include <algorithm>
+#include <iterator>
 #include <cstring>
 #include <stdint.h>
 
@@ -48,7 +50,11 @@ protected:
 public:
     virtual void reset(uint8_t volume) = 0;
 
-    void reset() { std::memset(lastpoke, 0, 0x20); reset(0); }
+    void reset()
+    {
+        std::fill(std::begin(lastpoke), std::end(lastpoke), 0);
+        reset(0);
+    }
 
     // Bank functions
     void poke(uint_least16_t address, uint8_t value) override
