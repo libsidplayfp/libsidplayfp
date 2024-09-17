@@ -32,7 +32,8 @@
 #include "mos656x.h"
 
 #include <type_traits>
-#include <cstring>
+#include <algorithm>
+#include <iterator>
 
 #include "sidendian.h"
 
@@ -89,7 +90,7 @@ void MOS656X::reset()
     vblanking           = false;
     lpAsserted          = false;
 
-    memset(regs, 0, sizeof(regs));
+    std::fill(std::begin(regs), std::end(regs), 0);
 
     lp.reset();
     sprites.reset();

@@ -115,7 +115,7 @@ public:
 
     void fillRam(uint_least16_t start, uint8_t value, unsigned int size) override
     {
-        memset(ramBank.ram+start, value, size);
+        std::memset(ramBank.ram+start, value, size);
     }
     void fillRam(uint_least16_t start, const uint8_t* source, unsigned int size) override
     {

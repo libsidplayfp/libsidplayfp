@@ -23,7 +23,8 @@
 
 #include "mos652x.h"
 
-#include <cstring>
+#include <algorithm>
+#include <iterator>
 
 #include "sidendian.h"
 
@@ -144,7 +145,7 @@ void MOS652X::handleSerialPort()
 
 void MOS652X::reset()
 {
-    memset(regs, 0, sizeof(regs));
+    std::fill(std::begin(regs), std::end(regs), 0);
 
     serialPort.reset();
 

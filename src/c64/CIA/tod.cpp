@@ -53,7 +53,7 @@ uint8_t Tod::read(uint_least8_t reg)
     // keeps ticking all the time.
     // Also note that this latching is different from the input one.
     if (!isLatched)
-        memcpy(latch, clock, sizeof(latch));
+        std::memcpy(latch, clock, sizeof(latch));
 
     if (reg == TENTHS)
         isLatched = false;

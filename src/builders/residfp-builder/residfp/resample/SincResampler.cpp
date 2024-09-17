@@ -26,6 +26,8 @@
 #  include <numbers>
 #endif
 
+#include <algorithm>
+#include <iterator>
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -369,7 +371,7 @@ bool SincResampler::input(int input)
 
 void SincResampler::reset()
 {
-    memset(sample, 0, sizeof(sample));
+    std::fill(std::begin(sample), std::end(sample), 0);
     sampleOffset = 0;
 }
 
