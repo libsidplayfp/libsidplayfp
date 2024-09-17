@@ -484,7 +484,7 @@ void SID::write(int offset, unsigned char value)
     voiceSync(false);
 }
 
-void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency)
+void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency)
 {
     externalFilter->setClockFrequency(clockFrequency);
 
@@ -495,7 +495,7 @@ void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, do
         break;
 
     case RESAMPLE:
-        resampler.reset(TwoPassSincResampler::create(clockFrequency, samplingFrequency, highestAccurateFrequency));
+        resampler.reset(TwoPassSincResampler::create(clockFrequency, samplingFrequency));
         break;
 
     default:

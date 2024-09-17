@@ -240,7 +240,11 @@ public:
      * @param highestAccurateFrequency
      * @throw SIDError
      */
-    void setSamplingParameters(double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency);
+    void setSamplingParameters(
+        double clockFrequency,
+        SamplingMethod method,
+        double samplingFrequency
+    );
 
     /**
      * Clock SID forward using chosen output sampling algorithm.

@@ -253,7 +253,10 @@ int SincResampler::fir(int subcycle)
     return v1 + (firTableOffset * (v2 - v1) >> 10);
 }
 
-SincResampler::SincResampler(double clockFrequency, double samplingFrequency, double highestAccurateFrequency) :
+SincResampler::SincResampler(
+        double clockFrequency,
+        double samplingFrequency,
+        double highestAccurateFrequency) :
     cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.))
 {
 #if defined(HAVE_CXX20) && defined(__cpp_lib_constexpr_cmath)

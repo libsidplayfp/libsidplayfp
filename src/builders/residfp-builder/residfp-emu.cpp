@@ -130,8 +130,7 @@ void ReSIDfp::sampling(float systemclock, float freq,
 
     try
     {
-        const int halfFreq = (freq > 44000) ? 20000 : 9 * freq / 20;
-        m_sid.setSamplingParameters(systemclock, sampleMethod, freq, halfFreq);
+        m_sid.setSamplingParameters(systemclock, sampleMethod, freq);
     }
     catch (reSIDfp::SIDError const &)
     {
