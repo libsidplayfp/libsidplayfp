@@ -135,7 +135,9 @@ public:
      * Toggle sid filter emulation.
      *
      * @param enable true = enable, false = disable
+     * @deprecated use #sidplayfp.filter
      */
+    SID_DEPRECATED
     virtual void filter(bool enable) = 0;
 };
 
