@@ -34,16 +34,16 @@ void sidemu::writeReg(uint_least8_t addr, uint8_t data)
     switch (addr)
     {
     case 0x04:
-        if (isMuted[0]) data &= 0b00001110;
+        if (isMuted[0]) data &= 0x0e;
         break;
     case 0x0b:
-        if (isMuted[1]) data &= 0b00001110;
+        if (isMuted[1]) data &= 0x0e;
         break;
     case 0x12:
-        if (isMuted[2]) data &= 0b00001110;
+        if (isMuted[2]) data &= 0x0e;
         break;
     case 0x18:
-        if (isMuted[3]) data |= 0b00001110;
+        if (isMuted[3]) data |= 0x0f;
         break;
     }
 
