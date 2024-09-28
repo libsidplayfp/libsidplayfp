@@ -363,6 +363,7 @@ bool Player::config(const SidConfig &cfg, bool force)
         }
         catch (configError const &e)
         {
+            sidRelease();
             m_errorString = e.message();
             m_cfg.sidEmulation = nullptr;
             if (&m_cfg != &cfg)
