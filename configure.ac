@@ -1,6 +1,6 @@
 m4_define([lib_major], [2])
 m4_define([lib_minor], [10])
-m4_define([lib_level], [0a])
+m4_define([lib_level], [0b])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_PREREQ([2.62])
@@ -101,9 +101,9 @@ dnl libtool-style version-info number
 #
 # Increase the age value only if the changes made to the ABI are backward compatible.
 
-LIBSIDPLAYCUR=10
-LIBSIDPLAYREV=33
-LIBSIDPLAYAGE=4
+LIBSIDPLAYCUR=11
+LIBSIDPLAYREV=34
+LIBSIDPLAYAGE=5
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
 LIBSTILVIEWCUR=0
