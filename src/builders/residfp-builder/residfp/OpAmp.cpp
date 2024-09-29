@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,7 @@ double OpAmp::solve(double n, double vi) const
 
         // Calculate f and df.
 
-        Spline::Point out = opamp->evaluate(x);
+        Spline::Point out = opamp.evaluate(x);
         const double vo = out.x;
         const double dvo = out.y;
 
@@ -66,7 +66,7 @@ double OpAmp::solve(double n, double vi) const
 
         if (unlikely(std::fabs(x - xk) < EPSILON))
         {
-            out = opamp->evaluate(x);
+            out = opamp.evaluate(x);
             return out.x;
         }
 

@@ -26,6 +26,9 @@
 #include <memory>
 
 #include "siddefs-fp.h"
+#include "ExternalFilter.h"
+#include "Potentiometer.h"
+#include "Voice.h"
 
 #include "sidcxx11.h"
 
@@ -35,9 +38,6 @@ namespace reSIDfp
 class Filter;
 class Filter6581;
 class Filter8580;
-class ExternalFilter;
-class Potentiometer;
-class Voice;
 class Resampler;
 
 /**
@@ -69,23 +69,23 @@ private:
     /// Filter used, if model is set to 8580
     Filter8580* const filter8580;
 
+    /// Resampler used by audio generation code.
+    std::unique_ptr<Resampler> resampler;
+
     /**
      * External filter that provides high-pass and low-pass filtering
      * to adjust sound tone slightly.
      */
-    ExternalFilter* const externalFilter;
-
-    /// Resampler used by audio generation code.
-    std::unique_ptr<Resampler> resampler;
+    ExternalFilter externalFilter;
 
     /// Paddle X register support
-    Potentiometer* const potX;
+    Potentiometer potX;
 
     /// Paddle Y register support
-    Potentiometer* const potY;
+    Potentiometer potY;
 
     /// SID voices
-    std::unique_ptr<Voice> voice[3];
+    Voice voice[3];
 
     /// Used to amplify the output by x/2 to get an adequate playback volume
     int scaleFactor;
@@ -135,7 +135,7 @@ private:
      *
      * @return the output sample
      */
-    int output() const;
+    int output();
 
     /**
      * Calculate the numebr of cycles according to current parameters
@@ -326,14 +326,14 @@ void SID::ageBusValue(unsigned int n)
 }
 
 RESID_INLINE
-int SID::output() const
+int SID::output()
 {
-    const float v1 = voice[0]->output(voice[2]->wave());
-    const float v2 = voice[1]->output(voice[0]->wave());
-    const float v3 = voice[2]->output(voice[1]->wave());
+    const float v1 = voice[0].output(voice[2].wave());
+    const float v2 = voice[1].output(voice[0].wave());
+    const float v3 = voice[2].output(voice[1].wave());
 
     const int input = static_cast<int>(filter->clock(v1, v2, v3));
-    return externalFilter->clock(input);
+    return externalFilter.clock(input);
 }
 
 
@@ -352,14 +352,14 @@ int SID::clock(unsigned int cycles, short* buf)
             for (unsigned int i = 0; i < delta_t; i++)
             {
                 // clock waveform generators
-                voice[0]->wave()->clock();
-                voice[1]->wave()->clock();
-                voice[2]->wave()->clock();
+                voice[0].wave()->clock();
+                voice[1].wave()->clock();
+                voice[2].wave()->clock();
 
                 // clock envelope generators
-                voice[0]->envelope()->clock();
-                voice[1]->envelope()->clock();
-                voice[2]->envelope()->clock();
+                voice[0].envelope()->clock();
+                voice[1].envelope()->clock();
+                voice[2].envelope()->clock();
 
                 if (unlikely(resampler->input(output())))
                 {
