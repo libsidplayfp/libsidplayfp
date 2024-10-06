@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -101,66 +102,61 @@
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    uint8_t busValue;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">bool</span> muted[3];</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> runmodel;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> runmodel;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> delay();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* getCredits();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="classlibsidplayfp_1_1exSID.html">exSID</a>(<a class="code" href="classsidbuilder.html">sidbuilder</a> *builder);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    ~<a class="code" href="classlibsidplayfp_1_1exSID.html">exSID</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> delay();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* getCredits();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="classlibsidplayfp_1_1exSID.html">exSID</a>(<a class="code" href="classsidbuilder.html">sidbuilder</a> *builder);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    ~<a class="code" href="classlibsidplayfp_1_1exSID.html">exSID</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">bool</span> getStatus()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_status; }</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">bool</span> getStatus()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_status; }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    uint8_t read(uint_least8_t addr) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> write(uint_least8_t addr, uint8_t data) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// c64sid functions</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> reset(uint8_t volume) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// Standard SID functions</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a179e927c205e030ab089366763699c6f">clock</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    uint8_t read(uint_least8_t addr) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordtype">void</span> write(uint_least8_t addr, uint8_t data) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="comment">// c64sid functions</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> reset(uint8_t volume) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Standard SID functions</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a179e927c205e030ab089366763699c6f">clock</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a5618471dcc25edd921ab7c73c908befc">model</a>(<a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> <a class="code" href="classlibsidplayfp_1_1exSID.html#a5618471dcc25edd921ab7c73c908befc">model</a>, <span class="keywordtype">bool</span> digiboost) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a5618471dcc25edd921ab7c73c908befc">model</a>(<a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> <a class="code" href="classlibsidplayfp_1_1exSID.html#a5618471dcc25edd921ab7c73c908befc">model</a>, <span class="keywordtype">bool</span> digiboost) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> filter(<span class="keywordtype">bool</span>) {}</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#abc23763804bd2700ce87766238ada515">voice</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> num, <span class="keywordtype">bool</span> mute) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">void</span> filter(<span class="keywordtype">bool</span>) {}</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> sampling(<span class="keywordtype">float</span> systemclock, <span class="keywordtype">float</span> freq,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a> method, <span class="keywordtype">bool</span>) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// exSID specific</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">void</span> flush();</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Must lock the SID before using the standard functions.</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a522ac3d59bc0f51ea3863e9290145672">lock</a>(<a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> *env) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a785a44f0977c62701d68f11190e60997">unlock</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;};</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// EXSID_EMU_H</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> sampling(<span class="keywordtype">float</span> systemclock, <span class="keywordtype">float</span> freq,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="code" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a> method, <span class="keywordtype">bool</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// exSID specific</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> flush();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Must lock the SID before using the standard functions.</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a522ac3d59bc0f51ea3863e9290145672">lock</a>(<a class="code" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> *env) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1exSID.html#a785a44f0977c62701d68f11190e60997">unlock</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;};</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// EXSID_EMU_H</span></div>
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:51</div></div>
 <div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:84</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1EventScheduler_html"><div class="ttname"><a href="classlibsidplayfp_1_1EventScheduler.html">libsidplayfp::EventScheduler</a></div><div class="ttdef"><b>Definition:</b> EventScheduler.h:62</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1exSID_html"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html">libsidplayfp::exSID</a></div><div class="ttdef"><b>Definition:</b> exsid-emu.h:37</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a179e927c205e030ab089366763699c6f"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a179e927c205e030ab089366763699c6f">libsidplayfp::exSID::clock</a></div><div class="ttdeci">void clock() override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:99</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a522ac3d59bc0f51ea3863e9290145672"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a522ac3d59bc0f51ea3863e9290145672">libsidplayfp::exSID::lock</a></div><div class="ttdeci">bool lock(EventScheduler *env) override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:164</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a5618471dcc25edd921ab7c73c908befc"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a5618471dcc25edd921ab7c73c908befc">libsidplayfp::exSID::model</a></div><div class="ttdeci">void model(SidConfig::sid_model_t model, bool digiboost) override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:153</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a785a44f0977c62701d68f11190e60997"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a785a44f0977c62701d68f11190e60997">libsidplayfp::exSID::unlock</a></div><div class="ttdeci">void unlock() override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:169</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_abc23763804bd2700ce87766238ada515"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#abc23763804bd2700ce87766238ada515">libsidplayfp::exSID::voice</a></div><div class="ttdeci">void voice(unsigned int num, bool mute) override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:148</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a179e927c205e030ab089366763699c6f"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a179e927c205e030ab089366763699c6f">libsidplayfp::exSID::clock</a></div><div class="ttdeci">void clock() override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:97</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a522ac3d59bc0f51ea3863e9290145672"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a522ac3d59bc0f51ea3863e9290145672">libsidplayfp::exSID::lock</a></div><div class="ttdeci">bool lock(EventScheduler *env) override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:154</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a5618471dcc25edd921ab7c73c908befc"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a5618471dcc25edd921ab7c73c908befc">libsidplayfp::exSID::model</a></div><div class="ttdeci">void model(SidConfig::sid_model_t model, bool digiboost) override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:143</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1exSID_html_a785a44f0977c62701d68f11190e60997"><div class="ttname"><a href="classlibsidplayfp_1_1exSID.html#a785a44f0977c62701d68f11190e60997">libsidplayfp::exSID::unlock</a></div><div class="ttdeci">void unlock() override</div><div class="ttdef"><b>Definition:</b> exsid-emu.cpp:159</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></div><div class="ttdef"><b>Definition:</b> sidemu.h:47</div></div>
 <div class="ttc" id="aclasssidbuilder_html"><div class="ttname"><a href="classsidbuilder.html">sidbuilder</a></div><div class="ttdef"><b>Definition:</b> sidbuilder.h:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

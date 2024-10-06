@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -76,48 +77,49 @@
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define COLORRAMBANK_H</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;cstring&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;Bank.h&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">namespace </span>libsidplayfp</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1ColorRAMBank.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1ColorRAMBank.html">ColorRAMBank</a> final : <span class="keyword">public</span> <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    uint8_t ram[0x400];</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> reset()</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;         memset(ram, 0, <span class="keyword">sizeof</span>(ram));</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1ColorRAMBank.html#aa8cabf80c02d2c8ed2cc890739b99a89">   53</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1ColorRAMBank.html#aa8cabf80c02d2c8ed2cc890739b99a89">poke</a>(uint_least16_t address, uint8_t value)<span class="keyword"> override</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        ram[address &amp; 0x3ff] = value &amp; 0xf;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1ColorRAMBank.html#aa47715c834712d3a989fd2497bff26b3">   58</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1ColorRAMBank.html#aa47715c834712d3a989fd2497bff26b3">peek</a>(uint_least16_t address)<span class="keyword"> override</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">return</span> ram[address &amp; 0x3ff];</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;iterator&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;Bank.h&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>libsidplayfp</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1ColorRAMBank.html">   43</a></span>&#160;<span class="keyword">class </span><a class="code" href="classlibsidplayfp_1_1ColorRAMBank.html">ColorRAMBank</a> final : <span class="keyword">public</span> <a class="code" href="classlibsidplayfp_1_1Bank.html">Bank</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    uint8_t ram[0x400];</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> reset()</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;         std::fill(std::begin(ram), std::end(ram), 0);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1ColorRAMBank.html#aa8cabf80c02d2c8ed2cc890739b99a89">   54</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1ColorRAMBank.html#aa8cabf80c02d2c8ed2cc890739b99a89">poke</a>(uint_least16_t address, uint8_t value)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        ram[address &amp; 0x3ff] = value &amp; 0xf;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1ColorRAMBank.html#aa47715c834712d3a989fd2497bff26b3">   59</a></span>&#160;    uint8_t <a class="code" href="classlibsidplayfp_1_1ColorRAMBank.html#aa47715c834712d3a989fd2497bff26b3">peek</a>(uint_least16_t address)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> ram[address &amp; 0x3ff];</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;};</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a></div><div class="ttdef"><b>Definition:</b> Bank.h:36</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1ColorRAMBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1ColorRAMBank.html">libsidplayfp::ColorRAMBank</a></div><div class="ttdef"><b>Definition:</b> ColorRAMBank.h:43</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1ColorRAMBank_html_aa47715c834712d3a989fd2497bff26b3"><div class="ttname"><a href="classlibsidplayfp_1_1ColorRAMBank.html#aa47715c834712d3a989fd2497bff26b3">libsidplayfp::ColorRAMBank::peek</a></div><div class="ttdeci">uint8_t peek(uint_least16_t address) override</div><div class="ttdef"><b>Definition:</b> ColorRAMBank.h:58</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1ColorRAMBank_html_aa8cabf80c02d2c8ed2cc890739b99a89"><div class="ttname"><a href="classlibsidplayfp_1_1ColorRAMBank.html#aa8cabf80c02d2c8ed2cc890739b99a89">libsidplayfp::ColorRAMBank::poke</a></div><div class="ttdeci">void poke(uint_least16_t address, uint8_t value) override</div><div class="ttdef"><b>Definition:</b> ColorRAMBank.h:53</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1ColorRAMBank_html"><div class="ttname"><a href="classlibsidplayfp_1_1ColorRAMBank.html">libsidplayfp::ColorRAMBank</a></div><div class="ttdef"><b>Definition:</b> ColorRAMBank.h:44</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1ColorRAMBank_html_aa47715c834712d3a989fd2497bff26b3"><div class="ttname"><a href="classlibsidplayfp_1_1ColorRAMBank.html#aa47715c834712d3a989fd2497bff26b3">libsidplayfp::ColorRAMBank::peek</a></div><div class="ttdeci">uint8_t peek(uint_least16_t address) override</div><div class="ttdef"><b>Definition:</b> ColorRAMBank.h:59</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1ColorRAMBank_html_aa8cabf80c02d2c8ed2cc890739b99a89"><div class="ttname"><a href="classlibsidplayfp_1_1ColorRAMBank.html#aa8cabf80c02d2c8ed2cc890739b99a89">libsidplayfp::ColorRAMBank::poke</a></div><div class="ttdeci">void poke(uint_least16_t address, uint8_t value) override</div><div class="ttdef"><b>Definition:</b> ColorRAMBank.h:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

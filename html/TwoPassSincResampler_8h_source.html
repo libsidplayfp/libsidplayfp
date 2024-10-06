@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -101,44 +102,55 @@
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Named constructor</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1TwoPassSincResampler.html">TwoPassSincResampler</a>* create(<span class="keywordtype">double</span> clockFrequency, <span class="keywordtype">double</span> samplingFrequency, <span class="keywordtype">double</span> highestAccurateFrequency)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1TwoPassSincResampler.html">TwoPassSincResampler</a>* create(<span class="keywordtype">double</span> clockFrequency, <span class="keywordtype">double</span> samplingFrequency)</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="comment">// Calculation according to Laurent Ganier. It evaluates to about 120 kHz at typical settings.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">// Some testing around the chosen value seems to confirm that this does work.</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">double</span> <span class="keyword">const</span> intermediateFrequency = 2. * highestAccurateFrequency</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            + std::sqrt(2. * highestAccurateFrequency * clockFrequency</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                * (samplingFrequency - 2. * highestAccurateFrequency) / samplingFrequency);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classreSIDfp_1_1TwoPassSincResampler.html">TwoPassSincResampler</a>(clockFrequency, samplingFrequency, highestAccurateFrequency, intermediateFrequency);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="comment">// Set the passband frequency slightly below half sampling frequency</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">//   pass_freq &lt;= 0.9*sample_freq/2</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="comment">//</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="comment">// This constraint ensures that the FIR table is not overfilled.</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">// For higher sampling frequencies we&#39;re fine with 20KHz</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> halfFreq = (samplingFrequency &gt; 44000.)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            ? 20000. : samplingFrequency * 0.45;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1TwoPassSincResampler.html#a586479c2bcbb8f6786af76aa8cf0e9db">   64</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classreSIDfp_1_1TwoPassSincResampler.html#a586479c2bcbb8f6786af76aa8cf0e9db">input</a>(<span class="keywordtype">int</span> sample)<span class="keyword"> override</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> s1-&gt;input(sample) &amp;&amp; s2-&gt;input(s1-&gt;output());</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">int</span> output()<span class="keyword"> const override</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> s2-&gt;output();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> reset()<span class="keyword"> override</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        s1-&gt;reset();</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        s2-&gt;reset();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">// Calculation according to Laurent Ganier.</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">// It evaluates to about 120 kHz at typical settings.</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="comment">// Some testing around the chosen value seems to confirm that this does work.</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">double</span> <span class="keyword">const</span> intermediateFrequency = 2. * halfFreq</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            + std::sqrt(2. * halfFreq * clockFrequency</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                * (samplingFrequency - 2. * halfFreq) / samplingFrequency);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="classreSIDfp_1_1TwoPassSincResampler.html">TwoPassSincResampler</a>(</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            clockFrequency, samplingFrequency, halfFreq, intermediateFrequency);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1TwoPassSincResampler.html#a586479c2bcbb8f6786af76aa8cf0e9db">   75</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classreSIDfp_1_1TwoPassSincResampler.html#a586479c2bcbb8f6786af76aa8cf0e9db">input</a>(<span class="keywordtype">int</span> sample)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> s1-&gt;input(sample) &amp;&amp; s2-&gt;input(s1-&gt;output());</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;};</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">int</span> output()<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">return</span> s2-&gt;output();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> reset()<span class="keyword"> override</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        s1-&gt;reset();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        s2-&gt;reset();</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;};</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1Resampler_html"><div class="ttname"><a href="classreSIDfp_1_1Resampler.html">reSIDfp::Resampler</a></div><div class="ttdef"><b>Definition:</b> Resampler.h:40</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1SincResampler_html"><div class="ttname"><a href="classreSIDfp_1_1SincResampler.html">reSIDfp::SincResampler</a></div><div class="ttdef"><b>Definition:</b> SincResampler.h:49</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1TwoPassSincResampler_html"><div class="ttname"><a href="classreSIDfp_1_1TwoPassSincResampler.html">reSIDfp::TwoPassSincResampler</a></div><div class="ttdef"><b>Definition:</b> TwoPassSincResampler.h:41</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1TwoPassSincResampler_html_a586479c2bcbb8f6786af76aa8cf0e9db"><div class="ttname"><a href="classreSIDfp_1_1TwoPassSincResampler.html#a586479c2bcbb8f6786af76aa8cf0e9db">reSIDfp::TwoPassSincResampler::input</a></div><div class="ttdeci">bool input(int sample) override</div><div class="ttdef"><b>Definition:</b> TwoPassSincResampler.h:64</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1TwoPassSincResampler_html_a586479c2bcbb8f6786af76aa8cf0e9db"><div class="ttname"><a href="classreSIDfp_1_1TwoPassSincResampler.html#a586479c2bcbb8f6786af76aa8cf0e9db">reSIDfp::TwoPassSincResampler::input</a></div><div class="ttdeci">bool input(int sample) override</div><div class="ttdef"><b>Definition:</b> TwoPassSincResampler.h:75</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

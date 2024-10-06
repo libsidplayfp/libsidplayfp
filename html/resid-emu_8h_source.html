@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -120,24 +121,21 @@
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> sampling(<span class="keywordtype">float</span> systemclock, <span class="keywordtype">float</span> freq,</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a> method, <span class="keywordtype">bool</span> fast) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1ReSID.html#a53340093cc67217f086389a0bdf4bfd9">voice</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> num, <span class="keywordtype">bool</span> mute) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1ReSID.html#a89b7dee3949575461e266c15eae123bb">model</a>(<a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> <a class="code" href="classlibsidplayfp_1_1ReSID.html#a89b7dee3949575461e266c15eae123bb">model</a>, <span class="keywordtype">bool</span> digiboost) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1ReSID.html#a89b7dee3949575461e266c15eae123bb">model</a>(<a class="code" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> <a class="code" href="classlibsidplayfp_1_1ReSID.html#a89b7dee3949575461e266c15eae123bb">model</a>, <span class="keywordtype">bool</span> digiboost) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// Specific to resid</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> bias(<span class="keywordtype">double</span> dac_bias);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> filter(<span class="keywordtype">bool</span> enable);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// Specific to resid</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> bias(<span class="keywordtype">double</span> dac_bias);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">void</span> filter(<span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;};</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// RESID_EMU_H</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// RESID_EMU_H</span></div>
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:51</div></div>
 <div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:84</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1ReSID_html"><div class="ttname"><a href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a></div><div class="ttdef"><b>Definition:</b> resid-emu.h:44</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1ReSID_html_a53340093cc67217f086389a0bdf4bfd9"><div class="ttname"><a href="classlibsidplayfp_1_1ReSID.html#a53340093cc67217f086389a0bdf4bfd9">libsidplayfp::ReSID::voice</a></div><div class="ttdeci">void voice(unsigned int num, bool mute) override</div><div class="ttdef"><b>Definition:</b> resid-emu.cpp:134</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1ReSID_html_a59a030485e241052f87888b35495fef8"><div class="ttname"><a href="classlibsidplayfp_1_1ReSID.html#a59a030485e241052f87888b35495fef8">libsidplayfp::ReSID::clock</a></div><div class="ttdeci">void clock() override</div><div class="ttdef"><b>Definition:</b> resid-emu.cpp:94</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1ReSID_html_a89b7dee3949575461e266c15eae123bb"><div class="ttname"><a href="classlibsidplayfp_1_1ReSID.html#a89b7dee3949575461e266c15eae123bb">libsidplayfp::ReSID::model</a></div><div class="ttdeci">void model(SidConfig::sid_model_t model, bool digiboost) override</div><div class="ttdef"><b>Definition:</b> resid-emu.cpp:145</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1ReSID_html_a89b7dee3949575461e266c15eae123bb"><div class="ttname"><a href="classlibsidplayfp_1_1ReSID.html#a89b7dee3949575461e266c15eae123bb">libsidplayfp::ReSID::model</a></div><div class="ttdeci">void model(SidConfig::sid_model_t model, bool digiboost) override</div><div class="ttdef"><b>Definition:</b> resid-emu.cpp:135</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></div><div class="ttdef"><b>Definition:</b> sidemu.h:47</div></div>
 <div class="ttc" id="aclassreSID_1_1SID_html"><div class="ttname"><a href="classreSID_1_1SID.html">reSID::SID</a></div><div class="ttdef"><b>Definition:</b> sid.h:39</div></div>
 <div class="ttc" id="aclasssidbuilder_html"><div class="ttname"><a href="classsidbuilder.html">sidbuilder</a></div><div class="ttdef"><b>Definition:</b> sidbuilder.h:41</div></div>
@@ -145,7 +143,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

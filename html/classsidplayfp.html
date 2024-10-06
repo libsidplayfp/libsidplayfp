@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -79,6 +80,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a65dd7c4dd9fa009f6eda82afb5af4f35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabd36cbfdecac5ef5e716f0918fa2e12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#aabd36cbfdecac5ef5e716f0918fa2e12">mute</a> (unsigned int sidNum, unsigned int voice, bool enable)</td></tr>
 <tr class="separator:aabd36cbfdecac5ef5e716f0918fa2e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a409fc3245a2896b41b2bd77cf9abfbf6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#a409fc3245a2896b41b2bd77cf9abfbf6">filter</a> (unsigned int sidNum, bool enable)</td></tr>
+<tr class="separator:a409fc3245a2896b41b2bd77cf9abfbf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad10c56b2f3350e96c4798e7b0b796fca"><td class="memItemLeft" align="right" valign="top">uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#ad10c56b2f3350e96c4798e7b0b796fca">time</a> () const</td></tr>
 <tr class="separator:ad10c56b2f3350e96c4798e7b0b796fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa03bede3d0e7cfa33ee12725e02abf11"><td class="memItemLeft" align="right" valign="top">uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#aa03bede3d0e7cfa33ee12725e02abf11">timeMs</a> () const</td></tr>
@@ -229,6 +232,43 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a409fc3245a2896b41b2bd77cf9abfbf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a409fc3245a2896b41b2bd77cf9abfbf6">&#9670;&nbsp;</a></span>filter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sidplayfp::filter </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>sidNum</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Enable/disable SID filter. Must be called after <a class="el" href="classsidplayfp.html#a455797460b63290cddbeb99d3c24a056">config</a> or it has no effect.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sidNum</td><td>the SID chip, 0 for the first one, 1 for the second or 2 for the third. </td></tr>
+    <tr><td class="paramname">enable</td><td>true enable the filter, false disable it. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>2.10 </dd></dl>
 
 </div>
 </div>
@@ -392,8 +432,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
 <p>Mute/unmute a SID channel.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sidNum</td><td>the SID chip, 0 for the first one, 1 for the second. </td></tr>
-    <tr><td class="paramname">voice</td><td>the channel to mute/unmute. </td></tr>
+    <tr><td class="paramname">sidNum</td><td>the SID chip, 0 for the first one, 1 for the second or 2 for the third. </td></tr>
+    <tr><td class="paramname">voice</td><td>the channel to mute/unmute, 0 to 2 for the voices or 3 for samples. </td></tr>
     <tr><td class="paramname">enable</td><td>true unmutes the channel, false mutes it. </td></tr>
   </table>
   </dd>
@@ -575,7 +615,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

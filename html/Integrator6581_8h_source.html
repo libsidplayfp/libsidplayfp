@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -110,36 +111,35 @@
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> nVt;</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> nVmin;</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>* fmc;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>&amp; fmc;</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="classreSIDfp_1_1Integrator6581.html">Integrator6581</a>(<span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>* fmc,</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;               <span class="keywordtype">double</span> WL_snake) :</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        wlSnake(WL_snake),</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="preprocessor">#ifdef SLOPE_FACTOR</span></div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        n(1.4),</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        nVddt_Vw_2(0),</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        nVddt(fmc-&gt;getNormalizedValue(fmc-&gt;getVddt())),</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        nVt(fmc-&gt;getNormalizedValue(fmc-&gt;getVth())),</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        nVmin(fmc-&gt;getNVmin()),</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        fmc(fmc) {}</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordtype">void</span> setVw(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> Vw) { nVddt_Vw_2 = ((nVddt - Vw) * (nVddt - Vw)) &gt;&gt; 1; }</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordtype">int</span> solve(<span class="keywordtype">int</span> vi) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;};</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="classreSIDfp_1_1Integrator6581.html">Integrator6581</a>(<a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>&amp; fmc) :</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        wlSnake(fmc.getWL_snake()),</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="preprocessor">#ifdef SLOPE_FACTOR</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        n(1.4),</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        nVddt_Vw_2(0),</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        nVddt(fmc.getNormalizedValue(fmc.getVddt())),</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        nVt(fmc.getNormalizedValue(fmc.getVth())),</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        nVmin(fmc.getNVmin()),</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        fmc(fmc) {}</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keywordtype">void</span> setVw(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> Vw) { nVddt_Vw_2 = ((nVddt - Vw) * (nVddt - Vw)) &gt;&gt; 1; }</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordtype">int</span> solve(<span class="keywordtype">int</span> vi) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;};</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html">reSIDfp::FilterModelConfig6581</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.h:43</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Integrator6581_html"><div class="ttname"><a href="classreSIDfp_1_1Integrator6581.html">reSIDfp::Integrator6581</a></div><div class="ttdef"><b>Definition:</b> Integrator6581.h:165</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Integrator_html"><div class="ttname"><a href="classreSIDfp_1_1Integrator.html">reSIDfp::Integrator</a></div><div class="ttdef"><b>Definition:</b> Integrator.h:30</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -174,20 +175,22 @@
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordtype">void</span> mute(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> voice, <span class="keywordtype">bool</span> enable);</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *error()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_errorString; }</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> filter(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">bool</span> enable);</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordtype">void</span> setKernal(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">void</span> setBasic(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> setChargen(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getCia1TimerA(); }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *error()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_errorString; }</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">void</span> setKernal(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordtype">void</span> setBasic(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordtype">void</span> setChargen(<span class="keyword">const</span> uint8_t* rom);</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">bool</span> getSidStatus(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, uint8_t regs[32]);</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;};</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;}</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getCia1TimerA(); }</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">bool</span> getSidStatus(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, uint8_t regs[32]);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;};</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// PLAYER_H</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;}</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// PLAYER_H</span></div>
 <div class="ttc" id="aclassSidConfig_html"><div class="ttname"><a href="classSidConfig.html">SidConfig</a></div><div class="ttdef"><b>Definition:</b> SidConfig.h:40</div></div>
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:51</div></div>
 <div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition:</b> SidConfig.h:84</div></div>
@@ -204,7 +207,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

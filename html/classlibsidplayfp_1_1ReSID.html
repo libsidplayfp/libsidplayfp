@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -73,13 +74,14 @@ Collaboration diagram for libsidplayfp::ReSID:</div>
 <div class="dyncontent">
 <div class="center"><img src="classlibsidplayfp_1_1ReSID__coll__graph.png" border="0" usemap="#alibsidplayfp_1_1ReSID_coll__map" alt="Collaboration graph"/></div>
 <map name="alibsidplayfp_1_1ReSID_coll__map" id="alibsidplayfp_1_1ReSID_coll__map">
-<area shape="rect" title=" " alt="" coords="154,261,299,288"/>
-<area shape="rect" href="classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="149,185,304,212"/>
+<area shape="rect" title=" " alt="" coords="286,261,431,288"/>
+<area shape="rect" href="classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="281,185,436,212"/>
 <area shape="rect" href="classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="6,96,154,123"/>
 <area shape="rect" href="classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="5,13,144,39"/>
-<area shape="rect" title=" " alt="" coords="183,96,270,123"/>
+<area shape="rect" title=" " alt="" coords="189,96,275,123"/>
 <area shape="rect" title=" " alt="" coords="168,5,307,47"/>
-<area shape="rect" href="classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="294,96,501,123"/>
+<area shape="rect" href="classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="299,96,506,123"/>
+<area shape="rect" title=" " alt="" coords="531,96,656,123"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -105,8 +107,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (uint8_t vo
 <tr class="memitem:a2676051a8b135172780084407e88fbc0"><td class="memItemLeft" align="right" valign="top"><a id="a2676051a8b135172780084407e88fbc0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sampling</b> (float systemclock, float freq, <a class="el" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a> method, bool fast) override</td></tr>
 <tr class="separator:a2676051a8b135172780084407e88fbc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53340093cc67217f086389a0bdf4bfd9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1ReSID.html#a53340093cc67217f086389a0bdf4bfd9">voice</a> (unsigned int num, bool mute) override</td></tr>
-<tr class="separator:a53340093cc67217f086389a0bdf4bfd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89b7dee3949575461e266c15eae123bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1ReSID.html#a89b7dee3949575461e266c15eae123bb">model</a> (<a class="el" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> model, bool digiboost) override</td></tr>
 <tr class="separator:a89b7dee3949575461e266c15eae123bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d8a18d0e9f932a312a036c2bf9d53ab"><td class="memItemLeft" align="right" valign="top"><a id="a3d8a18d0e9f932a312a036c2bf9d53ab"></a>
@@ -123,6 +123,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>filter</b> (bool enab
 <tr class="separator:a74cdaf4377c3eccff38a2f4d6529acf2 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a754190edcc167c154394f62f1c91dfd2 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a754190edcc167c154394f62f1c91dfd2">unlock</a> ()</td></tr>
 <tr class="separator:a754190edcc167c154394f62f1c91dfd2 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae257b20e82ca7ad61a1a2f271bb109b1 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#ae257b20e82ca7ad61a1a2f271bb109b1">voice</a> (unsigned int voice, bool mute)</td></tr>
+<tr class="separator:ae257b20e82ca7ad61a1a2f271bb109b1 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9efffb6a38b30eedd6bc085a5612cfd8 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a9efffb6a38b30eedd6bc085a5612cfd8">filter</a> (bool enable)</td></tr>
+<tr class="separator:a9efffb6a38b30eedd6bc085a5612cfd8 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96d9dc25105c569fb0c11656ac1e088a inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a96d9dc25105c569fb0c11656ac1e088a">sampling</a> (float systemfreq SID_UNUSED, float outputfreq SID_UNUSED, <a class="el" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a> method SID_UNUSED, bool fast SID_UNUSED)</td></tr>
 <tr class="separator:a96d9dc25105c569fb0c11656ac1e088a inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0f80744d46e4123854a22f46bf1a0d1 inherit pub_methods_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#aa0f80744d46e4123854a22f46bf1a0d1">error</a> () const</td></tr>
@@ -161,6 +165,10 @@ Additional Inherited Members</h2></td></tr>
 static constexpr unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#ab9d62b5bcf5bc66ec28b0125372ca71f">OUTPUTBUFFERSIZE</a> = 5000</td></tr>
 <tr class="memdesc:ab9d62b5bcf5bc66ec28b0125372ca71f inherit pub_static_attribs_classlibsidplayfp_1_1sidemu"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer size. 5000 is roughly 5 ms at 96 kHz. <br /></td></tr>
 <tr class="separator:ab9d62b5bcf5bc66ec28b0125372ca71f inherit pub_static_attribs_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classlibsidplayfp_1_1sidemu"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classlibsidplayfp_1_1sidemu')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td></tr>
+<tr class="memitem:a0ccea42395c389bff28dd97e9f6217a9 inherit pro_methods_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top"><a id="a0ccea42395c389bff28dd97e9f6217a9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeReg</b> (uint_least8_t addr, uint8_t data) override final</td></tr>
+<tr class="separator:a0ccea42395c389bff28dd97e9f6217a9 inherit pro_methods_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classlibsidplayfp_1_1sidemu"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classlibsidplayfp_1_1sidemu')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td></tr>
 <tr class="memitem:a3a4ce803b6fd60b9b959f6d09de20ca3 inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top"><a id="a3a4ce803b6fd60b9b959f6d09de20ca3"></a>
 <a class="el" href="classlibsidplayfp_1_1EventScheduler.html">EventScheduler</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>eventScheduler</b> = nullptr</td></tr>
@@ -182,6 +190,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b> = true</
 <tr class="memitem:a1f8b382c5c8493c808b280473607efcd inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top"><a id="a1f8b382c5c8493c808b280473607efcd"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLocked</b> = false</td></tr>
 <tr class="separator:a1f8b382c5c8493c808b280473607efcd inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae88bdb6449c7850c950a47ade49000a7 inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top"><a id="ae88bdb6449c7850c950a47ade49000a7"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFilterDisabled</b> = false</td></tr>
+<tr class="separator:ae88bdb6449c7850c950a47ade49000a7 inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed3d04c7191c179b7c710a773480e1df inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top"><a id="aed3d04c7191c179b7c710a773480e1df"></a>
+std::bitset&lt; 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#aed3d04c7191c179b7c710a773480e1df">isMuted</a></td></tr>
+<tr class="memdesc:aed3d04c7191c179b7c710a773480e1df inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classlibsidplayfp_1_1Flags.html">Flags</a> for muted voices. <br /></td></tr>
+<tr class="separator:aed3d04c7191c179b7c710a773480e1df inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af290518ba47f72674100feeac24ad0ed inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memItemLeft" align="right" valign="top"><a id="af290518ba47f72674100feeac24ad0ed"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_error</b></td></tr>
 <tr class="separator:af290518ba47f72674100feeac24ad0ed inherit pro_attribs_classlibsidplayfp_1_1sidemu"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -264,45 +279,6 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 
 </div>
 </div>
-<a id="a53340093cc67217f086389a0bdf4bfd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53340093cc67217f086389a0bdf4bfd9">&#9670;&nbsp;</a></span>voice()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void libsidplayfp::ReSID::voice </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>num</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>mute</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Mute/unmute voice. </p>
-
-<p>Implements <a class="el" href="classlibsidplayfp_1_1sidemu.html#ac0168a2971f9d29425b1431622d8941f">libsidplayfp::sidemu</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="resid-emu_8h_source.html">resid-emu.h</a></li>
 <li>resid-emu.cpp</li>
@@ -310,7 +286,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -71,7 +72,9 @@
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getCredits</b>() (defined in <a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>getStatus</b>() const (defined in <a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>getStatus</b>(uint8_t regs[0x20]) const (defined in <a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>isLocked</b> (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>isFilterDisabled</b> (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>isLocked</b> (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#aed3d04c7191c179b7c710a773480e1df">isMuted</a></td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a74cdaf4377c3eccff38a2f4d6529acf2">lock</a>(EventScheduler *scheduler)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>m_accessClk</b> (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a0cb045e4f686a04374d2346ce0017e92">m_buffer</a></td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
@@ -90,16 +93,17 @@
   <tr><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a96d9dc25105c569fb0c11656ac1e088a">libsidplayfp::sidemu::sampling</a>(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED, SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sidemu</b>(sidbuilder *builder) (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a754190edcc167c154394f62f1c91dfd2">unlock</a>()</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1ReSID.html#a53340093cc67217f086389a0bdf4bfd9">voice</a>(unsigned int num, bool mute) override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#ae257b20e82ca7ad61a1a2f271bb109b1">voice</a>(unsigned int voice, bool mute)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>write</b>(uint_least8_t addr, uint8_t data) override (defined in <a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Bank</b>()=default (defined in <a class="el" href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>~c64sid</b>()=default (defined in <a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~ReSID</b>() override (defined in <a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>~sidemu</b>() override=default (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>writeReg</b>(uint_least8_t addr, uint8_t data) override final (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~Bank</b>()=default (defined in <a class="el" href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~c64sid</b>()=default (defined in <a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~ReSID</b>() override (defined in <a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1ReSID.html">libsidplayfp::ReSID</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~sidemu</b>() override=default (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

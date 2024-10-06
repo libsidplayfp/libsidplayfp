@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -76,9 +77,9 @@
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef FILTER6581_H</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define FILTER6581_H</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;Integrator.h&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;Filter.h&quot;</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;FilterModelConfig6581.h&quot;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;Filter.h&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;FilterModelConfig6581.h&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;Integrator6581.h&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
@@ -87,39 +88,49 @@
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">class </span>Integrator6581;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00319"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter6581.html">  319</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1Filter6581.html">Filter6581</a> final : <span class="keyword">public</span> <a class="code" href="classreSIDfp_1_1Filter.html">Filter</a></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;{</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* f0_dac;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter6581.html#ad63b0f969d78454a2c9645ff8cef9e28">updateCenterFrequency</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <a class="code" href="classreSIDfp_1_1Filter6581.html">Filter6581</a>() :</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <a class="code" href="classreSIDfp_1_1Filter.html">Filter</a>(FilterModelConfig6581::getInstance()),</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        f0_dac(FilterModelConfig6581::getInstance()-&gt;getDAC(0.5))</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    {}</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    ~<a class="code" href="classreSIDfp_1_1Filter6581.html">Filter6581</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter6581.html#a53fb448a90aebcb80a5ad3a26f517fe7">setFilterCurve</a>(<span class="keywordtype">double</span> curvePosition);</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter6581.html#a5f0d6289ef511a37a45ad09a967167d1">setFilterRange</a>(<span class="keywordtype">double</span> adjustment);</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;};</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter6581.html">  320</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1Filter6581.html">Filter6581</a> final : <span class="keyword">public</span> <a class="code" href="classreSIDfp_1_1Filter.html">Filter</a></div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;{</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <a class="code" href="classreSIDfp_1_1Integrator6581.html">Integrator6581</a> hpIntegrator;</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <a class="code" href="classreSIDfp_1_1Integrator6581.html">Integrator6581</a> bpIntegrator;</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* f0_dac;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter6581.html#ad63b0f969d78454a2c9645ff8cef9e28">updateCenterFrequency</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <a class="code" href="classreSIDfp_1_1Filter6581.html">Filter6581</a>() :</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        <a class="code" href="classreSIDfp_1_1Filter.html">Filter</a>(*FilterModelConfig6581::getInstance()),</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        hpIntegrator(*FilterModelConfig6581::getInstance()),</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        bpIntegrator(*FilterModelConfig6581::getInstance()),</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        f0_dac(FilterModelConfig6581::getInstance()-&gt;getDAC(0.5))</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    {}</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    ~<a class="code" href="classreSIDfp_1_1Filter6581.html">Filter6581</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="classreSIDfp_1_1Filter6581.html#a4fecd0f222ae9af5815daa29c7550391">clock</a>(<span class="keywordtype">float</span> v1, <span class="keywordtype">float</span> v2, <span class="keywordtype">float</span> v3) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter6581.html#a53fb448a90aebcb80a5ad3a26f517fe7">setFilterCurve</a>(<span class="keywordtype">double</span> curvePosition);</div>
 <div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160; </div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html">reSIDfp::Filter6581</a></div><div class="ttdef"><b>Definition:</b> Filter6581.h:320</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html_a53fb448a90aebcb80a5ad3a26f517fe7"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html#a53fb448a90aebcb80a5ad3a26f517fe7">reSIDfp::Filter6581::setFilterCurve</a></div><div class="ttdeci">void setFilterCurve(double curvePosition)</div><div class="ttdef"><b>Definition:</b> Filter6581.cpp:42</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html_a5f0d6289ef511a37a45ad09a967167d1"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html#a5f0d6289ef511a37a45ad09a967167d1">reSIDfp::Filter6581::setFilterRange</a></div><div class="ttdeci">void setFilterRange(double adjustment)</div><div class="ttdef"><b>Definition:</b> Filter6581.cpp:49</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html_ad63b0f969d78454a2c9645ff8cef9e28"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html#ad63b0f969d78454a2c9645ff8cef9e28">reSIDfp::Filter6581::updateCenterFrequency</a></div><div class="ttdeci">void updateCenterFrequency() override</div><div class="ttdef"><b>Definition:</b> Filter6581.cpp:35</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html"><div class="ttname"><a href="classreSIDfp_1_1Filter.html">reSIDfp::Filter</a></div><div class="ttdef"><b>Definition:</b> Filter.h:39</div></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter6581.html#a5f0d6289ef511a37a45ad09a967167d1">setFilterRange</a>(<span class="keywordtype">double</span> adjustment);</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;};</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html">reSIDfp::Filter6581</a></div><div class="ttdef"><b>Definition:</b> Filter6581.h:321</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html_a4fecd0f222ae9af5815daa29c7550391"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html#a4fecd0f222ae9af5815daa29c7550391">reSIDfp::Filter6581::clock</a></div><div class="ttdeci">unsigned short clock(float v1, float v2, float v3) override</div><div class="ttdef"><b>Definition:</b> Filter6581.cpp:30</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html_a53fb448a90aebcb80a5ad3a26f517fe7"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html#a53fb448a90aebcb80a5ad3a26f517fe7">reSIDfp::Filter6581::setFilterCurve</a></div><div class="ttdeci">void setFilterCurve(double curvePosition)</div><div class="ttdef"><b>Definition:</b> Filter6581.cpp:74</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html_a5f0d6289ef511a37a45ad09a967167d1"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html#a5f0d6289ef511a37a45ad09a967167d1">reSIDfp::Filter6581::setFilterRange</a></div><div class="ttdeci">void setFilterRange(double adjustment)</div><div class="ttdef"><b>Definition:</b> Filter6581.cpp:81</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter6581_html_ad63b0f969d78454a2c9645ff8cef9e28"><div class="ttname"><a href="classreSIDfp_1_1Filter6581.html#ad63b0f969d78454a2c9645ff8cef9e28">reSIDfp::Filter6581::updateCenterFrequency</a></div><div class="ttdeci">void updateCenterFrequency() override</div><div class="ttdef"><b>Definition:</b> Filter6581.cpp:67</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html"><div class="ttname"><a href="classreSIDfp_1_1Filter.html">reSIDfp::Filter</a></div><div class="ttdef"><b>Definition:</b> Filter.h:37</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Integrator6581_html"><div class="ttname"><a href="classreSIDfp_1_1Integrator6581.html">reSIDfp::Integrator6581</a></div><div class="ttdef"><b>Definition:</b> Integrator6581.h:165</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

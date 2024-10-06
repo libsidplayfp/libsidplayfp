@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -76,81 +77,78 @@
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef VOICE_H</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define VOICE_H</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;siddefs-fp.h&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;WaveformGenerator.h&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;EnvelopeGenerator.h&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;sidcxx11.h&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1Voice.html">Voice</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::unique_ptr&lt;WaveformGenerator&gt; <span class="keyword">const</span> waveformGenerator;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::unique_ptr&lt;EnvelopeGenerator&gt; <span class="keyword">const</span> envelopeGenerator;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">float</span>* wavDAC; <span class="comment">//-V730_NOINIT this is initialized in the SID constructor</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">float</span>* envDAC; <span class="comment">//-V730_NOINIT this is initialized in the SID constructor</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    RESID_INLINE</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#aa4e14d7e8445b6269cb9a42faf88b5be">   70</a></span>&#160;    <span class="keywordtype">float</span> <a class="code" href="classreSIDfp_1_1Voice.html#aa4e14d7e8445b6269cb9a42faf88b5be">output</a>(<span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>* ringModulator)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> wav = waveformGenerator-&gt;output(ringModulator);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> env = envelopeGenerator-&gt;output();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">// DAC imperfections are emulated by using the digital output</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">// as an index into a DAC lookup table.</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> wavDAC[wav] * envDAC[env];</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#a42d7840fd0b9faa2e64472d33ba7d888">   83</a></span>&#160;    <a class="code" href="classreSIDfp_1_1Voice.html#a42d7840fd0b9faa2e64472d33ba7d888">Voice</a>() :</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        waveformGenerator(new <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>()),</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        envelopeGenerator(new <a class="code" href="classreSIDfp_1_1EnvelopeGenerator.html">EnvelopeGenerator</a>()) {}</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">   93</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">setWavDAC</a>(<span class="keywordtype">float</span>* dac) { wavDAC = dac; }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">  101</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">setEnvDAC</a>(<span class="keywordtype">float</span>* dac) { envDAC = dac; }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>* wave()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> waveformGenerator.get(); }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    EnvelopeGenerator* envelope()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> envelopeGenerator.get(); }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;siddefs-fp.h&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;WaveformGenerator.h&quot;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;EnvelopeGenerator.h&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">namespace </span>reSIDfp</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;{</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html">   36</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1Voice.html">Voice</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a> waveformGenerator;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classreSIDfp_1_1EnvelopeGenerator.html">EnvelopeGenerator</a> envelopeGenerator;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">float</span>* wavDAC; <span class="comment">//-V730_NOINIT this is initialized in the SID constructor</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">float</span>* envDAC; <span class="comment">//-V730_NOINIT this is initialized in the SID constructor</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    RESID_INLINE</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#a5f950d45b14546e196f00cb6786e5ad5">   66</a></span>&#160;    <span class="keywordtype">float</span> <a class="code" href="classreSIDfp_1_1Voice.html#a5f950d45b14546e196f00cb6786e5ad5">output</a>(<span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>* ringModulator)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> wav = waveformGenerator.<a class="code" href="classreSIDfp_1_1WaveformGenerator.html#a0f89efa7a353bebf9e2015ffe5385577">output</a>(ringModulator);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="keyword">const</span> env = envelopeGenerator.<a class="code" href="classreSIDfp_1_1EnvelopeGenerator.html#a07c062ea2465158e8e35f1f719fccabc">output</a>();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">// DAC imperfections are emulated by using the digital output</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="comment">// as an index into a DAC lookup table.</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span> wavDAC[wav] * envDAC[env];</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">   82</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">setWavDAC</a>(<span class="keywordtype">float</span>* dac) { wavDAC = dac; }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">   90</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">setEnvDAC</a>(<span class="keywordtype">float</span>* dac) { envDAC = dac; }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="classreSIDfp_1_1WaveformGenerator.html">WaveformGenerator</a>* wave() { <span class="keywordflow">return</span> &amp;waveformGenerator; }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    EnvelopeGenerator* envelope() { <span class="keywordflow">return</span> &amp;envelopeGenerator; }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#a603af72953ef2853bf11a7efecf26b24">  101</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#a603af72953ef2853bf11a7efecf26b24">writeCONTROL_REG</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> control)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        waveformGenerator.<a class="code" href="classreSIDfp_1_1WaveformGenerator.html#a7e7a5ce8355222ef3b10748a9d1d859c">writeCONTROL_REG</a>(control);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        envelopeGenerator.<a class="code" href="classreSIDfp_1_1EnvelopeGenerator.html#a818b47958703edf6c96b30ee209f0500">writeCONTROL_REG</a>(control);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#a603af72953ef2853bf11a7efecf26b24">  112</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#a603af72953ef2853bf11a7efecf26b24">writeCONTROL_REG</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> control)</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        waveformGenerator-&gt;writeCONTROL_REG(control);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        envelopeGenerator-&gt;writeCONTROL_REG(control);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#ab27c1291f0e34137e9d5a0dcf6b69ae9">  121</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#ab27c1291f0e34137e9d5a0dcf6b69ae9">reset</a>()</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        waveformGenerator-&gt;reset();</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        envelopeGenerator-&gt;reset();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;};</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Voice.html#ab27c1291f0e34137e9d5a0dcf6b69ae9">  110</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Voice.html#ab27c1291f0e34137e9d5a0dcf6b69ae9">reset</a>()</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        waveformGenerator.<a class="code" href="classreSIDfp_1_1WaveformGenerator.html#ad242d9ca647ea24a611e68e9712dec3f">reset</a>();</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        envelopeGenerator.<a class="code" href="classreSIDfp_1_1EnvelopeGenerator.html#a20ebe9bb9287bb325d14b516a8f0b3d8">reset</a>();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;};</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html">reSIDfp::EnvelopeGenerator</a></div><div class="ttdef"><b>Definition:</b> EnvelopeGenerator.h:44</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html"><div class="ttname"><a href="classreSIDfp_1_1Voice.html">reSIDfp::Voice</a></div><div class="ttdef"><b>Definition:</b> Voice.h:41</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html_a42d7840fd0b9faa2e64472d33ba7d888"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#a42d7840fd0b9faa2e64472d33ba7d888">reSIDfp::Voice::Voice</a></div><div class="ttdeci">Voice()</div><div class="ttdef"><b>Definition:</b> Voice.h:83</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html_a603af72953ef2853bf11a7efecf26b24"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#a603af72953ef2853bf11a7efecf26b24">reSIDfp::Voice::writeCONTROL_REG</a></div><div class="ttdeci">void writeCONTROL_REG(unsigned char control)</div><div class="ttdef"><b>Definition:</b> Voice.h:112</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html_aa4e14d7e8445b6269cb9a42faf88b5be"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#aa4e14d7e8445b6269cb9a42faf88b5be">reSIDfp::Voice::output</a></div><div class="ttdeci">RESID_INLINE float output(const WaveformGenerator *ringModulator) const</div><div class="ttdef"><b>Definition:</b> Voice.h:70</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html_ab27c1291f0e34137e9d5a0dcf6b69ae9"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ab27c1291f0e34137e9d5a0dcf6b69ae9">reSIDfp::Voice::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> Voice.h:121</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html_ab767f859b91b61c268169fd5135ea18a"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">reSIDfp::Voice::setEnvDAC</a></div><div class="ttdeci">void setEnvDAC(float *dac)</div><div class="ttdef"><b>Definition:</b> Voice.h:101</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Voice_html_ad0475864f2aeed3145448670111fdece"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">reSIDfp::Voice::setWavDAC</a></div><div class="ttdeci">void setWavDAC(float *dac)</div><div class="ttdef"><b>Definition:</b> Voice.h:93</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html_a07c062ea2465158e8e35f1f719fccabc"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html#a07c062ea2465158e8e35f1f719fccabc">reSIDfp::EnvelopeGenerator::output</a></div><div class="ttdeci">unsigned int output() const</div><div class="ttdef"><b>Definition:</b> EnvelopeGenerator.h:130</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html_a20ebe9bb9287bb325d14b516a8f0b3d8"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html#a20ebe9bb9287bb325d14b516a8f0b3d8">reSIDfp::EnvelopeGenerator::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> EnvelopeGenerator.cpp:62</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html_a818b47958703edf6c96b30ee209f0500"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html#a818b47958703edf6c96b30ee209f0500">reSIDfp::EnvelopeGenerator::writeCONTROL_REG</a></div><div class="ttdeci">void writeCONTROL_REG(unsigned char control)</div><div class="ttdef"><b>Definition:</b> EnvelopeGenerator.cpp:87</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Voice_html"><div class="ttname"><a href="classreSIDfp_1_1Voice.html">reSIDfp::Voice</a></div><div class="ttdef"><b>Definition:</b> Voice.h:37</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Voice_html_a5f950d45b14546e196f00cb6786e5ad5"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#a5f950d45b14546e196f00cb6786e5ad5">reSIDfp::Voice::output</a></div><div class="ttdeci">RESID_INLINE float output(const WaveformGenerator *ringModulator)</div><div class="ttdef"><b>Definition:</b> Voice.h:66</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Voice_html_a603af72953ef2853bf11a7efecf26b24"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#a603af72953ef2853bf11a7efecf26b24">reSIDfp::Voice::writeCONTROL_REG</a></div><div class="ttdeci">void writeCONTROL_REG(unsigned char control)</div><div class="ttdef"><b>Definition:</b> Voice.h:101</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Voice_html_ab27c1291f0e34137e9d5a0dcf6b69ae9"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ab27c1291f0e34137e9d5a0dcf6b69ae9">reSIDfp::Voice::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> Voice.h:110</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Voice_html_ab767f859b91b61c268169fd5135ea18a"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ab767f859b91b61c268169fd5135ea18a">reSIDfp::Voice::setEnvDAC</a></div><div class="ttdeci">void setEnvDAC(float *dac)</div><div class="ttdef"><b>Definition:</b> Voice.h:90</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Voice_html_ad0475864f2aeed3145448670111fdece"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#ad0475864f2aeed3145448670111fdece">reSIDfp::Voice::setWavDAC</a></div><div class="ttdeci">void setWavDAC(float *dac)</div><div class="ttdef"><b>Definition:</b> Voice.h:82</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1WaveformGenerator_html"><div class="ttname"><a href="classreSIDfp_1_1WaveformGenerator.html">reSIDfp::WaveformGenerator</a></div><div class="ttdef"><b>Definition:</b> WaveformGenerator.h:94</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformGenerator_html_a0f89efa7a353bebf9e2015ffe5385577"><div class="ttname"><a href="classreSIDfp_1_1WaveformGenerator.html#a0f89efa7a353bebf9e2015ffe5385577">reSIDfp::WaveformGenerator::output</a></div><div class="ttdeci">unsigned int output(const WaveformGenerator *ringModulator)</div><div class="ttdef"><b>Definition:</b> WaveformGenerator.h:344</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformGenerator_html_a7e7a5ce8355222ef3b10748a9d1d859c"><div class="ttname"><a href="classreSIDfp_1_1WaveformGenerator.html#a7e7a5ce8355222ef3b10748a9d1d859c">reSIDfp::WaveformGenerator::writeCONTROL_REG</a></div><div class="ttdeci">void writeCONTROL_REG(unsigned char control)</div><div class="ttdef"><b>Definition:</b> WaveformGenerator.cpp:354</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformGenerator_html_ad242d9ca647ea24a611e68e9712dec3f"><div class="ttname"><a href="classreSIDfp_1_1WaveformGenerator.html#ad242d9ca647ea24a611e68e9712dec3f">reSIDfp::WaveformGenerator::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> WaveformGenerator.cpp:453</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

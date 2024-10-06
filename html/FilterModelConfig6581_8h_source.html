@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -126,36 +127,34 @@
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html#a2670cf74cbf8f83e2a23982edf80177b">getDAC</a>(<span class="keywordtype">double</span> adjustment) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="classreSIDfp_1_1Integrator.html">Integrator</a>* <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html#ac7dcbf8913eab701edf5367febfdc13c">buildIntegrator</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_nVg(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> vcr_nVg[i]; }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_n_Ids_term(<span class="keywordtype">int</span> i)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> tmp = vcr_n_Ids_term[i] * <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">uCox</a>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        assert(tmp &gt; -0.5 &amp;&amp; tmp &lt; 65535.5);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">short</span><span class="keyword">&gt;</span>(tmp + 0.5);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">// only used if SLOPE_FACTOR is defined</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">inline</span> constexpr <span class="keywordtype">double</span> getUt()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">Ut</a>; }</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">double</span> getN16()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">N16</a>; }</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;};</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">double</span> getWL_snake()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> WL_snake; }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_nVg(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> vcr_nVg[i]; }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_n_Ids_term(<span class="keywordtype">int</span> i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> tmp = vcr_n_Ids_term[i] * <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">uCox</a>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        assert(tmp &gt; -0.5 &amp;&amp; tmp &lt; 65535.5);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">short</span><span class="keyword">&gt;</span>(tmp + 0.5);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// only used if SLOPE_FACTOR is defined</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">inline</span> constexpr <span class="keywordtype">double</span> getUt()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">Ut</a>; }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">double</span> getN16()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">N16</a>; }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;};</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1Dac_html"><div class="ttname"><a href="classreSIDfp_1_1Dac.html">reSIDfp::Dac</a></div><div class="ttdef"><b>Definition:</b> Dac.h:76</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html">reSIDfp::FilterModelConfig6581</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.h:43</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html_a2670cf74cbf8f83e2a23982edf80177b"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html#a2670cf74cbf8f83e2a23982edf80177b">reSIDfp::FilterModelConfig6581::getDAC</a></div><div class="ttdeci">unsigned short * getDAC(double adjustment) const</div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.cpp:259</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html_ac7dcbf8913eab701edf5367febfdc13c"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html#ac7dcbf8913eab701edf5367febfdc13c">reSIDfp::FilterModelConfig6581::buildIntegrator</a></div><div class="ttdeci">Integrator * buildIntegrator() override</div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.cpp:274</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:40</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_a489748ed7997e7a80b9b3d7f7a38fec0"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">reSIDfp::FilterModelConfig::uCox</a></div><div class="ttdeci">double uCox</div><div class="ttdoc">Transconductance coefficient: u*Cox.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:53</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_aadc3f4d5eff80806180c0ef3233995f5"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">reSIDfp::FilterModelConfig::Ut</a></div><div class="ttdeci">static constexpr double Ut</div><div class="ttdoc">Transistor parameters.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:48</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_adec22dcd54967be1860668fc89e1f98c"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">reSIDfp::FilterModelConfig::N16</a></div><div class="ttdeci">const double N16</div><div class="ttdoc">Fixed point scaling for 16 bit op-amp output.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:61</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Integrator_html"><div class="ttname"><a href="classreSIDfp_1_1Integrator.html">reSIDfp::Integrator</a></div><div class="ttdef"><b>Definition:</b> Integrator.h:30</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html_a2670cf74cbf8f83e2a23982edf80177b"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html#a2670cf74cbf8f83e2a23982edf80177b">reSIDfp::FilterModelConfig6581::getDAC</a></div><div class="ttdeci">unsigned short * getDAC(double adjustment) const</div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.cpp:267</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:38</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_a489748ed7997e7a80b9b3d7f7a38fec0"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">reSIDfp::FilterModelConfig::uCox</a></div><div class="ttdeci">double uCox</div><div class="ttdoc">Transconductance coefficient: u*Cox.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:51</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_aadc3f4d5eff80806180c0ef3233995f5"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">reSIDfp::FilterModelConfig::Ut</a></div><div class="ttdeci">static constexpr double Ut</div><div class="ttdoc">Transistor parameters.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:46</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_adec22dcd54967be1860668fc89e1f98c"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">reSIDfp::FilterModelConfig::N16</a></div><div class="ttdeci">const double N16</div><div class="ttdoc">Fixed point scaling for 16 bit op-amp output.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:59</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

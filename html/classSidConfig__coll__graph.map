@@ -1,11 +1,12 @@
 <map id="SidConfig" name="SidConfig">
-<area shape="rect" id="node1" title=" " alt="" coords="391,468,474,495"/>
-<area shape="rect" id="node2" href="$classsidbuilder.html" title=" " alt="" coords="389,379,476,405"/>
-<area shape="rect" id="node3" title=" " alt="" coords="429,96,516,123"/>
-<area shape="rect" id="node6" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="215,185,370,212"/>
-<area shape="rect" id="node4" title=" " alt="" coords="403,5,542,47"/>
-<area shape="rect" id="node5" title=" " alt="" coords="281,275,443,316"/>
+<area shape="rect" id="node1" title=" " alt="" coords="525,468,607,495"/>
+<area shape="rect" id="node2" href="$classsidbuilder.html" title=" " alt="" coords="523,379,609,405"/>
+<area shape="rect" id="node3" title=" " alt="" coords="575,96,661,123"/>
+<area shape="rect" id="node6" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="385,185,539,212"/>
+<area shape="rect" id="node4" title=" " alt="" coords="549,5,687,47"/>
+<area shape="rect" id="node5" title=" " alt="" coords="416,275,577,316"/>
 <area shape="rect" id="node7" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="5,96,153,123"/>
 <area shape="rect" id="node8" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="10,13,149,39"/>
 <area shape="rect" id="node9" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="177,96,384,123"/>
+<area shape="rect" id="node10" title=" " alt="" coords="409,96,534,123"/>
 </map>

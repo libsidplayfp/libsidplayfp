@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -154,7 +155,7 @@
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
 <div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1MMU.html#ab2821fb825b94b8d8fd276035c94676a">  116</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MMU.html#ab2821fb825b94b8d8fd276035c94676a">fillRam</a>(uint_least16_t start, uint8_t value, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size)<span class="keyword"> override</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        memset(ramBank.ram+start, value, size);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        std::memset(ramBank.ram+start, value, size);</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
 <div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1MMU.html#ab9428275dd3b46562045883f50d9da9c">  120</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1MMU.html#ab9428275dd3b46562045883f50d9da9c">fillRam</a>(uint_least16_t start, <span class="keyword">const</span> uint8_t* source, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> size)<span class="keyword"> override</span></div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="keyword">    </span>{</div>
@@ -209,7 +210,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

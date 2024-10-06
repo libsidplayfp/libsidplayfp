@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -54,7 +55,7 @@
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2023 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Copyright 2011-2024 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Copyright 2000 Simon White</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> *</span></div>
@@ -124,22 +125,24 @@
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordtype">void</span> mute(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> voice, <span class="keywordtype">bool</span> enable);</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    uint_least32_t time() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    uint_least32_t timeMs() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">void</span> setRoms(<span class="keyword">const</span> uint8_t* kernal, <span class="keyword">const</span> uint8_t* basic=0, <span class="keyword">const</span> uint8_t* character=0);</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordtype">void</span> setKernal(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">void</span> setBasic(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordtype">void</span> setChargen(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    uint_least16_t getCia1TimerA() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordtype">bool</span> getSidStatus(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, uint8_t regs[32]);</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;};</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SIDPLAYFP_H</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">void</span> filter(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    uint_least32_t time() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    uint_least32_t timeMs() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">void</span> setRoms(<span class="keyword">const</span> uint8_t* kernal, <span class="keyword">const</span> uint8_t* basic=0, <span class="keyword">const</span> uint8_t* character=0);</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordtype">void</span> setKernal(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordtype">void</span> setBasic(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordtype">void</span> setChargen(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    uint_least16_t getCia1TimerA() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keywordtype">bool</span> getSidStatus(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, uint8_t regs[32]);</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;};</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SIDPLAYFP_H</span></div>
 <div class="ttc" id="aclassSidConfig_html"><div class="ttname"><a href="classSidConfig.html">SidConfig</a></div><div class="ttdef"><b>Definition:</b> SidConfig.h:40</div></div>
 <div class="ttc" id="aclassSidInfo_html"><div class="ttname"><a href="classSidInfo.html">SidInfo</a></div><div class="ttdef"><b>Definition:</b> SidInfo.h:34</div></div>
 <div class="ttc" id="aclassSidTune_html"><div class="ttname"><a href="classSidTune.html">SidTune</a></div><div class="ttdef"><b>Definition:</b> SidTune.h:43</div></div>
@@ -148,7 +151,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -75,10 +76,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a30d28739a358f5269e29f2984075cad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b16d87dbd316842d1ad6aea64c1f932"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1SID.html#a3b16d87dbd316842d1ad6aea64c1f932">write</a> (int offset, unsigned char value)</td></tr>
 <tr class="separator:a3b16d87dbd316842d1ad6aea64c1f932"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af323dd07e595c9ab0946b530ff8c59d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1SID.html#af323dd07e595c9ab0946b530ff8c59d1">mute</a> (int channel, bool enable)</td></tr>
-<tr class="separator:af323dd07e595c9ab0946b530ff8c59d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a398b11d4fe42860ed7678c0617f4488f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1SID.html#a398b11d4fe42860ed7678c0617f4488f">setSamplingParameters</a> (double clockFrequency, SamplingMethod method, double samplingFrequency, double highestAccurateFrequency)</td></tr>
-<tr class="separator:a398b11d4fe42860ed7678c0617f4488f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5213c8e577045c955b3dce4ad92392e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1SID.html#a5213c8e577045c955b3dce4ad92392e3">setSamplingParameters</a> (double clockFrequency, SamplingMethod method, double samplingFrequency)</td></tr>
+<tr class="separator:a5213c8e577045c955b3dce4ad92392e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcf854f6e1774606f7a29435beb09afc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1SID.html#abcf854f6e1774606f7a29435beb09afc">clock</a> (unsigned int cycles, short *buf)</td></tr>
 <tr class="separator:abcf854f6e1774606f7a29435beb09afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec85a284b5290053c92b18d9f1f190bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1SID.html#aec85a284b5290053c92b18d9f1f190bc">clockSilent</a> (unsigned int cycles)</td></tr>
@@ -228,50 +227,6 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">value</td><td>input level to set </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="af323dd07e595c9ab0946b530ff8c59d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af323dd07e595c9ab0946b530ff8c59d1">&#9670;&nbsp;</a></span>mute()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reSIDfp::SID::mute </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>channel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enable</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p><a class="el" href="classreSIDfp_1_1SID.html">SID</a> voice muting.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">channel</td><td>channel to modify </td></tr>
-    <tr><td class="paramname">enable</td><td>is muted? </td></tr>
   </table>
   </dd>
 </dl>
@@ -445,8 +400,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a398b11d4fe42860ed7678c0617f4488f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a398b11d4fe42860ed7678c0617f4488f">&#9670;&nbsp;</a></span>setSamplingParameters()</h2>
+<a id="a5213c8e577045c955b3dce4ad92392e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5213c8e577045c955b3dce4ad92392e3">&#9670;&nbsp;</a></span>setSamplingParameters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -467,13 +422,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>samplingFrequency</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>highestAccurateFrequency</em>&#160;</td>
+          <td class="paramname"><em>samplingFrequency</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -548,7 +497,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:51 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:24 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

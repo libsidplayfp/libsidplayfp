@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.9.0</span>
+   &#160;<span id="projectnumber">2.10.0</span>
    </div>
   </td>
  </tr>
@@ -31,6 +31,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -93,10 +94,10 @@
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> nVgt;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> n_dac;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>* fmc;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>&amp; fmc;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="classreSIDfp_1_1Integrator8580.html">Integrator8580</a>(<span class="keyword">const</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>* fmc) :</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="classreSIDfp_1_1Integrator8580.html">Integrator8580</a>(<a class="code" href="classreSIDfp_1_1FilterModelConfig8580.html">FilterModelConfig8580</a>&amp; fmc) :</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        fmc(fmc)</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <a class="code" href="classreSIDfp_1_1Integrator8580.html#aec485c8ed6d1ae6bc0096e9a4971827c">setV</a>(1.5);</div>
@@ -106,7 +107,7 @@
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    {</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">// Normalized current factor, 1 cycle at 1MHz.</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="comment">// Fit in 5 bits.</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        n_dac = fmc-&gt;getNormalizedCurrentFactor(wl);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        n_dac = fmc.getNormalizedCurrentFactor(wl);</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Integrator8580.html#aec485c8ed6d1ae6bc0096e9a4971827c">   83</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Integrator8580.html#aec485c8ed6d1ae6bc0096e9a4971827c">setV</a>(<span class="keywordtype">double</span> v)</div>
@@ -115,11 +116,11 @@
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// Ua = Ue * v = 4.76v  1&lt;v&lt;2</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        assert(v &gt; 1.0 &amp;&amp; v &lt; 2.0);</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vg = 4.76 * v;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vgt = Vg - fmc-&gt;getVth();</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vgt = Vg - fmc.getVth();</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">// Vg - Vth, normalized so that translated values can be subtracted:</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="comment">// Vgt - x = (Vgt - t) - (x - t)</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        nVgt = fmc-&gt;getNormalizedValue(Vgt);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        nVgt = fmc.getNormalizedValue(Vgt);</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">int</span> solve(<span class="keywordtype">int</span> vi) <span class="keyword">const override</span>;</div>
@@ -136,7 +137,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:26:50 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 6 2024 09:28:23 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
