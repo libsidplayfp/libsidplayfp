@@ -67,6 +67,7 @@ enabled by default
 enable SIMD code in reSIDfp that might increase resampling performance.
 Be aware that this is processor specific and the compiler could actually produce
 more optimized code with the appropriate flags. Use only if you know what you're doing.
+neon is currently unimplemented.
 none by default
 
 --enable-testsuite=PATH_TO_TESTSUITE
