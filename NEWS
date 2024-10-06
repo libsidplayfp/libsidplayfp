@@ -1,4 +1,4 @@
-2.10.0 2024-xx-xx
+2.10.0 2024-10-06
 * Add support for c++20 where available
 * residfp: retuned cw parameters after measuring waves RMS (#143)
 * residfp: code refactoring and minor performance optimizations (#145)
