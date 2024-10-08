@@ -77,13 +77,13 @@ public:
     static constexpr int_least32_t C2 = static_cast<int_least32_t>(SQRT_0_5 / (1.0 + SQRT_0_5) * SCALE_FACTOR);
 
 private:
-    typedef int_least32_t (Mixer::*mixer_func_t)() const;
+    using mixer_func_t = int_least32_t (Mixer::*)() const;
 
-    typedef int (Mixer::*scale_func_t)(unsigned int);
+    using scale_func_t = int (Mixer::*)(unsigned int);
 
 public:
     /// Maximum allowed volume, must be a power of 2.
-    static const int_least32_t VOLUME_MAX = 1024;
+    static constexpr int_least32_t VOLUME_MAX = 1024;
 
 private:
     std::vector<sidemu*> m_chips;
