@@ -23,6 +23,7 @@
 #include "mixer.h"
 
 #include <cassert>
+#include <cstring>
 #include <algorithm>
 
 #include "sidemu.h"
@@ -94,11 +95,7 @@ void Mixer::doMix()
     // move the unhandled data to start of buffer, if any.
     const int samplesLeft = sampleCount - i;
     std::for_each(m_buffers.begin(), m_buffers.end(), [i, samplesLeft](short *dest) {
-        const short* src = dest + i;
-        for (int j = 0; j < samplesLeft; j++)
-        {
-            dest[j] = src[j];
-        }
+        std::memmove(dest, dest+i, samplesLeft*2);
     });
     std::for_each(m_chips.begin(), m_chips.end(), [samplesLeft](sidemu *s) { s->bufferpos(samplesLeft); });
 }
