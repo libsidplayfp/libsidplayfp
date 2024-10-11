@@ -44,7 +44,7 @@ void Mixer::resetBufs()
 
 void Mixer::doMix()
 {
-    short *buf = m_sampleBuffer + m_sampleIndex;
+    short *outputBuffer = m_sampleBuffer + m_sampleIndex;
 
     // extract buffer info now that the SID is updated.
     // clock() may update bufferpos.
@@ -52,19 +52,12 @@ void Mixer::doMix()
     const int sampleCount = m_chips.front()->bufferpos();
 
     int i = 0;
-    while (i < sampleCount)
+    while (
+        (i < sampleCount) &&
+        (m_sampleIndex < m_sampleCount) &&      // Handle whatever output the sid has generated so far
+        (i + m_fastForwardFactor < sampleCount) // Are there enough samples to generate the next one?
+    )
     {
-        // Handle whatever output the sid has generated so far
-        if (m_sampleIndex >= m_sampleCount)
-        {
-            break;
-        }
-        // Are there enough samples to generate the next one?
-        if (i + m_fastForwardFactor >= sampleCount)
-        {
-            break;
-        }
-
         // This is a crude boxcar low-pass filter to
         // reduce aliasing during fast forward.
         for (size_t k = 0; k < m_buffers.size(); k++)
@@ -87,7 +80,7 @@ void Mixer::doMix()
         {
             const int_least32_t tmp = (this->*(m_scale[ch]))(ch);
             assert(tmp >= -32768 && tmp <= 32767);
-            *buf++ = static_cast<short>(tmp);
+            *outputBuffer++ = static_cast<short>(tmp);
             m_sampleIndex++;
         }
     }
