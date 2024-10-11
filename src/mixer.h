@@ -107,6 +107,8 @@ private:
 
     bool m_stereo = false;
 
+    bool m_wait = false;
+
     randomLCG<VOLUME_MAX> m_rand;
 
 private:
@@ -258,12 +260,17 @@ public:
     /**
      * Check if the buffer have been filled.
      */
-    bool notFinished() const { return m_sampleIndex != m_sampleCount; }
+    bool notFinished() const { return m_sampleIndex < m_sampleCount; }
 
     /**
      * Get the number of samples generated up to now.
      */
     uint_least32_t samplesGenerated() const { return m_sampleIndex; }
+
+    /*
+     * Wait till we consume the buffer.
+     */
+    bool wait() const { return m_wait; }
 };
 
 }

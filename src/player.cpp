@@ -234,7 +234,8 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
                     // Clock chips and mix into output buffer
                     while ((m_isPlaying != state_t::STOPPED) && m_mixer.notFinished())
                     {
-                        run(sidemu::OUTPUTBUFFERSIZE);
+                        if (!m_mixer.wait())
+                            run(sidemu::OUTPUTBUFFERSIZE);
 
                         m_mixer.clockChips();
                         m_mixer.doMix();

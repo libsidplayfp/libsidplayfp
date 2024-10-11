@@ -91,6 +91,8 @@ void Mixer::doMix()
         std::memmove(dest, dest+i, samplesLeft*2);
     });
     std::for_each(m_chips.begin(), m_chips.end(), [samplesLeft](sidemu *s) { s->bufferpos(samplesLeft); });
+
+    m_wait = samplesLeft > m_sampleCount;
 }
 
 void Mixer::begin(short *buffer, uint_least32_t count)
@@ -99,12 +101,6 @@ void Mixer::begin(short *buffer, uint_least32_t count)
 
     // don't allow odd counts for stereo playback
     if (m_stereo && (count & 1))
-        throw badBufferSize();
-
-    // TODO short buffers make the emulator crash, should investigate why
-    //      in the meantime set a reasonable lower bound of 5ms
-    const uint_least32_t lowerBound = m_sampleRate / (m_stereo ? 100 : 200);
-    if (count && (count < lowerBound))
         throw badBufferSize();
 
     m_sampleIndex  = 0;
