@@ -34,6 +34,8 @@ void sidemu::writeReg(uint_least8_t addr, uint8_t data)
     switch (addr)
     {
     case 0x04:
+        // Ignore writes to control register to mute voices
+        // Leave test/ring/sync bits untouched
         if (isMuted[0]) data &= 0x0e;
         break;
     case 0x0b:
@@ -43,9 +45,13 @@ void sidemu::writeReg(uint_least8_t addr, uint8_t data)
         if (isMuted[2]) data &= 0x0e;
         break;
     case 0x17:
+        // Ignore writes to filter register to disable filter
         if (isFilterDisabled) data &= 0xf0;
         break;
     case 0x18:
+        // Ignore writes to volume register to mute samples
+        // Works only for volume-based digis
+        // Trick suggested by LMan
         if (isMuted[3]) data |= 0x0f;
         break;
     }
