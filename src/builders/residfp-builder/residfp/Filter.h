@@ -182,7 +182,7 @@ public:
      *
      * @param input a signed 16 bit sample
      */
-    void input(unsigned short input) { Ve = fmc.getNormalizedVoice(input/32768.f); }
+    void input(short input) { Ve = fmc.getNormalizedVoice(input/32768.f); }
 };
 
 } // namespace reSIDfp
