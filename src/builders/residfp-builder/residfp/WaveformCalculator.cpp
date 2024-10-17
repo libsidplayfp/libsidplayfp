@@ -101,14 +101,14 @@ const CombinedWaveformConfig configAverage[2][5] =
         { exponentialDistance, 0.96f, 1.f, 2.5f, 1.1f, 1.2f },
     },
     { /* 8580 R5 1088 sampled by reFX-Mike */
-        // TS  error 10788 (354/32768)
+        // TS  error 10788 (354/32768) [RMS: 58.31]
         { exponentialDistance, 0.841851234f, 1.09233654f, 0.f, 1.85262764f, 6.22224379f },
-        // PT  error 10635 (289/32768)
+        // PT  error 10635 (289/32768) [RMS: 108.81]
         { exponentialDistance, 0.929835618f, 1.f, 1.12836814f, 1.10453653f, 1.48065746f },
-        // PS  error 12259 (555/32768)
-        { quadraticDistance, 0.911715686f, 0.995952725f, 1.22720313f, 0.000117408723f, 0.189491063f },
-        // PTS error  7665 (126/32768)
-        { exponentialDistance, 0.863748789f, 0.980024457f, 0.8020401f, 0.972693145f, 1.51878834f },
+        // PS  error 12255 (554/32768) [RMS: 102.27])
+        { quadraticDistance, 0.911938608f, 0.996440411f, 1.2278074f, 0.000117214302f, 0.18948476f },
+        // PTS error  7195 (144/32768) [RMS: 55.92]
+        { exponentialDistance, 0.93879205f, 1.04797339f, 1.19729173f, 0.883134544f, 1.43160987f },
         // NP  guessed
         { exponentialDistance, 0.95f, 1.f, 1.15f, 1.f, 1.45f },
     },
