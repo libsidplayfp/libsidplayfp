@@ -24,6 +24,7 @@
 #define FILTERMODELCONFIG_H
 
 #include <algorithm>
+#include <random>
 #include <cassert>
 
 #include "OpAmp.h"
@@ -36,6 +37,33 @@ namespace reSIDfp
 
 class FilterModelConfig
 {
+private:
+    /*
+     * Hack to add quick dither when converting values from float to int
+     * and avoid quantization noise.
+     * Hopefully this can be removed the day we move all the analog part
+     * processing to floats.
+     *
+     * Not sure about the effect of using such small buffer of numbers
+     * since the random sequence repeats every 1024 values but for
+     * now it seems to do the job.
+     */
+    class Randomnoise
+    {
+    private:
+        double buffer[1024];
+        mutable int index = 0;
+    public:
+        Randomnoise()
+        {
+            std::uniform_real_distribution<double> unif(0., 1.);
+            std::default_random_engine re;
+            for (int i=0; i<1024; i++)
+                buffer[i] = unif(re);
+        }
+        double getNoise() const { index = (index + 1) & 0x3ff; return buffer[index]; }
+    };
+
 protected:
     /// Capacitor value.
     const double C;
@@ -74,6 +102,9 @@ protected:
 
     /// Reverse op-amp transfer function.
     unsigned short opamp_rev[1 << 16]; //-V730_NOINIT this is initialized in the derived class constructor
+
+private:
+    Randomnoise rnd;
 
 private:
     FilterModelConfig(const FilterModelConfig&) = delete;
@@ -231,11 +262,12 @@ public:
     inline double getVth() const { return Vth; }
 
     // helper functions
+
     inline unsigned short getNormalizedValue(double value) const
     {
         const double tmp = N16 * (value - vmin);
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
+        assert(tmp >= 0. && tmp <= 65535.);
+        return static_cast<unsigned short>(tmp + rnd.getNoise());
     }
 
     inline unsigned short getNormalizedCurrentFactor(double wl) const
