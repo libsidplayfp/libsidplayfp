@@ -1,3 +1,9 @@
+2.10.1 2024-10-20
+* residfp: fix digiboost (#157)
+* residfp: fix combined waveforms (#160)
+
+
+
 2.10.0 2024-10-06
 * Add support for c++20 where available
 * residfp: retuned cw parameters after measuring waves RMS (#143)
