@@ -118,7 +118,6 @@ void FilterModelConfig6581::setFilterRange(double adjustment)
 FilterModelConfig6581::FilterModelConfig6581() :
     FilterModelConfig(
         1.5,     // voice voltage range
-        5.075,   // voice DC voltage
         470e-12, // capacitor value
         12.18,   // Vdd
         1.31,    // Vth

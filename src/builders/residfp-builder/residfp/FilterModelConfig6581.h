@@ -76,6 +76,17 @@ private:
     FilterModelConfig6581();
     ~FilterModelConfig6581() = default;
 
+protected:
+    /**
+     * On 6581 the DC offset varies between 5.0V and 5.214V depending on
+     * the envelope value. We assume for simplicity a linear relation.
+     * TODO cache value or use a LUT
+     */
+    double getVoiceDC(unsigned int env) const override
+    {
+        return 5.075 + (0.2145 * static_cast<double>(env) / 255.);
+    }
+
 public:
     static FilterModelConfig6581* getInstance();
 

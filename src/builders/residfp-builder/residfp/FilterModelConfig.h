@@ -87,7 +87,6 @@ protected:
     const double N16;
 
     const double voice_voltage_range;
-    const double voice_DC_voltage;
 
     /// Current factor coefficient for op-amp integrators.
     double currFactorCoeff;
@@ -110,15 +109,14 @@ private:
     FilterModelConfig(const FilterModelConfig&) = delete;
     FilterModelConfig& operator= (const FilterModelConfig&) = delete;
 
-    inline double getVoiceVoltage(float value) const
+    inline double getVoiceVoltage(float value, unsigned int env) const
     {
-        return value * voice_voltage_range + voice_DC_voltage;
+        return value * voice_voltage_range + getVoiceDC(env);
     }
 
 protected:
     /**
      * @param vvr voice voltage range
-     * @param vdv voice DC voltage
      * @param c   capacitor value
      * @param vdd Vdd supply voltage
      * @param vth threshold voltage
@@ -128,7 +126,6 @@ protected:
      */
     FilterModelConfig(
         double vvr,
-        double vdv,
         double c,
         double vdd,
         double vth,
@@ -140,6 +137,8 @@ protected:
     ~FilterModelConfig();
 
     void setUCox(double new_uCox);
+
+    virtual double getVoiceDC(unsigned int env) const = 0;
 
     /**
      * The filter summer operates at n ~ 1, and has 5 fundamentally different
@@ -284,9 +283,9 @@ public:
         return static_cast<unsigned short>(tmp + 0.5);
     }
 
-    inline int getNormalizedVoice(float value) const
+    inline int getNormalizedVoice(float value, unsigned int env) const
     {
-        return static_cast<int>(getNormalizedValue(getVoiceVoltage(value)));
+        return static_cast<int>(getNormalizedValue(getVoiceVoltage(value, env)));
     }
 };
 
