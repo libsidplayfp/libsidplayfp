@@ -133,6 +133,16 @@ FilterModelConfig6581::FilterModelConfig6581() :
 {
     dac.kinkedDac(MOS6581);
 
+    {
+        Dac envDac(8);
+        envDac.kinkedDac(MOS6581);
+        for(int i=0; i<256; i++)
+        {
+            const double envI = envDac.getOutput(i);
+            voiceDC[i] = 5.075 + (0.2143 * envI);
+        }
+    }
+
     // Create lookup tables for gains / summers.
 
     //

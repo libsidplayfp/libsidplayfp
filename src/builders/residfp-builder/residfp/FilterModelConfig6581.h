@@ -70,6 +70,9 @@ private:
     double vcr_n_Ids_term[1 << 16];
     //@}
 
+    // Voice DC offset LUT
+    double voiceDC[256];
+
 private:
     double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
 
@@ -78,13 +81,12 @@ private:
 
 protected:
     /**
-     * On 6581 the DC offset varies between 5.0V and 5.214V depending on
-     * the envelope value. We assume for simplicity a linear relation.
-     * TODO cache value or use a LUT
+     * On 6581 the DC offset varies between ~5.0V and ~5.214V depending on
+     * the envelope value.
      */
     double getVoiceDC(unsigned int env) const override
     {
-        return 5.075 + (0.2145 * static_cast<double>(env) / 255.);
+        return voiceDC[env];
     }
 
 public:
