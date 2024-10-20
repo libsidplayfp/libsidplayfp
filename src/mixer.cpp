@@ -87,12 +87,13 @@ void Mixer::doMix()
 
     // move the unhandled data to start of buffer, if any.
     const int samplesLeft = sampleCount - i;
+    assert(samplesLeft >= 0);
     std::for_each(m_buffers.begin(), m_buffers.end(), [i, samplesLeft](short *dest) {
         std::memmove(dest, dest+i, samplesLeft*2);
     });
     std::for_each(m_chips.begin(), m_chips.end(), [samplesLeft](sidemu *s) { s->bufferpos(samplesLeft); });
 
-    m_wait = samplesLeft > m_sampleCount;
+    m_wait = static_cast<uint_least32_t>(samplesLeft) > m_sampleCount;
 }
 
 void Mixer::begin(short *buffer, uint_least32_t count)
