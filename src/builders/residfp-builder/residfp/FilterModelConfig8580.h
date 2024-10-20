@@ -50,7 +50,7 @@ private:
 
 protected:
     // FIXME should actually be 4.75
-    double getVoiceDC(unsigned int env) const override { return 4.84; }
+    double getVoiceDC(unsigned int) const override { return 4.84; }
 
 public:
     static FilterModelConfig8580* getInstance();
