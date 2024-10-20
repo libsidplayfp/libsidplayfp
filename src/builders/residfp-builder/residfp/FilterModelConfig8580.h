@@ -48,6 +48,10 @@ private:
     FilterModelConfig8580();
     ~FilterModelConfig8580() = default;
 
+protected:
+    // FIXME should actually be 4.75
+    double getVoiceDC(unsigned int) const override { return 4.84; }
+
 public:
     static FilterModelConfig8580* getInstance();
 };

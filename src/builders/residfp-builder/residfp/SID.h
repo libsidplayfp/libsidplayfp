@@ -328,9 +328,17 @@ void SID::ageBusValue(unsigned int n)
 RESID_INLINE
 int SID::output()
 {
-    const float v1 = voice[0].output(voice[2].wave());
-    const float v2 = voice[1].output(voice[0].wave());
-    const float v3 = voice[2].output(voice[1].wave());
+    const float o1 = voice[0].output(voice[2].wave());
+    const float o2 = voice[1].output(voice[0].wave());
+    const float o3 = voice[2].output(voice[1].wave());
+
+    const unsigned int env1 = voice[0].envelope()->output();
+    const unsigned int env2 = voice[1].envelope()->output();
+    const unsigned int env3 = voice[2].envelope()->output();
+
+    const int v1 = filter->getNormalizedVoice(o1, env1);
+    const int v2 = filter->getNormalizedVoice(o2, env2);
+    const int v3 = filter->getNormalizedVoice(o3, env3);
 
     const int input = static_cast<int>(filter->clock(v1, v2, v3));
     return externalFilter.clock(input);

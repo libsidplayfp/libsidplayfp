@@ -70,11 +70,24 @@ private:
     double vcr_n_Ids_term[1 << 16];
     //@}
 
+    // Voice DC offset LUT
+    double voiceDC[256];
+
 private:
     double getDacZero(double adjustment) const { return dac_zero + (1. - adjustment); }
 
     FilterModelConfig6581();
     ~FilterModelConfig6581() = default;
+
+protected:
+    /**
+     * On 6581 the DC offset varies between ~5.0V and ~5.214V depending on
+     * the envelope value.
+     */
+    double getVoiceDC(unsigned int env) const override
+    {
+        return voiceDC[env];
+    }
 
 public:
     static FilterModelConfig6581* getInstance();

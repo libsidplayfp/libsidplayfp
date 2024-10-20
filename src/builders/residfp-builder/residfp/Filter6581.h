@@ -344,7 +344,7 @@ public:
 
     ~Filter6581() override;
 
-    unsigned short clock(float v1, float v2, float v3) override;
+    unsigned short clock(int v1, int v2, int v3) override;
 
     /**
      * Set filter curve type based on single parameter.

@@ -135,7 +135,7 @@ public:
      * @param v3 voice 3 in
      * @return filtered output
      */
-    virtual unsigned short clock(float v1, float v2, float v3) = 0;
+    virtual unsigned short clock(int v1, int v2, int v3) = 0;
 
     /**
      * Enable filter.
@@ -182,7 +182,9 @@ public:
      *
      * @param input a signed 16 bit sample
      */
-    void input(short input) { Ve = fmc.getNormalizedVoice(input/32768.f); }
+    void input(short input) { Ve = fmc.getNormalizedVoice(input/32768.f, 0); }
+
+    inline int getNormalizedVoice(float value, unsigned int env) const { return fmc.getNormalizedVoice(value, env); }
 };
 
 } // namespace reSIDfp
