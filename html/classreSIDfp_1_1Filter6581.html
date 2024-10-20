@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.10.0</span>
+   &#160;<span id="projectnumber">2.10.1</span>
    </div>
   </td>
  </tr>
@@ -104,8 +104,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a389ce155f80c6b5a201aa7ced2a98d4a inherit pub_methods_classreSIDfp_1_1Filter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac56a22eceff41f2fdafbe2e4e42acf8c inherit pub_methods_classreSIDfp_1_1Filter"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter.html#ac56a22eceff41f2fdafbe2e4e42acf8c">writeMODE_VOL</a> (unsigned char mode_vol)</td></tr>
 <tr class="separator:ac56a22eceff41f2fdafbe2e4e42acf8c inherit pub_methods_classreSIDfp_1_1Filter"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5968f88984e1491edf3c7b4346bb353f inherit pub_methods_classreSIDfp_1_1Filter"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">input</a> (int input)</td></tr>
-<tr class="separator:a5968f88984e1491edf3c7b4346bb353f inherit pub_methods_classreSIDfp_1_1Filter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab06e17a7575b82503c35120b4769fd65 inherit pub_methods_classreSIDfp_1_1Filter"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a> (short input)</td></tr>
+<tr class="separator:ab06e17a7575b82503c35120b4769fd65 inherit pub_methods_classreSIDfp_1_1Filter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -276,11 +276,11 @@ NMOS FET voltage controlled resistor (VCR)</h2>
 <div class="line">        +----R24----+</div>
 <div class="line"> </div>
 <div class="line"> </div>
-<div class="line">vi  - <a class="code" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">input</a></div>
+<div class="line">vi  - <a class="code" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a></div>
 <div class="line">vo  - output</div>
 <div class="line">Rn  - <span class="stringliteral">&quot;resistors&quot;</span>, implemented with custom NMOS FETs</div>
 <div class="line">Vw  - voltage from 11-bit DAC (frequency cutoff control)</div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a5968f88984e1491edf3c7b4346bb353f"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(int input)</div><div class="ttdef"><b>Definition:</b> Filter.h:185</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html_ab06e17a7575b82503c35120b4769fd65"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(short input)</div><div class="ttdef"><b>Definition:</b> Filter.h:185</div></div>
 </div><!-- fragment --><p> Notes:</p>
 <p>An approximate value for R24 can be found by using the formula for the filter cutoff frequency: </p><pre class="fragment">FCmin = 1/(2*pi*Rmax*C)
 </pre><p> Assuming that a the setting for minimum cutoff frequency in combination with a low level input signal ensures that only negligible current will flow through the transistor in the schematics above, values for FCmin and C can be substituted in this formula to find Rmax. Using C = 470pF and FCmin = 220Hz (measured value), we get: </p><pre class="fragment">FCmin = 1/(2*pi*Rmax*C)
@@ -330,7 +330,7 @@ Filter frequency cutoff DAC</h2>
 <div class="line">     +----------------------+</div>
 <div class="line"> </div>
 <div class="line"> </div>
-<div class="line">vi  - <a class="code" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">input</a></div>
+<div class="line">vi  - <a class="code" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a></div>
 <div class="line">vo  - output</div>
 </div><!-- fragment --><p> Notes:</p>
 <p>The schematics above are laid out to show that the "op-amp" logically consists of two building blocks; a saturated load NMOS inverter (on the right hand side of the schematics) with a buffer / bias input stage consisting of a variable saturated load NMOS inverter (on the left hand side of the schematics).</p>
@@ -353,7 +353,7 @@ Output buffer (NMOS voltage follower)</h2>
 <div class="line"> </div>
 <div class="line">           GND</div>
 <div class="line"> </div>
-<div class="line">vi   - <a class="code" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">input</a></div>
+<div class="line">vi   - <a class="code" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a></div>
 <div class="line">vo   - output</div>
 <div class="line">Rext - external resistor, 1kOhm</div>
 </div><!-- fragment --><p> Notes:</p>
@@ -499,7 +499,7 @@ Output buffer (NMOS voltage follower)</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 6 2024 09:28:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 20 2024 09:22:37 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.10.0</span>
+   &#160;<span id="projectnumber">2.10.1</span>
    </div>
   </td>
  </tr>
@@ -161,7 +161,7 @@
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter.html#ac56a22eceff41f2fdafbe2e4e42acf8c">writeMODE_VOL</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> mode_vol);</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
-<div class="line"><a name="l00185"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">  185</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">input</a>(<span class="keywordtype">int</span> <a class="code" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">input</a>) { <a class="code" href="classreSIDfp_1_1Filter.html#a9848fc91e5f1bab3a387304f7726aa24">Ve</a> = fmc.getNormalizedVoice(<a class="code" href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">input</a>/65536.f); }</div>
+<div class="line"><a name="l00185"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">  185</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>(<span class="keywordtype">short</span> <a class="code" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>) { <a class="code" href="classreSIDfp_1_1Filter.html#a9848fc91e5f1bab3a387304f7726aa24">Ve</a> = fmc.getNormalizedVoice(<a class="code" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>/32768.f); }</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;};</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
@@ -181,7 +181,6 @@
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a40d4c67e78ff47c60a70bfa0afa5a656"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a40d4c67e78ff47c60a70bfa0afa5a656">reSIDfp::Filter::currentMixer</a></div><div class="ttdeci">unsigned short * currentMixer</div><div class="ttdoc">Current filter/voice mixer setting.</div><div class="ttdef"><b>Definition:</b> Filter.h:48</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a4bd724b60538b84e134580683f1e6bc7"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a4bd724b60538b84e134580683f1e6bc7">reSIDfp::Filter::writeFC_HI</a></div><div class="ttdeci">void writeFC_HI(unsigned char fc_hi)</div><div class="ttdef"><b>Definition:</b> Filter.cpp:60</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a58d52f2b167fa4b8f66b4c555f54ab94"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a58d52f2b167fa4b8f66b4c555f54ab94">reSIDfp::Filter::Vhp</a></div><div class="ttdeci">int Vhp</div><div class="ttdoc">Filter highpass state.</div><div class="ttdef"><b>Definition:</b> Filter.h:60</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a5968f88984e1491edf3c7b4346bb353f"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a5968f88984e1491edf3c7b4346bb353f">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(int input)</div><div class="ttdef"><b>Definition:</b> Filter.h:185</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a6cd760f4b445eba2e78a63f72185a0cd"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a6cd760f4b445eba2e78a63f72185a0cd">reSIDfp::Filter::currentResonance</a></div><div class="ttdeci">unsigned short * currentResonance</div><div class="ttdoc">Filter resonance value.</div><div class="ttdef"><b>Definition:</b> Filter.h:54</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a752ffbbe074f45857e3e999e849e2c0f"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a752ffbbe074f45857e3e999e849e2c0f">reSIDfp::Filter::filt1</a></div><div class="ttdeci">bool filt1</div><div class="ttdoc">Routing to filter or outside filter.</div><div class="ttdef"><b>Definition:</b> Filter.h:76</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a941d749d905f66879e78f632c45f19a1"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a941d749d905f66879e78f632c45f19a1">reSIDfp::Filter::Vlp</a></div><div class="ttdeci">int Vlp</div><div class="ttdoc">Filter lowpass state.</div><div class="ttdef"><b>Definition:</b> Filter.h:66</div></div>
@@ -190,13 +189,14 @@
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_aa283c9b57731cdae9ba3183cb80feb76"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#aa283c9b57731cdae9ba3183cb80feb76">reSIDfp::Filter::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> Filter.cpp:118</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_aa4ccd48a64641d2de80bde216c602299"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#aa4ccd48a64641d2de80bde216c602299">reSIDfp::Filter::updateCenterFrequency</a></div><div class="ttdeci">virtual void updateCenterFrequency()=0</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_aa857d5efb3725e8171d078155536b628"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#aa857d5efb3725e8171d078155536b628">reSIDfp::Filter::updateMixing</a></div><div class="ttdeci">void updateMixing()</div><div class="ttdef"><b>Definition:</b> Filter.cpp:30</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html_ab06e17a7575b82503c35120b4769fd65"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(short input)</div><div class="ttdef"><b>Definition:</b> Filter.h:185</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_ac56a22eceff41f2fdafbe2e4e42acf8c"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ac56a22eceff41f2fdafbe2e4e42acf8c">reSIDfp::Filter::writeMODE_VOL</a></div><div class="ttdeci">void writeMODE_VOL(unsigned char mode_vol)</div><div class="ttdef"><b>Definition:</b> Filter.cpp:83</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_ae86f0240b6e837520b22709279eec5c9"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ae86f0240b6e837520b22709279eec5c9">reSIDfp::Filter::fc</a></div><div class="ttdeci">unsigned int fc</div><div class="ttdoc">Filter cutoff frequency.</div><div class="ttdef"><b>Definition:</b> Filter.h:72</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_ae93bef21b1ce439a4837e99cdeb789a6"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ae93bef21b1ce439a4837e99cdeb789a6">reSIDfp::Filter::getFC</a></div><div class="ttdeci">unsigned int getFC() const</div><div class="ttdef"><b>Definition:</b> Filter.h:123</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 6 2024 09:28:31 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Oct 20 2024 09:22:37 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
