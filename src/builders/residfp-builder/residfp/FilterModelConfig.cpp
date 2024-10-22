@@ -29,7 +29,6 @@ namespace reSIDfp
 
 FilterModelConfig::FilterModelConfig(
     double vvr,
-    double vdv,
     double c,
     double vdd,
     double vth,
@@ -46,8 +45,7 @@ FilterModelConfig::FilterModelConfig(
     denorm(vmax - vmin),
     norm(1.0 / denorm),
     N16(norm * ((1 << 16) - 1)),
-    voice_voltage_range(vvr),
-    voice_DC_voltage(vdv)
+    voice_voltage_range(vvr)
 {
     setUCox(ucox);
 
