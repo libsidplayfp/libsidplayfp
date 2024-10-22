@@ -1,3 +1,10 @@
+2.11.0 2024-xx-xx
+* Remove buffer size limit from mixer (fixes #159)
+* residfp: Avoid quantization noise (#156)
+* residfp: Implement 6581 DC drift (#155)
+
+
+
 2.10.1 2024-10-20
 * residfp: fix digiboost (#157)
 * residfp: fix combined waveforms (#160)
