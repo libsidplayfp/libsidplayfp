@@ -117,11 +117,11 @@ void FilterModelConfig6581::setFilterRange(double adjustment)
 
 FilterModelConfig6581::FilterModelConfig6581() :
     FilterModelConfig(
-        1.5,     // voice voltage range FIXME should theoretically be ~3,571V
-        470e-12, // capacitor value
-        12.18,   // Vdd
-        1.31,    // Vth
-        20e-6,   // uCox
+        1.5,                    // voice voltage range FIXME should theoretically be ~3,571V
+        470e-12,                // capacitor value
+        12. * VOLTAGE_SKEW,     // Vdd
+        1.31,                   // Vth
+        20e-6,                  // uCox
         opamp_voltage,
         OPAMP_SIZE
     ),
@@ -139,7 +139,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         for(int i=0; i<256; i++)
         {
             const double envI = envDac.getOutput(i);
-            voiceDC[i] = 5.075 + (0.2143 * envI);
+            voiceDC[i] = 5. * VOLTAGE_SKEW + (0.2143 * envI);
         }
     }
 

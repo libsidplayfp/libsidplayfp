@@ -42,12 +42,17 @@ class Integrator6581;
 class FilterModelConfig6581 final : public FilterModelConfig
 {
 private:
-    static constexpr unsigned int DAC_BITS = 11;
-
-private:
     static std::unique_ptr<FilterModelConfig6581> instance;
     // This allows access to the private constructor
     friend std::unique_ptr<FilterModelConfig6581>::deleter_type;
+
+private:
+    static constexpr unsigned int DAC_BITS = 11;
+
+    /**
+     * Power bricks generate voltages slightly out of spec
+     */
+    static constexpr double VOLTAGE_SKEW = 1.015;
 
     /// Transistor parameters.
     //@{

@@ -130,11 +130,11 @@ FilterModelConfig8580* FilterModelConfig8580::getInstance()
 
 FilterModelConfig8580::FilterModelConfig8580() :
     FilterModelConfig(
-        0.24,   // voice voltage range FIXME should theoretically be ~0,474V
-        22e-9,  // capacitor value
-        9.09,   // Vdd
-        0.80,   // Vth
-        100e-6, // uCox
+        0.24,               // voice voltage range FIXME should theoretically be ~0,474V
+        22e-9,              // capacitor value
+        9. * VOLTAGE_SKEW,  // Vdd
+        0.80,               // Vth
+        100e-6,             // uCox
         opamp_voltage,
         OPAMP_SIZE
     )
