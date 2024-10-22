@@ -117,7 +117,7 @@ void FilterModelConfig6581::setFilterRange(double adjustment)
 
 FilterModelConfig6581::FilterModelConfig6581() :
     FilterModelConfig(
-        1.5,     // voice voltage range
+        1.5,     // voice voltage range FIXME should theoretically be ~3,571V
         470e-12, // capacitor value
         12.18,   // Vdd
         1.31,    // Vth
