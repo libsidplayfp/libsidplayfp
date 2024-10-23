@@ -45,7 +45,7 @@ https://libsidplayfp.github.io/libsidplayfp/
 
 This package uses autotools so the usual ./configure && make is enough to build
 the libraries. If cloning the bare sources the package need to be bootstrapped
-in advance with the autoreconf -i command. This step requires the xa cross-assembler
+in advance with the autoreconf -vfi command. This step requires the xa cross-assembler
 to compile the 6502 code, usually provided by distributions with the xa65 package
 or available at http://www.floodgap.com/retrotech/xa/.
 
