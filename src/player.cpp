@@ -210,6 +210,8 @@ void Player::run(unsigned int events)
 
 uint_least32_t Player::play(short *buffer, uint_least32_t count)
 {
+    static constexpr unsigned int CYCLES = 3000;
+
     // Make sure a tune is loaded
     if (m_tune == nullptr)
         return 0;
@@ -235,7 +237,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
                     while ((m_isPlaying != state_t::STOPPED) && m_mixer.notFinished())
                     {
                         if (!m_mixer.wait())
-                            run(sidemu::OUTPUTBUFFERSIZE);
+                            run(CYCLES);
 
                         m_mixer.clockChips();
                         m_mixer.doMix();
@@ -248,7 +250,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
                     int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
                     while ((m_isPlaying != state_t::STOPPED) && --size)
                     {
-                        run(sidemu::OUTPUTBUFFERSIZE);
+                        run(CYCLES);
 
                         m_mixer.clockChips();
                         m_mixer.resetBufs();
@@ -261,7 +263,7 @@ uint_least32_t Player::play(short *buffer, uint_least32_t count)
                 int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
                 while ((m_isPlaying != state_t::STOPPED) && --size)
                 {
-                    run(sidemu::OUTPUTBUFFERSIZE);
+                    run(CYCLES);
                 }
             }
         }
