@@ -2,6 +2,7 @@
 * Remove buffer size limit from mixer (fixes #159)
 * residfp: Avoid quantization noise (#156)
 * residfp: Implement 6581 DC drift (#155)
+* residfp: properly adjusted 8580 Vref value
 
 
 
