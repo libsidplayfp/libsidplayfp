@@ -24,7 +24,6 @@
 
 #include <cassert>
 #include <cstring>
-#include <algorithm>
 
 #include "sidemu.h"
 
@@ -34,12 +33,14 @@ namespace libsidplayfp
 
 void Mixer::clockChips()
 {
-    std::for_each(m_chips.begin(), m_chips.end(), [](sidemu *s) { s->clock(); });
+    for (sidemu* chip: m_chips)
+        chip->clock();
 }
 
 void Mixer::resetBufs()
 {
-    std::for_each(m_chips.begin(), m_chips.end(), [](sidemu *s) { s->bufferpos(0); });
+    for (sidemu* chip: m_chips)
+        chip->bufferpos(0);
 }
 
 void Mixer::doMix()
@@ -88,10 +89,12 @@ void Mixer::doMix()
     // move the unhandled data to start of buffer, if any.
     const int samplesLeft = sampleCount - i;
     assert(samplesLeft >= 0);
-    std::for_each(m_buffers.begin(), m_buffers.end(), [i, samplesLeft](short *dest) {
-        std::memmove(dest, dest+i, samplesLeft*2);
-    });
-    std::for_each(m_chips.begin(), m_chips.end(), [samplesLeft](sidemu *s) { s->bufferpos(samplesLeft); });
+
+    for (short* buffer: m_buffers)
+        std::memmove(buffer, buffer+i, samplesLeft*2);
+
+    for (sidemu* chip: m_chips)
+        chip->bufferpos(samplesLeft);
 
     m_wait = static_cast<uint_least32_t>(samplesLeft) > m_sampleCount;
 }

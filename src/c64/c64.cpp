@@ -22,8 +22,6 @@
 
 #include "c64.h"
 
-#include <algorithm>
-
 #include "c64/CIA/mos652x.h"
 #include "c64/VIC_II/mos656x.h"
 
@@ -125,7 +123,8 @@ void c64::reset()
     colorRAMBank.reset();
     mmu.reset();
 
-    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), [](sidBankMap_t::value_type &e) { e.second->reset(); });
+    for (auto sidBank: extraSidBanks)
+        sidBank.second->reset();
 
     irqCount = 0;
     oldBAState = true;
@@ -185,7 +184,9 @@ bool c64::addExtraSid(c64sid *s, int address)
 
 c64::~c64()
 {
-    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), [](sidBankMap_t::value_type &s) { delete s.second; });
+    for (auto sidBank: extraSidBanks)
+        delete sidBank.second;
+
     extraSidBanks.clear();
 }
 
@@ -195,7 +196,8 @@ void c64::clearSids()
 
     resetIoBank();
 
-    std::for_each(extraSidBanks.begin(), extraSidBanks.end(), [](sidBankMap_t::value_type &s) { delete s.second; });
+    for (auto sidBank: extraSidBanks)
+        delete sidBank.second;
 
     extraSidBanks.clear();
 }

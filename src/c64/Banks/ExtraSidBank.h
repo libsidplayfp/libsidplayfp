@@ -23,7 +23,6 @@
 
 #include "Bank.h"
 #include <vector>
-#include <algorithm>
 
 #include "c64/c64sid.h"
 
@@ -65,7 +64,8 @@ public:
 
     void reset()
     {
-        std::for_each(sids.begin(), sids.end(), [](sids_t::value_type &e) { e->reset(0xf); });
+        for (c64sid* sid: sids)
+            sid->reset(0xf);
     }
 
     void resetSIDMapper(Bank *bank)
