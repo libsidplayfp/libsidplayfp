@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.10.1</span>
+   &#160;<span id="projectnumber">2.11.0</span>
    </div>
   </td>
  </tr>
@@ -82,8 +82,8 @@ Collaboration diagram for reSIDfp::Filter6581:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4fecd0f222ae9af5815daa29c7550391"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter6581.html#a4fecd0f222ae9af5815daa29c7550391">clock</a> (float v1, float v2, float v3) override</td></tr>
-<tr class="separator:a4fecd0f222ae9af5815daa29c7550391"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50e70f65c81de5661d408e4577da9e78"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter6581.html#a50e70f65c81de5661d408e4577da9e78">clock</a> (int v1, int v2, int v3) override</td></tr>
+<tr class="separator:a50e70f65c81de5661d408e4577da9e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53fb448a90aebcb80a5ad3a26f517fe7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter6581.html#a53fb448a90aebcb80a5ad3a26f517fe7">setFilterCurve</a> (double curvePosition)</td></tr>
 <tr class="separator:a53fb448a90aebcb80a5ad3a26f517fe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f0d6289ef511a37a45ad09a967167d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter6581.html#a5f0d6289ef511a37a45ad09a967167d1">setFilterRange</a> (double adjustment)</td></tr>
@@ -106,6 +106,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac56a22eceff41f2fdafbe2e4e42acf8c inherit pub_methods_classreSIDfp_1_1Filter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab06e17a7575b82503c35120b4769fd65 inherit pub_methods_classreSIDfp_1_1Filter"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a> (short input)</td></tr>
 <tr class="separator:ab06e17a7575b82503c35120b4769fd65 inherit pub_methods_classreSIDfp_1_1Filter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a892f24d6006fb1bce610726393d7a037 inherit pub_methods_classreSIDfp_1_1Filter"><td class="memItemLeft" align="right" valign="top"><a id="a892f24d6006fb1bce610726393d7a037"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getNormalizedVoice</b> (float value, unsigned int env) const</td></tr>
+<tr class="separator:a892f24d6006fb1bce610726393d7a037 inherit pub_methods_classreSIDfp_1_1Filter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -360,8 +363,8 @@ Output buffer (NMOS voltage follower)</h2>
 <p>The external resistor Rext is needed to complete the NMOS voltage follower, this resistor has a recommended value of 1kOhm.</p>
 <p>Die photographs show that actually, two NMOS transistors are used in the voltage follower. However the two transistors are coupled in parallel (all terminals are pairwise common), which implies that we can model the two transistors as one. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4fecd0f222ae9af5815daa29c7550391"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fecd0f222ae9af5815daa29c7550391">&#9670;&nbsp;</a></span>clock()</h2>
+<a id="a50e70f65c81de5661d408e4577da9e78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50e70f65c81de5661d408e4577da9e78">&#9670;&nbsp;</a></span>clock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -372,19 +375,19 @@ Output buffer (NMOS voltage follower)</h2>
         <tr>
           <td class="memname">unsigned short reSIDfp::Filter6581::clock </td>
           <td>(</td>
-          <td class="paramtype">float&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>v1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>v2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>v3</em>&#160;</td>
         </tr>
         <tr>
@@ -410,7 +413,7 @@ Output buffer (NMOS voltage follower)</h2>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>filtered output </dd></dl>
 
-<p>Implements <a class="el" href="classreSIDfp_1_1Filter.html#a35579de0ef0d050b45dff13f76de2269">reSIDfp::Filter</a>.</p>
+<p>Implements <a class="el" href="classreSIDfp_1_1Filter.html#a0aab735341ebd438cfbc7a08568176ed">reSIDfp::Filter</a>.</p>
 
 </div>
 </div>
@@ -499,7 +502,7 @@ Output buffer (NMOS voltage follower)</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 20 2024 09:22:49 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Nov 3 2024 13:31:42 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

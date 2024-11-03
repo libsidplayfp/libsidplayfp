@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.10.1</span>
+   &#160;<span id="projectnumber">2.11.0</span>
    </div>
   </td>
  </tr>
@@ -113,9 +113,9 @@
 <div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Integrator8580.html#aec485c8ed6d1ae6bc0096e9a4971827c">   83</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classreSIDfp_1_1Integrator8580.html#aec485c8ed6d1ae6bc0096e9a4971827c">setV</a>(<span class="keywordtype">double</span> v)</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="comment">// Gate voltage is controlled by the switched capacitor voltage divider</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// Ua = Ue * v = 4.76v  1&lt;v&lt;2</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// Ua = Ue * v = 4.75v  1&lt;v&lt;2</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        assert(v &gt; 1.0 &amp;&amp; v &lt; 2.0);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vg = 4.76 * v;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vg = fmc.getVref() * v;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> Vgt = Vg - fmc.getVth();</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">// Vg - Vth, normalized so that translated values can be subtracted:</span></div>
@@ -137,7 +137,7 @@
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 20 2024 09:22:49 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Nov 3 2024 13:31:42 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

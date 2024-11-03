@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.10.1</span>
+   &#160;<span id="projectnumber">2.11.0</span>
    </div>
   </td>
  </tr>
@@ -93,68 +93,80 @@
 <div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1FilterModelConfig6581.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a> final : <span class="keyword">public</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html">FilterModelConfig</a></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">static</span> constexpr <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> DAC_BITS = 11;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">static</span> std::unique_ptr&lt;FilterModelConfig6581&gt; instance;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">// This allows access to the private constructor</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">friend</span> std::unique_ptr&lt;FilterModelConfig6581&gt;::deleter_type;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">static</span> std::unique_ptr&lt;FilterModelConfig6581&gt; instance;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// This allows access to the private constructor</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">friend</span> std::unique_ptr&lt;FilterModelConfig6581&gt;::deleter_type;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">static</span> constexpr <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> DAC_BITS = 11;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> WL_vcr;        </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> WL_snake;      </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> dac_zero;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> dac_scale;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="classreSIDfp_1_1Dac.html">Dac</a> dac;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">static</span> constexpr <span class="keywordtype">double</span> VOLTAGE_SKEW = 1.015;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> WL_vcr;        </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> WL_snake;      </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> dac_zero;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">double</span> dac_scale;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> vcr_nVg[1 &lt;&lt; 16];</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">double</span> vcr_n_Ids_term[1 &lt;&lt; 16];</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">double</span> getDacZero(<span class="keywordtype">double</span> adjustment)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dac_zero + (1. - adjustment); }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>();</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    ~<a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>* getInstance();</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> setFilterRange(<span class="keywordtype">double</span> adjustment);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="classreSIDfp_1_1Dac.html">Dac</a> dac;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> vcr_nVg[1 &lt;&lt; 16];</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">double</span> vcr_n_Ids_term[1 &lt;&lt; 16];</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Voice DC offset LUT</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">double</span> voiceDC[256];</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">double</span> getDacZero(<span class="keywordtype">double</span> adjustment)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dac_zero + (1. - adjustment); }</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html#a2670cf74cbf8f83e2a23982edf80177b">getDAC</a>(<span class="keywordtype">double</span> adjustment) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">double</span> getWL_snake()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> WL_snake; }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_nVg(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> vcr_nVg[i]; }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_n_Ids_term(<span class="keywordtype">int</span> i)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> tmp = vcr_n_Ids_term[i] * <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">uCox</a>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        assert(tmp &gt; -0.5 &amp;&amp; tmp &lt; 65535.5);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">short</span><span class="keyword">&gt;</span>(tmp + 0.5);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// only used if SLOPE_FACTOR is defined</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">inline</span> constexpr <span class="keywordtype">double</span> getUt()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">Ut</a>; }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">double</span> getN16()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">N16</a>; }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;};</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    ~<a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1FilterModelConfig6581.html#a09580a8c470662b8d7cac8fd980eb884">   92</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html#a09580a8c470662b8d7cac8fd980eb884">getVoiceDC</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> env)<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">return</span> voiceDC[env];</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">static</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a>* getInstance();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> setFilterRange(<span class="keywordtype">double</span> adjustment);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* <a class="code" href="classreSIDfp_1_1FilterModelConfig6581.html#a2670cf74cbf8f83e2a23982edf80177b">getDAC</a>(<span class="keywordtype">double</span> adjustment) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">double</span> getWL_snake()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> WL_snake; }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_nVg(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> vcr_nVg[i]; }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getVcr_n_Ids_term(<span class="keywordtype">int</span> i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> tmp = vcr_n_Ids_term[i] * <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">uCox</a>;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        assert(tmp &gt; -0.5 &amp;&amp; tmp &lt; 65535.5);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">short</span><span class="keyword">&gt;</span>(tmp + 0.5);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="comment">// only used if SLOPE_FACTOR is defined</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keyword">inline</span> constexpr <span class="keywordtype">double</span> getUt()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">Ut</a>; }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">double</span> getN16()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">N16</a>; }</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;};</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1Dac_html"><div class="ttname"><a href="classreSIDfp_1_1Dac.html">reSIDfp::Dac</a></div><div class="ttdef"><b>Definition:</b> Dac.h:76</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html">reSIDfp::FilterModelConfig6581</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.h:43</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html_a2670cf74cbf8f83e2a23982edf80177b"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html#a2670cf74cbf8f83e2a23982edf80177b">reSIDfp::FilterModelConfig6581::getDAC</a></div><div class="ttdeci">unsigned short * getDAC(double adjustment) const</div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.cpp:267</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:38</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_a489748ed7997e7a80b9b3d7f7a38fec0"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">reSIDfp::FilterModelConfig::uCox</a></div><div class="ttdeci">double uCox</div><div class="ttdoc">Transconductance coefficient: u*Cox.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:51</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_aadc3f4d5eff80806180c0ef3233995f5"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">reSIDfp::FilterModelConfig::Ut</a></div><div class="ttdeci">static constexpr double Ut</div><div class="ttdoc">Transistor parameters.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:46</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_adec22dcd54967be1860668fc89e1f98c"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">reSIDfp::FilterModelConfig::N16</a></div><div class="ttdeci">const double N16</div><div class="ttdoc">Fixed point scaling for 16 bit op-amp output.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:59</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html_a09580a8c470662b8d7cac8fd980eb884"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html#a09580a8c470662b8d7cac8fd980eb884">reSIDfp::FilterModelConfig6581::getVoiceDC</a></div><div class="ttdeci">double getVoiceDC(unsigned int env) const override</div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.h:92</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig6581_html_a2670cf74cbf8f83e2a23982edf80177b"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig6581.html#a2670cf74cbf8f83e2a23982edf80177b">reSIDfp::FilterModelConfig6581::getDAC</a></div><div class="ttdeci">unsigned short * getDAC(double adjustment) const</div><div class="ttdef"><b>Definition:</b> FilterModelConfig6581.cpp:276</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:39</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_a489748ed7997e7a80b9b3d7f7a38fec0"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#a489748ed7997e7a80b9b3d7f7a38fec0">reSIDfp::FilterModelConfig::uCox</a></div><div class="ttdeci">double uCox</div><div class="ttdoc">Transconductance coefficient: u*Cox.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:79</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_aadc3f4d5eff80806180c0ef3233995f5"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#aadc3f4d5eff80806180c0ef3233995f5">reSIDfp::FilterModelConfig::Ut</a></div><div class="ttdeci">static constexpr double Ut</div><div class="ttdoc">Transistor parameters.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:74</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html_adec22dcd54967be1860668fc89e1f98c"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html#adec22dcd54967be1860668fc89e1f98c">reSIDfp::FilterModelConfig::N16</a></div><div class="ttdeci">const double N16</div><div class="ttdoc">Fixed point scaling for 16 bit op-amp output.</div><div class="ttdef"><b>Definition:</b> FilterModelConfig.h:87</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 20 2024 09:22:49 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Nov 3 2024 13:31:42 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

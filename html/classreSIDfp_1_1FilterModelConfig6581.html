@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.10.1</span>
+   &#160;<span id="projectnumber">2.11.0</span>
    </div>
   </td>
  </tr>
@@ -53,6 +53,7 @@
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classreSIDfp_1_1FilterModelConfig6581-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reSIDfp::FilterModelConfig6581 Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
@@ -132,9 +133,9 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>getNormaliz
 <tr class="memitem:aa5e2f1bd66ac1c2fe6c12bb4797bd993 inherit pub_methods_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="aa5e2f1bd66ac1c2fe6c12bb4797bd993"></a>
 unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>getNVmin</b> () const</td></tr>
 <tr class="separator:aa5e2f1bd66ac1c2fe6c12bb4797bd993 inherit pub_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68c954f76a8b36d98b9cd0c012dda923 inherit pub_methods_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="a68c954f76a8b36d98b9cd0c012dda923"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getNormalizedVoice</b> (float value) const</td></tr>
-<tr class="separator:a68c954f76a8b36d98b9cd0c012dda923 inherit pub_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9074de29e4ebb7ee74a320d5e0c4b6a inherit pub_methods_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="aa9074de29e4ebb7ee74a320d5e0c4b6a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getNormalizedVoice</b> (float value, unsigned int env) const</td></tr>
+<tr class="separator:aa9074de29e4ebb7ee74a320d5e0c4b6a inherit pub_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -142,11 +143,13 @@ Static Public Member Functions</h2></td></tr>
 static <a class="el" href="classreSIDfp_1_1FilterModelConfig6581.html">FilterModelConfig6581</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getInstance</b> ()</td></tr>
 <tr class="separator:a878574d0cda34ee078cbf9a99bfc0b9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a09580a8c470662b8d7cac8fd980eb884"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig6581.html#a09580a8c470662b8d7cac8fd980eb884">getVoiceDC</a> (unsigned int env) const override</td></tr>
+<tr class="separator:a09580a8c470662b8d7cac8fd980eb884"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classreSIDfp_1_1FilterModelConfig"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classreSIDfp_1_1FilterModelConfig')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></td></tr>
-<tr class="memitem:a9d7dc3ee5756c672ddd0062127396e72 inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a9d7dc3ee5756c672ddd0062127396e72">FilterModelConfig</a> (double vvr, double vdv, double c, double vdd, double vth, double ucox, const <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> *opamp_voltage, int opamp_size)</td></tr>
-<tr class="separator:a9d7dc3ee5756c672ddd0062127396e72 inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c26d3f4a5919c5e088e9ddaeff08abf inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a8c26d3f4a5919c5e088e9ddaeff08abf">FilterModelConfig</a> (double vvr, double c, double vdd, double vth, double ucox, const <a class="el" href="structreSIDfp_1_1Spline_1_1Point.html">Spline::Point</a> *opamp_voltage, int opamp_size)</td></tr>
+<tr class="separator:a8c26d3f4a5919c5e088e9ddaeff08abf inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b5197973c726843799f77d5ca1babc7 inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="a1b5197973c726843799f77d5ca1babc7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setUCox</b> (double new_uCox)</td></tr>
 <tr class="separator:a1b5197973c726843799f77d5ca1babc7 inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,6 +161,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setUCox</b> (double n
 <tr class="separator:a02a9955078695bb77a64f0a9b4923564 inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26df5fb2fb25b06ccd83dcb8a9f4bcda inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a26df5fb2fb25b06ccd83dcb8a9f4bcda">buildResonanceTable</a> (const <a class="el" href="classreSIDfp_1_1OpAmp.html">OpAmp</a> &amp;opampModel, const double resonance_n[16])</td></tr>
 <tr class="separator:a26df5fb2fb25b06ccd83dcb8a9f4bcda inherit pro_methods_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classreSIDfp_1_1FilterModelConfig"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classreSIDfp_1_1FilterModelConfig')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></td></tr>
 <tr class="memitem:a7ac01f081df474d94667726ef92262a3 inherit pro_attribs_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="a7ac01f081df474d94667726ef92262a3"></a>
 const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a7ac01f081df474d94667726ef92262a3">C</a></td></tr>
@@ -198,9 +204,6 @@ const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a504f264030b6ee9ac270ff4442d0419a inherit pro_attribs_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="a504f264030b6ee9ac270ff4442d0419a"></a>
 const double&#160;</td><td class="memItemRight" valign="bottom"><b>voice_voltage_range</b></td></tr>
 <tr class="separator:a504f264030b6ee9ac270ff4442d0419a inherit pro_attribs_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16f3562d8b243c9f688c52300e3de119 inherit pro_attribs_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="a16f3562d8b243c9f688c52300e3de119"></a>
-const double&#160;</td><td class="memItemRight" valign="bottom"><b>voice_DC_voltage</b></td></tr>
-<tr class="separator:a16f3562d8b243c9f688c52300e3de119 inherit pro_attribs_classreSIDfp_1_1FilterModelConfig"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a786df89ade7eab189eb0b65fec383d09 inherit pro_attribs_classreSIDfp_1_1FilterModelConfig"><td class="memItemLeft" align="right" valign="top"><a id="a786df89ade7eab189eb0b65fec383d09"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1FilterModelConfig.html#a786df89ade7eab189eb0b65fec383d09">currFactorCoeff</a></td></tr>
 <tr class="memdesc:a786df89ade7eab189eb0b65fec383d09 inherit pro_attribs_classreSIDfp_1_1FilterModelConfig"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current factor coefficient for op-amp integrators. <br /></td></tr>
@@ -256,6 +259,35 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 
 </div>
 </div>
+<a id="a09580a8c470662b8d7cac8fd980eb884"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09580a8c470662b8d7cac8fd980eb884">&#9670;&nbsp;</a></span>getVoiceDC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double reSIDfp::FilterModelConfig6581::getVoiceDC </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>env</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>On 6581 the DC offset varies between ~5.0V and ~5.214V depending on the envelope value. </p>
+
+<p>Implements <a class="el" href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="FilterModelConfig6581_8h_source.html">FilterModelConfig6581.h</a></li>
 <li>FilterModelConfig6581.cpp</li>
@@ -263,7 +295,7 @@ unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 20 2024 09:22:49 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Nov 3 2024 13:31:42 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
