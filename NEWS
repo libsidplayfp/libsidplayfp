@@ -1,7 +1,7 @@
-2.11.0 2024-xx-xx
+2.11.0 2024-11-03
 * Remove buffer size limit from mixer (fixes #159)
-* residfp: Avoid quantization noise (#156)
-* residfp: Implement 6581 DC drift (#155)
+* residfp: avoid quantization noise (#156)
+* residfp: implemented 6581 DC drift (#155)
 * residfp: properly adjusted 8580 Vref value
 
 
