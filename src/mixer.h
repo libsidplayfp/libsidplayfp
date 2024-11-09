@@ -76,9 +76,9 @@ private:
     static constexpr double SQRT_3 = 1.73205080757;
 
     static constexpr int_least32_t SCALE[3] = {
-        SCALE_FACTOR,
-        static_cast<int_least32_t>((1.0 / SQRT_2) * SCALE_FACTOR),
-        static_cast<int_least32_t>((1.0 / SQRT_3) * SCALE_FACTOR)
+        SCALE_FACTOR,                                               // 1 chip, no scale
+        static_cast<int_least32_t>((1.0 / SQRT_2) * SCALE_FACTOR),  // 2 chips, scale by sqrt(2)
+        static_cast<int_least32_t>((1.0 / SQRT_3) * SCALE_FACTOR)   // 3 chips, scale by sqrt(3)
     };
 
 private:
