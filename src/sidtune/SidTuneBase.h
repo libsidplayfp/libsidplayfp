@@ -60,7 +60,7 @@ public:
 class SidTuneBase
 {
 protected:
-    typedef std::vector<uint8_t> buffer_t;
+    using buffer_t = std::vector<uint8_t>;
 
 protected:
     /// Also PSID file format limit.
@@ -73,7 +73,7 @@ protected:
 public:  // ----------------------------------------------------------------
     virtual ~SidTuneBase() = default;
 
-    typedef void (*LoaderFunc)(const char* fileName, buffer_t& bufferRef);
+    using LoaderFunc = void (*)(const char* fileName, buffer_t& bufferRef);
 
     /**
      * Load a sidtune from a file.

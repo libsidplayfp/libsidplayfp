@@ -33,9 +33,9 @@ namespace reSIDfp
 /**
  * Combined waveform model parameters.
  */
-typedef float (*distance_t)(float, int);
+using distance_t = float (*)(float, int);
 
-typedef struct
+using CombinedWaveformConfig = struct
 {
     distance_t distFunc;
     float threshold;
@@ -43,9 +43,9 @@ typedef struct
     float pulsestrength;
     float distance1;
     float distance2;
-} CombinedWaveformConfig;
+};
 
-typedef std::map<const CombinedWaveformConfig*, matrix_t> cw_cache_t;
+using cw_cache_t = std::map<const CombinedWaveformConfig*, matrix_t>;
 
 cw_cache_t PULLDOWN_CACHE;
 

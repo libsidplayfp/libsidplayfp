@@ -8,7 +8,7 @@
 namespace libsidplayfp
 {
 
-typedef unsigned long int ulint_smartpt;
+using ulint_smartpt = unsigned long int;
 
 template<class T>
 class SmartPtrBase_sidtt

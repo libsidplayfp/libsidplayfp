@@ -55,14 +55,14 @@ public:
     };
 
 private:
-    typedef event_clock_t (MOS656X::*ClockFunc)();
+    using ClockFunc = event_clock_t (MOS656X::*)();
 
-    typedef struct
+    using model_data_t = struct
     {
         unsigned int rasterLines;
         unsigned int cyclesPerLine;
         ClockFunc clock;
-    } model_data_t;
+    };
 
 private:
     static const model_data_t modelData[];

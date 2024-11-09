@@ -35,7 +35,7 @@ template< class This >
 class EventCallback final : public Event
 {
 private:
-    typedef void (This::*Callback) ();
+    using Callback = void (This::*)();
 
 private:
     This &m_this;

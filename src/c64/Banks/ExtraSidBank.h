@@ -37,7 +37,7 @@ namespace libsidplayfp
 class ExtraSidBank final : public Bank
 {
 private:
-    typedef std::vector<c64sid*> sids_t;
+    using sids_t = std::vector<c64sid*>;
 
 private:
     /**

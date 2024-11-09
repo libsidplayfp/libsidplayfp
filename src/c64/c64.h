@@ -72,24 +72,24 @@ class sidmemory;
 class c64 final : private c64env
 {
 public:
-    typedef enum
+    using model_t = enum
     {
         PAL_B = 0     ///< PAL C64
         ,NTSC_M       ///< NTSC C64
         ,OLD_NTSC_M   ///< Old NTSC C64
         ,PAL_N        ///< C64 Drean
         ,PAL_M        ///< C64 Brasil
-    } model_t;
+    };
 
-    typedef enum
+    using cia_model_t = enum
     {
         OLD = 0     ///< Old CIA
         ,NEW        ///< New CIA
         ,OLD_4485   ///< Old CIA, special batch labeled 4485
-    } cia_model_t;
+    };
 
 private:
-    typedef std::map<int, ExtraSidBank*> sidBankMap_t;
+    using sidBankMap_t = std::map<int, ExtraSidBank*>;
 
 private:
     /// System clock frequency

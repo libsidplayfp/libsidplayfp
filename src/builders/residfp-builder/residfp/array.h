@@ -75,6 +75,6 @@ public:
     T const* operator[](unsigned int a) const { return &data[a * y]; }
 };
 
-typedef matrix<short> matrix_t;
+using matrix_t = matrix<short>;
 
 #endif
