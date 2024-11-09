@@ -400,7 +400,7 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
     c64::model_t model;
 
     // Use preferred speed if forced or if song speed is unknown
-    if (forced || clockSpeed == SidTuneInfo::CLOCK_UNKNOWN || clockSpeed == SidTuneInfo::CLOCK_ANY)
+    if (forced || (clockSpeed == SidTuneInfo::CLOCK_UNKNOWN) || (clockSpeed == SidTuneInfo::CLOCK_ANY))
     {
         switch (defaultModel)
         {
