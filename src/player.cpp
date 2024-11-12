@@ -218,6 +218,36 @@ void Player::filter(unsigned int sidNum, bool enable)
         s->filter(enable);
 }
 
+uint_least32_t Player::play(unsigned int cycles, short* (&buffers)[])
+{
+    try
+    {
+        for (unsigned int i = 0; i < cycles; i++)
+            m_c64.clock();
+
+        int sampleCount = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            sidemu *s = m_mixer.getSid(i);
+            if (s)
+            {
+                s->clock();
+                sampleCount = s->bufferpos();
+                buffers[i] = s->buffer();
+                s->bufferpos(0);
+            }
+            else
+                buffers[i] = nullptr;
+        }
+        return sampleCount;
+    }
+    catch (MOS6510::haltInstruction const &)
+    {
+        m_errorString = "Illegal instruction executed";
+        return 0;
+    }
+}
+
 /**
  * @throws MOS6510::haltInstruction
  */
