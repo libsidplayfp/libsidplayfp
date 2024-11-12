@@ -110,6 +110,8 @@ void Mixer::begin(short *buffer, uint_least32_t count)
     m_sampleIndex  = 0;
     m_sampleCount  = count;
     m_sampleBuffer = buffer;
+
+    m_wait = false;
 }
 
 void Mixer::updateParams()
