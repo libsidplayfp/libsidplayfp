@@ -153,6 +153,9 @@ private:
     bool msb_rising = false;
 
     bool is6581; //-V730_NOINIT this is initialized in the SID constructor
+    
+    // Prevents unwanted sync from occuring when a saw-combined wave is selected on 6581
+    bool msb_driven_low;
 
 private:
     void shift_phase2(unsigned int waveform_old, unsigned int waveform_new);
@@ -369,13 +372,6 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
             osc3 = waveform_output;
         }
 
-        // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
-        // when the sawtooth is selected
-        if (is6581
-                && (waveform & 0x2)
-                && ((waveform_output & 0x800) == 0))
-            accumulator &= 0x7fffff;
-
         write_shift_register();
     }
     else
@@ -385,6 +381,18 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
         {
             waveBitfade();
         }
+    }
+    
+    // On the 6581, the top bit of the accumulator may be driven low by combined waveforms
+    // when sawtooth is selected
+    if (is6581 && (waveform & 0x2) && ((waveform_output & 0x800) == 0))
+    {
+        accumulator &= 0x7fffff;
+        msb_driven_low = true; 
+    }
+    else   
+    {
+        msb_driven_low = false;
     }
 
     // The pulse level is defined as (accumulator >> 12) >= pw ? 0xfff : 0x000.
