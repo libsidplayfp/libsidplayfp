@@ -40,7 +40,7 @@ inline double getRC(double res, double cap)
 
 ExternalFilter::ExternalFilter()
 {
-    reset();S
+    reset();
 }
 
 void ExternalFilter::setClockFrequency(double frequency)
