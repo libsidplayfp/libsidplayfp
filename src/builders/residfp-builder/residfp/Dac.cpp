@@ -27,8 +27,8 @@
 namespace reSIDfp
 {
 
-constexpr double MOSFET_LEAKAGE_6581 = 0.0075;
-constexpr double MOSFET_LEAKAGE_8580 = 0.0035;
+constexpr double MOSFET_LEAKAGE_6581 = 0;
+constexpr double MOSFET_LEAKAGE_8580 = 0;
 
 Dac::Dac(unsigned int bits) :
     dac(new double[bits]),

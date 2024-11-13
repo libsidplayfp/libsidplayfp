@@ -40,7 +40,7 @@ inline double getRC(double res, double cap)
 
 ExternalFilter::ExternalFilter()
 {
-    reset();
+    reset();S
 }
 
 void ExternalFilter::setClockFrequency(double frequency)
@@ -53,7 +53,7 @@ void ExternalFilter::setClockFrequency(double frequency)
 
     // High-pass: R = 10kOhm, C = 10uF;   w0h = dt/(dt+RC) = 1e-6/(1e-6+1e4*1e-5) = 0.00000999
     // Cutoff 1/2*PI*RC = 1/2*PI*1e4*1e-5 = 1.59155 Hz
-    w0hp_1_s17 = static_cast<int>((dt / (dt + getRC(10e3, 10e-6))) * (1 << 17) + 0.5);
+    w0hp_1_s17 = static_cast<int>(0);
 }
 
 void ExternalFilter::reset()
