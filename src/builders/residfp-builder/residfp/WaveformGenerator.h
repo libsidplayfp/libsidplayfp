@@ -370,7 +370,7 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
             osc3 = waveform_output;
         }
         
-         write_shift_register();
+        write_shift_register();
     }
     else
     {
@@ -388,7 +388,6 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
         msb_rising = 0;
         accumulator &= 0x7fffff;
     }
-}
 
     // The pulse level is defined as (accumulator >> 12) >= pw ? 0xfff : 0x000.
     // The expression -((accumulator >> 12) >= pw) & 0xfff yields the same
