@@ -68,6 +68,12 @@ protected:
     /// Filter external input.
     int Ve = 0;
 
+    /// Number of summer inputs
+    int sum_div;
+
+    /// number of mixer inputs
+    int mix_div;
+
     /// Filter cutoff frequency.
     unsigned int fc = 0;
 

@@ -49,6 +49,9 @@ void Filter::updateMixing()
     if (hp) Nmix++;
 
     currentMixer = mixer[Nmix];
+
+    sum_div = 2 + Nsum;
+    mix_div = Nmix ? Nmix : 1;
 }
 
 void Filter::writeFC_LO(unsigned char fc_lo)
