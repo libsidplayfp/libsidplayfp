@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -207,14 +207,18 @@ uint_least32_t Player::play(unsigned int cycles, short* (&buffers)[])
             m_c64.clock();
 
         int sampleCount = 0;
-        for (int i = 0; i < 3; i++)
+        for (unsigned int i = 0; i < Mixer::MAX_SIDS; i++)
         {
             sidemu *s = m_mixer.getSid(i);
             if (s)
             {
+                // clock the chip and get the buffer
+                // buffersize is expected to be the same
+                // for all chips
                 s->clock();
                 sampleCount = s->bufferpos();
                 buffers[i] = s->buffer();
+                // Reset the buffer
                 s->bufferpos(0);
             }
             else
