@@ -256,12 +256,6 @@ AC_ARG_ENABLE([tests],
   [enable_tests=no]
 )
 
-AS_IF([test "x$enable_tests" != "xno"],
-  [[echo Enabling unit tests]
-    PKG_CHECK_MODULES(UNITTEST, [UnitTest++])
-  ]
-)
-
 AM_CONDITIONAL([ENABLE_TEST], [test x$enable_tests = xyes])
 
 

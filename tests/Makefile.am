@@ -5,10 +5,8 @@ if ENABLE_TEST
 
 AM_CPPFLAGS = \
 -I$(top_srcdir)/src \
--I$(top_builddir)/src/builders/residfp-builder/residfp \
-$(UNITTEST_CFLAGS)
+-I$(top_builddir)/src/builders/residfp-builder/residfp
 
-AM_LDFLAGS = $(UNITTEST_LIBS)
 
 TESTS = \
 TestEnvelopeGenerator \
