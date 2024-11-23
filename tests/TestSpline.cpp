@@ -90,7 +90,7 @@ TEST(TestPoints)
 {
     Spline s(std::vector<Spline::Point>(std::begin(opamp_voltage), std::end(opamp_voltage)));
 
-    for (int i = 0; i < OPAMP_SIZE; i++)
+    for (unsigned int i = 0; i < OPAMP_SIZE; i++)
     {
         Spline::Point out = s.evaluate(opamp_voltage[i].x);
 

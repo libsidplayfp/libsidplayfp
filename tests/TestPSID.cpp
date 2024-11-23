@@ -214,7 +214,7 @@ TEST_FIXTURE(TestFixture, TestTooManySongs)
     //CHECK(!tune.getStatus());
 
     //CHECK_EQUAL("SIDTUNE ERROR: ", tune.statusString());
-    CHECK_EQUAL(256, tune.getInfo()->songs());
+    CHECK_EQUAL(256u, tune.getInfo()->songs());
 }
 
 /*
@@ -224,7 +224,7 @@ TEST_FIXTURE(TestFixture, TestDefaultStartSong)
 {
     SidTune tune(data, BUFFERSIZE);
 
-    CHECK_EQUAL(1, tune.getInfo()->startSong());
+    CHECK_EQUAL(1u, tune.getInfo()->startSong());
 }
 
 /*
