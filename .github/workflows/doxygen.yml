@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: deps
       run: sudo apt-get install libgcrypt20-dev xa65 doxygen graphviz
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: 'true'
         ref: ${{ github.ref }}
@@ -26,7 +26,7 @@ jobs:
     - name: make doc
       run: make doc
     - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         publish_dir: ./docs/html
         destination_dir: html
