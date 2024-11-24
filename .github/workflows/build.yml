@@ -30,6 +30,7 @@ jobs:
         export HOMEBREW_NO_INSTALL_CLEANUP=1
         brew update
         brew upgrade || true
+        brew uninstall --ignore-dependencies --force pkg-config@0.29.2
         brew install \
           autoconf \
           automake \
