@@ -34,7 +34,7 @@ jobs:
           autoconf \
           automake \
           libtool \
-          pkg-config \
+          pkgconf \
           coreutils \
           gnu-sed \
           libgcrypt \
