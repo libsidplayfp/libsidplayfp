@@ -35,7 +35,7 @@
 namespace reSIDfp
 {
 
-const unsigned int OPAMP_SIZE = 33;
+constexpr unsigned int OPAMP_SIZE = 33;
 
 /**
  * This is the SID 6581 op-amp voltage transfer function, measured on
@@ -43,7 +43,7 @@ const unsigned int OPAMP_SIZE = 33;
  * All measured chips have op-amps with output voltages (and thus input
  * voltages) within the range of 0.81V - 10.31V.
  */
-const Spline::Point opamp_voltage[OPAMP_SIZE] =
+constexpr Spline::Point opamp_voltage[OPAMP_SIZE] =
 {
   {  0.81, 10.31 },  // Approximate start of actual range
   {  2.40, 10.31 },

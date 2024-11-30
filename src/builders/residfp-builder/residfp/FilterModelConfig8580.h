@@ -65,7 +65,7 @@ protected:
 public:
     static FilterModelConfig8580* getInstance();
 
-    inline double getVref() const { return Vref * VOLTAGE_SKEW; }
+    inline constexpr double getVref() const { return Vref * VOLTAGE_SKEW; }
 };
 
 } // namespace reSIDfp

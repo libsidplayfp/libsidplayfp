@@ -66,7 +66,7 @@ constexpr unsigned int SHIFT_REGISTER_RESET_6581R4 = 2150000;
 constexpr unsigned int SHIFT_REGISTER_RESET_8580R5 =  986000;
 constexpr unsigned int SHIFT_REGISTER_FADE_8580R5  =  314300;
 
-const unsigned int shift_mask =
+constexpr unsigned int shift_mask =
     ~(
         (1u <<  2) |  // Bit 20
         (1u <<  4) |  // Bit 18
