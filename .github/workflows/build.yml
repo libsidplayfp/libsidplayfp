@@ -22,7 +22,6 @@ jobs:
         sudo apt-get install \
           libgcrypt20-dev \
           xa65 \
-          libunittest++-dev \
           libftdi1-dev
     - name: deps [macOS]
       if: runner.os == 'macOS'
@@ -40,7 +39,6 @@ jobs:
           gnu-sed \
           libgcrypt \
           xa \
-          unittest-cpp \
           libftdi
     - uses: actions/checkout@v4
       with:

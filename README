@@ -77,7 +77,7 @@ code execution. The path to testsuite must include terminal path separator
 disabled by default
 
 --enable-tests
-enables unit tests. Requires libUnitTest++ installed. Use "make check" to launch the testsuite
+enables unit tests. Use "make check" to launch the testsuite
 disabled by default
 
 --enable-hardsid

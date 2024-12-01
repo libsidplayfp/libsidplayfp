@@ -40,7 +40,6 @@ jobs:
         sudo apt-get install \
           libgcrypt20-dev \
           xa65 \
-          libunittest++-dev \
           libftdi1-dev
 
     - name: Checkout repository
