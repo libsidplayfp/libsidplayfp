@@ -1,3 +1,12 @@
+2.12.0 2024-12-01
+* Better mixing for multi chip tunes (#167)
+* fixed voice sync when a saw-combined waveform is selected (#169)
+* residfp: updated CW parameters
+* resid: properly adjusted 8580 Vref value
+* switched to UTPP for unit tests (#170)
+
+
+
 2.11.0 2024-11-03
 * Remove buffer size limit from mixer (fixes #159)
 * residfp: avoid quantization noise (#156)
