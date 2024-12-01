@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.11.0</span>
+   &#160;<span id="projectnumber">2.12.0</span>
    </div>
   </td>
  </tr>
@@ -81,21 +81,12 @@ Collaboration diagram for libsidplayfp::c64:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a2f91c4b4913df2f7c34579853979c66e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66e">model_t</a> { <br />
-&#160;&#160;<a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66ea12d28cbb1f09bb0659cef7daee44b8c9">PAL_B</a> = 0
-, <a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66ead69ffedee6516700f807a7089fa6369b">NTSC_M</a>
-, <a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66eaa043b8e81b6c530f7e030c8a0f4ad1a0">OLD_NTSC_M</a>
-, <a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66ea2a08208e448fc71f2db72ad50c611e04">PAL_N</a>
-, <br />
-&#160;&#160;<a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66ea6d54af6b68e65b3d62d03ff71ecbfa52">PAL_M</a>
-<br />
- }</td></tr>
-<tr class="separator:a2f91c4b4913df2f7c34579853979c66e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7652923a8924a078a543bc904b64673"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673">cia_model_t</a> { <a class="el" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673a60b02c27827410a6b4d98feda3d9a60c">OLD</a> = 0
-, <a class="el" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673a841d839d839a4f22bc9f5579da90e8ca">NEW</a>
-, <a class="el" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673a56060aed7e57c6b5ac25350811650862">OLD_4485</a>
- }</td></tr>
-<tr class="separator:af7652923a8924a078a543bc904b64673"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65890b73d1c739c8433834d11633273e"><td class="memItemLeft" align="right" valign="top"><a id="a65890b73d1c739c8433834d11633273e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>model_t</b> = enum { PAL_B=0,NTSC_M,OLD_NTSC_M,PAL_N,PAL_M }</td></tr>
+<tr class="separator:a65890b73d1c739c8433834d11633273e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eac1b7ac1e8baba0a7959aedfaa6eab"><td class="memItemLeft" align="right" valign="top"><a id="a3eac1b7ac1e8baba0a7959aedfaa6eab"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>cia_model_t</b> = enum { OLD=0,NEW,OLD_4485 }</td></tr>
+<tr class="separator:a3eac1b7ac1e8baba0a7959aedfaa6eab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -115,9 +106,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 <tr class="memitem:a1a5e8d30c62703dad93963fe74d8d488"><td class="memItemLeft" align="right" valign="top"><a id="a1a5e8d30c62703dad93963fe74d8d488"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resetCpu</b> ()</td></tr>
 <tr class="separator:a1a5e8d30c62703dad93963fe74d8d488"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ca98b7c75e8e45162ef67ac62604c0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1c64.html#a9ca98b7c75e8e45162ef67ac62604c0f">setModel</a> (<a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66e">model_t</a> model)</td></tr>
+<tr class="memitem:a9ca98b7c75e8e45162ef67ac62604c0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1c64.html#a9ca98b7c75e8e45162ef67ac62604c0f">setModel</a> (model_t model)</td></tr>
 <tr class="separator:a9ca98b7c75e8e45162ef67ac62604c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fa1cd0cc5d3813d5d392d3e1349bcdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1c64.html#a4fa1cd0cc5d3813d5d392d3e1349bcdb">setCiaModel</a> (<a class="el" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673">cia_model_t</a> model)</td></tr>
+<tr class="memitem:a4fa1cd0cc5d3813d5d392d3e1349bcdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1c64.html#a4fa1cd0cc5d3813d5d392d3e1349bcdb">setCiaModel</a> (cia_model_t model)</td></tr>
 <tr class="separator:a4fa1cd0cc5d3813d5d392d3e1349bcdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8321a0a6dd619d9b93717efc47dd293b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1c64.html#a8321a0a6dd619d9b93717efc47dd293b">getMainCpuSpeed</a> () const</td></tr>
 <tr class="separator:a8321a0a6dd619d9b93717efc47dd293b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,56 +147,7 @@ uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getCia1Time
 <li>Basic ROM 2364</li>
 <li>Kernal ROM 2364 </li>
 </ul>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="af7652923a8924a078a543bc904b64673"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7652923a8924a078a543bc904b64673">&#9670;&nbsp;</a></span>cia_model_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673">libsidplayfp::c64::cia_model_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af7652923a8924a078a543bc904b64673a60b02c27827410a6b4d98feda3d9a60c"></a>OLD&#160;</td><td class="fielddoc"><p>Old CIA. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="af7652923a8924a078a543bc904b64673a841d839d839a4f22bc9f5579da90e8ca"></a>NEW&#160;</td><td class="fielddoc"><p>New CIA. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="af7652923a8924a078a543bc904b64673a56060aed7e57c6b5ac25350811650862"></a>OLD_4485&#160;</td><td class="fielddoc"><p>Old CIA, special batch labeled 4485. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="a2f91c4b4913df2f7c34579853979c66e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f91c4b4913df2f7c34579853979c66e">&#9670;&nbsp;</a></span>model_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66e">libsidplayfp::c64::model_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a2f91c4b4913df2f7c34579853979c66ea12d28cbb1f09bb0659cef7daee44b8c9"></a>PAL_B&#160;</td><td class="fielddoc"><p>PAL C64. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a2f91c4b4913df2f7c34579853979c66ead69ffedee6516700f807a7089fa6369b"></a>NTSC_M&#160;</td><td class="fielddoc"><p>NTSC C64. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a2f91c4b4913df2f7c34579853979c66eaa043b8e81b6c530f7e030c8a0f4ad1a0"></a>OLD_NTSC_M&#160;</td><td class="fielddoc"><p>Old NTSC C64. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a2f91c4b4913df2f7c34579853979c66ea2a08208e448fc71f2db72ad50c611e04"></a>PAL_N&#160;</td><td class="fielddoc"><p>C64 Drean. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a2f91c4b4913df2f7c34579853979c66ea6d54af6b68e65b3d62d03ff71ecbfa52"></a>PAL_M&#160;</td><td class="fielddoc"><p>C64 Brasil. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a455ed17a420ac0d3cfa62bb31da3bce5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a455ed17a420ac0d3cfa62bb31da3bce5">&#9670;&nbsp;</a></span>addExtraSid()</h2>
 
@@ -407,7 +349,7 @@ uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getCia1Time
         <tr>
           <td class="memname">void libsidplayfp::c64::setCiaModel </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classlibsidplayfp_1_1c64.html#af7652923a8924a078a543bc904b64673">cia_model_t</a>&#160;</td>
+          <td class="paramtype">cia_model_t&#160;</td>
           <td class="paramname"><em>model</em></td><td>)</td>
           <td></td>
         </tr>
@@ -426,7 +368,7 @@ uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getCia1Time
         <tr>
           <td class="memname">void libsidplayfp::c64::setModel </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classlibsidplayfp_1_1c64.html#a2f91c4b4913df2f7c34579853979c66e">model_t</a>&#160;</td>
+          <td class="paramtype">model_t&#160;</td>
           <td class="paramname"><em>model</em></td><td>)</td>
           <td></td>
         </tr>
@@ -443,7 +385,7 @@ uint_least16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getCia1Time
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Nov 3 2024 13:32:09 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Dec 1 2024 14:09:15 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

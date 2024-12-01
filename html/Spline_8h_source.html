@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.11.0</span>
+   &#160;<span id="projectnumber">2.12.0</span>
    </div>
   </td>
  </tr>
@@ -85,14 +85,14 @@
 <div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Spline.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="classreSIDfp_1_1Spline.html">Spline</a></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="structreSIDfp_1_1Spline_1_1Point.html">   41</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">using</span> Point = <span class="keyword">struct</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">double</span> x;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">double</span> y;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    } <a class="code" href="structreSIDfp_1_1Spline_1_1Point.html">Point</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    };</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">using</span> Param = <span class="keyword">struct</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordtype">double</span> x1;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordtype">double</span> x2;</div>
@@ -100,9 +100,9 @@
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">double</span> b;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordtype">double</span> c;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordtype">double</span> d;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    } Param;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    };</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">typedef</span> std::vector&lt;Param&gt; ParamVector;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">using</span> ParamVector = std::vector&lt;Param&gt;;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    ParamVector params;</div>
@@ -120,11 +120,10 @@
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1Spline_html"><div class="ttname"><a href="classreSIDfp_1_1Spline.html">reSIDfp::Spline</a></div><div class="ttdef"><b>Definition:</b> Spline.h:39</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Spline_html_a323c0d26d27e9ef4a0e74c940fcba197"><div class="ttname"><a href="classreSIDfp_1_1Spline.html#a323c0d26d27e9ef4a0e74c940fcba197">reSIDfp::Spline::evaluate</a></div><div class="ttdeci">Point evaluate(double x) const</div><div class="ttdef"><b>Definition:</b> Spline.cpp:91</div></div>
-<div class="ttc" id="astructreSIDfp_1_1Spline_1_1Point_html"><div class="ttname"><a href="structreSIDfp_1_1Spline_1_1Point.html">reSIDfp::Spline::Point</a></div><div class="ttdef"><b>Definition:</b> Spline.h:42</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Nov 3 2024 13:32:09 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Dec 1 2024 14:09:15 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

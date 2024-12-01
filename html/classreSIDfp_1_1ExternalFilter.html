@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.11.0</span>
+   &#160;<span id="projectnumber">2.12.0</span>
    </div>
   </td>
  </tr>
@@ -72,7 +72,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4e9411c5bc187a2bb014702d9da063fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The audio output stage in a Commodore 64 consists of two STC networks, a low-pass RC filter with 3 dB frequency 16kHz followed by a DC-blocker which acts as a high-pass filter with a cutoff dependent on the attached audio equipment impedance. Here we suppose an impedance of 10kOhm resulting in a 3 dB attenuation at 1.6Hz. To operate properly the 6581 audio output needs a pull-down resistor (1KOhm recommended, not needed on 8580)</p>
+<div class="textblock"><p>The audio output stage in a Commodore 64 consists of two STC networks, a low-pass RC filter with 3 dB frequency 16kHz followed by a DC-blocker which acts as a high-pass filter with a cutoff dependent on the attached audio equipment impedance. Here we suppose an impedance of 10kOhm resulting in a 3 dB attenuation at 1.6Hz.</p>
 <div class="fragment"><div class="line">                                9/12V</div>
 <div class="line">-----+</div>
 <div class="line">audio|       10k                  |</div>
@@ -82,11 +82,12 @@ Public Member Functions</h2></td></tr>
 <div class="line">         |        |  pF    +-C----o-----C-----+ 10k</div>
 <div class="line">                            470   |           |</div>
 <div class="line">        GND      GND         pF   R 1K        | amp</div>
-<div class="line">         *                   *    |           +-----</div>
+<div class="line">         *                   **   |           +-----</div>
 <div class="line"> </div>
 <div class="line">                                 GND</div>
-</div><!-- fragment --><p>The STC networks are connected with a <a href="https://en.wikipedia.org/wiki/Bipolar_junction_transistor">BJT</a> based <a href="https://en.wikipedia.org/wiki/Common_collector">common collector</a> used as a voltage follower (featuring a 2SC1815 NPN transistor).</p><ul>
-<li>The C64c board additionally includes a <a href="https://en.wikipedia.org/wiki/Bootstrapping_(electronics)">bootstrap</a> condenser to increase the input impedance of the common collector. </li>
+</div><!-- fragment --><p>The STC networks are connected with a <a href="https://en.wikipedia.org/wiki/Bipolar_junction_transistor">BJT</a> based <a href="https://en.wikipedia.org/wiki/Common_collector">common collector</a> used as a voltage follower (featuring a 2SC1815 NPN transistor).</p>
+<ul>
+<li>To operate properly the 6581 audio output needs a pull-down resistor (1KOhm recommended, not needed on 8580) ** The C64c board additionally includes a <a href="https://en.wikipedia.org/wiki/Bootstrapping_(electronics)">bootstrap</a> condenser to increase the input impedance of the common collector. </li>
 </ul>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a66014b71ab74301c04a0d6ffd65e855f"></a>
@@ -183,7 +184,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Nov 3 2024 13:32:09 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Dec 1 2024 14:09:15 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

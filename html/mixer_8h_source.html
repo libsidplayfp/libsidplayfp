@@ -19,7 +19,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libsidplayfp
-   &#160;<span id="projectnumber">2.11.0</span>
+   &#160;<span id="projectnumber">2.12.0</span>
    </div>
   </td>
  </tr>
@@ -119,87 +119,87 @@
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#ab0ac928b54ce2896e3573b8295ac21e7">   70</a></span>&#160;    <span class="keyword">static</span> constexpr <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#ab0ac928b54ce2896e3573b8295ac21e7">MAX_SIDS</a> = 3;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">static</span> constexpr int_least32_t SCALE_FACTOR = 1 &lt;&lt; 16;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">static</span> constexpr <span class="keywordtype">double</span> SQRT_0_5 = 0.70710678118654746;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">static</span> constexpr int_least32_t C1 = <span class="keyword">static_cast&lt;</span>int_least32_t<span class="keyword">&gt;</span>(1.0 / (1.0 + SQRT_0_5) * SCALE_FACTOR);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">static</span> constexpr int_least32_t C2 = <span class="keyword">static_cast&lt;</span>int_least32_t<span class="keyword">&gt;</span>(SQRT_0_5 / (1.0 + SQRT_0_5) * SCALE_FACTOR);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">using</span> mixer_func_t = int_least32_t (<a class="code" href="classlibsidplayfp_1_1Mixer.html">Mixer</a>::*)() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">using</span> scale_func_t = int (<a class="code" href="classlibsidplayfp_1_1Mixer.html">Mixer</a>::*)(<span class="keywordtype">unsigned</span> int);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">static</span> constexpr int_least32_t SCALE_FACTOR = 1 &lt;&lt; 16;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">static</span> constexpr <span class="keywordtype">double</span> SQRT_2 = 1.41421356237;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">static</span> constexpr <span class="keywordtype">double</span> SQRT_3 = 1.73205080757;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">static</span> constexpr int_least32_t SCALE[3] = {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        SCALE_FACTOR,                                               <span class="comment">// 1 chip, no scale</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keyword">static_cast&lt;</span>int_least32_t<span class="keyword">&gt;</span>((1.0 / SQRT_2) * SCALE_FACTOR),  <span class="comment">// 2 chips, scale by sqrt(2)</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">static_cast&lt;</span>int_least32_t<span class="keyword">&gt;</span>((1.0 / SQRT_3) * SCALE_FACTOR)   <span class="comment">// 3 chips, scale by sqrt(3)</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    };</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">   86</a></span>&#160;    <span class="keyword">static</span> constexpr int_least32_t <a class="code" href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">VOLUME_MAX</a> = 1024;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    std::vector&lt;sidemu*&gt; m_chips;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    std::vector&lt;short*&gt; m_buffers;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::vector&lt;int_least32_t&gt; m_iSamples;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    std::vector&lt;int_least32_t&gt; m_volume;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    std::vector&lt;mixer_func_t&gt; m_mix;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::vector&lt;scale_func_t&gt; m_scale;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">int</span> m_oldRandomValue = 0;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">int</span> m_fastForwardFactor = 1;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">// Mixer settings</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">short</span>         *m_sampleBuffer = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    uint_least32_t m_sampleCount = 0;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    uint_least32_t m_sampleIndex = 0;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">using</span> mixer_func_t = int_least32_t (<a class="code" href="classlibsidplayfp_1_1Mixer.html">Mixer</a>::*)() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">using</span> scale_func_t = int (<a class="code" href="classlibsidplayfp_1_1Mixer.html">Mixer</a>::*)(<span class="keywordtype">unsigned</span> int);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">   91</a></span>&#160;    <span class="keyword">static</span> constexpr int_least32_t <a class="code" href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">VOLUME_MAX</a> = 1024;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    std::vector&lt;sidemu*&gt; m_chips;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    std::vector&lt;short*&gt; m_buffers;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::vector&lt;int_least32_t&gt; m_iSamples;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::vector&lt;int_least32_t&gt; m_volume;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::vector&lt;mixer_func_t&gt; m_mix;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    std::vector&lt;scale_func_t&gt; m_scale;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">int</span> m_oldRandomValue = 0;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">int</span> m_fastForwardFactor = 1;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    uint_least32_t m_sampleRate = 0;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">bool</span> m_stereo = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">bool</span> m_wait = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    randomLCG&lt;VOLUME_MAX&gt; m_rand;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">void</span> updateParams();</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="comment">// Mixer settings</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">short</span>         *m_sampleBuffer = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    uint_least32_t m_sampleCount = 0;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    uint_least32_t m_sampleIndex = 0;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    uint_least32_t m_sampleRate = 0;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">bool</span> m_stereo = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">bool</span> m_wait = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">int</span> triangularDithering()</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    {</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">int</span> prevValue = m_oldRandomValue;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        m_oldRandomValue = m_rand.get();</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> m_oldRandomValue - prevValue;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">int</span> scale(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ch)</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    {</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keyword">const</span> int_least32_t sample = (this-&gt;*(m_mix[ch]))();</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keywordflow">return</span> (sample * m_volume[ch] + triangularDithering()) / <a class="code" href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">VOLUME_MAX</a>;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    }</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">int</span> noScale(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ch)</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="keywordflow">return</span> (this-&gt;*(m_mix[ch]))();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    randomLCG&lt;VOLUME_MAX&gt; m_rand;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">void</span> updateParams();</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">int</span> triangularDithering()</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">int</span> prevValue = m_oldRandomValue;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        m_oldRandomValue = m_rand.get();</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordflow">return</span> m_oldRandomValue - prevValue;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">int</span> scale(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ch)</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keyword">const</span> int_least32_t sample = (this-&gt;*(m_mix[ch]))();</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="keywordflow">return</span> (sample * m_volume[ch] + triangularDithering()) / <a class="code" href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">VOLUME_MAX</a>;</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    }</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">     * Channel matrix</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="comment">     *</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="comment">     *   C1</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="comment">     * L 1.0</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="comment">     * R 1.0</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="comment">     *</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="comment">     *   C1   C2</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">     * L 1.0  0.0</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="comment">     * R 0.0  1.0</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">     *</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">     *   C1       C2           C3</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment">     * L 1/1.707  0.707/1.707  0.0</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">     * R 0.0      0.707/1.707  1/1.707</span></div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">     *</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">     * FIXME</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">     * it seems that scaling down the summed signals is not the correct way of mixing, see:</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">     * http://dsp.stackexchange.com/questions/3581/algorithms-to-mix-audio-signals-without-clipping</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">     * maybe we should consider some form of soft/hard clipping instead to avoid possible overflows</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">int</span> noScale(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ch)</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    {</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordflow">return</span> (this-&gt;*(m_mix[ch]))();</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="comment">/*</span></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="comment">     * Channel matrix</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="comment">     *</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">     *   C1</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="comment">     * L 1.0</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">     * R 1.0</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">     *</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment">     *   C1    C2</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">     * L 1.0   0.5</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">     * R 0.5   1.0</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">     *</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">     *   C1    C2    C3</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">     * L 1.0   1.0   0.5</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">     * R 0.5   1.0   1.0</span></div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">     */</span></div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="comment">// Mono mixing</span></div>
@@ -209,83 +209,95 @@
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        int_least32_t res = 0;</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; Chips; i++)</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            res += m_iSamples[i];</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordflow">return</span> res / Chips;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordflow">return</span> res * SCALE[Chips-1] / SCALE_FACTOR;</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    }</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="comment">// Stereo mixing</span></div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    int_least32_t stereo_OneChip()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_iSamples[0]; }</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    int_least32_t stereo_ch1_TwoChips()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_iSamples[0]; }</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    int_least32_t stereo_ch2_TwoChips()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_iSamples[1]; }</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    int_least32_t stereo_ch1_ThreeChips()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (C1*m_iSamples[0] + C2*m_iSamples[1]) / SCALE_FACTOR; }</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    int_least32_t stereo_ch2_ThreeChips()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (C2*m_iSamples[1] + C1*m_iSamples[2]) / SCALE_FACTOR; }</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a4217c87734e1693f18b6dde6cfbb02ec">  179</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1Mixer.html#a4217c87734e1693f18b6dde6cfbb02ec">Mixer</a>() :</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        m_rand(257254)</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    {</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        m_mix.push_back(&amp;Mixer::mono&lt;1&gt;);</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    }</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#aa312bba0d2eaad4d4a0b91b612c0a918">doMix</a>();</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a5ac3a2aefd271a340e18140ac6bd0f14">clockChips</a>();</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a40e4d69a44c54f64959f485d59de9263">resetBufs</a>();</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#aaf2ff5e4b0ef6cbf9ed6b6af12534b8b">begin</a>(<span class="keywordtype">short</span> *buffer, uint_least32_t count);</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a4620a95bdfaf7bb280550ce25246ee15">clearSids</a>();</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a1747668170f76ff95d14b2e9b54de99c">addSid</a>(<a class="code" href="classlibsidplayfp_1_1sidemu.html">sidemu</a> *chip);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    int_least32_t stereo_ch1_TwoChips()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">return</span> (m_iSamples[0] + 0.5*m_iSamples[1]) * SCALE[1] / SCALE_FACTOR;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    }</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    int_least32_t stereo_ch2_TwoChips()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <span class="keywordflow">return</span> (0.5*m_iSamples[0] + m_iSamples[1]) * SCALE[1] / SCALE_FACTOR;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    }</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    int_least32_t stereo_ch1_ThreeChips()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keywordflow">return</span> (m_iSamples[0] + m_iSamples[1] + 0.5*m_iSamples[2]) * SCALE[2] / SCALE_FACTOR;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    }</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    int_least32_t stereo_ch2_ThreeChips()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keywordflow">return</span> (0.5*m_iSamples[0] + m_iSamples[1] + m_iSamples[2]) * SCALE[2] / SCALE_FACTOR;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    }</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00191"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a4217c87734e1693f18b6dde6cfbb02ec">  191</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1Mixer.html#a4217c87734e1693f18b6dde6cfbb02ec">Mixer</a>() :</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        m_rand(257254)</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    {</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        m_mix.push_back(&amp;Mixer::mono&lt;1&gt;);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    }</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#aa312bba0d2eaad4d4a0b91b612c0a918">doMix</a>();</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a5ac3a2aefd271a340e18140ac6bd0f14">clockChips</a>();</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a40e4d69a44c54f64959f485d59de9263">resetBufs</a>();</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#aaf2ff5e4b0ef6cbf9ed6b6af12534b8b">begin</a>(<span class="keywordtype">short</span> *buffer, uint_least32_t count);</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
-<div class="line"><a name="l00228"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#aeae0b012968e3cd11e4129876b891239">  228</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1sidemu.html">sidemu</a>* <a class="code" href="classlibsidplayfp_1_1Mixer.html#aeae0b012968e3cd11e4129876b891239">getSid</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (i &lt; m_chips.size()) ? m_chips[i] : <span class="keyword">nullptr</span>; }</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#ab0c56421a1ebd4d0f34602b21d45d1ad">setFastForward</a>(<span class="keywordtype">int</span> ff);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a62d3d527cc0b63327f3b484ae8c5c9bc">setVolume</a>(int_least32_t left, int_least32_t right);</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160; </div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a5f501b2bfcc4d0b496e9e2b181fb1084">setStereo</a>(<span class="keywordtype">bool</span> stereo);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a99815bc7986fcb1f3689e91e1edccd7f">setSamplerate</a>(uint_least32_t rate);</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a464647aef6260daeea89c71420cda0c0">  263</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a464647aef6260daeea89c71420cda0c0">notFinished</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_sampleIndex &lt; m_sampleCount; }</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a4620a95bdfaf7bb280550ce25246ee15">clearSids</a>();</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a1747668170f76ff95d14b2e9b54de99c">addSid</a>(<a class="code" href="classlibsidplayfp_1_1sidemu.html">sidemu</a> *chip);</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
+<div class="line"><a name="l00240"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#aeae0b012968e3cd11e4129876b891239">  240</a></span>&#160;    <a class="code" href="classlibsidplayfp_1_1sidemu.html">sidemu</a>* <a class="code" href="classlibsidplayfp_1_1Mixer.html#aeae0b012968e3cd11e4129876b891239">getSid</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (i &lt; m_chips.size()) ? m_chips[i] : <span class="keyword">nullptr</span>; }</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#ab0c56421a1ebd4d0f34602b21d45d1ad">setFastForward</a>(<span class="keywordtype">int</span> ff);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a62d3d527cc0b63327f3b484ae8c5c9bc">setVolume</a>(int_least32_t left, int_least32_t right);</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a5f501b2bfcc4d0b496e9e2b181fb1084">setStereo</a>(<span class="keywordtype">bool</span> stereo);</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a92d036045d92f4bce5f37ebf885ac291">  268</a></span>&#160;    uint_least32_t <a class="code" href="classlibsidplayfp_1_1Mixer.html#a92d036045d92f4bce5f37ebf885ac291">samplesGenerated</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_sampleIndex; }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="comment">     * Wait till we consume the buffer.</span></div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keywordtype">bool</span> wait()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_wait; }</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;};</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;}</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// MIXER_H</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a99815bc7986fcb1f3689e91e1edccd7f">setSamplerate</a>(uint_least32_t rate);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
+<div class="line"><a name="l00275"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a464647aef6260daeea89c71420cda0c0">  275</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibsidplayfp_1_1Mixer.html#a464647aef6260daeea89c71420cda0c0">notFinished</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_sampleIndex &lt; m_sampleCount; }</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
+<div class="line"><a name="l00280"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1Mixer.html#a92d036045d92f4bce5f37ebf885ac291">  280</a></span>&#160;    uint_least32_t <a class="code" href="classlibsidplayfp_1_1Mixer.html#a92d036045d92f4bce5f37ebf885ac291">samplesGenerated</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_sampleIndex; }</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160; </div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    <span class="comment">/*</span></div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="comment">     * Wait till we consume the buffer.</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keywordtype">bool</span> wait()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_wait; }</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;};</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;}</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// MIXER_H</span></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Mixer_1_1badBufferSize_html"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer_1_1badBufferSize.html">libsidplayfp::Mixer::badBufferSize</a></div><div class="ttdef"><b>Definition:</b> mixer.h:66</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html">libsidplayfp::Mixer</a></div><div class="ttdef"><b>Definition:</b> mixer.h:42</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a1747668170f76ff95d14b2e9b54de99c"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a1747668170f76ff95d14b2e9b54de99c">libsidplayfp::Mixer::addSid</a></div><div class="ttdeci">void addSid(sidemu *chip)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:140</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a1747668170f76ff95d14b2e9b54de99c"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a1747668170f76ff95d14b2e9b54de99c">libsidplayfp::Mixer::addSid</a></div><div class="ttdeci">void addSid(sidemu *chip)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:142</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a40e4d69a44c54f64959f485d59de9263"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a40e4d69a44c54f64959f485d59de9263">libsidplayfp::Mixer::resetBufs</a></div><div class="ttdeci">void resetBufs()</div><div class="ttdef"><b>Definition:</b> mixer.cpp:40</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a4217c87734e1693f18b6dde6cfbb02ec"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a4217c87734e1693f18b6dde6cfbb02ec">libsidplayfp::Mixer::Mixer</a></div><div class="ttdeci">Mixer()</div><div class="ttdef"><b>Definition:</b> mixer.h:179</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a4620a95bdfaf7bb280550ce25246ee15"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a4620a95bdfaf7bb280550ce25246ee15">libsidplayfp::Mixer::clearSids</a></div><div class="ttdeci">void clearSids()</div><div class="ttdef"><b>Definition:</b> mixer.cpp:134</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a464647aef6260daeea89c71420cda0c0"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a464647aef6260daeea89c71420cda0c0">libsidplayfp::Mixer::notFinished</a></div><div class="ttdeci">bool notFinished() const</div><div class="ttdef"><b>Definition:</b> mixer.h:263</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a4217c87734e1693f18b6dde6cfbb02ec"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a4217c87734e1693f18b6dde6cfbb02ec">libsidplayfp::Mixer::Mixer</a></div><div class="ttdeci">Mixer()</div><div class="ttdef"><b>Definition:</b> mixer.h:191</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a4620a95bdfaf7bb280550ce25246ee15"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a4620a95bdfaf7bb280550ce25246ee15">libsidplayfp::Mixer::clearSids</a></div><div class="ttdeci">void clearSids()</div><div class="ttdef"><b>Definition:</b> mixer.cpp:136</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a464647aef6260daeea89c71420cda0c0"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a464647aef6260daeea89c71420cda0c0">libsidplayfp::Mixer::notFinished</a></div><div class="ttdeci">bool notFinished() const</div><div class="ttdef"><b>Definition:</b> mixer.h:275</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a5ac3a2aefd271a340e18140ac6bd0f14"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a5ac3a2aefd271a340e18140ac6bd0f14">libsidplayfp::Mixer::clockChips</a></div><div class="ttdeci">void clockChips()</div><div class="ttdef"><b>Definition:</b> mixer.cpp:34</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a5f501b2bfcc4d0b496e9e2b181fb1084"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a5f501b2bfcc4d0b496e9e2b181fb1084">libsidplayfp::Mixer::setStereo</a></div><div class="ttdeci">void setStereo(bool stereo)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:154</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a62d3d527cc0b63327f3b484ae8c5c9bc"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a62d3d527cc0b63327f3b484ae8c5c9bc">libsidplayfp::Mixer::setVolume</a></div><div class="ttdeci">void setVolume(int_least32_t left, int_least32_t right)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:180</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a81dad31fc2337fc004235c1198a0d24f"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">libsidplayfp::Mixer::VOLUME_MAX</a></div><div class="ttdeci">static constexpr int_least32_t VOLUME_MAX</div><div class="ttdoc">Maximum allowed volume, must be a power of 2.</div><div class="ttdef"><b>Definition:</b> mixer.h:86</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a92d036045d92f4bce5f37ebf885ac291"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a92d036045d92f4bce5f37ebf885ac291">libsidplayfp::Mixer::samplesGenerated</a></div><div class="ttdeci">uint_least32_t samplesGenerated() const</div><div class="ttdef"><b>Definition:</b> mixer.h:268</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a99815bc7986fcb1f3689e91e1edccd7f"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a99815bc7986fcb1f3689e91e1edccd7f">libsidplayfp::Mixer::setSamplerate</a></div><div class="ttdeci">void setSamplerate(uint_least32_t rate)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:166</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a5f501b2bfcc4d0b496e9e2b181fb1084"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a5f501b2bfcc4d0b496e9e2b181fb1084">libsidplayfp::Mixer::setStereo</a></div><div class="ttdeci">void setStereo(bool stereo)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:156</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a62d3d527cc0b63327f3b484ae8c5c9bc"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a62d3d527cc0b63327f3b484ae8c5c9bc">libsidplayfp::Mixer::setVolume</a></div><div class="ttdeci">void setVolume(int_least32_t left, int_least32_t right)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:182</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a81dad31fc2337fc004235c1198a0d24f"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a81dad31fc2337fc004235c1198a0d24f">libsidplayfp::Mixer::VOLUME_MAX</a></div><div class="ttdeci">static constexpr int_least32_t VOLUME_MAX</div><div class="ttdoc">Maximum allowed volume, must be a power of 2.</div><div class="ttdef"><b>Definition:</b> mixer.h:91</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a92d036045d92f4bce5f37ebf885ac291"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a92d036045d92f4bce5f37ebf885ac291">libsidplayfp::Mixer::samplesGenerated</a></div><div class="ttdeci">uint_least32_t samplesGenerated() const</div><div class="ttdef"><b>Definition:</b> mixer.h:280</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_a99815bc7986fcb1f3689e91e1edccd7f"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#a99815bc7986fcb1f3689e91e1edccd7f">libsidplayfp::Mixer::setSamplerate</a></div><div class="ttdeci">void setSamplerate(uint_least32_t rate)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:168</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_aa312bba0d2eaad4d4a0b91b612c0a918"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#aa312bba0d2eaad4d4a0b91b612c0a918">libsidplayfp::Mixer::doMix</a></div><div class="ttdeci">void doMix()</div><div class="ttdef"><b>Definition:</b> mixer.cpp:46</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_aaf2ff5e4b0ef6cbf9ed6b6af12534b8b"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#aaf2ff5e4b0ef6cbf9ed6b6af12534b8b">libsidplayfp::Mixer::begin</a></div><div class="ttdeci">void begin(short *buffer, uint_least32_t count)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:102</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_ab0ac928b54ce2896e3573b8295ac21e7"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#ab0ac928b54ce2896e3573b8295ac21e7">libsidplayfp::Mixer::MAX_SIDS</a></div><div class="ttdeci">static constexpr unsigned int MAX_SIDS</div><div class="ttdoc">Maximum number of supported SIDs.</div><div class="ttdef"><b>Definition:</b> mixer.h:70</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_ab0c56421a1ebd4d0f34602b21d45d1ad"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#ab0c56421a1ebd4d0f34602b21d45d1ad">libsidplayfp::Mixer::setFastForward</a></div><div class="ttdeci">bool setFastForward(int ff)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:171</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_aeae0b012968e3cd11e4129876b891239"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#aeae0b012968e3cd11e4129876b891239">libsidplayfp::Mixer::getSid</a></div><div class="ttdeci">sidemu * getSid(unsigned int i) const</div><div class="ttdef"><b>Definition:</b> mixer.h:228</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_ab0c56421a1ebd4d0f34602b21d45d1ad"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#ab0c56421a1ebd4d0f34602b21d45d1ad">libsidplayfp::Mixer::setFastForward</a></div><div class="ttdeci">bool setFastForward(int ff)</div><div class="ttdef"><b>Definition:</b> mixer.cpp:173</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1Mixer_html_aeae0b012968e3cd11e4129876b891239"><div class="ttname"><a href="classlibsidplayfp_1_1Mixer.html#aeae0b012968e3cd11e4129876b891239">libsidplayfp::Mixer::getSid</a></div><div class="ttdeci">sidemu * getSid(unsigned int i) const</div><div class="ttdef"><b>Definition:</b> mixer.h:240</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></div><div class="ttdef"><b>Definition:</b> sidemu.h:47</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Nov 3 2024 13:32:09 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Dec 1 2024 14:09:15 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
