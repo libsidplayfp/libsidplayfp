@@ -120,7 +120,7 @@ protected:
     /**
      * Get the filter cutoff register value
      */
-    unsigned int getFC() const { return fc; }
+    inline unsigned int getFC() const { return fc; }
 
 public:
     Filter(FilterModelConfig& fmc);
