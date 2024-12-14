@@ -26,6 +26,7 @@ AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_srcdir)/src \
 ${W32_CPPFLAGS} \
 $(EXSID_CFLAGS) \
+$(USBSID_CFLAGS) \
 $(PTHREAD_CFLAGS) \
 $(FTDI_CFLAGS) \
 @debug_flags@
@@ -68,6 +69,10 @@ src/builders/residfp-builder/residfp/libresidfp.la \
 src/builders/resid-builder/resid/libresid.la \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
 src/builders/resid-builder/libsidplayfp-resid.la
+
+if USBSID_SUPPORT
+  noinst_LTLIBRARIES += src/builders/usbsid-builder/libsidplayfp-usbsid.la
+endif
 
 if HARDSID
   noinst_LTLIBRARIES += src/builders/hardsid-builder/libsidplayfp-hardsid.la
@@ -187,7 +192,7 @@ src/utils/md5Factory.h \
 src/utils/SidDatabase.cpp \
 $(MD5SRC)
 
-src_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS)
+src_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS) $(USBSID_LDFLAGS)
 
 src_libsidplayfp_ladir = $(includedir)/sidplayfp
 
@@ -210,6 +215,10 @@ src/builders/resid-builder/libsidplayfp-resid.la \
 $(LIBGCRYPT_LIBS)
 
 src_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
+
+if USBSID_SUPPORT
+  src_libsidplayfp_la_LIBADD += src/builders/usbsid-builder/libsidplayfp-usbsid.la
+endif
 
 if HARDSID
   src_libsidplayfp_la_LIBADD += src/builders/hardsid-builder/libsidplayfp-hardsid.la
@@ -346,6 +355,31 @@ src/builders/resid-builder/resid-emu.h
 src_builders_resid_builder_libsidplayfp_resid_la_LIBADD = \
 src/builders/resid-builder/resid/libresid.la
 
+if USBSID_SUPPORT
+
+usbsid_src = \
+  src/builders/usbsid-builder/driver/USBSID.cpp \
+  src/builders/usbsid-builder/driver/USBSID.h
+
+  # src/builders/usbsid-builder/driver/USBSIDInterface.cpp \
+  # src/builders/usbsid-builder/driver/USBSIDInterface.h
+
+src_builders_usbsid_builder_libsidplayfp_usbsid_ladir = $(includedir)/sidplayfp/builders
+src_builders_usbsid_builder_libsidplayfp_usbsid_la_HEADERS = \
+src/builders/usbsid-builder/usbsid.h
+
+src_builders_usbsid_builder_libsidplayfp_usbsid_la_SOURCES = \
+src/builders/usbsid-builder/usbsid-builder.cpp  \
+src/builders/usbsid-builder/usbsid-emu.cpp \
+src/builders/usbsid-builder/usbsid-emu.h \
+$(usbsid_src)
+
+src_builders_usbsid_builder_libsidplayfp_usbsid_la_LIBADD = \
+    $(USBSID_LIBS) \
+    $(PTHREAD_LIBS)
+
+endif
+
 if HARDSID
 src_builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
 src_builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
@@ -358,9 +392,10 @@ else
 endif
 
 src_builders_hardsid_builder_libsidplayfp_hardsid_la_SOURCES = \
-$(hardsid_src) \
 src/builders/hardsid-builder/hardsid-builder.cpp  \
-src/builders/hardsid-builder/hardsid-emu.h
+src/builders/hardsid-builder/hardsid-emu.h \
+$(hardsid_src)
+
 endif
 
 
@@ -428,11 +463,11 @@ $(DEMO_SRC) \
 test/test \
 src/builders/residfp-builder/residfp/resample/test
 
-test_demo_SOURCES = test/demo.cpp 
+test_demo_SOURCES = test/demo.cpp
 
 test_demo_LDADD = src/libsidplayfp.la
 
-test_test_SOURCES = test/test.cpp 
+test_test_SOURCES = test/test.cpp
 
 test_test_LDADD = src/libsidplayfp.la
 

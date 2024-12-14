@@ -67,7 +67,7 @@ public:
 
 public:
     /// Maximum number of supported SIDs
-    static constexpr unsigned int MAX_SIDS = 3;
+    static constexpr unsigned int MAX_SIDS = 3; /* ISSUE: FOR MORE THEN 3 SID TUNES */
 
 private:
     static constexpr int_least32_t SCALE_FACTOR = 1 << 16;
