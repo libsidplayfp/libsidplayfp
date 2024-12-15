@@ -2,10 +2,14 @@
 #ifndef USBSID_EMU_H
 #define USBSID_EMU_H
 
+#include <stdint.h>
+
+#include "sidplayfp/SidConfig.h"
 #include "sidemu.h"
 #include "Event.h"
 #include "EventScheduler.h"
 #include "sidplayfp/siddefs.h"
+#include "driver/USBSID.h"
 
 #include "sidcxx11.h"
 
@@ -13,15 +17,10 @@
 #  include "config.h"
 #endif
 
-// #include "usbsid.h"
-#include "driver/USBSID.h"
-// #include "driver/USBSIDInterface.h"
-
-namespace libsidplayfp
-{
-
 // Approx 60ms
 #define USBSID_DELAY_CYCLES 60000
+namespace libsidplayfp
+{
 
 /***************************************************************************
  * USBSID SID Specialisation
@@ -29,34 +28,28 @@ namespace libsidplayfp
 class USBSID final : public sidemu, private Event//, public USBSIDBuilder
 {
 private:
-    friend class USBSIDBuilder;
-
-    // USBSID specific data
-    USBSID_NS::USBSID_Class usbsid;
-    static unsigned int sid;
+    /* USBSID specific data */
+    USBSID_NS::USBSID_Class &m_sid;
     static unsigned int m_sidFree[4];
-    static unsigned int num;
-    static unsigned int m_instance;
-    int m_handle;
+    static unsigned int m_sidsUsed;
+    static bool m_sidInitDone;
+    const unsigned int sidno;
 
-    bool m_status;
-    bool readflag;
-
-    uint8_t busValue;
+    bool readflag;  /* To decide if we do a real read or not */
+    uint8_t busValue;  /* Return value on read */
 
     SidConfig::sid_model_t runmodel;  /* Read model type */
 
 private:
-    // unsigned int delay();
-    event_clock_t delay();
+    event_clock_t delay();  /* Event */
 
 public:
     static const char* getCredits();
 
 public:
-    USBSID(sidbuilder *builder, bool threaded);
+    USBSID(sidbuilder *builder, bool threaded, unsigned int sidno);
     ~USBSID() override;
-    bool m_isthreaded;
+    bool m_isthreaded;  /* Threaded dumping of registers and values via USB */
 
     bool getStatus() const { return m_status; }
 
@@ -68,17 +61,16 @@ public:
 
     /* Standard SID functions */
     void clock() override;
-    void model(SidConfig::sid_model_t model, MAYBE_UNUSED bool digiboost) override;
+
+
     void sampling(float systemclock, MAYBE_UNUSED float freq,
         MAYBE_UNUSED SidConfig::sampling_method_t method, bool) override;
+
+    void model(SidConfig::sid_model_t model, MAYBE_UNUSED bool digiboost) override;
 
     /* USBSID specific */
     void flush(void);
     void filter(bool) {}
-
-    // Must lock the SID before using the standard functions.
-    bool lock(EventScheduler *env) override;
-    void unlock() override;
 
 private:
     // Fixed interval timer delay to prevent sidplay2

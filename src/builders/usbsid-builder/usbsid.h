@@ -11,8 +11,6 @@ class SID_EXTERN USBSIDBuilder : public sidbuilder
 private:
     static bool m_initialised;
 
-    static unsigned int m_count;
-
 public:
     USBSIDBuilder(const char * const name);
     ~USBSIDBuilder();

@@ -16,9 +16,8 @@ namespace libsidplayfp
 {
 
 unsigned int USBSID::m_sidFree[4] = {0,0,0,0};
-unsigned int USBSID::sid = 0;
-unsigned int USBSID::num = USBSID_MAXSID;
-unsigned int USBSID::m_instance = 0;
+unsigned int USBSID::m_sidsUsed = 0;
+bool USBSID::m_sidInitDone = false;
 
 const char* USBSID::getCredits()
 {
@@ -27,91 +26,76 @@ const char* USBSID::getCredits()
         "\t(C) 2024 LouD\n";
 }
 
-USBSID::USBSID(sidbuilder *builder, bool threaded) :
+USBSID::USBSID(sidbuilder *builder, bool threaded, unsigned int count) :
     sidemu(builder),
     Event("USBSID Delay"),
-    m_status(false),
+    m_sid(*(new USBSID_NS::USBSID_Class)),
     m_isthreaded(false),
     readflag(false),
     busValue(0),
-    m_handle(0)
-    // m_instance(sid++)
+    sidno(count)
 {
-    /* sid++; */
-    printf("[%s %s %d]A sid:%d num:%d m_sidFree:%d%d%d%d m_instance:%d m_status:%d\n",
-        __func__, builder->name(), builder->usedDevices(), sid, num,
-        m_sidFree[0], m_sidFree[1], m_sidFree[2], m_sidFree[3],
-        this->m_instance, this->m_status);
-    /* unsigned int num = 4; */
-    for (int i = 0; i < 4; i++)
-    {
-        printf("[%s]A num:%d i:%d m_sidFree[i]:%d sid:%d\n", __func__, num, i, m_sidFree[i], sid);
-        if (m_sidFree[i] == 0)
-        {
-            sid = i;
-            m_sidFree[i] = 1;
-            num = i;
-            break;
-        }
-        printf("[%s]B num:%d i:%d m_sidFree[i]:%d sid:%d\n", __func__, num, i, m_sidFree[i], sid);
-    }
-
-    // All sids in use?!?
-    if (num == 4)
+    if (sidno < USBSID_MAXSID) {  /* Any sids available? */
+        if (m_sidFree[sidno] == 0) m_sidFree[sidno] = 1;
+    } else { /* All sids in use */
         return;
+    }
+    printf("[%s] sidno:%d m_sidFree[all]:[%d%d%d%d]\n",
+        __func__, sidno, m_sidFree[0], m_sidFree[1], m_sidFree[2], m_sidFree[3]);
 
-    /* m_handle = num; */
-    printf("[%s]B sid:%d num:%d m_sidFree:%d%d%d%d m_instance:%d m_status:%d\n",
-        __func__, sid, num,
-        m_sidFree[0], m_sidFree[1], m_sidFree[2], m_sidFree[3],
-        this->m_instance, this->m_status);
-    /* usbsid driver is initialized in usbsid-emu.h */
-    if (!usbsid.us_Initialised)
+    if (!m_sid.us_Initialised)
     {
         m_error = "out of memory";
         return;
     }
 
-    {
-        /* Only start the object driver once */
-        m_handle = sid;
-        if (sid == 0 && m_instance == 0) {
-            /* Set threaded option */
-            m_isthreaded = threaded;
-            /* Start the fucker */
-            if (usbsid.USBSID_Init(m_isthreaded) < 0)
-            {
-                m_error = "USBSID init failed";
-                return;
-            }
-            m_instance = 1;  /* TODO: Per USB devoce */
+    /* Only start the object driver once */
+    if (sidno == 0) {
+        /* Set threaded option */
+        m_isthreaded = threaded;
+        /* Start the fucker */
+        if (m_sid.USBSID_Init(m_isthreaded) < 0)
+        {
+            m_error = "USBSID init failed";
+            return;
         }
+        // m_instance = 1;  /* USB device access ~ finish this later */
     }
-    printf("[%s]C m_handle:%d sid:%d num:%d m_sidFree:%d%d%d%d m_instance:%d m_status:%d\n",
-        __func__, m_handle, sid, num,
-        m_sidFree[0], m_sidFree[1], m_sidFree[2], m_sidFree[3],
-        this->m_instance, this->m_status);
-    m_status = true;
-    sidemu::reset();
+
+    /* NASTY WORKAROUND */
+    if(USBSID::m_sidInitDone == false) {
+        reset(0);
+        USBSID::m_sidInitDone = true; // update the static member here
+    }
 }
 
 USBSID::~USBSID()
 {
-    printf("[%s] BREAKDOWN POO!\n", __func__);
-    reset(0);
-    /* sid--; */
-    /* m_sidFree[m_instance] = 0; */
+    printf("[%s] BREAKDOWN POO! sidno:%d\n", __func__, sidno);
+    m_sidFree[sidno] = 0;
+    if (sidno == 0) {
+        reset(0);
+        delete &m_sid;
+    }
 }
 
 void USBSID::reset(uint8_t volume)
 {
 
     (void)volume;
-    usbsid.USBSID_Pause();
-    usbsid.USBSID_Reset();
+
+    /* NASTY WORKAROUND */
+    if (USBSID::m_sidInitDone == true) {
+        USBSID::m_sidsUsed++;
+    }
+    uint8_t sid = (sidno > (USBSID::m_sidsUsed - 1)) ? (USBSID::m_sidsUsed - 1) : sidno;
+    printf("[%s] m_sidInitDone:%d m_sidsUsed:%d sid:%d sidno:%d volume:%X", __func__, USBSID::m_sidInitDone, USBSID::m_sidsUsed, sid, sidno, volume);
+    std::cout << " address of `this`: " << this << '\n';
 
     m_accessClk = 0;
     readflag = false;
+    m_sid.USBSID_Reset();
+    m_sid.USBSID_Write(0x18, volume, 0); /* Testing volume writes */
 }
 
 event_clock_t USBSID::delay()
@@ -122,8 +106,7 @@ event_clock_t USBSID::delay()
     while (cycles > 0xffff)
     {
         if (cycles > 0) {
-            usbsid.USBSID_WaitForCycle(0xffff);
-            // usbsid.WaitForCycle(cycles);
+            m_sid.USBSID_WaitForCycle(0xffff);
         }
         cycles -= 0xffff;
     }
@@ -133,8 +116,7 @@ event_clock_t USBSID::delay()
 void USBSID::clock()
 {
     const unsigned int cycles = delay();
-    if (cycles)
-        usbsid.USBSID_WaitForCycle(cycles);
+    if (cycles) m_sid.USBSID_WaitForCycle(cycles);
 }
 
 uint8_t USBSID::read(uint_least8_t addr)
@@ -146,18 +128,19 @@ uint8_t USBSID::read(uint_least8_t addr)
 
     if (!readflag)
     {
-#ifdef DEBUG
-        printf("\nWARNING: Read support is limited. This file may not play correctly!\n");
-#endif
-        /* NOTE: NOT USED OR IMPLEMENTED YET! */
         readflag = true;
-        // Here we implement the "safe" detection routine return values
+        // Here we can implement any "safe" detection routine return values if we want to
         // if (0x1b == addr) {	// we could implement a commandline-chosen return byte here
             // return (SidConfig::MOS8580 == runmodel) ? 0x02 : 0x03;
         // }
     }
 
-    const unsigned int cycles = delay();
+    /* const unsigned int cycles = delay();
+    if (cycles) {  //TODO: change this to be only needed if there is to be an external cycle delayer (lol)
+        m_sid.USBSID_WaitForCycle(cycles);
+    } */
+
+    clock();
 
     if (readflag && !m_isthreaded) {
 
@@ -165,24 +148,27 @@ uint8_t USBSID::read(uint_least8_t addr)
         // USBSID_clkdread(usbsid, cycles, addr, &busValue);	// busValue is updated on valid reads
         // return busValue;
     }
-    return 0x0;
+    return busValue;  // always return the busValue for now ~ need to fix and finish this!
 }
 
 void USBSID::write(uint_least8_t addr, uint8_t data)
 {
     busValue = data;
-    /* printf("[W]$%04X$%02X:%d:%d:%d\n", addr, data, sid, m_instance, m_handle); */
+    /* NASTY WORKAROUND */
+    uint8_t sid = (sidno > (USBSID::m_sidsUsed - 1)) ? (USBSID::m_sidsUsed - 1) : sidno;
+    uint_least8_t address = ((0x20 * sid) + addr);
 
     if (addr > 0x18)
         return;
 
     const unsigned int cycles = delay();
-    if (cycles) {
-        usbsid.USBSID_WaitForCycle(cycles);
+    if (cycles) {  /* TODO: change this to be only needed if there is to be an external cycle delayer (lol) */
+        m_sid.USBSID_WaitForCycle(cycles);
     }
 
-    if (!m_isthreaded) usbsid.USBSID_Write(addr, data, cycles);
-    if (m_isthreaded) usbsid.USBSID_RingPush(addr, data, cycles);
+    /* clock(); */
+    if (!m_isthreaded) m_sid.USBSID_Write(address, data, cycles);
+    if (m_isthreaded) m_sid.USBSID_RingPush(address, data, cycles);
 }
 
 void USBSID::model(SidConfig::sid_model_t model, MAYBE_UNUSED bool digiboost)
@@ -196,11 +182,7 @@ void USBSID::sampling(float systemclock, MAYBE_UNUSED float freq,
 {
     (void)freq; /* Audio frequency is not used for USBSID-Pico */
     (void)method; /* Interpolation method is not used for USBSID-Pico */
-    usbsid.USBSID_SetClockRate((long)systemclock);
-    printf("[%s] m_handle:%d m_handle:%d sid:%d num:%d m_instance:%d m_status:%d m_sidFree:%d%d%d%d\n",
-        __func__, m_handle, this->m_handle, this->sid, this->num,
-        this->m_instance, this->m_status,
-        m_sidFree[0], m_sidFree[1], m_sidFree[2], m_sidFree[3]);
+    if (sidno == 0) m_sid.USBSID_SetClockRate((long)systemclock);  /* Set the USBSID internal oscillator speed */
 }
 
 void USBSID::event() /* Afaik only gets called from Sidplay2!? */
@@ -214,7 +196,7 @@ void USBSID::event() /* Afaik only gets called from Sidplay2!? */
     else
     {
         m_accessClk += cycles;
-        usbsid.USBSID_WaitForCycle(cycles);
+        m_sid.USBSID_WaitForCycle(cycles);
         eventScheduler->schedule(*this, USBSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
     }
 }
@@ -223,20 +205,6 @@ void USBSID::flush() /* Only gets call on player exit!? */
 {
     event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     printf("[%s] dafuq is this? %lu\n", __func__, cycles);  // TODO: REMOVE ME
-}
-
-bool USBSID::lock(EventScheduler* env)
-{
-    sidemu::lock(env);
-    eventScheduler->schedule(*this, USBSID_DELAY_CYCLES, EVENT_CLOCK_PHI1);
-
-    return true;
-}
-
-void USBSID::unlock()
-{
-    eventScheduler->cancel(*this);
-    sidemu::unlock();
 }
 
 }
