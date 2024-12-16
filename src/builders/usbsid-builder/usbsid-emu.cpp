@@ -6,10 +6,8 @@
 #include <fcntl.h>
 #include <sstream>
 #include <unistd.h>
-#include <iostream>
 
 #include "driver/USBSID.h"
-// #include "driver/USBSIDInterface.h"
 
 #include "sidcxx11.h"
 
@@ -75,6 +73,8 @@ USBSID::~USBSID()
     printf("[%s] BREAKDOWN POO! sidno:%d\n", __func__, sidno);
     m_sidFree[sidno] = 0;
     if (sidno == 0) {
+        USBSID::m_sidInitDone = false;
+        USBSID::m_sidsUsed = 0;
         reset(0);
         delete &m_sid;
     }
@@ -91,7 +91,7 @@ void USBSID::reset(uint8_t volume)
     }
     uint8_t sid = (sidno > (USBSID::m_sidsUsed - 1)) ? (USBSID::m_sidsUsed - 1) : sidno;
     printf("[%s] m_sidInitDone:%d m_sidsUsed:%d sid:%d sidno:%d volume:%X", __func__, USBSID::m_sidInitDone, USBSID::m_sidsUsed, sid, sidno, volume);
-    std::cout << " address of `this`: " << this << '\n';
+    printf(" address of `this`: %p\n", this);
 
     m_accessClk = 0;
     readflag = false;
