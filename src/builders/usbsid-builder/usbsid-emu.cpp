@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sstream>
 #include <unistd.h>
+#include <iostream>
 
 #include "driver/USBSID.h"
 // #include "driver/USBSIDInterface.h"
