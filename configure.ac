@@ -298,7 +298,7 @@ AC_ARG_WITH(
 # USBSID support requires libusb
 AS_IF(
     [test "x$with_usbsid" != "xno"],
-    [PKG_CHECK_MODULES(LIBUSB,
+    [PKG_CHECK_MODULES(USBSID,
         [libusb-1.0],
         [AC_DEFINE([HAVE_USBSID], 1, [Define to 1 if you have libusb (-libusb-1.0).])
         build_usbsid_builder=yes],
