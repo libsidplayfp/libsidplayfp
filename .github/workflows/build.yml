@@ -22,7 +22,8 @@ jobs:
         sudo apt-get install \
           libgcrypt20-dev \
           xa65 \
-          libftdi1-dev
+          libftdi1-dev \
+          libusb-1.0-0-dev
     - name: deps [macOS]
       if: runner.os == 'macOS'
       run: |
@@ -46,7 +47,7 @@ jobs:
     - name: bootstrap
       run: autoreconf -vfi
     - name: configure
-      run: ./configure
+      run: ./configure --with-usbsid
     - name: make distcheck
       run: |
         if [ '${{ runner.os }}' == 'macOS' ]; then
