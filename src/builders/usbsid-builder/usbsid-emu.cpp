@@ -81,7 +81,7 @@ USBSID::~USBSID()
 
 void USBSID::reset(uint8_t volume)
 {
-
+    using namespace std;
     (void)volume;
 
     /* NASTY WORKAROUND */
