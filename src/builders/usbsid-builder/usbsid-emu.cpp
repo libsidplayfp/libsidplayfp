@@ -63,7 +63,7 @@ USBSID::USBSID(sidbuilder *builder, bool threaded, unsigned int count) :
 
     /* NASTY WORKAROUND */
     if(USBSID::m_sidInitDone == false) {
-        reset(0);
+        m_sid.USBSID_Reset();
         USBSID::m_sidInitDone = true; // update the static member here
     }
 }
@@ -83,7 +83,6 @@ USBSID::~USBSID()
 void USBSID::reset(uint8_t volume)
 {
     using namespace std;
-    (void)volume;
 
     /* NASTY WORKAROUND */
     if (USBSID::m_sidInitDone == true) {
@@ -95,8 +94,10 @@ void USBSID::reset(uint8_t volume)
 
     m_accessClk = 0;
     readflag = false;
-    m_sid.USBSID_Reset();
-    m_sid.USBSID_Write(0x18, volume, 0); /* Testing volume writes */
+    if (sidno == 0 && m_sidInitDone == true) {
+        m_sid.USBSID_Reset();
+    }
+    m_sid.USBSID_Write((sidno * 0x20) + 0x18, volume); /* Testing volume writes */
 }
 
 event_clock_t USBSID::delay()
@@ -163,13 +164,12 @@ void USBSID::write(uint_least8_t addr, uint8_t data)
         return;
 
     const unsigned int cycles = delay();
-    if (cycles) {  /* TODO: change this to be only needed if there is to be an external cycle delayer (lol) */
+    if (cycles) {  /* change this to be only needed if there is to be an external cycle delayer (lol) */
         m_sid.USBSID_WaitForCycle(cycles);
     }
 
-    /* clock(); */
-    if (!m_isthreaded) m_sid.USBSID_Write(address, data, cycles);
-    if (m_isthreaded) m_sid.USBSID_RingPush(address, data, cycles);
+    if (!m_isthreaded) m_sid.USBSID_Write(address, data);
+    if (m_isthreaded) m_sid.USBSID_RingPushCycled(address, data, cycles); // << ADD CYCLES HERE
 }
 
 void USBSID::model(SidConfig::sid_model_t model, MAYBE_UNUSED bool digiboost)
