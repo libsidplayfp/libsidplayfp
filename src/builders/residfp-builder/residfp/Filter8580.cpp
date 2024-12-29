@@ -42,7 +42,8 @@ unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
     (filt3 ? Vsum : Vmix) += V3;
     (filtE ? Vsum : Vmix) += Ve;
 
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
+    const int Isum = currentResonance[Vbp] + Vlp + Vsum;
+    Vhp = currentSummer[Isum / sum_div];
     Vbp = hpIntegrator.solve(Vhp);
     Vlp = bpIntegrator.solve(Vbp);
 
@@ -50,7 +51,7 @@ unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
     if (bp) Vmix += Vbp;
     if (hp) Vmix += Vhp;
 
-    return currentVolume[currentMixer[Vmix]];
+    return currentVolume[currentMixer[Vmix / mix_div]];
 }
 
 /**

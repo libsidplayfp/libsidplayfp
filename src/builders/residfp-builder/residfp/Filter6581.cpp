@@ -42,7 +42,8 @@ unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
     (filt3 ? Vsum : Vmix) += V3;
     (filtE ? Vsum : Vmix) += Ve;
 
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
+    const int Isum = currentResonance[Vbp] + Vlp + Vsum;
+    Vhp = currentSummer[Isum / sum_div];
     Vbp = hpIntegrator.solve(Vhp);
     Vlp = bpIntegrator.solve(Vbp);
 
@@ -56,7 +57,7 @@ unsigned short Filter6581::clock(int voice1, int voice2, int voice3)
     constexpr int filterGain = static_cast<int>(0.93 * (1 << 12));
     Vfilt = (Vfilt * filterGain) >> 12;
 
-    return currentVolume[currentMixer[Vmix + Vfilt]];
+    return currentVolume[currentMixer[(Vmix + Vfilt) / mix_div]];
 }
 
 Filter6581::~Filter6581()
