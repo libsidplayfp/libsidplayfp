@@ -47,9 +47,10 @@ public:
     static const char* getCredits();
 
 public:
-    USBSID(sidbuilder *builder, bool threaded, unsigned int sidno);
+    USBSID(sidbuilder *builder, bool threaded, bool cycled, unsigned int sidno);
     ~USBSID() override;
     bool m_isthreaded;  /* Threaded dumping of registers and values via USB */
+    bool m_iscycled;  /* Attempt to do cycle exact writes */
 
     bool getStatus() const { return m_status; }
 

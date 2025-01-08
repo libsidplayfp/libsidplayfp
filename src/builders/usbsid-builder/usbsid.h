@@ -16,6 +16,7 @@ public:
     ~USBSIDBuilder();
 
     bool m_isthreaded;
+    bool m_iscycled;
 
     /**
      * Available sids.
