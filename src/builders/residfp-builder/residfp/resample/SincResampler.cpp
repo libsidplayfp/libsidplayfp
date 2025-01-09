@@ -62,7 +62,7 @@ constexpr int BITS = 16;
  * @param x evaluate I0 at x
  * @return value of I0 at x.
  */
-double I0(double x)
+constexpr double I0(double x)
 {
     double sum = 1.;
     double u = 1.;
@@ -312,7 +312,7 @@ SincResampler::SincResampler(
         firTable = new matrix_t(firRES, firN);
 
         // The cutoff frequency is midway through the transition band, in effect the same as nyquist.
-        const double wc = PI;
+        constexpr double wc = PI;
 
         // Calculate the sinc tables.
         const double scale = 32768.0 * wc * inv_cyclesPerSampleD / PI;
