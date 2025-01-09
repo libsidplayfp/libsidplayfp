@@ -28,6 +28,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <numeric>
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -220,11 +221,7 @@ int convolve(const int* a, const short* b, int bLength)
 #else
     int out = 0;
 #endif
-
-    for (int i = 0; i < bLength; i++)
-    {
-        out += a[i] * static_cast<int>(b[i]);
-    }
+    out = std::inner_product(a, a+bLength, b, out);
 
     return (out + (1 << 14)) >> 15;
 }
