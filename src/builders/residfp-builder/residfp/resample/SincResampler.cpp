@@ -91,6 +91,9 @@ constexpr double I0(double x)
  */
 int convolve(const int* a, const short* b, int bLength)
 {
+#if defined(__has_cpp_attribute) && __has_cpp_attribute( assume )
+    [[assume( bLength > 0 )]];
+#endif
 #ifdef HAVE_SMMINTRIN_H
     int out = 0;
 
