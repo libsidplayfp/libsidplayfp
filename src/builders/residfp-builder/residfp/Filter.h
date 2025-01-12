@@ -42,7 +42,6 @@ private:
     unsigned short** resonance;
     unsigned short** volume;
 
-protected:
     FilterModelConfig& fmc;
 
     /// Current filter/voice mixer setting.
@@ -57,6 +56,7 @@ protected:
     /// Current volume amplifier setting.
     unsigned short* currentVolume = nullptr;
 
+protected:
     /// Filter highpass state.
     int Vhp = 0;
 
@@ -66,6 +66,7 @@ protected:
     /// Filter lowpass state.
     int Vlp = 0;
 
+private:
     /// Filter external input.
     int Ve = 0;
 
@@ -83,6 +84,7 @@ protected:
     /// Switch voice 3 off.
     bool voice3off = false;
 
+protected:
     /// Highpass, bandpass, and lowpass filter modes.
     //@{
     bool hp = false;
@@ -99,6 +101,12 @@ private:
 
     /// Selects which inputs to route through filter.
     unsigned char filt = 0;
+
+private:
+    inline int getNormalizedVoice(Voice& v) const
+    {
+        return fmc.getNormalizedVoice(v.output(), v.envelope()->output());
+    }
 
 protected:
     /**
@@ -123,6 +131,8 @@ protected:
      */
     inline unsigned int getFC() const { return fc; }
 
+    virtual int solveIntegrators() = 0;
+
 public:
     Filter(FilterModelConfig& fmc);
 
@@ -136,7 +146,7 @@ public:
      * @param v3 voice 3 in
      * @return filtered output
      */
-    virtual unsigned short clock(int v1, int v2, int v3) = 0;
+    unsigned short clock(Voice& v1, Voice& v2, Voice& v3);
 
     /**
      * Enable filter.
@@ -184,12 +194,39 @@ public:
      * @param input a signed 16 bit sample
      */
     void input(short input) { Ve = fmc.getNormalizedVoice(input/32768.f, 0); }
-
-    inline int getNormalizedVoice(Voice& v) const
-    {
-        return fmc.getNormalizedVoice(v.output(), v.envelope()->output());
-    }
 };
+
+} // namespace reSIDfp
+
+#if RESID_INLINING || defined(FILTER_CPP)
+
+namespace reSIDfp
+{
+
+RESID_INLINE
+unsigned short Filter::clock(Voice& voice1, Voice& voice2, Voice& voice3)
+{
+    const int V1 = getNormalizedVoice(voice1);
+    const int V2 = getNormalizedVoice(voice2);
+    // Voice 3 is silenced by voice3off if it is not routed through the filter.
+    const int V3 = (filt3 || !voice3off) ? getNormalizedVoice(voice3) : 0;
+
+    int Vsum = 0;
+    int Vmix = 0;
+
+    (filt1 ? Vsum : Vmix) += V1;
+    (filt2 ? Vsum : Vmix) += V2;
+    (filt3 ? Vsum : Vmix) += V3;
+    (filtE ? Vsum : Vmix) += Ve;
+
+    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
+
+    Vmix += solveIntegrators();
+
+    return currentVolume[currentMixer[Vmix]];
+}
+
+#endif
 
 } // namespace reSIDfp
 
