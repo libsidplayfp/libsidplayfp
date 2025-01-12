@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -72,7 +72,7 @@ constexpr unsigned int OSC_DAC_BITS = 12;
  *
  *        ldx #$00
  *        lda #$38        ; Tweak this to find the "zero" level
- *l       cmp $d41b
+ * l      cmp $d41b
  *        bne l
  *        stx $d40e        ; Stop frequency counter - freeze waveform output
  *        brk
@@ -139,6 +139,10 @@ SID::SID() :
     resampler(nullptr),
     cws(AVERAGE)
 {
+    voice[0].setOtherVoices(voice[2], voice[1]);
+    voice[1].setOtherVoices(voice[0], voice[2]);
+    voice[2].setOtherVoices(voice[1], voice[0]);
+
     setChipModel(MOS8580);
     reset();
 }
@@ -177,7 +181,7 @@ void SID::voiceSync(bool sync)
         // Synchronize the 3 waveform generators.
         for (int i = 0; i < 3; i++)
         {
-            voice[i].wave()->synchronize(voice[(i + 1) % 3].wave(), voice[(i + 2) % 3].wave());
+            voice[i].wave()->synchronize();
         }
     }
 
@@ -189,7 +193,7 @@ void SID::voiceSync(bool sync)
         WaveformGenerator* const wave = voice[i].wave();
         const unsigned int freq = wave->readFreq();
 
-        if (wave->readTest() || freq == 0 || !voice[(i + 1) % 3].wave()->readSync())
+        if (wave->readTest() || freq == 0 || !voice[i].wave()->readFollowingVoiceSync())
         {
             continue;
         }
@@ -510,9 +514,9 @@ void SID::clockSilent(unsigned int cycles)
                 voice[1].wave()->clock();
                 voice[2].wave()->clock();
 
-                voice[0].wave()->output(voice[2].wave());
-                voice[1].wave()->output(voice[0].wave());
-                voice[2].wave()->output(voice[1].wave());
+                voice[0].wave()->output();
+                voice[1].wave()->output();
+                voice[2].wave()->output();
 
                 // clock ENV3 only
                 voice[2].envelope()->clock();

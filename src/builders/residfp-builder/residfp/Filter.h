@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -24,6 +24,7 @@
 #define FILTER_H
 
 #include "FilterModelConfig.h"
+#include "Voice.h"
 
 #include "siddefs-fp.h"
 
@@ -184,7 +185,10 @@ public:
      */
     void input(short input) { Ve = fmc.getNormalizedVoice(input/32768.f, 0); }
 
-    inline int getNormalizedVoice(float value, unsigned int env) const { return fmc.getNormalizedVoice(value, env); }
+    inline int getNormalizedVoice(Voice& v) const
+    {
+        return fmc.getNormalizedVoice(v.output(), v.envelope()->output());
+    }
 };
 
 } // namespace reSIDfp

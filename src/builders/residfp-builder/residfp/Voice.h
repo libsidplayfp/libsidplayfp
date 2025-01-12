@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -59,13 +59,12 @@ public:
      *
      * Ideal range [-2048*255, 2047*255].
      *
-     * @param ringModulator Ring-modulator for waveform
      * @return the voice analog output
      */
     RESID_INLINE
-    float output(const WaveformGenerator* ringModulator)
+    float output()
     {
-        unsigned int const wav = waveformGenerator.output(ringModulator);
+        unsigned int const wav = waveformGenerator.output();
         unsigned int const env = envelopeGenerator.output();
 
         // DAC imperfections are emulated by using the digital output
@@ -88,6 +87,16 @@ public:
      * @param dac
      */
     void setEnvDAC(float* dac) { envDAC = dac; }
+
+    /**
+     * Set the modulator voice.
+     *
+     * @param modulator Ring-modulator for waveform
+     */
+    void setOtherVoices(Voice& prev, Voice& next)
+    {
+        waveformGenerator.setOtherWaveforms(prev.wave(), next.wave());
+    }
 
     WaveformGenerator* wave() { return &waveformGenerator; }
 
