@@ -224,7 +224,16 @@ int convolve(const int* a, const short* b, int bLength)
 #else
     int out = 0;
 #endif
+#ifndef __clang__
     out = std::inner_product(a, a+bLength, b, out);
+#else
+    // Apparently clang is unable to fully optimize the above
+    // feed it some plain ol' c code
+    for (int i=0; i<bLength; i++)
+    {
+        out += a[i] * static_cast<int>(b[i]);
+    }
+#endif
 
     return (out + (1 << 14)) >> 15;
 }
