@@ -33,7 +33,7 @@ namespace reSIDfp
  * @param res the resistance value in Ohms
  * @param cap the capacitance value in Farads
  */
-inline double getRC(double res, double cap)
+constexpr inline double getRC(double res, double cap)
 {
     return res * cap;
 }
