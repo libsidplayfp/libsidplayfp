@@ -131,13 +131,6 @@ private:
     void ageBusValue(unsigned int n);
 
     /**
-     * Get output sample.
-     *
-     * @return the output sample
-     */
-    int output();
-
-    /**
      * Calculate the numebr of cycles according to current parameters
      * that it takes to reach sync.
      *
@@ -326,14 +319,6 @@ void SID::ageBusValue(unsigned int n)
 }
 
 RESID_INLINE
-int SID::output()
-{
-    const int input = static_cast<int>(filter->clock(voice[0], voice[1], voice[2]));
-    return externalFilter.clock(input);
-}
-
-
-RESID_INLINE
 int SID::clock(unsigned int cycles, short* buf)
 {
     ageBusValue(cycles);
@@ -357,7 +342,9 @@ int SID::clock(unsigned int cycles, short* buf)
                 voice[1].envelope()->clock();
                 voice[2].envelope()->clock();
 
-                if (unlikely(resampler->input(output())))
+                const int sidOutput = static_cast<int>(filter->clock(voice[0], voice[1], voice[2]));
+                const int c64Output = externalFilter.clock(sidOutput);
+                if (unlikely(resampler->input(c64Output)))
                 {
                     buf[s++] = resampler->getOutput(scaleFactor);
                 }
