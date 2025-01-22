@@ -65,8 +65,10 @@ enabled by default
 
 --with-simd=<sse4/neon/none>
 enable SIMD code in reSIDfp that might increase resampling performance.
+Requires compiler support for the SIMD instruction set, (i.e. -msse4).
 Be aware that this is processor specific and the compiler could actually produce
-more optimized code with the appropriate flags. Use only if you know what you're doing.
+more optimized code with the appropriate flags (i.e. -march=x86-64-v3 -ftree-vectorize).
+Use only if you know what you're doing.
 neon is currently unimplemented.
 none by default
 
