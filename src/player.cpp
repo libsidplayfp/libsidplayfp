@@ -166,6 +166,16 @@ void Player::initialise()
     }
 
     m_c64.resetCpu();
+
+    // Run for some cycles until the initialization routine is done
+    for (int i = 0; i < 140; i++)
+    {
+        for (int i = 0; i < 1000; i++)
+            m_c64.clock();
+
+        m_mixer.clockChips();
+        m_mixer.resetBufs();
+    }
 }
 
 bool Player::load(SidTune *tune)
@@ -182,6 +192,7 @@ bool Player::load(SidTune *tune)
             return false;
         }
     }
+
     return true;
 }
 
