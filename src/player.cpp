@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -132,6 +132,10 @@ void Player::initialise()
 
     m_c64.reset();
 
+    // Run for a random number of cycles
+    for (int i = 0; i < 20000; i++) // FIXME
+        m_c64.clock();
+
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
     const uint_least32_t size = static_cast<uint_least32_t>(tuneInfo->loadAddr()) + tuneInfo->c64dataLen() - 1;
@@ -168,9 +172,9 @@ void Player::initialise()
     m_c64.resetCpu();
 
     // Run for some cycles until the initialization routine is done
-    for (int i = 0; i < 140; i++)
+    for (int i = 0; i < 140; i++) // FIXME
     {
-        for (int i = 0; i < 1000; i++)
+        for (int j = 0; j < 1000; j++)
             m_c64.clock();
 
         m_mixer.clockChips();
