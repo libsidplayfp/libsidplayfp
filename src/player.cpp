@@ -132,12 +132,6 @@ void Player::initialise()
 
     m_c64.reset();
 
-    // Run for a random number of cycles
-    for (int i = 0; i < 3000; i++) // FIXME
-        m_c64.clock();
-    m_mixer.clockChips();
-    m_mixer.resetBufs();
-
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
     const uint_least32_t size = static_cast<uint_least32_t>(tuneInfo->loadAddr()) + tuneInfo->c64dataLen() - 1;
@@ -153,8 +147,16 @@ void Player::initialise()
         powerOnDelay = (uint_least16_t)((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
     }
 
+    // Run for calculated number of cycles
+    for (int i = 0; i <= powerOnDelay; i++)
+    {
+        for (int j = 0; j < 100; j++)
+            m_c64.clock();
+        m_mixer.clockChips();
+        m_mixer.resetBufs();
+    }
+
     psiddrv driver(m_tune->getInfo());
-    driver.powerOnDelay(powerOnDelay);
     if (!driver.drvReloc())
     {
         throw configError(driver.errorString());
@@ -172,6 +174,8 @@ void Player::initialise()
     }
 
     m_c64.resetCpu();
+
+    m_startTime = m_c64.getTimeMs();
 
     // Run for some cycles until the initialization routine is done
     for (int i = 0; i < 140; i++) // FIXME
