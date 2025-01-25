@@ -40,7 +40,7 @@ class EventScheduler;
 class sidbuilder
 {
 protected:
-    typedef std::set<libsidplayfp::sidemu*> emuset_t;
+    using emuset_t = std::set<libsidplayfp::sidemu*>;
 
 private:
     const char * const m_name;
