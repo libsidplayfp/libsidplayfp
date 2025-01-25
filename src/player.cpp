@@ -176,16 +176,14 @@ void Player::initialise()
     m_c64.resetCpu();
 
     m_startTime = m_c64.getTimeMs();
-
+#if 0
     // Run for some cycles until the initialization routine is done
-    for (int i = 0; i < 140; i++) // FIXME
-    {
-        for (int j = 0; j < 1000; j++)
-            m_c64.clock();
+    for (int j = 0; j < 50; j++)
+        m_c64.clock();
 
-        m_mixer.clockChips();
-        m_mixer.resetBufs();
-    }
+    m_mixer.clockChips();
+    m_mixer.resetBufs();
+#endif
 }
 
 bool Player::load(SidTune *tune)
