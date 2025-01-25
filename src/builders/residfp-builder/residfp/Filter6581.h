@@ -334,6 +334,8 @@ protected:
      */
     void updateCenterFrequency() override;
 
+    int solveIntegrators() override;
+
 public:
     Filter6581() :
         Filter(*FilterModelConfig6581::getInstance()),
@@ -343,8 +345,6 @@ public:
     {}
 
     ~Filter6581() override;
-
-    unsigned short clock(int v1, int v2, int v3) override;
 
     /**
      * Set filter curve type based on single parameter.

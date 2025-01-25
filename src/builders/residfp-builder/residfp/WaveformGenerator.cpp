@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -335,14 +335,14 @@ void WaveformGenerator::setPulldownModels(matrix_t* models)
     model_pulldown = models;
 }
 
-void WaveformGenerator::synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const
+void WaveformGenerator::synchronize() const
 {
     // A special case occurs when a sync source is synced itself on the same
     // cycle as when its MSB is set high. In this case the destination will
     // not be synced. This has been verified by sampling OSC3.
-    if (unlikely(msb_rising) && syncDest->sync && !(sync && syncSource->msb_rising))
+    if (unlikely(msb_rising) && nextVoice->sync && !(sync && prevVoice->msb_rising))
     {
-        syncDest->accumulator = 0;
+        nextVoice->accumulator = 0;
     }
 }
 

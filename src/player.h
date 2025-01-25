@@ -84,6 +84,8 @@ private:
 
     sidrandom m_rand;
 
+    uint_least32_t m_startTime = 0;
+
     /// PAL/NTSC switch value
     uint8_t videoSwitch;
 
@@ -149,7 +151,7 @@ public:
 
     void stop();
 
-    uint_least32_t timeMs() const { return m_c64.getTimeMs(); }
+    uint_least32_t timeMs() const { return m_c64.getTimeMs() - m_startTime; }
 
     void debug(const bool enable, FILE *out) { m_c64.debug(enable, out); }
 

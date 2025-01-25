@@ -269,9 +269,10 @@ public:
         return static_cast<unsigned short>(tmp + rnd.getNoise());
     }
 
+    template<int N>
     inline unsigned short getNormalizedCurrentFactor(double wl) const
     {
-        const double tmp = (1 << 13) * currFactorCoeff * wl;
+        const double tmp = (1 << N) * currFactorCoeff * wl;
         assert(tmp > -0.5 && tmp < 65535.5);
         return static_cast<unsigned short>(tmp + 0.5);
     }

@@ -44,8 +44,6 @@ private:
     uint_least16_t m_driverAddr;
     uint_least16_t m_driverLength;
 
-    uint_least16_t m_powerOnDelay;
-
 private:
     /**
      * Get required I/O map to reach address
@@ -57,15 +55,7 @@ private:
 
 public:
     psiddrv(const SidTuneInfo *tuneInfo) :
-        m_tuneInfo(tuneInfo),
-        m_powerOnDelay(0) {}
-
-    /**
-     * Set the power on delay cycles.
-     *
-     * @param delay the delay
-     */
-    void powerOnDelay(uint_least16_t delay) { m_powerOnDelay = delay; }
+        m_tuneInfo(tuneInfo) {}
 
     /**
      * Relocate the driver.

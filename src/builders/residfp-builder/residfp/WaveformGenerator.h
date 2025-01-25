@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem <resid@nimrod.no>
  *
@@ -154,6 +154,12 @@ private:
 
     bool is6581; //-V730_NOINIT this is initialized in the SID constructor
 
+    /// The other two waveform generators, for syncing and ring-mod.
+    //@{
+    const WaveformGenerator* prevVoice;
+    WaveformGenerator* nextVoice;
+    //@}
+
 private:
     void shift_phase2(unsigned int waveform_old, unsigned int waveform_new);
 
@@ -170,6 +176,12 @@ private:
 public:
     void setWaveformModels(matrix_t* models);
     void setPulldownModels(matrix_t* models);
+
+    void setOtherWaveforms(const WaveformGenerator* prev, WaveformGenerator* next)
+    {
+        prevVoice = prev;
+        nextVoice = next;
+    }
 
     /**
      * Set the chip model.
@@ -188,11 +200,8 @@ public:
      * Synchronize oscillators.
      * This must be done after all the oscillators have been clock()'ed,
      * so that they are in the same state.
-     *
-     * @param syncDest The oscillator that will be synced
-     * @param syncSource The sync source oscillator
      */
-    void synchronize(WaveformGenerator* syncDest, const WaveformGenerator* syncSource) const;
+    void synchronize() const;
 
     /**
      * Write FREQ LO register.
@@ -237,10 +246,9 @@ public:
     /**
      * 12-bit waveform output.
      *
-     * @param ringModulator The oscillator ring-modulating current one.
      * @return the waveform generator digital output
      */
-    unsigned int output(const WaveformGenerator* ringModulator);
+    unsigned int output();
 
     /**
      * Read OSC3 value.
@@ -263,9 +271,9 @@ public:
     bool readTest() const { return test; }
 
     /**
-     * Read sync value.
+     * Read sync value from following voice.
      */
-    bool readSync() const { return sync; }
+    bool readFollowingVoiceSync() const { return nextVoice->sync; }
 };
 
 } // namespace reSIDfp
@@ -341,12 +349,12 @@ void WaveformGenerator::clock()
 }
 
 RESID_INLINE
-unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
+unsigned int WaveformGenerator::output()
 {
     // Set output value.
     if (likely(waveform != 0))
     {
-        const unsigned int ix = (accumulator ^ (~ringModulator->accumulator & ring_msb_mask)) >> 12;
+        const unsigned int ix = (accumulator ^ (~prevVoice->accumulator & ring_msb_mask)) >> 12;
 
         // The bit masks no_pulse and no_noise are used to achieve branch-free
         // calculation of the output value.
@@ -368,15 +376,15 @@ unsigned int WaveformGenerator::output(const WaveformGenerator* ringModulator)
         {
             osc3 = waveform_output;
         }
-        
+
         // In the 6581 the top bit of the accumulator may be driven low by combined waveforms
         // when the sawtooth is selected
         if (is6581 && (waveform & 0x2) && ((waveform_output & 0x800) == 0))
         {
-            msb_rising = 0;
+            msb_rising = false;
             accumulator &= 0x7fffff;
         }
-        
+
         write_shift_register();
     }
     else
