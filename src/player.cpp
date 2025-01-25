@@ -133,8 +133,10 @@ void Player::initialise()
     m_c64.reset();
 
     // Run for a random number of cycles
-    for (int i = 0; i < 20000; i++) // FIXME
+    for (int i = 0; i < 3000; i++) // FIXME
         m_c64.clock();
+    m_mixer.clockChips();
+    m_mixer.resetBufs();
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
