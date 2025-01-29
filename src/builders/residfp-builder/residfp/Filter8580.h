@@ -291,6 +291,8 @@ protected:
      */
     void updateCenterFrequency() override;
 
+    int solveIntegrators() override;
+
 public:
     Filter8580() :
         Filter(*FilterModelConfig8580::getInstance()),
@@ -301,8 +303,6 @@ public:
     }
 
     ~Filter8580() override;
-
-    unsigned short clock(int v1, int v2, int v3) override;
 
     /**
      * Set filter curve type based on single parameter.

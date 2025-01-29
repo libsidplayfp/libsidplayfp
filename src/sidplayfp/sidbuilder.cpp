@@ -30,9 +30,8 @@ libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidCon
 {
     m_status = true;
 
-    for (auto sidobj: sidobjs)
+    for (libsidplayfp::sidemu *sid: sidobjs)
     {
-        libsidplayfp::sidemu *sid = (sidobj);
         if (sid->lock(env))
         {
             sid->model(model, digiboost);

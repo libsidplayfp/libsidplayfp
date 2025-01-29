@@ -27,30 +27,17 @@
 namespace reSIDfp
 {
 
-unsigned short Filter8580::clock(int voice1, int voice2, int voice3)
+int Filter8580::solveIntegrators()
 {
-    const int V1 = voice1;
-    const int V2 = voice2;
-    // Voice 3 is silenced by voice3off if it is not routed through the filter.
-    const int V3 = (filt3 || !voice3off) ? voice3 : 0;
-
-    int Vsum = 0;
-    int Vmix = 0;
-
-    (filt1 ? Vsum : Vmix) += V1;
-    (filt2 ? Vsum : Vmix) += V2;
-    (filt3 ? Vsum : Vmix) += V3;
-    (filtE ? Vsum : Vmix) += Ve;
-
-    Vhp = currentSummer[currentResonance[Vbp] + Vlp + Vsum];
     Vbp = hpIntegrator.solve(Vhp);
     Vlp = bpIntegrator.solve(Vbp);
 
-    if (lp) Vmix += Vlp;
-    if (bp) Vmix += Vbp;
-    if (hp) Vmix += Vhp;
+    int Vfilt = 0;
+    if (lp) Vfilt += Vlp;
+    if (bp) Vfilt += Vbp;
+    if (hp) Vfilt += Vhp;
 
-    return currentVolume[currentMixer[Vmix]];
+    return Vfilt;
 }
 
 /**

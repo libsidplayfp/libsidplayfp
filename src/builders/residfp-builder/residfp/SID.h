@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -129,13 +129,6 @@ private:
      * @param n the number of cycles
      */
     void ageBusValue(unsigned int n);
-
-    /**
-     * Get output sample.
-     *
-     * @return the output sample
-     */
-    int output();
 
     /**
      * Calculate the numebr of cycles according to current parameters
@@ -326,26 +319,6 @@ void SID::ageBusValue(unsigned int n)
 }
 
 RESID_INLINE
-int SID::output()
-{
-    const float o1 = voice[0].output(voice[2].wave());
-    const float o2 = voice[1].output(voice[0].wave());
-    const float o3 = voice[2].output(voice[1].wave());
-
-    const unsigned int env1 = voice[0].envelope()->output();
-    const unsigned int env2 = voice[1].envelope()->output();
-    const unsigned int env3 = voice[2].envelope()->output();
-
-    const int v1 = filter->getNormalizedVoice(o1, env1);
-    const int v2 = filter->getNormalizedVoice(o2, env2);
-    const int v3 = filter->getNormalizedVoice(o3, env3);
-
-    const int input = static_cast<int>(filter->clock(v1, v2, v3));
-    return externalFilter.clock(input);
-}
-
-
-RESID_INLINE
 int SID::clock(unsigned int cycles, short* buf)
 {
     ageBusValue(cycles);
@@ -369,7 +342,9 @@ int SID::clock(unsigned int cycles, short* buf)
                 voice[1].envelope()->clock();
                 voice[2].envelope()->clock();
 
-                if (unlikely(resampler->input(output())))
+                const int sidOutput = static_cast<int>(filter->clock(voice[0], voice[1], voice[2]));
+                const int c64Output = externalFilter.clock(sidOutput);
+                if (unlikely(resampler->input(c64Output)))
                 {
                     buf[s++] = resampler->getOutput(scaleFactor);
                 }

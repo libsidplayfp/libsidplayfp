@@ -73,8 +73,7 @@ public:
     void setFc(double wl)
     {
         // Normalized current factor, 1 cycle at 1MHz.
-        // Fit in 5 bits.
-        n_dac = fmc.getNormalizedCurrentFactor(wl);
+        n_dac = fmc.getNormalizedCurrentFactor<17>(wl);
     }
 
     /**

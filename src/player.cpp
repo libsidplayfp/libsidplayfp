@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -147,8 +147,16 @@ void Player::initialise()
         powerOnDelay = (uint_least16_t)((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
     }
 
+    // Run for calculated number of cycles
+    for (int i = 0; i <= powerOnDelay; i++)
+    {
+        for (int j = 0; j < 100; j++)
+            m_c64.clock();
+        m_mixer.clockChips();
+        m_mixer.resetBufs();
+    }
+
     psiddrv driver(m_tune->getInfo());
-    driver.powerOnDelay(powerOnDelay);
     if (!driver.drvReloc())
     {
         throw configError(driver.errorString());
@@ -166,6 +174,16 @@ void Player::initialise()
     }
 
     m_c64.resetCpu();
+
+    m_startTime = m_c64.getTimeMs();
+#if 0
+    // Run for some cycles until the initialization routine is done
+    for (int j = 0; j < 50; j++)
+        m_c64.clock();
+
+    m_mixer.clockChips();
+    m_mixer.resetBufs();
+#endif
 }
 
 bool Player::load(SidTune *tune)
@@ -182,6 +200,7 @@ bool Player::load(SidTune *tune)
             return false;
         }
     }
+
     return true;
 }
 
