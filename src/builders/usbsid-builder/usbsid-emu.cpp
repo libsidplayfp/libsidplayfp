@@ -11,11 +11,17 @@
 
 #include "sidcxx11.h"
 
+/* #define US_DEBUG */
 /* #define USWRITE_DEBUG */
-#ifdef USWRITE_DEBUG
+#ifdef US_DEBUG
 #define DBG(...) printf(__VA_ARGS__)
 #else
 #define DBG(...) ((void)0)
+#endif
+#ifdef USWRITE_DEBUG
+#define WDBG(...) printf(__VA_ARGS__)
+#else
+#define WDBG(...) ((void)0)
 #endif
 
 namespace libsidplayfp
@@ -74,7 +80,7 @@ USBSID::USBSID(sidbuilder *builder, bool threaded, bool cycled, unsigned int cou
 
     /* NASTY WORKAROUND */
     if(USBSID::m_sidInitDone == false) {
-        m_sid.USBSID_Reset();
+        m_sid.USBSID_ResetAllRegisters();
         USBSID::m_sidInitDone = true; // update the static member here
     }
 }
@@ -106,8 +112,7 @@ void USBSID::reset(uint8_t volume)
     m_accessClk = 0;
     readflag = false;
     if (sidno == 0 && m_sidInitDone == true) {
-        if (volume > 0) m_sid.USBSID_Reset();
-        if (volume == 0) m_sid.USBSID_ResetAll();
+        m_sid.USBSID_ResetAllRegisters();
         if (eventScheduler != nullptr)
             eventScheduler->schedule(*this, refresh_rate, EVENT_CLOCK_PHI1);
     }
@@ -152,7 +157,7 @@ uint8_t USBSID::read(uint_least8_t addr)
     }
     uint8_t sid = (sidno > (USBSID::m_sidsUsed - 1)) ? (USBSID::m_sidsUsed - 1) : sidno;
     uint_least8_t address = ((0x20 * sid) + addr);
-    DBG("READ: $%02X:%02X ", address, 0xFF);
+    WDBG("READ: $%02X:%02X ", address, 0xFF);
     event_clock_t cycles = delay();
     if (cycles) {
         m_sid.USBSID_WaitForCycle(cycles);
@@ -182,19 +187,19 @@ void USBSID::write(uint_least8_t addr, uint8_t data)
     /* TODO: CLEAN THIS SHIT UP */
     if (m_isthreaded == 1 && m_iscycled == 1) {
         m_sid.USBSID_WriteRingCycled(address, data, cycles);
-        DBG("WRITE THREADED CYCLED: $%02X:%02X %lu\n", address, data, cycles);
+        WDBG("WRITE THREADED CYCLED: $%02X:%02X (%lu)\n", address, data, cycles);
     };
     if (m_isthreaded != 1 && m_iscycled == 1) {
         m_sid.USBSID_WriteCycled(address, data, cycles);
-        DBG("WRITE CYCLED: $%02X:%02X %lu\n", address, data, cycles);
+        WDBG("WRITE CYCLED: $%02X:%02X (%lu)\n", address, data, cycles);
     };
     if (m_isthreaded == 1 && m_iscycled != 1) {
         m_sid.USBSID_WriteRing(address, data);
-        DBG("WRITE THREADED: $%02X:%02X\n", address, data);
+        WDBG("WRITE THREADED: $%02X:%02X (%lu)\n", address, data, cycles);
     };
     if (m_isthreaded != 1 && m_iscycled != 1) {
         m_sid.USBSID_Write(address, data);
-        DBG("WRITE: $%02X:%02X\n", address, data);
+        WDBG("WRITE: $%02X:%02X (%lu)\n", address, data, cycles);
     };
 }
 
