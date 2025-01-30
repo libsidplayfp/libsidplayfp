@@ -79,8 +79,8 @@ USBSID::USBSID(sidbuilder *builder, bool threaded, bool cycled, unsigned int cou
     }
 
     /* NASTY WORKAROUND */
-    if(USBSID::m_sidInitDone == false) {
-        m_sid.USBSID_ResetAllRegisters();
+    if(sidno == 0 && USBSID::m_sidInitDone == false) {
+        // m_sid.USBSID_ResetAllRegisters();  // BUG: Termporarily disabled
         USBSID::m_sidInitDone = true; // update the static member here
     }
 }
@@ -112,7 +112,7 @@ void USBSID::reset(uint8_t volume)
     m_accessClk = 0;
     readflag = false;
     if (sidno == 0 && m_sidInitDone == true) {
-        m_sid.USBSID_ResetAllRegisters();
+        // m_sid.USBSID_ResetAllRegisters();  // BUG: Termporarily disabled
         if (eventScheduler != nullptr)
             eventScheduler->schedule(*this, refresh_rate, EVENT_CLOCK_PHI1);
     }
