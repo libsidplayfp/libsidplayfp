@@ -35,7 +35,6 @@ private:
     static bool m_sidInitDone;
     const unsigned int sidno;
 
-    bool readflag;  /* To decide if we do a real read or not */
     uint8_t busValue;  /* Return value on read */
 
     SidConfig::sid_model_t runmodel;  /* Read model type */

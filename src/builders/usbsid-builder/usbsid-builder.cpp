@@ -67,7 +67,7 @@ unsigned int USBSIDBuilder::create(unsigned int sids)  /* Always uses the maximu
 
 unsigned int USBSIDBuilder::availDevices() const
 {
-    return 0;  /* 0 means endless devices left */
+    return 1;  /* Always one availabe ~ needs fixing */
 }
 
 const char *USBSIDBuilder::credits() const
