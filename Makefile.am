@@ -31,7 +31,7 @@ $(PTHREAD_CFLAGS) \
 $(FTDI_CFLAGS) \
 @debug_flags@
 
-AM_CXXFLAGS = $(VISIBILITY_CXXFLAGS)
+AM_CXXFLAGS = $(VISIBILITY_CXXFLAGS) $(SIMD_CFLAGS)
 
 #=========================================================
 EXTRA_DIST = \

@@ -153,22 +153,31 @@ AC_ARG_WITH(
 )
 
 AS_IF([test x"$with_simd" != xnone],
-    # Testing for intrinsic headers requires compiler
-    # support activated by specific flags.
-    # These are most likely defined in CXXFLAGS
-    # but AC_CHECK_HEADERS uses only CPPFLAGS
-    # so we need a workaround.
-    [saveCPPFLAGS=$CPPFLAGS
-    CPPFLAGS="$CPPFLAGS $CXXFLAGS"
+    [AS_CASE([$with_simd],
+        [sse4], [
+            AC_MSG_CHECKING([for sse4.1 support])
+            save_CXXFLAGS="$CXXFLAGS"
+            CXXFLAGS="$CXXFLAGS -msse4.1"
 
-    AS_CASE([$with_simd],
-        [sse4], [AC_CHECK_HEADERS([smmintrin.h])],
-        [neon], [AC_CHECK_HEADERS([arm_neon.h])],
+            AC_COMPILE_IFELSE(
+                [AC_LANG_PROGRAM(
+                    [#include <smmintrin.h>],
+                    [return 0;])],
+                [
+                    SIMD_CFLAGS=-msse4.1
+                    AC_MSG_RESULT([yes])
+                ],
+                [
+                    AC_MSG_RESULT([no])
+                ])
+
+            CXXFLAGS="$save_CXXFLAGS"
+        ],
+        [neon], [AC_MSG_WARN([neon is currently unimplemented])],
         [AC_MSG_ERROR([Unrecognized SIMD specified])]
-    )
-
-    CPPFLAGS=$saveCPPFLAGS]
+    )]
 )
+AC_SUBST([SIMD_CFLAGS])
 
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 [AC_COMPILE_IFELSE(

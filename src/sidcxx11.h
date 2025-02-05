@@ -26,6 +26,10 @@
 #endif
 
 
+#ifdef HAVE_CXX23
+#  define HAVE_CXX20
+#endif
+
 #ifdef HAVE_CXX20
 #  define HAVE_CXX17
 #endif
