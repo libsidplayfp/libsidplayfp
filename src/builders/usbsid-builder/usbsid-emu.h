@@ -34,6 +34,7 @@ private:
     static unsigned int m_sidsUsed;
     static bool m_sidInitDone;
     const unsigned int sidno;
+    int m_handle;
 
     uint8_t busValue;  /* Return value on read */
 
@@ -46,9 +47,8 @@ public:
     static const char* getCredits();
 
 public:
-    USBSID(sidbuilder *builder, bool threaded, bool cycled, unsigned int sidno);
+    USBSID(sidbuilder *builder, bool cycled, unsigned int sidno);
     ~USBSID() override;
-    bool m_isthreaded;  /* Threaded dumping of registers and values via USB */
     bool m_iscycled;  /* Attempt to do cycle exact writes */
 
     bool getStatus() const { return m_status; }

@@ -43,7 +43,7 @@ unsigned int USBSIDBuilder::create(unsigned int sids)  /* Always uses the maximu
         try
         {
             /* sidobjs.insert(new libsidplayfp::USBSID(this, m_isthreaded, count)); */
-            std::unique_ptr<libsidplayfp::USBSID> sid(new libsidplayfp::USBSID(this, m_isthreaded, m_iscycled, count));
+            std::unique_ptr<libsidplayfp::USBSID> sid(new libsidplayfp::USBSID(this, m_iscycled, count));
 
             // SID init failed?
             if (!sid->getStatus())
@@ -67,7 +67,7 @@ unsigned int USBSIDBuilder::create(unsigned int sids)  /* Always uses the maximu
 
 unsigned int USBSIDBuilder::availDevices() const
 {
-    return 1;  /* Always one availabe ~ needs fixing */
+    return 0;  /* Always one availabe ~ needs fixing */
 }
 
 const char *USBSIDBuilder::credits() const

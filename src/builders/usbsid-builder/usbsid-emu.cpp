@@ -36,14 +36,14 @@ const char* USBSID::getCredits()
 {
     return
         "USBSID V" VERSION " Engine:\n"
-        "\t(C) 2024 LouD\n";
+        "\t(C) 2024-2025 LouD\n";
 }
 
-USBSID::USBSID(sidbuilder *builder, bool threaded, bool cycled, unsigned int count) :
+USBSID::USBSID(sidbuilder *builder, bool cycled, unsigned int count) :
     sidemu(builder),
     Event("USBSID Delay"),
+    m_handle(-1),
     m_sid(*(new USBSID_NS::USBSID_Class)),
-    m_isthreaded(false),
     m_iscycled(false),
     busValue(0),
     sidno(count)
@@ -53,8 +53,8 @@ USBSID::USBSID(sidbuilder *builder, bool threaded, bool cycled, unsigned int cou
     } else { /* All sids in use */
         return;
     }
-    DBG("[%s] threaded:%d cycled:%d sidno:%d m_sidFree[all]:[%d%d%d%d]\n",
-        __func__, threaded, cycled, sidno, m_sidFree[0], m_sidFree[1], m_sidFree[2], m_sidFree[3]);
+    DBG("[%s] cycled:%d sidno:%d m_sidFree[all]:[%d%d%d%d]\n",
+        __func__, cycled, sidno, m_sidFree[0], m_sidFree[1], m_sidFree[2], m_sidFree[3]);
 
     if (!m_sid.us_Initialised)
     {
@@ -62,14 +62,13 @@ USBSID::USBSID(sidbuilder *builder, bool threaded, bool cycled, unsigned int cou
         return;
     }
 
-    /* Set threaded option */
-    m_isthreaded = (threaded == 1) ? 1 : 0;
     /* Set cycled option */
     m_iscycled = (cycled == 1) ? 1 : 0;
     /* Only start the object driver once */
     if (sidno == 0) {
         /* Start the fucker */
-        if (m_sid.USBSID_Init(m_isthreaded, m_iscycled) < 0)
+        m_handle = m_sid.USBSID_Init(m_iscycled, m_iscycled);
+        if (m_handle < 0)
         {
             m_error = "USBSID init failed";
             return;
@@ -113,8 +112,9 @@ void USBSID::reset(uint8_t volume)
     if (sidno == 0 && m_sidInitDone == true) {
         m_sid.USBSID_Mute();
         m_sid.USBSID_ClearBus();
-        if (eventScheduler != nullptr)
+        if (eventScheduler != nullptr) {
             eventScheduler->schedule(*this, raster_rate, EVENT_CLOCK_PHI1);
+        }
     }
 }
 
@@ -134,6 +134,7 @@ event_clock_t USBSID::delay()
 
 void USBSID::clock()
 {
+    if (!m_handle || sidno != 0) return;
     const event_clock_t cycles = delay();
     if (cycles) {
         m_sid.USBSID_WaitForCycle(cycles);
@@ -160,7 +161,7 @@ void USBSID::write(uint_least8_t addr, uint8_t data)
         m_sid.USBSID_WaitForCycle(cycles);
     }
 
-    if (m_isthreaded == 1 && m_iscycled == 1) {  /* Digitunes and most other SID tunes */
+    if (m_iscycled == 1) {  /* Digitunes and most other SID tunes */
         m_sid.USBSID_WriteRingCycled(address, data, cycles);
         WDBG("WRITE THREADED CYCLED: $%02X:%02X (c:%lu)\n", address, data, cycles);
     } else {  /* PSID tunes like Spy vs Spy and Commando */
