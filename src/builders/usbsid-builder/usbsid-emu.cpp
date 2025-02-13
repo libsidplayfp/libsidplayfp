@@ -30,7 +30,7 @@ namespace libsidplayfp
 unsigned int USBSID::m_sidFree[4] = {0,0,0,0};
 unsigned int USBSID::m_sidsUsed = 0;
 bool USBSID::m_sidInitDone = false;
-static long raster_rate;
+static long raster_rate = 19950; /* Start on PAL */
 
 const char* USBSID::getCredits()
 {
@@ -126,6 +126,7 @@ event_clock_t USBSID::delay()
     m_accessClk += cycles;
     while (cycles > 0xffff)
     {
+        /* printf("[%s][%d] ", __func__, sidno); */
         m_sid.USBSID_WaitForCycle(0xffff);
         cycles -= 0xffff;
     }
@@ -134,15 +135,17 @@ event_clock_t USBSID::delay()
 
 void USBSID::clock()
 {
-    if (!m_handle || sidno != 0) return;
+    if (!m_handle || sidno != 0) return;  // <<-- REMOVING THIS WILL BREAK SID TUNES
     const event_clock_t cycles = delay();
     if (cycles) {
+        /* printf("[%s][%d] ", __func__, sidno); */
         m_sid.USBSID_WaitForCycle(cycles);
     }
 }
 
 uint8_t USBSID::read(uint_least8_t addr)
 {   /* NOTICE: Reading is blocking and not needed so it is disabled */
+    clock();
     return busValue;  /* Always return the busValue */
 }
 
@@ -157,7 +160,8 @@ void USBSID::write(uint_least8_t addr, uint8_t data)
     uint_least8_t address = ((0x20 * sid) + addr);
 
     event_clock_t cycles = delay();
-    if (cycles) {
+    if (cycles/*  && sidno == 0 */) {
+        /* printf("[%s][%d] ", __func__, sidno); */
         m_sid.USBSID_WaitForCycle(cycles);
     }
 
@@ -182,7 +186,7 @@ void USBSID::sampling(float systemclock, MAYBE_UNUSED float freq,
     (void)freq; /* Audio frequency is not used for USBSID-Pico */
     (void)method; /* Interpolation method is not used for USBSID-Pico */
     if (sidno == 0) {
-        m_sid.USBSID_SetClockRate((long)systemclock);  /* Set the USBSID internal oscillator speed */
+        m_sid.USBSID_SetClockRate((long)systemclock, true);  /* Set the USBSID internal oscillator speed */
         raster_rate = m_sid.USBSID_GetRasterRate();    /* Get the USBSID internal raster rate */
     }
 }
@@ -198,9 +202,24 @@ void USBSID::event()
     {
         m_accessClk += cycles;
         m_sid.USBSID_Flush();
+        /* printf("[%s][%d] ", __func__, sidno); */
+        /* m_sid.USBSID_WaitForCycle(cycles); */
         eventScheduler->schedule(*this, raster_rate, EVENT_CLOCK_PHI1);
     }
 }
+
+bool USBSID::lock(EventScheduler* env)
+{
+    return sidemu::lock(env);
+    eventScheduler->schedule(*this, raster_rate, EVENT_CLOCK_PHI1);
+}
+
+void USBSID::unlock()
+{
+    eventScheduler->cancel(*this);
+    sidemu::unlock();
+}
+
 
 void USBSID::filter(bool enable)
 {

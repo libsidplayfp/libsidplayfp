@@ -74,8 +74,8 @@ public:
 
     /* ISSUE: Disabled, blocks playing */
     // Must lock the SID before using the standard functions.
-    // bool lock(EventScheduler *env) override;
-    // void unlock() override;
+    bool lock(EventScheduler *env) override;
+    void unlock() override;
 
 private:
     // Fixed interval timer delay to prevent sidplay2
