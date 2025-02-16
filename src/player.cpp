@@ -338,8 +338,8 @@ bool Player::config(const SidConfig &cfg, bool force)
         return true;
     }
 
-    // Check for base sampling frequency
-    if (cfg.frequency < 8000)
+    // Check for a sane sampling frequency
+    if ((cfg.frequency < 8000) || (cfg.frequency > 192000))
     {
         m_errorString = ERR_UNSUPPORTED_FREQ;
         return false;
