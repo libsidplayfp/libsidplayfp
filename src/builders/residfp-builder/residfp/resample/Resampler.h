@@ -53,7 +53,7 @@ private:
         constexpr double b = 1. / a;
 
         double value = static_cast<double>(x - threshold) / max_val;
-        value = std::fma(a, std::tanh(b * value), t);
+        value = t + a * std::tanh(b * value);
         return static_cast<int>(value * max_val);
     }
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -25,7 +25,6 @@
 
 #include <algorithm>
 #include <random>
-#include <cmath>
 #include <cassert>
 
 #include "OpAmp.h"
@@ -165,7 +164,7 @@ protected:
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = std::fma(vi, r_N16 * r_idiv, vmin); /* vmin .. vmax */
+                const double vin = vmin + vi * r_N16 * r_idiv; /* vmin .. vmax */
                 summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
@@ -194,7 +193,7 @@ protected:
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = std::fma(vi, r_N16 * r_idiv, vmin); /* vmin .. vmax */
+                const double vin = vmin + vi * r_N16 * r_idiv; /* vmin .. vmax */
                 mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
@@ -220,7 +219,7 @@ protected:
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = std::fma(vi, r_N16, vmin); /* vmin .. vmax */
+                const double vin = vmin + vi * r_N16; /* vmin .. vmax */
                 volume[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
@@ -245,7 +244,7 @@ protected:
 
             for (int vi = 0; vi < size; vi++)
             {
-                const double vin = std::fma(vi, r_N16, vmin); /* vmin .. vmax */
+                const double vin = vmin + vi * r_N16; /* vmin .. vmax */
                 resonance[n8][vi] = getNormalizedValue(opampModel.solve(resonance_n[n8], vin));
             }
         }
