@@ -343,7 +343,7 @@ int SID::clock(unsigned int cycles, short* buf)
                 voice[2].envelope()->clock();
 
                 const int sidOutput = static_cast<int>(filter->clock(voice[0], voice[1], voice[2]));
-                const int c64Output = externalFilter.clock(sidOutput);
+                const int c64Output = externalFilter.clock(sidOutput - (1 << 15));
                 if (unlikely(resampler->input(c64Output)))
                 {
                     buf[s++] = resampler->getOutput(scaleFactor);

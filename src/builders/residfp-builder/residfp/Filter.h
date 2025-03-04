@@ -144,7 +144,7 @@ public:
      * @param v1 voice 1 in
      * @param v2 voice 2 in
      * @param v3 voice 3 in
-     * @return filtered output
+     * @return filtered output, unsigned 16 bit
      */
     unsigned short clock(Voice& v1, Voice& v2, Voice& v3);
 
