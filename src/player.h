@@ -147,7 +147,9 @@ public:
 
     uint_least32_t play(short *buffer, uint_least32_t samples);
 
-    uint_least32_t play(unsigned int cycles, short* (&buffers)[]);
+    void buffers(short* (&buffers)[3]) const;
+
+    uint_least32_t play(unsigned int cycles);
 
     bool isPlaying() const { return m_isPlaying != state_t::STOPPED; }
 

@@ -61,9 +61,14 @@ uint_least32_t sidplayfp::play(short *buffer, uint_least32_t count)
     return sidplayer.play(buffer, count);
 }
 
-uint_least32_t sidplayfp::play(unsigned int cycles, short* (&buffers)[])
+void sidplayfp::buffers(short* (&buffers)[3]) const
 {
-    return sidplayer.play(cycles, buffers);
+    sidplayer.buffers(buffers);
+}
+
+uint_least32_t sidplayfp::play(unsigned int cycles)
+{
+    return sidplayer.play(cycles);
 }
 
 bool sidplayfp::load(SidTune *tune)

@@ -111,7 +111,8 @@ public:
     uint_least32_t play(short *buffer, uint_least32_t count);
 
     /// Experimental
-    uint_least32_t play(unsigned int cycles, short* (&buffers)[]);
+    void buffers(short* (&buffers)[3]) const;
+    uint_least32_t play(unsigned int cycles);
 
     /**
      * Check if the engine is playing or stopped.

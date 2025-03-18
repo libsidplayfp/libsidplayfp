@@ -218,7 +218,16 @@ void Player::filter(unsigned int sidNum, bool enable)
         s->filter(enable);
 }
 
-uint_least32_t Player::play(unsigned int cycles, short* (&buffers)[])
+void Player::buffers(short* (&buffers)[3]) const
+{
+    for (unsigned int i = 0; i < Mixer::MAX_SIDS; i++)
+    {
+        sidemu *s = m_mixer.getSid(i);
+        buffers[i] = s ? s->buffer() : nullptr;
+    }
+}
+
+uint_least32_t Player::play(unsigned int cycles)
 {
     try
     {
@@ -236,12 +245,9 @@ uint_least32_t Player::play(unsigned int cycles, short* (&buffers)[])
                 // for all chips
                 s->clock();
                 sampleCount = s->bufferpos();
-                buffers[i] = s->buffer();
                 // Reset the buffer
                 s->bufferpos(0);
             }
-            else
-                buffers[i] = nullptr;
         }
         return sampleCount;
     }
