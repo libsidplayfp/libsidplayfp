@@ -95,6 +95,8 @@ AC_CACHE_CHECK([for od that supports -w], [ac_cv_path_OD],
 )
 AC_SUBST([OD], [$ac_cv_path_OD])
 
+AX_PTHREAD([], [AC_MSG_ERROR("pthreads not found")])
+
 dnl libtool-style version-info number
 #
 # https://autotools.io/libtool/version.html
