@@ -1,11 +1,12 @@
 3.0
 * wrap everything into a library namespace (?)
-* require c++11 (?)
 * add API to allow mixing client side
+* hide virtual functions in sidbuilder class
 
 
 someday/maybe:
 
+* do not require call to sidbuilder::create
 * support non-ascii paths on Windows (SidTune, STIL)
 * relocate only psid tunes (?)
 * add SIDid support
