@@ -226,8 +226,8 @@ unsigned short Filter::clock(Voice& voice1, Voice& voice2, Voice& voice3)
     return currentVolume[currentMixer[Vmix]];
 }
 
-#endif
-
 } // namespace reSIDfp
+
+#endif
 
 #endif
