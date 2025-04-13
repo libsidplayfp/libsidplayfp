@@ -1,5 +1,22 @@
 <map id="libsidplayfp::SidTuneBase" name="libsidplayfp::SidTuneBase">
-<area shape="rect" id="node1" title=" " alt="" coords="101,109,289,136"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,13,172,39"/>
-<area shape="rect" id="node3" title=" " alt="" coords="197,5,407,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1377,183,1565,208"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="1076,141,1287,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1300,172,1377,181,1377,187,1300,177"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1SidTuneInfoImpl.html" title=" " alt="" coords="795,148,1005,173"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1019,158,1076,158,1076,163,1019,163"/>
+<area shape="rect" id="Node000004" href="$classSidTuneInfo.html" title=" " alt="" coords="451,5,549,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="563,24,662,44,718,59,772,78,835,112,884,146,881,150,832,117,770,83,716,64,661,49,562,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="193,117,280,143"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="293,117,304,115,369,115,482,114,571,111,659,112,771,123,819,133,862,145,860,150,817,138,770,129,658,117,571,116,483,119,369,121,304,121,294,122"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="407,148,593,173"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="294,134,407,147,406,152,294,139"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,110,144,150"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="157,127,193,127,193,133,157,133"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="413,197,587,223"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="601,198,770,178,821,171,822,176,771,183,601,203"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="393,247,607,272"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="620,244,695,232,770,214,826,193,873,171,875,176,828,198,771,219,696,237,621,250"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="607,158,794,158,794,163,607,163"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="1098,205,1265,231"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="1278,213,1353,209,1384,205,1385,211,1354,214,1278,219"/>
 </map>

@@ -1,10 +1,17 @@
 <map id="libsidplayfp::c64sid" name="libsidplayfp::c64sid">
-<area shape="rect" id="node1" title=" " alt="" coords="185,80,333,107"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1NullSid.html" title=" " alt="" coords="95,155,247,181"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="271,155,426,181"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="190,5,329,32"/>
-<area shape="rect" id="node5" href="$classlibsidplayfp_1_1HardSID.html" title=" " alt="" coords="5,229,164,256"/>
-<area shape="rect" id="node6" href="$classlibsidplayfp_1_1ReSID.html" title=" " alt="" coords="188,229,333,256"/>
-<area shape="rect" id="node7" href="$classlibsidplayfp_1_1ReSIDfp.html" title=" " alt="" coords="357,229,516,256"/>
-<area shape="rect" id="node8" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="541,229,685,256"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="185,79,333,104"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1NullSid.html" title=" " alt="" coords="95,152,247,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,115,187,154,184,150,233,110"/>
+<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="271,152,426,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="286,110,336,150,332,154,283,115"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="190,5,329,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,44,262,79,257,79,257,44"/>
+<area shape="rect" id="Node000005" href="$classlibsidplayfp_1_1HardSID.html" title=" " alt="" coords="5,225,164,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="294,183,128,228,127,223,292,178"/>
+<area shape="rect" id="Node000006" href="$classlibsidplayfp_1_1ReSID.html" title=" " alt="" coords="188,225,333,251"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="326,188,277,227,273,223,322,184"/>
+<area shape="rect" id="Node000007" href="$classlibsidplayfp_1_1ReSIDfp.html" title=" " alt="" coords="357,225,516,251"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="375,184,424,223,421,227,372,188"/>
+<area shape="rect" id="Node000008" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="541,225,685,251"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="405,178,571,223,569,228,404,183"/>
 </map>

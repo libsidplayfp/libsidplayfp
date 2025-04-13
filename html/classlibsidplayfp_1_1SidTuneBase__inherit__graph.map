@@ -1,7 +1,11 @@
 <map id="libsidplayfp::SidTuneBase" name="libsidplayfp::SidTuneBase">
-<area shape="rect" id="node1" title=" " alt="" coords="218,5,406,32"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1MUS.html" title=" " alt="" coords="5,80,141,107"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1PSID.html" title=" " alt="" coords="165,80,301,107"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1p00.html" title=" " alt="" coords="325,80,456,107"/>
-<area shape="rect" id="node5" href="$classlibsidplayfp_1_1prg.html" title=" " alt="" coords="481,80,607,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="218,5,406,31"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1MUS.html" title=" " alt="" coords="5,79,141,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="261,37,113,81,111,76,260,32"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1PSID.html" title=" " alt="" coords="165,79,301,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="291,42,248,80,244,76,287,38"/>
+<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1p00.html" title=" " alt="" coords="325,79,456,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="337,38,380,76,376,80,333,42"/>
+<area shape="rect" id="Node000005" href="$classlibsidplayfp_1_1prg.html" title=" " alt="" coords="481,79,607,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="363,32,507,76,506,81,361,37"/>
 </map>

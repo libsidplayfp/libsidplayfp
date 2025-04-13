@@ -1,5 +1,7 @@
 <map id="libsidplayfp::MMU" name="libsidplayfp::MMU">
-<area shape="rect" id="node1" title=" " alt="" coords="90,80,230,107"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1PLA.html" title=" " alt="" coords="5,5,136,32"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1sidmemory.html" title=" " alt="" coords="161,5,341,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="90,79,230,104"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1PLA.html" title=" " alt="" coords="5,5,136,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,37,147,76,144,81,94,41"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1sidmemory.html" title=" " alt="" coords="161,5,341,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,41,176,81,173,76,224,37"/>
 </map>

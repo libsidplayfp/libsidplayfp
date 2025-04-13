@@ -1,5 +1,7 @@
 <map id="libsidplayfp::c64cia1" name="libsidplayfp::c64cia1">
-<area shape="rect" id="node1" title=" " alt="" coords="101,80,257,107"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1MOS652X.html" title=" " alt="" coords="5,5,175,32"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="199,5,338,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="101,79,257,104"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1MOS652X.html" title=" " alt="" coords="5,5,175,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,37,166,76,163,81,113,41"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="199,5,338,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,41,196,81,192,76,242,37"/>
 </map>

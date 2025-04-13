@@ -1,12 +1,29 @@
 <map id="sid.h" name="sid.h">
-<area shape="rect" id="node1" title=" " alt="" coords="240,5,293,32"/>
-<area shape="rect" id="node2" href="$resid-config_8h_source.html" title=" " alt="" coords="115,229,226,256"/>
-<area shape="rect" id="node4" href="$voice_8h_source.html" title=" " alt="" coords="76,80,145,107"/>
-<area shape="rect" id="node7" href="$filter8580new_8h_source.html" title=" " alt="" coords="205,80,328,107"/>
-<area shape="rect" id="node9" href="$extfilt_8h_source.html" title=" " alt="" coords="387,155,459,181"/>
-<area shape="rect" id="node10" href="$pot_8h_source.html" title=" " alt="" coords="458,80,513,107"/>
-<area shape="rect" id="node3" href="$builders_2resid-builder_2resid_2siddefs_8h_source.html" title=" " alt="" coords="130,304,211,331"/>
-<area shape="rect" id="node5" href="$wave_8h_source.html" title=" " alt="" coords="29,155,99,181"/>
-<area shape="rect" id="node6" href="$envelope_8h_source.html" title=" " alt="" coords="123,155,218,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="293,155,363,181"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="302,5,355,31"/>
+<area shape="rect" id="Node000002" href="$resid-config_8h_source.html" title=" " alt="" coords="116,225,226,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,22,233,27,190,34,146,45,103,62,64,85,32,115,11,153,8,168,11,180,19,191,31,201,64,216,103,226,101,231,62,221,28,205,15,195,6,183,3,168,6,151,28,111,61,80,100,57,144,40,189,29,232,22,301,17"/>
+<area shape="rect" id="Node000004" href="$voice_8h_source.html" title=" " alt="" coords="83,79,152,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="302,31,166,77,164,72,301,26"/>
+<area shape="rect" id="Node000007" href="$filter8580new_8h_source.html" title=" " alt="" coords="267,79,390,104"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="331,31,331,65,326,65,326,31"/>
+<area shape="rect" id="Node000010" href="$extfilt_8h_source.html" title=" " alt="" coords="415,79,487,104"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="349,28,421,69,418,74,347,33"/>
+<area shape="rect" id="Node000011" href="$pot_8h_source.html" title=" " alt="" coords="513,79,568,104"/>
+<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="356,26,501,74,499,79,354,31"/>
+<area shape="rect" id="Node000003" href="$builders_2resid-builder_2resid_2siddefs_8h_source.html" title=" " alt="" coords="130,299,212,324"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="174,251,174,285,168,285,168,251"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="85,107,56,120,31,136,16,155,15,165,20,176,36,194,57,208,103,225,101,230,54,212,33,198,15,179,10,166,11,154,27,132,54,115,83,102"/>
+<area shape="rect" id="Node000005" href="$wave_8h_source.html" title=" " alt="" coords="30,152,99,177"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="111,106,83,143,79,140,107,103"/>
+<area shape="rect" id="Node000006" href="$envelope_8h_source.html" title=" " alt="" coords="124,152,218,177"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="129,103,156,140,152,143,124,106"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="83,175,144,215,141,220,80,180"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="174,178,174,212,168,212,168,178"/>
+<area shape="poly" id="edge10_Node000007_Node000002" title=" " alt="" coords="317,106,196,218,192,214,314,102"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="294,152,363,177"/>
+<area shape="poly" id="edge11_Node000007_Node000008" title=" " alt="" coords="331,104,331,138,326,138,326,104"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="388,152,453,177"/>
+<area shape="poly" id="edge12_Node000007_Node000009" title=" " alt="" coords="345,102,396,141,393,146,341,106"/>
+<area shape="poly" id="edge14_Node000010_Node000002" title=" " alt="" coords="461,104,475,139,476,160,468,179,453,191,431,202,372,218,305,229,241,235,240,230,304,223,371,213,429,197,450,187,463,176,470,159,469,140,456,106"/>
+<area shape="poly" id="edge16_Node000011_Node000002" title=" " alt="" coords="539,105,522,142,507,163,488,180,444,198,379,213,240,233,239,228,378,208,442,193,486,175,503,159,517,140,534,103"/>
 </map>

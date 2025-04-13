@@ -1,6 +1,9 @@
 <map id="libsidplayfp::romCheck" name="libsidplayfp::romCheck">
-<area shape="rect" id="node1" title=" " alt="" coords="223,5,395,32"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1basicCheck.html" title=" " alt="" coords="5,80,185,107"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1chargenCheck.html" title=" " alt="" coords="209,80,408,107"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1kernalCheck.html" title=" " alt="" coords="433,80,619,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="223,5,395,31"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1basicCheck.html" title=" " alt="" coords="5,79,185,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,37,131,81,129,76,261,32"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1chargenCheck.html" title=" " alt="" coords="209,79,408,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="311,44,311,79,306,79,306,44"/>
+<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1kernalCheck.html" title=" " alt="" coords="433,79,619,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="357,32,492,76,490,81,356,37"/>
 </map>

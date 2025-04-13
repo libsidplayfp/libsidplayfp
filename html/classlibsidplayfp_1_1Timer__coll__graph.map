@@ -1,12 +1,29 @@
 <map id="libsidplayfp::Timer" name="libsidplayfp::Timer">
-<area shape="rect" id="node1" title=" " alt="" coords="225,87,369,113"/>
-<area shape="rect" id="node7" href="$classlibsidplayfp_1_1TimerA.html" title=" " alt="" coords="642,5,795,32"/>
-<area shape="rect" id="node8" href="$classlibsidplayfp_1_1TimerB.html" title=" " alt="" coords="642,56,795,83"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1Event.html" title=" " alt="" coords="5,203,148,229"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1SerialPort.html" title=" " alt="" coords="420,172,589,199"/>
-<area shape="rect" id="node6" href="$classlibsidplayfp_1_1Tod.html" title=" " alt="" coords="441,231,569,257"/>
-<area shape="rect" id="node9" href="$classlibsidplayfp_1_1EventCallback.html" title=" " alt="" coords="197,287,396,329"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1MOS652X.html" title=" " alt="" coords="977,203,1147,229"/>
-<area shape="rect" id="node5" title=" " alt="" coords="613,358,824,399"/>
-<area shape="rect" id="node10" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="615,424,822,451"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="397,203,541,229"/>
+<area shape="rect" id="Node000005" href="$classlibsidplayfp_1_1TimerA.html" title=" " alt="" coords="847,125,1001,150"/>
+<area shape="poly" id="edge5_Node000005_Node000001" title=" " alt="" coords="525,197,595,180,728,158,847,143,847,148,729,163,597,185,527,202"/>
+<area shape="rect" id="Node000006" href="$classlibsidplayfp_1_1TimerB.html" title=" " alt="" coords="847,174,1001,199"/>
+<area shape="poly" id="edge7_Node000006_Node000001" title=" " alt="" coords="554,208,847,189,847,194,555,213"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1Event.html" title=" " alt="" coords="37,317,180,342"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,309,235,283,422,226,424,231,237,288,159,314"/>
+<area shape="rect" id="Node000009" href="$classlibsidplayfp_1_1Tod.html" title=" " alt="" coords="631,290,759,315"/>
+<area shape="poly" id="edge12_Node000009_Node000002" title=" " alt="" coords="194,323,631,303,631,308,194,328"/>
+<area shape="rect" id="Node000010" href="$classlibsidplayfp_1_1SerialPort.html" title=" " alt="" coords="611,349,780,374"/>
+<area shape="poly" id="edge14_Node000010_Node000002" title=" " alt="" coords="194,331,611,354,610,359,194,337"/>
+<area shape="rect" id="Node000011" href="$classlibsidplayfp_1_1EventCallback.html" title=" " alt="" coords="596,405,795,445"/>
+<area shape="poly" id="edge16_Node000011_Node000002" title=" " alt="" coords="194,340,596,407,595,412,193,346"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1MOS652X.html" title=" " alt="" coords="1183,202,1352,227"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1169,223,1029,228,759,228,541,222,541,216,759,222,1029,223,1169,217"/>
+<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="5,25,212,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="225,26,384,19,585,17,807,24,920,32,1030,45,1098,54,1127,63,1160,82,1194,110,1223,143,1261,200,1257,203,1219,146,1191,114,1157,86,1125,68,1097,60,1029,51,919,38,807,29,585,22,384,25,225,32"/>
+<area shape="rect" id="Node000008" href="$classlibsidplayfp_1_1InterruptSource.html" title=" " alt="" coords="365,63,572,89"/>
+<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="204,49,236,53,366,66,365,71,236,59,204,55"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="1015,147,1159,176,1233,199,1231,204,1158,181,1014,153"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="1015,191,1182,205,1182,210,1014,197"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="819,60,1029,100"/>
+<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="1044,97,1102,113,1160,135,1213,167,1254,200,1250,204,1210,172,1157,140,1101,118,1042,102"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="586,74,819,76,819,82,586,80"/>
+<area shape="poly" id="edge11_Node000003_Node000009" title=" " alt="" coords="773,301,854,299,951,292,1055,278,1158,255,1237,225,1239,230,1159,260,1056,283,952,298,854,304,773,307"/>
+<area shape="poly" id="edge13_Node000003_Node000010" title=" " alt="" coords="794,358,875,352,968,339,1065,317,1112,302,1157,283,1208,254,1248,225,1251,230,1211,258,1160,288,1114,307,1066,322,969,344,876,357,794,363"/>
+<area shape="poly" id="edge15_Node000003_Node000011" title=" " alt="" coords="808,422,890,415,981,399,1073,370,1117,350,1157,326,1188,301,1215,274,1255,226,1259,229,1219,277,1191,305,1160,330,1119,355,1075,375,983,404,891,420,809,428"/>
 </map>

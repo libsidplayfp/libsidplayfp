@@ -1,5 +1,7 @@
 <map id="reSIDfp::FilterModelConfig" name="reSIDfp::FilterModelConfig">
-<area shape="rect" id="node1" title=" " alt="" coords="145,5,337,32"/>
-<area shape="rect" id="node2" href="$classreSIDfp_1_1FilterModelConfig6581.html" title=" " alt="" coords="5,80,229,107"/>
-<area shape="rect" id="node3" href="$classreSIDfp_1_1FilterModelConfig8580.html" title=" " alt="" coords="253,80,477,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="145,5,337,31"/>
+<area shape="rect" id="Node000002" href="$classreSIDfp_1_1FilterModelConfig6581.html" title=" " alt="" coords="5,79,229,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,40,139,81,136,76,208,35"/>
+<area shape="rect" id="Node000003" href="$classreSIDfp_1_1FilterModelConfig8580.html" title=" " alt="" coords="253,79,477,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="274,35,346,76,344,81,272,40"/>
 </map>

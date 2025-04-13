@@ -1,5 +1,7 @@
 <map id="libsidplayfp::InterruptSource8521" name="libsidplayfp::InterruptSource8521">
-<area shape="rect" id="node1" title=" " alt="" coords="5,171,244,197"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1InterruptSource.html" title=" " alt="" coords="21,95,228,121"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="21,5,228,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,168,244,193"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1InterruptSource.html" title=" " alt="" coords="21,93,228,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,133,127,168,122,168,122,133"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="21,5,228,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,45,127,93,122,93,122,45"/>
 </map>

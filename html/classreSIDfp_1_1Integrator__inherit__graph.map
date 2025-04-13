@@ -1,5 +1,7 @@
 <map id="reSIDfp::Integrator" name="reSIDfp::Integrator">
-<area shape="rect" id="node1" title=" " alt="" coords="120,5,263,32"/>
-<area shape="rect" id="node2" href="$classreSIDfp_1_1Integrator6581.html" title=" " alt="" coords="5,80,180,107"/>
-<area shape="rect" id="node3" href="$classreSIDfp_1_1Integrator8580.html" title=" " alt="" coords="204,80,379,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="120,5,263,31"/>
+<area shape="rect" id="Node000002" href="$classreSIDfp_1_1Integrator6581.html" title=" " alt="" coords="5,79,180,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,41,110,81,107,76,163,36"/>
+<area shape="rect" id="Node000003" href="$classreSIDfp_1_1Integrator8580.html" title=" " alt="" coords="204,79,379,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,36,277,76,273,81,217,41"/>
 </map>

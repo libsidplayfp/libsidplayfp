@@ -1,7 +1,12 @@
 <map id="SidInfoImpl" name="SidInfoImpl">
-<area shape="rect" id="node1" title=" " alt="" coords="72,336,168,363"/>
-<area shape="rect" id="node2" href="$classSidInfo.html" title=" " alt="" coords="5,216,72,243"/>
-<area shape="rect" id="node3" title=" " alt="" coords="98,96,185,123"/>
-<area shape="rect" id="node5" title=" " alt="" coords="249,216,436,243"/>
-<area shape="rect" id="node4" title=" " alt="" coords="72,5,211,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="72,333,168,359"/>
+<area shape="rect" id="Node000002" href="$classSidInfo.html" title=" " alt="" coords="5,214,72,239"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,249,114,332,110,335,52,252"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,95,185,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,134,135,183,123,333,118,333,129,182,135,133"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="249,214,436,239"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="174,125,324,211,321,216,172,129"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="72,5,211,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="144,59,144,94,139,94,139,59"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="310,248,143,335,141,331,308,243"/>
 </map>

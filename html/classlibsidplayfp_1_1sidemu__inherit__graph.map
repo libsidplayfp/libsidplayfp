@@ -1,9 +1,15 @@
 <map id="libsidplayfp::sidemu" name="libsidplayfp::sidemu">
-<area shape="rect" id="node1" title=" " alt="" coords="271,155,426,181"/>
-<area shape="rect" id="node4" href="$classlibsidplayfp_1_1HardSID.html" title=" " alt="" coords="5,229,164,256"/>
-<area shape="rect" id="node5" href="$classlibsidplayfp_1_1ReSID.html" title=" " alt="" coords="188,229,333,256"/>
-<area shape="rect" id="node6" href="$classlibsidplayfp_1_1ReSIDfp.html" title=" " alt="" coords="357,229,516,256"/>
-<area shape="rect" id="node7" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="541,229,685,256"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="275,80,423,107"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="279,5,418,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="271,152,426,177"/>
+<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1HardSID.html" title=" " alt="" coords="5,225,164,251"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="294,183,128,228,127,223,292,178"/>
+<area shape="rect" id="Node000005" href="$classlibsidplayfp_1_1ReSID.html" title=" " alt="" coords="188,225,333,251"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="326,188,277,227,273,223,322,184"/>
+<area shape="rect" id="Node000006" href="$classlibsidplayfp_1_1ReSIDfp.html" title=" " alt="" coords="357,225,516,251"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="375,184,424,223,421,227,372,188"/>
+<area shape="rect" id="Node000007" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="541,225,685,251"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="405,178,571,223,569,228,404,183"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="275,79,423,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="351,118,351,152,346,152,346,118"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="279,5,418,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="351,44,351,79,346,79,346,44"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="libsidplayfp::iMd5" name="libsidplayfp::iMd5">
-<area shape="rect" id="node1" title=" " alt="" coords="128,5,267,32"/>
-<area shape="rect" id="node2" href="$classlibsidplayfp_1_1md5Gcrypt.html" title=" " alt="" coords="5,80,184,107"/>
-<area shape="rect" id="node3" href="$classlibsidplayfp_1_1md5Internal.html" title=" " alt="" coords="209,80,394,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="128,5,267,31"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1md5Gcrypt.html" title=" " alt="" coords="5,79,184,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,41,113,81,110,76,168,36"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1md5Internal.html" title=" " alt="" coords="209,79,394,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,36,286,76,283,81,224,41"/>
 </map>
