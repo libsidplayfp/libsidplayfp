@@ -40,7 +40,7 @@ Dac::~Dac()
     delete [] dac;
 }
 
-double Dac::getOutput(unsigned int input) const
+double Dac::getOutput(unsigned int input, bool saturate) const
 {
     double dacValue = 0.;
 
@@ -50,6 +50,15 @@ double Dac::getOutput(unsigned int input) const
         dacValue += transistor_on ? dac[i] : dac[i] * leakage;
     }
 
+    /*
+     * Rough approximation of MDAC saturation for the 6581
+     */
+    if (saturate)
+    {
+        static constexpr double GAIN = 1.1;
+        static constexpr double SAT = 1.1;
+        dacValue = GAIN*dacValue + (1. - GAIN)*SAT*dacValue*dacValue*dacValue;
+    }
     return dacValue;
 }
 
