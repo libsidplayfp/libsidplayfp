@@ -52,6 +52,8 @@ src/builders/resid-builder/resid/THANKS \
 src/builders/resid-builder/resid/TODO \
 src/builders/resid-builder/resid/filter8580new.cc \
 src/builders/resid-builder/resid/filter8580new.h \
+src/builders/exsid-builder/driver/docs \
+src/builders/exsid-builder/driver/m4 \
 $(noinst_DATA) \
 $(noinst_SCRIPTS) \
 test/testsuite.sh \
