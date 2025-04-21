@@ -218,7 +218,7 @@ void Player::filter(unsigned int sidNum, bool enable)
         s->filter(enable);
 }
 
-void Player::buffers(short* (&buffers)[3]) const
+void Player::buffers(short** buffers) const
 {
     for (unsigned int i = 0; i < Mixer::MAX_SIDS; i++)
     {

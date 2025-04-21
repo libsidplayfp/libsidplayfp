@@ -147,7 +147,7 @@ public:
 
     uint_least32_t play(short *buffer, uint_least32_t samples);
 
-    void buffers(short* (&buffers)[3]) const;
+    void buffers(short** buffers) const;
 
     uint_least32_t play(unsigned int cycles);
 

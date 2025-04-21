@@ -61,7 +61,7 @@ uint_least32_t sidplayfp::play(short *buffer, uint_least32_t count)
     return sidplayer.play(buffer, count);
 }
 
-void sidplayfp::buffers(short* (&buffers)[3]) const
+void sidplayfp::buffers(short** buffers) const
 {
     sidplayer.buffers(buffers);
 }
