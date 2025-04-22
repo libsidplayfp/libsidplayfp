@@ -113,6 +113,7 @@ public:
     /// Experimental
     void buffers(short** buffers) const;
     uint_least32_t play(unsigned int cycles);
+    unsigned int installedSIDs() const;
 
     /**
      * Check if the engine is playing or stopped.

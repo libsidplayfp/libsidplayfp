@@ -141,3 +141,8 @@ bool sidplayfp::getSidStatus(unsigned int sidNum, uint8_t regs[32])
 {
     return sidplayer.getSidStatus(sidNum, regs);
 }
+
+unsigned int sidplayfp::installedSIDs() const
+{
+    return sidplayer.installedSIDs();
+}
