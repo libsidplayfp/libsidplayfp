@@ -1,3 +1,11 @@
+2.13.1 2025-0x-xx
+* Fix build with inlining disabled (#181)
+* Add missing files to the tarball (#182)
+* Update exsid driver
+* Fixed an uninitialized warning
+
+
+
 2.13.0 2025-04-13
 * Add support for c++23 where available
 * Reworked power on delay (#82)
