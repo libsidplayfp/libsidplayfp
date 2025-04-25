@@ -1,4 +1,4 @@
-2.13.1 2025-0x-xx
+2.13.1 2025-04-25
 * Fix build with inlining disabled (#181)
 * Add missing files to the tarball (#182)
 * Update exsid driver
