@@ -218,6 +218,46 @@ void Player::filter(unsigned int sidNum, bool enable)
         s->filter(enable);
 }
 
+void Player::buffers(short** buffers) const
+{
+    for (unsigned int i = 0; i < Mixer::MAX_SIDS; i++)
+    {
+        sidemu *s = m_mixer.getSid(i);
+        buffers[i] = s ? s->buffer() : nullptr;
+    }
+}
+
+uint_least32_t Player::play(unsigned int cycles)
+{
+    try
+    {
+        for (unsigned int i = 0; i < cycles; i++)
+            m_c64.clock();
+
+        int sampleCount = 0;
+        for (unsigned int i = 0; i < Mixer::MAX_SIDS; i++)
+        {
+            sidemu *s = m_mixer.getSid(i);
+            if (s)
+            {
+                // clock the chip and get the buffer
+                // buffersize is expected to be the same
+                // for all chips
+                s->clock();
+                sampleCount = s->bufferpos();
+                // Reset the buffer
+                s->bufferpos(0);
+            }
+        }
+        return sampleCount;
+    }
+    catch (MOS6510::haltInstruction const &)
+    {
+        m_errorString = "Illegal instruction executed";
+        return 0;
+    }
+}
+
 /**
  * @throws MOS6510::haltInstruction
  */
