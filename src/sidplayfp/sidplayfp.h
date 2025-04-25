@@ -111,7 +111,7 @@ public:
     uint_least32_t play(short *buffer, uint_least32_t count);
 
     /**
-     * Get the buffers.
+     * Get the buffer pointers for each of the installed SID chips.
      *
      * @param buffers pointer to the array of buffer pointers.
      * @since 2.14
@@ -119,10 +119,12 @@ public:
     void buffers(short** buffers) const;
 
     /**
-     * Run the emulation.
+     * Run the emulation for selected number of cycles.
+     * The value will be limited to a reasonable amount
+     * if too large.
      *
      * @param cycles the number of cycles to run.
-     * @return the number of produced samples.
+     * @return the number of produced samples or zero in case of errors.
      * @since 2.14
      */
     uint_least32_t play(unsigned int cycles);

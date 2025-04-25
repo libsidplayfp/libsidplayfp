@@ -229,6 +229,13 @@ void Player::buffers(short** buffers) const
 
 uint_least32_t Player::play(unsigned int cycles)
 {
+    // Limit to roughly 20ms
+    constexpr unsigned int max_cycles = 20000;
+    if (cycles > max_cycles)
+    {
+        cycles = max_cycles;
+    }
+
     try
     {
         for (unsigned int i = 0; i < cycles; i++)
