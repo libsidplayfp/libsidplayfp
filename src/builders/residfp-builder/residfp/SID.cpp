@@ -253,11 +253,11 @@ void SID::setChipModel(ChipModel model)
         dacBuilder.kinkedDac(model);
 
         //const double offset = dacBuilder.getOutput(is6581 ? OFFSET_6581 : OFFSET_8580);
-        const double offset = dacBuilder.getOutput(0x7ff);
+        const double offset = dacBuilder.getOutput(0x7ff, is6581);
 
         for (unsigned int i = 0; i < (1 << OSC_DAC_BITS); i++)
         {
-            const double dacValue = dacBuilder.getOutput(i);
+            const double dacValue = dacBuilder.getOutput(i, is6581);
             oscDAC[i] = static_cast<float>(dacValue - offset);
         }
     }
