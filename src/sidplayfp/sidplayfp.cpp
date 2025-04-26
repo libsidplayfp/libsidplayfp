@@ -66,7 +66,7 @@ void sidplayfp::buffers(short** buffers) const
     sidplayer.buffers(buffers);
 }
 
-uint_least32_t sidplayfp::play(unsigned int cycles)
+int sidplayfp::play(unsigned int cycles)
 {
     return sidplayer.play(cycles);
 }

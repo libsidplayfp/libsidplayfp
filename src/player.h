@@ -149,7 +149,7 @@ public:
 
     void buffers(short** buffers) const;
 
-    uint_least32_t play(unsigned int cycles);
+    int play(unsigned int cycles);
 
     bool isPlaying() const { return m_isPlaying != state_t::STOPPED; }
 

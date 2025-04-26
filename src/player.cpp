@@ -227,7 +227,7 @@ void Player::buffers(short** buffers) const
     }
 }
 
-uint_least32_t Player::play(unsigned int cycles)
+int Player::play(unsigned int cycles)
 {
     // Limit to roughly 20ms
     constexpr unsigned int max_cycles = 20000;
@@ -261,7 +261,7 @@ uint_least32_t Player::play(unsigned int cycles)
     catch (MOS6510::haltInstruction const &)
     {
         m_errorString = "Illegal instruction executed";
-        return 0;
+        return -1;
     }
 }
 
