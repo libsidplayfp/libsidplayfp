@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -32,8 +32,7 @@
 class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 {
 public:
-    ReSIDfpBuilder(const char * const name) :
-        sidbuilder(name) {}
+    ReSIDfpBuilder(const char * const name);
     ~ReSIDfpBuilder();
 
     /**
@@ -87,8 +86,10 @@ public:
      * @param cws 
      */
     void combinedWaveformsStrength(SidConfig::sid_cw_t cws);
-
     //@}
+private:
+    struct config;
+    config *m_config;
 };
 
 #endif // RESIDFP_H
