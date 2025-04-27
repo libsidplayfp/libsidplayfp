@@ -62,7 +62,10 @@ constexpr int BITS = 16;
  * @param x evaluate I0 at x
  * @return value of I0 at x.
  */
-constexpr double I0(double x)
+#ifdef HAVE_CXX14
+constexpr
+#endif
+double I0(double x)
 {
     double sum = 1.;
     double u = 1.;
