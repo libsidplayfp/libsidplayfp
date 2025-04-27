@@ -80,10 +80,6 @@ public:
 
     // exSID specific
     void flush();
-
-    // Must lock the SID before using the standard functions.
-    bool lock(EventScheduler *env) override;
-    void unlock() override;
 };
 
 }
