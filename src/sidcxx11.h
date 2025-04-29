@@ -32,6 +32,9 @@
 
 #ifdef HAVE_CXX20
 #  define HAVE_CXX17
+#  define UNLIKELY [[ unlikely ]]
+#else
+#  define UNLIKELY
 #endif
 
 #ifdef HAVE_CXX17

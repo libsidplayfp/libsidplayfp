@@ -229,6 +229,13 @@ void Player::buffers(short** buffers) const
 
 int Player::play(unsigned int cycles)
 {
+    // Make sure a tune is loaded
+    if (m_tune == nullptr) UNLIKELY
+    {
+        m_errorString = "No tune loaded";
+        return -1;
+    }
+
     // Limit to roughly 20ms
     constexpr unsigned int max_cycles = 20000;
     if (cycles > max_cycles)
