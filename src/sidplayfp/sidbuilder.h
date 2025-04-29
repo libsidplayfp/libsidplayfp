@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -78,6 +78,7 @@ public:
      *
      * @param sids the number of required sid emu
      * @return the number of actually created sid emus
+     * @deprecated
      */
     virtual unsigned int create(unsigned int sids) = 0;
 
@@ -100,6 +101,7 @@ public:
 
     /**
      * Remove all SID emulations.
+     * @deprecated
      */
     void remove();
 
