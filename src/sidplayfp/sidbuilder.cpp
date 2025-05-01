@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -30,27 +30,12 @@ libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidCon
 {
     m_status = true;
 
-    // TODO cleanup once we remove sidbuilder::create
-
     for (libsidplayfp::sidemu *sid: sidobjs)
     {
         if (sid->lock(env))
         {
             sid->model(model, digiboost);
             return sid;
-        }
-    }
-
-    unsigned int res = create(1);
-    if (res)
-    {
-        for (libsidplayfp::sidemu *sid: sidobjs)
-        {
-            if (sid->lock(env))
-            {
-                sid->model(model, digiboost);
-                return sid;
-            }
         }
     }
 
@@ -66,9 +51,6 @@ void sidbuilder::unlock(libsidplayfp::sidemu *device)
     if (it != sidobjs.end())
     {
         (*it)->unlock();
-        // TODO should we remove it or cache for later use?
-        //sidobjs.erase(it);
-        //delete *it;
     }
 }
 

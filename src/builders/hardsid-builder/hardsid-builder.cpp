@@ -35,14 +35,8 @@
 #  include <iomanip>
 #endif
 
-#include "properties.h"
 #include "hardsid-emu.h"
 
-
-struct HardSIDBuilder::config
-{
-    Property<bool> filterEnabled;
-};
 
 #ifdef _WIN32
 //**************************************************************************
@@ -58,8 +52,7 @@ unsigned int HardSIDBuilder::m_count = 0;
 #endif
 
 HardSIDBuilder::HardSIDBuilder(const char * const name) :
-    sidbuilder (name),
-    m_config(new config)
+    sidbuilder (name)
 {
     if (!m_initialised)
     {
@@ -72,8 +65,6 @@ HardSIDBuilder::HardSIDBuilder(const char * const name) :
 HardSIDBuilder::~HardSIDBuilder()
 {   // Remove all SID emulations
     remove();
-
-    delete m_config;
 }
 
 // Create a new sid emulation.
@@ -104,8 +95,6 @@ unsigned int HardSIDBuilder::create(unsigned int sids)
                 m_errorBuffer = sid->error();
                 goto HardSIDBuilder_create_error;
             }
-            if (m_config->filterEnabled.has_value())
-                sid->filter(m_config->filterEnabled.value());
             sidobjs.insert(sid.release());
         }
         // Memory alloc failed?
@@ -148,7 +137,6 @@ void HardSIDBuilder::flush()
 
 void HardSIDBuilder::filter(bool enable)
 {
-    m_config->filterEnabled = enable;
     for (libsidplayfp::sidemu* e: sidobjs)
         static_cast<libsidplayfp::HardSID*>(e)->filter(enable);
 }

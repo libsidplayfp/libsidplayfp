@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -32,7 +32,8 @@
 class SID_EXTERN ReSIDBuilder : public sidbuilder
 {
 public:
-    ReSIDBuilder(const char * const name);
+    ReSIDBuilder(const char * const name) :
+        sidbuilder(name) {}
     ~ReSIDBuilder();
 
     /**
@@ -60,9 +61,6 @@ public:
      */
     void bias(double dac_bias);
     //@}
-private:
-    struct config;
-    config *m_config;
 };
 
 #endif // RESID_H

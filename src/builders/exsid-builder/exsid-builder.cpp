@@ -22,22 +22,15 @@
 #include <sstream>
 #include <string>
 
-#include "properties.h"
 #include "exsid.h"
 #include "exsid-emu.h"
 
-
-struct exSIDBuilder::config
-{
-    Property<bool> filterEnabled;
-};
 
 bool exSIDBuilder::m_initialised = false;
 unsigned int exSIDBuilder::m_count = 0;
 
 exSIDBuilder::exSIDBuilder(const char * const name) :
-    sidbuilder(name),
-    m_config(new config)
+    sidbuilder(name)
 {
     if (!m_initialised)
     {
@@ -50,8 +43,6 @@ exSIDBuilder::~exSIDBuilder()
 {
     // Remove all SID emulations
     remove();
-
-    delete m_config;
 }
 
 // Create a new sid emulation.  Called by libsidplay2 only
@@ -83,8 +74,6 @@ unsigned int exSIDBuilder::create(unsigned int sids)
                 goto exSIDBuilder_create_error;
             }
 
-            if (m_config->filterEnabled.has_value())
-                sid->filter(m_config->filterEnabled.value());
             sidobjs.insert(sid.release());
         }
         // Memory alloc failed?
@@ -119,7 +108,6 @@ void exSIDBuilder::flush()
 
 void exSIDBuilder::filter (bool enable)
 {
-    m_config->filterEnabled = enable;
     for (libsidplayfp::sidemu* e: sidobjs)
         static_cast<libsidplayfp::exSID*>(e)->filter(enable);
 }

@@ -40,14 +40,10 @@ public:
     const char *credits() const;
     void flush();
 
-    /// @name global settings
-    /// Settings that affect all SIDs.
-    //@{
     /**
      * enable/disable filter.
      */
     void filter(bool enable);
-    //@}
 
     /**
      * Create the sid emu.
@@ -55,9 +51,6 @@ public:
      * @param sids the number of required sid emu
      */
     unsigned int create(unsigned int sids);
-private:
-    struct config;
-    config *m_config;
 };
 
 #endif // EXSID_H

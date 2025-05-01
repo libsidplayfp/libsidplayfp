@@ -106,7 +106,6 @@ src/psiddrv.bin \
 src/mixer.cpp \
 src/mixer.h \
 src/poweron.bin \
-src/properties.h \
 src/reloc65.cpp \
 src/reloc65.h \
 src/sidcxx11.h \
