@@ -42,6 +42,11 @@ namespace reSIDfp
 constexpr unsigned int ENV_DAC_BITS = 8;
 constexpr unsigned int OSC_DAC_BITS = 12;
 
+#if 0
+Note: this needs more in-depth analysis.
+With the implementation of the 6581 DC drift the digis become too loud.
+Also there is no evidence in the schematics for a DC offset in the 8580.
+
 /**
  * The waveform D/A converter introduces a DC offset in the signal
  * to the envelope multiplying D/A converter. The "zero" level of
@@ -110,6 +115,7 @@ constexpr unsigned int OSC_DAC_BITS = 12;
 constexpr unsigned int OFFSET_6581 = 0x380;
 constexpr unsigned int OFFSET_8580 = 0x9c0;
 //@}
+#endif
 
 /**
  * Bus value stays alive for some time after each operation.
