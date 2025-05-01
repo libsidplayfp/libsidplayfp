@@ -6,7 +6,6 @@
 
 someday/maybe:
 
-* do not require call to sidbuilder::create
 * support non-ascii paths on Windows (SidTune, STIL)
 * relocate only psid tunes (?)
 * add SIDid support
