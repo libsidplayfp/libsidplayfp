@@ -259,7 +259,7 @@ public:
 
     uint_least16_t getCia1TimerA() const { return cia1.getTimerA(); }
 
-    unsigned int installedSIDs() const { return 1 + extraSidBanks.size(); }
+    unsigned int installedSIDs() const;
 };
 
 void c64::interruptIRQ(bool state)

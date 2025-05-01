@@ -182,6 +182,14 @@ bool c64::addExtraSid(c64sid *s, int address)
     return true;
 }
 
+unsigned int c64::installedSIDs() const
+{
+    unsigned int sids = 1;
+    for (auto sidBank: extraSidBanks)
+        sids += sidBank.second->installedSIDs();
+    return sids;
+}
+
 c64::~c64()
 {
     for (auto sidBank: extraSidBanks)

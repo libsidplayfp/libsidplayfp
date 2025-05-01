@@ -95,6 +95,8 @@ public:
         sids.push_back(s);
         mapper[mapperIndex(address)] = s;
     }
+
+    unsigned int installedSIDs() const { return sids.size(); }
 };
 
 }
