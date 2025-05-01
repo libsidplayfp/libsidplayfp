@@ -190,12 +190,17 @@ unsigned int c64::installedSIDs() const
     return sids;
 }
 
-c64::~c64()
+void c64::deleteSids(sidBankMap_t &extraSidBanks)
 {
     for (auto sidBank: extraSidBanks)
         delete sidBank.second;
 
     extraSidBanks.clear();
+}
+
+c64::~c64()
+{
+    deleteSids(extraSidBanks);
 }
 
 void c64::clearSids()
@@ -204,10 +209,7 @@ void c64::clearSids()
 
     resetIoBank();
 
-    for (auto sidBank: extraSidBanks)
-        delete sidBank.second;
-
-    extraSidBanks.clear();
+    deleteSids(extraSidBanks);
 }
 
 }
