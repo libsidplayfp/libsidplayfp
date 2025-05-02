@@ -1,3 +1,9 @@
+2.14.0 2025-05-xx
+* Rough approximation of MDAC saturation for the 6581 (#177) (#185)
+* New play API for client side mixing (#41) (#184)
+
+
+
 2.13.1 2025-04-25
 * Fix build with inlining disabled (#181)
 * Add missing files to the tarball (#182)
