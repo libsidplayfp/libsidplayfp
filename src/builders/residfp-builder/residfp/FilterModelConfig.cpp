@@ -23,6 +23,7 @@
 #include "FilterModelConfig.h"
 
 #include <vector>
+#include <cstdint>
 
 namespace reSIDfp
 {
@@ -44,7 +45,7 @@ FilterModelConfig::FilterModelConfig(
     vmax(std::max(Vddt, opamp_voltage[0].y)),
     denorm(vmax - vmin),
     norm(1.0 / denorm),
-    N16(norm * ((1 << 16) - 1)),
+    N16(norm * UINT16_MAX),
     voice_voltage_range(vvr)
 {
     setUCox(ucox);
