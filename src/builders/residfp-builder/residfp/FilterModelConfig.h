@@ -212,7 +212,7 @@ protected:
 
         for (int n8 = 0; n8 < 16; n8++)
         {
-            const int size = 1 << 16;
+            constexpr int size = 1 << 16;
             const double n = n8 / nDivisor;
             opampModel.reset();
             volume[n8] = new unsigned short[size];
@@ -238,7 +238,7 @@ protected:
 
         for (int n8 = 0; n8 < 16; n8++)
         {
-            const int size = 1 << 16;
+            constexpr int size = 1 << 16;
             opampModel.reset();
             resonance[n8] = new unsigned short[size];
 
