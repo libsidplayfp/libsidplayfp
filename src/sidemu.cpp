@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -36,23 +36,23 @@ void sidemu::writeReg(uint_least8_t addr, uint8_t data)
     case 0x04:
         // Ignore writes to control register to mute voices
         // Leave test/ring/sync bits untouched
-        if (isMuted[0]) data &= 0x0e;
+        if (isMuted[0]) UNLIKELY data &= 0x0e;
         break;
     case 0x0b:
-        if (isMuted[1]) data &= 0x0e;
+        if (isMuted[1]) UNLIKELY data &= 0x0e;
         break;
     case 0x12:
-        if (isMuted[2]) data &= 0x0e;
+        if (isMuted[2]) UNLIKELY data &= 0x0e;
         break;
     case 0x17:
         // Ignore writes to filter register to disable filter
-        if (isFilterDisabled) data &= 0xf0;
+        if (isFilterDisabled) UNLIKELY data &= 0xf0;
         break;
     case 0x18:
         // Ignore writes to volume register to mute samples
         // Works only for volume-based digis
         // Trick suggested by LMan
-        if (isMuted[3]) data |= 0x0f;
+        if (isMuted[3]) UNLIKELY data |= 0x0f;
         break;
     }
 
@@ -61,7 +61,7 @@ void sidemu::writeReg(uint_least8_t addr, uint8_t data)
 
 void sidemu::voice(unsigned int voice, bool mute)
 {
-    if (voice < 4)
+    if (voice < 4) LIKELY
         isMuted[voice] = mute;
 }
 
