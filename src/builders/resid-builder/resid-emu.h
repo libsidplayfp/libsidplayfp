@@ -44,6 +44,7 @@ class ReSID final : public sidemu
 {
 private:
     reSID::SID   &m_sid;
+    int           m_buffersize;
     uint8_t       m_voiceMask;
 
 public:

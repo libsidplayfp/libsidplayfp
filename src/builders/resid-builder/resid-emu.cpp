@@ -24,6 +24,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 #include <sstream>
 #include <string>
 
@@ -56,7 +57,6 @@ ReSID::ReSID(sidbuilder *builder) :
     m_sid(*(new reSID::SID)),
     m_voiceMask(0x07)
 {
-    m_buffer = new short[OUTPUTBUFFERSIZE];
     reset(0);
 }
 
@@ -95,7 +95,7 @@ void ReSID::clock()
 {
     reSID::cycle_count cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
-    m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, OUTPUTBUFFERSIZE - m_bufferpos, 1);
+    m_bufferpos += m_sid.clock(cycles, (short *) m_buffer + m_bufferpos, m_buffersize - m_bufferpos, 1);
     // Adjust in case not all cycles have been consumed
     m_accessClk -= cycles;
 }
@@ -130,6 +130,12 @@ void ReSID::sampling(float systemclock, float freq,
         return;
     }
 
+    if (m_buffer)
+        delete[] m_buffer;
+
+    // 20ms buffer
+    m_buffersize = std::ceil((freq / 1000.f) * 20.f);
+    m_buffer = new short[m_buffersize];
     m_status = true;
 }
 
