@@ -20,6 +20,8 @@
 
 #include "Integrator6581.h"
 
+#include <cstdint>
+
 #ifdef SLOPE_FACTOR
 #  include <cmath>
 #  include "sidcxx11.h"
@@ -58,10 +60,10 @@ int Integrator6581::solve(int vi) const
 #endif
 
     // VCR voltages for EKV model table lookup.
-    const int kVgt_Vs = (kVgt - vx) + (1 << 15);
-    assert((kVgt_Vs >= 0) && (kVgt_Vs < (1 << 16)));
-    const int kVgt_Vd = (kVgt - vi) + (1 << 15);
-    assert((kVgt_Vd >= 0) && (kVgt_Vd < (1 << 16)));
+    const int kVgt_Vs = (kVgt - vx) - INT16_MIN;
+    assert((kVgt_Vs >= 0) && (kVgt_Vs <= UINT16_MAX));
+    const int kVgt_Vd = (kVgt - vi) - INT16_MIN;
+    assert((kVgt_Vd >= 0) && (kVgt_Vd <= UINT16_MAX));
 
     // VCR current, scaled by m*2^15*2^15 = m*2^30
     const unsigned int If = static_cast<unsigned int>(fmc.getVcr_n_Ids_term(kVgt_Vs)) << 15;
@@ -86,8 +88,8 @@ int Integrator6581::solve(int vi) const
     vc += n_I_snake + n_I_vcr;
 
     // vx = g(vc)
-    const int tmp = (vc >> 15) + (1 << 15);
-    assert(tmp < (1 << 16));
+    const int tmp = (vc >> 15) - INT16_MIN;
+    assert(tmp <= UINT16_MAX);
     vx = fmc.getOpampRev(tmp);
 
     // Return vo.
