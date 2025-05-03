@@ -154,14 +154,14 @@ void c64::setBaseSid(c64sid *s)
 bool c64::addExtraSid(c64sid *s, int address)
 {
     // Check for valid address in the IO area range ($dxxx)
-    if ((address & 0xf000) != 0xd000)
+    if ((address & 0xf000) != 0xd000) UNLIKELY
         return false;
 
     const int idx = (address >> 8) & 0xf;
 
     // Only allow second SID chip in SID area ($d400-$d7ff)
     // or IO Area ($de00-$dfff)
-    if ((idx < 0x4) || ((idx > 0x7) && (idx < 0xe)))
+    if ((idx < 0x4) || ((idx > 0x7) && (idx < 0xe))) UNLIKELY
         return false;
 
     // Add new SID bank
