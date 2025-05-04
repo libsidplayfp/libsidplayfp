@@ -46,7 +46,11 @@ FilterModelConfig::FilterModelConfig(
     denorm(vmax - vmin),
     norm(1.0 / denorm),
     N16(norm * UINT16_MAX),
-    voice_voltage_range(vvr)
+    voice_voltage_range(vvr),
+    mixer(new unsigned short[mixer_offset<8>::value]),
+    summer(new unsigned short[summer_offset<5>::value]),
+    volume(new unsigned short[16 * (1 << 16)]),
+    resonance(new unsigned short[16 * (1 << 16)])
 {
     setUCox(ucox);
 
@@ -79,21 +83,10 @@ FilterModelConfig::FilterModelConfig(
 
 FilterModelConfig::~FilterModelConfig()
 {
-    for (int i = 0; i < 8; i++)
-    {
-        delete [] mixer[i];
-    }
-
-    for (int i = 0; i < 5; i++)
-    {
-        delete [] summer[i];
-    }
-
-    for (int i = 0; i < 16; i++)
-    {
-        delete [] volume[i];
-        delete [] resonance[i];
-    }
+    delete [] mixer;
+    delete [] summer;
+    delete [] volume;
+    delete [] resonance;
 }
 
 void FilterModelConfig::setUCox(double new_uCox)
