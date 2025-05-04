@@ -37,10 +37,10 @@ namespace reSIDfp
 class Filter
 {
 private:
-    unsigned short** mixer;
-    unsigned short** summer;
-    unsigned short** resonance;
-    unsigned short** volume;
+    unsigned short* mixer;
+    unsigned short* summer;
+    unsigned short* resonance;
+    unsigned short* volume;
 
     FilterModelConfig& fmc;
 
@@ -119,7 +119,7 @@ protected:
      *
      * @param res the new resonance value
      */
-    void updateResonance(unsigned char res) { currentResonance = resonance[res]; }
+    void updateResonance(unsigned char res) { currentResonance = resonance + (res * (1<<16)); }
 
     /**
      * Mixing configuration modified (offsets change)

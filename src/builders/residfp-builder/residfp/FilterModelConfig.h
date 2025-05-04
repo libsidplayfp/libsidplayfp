@@ -37,6 +37,21 @@ namespace reSIDfp
 
 class FilterModelConfig
 {
+public:
+    // The highpass summer has 2 - 6 inputs (bandpass, lowpass, and 0 - 4 voices).
+    template<int i>
+    struct summer_offset
+    {
+        static constexpr int value = summer_offset<i - 1>::value + ((2 + i - 1) << 16);
+    };
+
+    // The mixer has 0 - 7 inputs (0 - 4 voices and 0 - 3 filter outputs).
+    template<int i>
+    struct mixer_offset
+    {
+        static constexpr int value = mixer_offset<i - 1>::value + ((i - 1) << 16);
+    };
+
 private:
     /*
      * Hack to add quick dither when converting values from float to int
@@ -93,10 +108,10 @@ protected:
 
     /// Lookup tables for gain and summer op-amps in output stage / filter.
     //@{
-    unsigned short* mixer[8];       //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* summer[5];      //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* volume[16];     //-V730_NOINIT this is initialized in the derived class constructor
-    unsigned short* resonance[16];  //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* mixer;          //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* summer;         //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* volume;         //-V730_NOINIT this is initialized in the derived class constructor
+    unsigned short* resonance;      //-V730_NOINIT this is initialized in the derived class constructor
     //@}
 
     /// Reverse op-amp transfer function.
@@ -153,6 +168,7 @@ protected:
     {
         const double r_N16 = 1. / N16;
 
+        int idx = 0;
         for (int i = 0; i < 5; i++)
         {
             const int idiv = 2 + i;        // 2 - 6 input "resistors".
@@ -160,12 +176,11 @@ protected:
             const double n = idiv;
             const double r_idiv = 1. / idiv;
             opampModel.reset();
-            summer[i] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi * r_N16 * r_idiv; /* vmin .. vmax */
-                summer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
+                summer[idx++] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
     }
@@ -182,6 +197,7 @@ protected:
     {
         const double r_N16 = 1. / N16;
 
+        int idx = 0;
         for (int i = 0; i < 8; i++)
         {
             const int idiv = (i == 0) ? 1 : i;
@@ -189,12 +205,11 @@ protected:
             const double n = i * nRatio;
             const double r_idiv = 1. / idiv;
             opampModel.reset();
-            mixer[i] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi * r_N16 * r_idiv; /* vmin .. vmax */
-                mixer[i][vi] = getNormalizedValue(opampModel.solve(n, vin));
+                mixer[idx++] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
     }
@@ -210,17 +225,17 @@ protected:
     {
         const double r_N16 = 1. / N16;
 
+        int idx = 0;
         for (int n8 = 0; n8 < 16; n8++)
         {
             constexpr int size = 1 << 16;
             const double n = n8 / nDivisor;
             opampModel.reset();
-            volume[n8] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi * r_N16; /* vmin .. vmax */
-                volume[n8][vi] = getNormalizedValue(opampModel.solve(n, vin));
+                volume[idx++] = getNormalizedValue(opampModel.solve(n, vin));
             }
         }
     }
@@ -236,25 +251,25 @@ protected:
     {
         const double r_N16 = 1. / N16;
 
+        int idx = 0;
         for (int n8 = 0; n8 < 16; n8++)
         {
             constexpr int size = 1 << 16;
             opampModel.reset();
-            resonance[n8] = new unsigned short[size];
 
             for (int vi = 0; vi < size; vi++)
             {
                 const double vin = vmin + vi * r_N16; /* vmin .. vmax */
-                resonance[n8][vi] = getNormalizedValue(opampModel.solve(resonance_n[n8], vin));
+                resonance[idx++] = getNormalizedValue(opampModel.solve(resonance_n[n8], vin));
             }
         }
     }
 
 public:
-    unsigned short** getVolume() { return volume; }
-    unsigned short** getResonance() { return resonance; }
-    unsigned short** getSummer() { return summer; }
-    unsigned short** getMixer() { return mixer; }
+    unsigned short* getVolume() { return volume; }
+    unsigned short* getResonance() { return resonance; }
+    unsigned short* getSummer() { return summer; }
+    unsigned short* getMixer() { return mixer; }
 
     inline unsigned short getOpampRev(int i) const { return opamp_rev[i]; }
     inline double getVddt() const { return Vddt; }
@@ -288,6 +303,24 @@ public:
     {
         return static_cast<int>(getNormalizedValue(getVoiceVoltage(value, env)));
     }
+};
+
+template<>
+struct FilterModelConfig::summer_offset<0>
+{
+    static constexpr int value = 0;
+};
+
+template<>
+struct FilterModelConfig::mixer_offset<1>
+{
+    static constexpr int value = 1;
+};
+
+template<>
+struct FilterModelConfig::mixer_offset<0>
+{
+    static constexpr int value = 0;
 };
 
 } // namespace reSIDfp
