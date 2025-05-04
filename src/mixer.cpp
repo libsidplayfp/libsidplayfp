@@ -134,11 +134,6 @@ void Mixer::updateParams()
      }
 }
 
-void Mixer::clearSids()
-{
-    m_chips.clear();
-}
-
 void Mixer::addSid(sidemu *chip)
 {
     if (chip != nullptr)
@@ -162,11 +157,6 @@ void Mixer::setStereo(bool stereo)
 
         updateParams();
     }
-}
-
-void Mixer::setSamplerate(uint_least32_t rate)
-{
-    m_sampleRate = rate;
 }
 
 bool Mixer::setFastForward(int ff)

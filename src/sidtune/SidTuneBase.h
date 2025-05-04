@@ -91,7 +91,10 @@ public:  // ----------------------------------------------------------------
      * @return the sid tune
      * @throw loadError
      */
-    static SidTuneBase* load(const char* fileName, const char **fileNameExt, bool separatorIsSlash);
+    static SidTuneBase* load(const char* fileName, const char **fileNameExt, bool separatorIsSlash)
+    {
+        return load(nullptr, fileName, fileNameExt, separatorIsSlash);
+    }
 
     /**
      * Load a sidtune from a file, using a file access callback.
@@ -118,7 +121,10 @@ public:  // ----------------------------------------------------------------
      * @return the sid tune
      * @throw loadError
      */
-    static SidTuneBase* read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen);
+    static SidTuneBase* read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
+    {
+        return getFromBuffer(sourceBuffer, bufferLen);
+    }
 
     /**
      * Select sub-song (0 = default starting song)
@@ -132,7 +138,7 @@ public:  // ----------------------------------------------------------------
     /**
      * Retrieve sub-song specific information.
      */
-    const SidTuneInfo* getInfo() const;
+    const SidTuneInfo* getInfo() const { return info.get(); }
 
     /**
      * Select sub-song (0 = default starting song)
@@ -140,7 +146,11 @@ public:  // ----------------------------------------------------------------
      *
      * @param songNum
      */
-    const SidTuneInfo* getInfo(unsigned int songNum);
+    const SidTuneInfo* getInfo(unsigned int songNum)
+    {
+        selectSong(songNum);
+        return info.get();
+    }
 
     /**
      * Copy sidtune into C64 memory (64 KB).
@@ -253,8 +263,12 @@ private:  // ---------------------------------------------------------------
 #if !defined(SIDTUNE_NO_STDIN_LOADER)
     static SidTuneBase* getFromStdIn();
 #endif
-    static SidTuneBase* getFromFiles(const char* name, const char **fileNameExtensions, bool separatorIsSlash);
-    static SidTuneBase* getFromFiles(LoaderFunc loader, const char* name, const char **fileNameExtensions, bool separatorIsSlash);
+    static SidTuneBase* getFromFiles(const char* fileName, const char **fileNameExtensions, bool separatorIsSlash)
+    {
+        return getFromFiles(nullptr, fileName, fileNameExtensions, separatorIsSlash);
+    }
+
+    static SidTuneBase* getFromFiles(LoaderFunc loader, const char* fileName, const char **fileNameExtensions, bool separatorIsSlash);
 
     /**
      * Try to retrieve single-file sidtune from specified buffer.
