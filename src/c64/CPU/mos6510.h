@@ -82,14 +82,14 @@ private:
      * Need to be larger than about 0x103 << 3,
      * but can't be min/max for Integer type.
      */
-    static const int MAX = 65536;
+    static constexpr int MAX = 65536;
 
     /// Stack page location
-    static const uint8_t SP_PAGE = 0x01;
+    static constexpr uint8_t SP_PAGE = 0x01;
 
 public:
     /// Status register interrupt bit.
-    static const int SR_INTERRUPT = 2;
+    static constexpr int SR_INTERRUPT = 2;
 
 private:
     struct ProcessorCycle
