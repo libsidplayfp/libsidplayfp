@@ -22,10 +22,6 @@
 
 #include "SincResampler.h"
 
-#ifdef HAVE_CXX20
-#  include <numbers>
-#endif
-
 #include <algorithm>
 #include <iterator>
 #include <numeric>
@@ -38,6 +34,10 @@
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
+#endif
+
+#if defined(HAVE_CXX20) && defined(__cpp_lib_math_constants)
+#  include <numbers>
 #endif
 
 #ifdef HAVE_SMMINTRIN_H
@@ -273,7 +273,7 @@ SincResampler::SincResampler(
         double highestAccurateFrequency) :
     cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.))
 {
-#if defined(HAVE_CXX20) && defined(__cpp_lib_constexpr_cmath)
+#if defined(HAVE_CXX20) && defined(__cpp_lib_math_constants)
     constexpr double PI = std::numbers::pi;
 #else
 #  ifdef M_PI
