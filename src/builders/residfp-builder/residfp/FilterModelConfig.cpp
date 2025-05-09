@@ -75,9 +75,7 @@ FilterModelConfig::FilterModelConfig(
     {
         const Spline::Point out = s.evaluate(x);
         // When interpolating outside range the first elements may be negative
-        double tmp = out.x > 0. ? out.x : 0.;
-        assert(tmp < 65535.5);
-        opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
+        opamp_rev[x] = out.x > 0. ? to_ushort(out.x) : 0;
     }
 }
 

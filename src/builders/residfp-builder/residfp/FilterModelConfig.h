@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <random>
 #include <cassert>
+#include <climits>
 
 #include "OpAmp.h"
 #include "Spline.h"
@@ -51,6 +52,19 @@ public:
     {
         static constexpr int value = mixer_offset<i - 1>::value + ((i - 1) << 16);
     };
+
+protected:
+    static inline unsigned short to_ushort_dither(double x, double d_noise)
+    {
+        const int tmp = static_cast<int>(x + d_noise);
+        assert((tmp >= 0) && (tmp <= USHRT_MAX));
+        return static_cast<unsigned short>(tmp);
+    }
+
+    static inline unsigned short to_ushort(double x)
+    {
+        return to_ushort_dither(x, 0.5);
+    }
 
 private:
     /*
@@ -279,24 +293,18 @@ public:
 
     inline unsigned short getNormalizedValue(double value) const
     {
-        const double tmp = N16 * (value - vmin);
-        assert(tmp >= 0. && tmp <= 65535.);
-        return static_cast<unsigned short>(tmp + rnd.getNoise());
+        return to_ushort_dither(N16 * (value - vmin), rnd.getNoise());
     }
 
     template<int N>
     inline unsigned short getNormalizedCurrentFactor(double wl) const
     {
-        const double tmp = (1 << N) * currFactorCoeff * wl;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
+        return to_ushort((1 << N) * currFactorCoeff * wl);
     }
 
     inline unsigned short getNVmin() const
     {
-        const double tmp = N16 * vmin;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
+        return to_ushort(N16 * vmin);
     }
 
     inline int getNormalizedVoice(float value, unsigned int env) const

@@ -216,9 +216,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         {
             // The table index is right-shifted 16 times in order to fit in
             // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-            const double tmp = nVddt - std::sqrt(static_cast<double>(i << 16));
-            assert(tmp > -0.5 && tmp < 65535.5);
-            vcr_nVg[i] = static_cast<unsigned short>(tmp + 0.5);
+            vcr_nVg[i] = to_ushort(nVddt - std::sqrt(static_cast<double>(i << 16)));
         }
     };
 
