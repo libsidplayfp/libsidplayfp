@@ -117,7 +117,7 @@ public:
         return to_ushort(vcr_n_Ids_term[i] * uCox);
     }
     // only used if SLOPE_FACTOR is defined
-    inline constexpr double getUt() const { return Ut; }
+    static inline constexpr double getUt() { return Ut; }
     inline double getN16() const { return N16; }
 };
 
