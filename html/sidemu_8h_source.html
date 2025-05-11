@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.13.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.14.0</span>
    </div>
   </td>
  </tr>
@@ -100,7 +100,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1sidemu.html">   46</a></span><span class="keyword">class </span><a class="code hl_class" href="classlibsidplayfp_1_1sidemu.html">sidemu</a> : <span class="keyword">public</span> <a class="code hl_class" href="classlibsidplayfp_1_1c64sid.html">c64sid</a></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1sidemu.html#ab9d62b5bcf5bc66ec28b0125372ca71f">   50</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classlibsidplayfp_1_1sidemu.html#ab9d62b5bcf5bc66ec28b0125372ca71f">OUTPUTBUFFERSIZE</a> = 5000;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">private</span>:</div>
@@ -192,7 +192,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_a9efffb6a38b30eedd6bc085a5612cfd8"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#a9efffb6a38b30eedd6bc085a5612cfd8">libsidplayfp::sidemu::filter</a></div><div class="ttdeci">void filter(bool enable)</div><div class="ttdef"><b>Definition</b> sidemu.cpp:68</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_aa32ebf4a30dd887f595e736742be71a0"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#aa32ebf4a30dd887f595e736742be71a0">libsidplayfp::sidemu::bufferpos</a></div><div class="ttdeci">int bufferpos() const</div><div class="ttdef"><b>Definition</b> sidemu.h:151</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_ab05940b298ea6899e2a3bae5fedff290"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#ab05940b298ea6899e2a3bae5fedff290">libsidplayfp::sidemu::bufferpos</a></div><div class="ttdeci">void bufferpos(int pos)</div><div class="ttdef"><b>Definition</b> sidemu.h:156</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_ab9d62b5bcf5bc66ec28b0125372ca71f"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#ab9d62b5bcf5bc66ec28b0125372ca71f">libsidplayfp::sidemu::OUTPUTBUFFERSIZE</a></div><div class="ttdeci">static constexpr unsigned int OUTPUTBUFFERSIZE</div><div class="ttdoc">Buffer size. 5000 is roughly 5 ms at 96 kHz.</div><div class="ttdef"><b>Definition</b> sidemu.h:50</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_ab9d62b5bcf5bc66ec28b0125372ca71f"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#ab9d62b5bcf5bc66ec28b0125372ca71f">libsidplayfp::sidemu::OUTPUTBUFFERSIZE</a></div><div class="ttdeci">static constexpr unsigned int OUTPUTBUFFERSIZE</div><div class="ttdoc">Buffer size. 5000 is roughly 50 ms at 96 kHz.</div><div class="ttdef"><b>Definition</b> sidemu.h:50</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_ae257b20e82ca7ad61a1a2f271bb109b1"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#ae257b20e82ca7ad61a1a2f271bb109b1">libsidplayfp::sidemu::voice</a></div><div class="ttdeci">void voice(unsigned int voice, bool mute)</div><div class="ttdef"><b>Definition</b> sidemu.cpp:62</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_aecec1276d5a7a994ae7b80154c189738"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#aecec1276d5a7a994ae7b80154c189738">libsidplayfp::sidemu::model</a></div><div class="ttdeci">virtual void model(SidConfig::sid_model_t model, bool digiboost)=0</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html_aed3d04c7191c179b7c710a773480e1df"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html#aed3d04c7191c179b7c710a773480e1df">libsidplayfp::sidemu::isMuted</a></div><div class="ttdeci">std::bitset&lt; 4 &gt; isMuted</div><div class="ttdoc">Flags for muted voices.</div><div class="ttdef"><b>Definition</b> sidemu.h:77</div></div>
@@ -201,7 +201,7 @@ $(document).ready(function() { init_codefold(0); });
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 25 2025 09:28:18 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 11 2025 08:35:48 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

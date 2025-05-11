@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.13.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.14.0</span>
    </div>
   </td>
  </tr>
@@ -64,8 +64,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1a32c4a2cd67fa7d9918afbbeaf1fea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acef19a169e750eb26460c120317c6979" id="r_acef19a169e750eb26460c120317c6979"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Dac.html#acef19a169e750eb26460c120317c6979">kinkedDac</a> (ChipModel chipModel)</td></tr>
 <tr class="separator:acef19a169e750eb26460c120317c6979"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fd03fd9e4277dc8db9d45156ddab0cd" id="r_a6fd03fd9e4277dc8db9d45156ddab0cd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Dac.html#a6fd03fd9e4277dc8db9d45156ddab0cd">getOutput</a> (unsigned int input) const</td></tr>
-<tr class="separator:a6fd03fd9e4277dc8db9d45156ddab0cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ff591bc430cdd23dddf784f4820ae23" id="r_a6ff591bc430cdd23dddf784f4820ae23"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreSIDfp_1_1Dac.html#a6ff591bc430cdd23dddf784f4820ae23">getOutput</a> (unsigned int input, bool saturate=false) const</td></tr>
+<tr class="separator:a6ff591bc430cdd23dddf784f4820ae23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Estimate DAC nonlinearity. The <a class="el" href="classreSIDfp_1_1SID.html">SID</a> DACs are built up as R-2R ladder as follows: </p><pre class="fragment">    n  n-1      2   1   0    VGND
@@ -108,8 +108,8 @@ Vo -o-R-o-R-...-o-R-o-R--    --+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6fd03fd9e4277dc8db9d45156ddab0cd" name="a6fd03fd9e4277dc8db9d45156ddab0cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fd03fd9e4277dc8db9d45156ddab0cd">&#9670;&#160;</a></span>getOutput()</h2>
+<a id="a6ff591bc430cdd23dddf784f4820ae23" name="a6ff591bc430cdd23dddf784f4820ae23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ff591bc430cdd23dddf784f4820ae23">&#9670;&#160;</a></span>getOutput()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -118,8 +118,18 @@ Vo -o-R-o-R-...-o-R-o-R--    --+
           <td class="memname">double reSIDfp::Dac::getOutput </td>
           <td>(</td>
           <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>input</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>saturate</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -166,7 +176,7 @@ Vo -o-R-o-R-...-o-R-o-R--    --+
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 25 2025 09:28:19 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 11 2025 08:35:48 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

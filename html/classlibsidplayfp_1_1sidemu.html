@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.13.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.14.0</span>
    </div>
   </td>
  </tr>
@@ -51,7 +51,6 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
@@ -133,9 +132,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af033de87aa0712efed475cc27756666f" id="r_af033de87aa0712efed475cc27756666f"><td class="memItemLeft" align="right" valign="top">short *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1sidemu.html#af033de87aa0712efed475cc27756666f">buffer</a> () const</td></tr>
 <tr class="separator:af033de87aa0712efed475cc27756666f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classlibsidplayfp_1_1c64sid"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classlibsidplayfp_1_1c64sid')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a></td></tr>
-<tr class="memitem:a4a2b6e1207e1a12a8b8ad80c1f63a352 inherit pub_methods_classlibsidplayfp_1_1c64sid" id="r_a4a2b6e1207e1a12a8b8ad80c1f63a352"><td class="memItemLeft" align="right" valign="top">
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (uint8_t volume)=0</td></tr>
-<tr class="separator:a4a2b6e1207e1a12a8b8ad80c1f63a352 inherit pub_methods_classlibsidplayfp_1_1c64sid"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2131b43cbcfeef3681eedf4cbc52c34 inherit pub_methods_classlibsidplayfp_1_1c64sid" id="r_af2131b43cbcfeef3681eedf4cbc52c34"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
 <tr class="separator:af2131b43cbcfeef3681eedf4cbc52c34 inherit pub_methods_classlibsidplayfp_1_1c64sid"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,13 +142,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 <tr class="memitem:a99f248456e703914a0150e53c1697d9d inherit pub_methods_classlibsidplayfp_1_1c64sid" id="r_a99f248456e703914a0150e53c1697d9d"><td class="memItemLeft" align="right" valign="top">
 void&#160;</td><td class="memItemRight" valign="bottom"><b>getStatus</b> (uint8_t regs[0x20]) const</td></tr>
 <tr class="separator:a99f248456e703914a0150e53c1697d9d inherit pub_methods_classlibsidplayfp_1_1c64sid"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:ab9d62b5bcf5bc66ec28b0125372ca71f" id="r_ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="memItemLeft" align="right" valign="top"><a id="ab9d62b5bcf5bc66ec28b0125372ca71f" name="ab9d62b5bcf5bc66ec28b0125372ca71f"></a>
-static constexpr unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>OUTPUTBUFFERSIZE</b> = 5000</td></tr>
-<tr class="memdesc:ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer size. 5000 is roughly 5 ms at 96 kHz. <br /></td></tr>
-<tr class="separator:ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -165,6 +154,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (ui
 <tr class="memitem:a16097bc99082281758cb119f85bbc08a inherit pro_methods_classlibsidplayfp_1_1c64sid" id="r_a16097bc99082281758cb119f85bbc08a"><td class="memItemLeft" align="right" valign="top">
 virtual uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>read</b> (uint_least8_t addr)=0</td></tr>
 <tr class="separator:a16097bc99082281758cb119f85bbc08a inherit pro_methods_classlibsidplayfp_1_1c64sid"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a2b6e1207e1a12a8b8ad80c1f63a352 inherit pro_methods_classlibsidplayfp_1_1c64sid" id="r_a4a2b6e1207e1a12a8b8ad80c1f63a352"><td class="memItemLeft" align="right" valign="top">
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (uint8_t volume)=0</td></tr>
+<tr class="separator:a4a2b6e1207e1a12a8b8ad80c1f63a352 inherit pro_methods_classlibsidplayfp_1_1c64sid"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -201,6 +193,10 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_error</b></t
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
+<tr class="memitem:ab9d62b5bcf5bc66ec28b0125372ca71f" id="r_ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="memItemLeft" align="right" valign="top"><a id="ab9d62b5bcf5bc66ec28b0125372ca71f" name="ab9d62b5bcf5bc66ec28b0125372ca71f"></a>
+static constexpr unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>OUTPUTBUFFERSIZE</b> = 5000</td></tr>
+<tr class="memdesc:ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer size. 5000 is roughly 50 ms at 96 kHz. <br /></td></tr>
+<tr class="separator:ab9d62b5bcf5bc66ec28b0125372ca71f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1a476772abd5ab383b0b40844d5448c" id="r_aa1a476772abd5ab383b0b40844d5448c"><td class="memItemLeft" align="right" valign="top"><a id="aa1a476772abd5ab383b0b40844d5448c" name="aa1a476772abd5ab383b0b40844d5448c"></a>
 static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_UNSUPPORTED_FREQ</b> [] = &quot;Unable to set desired output frequency.&quot;</td></tr>
 <tr class="separator:aa1a476772abd5ab383b0b40844d5448c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -391,7 +387,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><div class="memdoc">
 <p>Set execution environment and lock sid to it. </p>
 
-<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1exSID.html#a522ac3d59bc0f51ea3863e9290145672">libsidplayfp::exSID</a>, and <a class="el" href="classlibsidplayfp_1_1HardSID.html#a406b5f200d26499e7ca5b629723733f8">libsidplayfp::HardSID</a>.</p>
+<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1HardSID.html#a406b5f200d26499e7ca5b629723733f8">libsidplayfp::HardSID</a>.</p>
 
 </div>
 </div>
@@ -516,7 +512,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><div class="memdoc">
 <p>Unlock sid. </p>
 
-<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1exSID.html#a785a44f0977c62701d68f11190e60997">libsidplayfp::exSID</a>, and <a class="el" href="classlibsidplayfp_1_1HardSID.html#ac0da97adf6d72e7fceecb6f9e4f2712a">libsidplayfp::HardSID</a>.</p>
+<p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1HardSID.html#ac0da97adf6d72e7fceecb6f9e4f2712a">libsidplayfp::HardSID</a>.</p>
 
 </div>
 </div>
@@ -601,7 +597,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 25 2025 09:28:18 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 11 2025 08:35:48 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

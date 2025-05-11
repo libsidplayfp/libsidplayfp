@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.13.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.14.0</span>
    </div>
   </td>
  </tr>
@@ -70,6 +70,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a62e5a8e252685332f8a9ddbb6f466e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac436fcda23b37c6fb03e319d9705947b" id="r_ac436fcda23b37c6fb03e319d9705947b"><td class="memItemLeft" align="right" valign="top">uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">play</a> (short *buffer, uint_least32_t count)</td></tr>
 <tr class="separator:ac436fcda23b37c6fb03e319d9705947b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb1614b34f3e66d4f2178a35ad231e17" id="r_adb1614b34f3e66d4f2178a35ad231e17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#adb1614b34f3e66d4f2178a35ad231e17">buffers</a> (short **buffers) const</td></tr>
+<tr class="separator:adb1614b34f3e66d4f2178a35ad231e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e1f97c0701a83a01b76565c7c3bc468" id="r_a5e1f97c0701a83a01b76565c7c3bc468"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#a5e1f97c0701a83a01b76565c7c3bc468">play</a> (unsigned int cycles)</td></tr>
+<tr class="separator:a5e1f97c0701a83a01b76565c7c3bc468"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae017b707864fb4b6994130973173f8e9" id="r_ae017b707864fb4b6994130973173f8e9"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#ae017b707864fb4b6994130973173f8e9">installedSIDs</a> () const</td></tr>
+<tr class="separator:ae017b707864fb4b6994130973173f8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2b6b7d7c45ab1970a218bb6d5bf1178" id="r_ae2b6b7d7c45ab1970a218bb6d5bf1178"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#ae2b6b7d7c45ab1970a218bb6d5bf1178">isPlaying</a> () const</td></tr>
 <tr class="separator:ae2b6b7d7c45ab1970a218bb6d5bf1178"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca7ce52d48e3341b5454e9b1836ddaf8" id="r_aca7ce52d48e3341b5454e9b1836ddaf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidplayfp.html#aca7ce52d48e3341b5454e9b1836ddaf8">stop</a> ()</td></tr>
@@ -104,6 +110,32 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#_a0">demo.cpp</a>.</dd>
 </dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="adb1614b34f3e66d4f2178a35ad231e17" name="adb1614b34f3e66d4f2178a35ad231e17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb1614b34f3e66d4f2178a35ad231e17">&#9670;&#160;</a></span>buffers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sidplayfp::buffers </td>
+          <td>(</td>
+          <td class="paramtype">short **&#160;</td>
+          <td class="paramname"><em>buffers</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the buffer pointers for each of the installed SID chip.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffers</td><td>pointer to the array of buffer pointers. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>2.14 </dd></dl>
+
+</div>
+</div>
 <a id="a455797460b63290cddbeb99d3c24a056" name="a455797460b63290cddbeb99d3c24a056"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a455797460b63290cddbeb99d3c24a056">&#9670;&#160;</a></span>config() <span class="overload">[1/2]</span></h2>
 
@@ -347,6 +379,26 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
 
 </div>
 </div>
+<a id="ae017b707864fb4b6994130973173f8e9" name="ae017b707864fb4b6994130973173f8e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae017b707864fb4b6994130973173f8e9">&#9670;&#160;</a></span>installedSIDs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int sidplayfp::installedSIDs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the number of installed SID chips.</p>
+<dl class="section return"><dt>Returns</dt><dd>the number of SID chips. </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.14 </dd></dl>
+
+</div>
+</div>
 <a id="ae2b6b7d7c45ab1970a218bb6d5bf1178" name="ae2b6b7d7c45ab1970a218bb6d5bf1178"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae2b6b7d7c45ab1970a218bb6d5bf1178">&#9670;&#160;</a></span>isPlaying()</h2>
 
@@ -440,7 +492,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
 </div>
 </div>
 <a id="ac436fcda23b37c6fb03e319d9705947b" name="ac436fcda23b37c6fb03e319d9705947b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac436fcda23b37c6fb03e319d9705947b">&#9670;&#160;</a></span>play()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac436fcda23b37c6fb03e319d9705947b">&#9670;&#160;</a></span>play() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -475,6 +527,33 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
 <dl class="section return"><dt>Returns</dt><dd>the number of produced samples. If less than requested or <a class="el" href="classsidplayfp.html#ae2b6b7d7c45ab1970a218bb6d5bf1178">isPlaying()</a> is false an error occurred, use <a class="el" href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">error()</a> to get a detailed message. </dd></dl>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="demo_8cpp-example.html#a16">demo.cpp</a>.</dd>
 </dl>
+
+</div>
+</div>
+<a id="a5e1f97c0701a83a01b76565c7c3bc468" name="a5e1f97c0701a83a01b76565c7c3bc468"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e1f97c0701a83a01b76565c7c3bc468">&#9670;&#160;</a></span>play() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sidplayfp::play </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>cycles</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Run the emulation for selected number of cycles. The value will be limited to a reasonable amount if too large.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cycles</td><td>the number of cycles to run. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the number of produced samples or zero for hardware devices. If negative an error occurred, use <a class="el" href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">error()</a> to get a detailed message. </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.14 </dd></dl>
 
 </div>
 </div>
@@ -613,7 +692,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setChargen</b> (const
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 25 2025 09:28:18 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 11 2025 08:35:48 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.13.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.14.0</span>
    </div>
   </td>
  </tr>
@@ -171,33 +171,39 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    uint_least32_t play(<span class="keywordtype">short</span> *buffer, uint_least32_t samples);</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordtype">bool</span> isPlaying()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_isPlaying != state_t::STOPPED; }</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordtype">void</span> buffers(<span class="keywordtype">short</span>** buffers) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordtype">void</span> stop();</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordtype">int</span> play(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> cycles);</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    uint_least32_t timeMs()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getTimeMs() - m_startTime; }</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordtype">bool</span> isPlaying()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_isPlaying != state_t::STOPPED; }</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">void</span> debug(<span class="keyword">const</span> <span class="keywordtype">bool</span> enable, FILE *out) { m_c64.debug(enable, out); }</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">void</span> stop();</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">void</span> mute(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> voice, <span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    uint_least32_t timeMs()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getTimeMs() - m_startTime; }</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keywordtype">void</span> filter(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keywordtype">void</span> debug(<span class="keyword">const</span> <span class="keywordtype">bool</span> enable, FILE *out) { m_c64.debug(enable, out); }</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *error()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_errorString; }</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordtype">void</span> mute(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> voice, <span class="keywordtype">bool</span> enable);</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordtype">void</span> setKernal(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keywordtype">void</span> setBasic(<span class="keyword">const</span> uint8_t* rom);</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordtype">void</span> setChargen(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordtype">void</span> filter(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, <span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *error()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_errorString; }</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getCia1TimerA(); }</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keywordtype">bool</span> getSidStatus(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, uint8_t regs[32]);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>};</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordtype">void</span> setKernal(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keywordtype">void</span> setBasic(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keywordtype">void</span> setChargen(<span class="keyword">const</span> uint8_t* rom);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    uint_least16_t getCia1TimerA()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.getCia1TimerA(); }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordtype">bool</span> getSidStatus(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sidNum, uint8_t regs[32]);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> installedSIDs()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_c64.installedSIDs(); }</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>};</div>
 </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>}</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span><span class="preprocessor">#endif </span><span class="comment">// PLAYER_H</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>}</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">#endif </span><span class="comment">// PLAYER_H</span></div>
 <div class="ttc" id="aclassSidConfig_html"><div class="ttname"><a href="classSidConfig.html">SidConfig</a></div><div class="ttdef"><b>Definition</b> SidConfig.h:40</div></div>
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition</b> SidConfig.h:51</div></div>
 <div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition</b> SidConfig.h:84</div></div>
@@ -213,7 +219,7 @@ $(document).ready(function() { init_codefold(0); });
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 25 2025 09:28:18 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 11 2025 08:35:48 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

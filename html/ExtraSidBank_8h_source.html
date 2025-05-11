@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.13.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.14.0</span>
    </div>
   </td>
  </tr>
@@ -111,7 +111,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">void</span> reset()</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    {</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">for</span> (<a class="code hl_class" href="classlibsidplayfp_1_1c64sid.html">c64sid</a>* sid: sids)</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            sid-&gt;reset(0xf);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            sid-&gt;reset();</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    }</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">void</span> resetSIDMapper(<a class="code hl_class" href="classlibsidplayfp_1_1Bank.html">Bank</a> *bank)</div>
@@ -141,12 +141,14 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        mapper[mapperIndex(address)] = s;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
 </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>};</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> installedSIDs()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> sids.size(); }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>};</div>
 </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html">libsidplayfp::Bank</a></div><div class="ttdef"><b>Definition</b> Bank.h:36</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html_a467285ba24e4dc844e796b0f0c9ed443"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html#a467285ba24e4dc844e796b0f0c9ed443">libsidplayfp::Bank::peek</a></div><div class="ttdeci">virtual uint8_t peek(uint_least16_t address)=0</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Bank_html_a50d55f7b4f4e45ea11da64a79466cbe9"><div class="ttname"><a href="classlibsidplayfp_1_1Bank.html#a50d55f7b4f4e45ea11da64a79466cbe9">libsidplayfp::Bank::poke</a></div><div class="ttdeci">virtual void poke(uint_least16_t address, uint8_t value)=0</div></div>
@@ -158,7 +160,7 @@ $(document).ready(function() { init_codefold(0); });
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 25 2025 09:28:18 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 11 2025 08:35:48 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
