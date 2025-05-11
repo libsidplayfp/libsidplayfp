@@ -13,10 +13,6 @@ if MINGW32
   W32_LDFLAGS = -no-undefined
 endif
 
-if HAVE_VISIBILITY
-  VISIBILITY_CXXFLAGS = -fvisibility=hidden -fvisibility-inlines-hidden
-endif
-
 AM_CPPFLAGS = -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_builddir)/src/builders/residfp-builder/residfp \
 -I $(top_builddir)/src/builders/resid-builder \
@@ -29,8 +25,6 @@ $(EXSID_CFLAGS) \
 $(PTHREAD_CFLAGS) \
 $(FTDI_CFLAGS) \
 @debug_flags@
-
-AM_CXXFLAGS = $(VISIBILITY_CXXFLAGS) $(SIMD_CFLAGS)
 
 #=========================================================
 EXTRA_DIST = \
@@ -213,7 +207,7 @@ src/builders/resid-builder/libsidplayfp-resid.la \
 $(LIBGCRYPT_LIBS) \
 $(PTHREAD_LIBS)
 
-src_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(PTHREAD_CFLAGS) $(AM_CPPFLAGS)
+src_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
 
 if HARDSID
   src_libsidplayfp_la_LIBADD += src/builders/hardsid-builder/libsidplayfp-hardsid.la
