@@ -53,8 +53,7 @@ AS_IF([test $ax_cv_cxx_compile_cxx23__std_cpp23 != "yes"], [
 ])
 
 dnl check for hidden visibility support
-AX_CHECK_COMPILE_FLAG([-fvisibility=hidden -fvisibility-inlines-hidden], [has_visibility=yes], [has_visibility=no])
-AM_CONDITIONAL([HAVE_VISIBILITY], [test "x$has_visibility" = xyes])
+AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden -fvisibility-inlines-hidden])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -179,7 +178,7 @@ AS_IF([test x"$with_simd" != xnone],
         [AC_MSG_ERROR([Unrecognized SIMD specified])]
     )]
 )
-AC_SUBST([SIMD_CFLAGS])
+AX_APPEND_FLAG([$SIMD_CFLAGS])
 
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 [AC_COMPILE_IFELSE(
