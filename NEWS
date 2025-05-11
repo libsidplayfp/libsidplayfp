@@ -1,7 +1,7 @@
-2.14.0 2025-05-xx
+2.14.0 2025-05-11
 * Rough approximation of MDAC saturation for the 6581 (#177) (#185)
 * New play API for client side mixing (#41) (#184)
-* minor optimizations
+* Minor fixes and optimizations
 
 
 
