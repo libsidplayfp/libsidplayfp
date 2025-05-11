@@ -55,6 +55,9 @@ AS_IF([test $ax_cv_cxx_compile_cxx23__std_cpp23 != "yes"], [
 dnl check for hidden visibility support
 AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden -fvisibility-inlines-hidden])
 
+dnl enable fast math
+AX_APPEND_COMPILE_FLAGS([-ffast-math -fno-unsafe-math-optimizations])
+
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 
