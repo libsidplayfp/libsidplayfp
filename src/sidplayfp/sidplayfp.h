@@ -86,7 +86,9 @@ public:
      * Set the fast-forward factor.
      *
      * @param percent
+     * @deprecated
      */
+    SID_DEPRECATED
     bool fastForward(unsigned int percent);
 
     /**
@@ -107,7 +109,9 @@ public:
      * @return the number of produced samples. If less than requested
      *         or #isPlaying() is false an error occurred, use #error()
      *         to get a detailed message.
+     * @deprecated use #play(unsigned int)
      */
+    SID_DEPRECATED
     uint_least32_t play(short *buffer, uint_least32_t count);
 
     /**
@@ -143,12 +147,16 @@ public:
      * Check if the engine is playing or stopped.
      *
      * @return true if playing, false otherwise.
+     * @deprecated
      */
+    SID_DEPRECATED
     bool isPlaying() const;
 
     /**
      * Stop the engine.
+     * @deprecated
      */
+    SID_DEPRECATED
     void stop();
 
     /**
