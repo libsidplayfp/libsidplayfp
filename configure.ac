@@ -149,39 +149,27 @@ AS_IF([test x"$enable_inline" != "xno"],
   [RESID_INLINE=""; RESID_INLINING=0]
 )
 
+dnl define compiler flag to enable SIMD instructions, not required if -march or -mcpu is defined
 AC_ARG_WITH(
     [simd],
-    [AS_HELP_STRING([--with-simd], [Build with SIMD optimizations [@<:@sse4/neon/none, default=none@:>@]])],
+    [AS_HELP_STRING([--with-simd], [Build with SIMD optimizations [@<:@mmx/sse2/sse4/avx2/avx512f/none, default=none@:>@]])],
     [],
     [with_simd=none]
 )
 
 AS_IF([test x"$with_simd" != xnone],
     [AS_CASE([$with_simd],
-        [sse4], [
-            AC_MSG_CHECKING([for sse4.1 support])
-            save_CXXFLAGS="$CXXFLAGS"
-            CXXFLAGS="$CXXFLAGS -msse4.1"
-
-            AC_COMPILE_IFELSE(
-                [AC_LANG_PROGRAM(
-                    [#include <smmintrin.h>],
-                    [return 0;])],
-                [
-                    SIMD_CFLAGS=-msse4.1
-                    AC_MSG_RESULT([yes])
-                ],
-                [
-                    AC_MSG_RESULT([no])
-                ])
-
-            CXXFLAGS="$save_CXXFLAGS"
-        ],
-        [neon], [AC_MSG_WARN([neon is currently unimplemented])],
+        [mmx], [SID_X86_SIMD_SUPPORTS([mmx])],
+        [sse2], [SID_X86_SIMD_SUPPORTS([sse2])],
+        [sse4], [SID_X86_SIMD_SUPPORTS([sse4])],
+        [avx2], [SID_X86_SIMD_SUPPORTS([avx2])],
+        [avx512f], [SID_X86_SIMD_SUPPORTS([avx512f])],
         [AC_MSG_ERROR([Unrecognized SIMD specified])]
     )]
 )
-AX_APPEND_FLAG([$SIMD_CFLAGS])
+
+dnl gcc needs this flag to enable vectorization
+AX_APPEND_COMPILE_FLAGS([-ftree-loop-vectorize])
 
 AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
 [AC_COMPILE_IFELSE(
