@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -40,6 +40,15 @@
 #  include <numbers>
 #endif
 
+
+#if __cpp_lib_constexpr_cmath >= 202306L
+#  define CONSTEXPR_FUNC  constexpr
+#  define CONSTEXPR_VAR   constexpr
+#else
+#  define CONSTEXPR_FUNC
+#  define CONSTEXPR_VAR   const
+#endif
+
 namespace reSIDfp
 {
 
@@ -56,9 +65,7 @@ constexpr int BITS = 16;
  * @param x evaluate I0 at x
  * @return value of I0 at x.
  */
-#ifdef HAVE_CXX14
-constexpr
-#endif
+CONSTEXPR_FUNC
 double I0(double x)
 {
     double sum = 1.;
@@ -149,7 +156,7 @@ SincResampler::SincResampler(
 #endif
 
     // 16 bits -> -96dB stopband attenuation.
-    const double A = -20. * std::log10(1.0 / (1 << BITS));
+    CONSTEXPR_VAR double A = -20. * std::log10(1.0 / (1 << BITS));
     // A fraction of the bandwidth is allocated to the transition band, which we double
     // because we design the filter to transition halfway at nyquist.
     const double dw = (1. - 2.*highestAccurateFrequency / samplingFrequency) * PI * 2.;
@@ -157,8 +164,8 @@ SincResampler::SincResampler(
     // For calculation of beta and N see the reference for the kaiserord
     // function in the MATLAB Signal Processing Toolbox:
     // http://www.mathworks.com/help/signal/ref/kaiserord.html
-    const double beta = 0.1102 * (A - 8.7);
-    const double I0beta = I0(beta);
+    CONSTEXPR_VAR double beta = 0.1102 * (A - 8.7);
+    CONSTEXPR_VAR double I0beta = I0(beta);
     const double cyclesPerSampleD = clockFrequency / samplingFrequency;
     const double inv_cyclesPerSampleD = samplingFrequency / clockFrequency;
 
