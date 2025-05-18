@@ -107,8 +107,6 @@ private:
     uint_least32_t m_sampleCount = 0;
     uint_least32_t m_sampleIndex = 0;
 
-    uint_least32_t m_sampleRate = 0;
-
     bool m_stereo = false;
 
     bool m_wait = false;
@@ -260,13 +258,6 @@ public:
      * @param stereo true for stereo mode, false for mono
      */
     void setStereo(bool stereo);
-
-    /**
-     * Set sample rate.
-     *
-     * @param rate sample rate in Hertz
-     */
-    void setSamplerate(uint_least32_t rate) { m_sampleRate = rate; }
 
     /**
      * Check if the buffer have been filled.
