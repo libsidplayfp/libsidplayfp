@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <iterator>
 #include <numeric>
+#include <version>
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -32,11 +33,9 @@
 
 #include "siddefs-fp.h"
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+#include "sidcxx11.h"
 
-#if defined(HAVE_CXX20) && defined(__cpp_lib_math_constants)
+#ifdef __cpp_lib_math_constants
 #  include <numbers>
 #endif
 
@@ -145,7 +144,7 @@ SincResampler::SincResampler(
         double highestAccurateFrequency) :
     cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.))
 {
-#if defined(HAVE_CXX20) && defined(__cpp_lib_math_constants)
+#ifdef __cpp_lib_math_constants
     constexpr double PI = std::numbers::pi;
 #else
 #  ifdef M_PI

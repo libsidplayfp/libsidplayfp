@@ -24,14 +24,13 @@
 #ifndef SIMPLEMIXER_H
 #define SIMPLEMIXER_H
 
-#include "sidcxx11.h"
-
+#include <vector>
+#include <version>
 #include <cstdint>
 
 #ifdef __cpp_lib_math_constants
 #  include <numbers>
 #endif
-#include <vector>
 
 namespace libsidplayfp
 {
