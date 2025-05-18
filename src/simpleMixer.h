@@ -28,6 +28,9 @@
 
 #include <cstdint>
 
+#ifdef __cpp_lib_math_constants
+#  include <numbers>
+#endif
 #include <vector>
 
 namespace libsidplayfp
