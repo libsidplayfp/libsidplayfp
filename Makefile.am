@@ -106,6 +106,8 @@ src/sidcxx11.h \
 src/sidmd5.h \
 src/sidmemory.h \
 src/SidInfoImpl.h \
+src/simpleMixer.cpp \
+src/simpleMixer.h \
 src/romCheck.h \
 src/sidemu.cpp \
 src/sidemu.h \

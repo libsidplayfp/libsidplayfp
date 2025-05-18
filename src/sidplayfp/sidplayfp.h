@@ -144,6 +144,23 @@ public:
     unsigned int installedSIDs() const;
 
     /**
+     * Init mixer.
+     *
+     * @param stereo whether to mix in stereo or mono
+     * @since 2.15
+     */
+    void initMixer(bool stereo);
+
+    /**
+     * Mix buffers.
+     *
+     * @param buffer the output buffer
+     * @param samples number of samples to mix, returned from the #play(unsigned int) function
+     * @since 2.15
+     */
+    void mix(short *buffer, uint_least32_t samples);
+
+    /**
      * Check if the engine is playing or stopped.
      *
      * @return true if playing, false otherwise.

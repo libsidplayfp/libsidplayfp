@@ -97,6 +97,12 @@ int main(int, char* argv[])
     // Set up a SID builder
     std::unique_ptr<ReSIDfpBuilder> rs(new ReSIDfpBuilder("Demo"));
 
+    // Get the number of SIDs supported by the engine
+    unsigned int maxsids = (m_engine.info ()).maxsids();
+
+    // Create SID emulators
+    rs->create(maxsids);
+
     // Check if builder is ok
     if (!rs->getStatus())
     {
@@ -150,9 +156,10 @@ int main(int, char* argv[])
 
     uint_least32_t bufferSamples = static_cast<uint_least32_t>(bufferSize) / sizeof(short);
 
+    // 48000/~1000000 * 5000
+    short buffer[256];
     // Play for ~5 seconds
-    short* buffers[3];
-    m_engine.buffers(buffers);
+    m_engine.initMixer(false);
     for (int i=0; i<1000; i++)
     {
         int res = m_engine.play(5000);
@@ -161,7 +168,8 @@ int main(int, char* argv[])
             std::cerr << m_engine.error() << std::endl;
             break;
         }
-        ::write(handle, buffers[0], res*sizeof(short));
+        m_engine.mix(buffer, res);
+        ::write(handle, buffer, res*sizeof(short));
     }
 
     ::close(handle);

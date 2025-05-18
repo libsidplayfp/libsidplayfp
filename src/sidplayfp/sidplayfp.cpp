@@ -146,3 +146,13 @@ unsigned int sidplayfp::installedSIDs() const
 {
     return sidplayer.installedSIDs();
 }
+
+void sidplayfp::initMixer(bool stereo)
+{
+    return sidplayer.initMixer(stereo);
+}
+
+void sidplayfp::mix(short *buffer, uint_least32_t samples)
+{
+    return sidplayer.mix(buffer, samples);
+}

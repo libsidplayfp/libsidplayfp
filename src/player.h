@@ -34,6 +34,7 @@
 #include "SidInfoImpl.h"
 #include "sidrandom.h"
 #include "mixer.h"
+#include "simpleMixer.h"
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
@@ -41,6 +42,7 @@
 #endif
 
 #include <atomic>
+#include <memory>
 #include <vector>
 
 class SidTune;
@@ -88,6 +90,8 @@ private:
 
     /// PAL/NTSC switch value
     uint8_t videoSwitch;
+
+    std::unique_ptr<SimpleMixer> m_simpleMixer;
 
 private:
     /**
@@ -174,6 +178,10 @@ public:
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
 
     unsigned int installedSIDs() const { return m_c64.installedSIDs(); }
+
+    void initMixer(bool stereo);
+
+    void mix(short *buffer, uint_least32_t samples);
 };
 
 }
