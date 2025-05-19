@@ -156,9 +156,10 @@ public:
      *
      * @param buffer the output buffer
      * @param samples number of samples to mix, returned from the #play(unsigned int) function
+     * @return number of samples generated (samples for mono, samples*2 for stereo)
      * @since 2.15
      */
-    void mix(short *buffer, uint_least32_t samples);
+    unsigned int mix(short *buffer, unsigned int samples);
 
     /**
      * Check if the engine is playing or stopped.

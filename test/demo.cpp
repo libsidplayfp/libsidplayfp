@@ -147,7 +147,7 @@ int main(int, char* argv[])
     int handle=::open("/dev/dsp", O_WRONLY, 0);
     int format=AFMT_S16_LE;
     ioctl(handle, SNDCTL_DSP_SETFMT, &format);
-    int chn=1;
+    int chn=2;
     ioctl(handle, SNDCTL_DSP_CHANNELS, &chn);
     int sampleRate=SAMPLERATE;
     ioctl(handle, SNDCTL_DSP_SPEED, &sampleRate);
@@ -156,10 +156,10 @@ int main(int, char* argv[])
 
     uint_least32_t bufferSamples = static_cast<uint_least32_t>(bufferSize) / sizeof(short);
 
-    // 48000/~1000000 * 5000
-    short buffer[256];
+    // 48000/~1000000 * 5000 * 2
+    short buffer[512];
     // Play for ~5 seconds
-    m_engine.initMixer(false);
+    m_engine.initMixer(true);
     for (int i=0; i<1000; i++)
     {
         int res = m_engine.play(5000);
@@ -168,8 +168,8 @@ int main(int, char* argv[])
             std::cerr << m_engine.error() << std::endl;
             break;
         }
-        m_engine.mix(buffer, res);
-        ::write(handle, buffer, res*sizeof(short));
+        unsigned int s = m_engine.mix(buffer, res);
+        ::write(handle, buffer, s*sizeof(short));
     }
 
     ::close(handle);

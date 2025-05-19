@@ -152,7 +152,7 @@ void sidplayfp::initMixer(bool stereo)
     return sidplayer.initMixer(stereo);
 }
 
-void sidplayfp::mix(short *buffer, uint_least32_t samples)
+unsigned int sidplayfp::mix(short *buffer, unsigned int samples)
 {
     return sidplayer.mix(buffer, samples);
 }

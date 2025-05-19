@@ -33,9 +33,10 @@
 namespace libsidplayfp
 {
 
-void SimpleMixer::doMix(short *buffer, int samples)
+unsigned int SimpleMixer::doMix(short *buffer, unsigned int samples)
 {
-    for (int i=0; i<samples; i++)
+    unsigned int j = 0;
+    for (unsigned int i=0; i<samples; i++)
     {
         for (size_t k=0; k<m_buffers.size(); k++)
         {
@@ -47,9 +48,11 @@ void SimpleMixer::doMix(short *buffer, int samples)
         {
             const int_least32_t tmp = (this->*(mix))();
             assert((tmp >= SHRT_MIN) && (tmp <= SHRT_MAX));
-            buffer[i] = static_cast<short>(tmp);
+            buffer[j++] = static_cast<short>(tmp);
         }
     }
+
+    return j;
 }
 
 SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips)

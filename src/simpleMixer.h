@@ -130,7 +130,7 @@ public:
     /**
      * Do the mixing.
      */
-    void doMix(short *buffer, int samples);
+    unsigned int doMix(short *buffer, unsigned int samples);
 };
 
 }

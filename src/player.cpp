@@ -225,9 +225,9 @@ void Player::initMixer(bool stereo)
     m_simpleMixer.reset(new SimpleMixer(stereo, bufs, installedSIDs()));
 }
 
-void Player::mix(short *buffer, uint_least32_t samples)
+unsigned int Player::mix(short *buffer, unsigned int samples)
 {
-    m_simpleMixer->doMix(buffer, samples);
+    return m_simpleMixer->doMix(buffer, samples);
 }
 
 void Player::buffers(short** buffers) const
