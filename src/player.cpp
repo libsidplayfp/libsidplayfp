@@ -284,6 +284,18 @@ int Player::play(unsigned int cycles)
     }
 }
 
+bool Player::reset()
+{
+    try
+    {
+        initialise();
+        return true;
+    }
+    catch (configError const &) {
+        return false;
+    }
+}
+
 /**
  * @throws MOS6510::haltInstruction
  */

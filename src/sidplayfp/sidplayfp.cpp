@@ -71,6 +71,11 @@ int sidplayfp::play(unsigned int cycles)
     return sidplayer.play(cycles);
 }
 
+bool sidplayfp::reset()
+{
+    return sidplayer.reset();
+}
+
 bool sidplayfp::load(SidTune *tune)
 {
     return sidplayer.load(tune);

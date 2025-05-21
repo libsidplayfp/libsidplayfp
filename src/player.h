@@ -182,6 +182,8 @@ public:
     void initMixer(bool stereo);
 
     unsigned int mix(short *buffer, unsigned int samples);
+
+    bool reset();
 };
 
 }

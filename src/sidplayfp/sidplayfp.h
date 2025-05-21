@@ -136,6 +136,15 @@ public:
     int play(unsigned int cycles);
 
     /**
+     * Reinitialize the engine.
+     *
+     * @return false in case of error, use #error()
+     * to get a detailed message.
+     * @since 2.15
+     */
+    bool reset();
+
+    /**
      * Get the number of installed SID chips.
      *
      * @return the number of SID chips.
