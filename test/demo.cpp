@@ -97,12 +97,6 @@ int main(int, char* argv[])
     // Set up a SID builder
     std::unique_ptr<ReSIDfpBuilder> rs(new ReSIDfpBuilder("Demo"));
 
-    // Get the number of SIDs supported by the engine
-    unsigned int maxsids = (m_engine.info ()).maxsids();
-
-    // Create SID emulators
-    rs->create(maxsids);
-
     // Check if builder is ok
     if (!rs->getStatus())
     {
