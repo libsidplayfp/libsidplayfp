@@ -1,3 +1,11 @@
+2.15.0 2025-0x-xx
+* Compile with fast math, without unsafe optimizations
+* residfp: reworked the SIMD support, removed the intrinsics code leaving the compiler vectorize the loop
+* Extended the new play API
+* Marked old play API functions as deprecated
+
+
+
 2.14.0 2025-05-11
 * Rough approximation of MDAC saturation for the 6581 (#177) (#185)
 * New play API for client side mixing (#41) (#184)
