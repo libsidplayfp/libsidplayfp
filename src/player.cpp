@@ -519,7 +519,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
         // Setup base SID
         const SidConfig::sid_model_t userModel = getSidModel(tuneInfo->sidModel(0), defaultModel, forced);
         sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel, digiboost);
-        if (!builder->getStatus()) UNLIKELY
+        if (!s) UNLIKELY
         {
             throw configError(builder->error());
         }
@@ -541,7 +541,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                 const SidConfig::sid_model_t userModel = getSidModel(tuneInfo->sidModel(i+1), defaultModel, forced);
 
                 sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel, digiboost);
-                if (!builder->getStatus()) UNLIKELY
+                if (!s) UNLIKELY
                 {
                     throw configError(builder->error());
                 }

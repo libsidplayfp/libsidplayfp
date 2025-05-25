@@ -50,13 +50,13 @@ protected:
 
     emuset_t sidobjs;
 
-    bool m_status;
+protected:
+    virtual bool create() = 0;
 
 public:
     sidbuilder(const char * const name) :
         m_name(name),
-        m_errorBuffer("N/A"),
-        m_status(true) {}
+        m_errorBuffer("N/A") {}
     virtual ~sidbuilder() {}
 
     /**
@@ -67,28 +67,12 @@ public:
     unsigned int usedDevices() const { return sidobjs.size(); }
 
     /**
-     * Available devices.
-     *
-     * @return the number of available sids, 0 = endless.
-     */
-    virtual unsigned int availDevices() const = 0;
-
-    /**
-     * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
-     * @return the number of actually created sid emus
-     * @deprecated
-     */
-    virtual unsigned int create(unsigned int sids) = 0;
-
-    /**
      * Find a free SID of the required specs
      *
-     * @param env the event context
+     * @param scheduler the event scheduler
      * @param model the required sid model
      * @param digiboost whether to enable digiboost for 8580
-     * @return pointer to the locked sid emu
+     * @return pointer to the locked sid emu, null if no emu is available
      */
     libsidplayfp::sidemu *lock(libsidplayfp::EventScheduler *scheduler, SidConfig::sid_model_t model, bool digiboost);
 
@@ -118,13 +102,6 @@ public:
      * @return string error message.
      */
     const char *error() const { return m_errorBuffer.c_str(); }
-
-    /**
-     * Determine current state of object.
-     *
-     * @return true = okay, false = error
-     */
-    bool getStatus() const { return m_status; }
 
     /**
      * Get the builder's credits.

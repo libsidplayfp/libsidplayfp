@@ -21,31 +21,17 @@
 
 class SID_EXTERN exSIDBuilder : public sidbuilder
 {
-private:
-    static bool m_initialised;
-
-    static unsigned int m_count;
-
 public:
     exSIDBuilder(const char * const name);
     ~exSIDBuilder();
-
-    /**
-     * Available sids.
-     *
-     * @return the number of available sids, 0 = endless.
-     */
-    unsigned int availDevices() const;
 
     const char *credits() const;
     void flush();
 
     /**
      * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
      */
-    unsigned int create(unsigned int sids);
+    bool create();
 };
 
 #endif // EXSID_H

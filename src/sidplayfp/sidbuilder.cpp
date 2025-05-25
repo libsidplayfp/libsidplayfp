@@ -28,10 +28,7 @@
 
 libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidConfig::sid_model_t model, bool digiboost)
 {
-    m_status = true;
-
-    // TODO cleanup once we remove sidbuilder::create
-
+    // check if we have a cached emu
     for (libsidplayfp::sidemu *sid: sidobjs)
     {
         if (sid->lock(env))
@@ -41,8 +38,8 @@ libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidCon
         }
     }
 
-    unsigned int res = create(1);
-    if (res)
+    // create new emu
+    if (create())
     {
         for (libsidplayfp::sidemu *sid: sidobjs)
         {
@@ -55,7 +52,6 @@ libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidCon
     }
 
     // Unable to locate free SID
-    m_status = false;
     m_errorBuffer.assign(name()).append(" ERROR: No available SIDs to lock");
     return nullptr;
 }

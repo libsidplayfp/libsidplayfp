@@ -27,18 +27,9 @@
 #include "exsid-emu.h"
 
 
-bool exSIDBuilder::m_initialised = false;
-unsigned int exSIDBuilder::m_count = 0;
-
 exSIDBuilder::exSIDBuilder(const char * const name) :
     sidbuilder(name)
-{
-    if (!m_initialised)
-    {
-        m_count = 1;
-        m_initialised = true;
-    }
-}
+{}
 
 exSIDBuilder::~exSIDBuilder()
 {
@@ -46,53 +37,29 @@ exSIDBuilder::~exSIDBuilder()
     remove();
 }
 
-// Create a new sid emulation.  Called by libsidplay2 only
-unsigned int exSIDBuilder::create(unsigned int sids)
+// Create a new sid emulation. Called by sidbuilder only
+bool exSIDBuilder::create()
 {
-    m_status = true;
-
-    // Check available devices
-    unsigned int count = availDevices();
-    if (count == 0)
+    try
     {
-        m_errorBuffer.assign(name()).append(" ERROR: No devices found");
-        goto exSIDBuilder_create_error;
+        std::unique_ptr<libsidplayfp::exSID> sid(new libsidplayfp::exSID(this));
+
+        // SID init failed?
+        if (!sid->getStatus())
+        {
+            m_errorBuffer = sid->error();
+            return false;
+        }
+        sidobjs.insert(sid.release());
+    }
+    // Memory alloc failed?
+    catch (std::bad_alloc const &)
+    {
+        m_errorBuffer.assign(name()).append(" ERROR: Unable to create exSID object");
+        return false;
     }
 
-    if (count < sids)
-        sids = count;
-
-    for (count = 0; count < sids; count++)
-    {
-        try
-        {
-            std::unique_ptr<libsidplayfp::exSID> sid(new libsidplayfp::exSID(this));
-
-            // SID init failed?
-            if (!sid->getStatus())
-            {
-                m_errorBuffer = sid->error();
-                goto exSIDBuilder_create_error;
-            }
-            sidobjs.insert(sid.release());
-        }
-        // Memory alloc failed?
-        catch (std::bad_alloc const &)
-        {
-            m_errorBuffer.assign(name()).append(" ERROR: Unable to create exSID object");
-            goto exSIDBuilder_create_error;
-        }
-    }
-
-exSIDBuilder_create_error:
-    if (count == 0)
-        m_status = false;
-    return count;
-}
-
-unsigned int exSIDBuilder::availDevices() const
-{
-    return m_count;
+    return true;
 }
 
 const char *exSIDBuilder::credits() const

@@ -51,40 +51,29 @@ ReSIDfpBuilder::~ReSIDfpBuilder()
 }
 
 // Create a new sid emulation.
-unsigned int ReSIDfpBuilder::create(unsigned int sids)
+bool ReSIDfpBuilder::create()
 {
-    m_status = true;
-
-    // Check available devices
-    unsigned int count = availDevices();
-
-    if (count && (count < sids))
-        sids = count;
-
-    for (count = 0; count < sids; count++)
+    try
     {
-        try
-        {
-            auto sid = new libsidplayfp::ReSIDfp(this);
-            if (m_config->filter6581Curve.has_value())
-                sid->filter6581Curve(m_config->filter6581Curve.value());
-            if (m_config->filter8580Curve.has_value())
-                sid->filter8580Curve(m_config->filter8580Curve.value());
-            if (m_config->filter6581Range.has_value())
-                sid->filter6581Range(m_config->filter6581Range.value());
-            if (m_config->cws.has_value())
-                sid->combinedWaveforms(m_config->cws.value());
-            sidobjs.insert(sid);
-        }
-        // Memory alloc failed?
-        catch (std::bad_alloc const &)
-        {
-            m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfp object");
-            m_status = false;
-            break;
-        }
+        auto sid = new libsidplayfp::ReSIDfp(this);
+        if (m_config->filter6581Curve.has_value())
+            sid->filter6581Curve(m_config->filter6581Curve.value());
+        if (m_config->filter8580Curve.has_value())
+            sid->filter8580Curve(m_config->filter8580Curve.value());
+        if (m_config->filter6581Range.has_value())
+            sid->filter6581Range(m_config->filter6581Range.value());
+        if (m_config->cws.has_value())
+            sid->combinedWaveforms(m_config->cws.value());
+        sidobjs.insert(sid);
     }
-    return count;
+    catch (std::bad_alloc const &)
+    {
+        // Memory alloc failed
+        m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfp object");
+        return false;
+    }
+
+    return true;
 
 }
 

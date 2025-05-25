@@ -36,18 +36,9 @@ public:
     ~ReSIDfpIIBuilder();
 
     /**
-     * Available sids.
-     *
-     * @return the number of available sids, 0 = endless.
-     */
-    unsigned int availDevices() const { return 0; }
-
-    /**
      * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
      */
-    unsigned int create(unsigned int sids);
+    bool create();
 
     const char *credits() const;
 
