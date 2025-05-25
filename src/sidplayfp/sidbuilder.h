@@ -132,15 +132,6 @@ public:
      * @return credits
      */
     virtual const char *credits() const = 0;
-
-    /**
-     * Toggle sid filter emulation.
-     *
-     * @param enable true = enable, false = disable
-     * @deprecated use #sidplayfp.filter
-     */
-    SID_DEPRECATED
-    virtual void filter(bool enable) = 0;
 };
 
 #endif // SIDBUILDER_H

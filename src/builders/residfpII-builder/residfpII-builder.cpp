@@ -35,7 +35,6 @@ struct ReSIDfpIIBuilder::config
     Property<double> filter6581Curve;
     Property<double> filter6581Range;
     Property<SidConfig::sid_cw_t> cws;
-    Property<bool> filterEnabled;
 };
 
 
@@ -75,8 +74,6 @@ unsigned int ReSIDfpIIBuilder::create(unsigned int sids)
                 sid->filter6581Range(m_config->filter6581Range.value());
             if (m_config->cws.has_value())
                 sid->combinedWaveforms(m_config->cws.value());
-            if (m_config->filterEnabled.has_value())
-                sid->filter(m_config->filterEnabled.value());
             sidobjs.insert(sid);
         }
         // Memory alloc failed?
@@ -94,13 +91,6 @@ unsigned int ReSIDfpIIBuilder::create(unsigned int sids)
 const char *ReSIDfpIIBuilder::credits() const
 {
     return libsidplayfp::ReSIDfpII::getCredits();
-}
-
-void ReSIDfpIIBuilder::filter(bool enable)
-{
-    m_config->filterEnabled = enable;
-    for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfpII*>(e)->filter(enable);
 }
 
 void ReSIDfpIIBuilder::filter6581Curve(double filterCurve)

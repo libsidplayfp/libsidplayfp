@@ -55,11 +55,6 @@ public:
     /// Settings that affect all SIDs.
     //@{
     /**
-     * enable/disable filter.
-     */
-    void filter(bool enable);
-
-    /**
      * Set 6581 filter curve.
      *
      * @param filterCurve from 0.0 (light) to 1.0 (dark) (default 0.5)
