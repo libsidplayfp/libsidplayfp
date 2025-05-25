@@ -62,7 +62,7 @@ bool exSIDBuilder::create()
     return true;
 }
 
-const char *exSIDBuilder::credits() const
+const char *exSIDBuilder::getCredits() const
 {
     return libsidplayfp::exSID::getCredits();
 }

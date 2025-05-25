@@ -77,7 +77,7 @@ bool ReSIDfpIIBuilder::create()
 
 }
 
-const char *ReSIDfpIIBuilder::credits() const
+const char *ReSIDfpIIBuilder::getCredits() const
 {
     return libsidplayfp::ReSIDfpII::getCredits();
 }

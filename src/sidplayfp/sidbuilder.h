@@ -53,6 +53,8 @@ protected:
 protected:
     virtual bool create() = 0;
 
+    virtual const char *getCredits() const = 0;
+
 public:
     sidbuilder(const char * const name) :
         m_name(name),
@@ -108,7 +110,7 @@ public:
      *
      * @return credits
      */
-    virtual const char *credits() const = 0;
+    const char *credits() const;
 };
 
 #endif // SIDBUILDER_H

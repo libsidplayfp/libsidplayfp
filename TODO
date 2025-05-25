@@ -1,6 +1,5 @@
 3.0
 * wrap everything into a library namespace (?)
-* hide virtual functions in sidbuilder class
 
 
 someday/maybe:

@@ -75,3 +75,8 @@ void sidbuilder::remove()
 
     sidobjs.clear();
 }
+
+const char* sidbuilder::credits() const
+{
+    return getCredits();
+}

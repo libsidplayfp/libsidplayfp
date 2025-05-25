@@ -25,7 +25,7 @@ public:
     exSIDBuilder(const char * const name);
     ~exSIDBuilder();
 
-    const char *credits() const;
+    const char *getCredits() const;
     void flush();
 
     /**

@@ -40,7 +40,7 @@ public:
      */
     bool create();
 
-    const char *credits() const;
+    const char *getCredits() const;
 
     /// @name global settings
     /// Settings that affect all SIDs.
