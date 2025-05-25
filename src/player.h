@@ -159,7 +159,7 @@ public:
 
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
 
-    unsigned int installedSIDs() const { return m_c64.installedSIDs(); }
+    unsigned int installedSIDs() const { return m_chips.size(); }
 
     void initMixer(bool stereo);
 
