@@ -133,13 +133,6 @@ AS_IF([test "x$enable_debug" = "xno"],
 
 AC_SUBST([debug_flags])
 
-AC_ARG_ENABLE([hardsid],
-  AS_HELP_STRING([--enable-hardsid],[enable hardsid builder [default=no]])
-)
-
-AM_CONDITIONAL([HARDSID], [test "x$enable_hardsid" = "xyes"])
-
-
 AC_ARG_ENABLE([inline],
   AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]])
 )
