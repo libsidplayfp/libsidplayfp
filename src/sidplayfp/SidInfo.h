@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2019 Leandro Nini
+ *  Copyright 2011-2025 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -45,9 +45,6 @@ public:
     const char *credits(unsigned int i) const;
     //@}
 
-    /// Number of SIDs supported by this library
-    unsigned int maxsids() const;
-
     /// Number of output channels (1-mono, 2-stereo)
     unsigned int channels() const;
 
@@ -77,8 +74,6 @@ private:
 
     virtual unsigned int getNumberOfCredits() const =0;
     virtual const char *getCredits(unsigned int i) const =0;
-
-    virtual unsigned int getMaxsids() const =0;
 
     virtual unsigned int getChannels() const =0;
 

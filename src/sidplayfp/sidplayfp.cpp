@@ -51,16 +51,6 @@ const SidConfig &sidplayfp::config() const
     return sidplayer.config();
 }
 
-void sidplayfp::stop()
-{
-    sidplayer.stop();
-}
-
-uint_least32_t sidplayfp::play(short *buffer, uint_least32_t count)
-{
-    return sidplayer.play(buffer, count);
-}
-
 void sidplayfp::buffers(short** buffers) const
 {
     sidplayer.buffers(buffers);
@@ -101,11 +91,6 @@ const char *sidplayfp::error() const
     return sidplayer.error();
 }
 
-bool  sidplayfp::fastForward(unsigned int percent)
-{
-    return sidplayer.fastForward(percent);
-}
-
 void sidplayfp::mute(unsigned int sidNum, unsigned int voice, bool enable)
 {
     sidplayer.mute(sidNum, voice, enable);
@@ -119,11 +104,6 @@ void sidplayfp::filter(unsigned int sidNum, bool enable)
 void sidplayfp::debug(bool enable, FILE *out)
 {
     sidplayer.debug(enable, out);
-}
-
-bool sidplayfp::isPlaying() const
-{
-    return sidplayer.isPlaying();
 }
 
 void sidplayfp::setKernal(const uint8_t* rom) { sidplayer.setKernal(rom); }

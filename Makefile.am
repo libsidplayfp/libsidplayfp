@@ -94,8 +94,6 @@ src/player.h \
 src/psiddrv.cpp \
 src/psiddrv.h \
 src/psiddrv.bin \
-src/mixer.cpp \
-src/mixer.h \
 src/poweron.bin \
 src/properties.h \
 src/reloc65.cpp \

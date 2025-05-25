@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright 2011-2017 Leandro Nini
+ *  Copyright 2011-2025 Leandro Nini
  *  Copyright 2007-2010 Antti Lankila
  *  Copyright 2000 Simon White
  *
@@ -29,8 +29,6 @@ const char *SidInfo::version() const { return getVersion(); }
 
 unsigned int SidInfo::numberOfCredits() const { return getNumberOfCredits(); }
 const char *SidInfo::credits(unsigned int i) const { return getCredits(i); }
-
-unsigned int SidInfo::maxsids() const { return getMaxsids(); }
 
 unsigned int SidInfo::channels() const { return getChannels(); }
 

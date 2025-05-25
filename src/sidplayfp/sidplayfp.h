@@ -83,15 +83,6 @@ public:
     const char *error() const;
 
     /**
-     * Set the fast-forward factor.
-     *
-     * @param percent
-     * @deprecated
-     */
-    SID_DEPRECATED
-    bool fastForward(unsigned int percent);
-
-    /**
      * Load a tune.
      * Check #error for detailed message if something goes wrong.
      *
@@ -99,20 +90,6 @@ public:
      * @return true on sucess, false otherwise.
      */
     bool load(SidTune *tune);
-
-    /**
-     * Run the emulation and produce samples to play if a buffer is given.
-     *
-     * @param buffer pointer to the buffer to fill with samples.
-     * @param count the size of the buffer measured in 16 bit samples
-     *              or 0 if no output is needed (e.g. Hardsid)
-     * @return the number of produced samples. If less than requested
-     *         or #isPlaying() is false an error occurred, use #error()
-     *         to get a detailed message.
-     * @deprecated use #play(unsigned int)
-     */
-    SID_DEPRECATED
-    uint_least32_t play(short *buffer, uint_least32_t count);
 
     /**
      * Get the buffer pointers for each of the installed SID chip.
@@ -169,22 +146,6 @@ public:
      * @since 2.15
      */
     unsigned int mix(short *buffer, unsigned int samples);
-
-    /**
-     * Check if the engine is playing or stopped.
-     *
-     * @return true if playing, false otherwise.
-     * @deprecated
-     */
-    SID_DEPRECATED
-    bool isPlaying() const;
-
-    /**
-     * Stop the engine.
-     * @deprecated
-     */
-    SID_DEPRECATED
-    void stop();
 
     /**
      * Control debugging.

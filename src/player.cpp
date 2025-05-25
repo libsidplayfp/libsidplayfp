@@ -71,7 +71,6 @@ Player::Player() :
     // Set default settings for system
     m_tune(nullptr),
     m_errorString(ERR_NA),
-    m_isPlaying(state_t::STOPPED),
     m_rand((unsigned int)std::time(nullptr))
 {
     // We need at least some minimal interrupt handling
@@ -115,21 +114,8 @@ void Player::setChargen(const uint8_t* rom)
     m_c64.getMemInterface().setChargen(rom);
 }
 
-bool Player::fastForward(unsigned int percent)
-{
-    if (!m_mixer.setFastForward(percent / 100))
-    {
-        m_errorString = ERR_INVALID_PERCENTAGE;
-        return false;
-    }
-
-    return true;
-}
-
 void Player::initialise()
 {
-    m_isPlaying = state_t::STOPPED;
-
     m_c64.reset();
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
@@ -152,8 +138,12 @@ void Player::initialise()
     {
         for (int j = 0; j < 100; j++)
             m_c64.clock();
-        m_mixer.clockChips();
-        m_mixer.resetBufs();
+
+        for (sidemu* chip: m_chips)
+        {
+            chip->clock();
+            chip->bufferpos(0);
+        }
     }
 
     psiddrv driver(m_tune->getInfo());
@@ -181,8 +171,11 @@ void Player::initialise()
     for (int j = 0; j < 50; j++)
         m_c64.clock();
 
-    m_mixer.clockChips();
-    m_mixer.resetBufs();
+    for (sidemu* chip: m_chips)
+    {
+        chip->clock();
+        chip->bufferpos(0);
+    }
 #endif
 }
 
@@ -206,23 +199,21 @@ bool Player::load(SidTune *tune)
 
 void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
 {
-    sidemu *s = m_mixer.getSid(sidNum);
-    if (s != nullptr)
+    if (sidemu *s = (sidNum < m_chips.size()) ? m_chips[sidNum] : nullptr)
         s->voice(voice, enable);
 }
 
 void Player::filter(unsigned int sidNum, bool enable)
 {
-    sidemu *s = m_mixer.getSid(sidNum);
-    if (s != nullptr)
+    if (sidemu *s = (sidNum < m_chips.size()) ? m_chips[sidNum] : nullptr)
         s->filter(enable);
 }
 
 void Player::initMixer(bool stereo)
 {
-    short* bufs[Mixer::MAX_SIDS];
-    buffers(bufs);
-    m_simpleMixer.reset(new SimpleMixer(stereo, bufs, installedSIDs()));
+    std::unique_ptr<short*[]> bufs(new short*[m_chips.size()]);
+    buffers(bufs.get());
+    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.get(), installedSIDs()));
 }
 
 unsigned int Player::mix(short *buffer, unsigned int samples)
@@ -232,10 +223,9 @@ unsigned int Player::mix(short *buffer, unsigned int samples)
 
 void Player::buffers(short** buffers) const
 {
-    for (unsigned int i = 0; i < Mixer::MAX_SIDS; i++)
+    for (size_t i = 0; i < m_chips.size(); i++)
     {
-        sidemu *s = m_mixer.getSid(i);
-        buffers[i] = s ? s->buffer() : nullptr;
+        buffers[i] = m_chips[i]->buffer();
     }
 }
 
@@ -261,19 +251,15 @@ int Player::play(unsigned int cycles)
             m_c64.clock();
 
         int sampleCount = 0;
-        for (unsigned int i = 0; i < Mixer::MAX_SIDS; i++)
+        for (sidemu *s: m_chips)
         {
-            sidemu *s = m_mixer.getSid(i);
-            if (s)
-            {
-                // clock the chip and get the buffer
-                // buffersize is expected to be the same
-                // for all chips
-                s->clock();
-                sampleCount = s->bufferpos();
-                // Reset the buffer
-                s->bufferpos(0);
-            }
+            // clock the chip and get the buffer
+            // buffersize is expected to be the same
+            // for all chips
+            s->clock();
+            sampleCount = s->bufferpos();
+            // Reset the buffer
+            s->bufferpos(0);
         }
         return sampleCount;
     }
@@ -293,107 +279,6 @@ bool Player::reset()
     }
     catch (configError const &) {
         return false;
-    }
-}
-
-/**
- * @throws MOS6510::haltInstruction
- */
-void Player::run(unsigned int events)
-{
-    for (unsigned int i = 0; (m_isPlaying != state_t::STOPPED) && (i < events); i++)
-        m_c64.clock();
-}
-
-uint_least32_t Player::play(short *buffer, uint_least32_t count)
-{
-    static constexpr unsigned int CYCLES = 3000;
-
-    // Make sure a tune is loaded
-    if (m_tune == nullptr)
-        return 0;
-
-    // Start the player loop
-    if (m_isPlaying == state_t::STOPPED)
-        m_isPlaying = state_t::PLAYING;
-
-    if (m_isPlaying == state_t::PLAYING)
-    {
-        try
-        {
-            m_mixer.begin(buffer, count);
-
-            if (m_mixer.getSid(0) != nullptr)
-            {
-                if (count && (buffer != nullptr))
-                {
-                    // reset count in case of exceptions
-                    count = 0;
-
-                    // Clock chips and mix into output buffer
-                    while ((m_isPlaying != state_t::STOPPED) && m_mixer.notFinished())
-                    {
-                        if (!m_mixer.wait())
-                            run(CYCLES);
-
-                        m_mixer.clockChips();
-                        m_mixer.doMix();
-                    }
-                    count = m_mixer.samplesGenerated();
-                }
-                else
-                {
-                    // Clock chips and discard buffers
-                    int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
-                    while ((m_isPlaying != state_t::STOPPED) && --size)
-                    {
-                        run(CYCLES);
-
-                        m_mixer.clockChips();
-                        m_mixer.resetBufs();
-                    }
-                }
-            }
-            else
-            {
-                // Clock the machine
-                int size = m_c64.getMainCpuSpeed() / m_cfg.frequency;
-                while ((m_isPlaying != state_t::STOPPED) && --size)
-                {
-                    run(CYCLES);
-                }
-            }
-        }
-        catch (MOS6510::haltInstruction const &)
-        {
-            m_errorString = "Illegal instruction executed";
-            m_isPlaying = state_t::STOPPING;
-        }
-        catch (Mixer::badBufferSize const &)
-        {
-            m_errorString = "Bad buffer size";
-            m_isPlaying = state_t::STOPPING;
-        }
-    }
-
-    if (m_isPlaying == state_t::STOPPING)
-    {
-        try
-        {
-            initialise();
-        }
-        catch (configError const &) {}
-        m_isPlaying = state_t::STOPPED;
-    }
-
-    return count;
-}
-
-void Player::stop()
-{
-    if ((m_tune != nullptr) && (m_isPlaying == state_t::PLAYING))
-    {
-        m_isPlaying = state_t::STOPPING;
     }
 }
 
@@ -476,9 +361,6 @@ bool Player::config(const SidConfig &cfg, bool force)
 
     const bool isStereo = cfg.playback == SidConfig::STEREO;
     m_info.m_channels = isStereo ? 2 : 1;
-
-    m_mixer.setStereo(isStereo);
-    m_mixer.setVolume(cfg.leftVolume, cfg.rightVolume);
 
     // Update Configuration
     m_cfg = cfg;
@@ -615,19 +497,15 @@ void Player::sidRelease()
 {
     m_c64.clearSids();
 
-    for (unsigned int i = 0; ; i++)
+    for (sidemu *s: m_chips)
     {
-        sidemu *s = m_mixer.getSid(i);
-        if (s == nullptr)
-            break;
-
         if (sidbuilder *b = s->builder())
         {
             b->unlock(s);
         }
     }
 
-    m_mixer.clearSids();
+    m_chips.clear();
 }
 
 void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel, bool digiboost,
@@ -635,6 +513,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 {
     if (builder != nullptr)
     {
+        m_chips.clear();
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
         // Setup base SID
@@ -646,7 +525,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
         }
 
         m_c64.setBaseSid(s);
-        m_mixer.addSid(s);
+        m_chips.push_back(s);
 
         // Setup extra SIDs if needed
         if (extraSidAddresses.size() != 0)
@@ -670,7 +549,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                 if (!m_c64.addExtraSid(s, extraSidAddresses[i])) UNLIKELY
                     throw configError(ERR_UNSUPPORTED_SID_ADDR);
 
-                m_mixer.addSid(s);
+                m_chips.push_back(s);
             }
         }
     }
@@ -679,24 +558,18 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 void Player::sidParams(double cpuFreq, int frequency,
                         SidConfig::sampling_method_t sampling, bool fastSampling)
 {
-    for (unsigned int i = 0; ; i++)
+    for (sidemu *s: m_chips)
     {
-        sidemu *s = m_mixer.getSid(i);
-        if (s == nullptr)
-            break;
-
         s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
     }
 }
 
 bool Player::getSidStatus(unsigned int sidNum, uint8_t regs[32])
 {
-    sidemu *s = m_mixer.getSid(sidNum);
-
-    if (s == nullptr)
+    if (sidNum >= m_chips.size())
         return false;
 
-    s->getStatus(regs);
+    m_chips[sidNum]->getStatus(regs);
     return true;
 }
 
