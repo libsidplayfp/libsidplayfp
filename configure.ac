@@ -164,19 +164,6 @@ AS_IF([test x"$with_simd" != xnone],
 dnl gcc needs this flag to enable vectorization
 AX_APPEND_COMPILE_FLAGS([-ftree-loop-vectorize])
 
-AC_CACHE_CHECK([for working bool], ac_cv_cxx_bool,
-[AC_COMPILE_IFELSE(
-  [AC_LANG_PROGRAM([],
-    [[bool flag;]])],
-  [ac_cv_cxx_bool=yes],
-  [ac_cv_cxx_bool=no])]
-)
-
-AS_IF([test "x$ac_cv_cxx_bool" = "xno"],
-  [HAVE_BOOL=0],
-  [HAVE_BOOL=1]
-)
-
 dnl Enable branch prediction hints.
 AC_ARG_ENABLE([branch-hints],
   [AS_HELP_STRING([--enable-branch-hints],
@@ -188,20 +175,6 @@ AC_ARG_ENABLE([branch-hints],
 AS_IF([test "$enable_branch_hints" != no],
   [RESID_BRANCH_HINTS=1],
   [RESID_BRANCH_HINTS=0]
-)
-
-AC_CACHE_CHECK([for log1p], [resid_cv_log1p],
-  [AC_COMPILE_IFELSE(
-    [AC_LANG_PROGRAM(
-      [ #include <math.h> ], [ log1p(1); ]
-    )],
-    [resid_cv_log1p=yes], [resid_cv_log1p=no]
-  )]
-)
-
-AS_IF([test "$resid_cv_log1p" = no],
-  [HAVE_LOG1P=0],
-  [HAVE_LOG1P=1]
 )
 
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
@@ -271,16 +244,10 @@ AS_IF([test "x$with_gcrypt" != "xno"],
 AM_CONDITIONAL([LIBGCRYPT], [test x$USE_LIBGCRYPT = xyes])
 
 
-NEW_8580_FILTER=1
-AM_CONDITIONAL([NEW_8580_FILTER], [test $NEW_8580_FILTER != 0])
-
-AC_SUBST(HAVE_BOOL)
-AC_SUBST(HAVE_LOG1P)
 AC_SUBST(HAVE_BUILTIN_EXPECT)
 AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)
 AC_SUBST(RESID_BRANCH_HINTS)
-AC_SUBST(NEW_8580_FILTER)
 
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
