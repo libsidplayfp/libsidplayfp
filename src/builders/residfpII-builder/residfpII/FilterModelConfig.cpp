@@ -25,7 +25,7 @@
 #include <vector>
 #include <cstdint>
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 FilterModelConfig::FilterModelConfig(
@@ -93,4 +93,4 @@ void FilterModelConfig::setUCox(double new_uCox)
     currFactorCoeff = denorm * (uCox / 2. * 1.0e-6 / C);
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

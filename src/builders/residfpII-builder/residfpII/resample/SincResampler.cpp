@@ -31,7 +31,7 @@
 #include <cmath>
 #include <cstdint>
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
 #include "sidcxx11.h"
 
@@ -48,7 +48,7 @@
 #  define CONSTEXPR_VAR   const
 #endif
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /// Maximum error acceptable in I0 is 1e-6, or ~96 dB.
@@ -258,4 +258,4 @@ void SincResampler::reset()
     sampleOffset = 0;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

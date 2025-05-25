@@ -27,7 +27,7 @@
 #  include "sidcxx11.h"
 #endif
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 int Integrator6581::solve(int vi) const
@@ -96,4 +96,4 @@ int Integrator6581::solve(int vi) const
     return vx - (vc >> 14);
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

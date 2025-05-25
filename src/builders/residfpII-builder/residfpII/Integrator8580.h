@@ -29,9 +29,9 @@
 #include <stdint.h>
 #include <cassert>
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -95,6 +95,6 @@ public:
     int solve(int vi) const override;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

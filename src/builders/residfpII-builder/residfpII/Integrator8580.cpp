@@ -22,7 +22,7 @@
 
 #include <cstdint>
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 int Integrator8580::solve(int vi) const
@@ -52,4 +52,4 @@ int Integrator8580::solve(int vi) const
     return vx - (vc >> 14);
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

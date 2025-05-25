@@ -23,11 +23,11 @@
 #ifndef VOICE_H
 #define VOICE_H
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 #include "WaveformGenerator.h"
 #include "EnvelopeGenerator.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -123,6 +123,6 @@ public:
     }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

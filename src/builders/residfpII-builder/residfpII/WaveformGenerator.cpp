@@ -24,7 +24,7 @@
 
 #include "WaveformGenerator.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -487,4 +487,4 @@ void WaveformGenerator::reset()
     floating_output_ttl = 0;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

@@ -24,7 +24,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 constexpr double MOSFET_LEAKAGE_6581 = 0.0075;
@@ -135,4 +135,4 @@ void Dac::kinkedDac(ChipModel chipModel)
     }
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

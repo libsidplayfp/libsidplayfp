@@ -23,7 +23,7 @@
 #ifndef INTEGRATOR_H
 #define INTEGRATOR_H
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 class Integrator
@@ -42,6 +42,6 @@ public:
     virtual ~Integrator() = default;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

@@ -26,9 +26,9 @@
 #include "FilterModelConfig.h"
 #include "Voice.h"
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -196,11 +196,11 @@ public:
     void input(short input) { Ve = fmc.getNormalizedVoice(input/32768.f, 0); }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #if RESID_INLINING || defined(FILTER_CPP)
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 RESID_INLINE
@@ -226,7 +226,7 @@ unsigned short Filter::clock(Voice& voice1, Voice& voice2, Voice& voice3)
     return currentVolume[currentMixer[Vmix]];
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif
 

@@ -26,14 +26,14 @@
 #include <memory>
 #include <cstdint>
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 #include "ExternalFilter.h"
 #include "Potentiometer.h"
 #include "Voice.h"
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 class Filter;
@@ -290,7 +290,7 @@ public:
     void enableFilter(bool enable);
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #if RESID_INLINING || defined(SID_CPP)
 
@@ -301,7 +301,7 @@ public:
 #include "Voice.h"
 #include "resample/Resampler.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 RESID_INLINE
@@ -364,7 +364,7 @@ int SID::clock(unsigned int cycles, short* buf)
     return s;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif
 

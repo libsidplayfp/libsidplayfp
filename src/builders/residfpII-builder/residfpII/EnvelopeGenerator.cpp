@@ -25,7 +25,7 @@
 
 #include "EnvelopeGenerator.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -152,4 +152,4 @@ void EnvelopeGenerator::writeSUSTAIN_RELEASE(unsigned char sustain_release)
     }
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

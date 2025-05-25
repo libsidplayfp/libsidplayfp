@@ -24,7 +24,7 @@
 
 #include "ExternalFilter.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -63,4 +63,4 @@ void ExternalFilter::reset()
     Vhp = 0;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

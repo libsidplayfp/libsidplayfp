@@ -29,7 +29,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 class Integrator6581;
@@ -363,6 +363,6 @@ public:
     void setFilterRange(double adjustment);
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

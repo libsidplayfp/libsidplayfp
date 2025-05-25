@@ -24,7 +24,7 @@
 
 #include "Filter.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 static constexpr int summerIdx[5] =
@@ -144,4 +144,4 @@ void Filter::reset()
     writeRES_FILT(0);
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

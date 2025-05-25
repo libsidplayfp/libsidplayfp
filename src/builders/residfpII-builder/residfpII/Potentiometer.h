@@ -23,7 +23,7 @@
 #ifndef POTENTIOMETER_H
 #define POTENTIOMETER_H
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -45,6 +45,6 @@ public:
     unsigned char readPOT() const { return 0xff; }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

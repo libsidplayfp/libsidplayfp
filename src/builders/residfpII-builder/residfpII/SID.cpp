@@ -36,7 +36,7 @@
 #include "resample/TwoPassSincResampler.h"
 #include "resample/ZeroOrderResampler.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 constexpr unsigned int ENV_DAC_BITS = 8;
@@ -539,4 +539,4 @@ void SID::clockSilent(unsigned int cycles)
     }
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

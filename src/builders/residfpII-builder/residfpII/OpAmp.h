@@ -29,7 +29,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -114,6 +114,6 @@ public:
     double solve(double n, double vi) const;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

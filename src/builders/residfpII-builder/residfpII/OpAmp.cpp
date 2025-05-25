@@ -23,9 +23,9 @@
 
 #include <cmath>
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 constexpr double EPSILON = 1e-8;
@@ -81,4 +81,4 @@ double OpAmp::solve(double n, double vi) const
     }
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

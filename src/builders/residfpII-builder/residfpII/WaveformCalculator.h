@@ -24,10 +24,10 @@
 
 #include "array.h"
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -114,6 +114,6 @@ public:
     matrix_t* buildPulldownTable(ChipModel model, CombinedWaveforms cws);
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

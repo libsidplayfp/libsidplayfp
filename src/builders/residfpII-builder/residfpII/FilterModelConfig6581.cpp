@@ -33,7 +33,7 @@
 #include <cmath>
 #include <cstdint>
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 constexpr unsigned int OPAMP_SIZE = 33;
@@ -287,4 +287,4 @@ unsigned short* FilterModelConfig6581::getDAC(double adjustment) const
     return f0_dac;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

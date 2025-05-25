@@ -33,7 +33,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 class FilterModelConfig
@@ -331,6 +331,6 @@ struct FilterModelConfig::mixer_offset<0>
     static constexpr int value = 0;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include "residfp/SID.h"
+#include "residfpII/SID.h"
 #include "sidplayfp/SidConfig.h"
 #include "sidemu.h"
 #include "Event.h"
@@ -38,17 +38,17 @@ class sidbuilder;
 namespace libsidplayfp
 {
 
-class ReSIDfp final : public sidemu
+class ReSIDfpII final : public sidemu
 {
 private:
-    reSIDfp::SID &m_sid;
+    reSIDfpII::SID &m_sid;
 
 public:
     static const char* getCredits();
 
 public:
-    ReSIDfp(sidbuilder *builder);
-    ~ReSIDfp() override;
+    ReSIDfpII(sidbuilder *builder);
+    ~ReSIDfpII() override;
 
     bool getStatus() const { return m_status; }
 

@@ -27,9 +27,9 @@
 
 #include "sidcxx11.h"
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -100,6 +100,6 @@ public:
     virtual void reset() = 0;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

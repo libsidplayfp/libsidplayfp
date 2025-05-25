@@ -24,7 +24,7 @@
 
 #include "Integrator6581.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 int Filter6581::solveIntegrators()
@@ -67,4 +67,4 @@ void Filter6581::setFilterRange(double adjustment)
     FilterModelConfig6581::getInstance()->setFilterRange(adjustment);
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

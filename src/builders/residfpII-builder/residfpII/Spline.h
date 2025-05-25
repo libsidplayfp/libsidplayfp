@@ -25,7 +25,7 @@
 #include <cstddef>
 #include <vector>
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -73,6 +73,6 @@ public:
     Point evaluate(double x) const;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

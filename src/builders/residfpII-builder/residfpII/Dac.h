@@ -23,9 +23,9 @@
 #ifndef DAC_H
 #define DAC_H
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -115,6 +115,6 @@ public:
     double getOutput(unsigned int input, bool saturate=false) const;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

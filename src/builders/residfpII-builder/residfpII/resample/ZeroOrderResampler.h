@@ -26,7 +26,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -83,6 +83,6 @@ public:
     }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

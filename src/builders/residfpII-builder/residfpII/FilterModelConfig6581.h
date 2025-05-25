@@ -31,7 +31,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 class Integrator6581;
@@ -121,6 +121,6 @@ public:
     inline double getN16() const { return N16; }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

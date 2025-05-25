@@ -20,16 +20,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "residfp.h"
+#include "residfpII.h"
 
 #include <algorithm>
 #include <new>
 #include <utility>
 
 #include "properties.h"
-#include "residfp-emu.h"
+#include "residfpII-emu.h"
 
-struct ReSIDfpBuilder::config
+struct ReSIDfpIIBuilder::config
 {
     Property<double> filter8580Curve;
     Property<double> filter6581Curve;
@@ -39,11 +39,11 @@ struct ReSIDfpBuilder::config
 };
 
 
-ReSIDfpBuilder::ReSIDfpBuilder(const char * const name) :
+ReSIDfpIIBuilder::ReSIDfpIIBuilder(const char * const name) :
     sidbuilder(name),
     m_config(new config) {}
 
-ReSIDfpBuilder::~ReSIDfpBuilder()
+ReSIDfpIIBuilder::~ReSIDfpIIBuilder()
 {
     // Remove all SID emulations
     remove();
@@ -52,7 +52,7 @@ ReSIDfpBuilder::~ReSIDfpBuilder()
 }
 
 // Create a new sid emulation.
-unsigned int ReSIDfpBuilder::create(unsigned int sids)
+unsigned int ReSIDfpIIBuilder::create(unsigned int sids)
 {
     m_status = true;
 
@@ -66,7 +66,7 @@ unsigned int ReSIDfpBuilder::create(unsigned int sids)
     {
         try
         {
-            auto sid = new libsidplayfp::ReSIDfp(this);
+            auto sid = new libsidplayfp::ReSIDfpII(this);
             if (m_config->filter6581Curve.has_value())
                 sid->filter6581Curve(m_config->filter6581Curve.value());
             if (m_config->filter8580Curve.has_value())
@@ -82,7 +82,7 @@ unsigned int ReSIDfpBuilder::create(unsigned int sids)
         // Memory alloc failed?
         catch (std::bad_alloc const &)
         {
-            m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfp object");
+            m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfpII object");
             m_status = false;
             break;
         }
@@ -91,42 +91,42 @@ unsigned int ReSIDfpBuilder::create(unsigned int sids)
 
 }
 
-const char *ReSIDfpBuilder::credits() const
+const char *ReSIDfpIIBuilder::credits() const
 {
-    return libsidplayfp::ReSIDfp::getCredits();
+    return libsidplayfp::ReSIDfpII::getCredits();
 }
 
-void ReSIDfpBuilder::filter(bool enable)
+void ReSIDfpIIBuilder::filter(bool enable)
 {
     m_config->filterEnabled = enable;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->filter(enable);
+        static_cast<libsidplayfp::ReSIDfpII*>(e)->filter(enable);
 }
 
-void ReSIDfpBuilder::filter6581Curve(double filterCurve)
+void ReSIDfpIIBuilder::filter6581Curve(double filterCurve)
 {
     m_config->filter6581Curve = filterCurve;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Curve(filterCurve);
+        static_cast<libsidplayfp::ReSIDfpII*>(e)->filter6581Curve(filterCurve);
 }
 
-void ReSIDfpBuilder::filter6581Range(double filterRange)
+void ReSIDfpIIBuilder::filter6581Range(double filterRange)
 {
     m_config->filter6581Range = filterRange;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Range(filterRange);
+        static_cast<libsidplayfp::ReSIDfpII*>(e)->filter6581Range(filterRange);
 }
 
-void ReSIDfpBuilder::filter8580Curve(double filterCurve)
+void ReSIDfpIIBuilder::filter8580Curve(double filterCurve)
 {
     m_config->filter8580Curve = filterCurve;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->filter8580Curve(filterCurve);
+        static_cast<libsidplayfp::ReSIDfpII*>(e)->filter8580Curve(filterCurve);
 }
 
-void ReSIDfpBuilder::combinedWaveformsStrength(SidConfig::sid_cw_t cws)
+void ReSIDfpIIBuilder::combinedWaveformsStrength(SidConfig::sid_cw_t cws)
 {
     m_config->cws = cws;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->combinedWaveforms(cws);
+        static_cast<libsidplayfp::ReSIDfpII*>(e)->combinedWaveforms(cws);
 }

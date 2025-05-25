@@ -27,7 +27,7 @@
 
 #include "../array.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -104,6 +104,6 @@ public:
     void reset() override;
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

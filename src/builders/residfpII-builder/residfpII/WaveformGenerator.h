@@ -23,7 +23,7 @@
 #ifndef WAVEFORMGENERATOR_H
 #define WAVEFORMGENERATOR_H
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 #include "array.h"
 
 #include "sidcxx11.h"
@@ -35,7 +35,7 @@
 #  include <iostream>
 #endif
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -276,11 +276,11 @@ public:
     bool readFollowingVoiceSync() const { return nextVoice->sync; }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #if RESID_INLINING || defined(WAVEFORMGENERATOR_CPP)
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 RESID_INLINE
@@ -413,7 +413,7 @@ unsigned int WaveformGenerator::output()
     return waveform_output;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif
 

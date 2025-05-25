@@ -27,7 +27,7 @@
 #include <mutex>
 #include <cmath>
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -300,4 +300,4 @@ matrix_t* WaveformCalculator::buildPulldownTable(ChipModel model, CombinedWavefo
     return &(PULLDOWN_CACHE.emplace_hint(lb, cw_cache_t::value_type(cfgArray, pdTable))->second);
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

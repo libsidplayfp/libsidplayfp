@@ -24,7 +24,7 @@
 #include <cassert>
 #include <limits>
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 Spline::Spline(const std::vector<Point> &input) :
@@ -116,4 +116,4 @@ Spline::Point Spline::evaluate(double x) const
     return out;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

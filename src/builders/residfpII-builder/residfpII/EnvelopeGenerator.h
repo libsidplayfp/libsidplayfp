@@ -24,9 +24,9 @@
 #ifndef ENVELOPEGENERATOR_H
 #define ENVELOPEGENERATOR_H
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -166,11 +166,11 @@ public:
     unsigned char readENV() const { return env3; }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #if RESID_INLINING || defined(ENVELOPEGENERATOR_CPP)
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 RESID_INLINE
@@ -387,7 +387,7 @@ void EnvelopeGenerator::set_exponential_counter()
     }
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif
 

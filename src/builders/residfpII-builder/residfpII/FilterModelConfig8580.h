@@ -29,7 +29,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 class Integrator8580;
@@ -68,6 +68,6 @@ public:
     static inline constexpr double getVref() { return Vref * VOLTAGE_SKEW; }
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif

@@ -23,9 +23,9 @@
 #ifndef EXTERNALFILTER_H
 #define EXTERNALFILTER_H
 
-#include "siddefs-fp.h"
+#include "siddefs-fpII.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /**
@@ -102,11 +102,11 @@ public:
     void reset();
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #if RESID_INLINING || defined(EXTERNALFILTER_CPP)
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 RESID_INLINE
@@ -120,7 +120,7 @@ int ExternalFilter::clock(int input)
     return (Vlp - Vhp) >> 11;
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif
 

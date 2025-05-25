@@ -24,7 +24,7 @@
 
 #include "Integrator8580.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 int Filter8580::solveIntegrators()
@@ -85,4 +85,4 @@ void Filter8580::setFilterCurve(double curvePosition)
     bpIntegrator.setV(cp);
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

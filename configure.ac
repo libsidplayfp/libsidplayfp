@@ -359,7 +359,7 @@ libsidplayfp.pc
 libstilview.pc
 src/sidplayfp/sidversion.h
 src/builders/residfp-builder/residfp/siddefs-fp.h
-src/builders/resid-builder/resid/siddefs.h
+src/builders/residfpII-builder/residfpII/siddefs-fpII.h
 tests/Makefile
 ])
 

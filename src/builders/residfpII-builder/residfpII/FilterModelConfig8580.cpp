@@ -30,7 +30,7 @@
 #include <mutex>
 #include <thread>
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 /*
@@ -215,4 +215,4 @@ FilterModelConfig8580::FilterModelConfig8580() :
 #endif
 }
 
-} // namespace reSIDfp
+} // namespace reSIDfpII

@@ -27,13 +27,13 @@
 #include "sidplayfp/siddefs.h"
 
 /**
- * ReSIDfp Builder Class
+ * ReSIDfpII Builder Class
  */
-class SID_EXTERN ReSIDfpBuilder: public sidbuilder
+class SID_EXTERN ReSIDfpIIBuilder: public sidbuilder
 {
 public:
-    ReSIDfpBuilder(const char * const name);
-    ~ReSIDfpBuilder();
+    ReSIDfpIIBuilder(const char * const name);
+    ~ReSIDfpIIBuilder();
 
     /**
      * Available sids.

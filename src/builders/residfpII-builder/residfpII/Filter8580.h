@@ -29,7 +29,7 @@
 
 #include "sidcxx11.h"
 
-namespace reSIDfp
+namespace reSIDfpII
 {
 
 class Integrator8580;
@@ -312,6 +312,6 @@ public:
     void setFilterCurve(double curvePosition);
 };
 
-} // namespace reSIDfp
+} // namespace reSIDfpII
 
 #endif
