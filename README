@@ -79,9 +79,6 @@ disabled by default
 enables unit tests. Use "make check" to launch the testsuite
 disabled by default
 
---enable-hardsid
-enables hardsid support
-
 --with-gcrypt / --without-gcrypt
 force/disable libgcrypt support for MD5 computation
 default check
@@ -97,4 +94,3 @@ can be built by invoking "make doc".
 
 Known bugs/limitations:
 * mus data embedded in psid file is not supported
-* hardsid support is untested and possibly broken
