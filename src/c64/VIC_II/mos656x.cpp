@@ -101,7 +101,9 @@ void MOS656X::reset()
 
 void MOS656X::chip(model_t model)
 {
-#ifdef HAVE_CXX14
+#ifdef __cpp_lib_to_underlying
+    const auto model_idx = std::to_underlying(model);
+#elifdef HAVE_CXX14
     const auto model_idx = static_cast<std::underlying_type_t<model_t>>(model);
 #else
     const auto model_idx = static_cast<typename std::underlying_type<model_t>::type>(model);
