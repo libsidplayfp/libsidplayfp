@@ -31,14 +31,16 @@
  */
 class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 {
-public:
-    ReSIDfpBuilder(const char * const name);
-    ~ReSIDfpBuilder();
-
+protected:
     /**
      * Create the sid emu.
      */
     bool create();
+
+public:
+    ReSIDfpBuilder(const char * const name);
+    ~ReSIDfpBuilder();
+
 
     const char *getCredits() const;
 

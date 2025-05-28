@@ -21,17 +21,18 @@
 
 class SID_EXTERN exSIDBuilder : public sidbuilder
 {
+protected:
+    /**
+     * Create the sid emu.
+     */
+    bool create();
+
 public:
     exSIDBuilder(const char * const name);
     ~exSIDBuilder();
 
     const char *getCredits() const;
     void flush();
-
-    /**
-     * Create the sid emu.
-     */
-    bool create();
 };
 
 #endif // EXSID_H
