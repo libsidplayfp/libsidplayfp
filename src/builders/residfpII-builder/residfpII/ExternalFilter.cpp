@@ -49,18 +49,18 @@ void ExternalFilter::setClockFrequency(double frequency)
 
     // Low-pass:  R = 10kOhm, C = 1000pF; w0l = dt/(dt+RC) = 1e-6/(1e-6+1e4*1e-9) = 0.091
     // Cutoff 1/2*PI*RC = 1/2*PI*1e4*1e-9 = 15915.5 Hz
-    w0lp_1_s7 = static_cast<int>((dt / (dt + getRC(10e3, 1000e-12))) * (1 << 7) + 0.5);
+    w0lp = static_cast<float>(dt / (dt + getRC(10e3, 1000e-12)));
 
     // High-pass: R = 10kOhm, C = 10uF;   w0h = dt/(dt+RC) = 1e-6/(1e-6+1e4*1e-5) = 0.00000999
     // Cutoff 1/2*PI*RC = 1/2*PI*1e4*1e-5 = 1.59155 Hz
-    w0hp_1_s17 = static_cast<int>((dt / (dt + getRC(10e3, 10e-6))) * (1 << 17) + 0.5);
+    w0hp = static_cast<float>(dt / (dt + getRC(10e3, 10e-6)));
 }
 
 void ExternalFilter::reset()
 {
     // State of filter.
-    Vlp = 0; //1 << (15 + 11);
-    Vhp = 0;
+    Vlp = 0.f;
+    Vhp = 0.f;
 }
 
 } // namespace reSIDfpII

@@ -24,6 +24,8 @@
 #define SIDFP_H
 
 #include <memory>
+#include <cassert>
+#include <cmath>
 #include <cstdint>
 
 #include "siddefs-fpII.h"
@@ -60,6 +62,38 @@ public:
  */
 class SID
 {
+private:
+    template<int m>
+    static inline int clipper(float x)
+    {
+        assert(!std::signbit(x));
+        constexpr float threshold = 28000.f;
+        if (likely(x < threshold))
+            return x;
+
+        constexpr float max_val = static_cast<float>(m);
+        constexpr float t = threshold / max_val;
+        constexpr float a = 1. - t;
+        constexpr float b = 1. / a;
+
+        float value = (x - threshold) / max_val;
+        value = t + a * std::tanh(b * value);
+        return static_cast<int>(value * max_val);
+    }
+
+    /*
+     * Soft Clipping implementation, splitted for test.
+     */
+    static inline int softClipImpl(float x)
+    {
+        return std::signbit(x) ? -clipper<32768>(-x) : clipper<32767>(x);
+    }
+
+    /*
+     * Soft Clipping into 16 bit range [-32768,32767]
+     */
+    static inline short softClip(float x) { return static_cast<short>(softClipImpl(x)); }
+
 private:
     /// Currently active filter
     Filter* filter;
@@ -343,11 +377,11 @@ int SID::clock(unsigned int cycles, short* buf)
                 voice[1].envelope()->clock();
                 voice[2].envelope()->clock();
 
-                const int sidOutput = static_cast<int>(filter->clock(voice[0], voice[1], voice[2]));
-                const int c64Output = externalFilter.clock(sidOutput + INT16_MIN);
+                const float sidOutput = static_cast<float>(filter->clock(voice[0], voice[1], voice[2]));
+                const float c64Output = externalFilter.clock(sidOutput);
                 if (unlikely(resampler->input(c64Output)))
                 {
-                    buf[s++] = resampler->getOutput(scaleFactor);
+                    buf[s++] = softClip(scaleFactor * resampler->output());
                 }
             }
 

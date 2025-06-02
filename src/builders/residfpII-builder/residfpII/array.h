@@ -76,5 +76,6 @@ public:
 };
 
 using matrix_t = matrix<short>;
+using matrixf_t = matrix<float>;
 
 #endif

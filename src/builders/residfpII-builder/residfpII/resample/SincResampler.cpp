@@ -92,12 +92,12 @@ double I0(double x)
  * @param bLength length of the sinc buffer
  * @return convolved result
  */
-int convolve(const int* a, const short* b, int bLength)
+float convolve(const float* a, const float* b, int bLength)
 {
 #if defined(__has_cpp_attribute) && __has_cpp_attribute( assume )
     [[assume( bLength > 0 )]];
 #endif
-    int out = 0;
+    float out = 0.f;
 #ifndef __clang__
     out = std::inner_product(a, a+bLength, b, out);
 #else
@@ -105,14 +105,14 @@ int convolve(const int* a, const short* b, int bLength)
     // feed it some plain ol' c code
     for (int i=0; i<bLength; i++)
     {
-        out += a[i] * static_cast<int>(b[i]);
+        out += a[i] * b[i];
     }
 #endif
 
-    return (out + (1 << 14)) >> 15;
+    return out;
 }
 
-int SincResampler::fir(int subcycle)
+float SincResampler::fir(int subcycle)
 {
     // Find the first of the nearest fir tables close to the phase
     int firTableFirst = (subcycle * firRES >> 10);
@@ -121,7 +121,7 @@ int SincResampler::fir(int subcycle)
     // Find firN most recent samples, plus one extra in case the FIR wraps.
     int sampleStart = sampleIndex - firN + RINGSIZE - 1;
 
-    const int v1 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+    const float v1 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
 
     // Use next FIR table, wrap around to first FIR table using
     // previous sample.
@@ -131,11 +131,11 @@ int SincResampler::fir(int subcycle)
         ++sampleStart;
     }
 
-    const int v2 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+    const float v2 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
 
     // Linear interpolation between the sinc tables yields good
     // approximation for the exact value.
-    return v1 + (firTableOffset * (v2 - v1) >> 10);
+    return v1 + (static_cast<float>(firTableOffset) * (v2 - v1) / 1024.f);
 }
 
 SincResampler::SincResampler(
@@ -195,13 +195,13 @@ SincResampler::SincResampler(
 
     {
         // Allocate memory for FIR tables.
-        firTable = new matrix_t(firRES, firN);
+        firTable = new matrixf_t(firRES, firN);
 
         // The cutoff frequency is midway through the transition band, in effect the same as nyquist.
         constexpr double wc = PI;
 
         // Calculate the sinc tables.
-        const double scale = 32768.0 * wc * inv_cyclesPerSampleD / PI;
+        const double scale = wc * inv_cyclesPerSampleD / PI;
 
         // we're not interested in the fractional part
         // so use int division before converting to double
@@ -222,7 +222,7 @@ SincResampler::SincResampler(
                 const double wt = wc * x * inv_cyclesPerSampleD;
                 const double sincWt = std::fabs(wt) >= 1e-8 ? std::sin(wt) / wt : 1.;
 
-                (*firTable)[i][j] = static_cast<short>(scale * sincWt * kaiserXt);
+                (*firTable)[i][j] = static_cast<float>(scale * sincWt * kaiserXt);
             }
         }
     }
@@ -233,7 +233,7 @@ SincResampler::~SincResampler()
     delete firTable;
 }
 
-bool SincResampler::input(int input)
+bool SincResampler::input(float input)
 {
     bool ready = false;
 
@@ -254,7 +254,7 @@ bool SincResampler::input(int input)
 
 void SincResampler::reset()
 {
-    std::fill(std::begin(sample), std::end(sample), 0);
+    std::fill(std::begin(sample), std::end(sample), 0.f);
     sampleOffset = 0;
 }
 
