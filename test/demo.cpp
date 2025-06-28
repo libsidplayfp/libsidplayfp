@@ -154,8 +154,6 @@ int main(int, char* argv[])
     int bufferSize;
     ioctl(handle, SNDCTL_DSP_GETBLKSIZE, &bufferSize);
 
-    uint_least32_t bufferSamples = static_cast<uint_least32_t>(bufferSize) / sizeof(short);
-
     // 48000/~1000000 * 5000 * 2
     short buffer[512];
     // Play for ~5 seconds
