@@ -242,10 +242,11 @@ AC_ARG_ENABLE([testsuite],
 )
 
 AS_IF([test "x$enable_testsuite" != xno],
-  AC_DEFINE_UNQUOTED([VICE_TESTSUITE],
+  [AC_DEFINE_UNQUOTED([VICE_TESTSUITE],
     ["$enable_testsuite"],
     [Path to VICE testsuite.]
   )
+  AC_CONFIG_LINKS([test/testsuite.sh:test/testsuite.sh test/testlist:test/testlist])]
 )
 
 AM_CONDITIONAL([TESTSUITE], [test "x$enable_testsuite" != xno])
@@ -351,7 +352,6 @@ AS_IF([test "x$build_exsid_driver" = xyes],
 
 eval loadable_shrext=$shrext_cmds
 AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
-
 
 AC_CONFIG_FILES([
 Makefile
