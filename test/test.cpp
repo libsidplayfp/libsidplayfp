@@ -195,7 +195,7 @@ int main(int argc, char* argv[])
 
     for (;;)
     {
-        m_engine.play(nullptr, 0);
+        m_engine.play(3000);
         std::cerr << ".";
     }
 }
