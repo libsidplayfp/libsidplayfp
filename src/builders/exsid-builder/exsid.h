@@ -25,7 +25,7 @@ protected:
     /**
      * Create the sid emu.
      */
-    bool create();
+    libsidplayfp::sidemu* create();
 
 public:
     exSIDBuilder(const char * const name);

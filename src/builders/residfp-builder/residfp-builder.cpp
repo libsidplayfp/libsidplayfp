@@ -51,7 +51,7 @@ ReSIDfpBuilder::~ReSIDfpBuilder()
 }
 
 // Create a new sid emulation.
-bool ReSIDfpBuilder::create()
+libsidplayfp::sidemu* ReSIDfpBuilder::create()
 {
     try
     {
@@ -64,16 +64,14 @@ bool ReSIDfpBuilder::create()
             sid->filter6581Range(m_config->filter6581Range.value());
         if (m_config->cws.has_value())
             sid->combinedWaveforms(m_config->cws.value());
-        sidobjs.insert(sid);
+        return sid;
     }
     catch (std::bad_alloc const &)
     {
         // Memory alloc failed
         m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfp object");
-        return false;
+        return nullptr;
     }
-
-    return true;
 
 }
 

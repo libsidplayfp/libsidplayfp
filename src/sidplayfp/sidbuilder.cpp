@@ -28,27 +28,17 @@
 
 libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidConfig::sid_model_t model, bool digiboost)
 {
-    // check if we have a cached emu
-    for (libsidplayfp::sidemu *sid: sidobjs)
+    // create new emu
+    if (libsidplayfp::sidemu* sid = create())
     {
         if (sid->lock(env))
         {
             sid->model(model, digiboost);
+            sidobjs.insert(sid);
             return sid;
         }
-    }
-
-    // create new emu
-    if (create())
-    {
-        for (libsidplayfp::sidemu *sid: sidobjs)
-        {
-            if (sid->lock(env))
-            {
-                sid->model(model, digiboost);
-                return sid;
-            }
-        }
+        else
+            delete sid;
     }
 
     // Unable to locate free SID
@@ -62,9 +52,9 @@ void sidbuilder::unlock(libsidplayfp::sidemu *device)
     if (it != sidobjs.end())
     {
         (*it)->unlock();
-        // TODO should we remove it or cache for later use?
-        //sidobjs.erase(it);
-        //delete *it;
+        // should we cache these for later use?
+        sidobjs.erase(it);
+        delete *it;
     }
 }
 

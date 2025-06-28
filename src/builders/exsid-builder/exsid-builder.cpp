@@ -38,7 +38,7 @@ exSIDBuilder::~exSIDBuilder()
 }
 
 // Create a new sid emulation. Called by sidbuilder only
-bool exSIDBuilder::create()
+libsidplayfp::sidemu* exSIDBuilder::create()
 {
     try
     {
@@ -48,18 +48,16 @@ bool exSIDBuilder::create()
         if (!sid->getStatus())
         {
             m_errorBuffer = sid->error();
-            return false;
+            return nullptr;
         }
-        sidobjs.insert(sid.release());
+        return sid.release();
     }
     // Memory alloc failed?
     catch (std::bad_alloc const &)
     {
         m_errorBuffer.assign(name()).append(" ERROR: Unable to create exSID object");
-        return false;
+        return nullptr;
     }
-
-    return true;
 }
 
 const char *exSIDBuilder::getCredits() const

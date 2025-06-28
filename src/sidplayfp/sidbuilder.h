@@ -51,7 +51,7 @@ protected:
     emuset_t sidobjs;
 
 protected:
-    virtual bool create() = 0;
+    virtual libsidplayfp::sidemu* create() = 0;
 
     virtual const char *getCredits() const = 0;
 
@@ -79,20 +79,19 @@ public:
      * @param scheduler the event scheduler
      * @param model the required sid model
      * @param digiboost whether to enable digiboost for 8580
-     * @return pointer to the locked sid emu, null if no emu is available
+     * @return pointer to the locked sid, null if none is available
      */
     libsidplayfp::sidemu *lock(libsidplayfp::EventScheduler *scheduler, SidConfig::sid_model_t model, bool digiboost);
 
     /**
      * Release this SID.
      *
-     * @param device the sid emu to unlock
+     * @param device the sid to unlock
      */
     void unlock(libsidplayfp::sidemu *device);
 
     /**
      * Remove all SID emulations.
-     * @deprecated
      */
     void remove();
 
