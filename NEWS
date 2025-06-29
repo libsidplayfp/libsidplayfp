@@ -1,4 +1,4 @@
-2.15.0 2025-0x-xx
+2.15.0 2025-06-29
 * Compile with fast math, without unsafe optimizations
 * residfp: reworked the SIMD support, removed the intrinsics code leaving the compiler vectorize the loop
 * Extended the new play API
