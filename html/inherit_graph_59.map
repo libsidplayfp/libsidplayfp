@@ -1,7 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classreSIDfp_1_1FilterModelConfig.html" title=" " alt="" coords="5,31,197,56"/>
-<area shape="rect" id="Node000001" href="$classreSIDfp_1_1FilterModelConfig6581.html" title=" " alt="" coords="245,5,469,31"/>
-<area shape="poly" id="edge61_Node000000_Node000001" title=" " alt="" coords="210,30,245,26,245,32,211,35"/>
-<area shape="rect" id="Node000002" href="$classreSIDfp_1_1FilterModelConfig8580.html" title=" " alt="" coords="245,55,469,80"/>
-<area shape="poly" id="edge62_Node000000_Node000002" title=" " alt="" coords="211,51,245,54,245,59,210,56"/>
+<area shape="rect" id="Node000000" href="$classreSIDfp_1_1Filter.html" title=" " alt="" coords="5,5,116,31"/>
+<area shape="rect" id="Node000001" href="$classreSIDfp_1_1Filter6581.html" title=" " alt="" coords="164,5,307,31"/>
+<area shape="poly" id="edge60_Node000000_Node000001" title=" " alt="" coords="130,15,164,15,164,21,130,21"/>
 </map>

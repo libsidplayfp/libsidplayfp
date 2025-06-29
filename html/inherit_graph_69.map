@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classreSIDfp_1_1SID.html" title=" " alt="" coords="5,5,105,31"/>
+<area shape="rect" id="Node000000" href="$classreSIDfp_1_1Resampler.html" title=" " alt="" coords="5,55,153,80"/>
+<area shape="rect" id="Node000001" href="$classreSIDfp_1_1SincResampler.html" title=" " alt="" coords="229,5,403,31"/>
+<area shape="poly" id="edge65_Node000000_Node000001" title=" " alt="" coords="154,49,254,28,255,33,155,54"/>
+<area shape="rect" id="Node000002" href="$classreSIDfp_1_1TwoPassSincResampler.html" title=" " alt="" coords="201,55,431,80"/>
+<area shape="poly" id="edge66_Node000000_Node000002" title=" " alt="" coords="167,65,201,65,201,70,167,70"/>
+<area shape="rect" id="Node000003" href="$classreSIDfp_1_1ZeroOrderResampler.html" title=" " alt="" coords="209,104,423,129"/>
+<area shape="poly" id="edge67_Node000000_Node000003" title=" " alt="" coords="155,80,255,101,254,107,154,85"/>
 </map>

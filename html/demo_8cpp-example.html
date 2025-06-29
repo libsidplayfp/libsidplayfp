@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.14.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.15.0</span>
    </div>
   </td>
  </tr>
@@ -183,26 +183,27 @@
 <div class="line">    <span class="keywordtype">int</span> handle=::open(<span class="stringliteral">&quot;/dev/dsp&quot;</span>, O_WRONLY, 0);</div>
 <div class="line">    <span class="keywordtype">int</span> format=AFMT_S16_LE;</div>
 <div class="line">    ioctl(handle, SNDCTL_DSP_SETFMT, &amp;format);</div>
-<div class="line">    <span class="keywordtype">int</span> chn=1;</div>
+<div class="line">    <span class="keywordtype">int</span> chn=2;</div>
 <div class="line">    ioctl(handle, SNDCTL_DSP_CHANNELS, &amp;chn);</div>
 <div class="line">    <span class="keywordtype">int</span> sampleRate=SAMPLERATE;</div>
 <div class="line">    ioctl(handle, SNDCTL_DSP_SPEED, &amp;sampleRate);</div>
 <div class="line">    <span class="keywordtype">int</span> bufferSize;</div>
 <div class="line">    ioctl(handle, SNDCTL_DSP_GETBLKSIZE, &amp;bufferSize);</div>
 <div class="line"> </div>
-<div class="line">    uint_least32_t bufferSamples = <span class="keyword">static_cast&lt;</span>uint_least32_t<span class="keyword">&gt;</span>(bufferSize) / <span class="keyword">sizeof</span>(<span class="keywordtype">short</span>);</div>
-<div class="line"> </div>
-<div class="line">    <span class="comment">// Play</span></div>
-<div class="line">    std::vector&lt;short&gt; buffer(bufferSamples);</div>
+<div class="line">    <span class="comment">// 48000/~1000000 * 5000 * 2</span></div>
+<div class="line">    <span class="keywordtype">short</span> buffer[512];</div>
+<div class="line">    <span class="comment">// Play for ~5 seconds</span></div>
+<div class="line">    m_engine.<a id="a16" name="a16"></a><a class="code hl_function" href="classsidplayfp.html#a5bd1b8c3364cd4e5a6d2c8a3145ad346">initMixer</a>(<span class="keyword">true</span>);</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;1000; i++)</div>
 <div class="line">    {</div>
-<div class="line">        uint_least32_t res = m_engine.<a id="a16" name="a16"></a><a class="code hl_function" href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">play</a>(&amp;buffer.front(), bufferSamples);</div>
-<div class="line">        <span class="keywordflow">if</span> (!m_engine.<a id="a17" name="a17"></a><a class="code hl_function" href="classsidplayfp.html#ae2b6b7d7c45ab1970a218bb6d5bf1178">isPlaying</a>() || (res &lt; bufferSamples))</div>
+<div class="line">        <span class="keywordtype">int</span> res = m_engine.<a id="a17" name="a17"></a><a class="code hl_function" href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">play</a>(5000);</div>
+<div class="line">        <span class="keywordflow">if</span> (res &lt; 0)</div>
 <div class="line">        {</div>
-<div class="line">            std::cerr &lt;&lt;  m_engine.<a class="code hl_function" href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">error</a>() &lt;&lt; std::endl;</div>
+<div class="line">            std::cerr &lt;&lt; m_engine.<a class="code hl_function" href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">error</a>() &lt;&lt; std::endl;</div>
 <div class="line">            <span class="keywordflow">break</span>;</div>
 <div class="line">        }</div>
-<div class="line">        ::write(handle, &amp;buffer.front(), bufferSize);</div>
+<div class="line">        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> s = m_engine.<a id="a18" name="a18"></a><a class="code hl_function" href="classsidplayfp.html#aa8b74ce4b2aa2fb3d439e9f2dee6e746">mix</a>(buffer, res);</div>
+<div class="line">        ::write(handle, buffer, s*<span class="keyword">sizeof</span>(<span class="keywordtype">short</span>));</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    ::close(handle);</div>
@@ -218,17 +219,18 @@
 <div class="ttc" id="aclassSidConfig_html_afb1f9401f74b5801c6f552b43cf16e50"><div class="ttname"><a href="classSidConfig.html#afb1f9401f74b5801c6f552b43cf16e50">SidConfig::samplingMethod</a></div><div class="ttdeci">sampling_method_t samplingMethod</div><div class="ttdef"><b>Definition</b> SidConfig.h:173</div></div>
 <div class="ttc" id="aclassSidTune_html"><div class="ttname"><a href="classSidTune.html">SidTune</a></div><div class="ttdef"><b>Definition</b> SidTune.h:43</div></div>
 <div class="ttc" id="aclasssidplayfp_html"><div class="ttname"><a href="classsidplayfp.html">sidplayfp</a></div><div class="ttdef"><b>Definition</b> sidplayfp.h:47</div></div>
-<div class="ttc" id="aclasssidplayfp_html_a1aea02da25db84d61604ebbb5af5f386"><div class="ttname"><a href="classsidplayfp.html#a1aea02da25db84d61604ebbb5af5f386">sidplayfp::info</a></div><div class="ttdeci">const SidInfo &amp; info() const</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:79</div></div>
+<div class="ttc" id="aclasssidplayfp_html_a1aea02da25db84d61604ebbb5af5f386"><div class="ttname"><a href="classsidplayfp.html#a1aea02da25db84d61604ebbb5af5f386">sidplayfp::info</a></div><div class="ttdeci">const SidInfo &amp; info() const</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:84</div></div>
 <div class="ttc" id="aclasssidplayfp_html_a455797460b63290cddbeb99d3c24a056"><div class="ttname"><a href="classsidplayfp.html#a455797460b63290cddbeb99d3c24a056">sidplayfp::config</a></div><div class="ttdeci">const SidConfig &amp; config() const</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:49</div></div>
-<div class="ttc" id="aclasssidplayfp_html_a62e5a8e252685332f8a9ddbb6f466e14"><div class="ttname"><a href="classsidplayfp.html#a62e5a8e252685332f8a9ddbb6f466e14">sidplayfp::load</a></div><div class="ttdeci">bool load(SidTune *tune)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:74</div></div>
-<div class="ttc" id="aclasssidplayfp_html_a8ad05fe52bd34636832684c6c08ca994"><div class="ttname"><a href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">sidplayfp::error</a></div><div class="ttdeci">const char * error() const</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:94</div></div>
-<div class="ttc" id="aclasssidplayfp_html_ac436fcda23b37c6fb03e319d9705947b"><div class="ttname"><a href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">sidplayfp::play</a></div><div class="ttdeci">uint_least32_t play(short *buffer, uint_least32_t count)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:59</div></div>
-<div class="ttc" id="aclasssidplayfp_html_ac6a9155ee3af4bac3cd775d72db41f57"><div class="ttname"><a href="classsidplayfp.html#ac6a9155ee3af4bac3cd775d72db41f57">sidplayfp::setRoms</a></div><div class="ttdeci">void setRoms(const uint8_t *kernal, const uint8_t *basic=0, const uint8_t *character=0)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:128</div></div>
-<div class="ttc" id="aclasssidplayfp_html_ae2b6b7d7c45ab1970a218bb6d5bf1178"><div class="ttname"><a href="classsidplayfp.html#ae2b6b7d7c45ab1970a218bb6d5bf1178">sidplayfp::isPlaying</a></div><div class="ttdeci">bool isPlaying() const</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:119</div></div>
+<div class="ttc" id="aclasssidplayfp_html_a5bd1b8c3364cd4e5a6d2c8a3145ad346"><div class="ttname"><a href="classsidplayfp.html#a5bd1b8c3364cd4e5a6d2c8a3145ad346">sidplayfp::initMixer</a></div><div class="ttdeci">void initMixer(bool stereo)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:155</div></div>
+<div class="ttc" id="aclasssidplayfp_html_a62e5a8e252685332f8a9ddbb6f466e14"><div class="ttname"><a href="classsidplayfp.html#a62e5a8e252685332f8a9ddbb6f466e14">sidplayfp::load</a></div><div class="ttdeci">bool load(SidTune *tune)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:79</div></div>
+<div class="ttc" id="aclasssidplayfp_html_a8ad05fe52bd34636832684c6c08ca994"><div class="ttname"><a href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">sidplayfp::error</a></div><div class="ttdeci">const char * error() const</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:99</div></div>
+<div class="ttc" id="aclasssidplayfp_html_aa8b74ce4b2aa2fb3d439e9f2dee6e746"><div class="ttname"><a href="classsidplayfp.html#aa8b74ce4b2aa2fb3d439e9f2dee6e746">sidplayfp::mix</a></div><div class="ttdeci">unsigned int mix(short *buffer, unsigned int samples)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:160</div></div>
+<div class="ttc" id="aclasssidplayfp_html_ac436fcda23b37c6fb03e319d9705947b"><div class="ttname"><a href="classsidplayfp.html#ac436fcda23b37c6fb03e319d9705947b">sidplayfp::play</a></div><div class="ttdeci">SID_DEPRECATED uint_least32_t play(short *buffer, uint_least32_t count)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:59</div></div>
+<div class="ttc" id="aclasssidplayfp_html_ac6a9155ee3af4bac3cd775d72db41f57"><div class="ttname"><a href="classsidplayfp.html#ac6a9155ee3af4bac3cd775d72db41f57">sidplayfp::setRoms</a></div><div class="ttdeci">void setRoms(const uint8_t *kernal, const uint8_t *basic=0, const uint8_t *character=0)</div><div class="ttdef"><b>Definition</b> sidplayfp.cpp:133</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun May 11 2025 08:35:55 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun Jun 29 2025 14:22:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

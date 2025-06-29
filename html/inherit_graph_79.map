@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classsidplayfp.html" title=" " alt="" coords="5,5,88,31"/>
+<area shape="rect" id="Node000000" href="$classSidInfo.html" title=" " alt="" coords="5,5,72,31"/>
+<area shape="rect" id="Node000001" href="$classSidInfoImpl.html" title=" " alt="" coords="120,5,216,31"/>
+<area shape="poly" id="edge72_Node000000_Node000001" title=" " alt="" coords="86,15,120,15,120,21,86,21"/>
 </map>
