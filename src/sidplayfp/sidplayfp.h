@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -83,13 +83,6 @@ public:
     const char *error() const;
 
     /**
-     * Set the fast-forward factor.
-     *
-     * @param percent
-     */
-    bool fastForward(unsigned int percent);
-
-    /**
      * Load a tune.
      * Check #error for detailed message if something goes wrong.
      *
@@ -99,28 +92,60 @@ public:
     bool load(SidTune *tune);
 
     /**
-     * Run the emulation and produce samples to play if a buffer is given.
+     * Get the buffer pointers for each of the installed SID chip.
      *
-     * @param buffer pointer to the buffer to fill with samples.
-     * @param count the size of the buffer measured in 16 bit samples
-     *              or 0 if no output is needed (e.g. Hardsid)
-     * @return the number of produced samples. If less than requested
-     *         or #isPlaying() is false an error occurred, use #error()
-     *         to get a detailed message.
+     * @param buffers pointer to the array of buffer pointers.
+     * @since 2.14
      */
-    uint_least32_t play(short *buffer, uint_least32_t count);
+    void buffers(short** buffers) const;
 
     /**
-     * Check if the engine is playing or stopped.
+     * Run the emulation for selected number of cycles.
+     * The value will be limited to a reasonable amount
+     * if too large.
      *
-     * @return true if playing, false otherwise.
+     * @param cycles the number of cycles to run.
+     * @return the number of produced samples or zero
+     * for hardware devices. If negative an error occurred,
+     * use #error() to get a detailed message.
+     * @since 2.14
      */
-    bool isPlaying() const;
+    int play(unsigned int cycles);
 
     /**
-     * Stop the engine.
+     * Reinitialize the engine.
+     *
+     * @return false in case of error, use #error()
+     * to get a detailed message.
+     * @since 2.15
      */
-    void stop();
+    bool reset();
+
+    /**
+     * Get the number of installed SID chips.
+     *
+     * @return the number of SID chips.
+     * @since 2.14
+     */
+    unsigned int installedSIDs() const;
+
+    /**
+     * Init mixer.
+     *
+     * @param stereo whether to mix in stereo or mono
+     * @since 2.15
+     */
+    void initMixer(bool stereo);
+
+    /**
+     * Mix buffers.
+     *
+     * @param buffer the output buffer
+     * @param samples number of samples to mix, returned from the #play(unsigned int) function
+     * @return number of samples generated (samples for mono, samples*2 for stereo)
+     * @since 2.15
+     */
+    unsigned int mix(short *buffer, unsigned int samples);
 
     /**
      * Control debugging.

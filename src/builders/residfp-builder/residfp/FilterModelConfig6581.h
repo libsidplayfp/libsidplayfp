@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004,2010 Dag Lem
  *
@@ -114,12 +114,10 @@ public:
     inline unsigned short getVcr_nVg(int i) const { return vcr_nVg[i]; }
     inline unsigned short getVcr_n_Ids_term(int i) const
     {
-        const double tmp = vcr_n_Ids_term[i] * uCox;
-        assert(tmp > -0.5 && tmp < 65535.5);
-        return static_cast<unsigned short>(tmp + 0.5);
+        return to_ushort(vcr_n_Ids_term[i] * uCox);
     }
     // only used if SLOPE_FACTOR is defined
-    inline constexpr double getUt() const { return Ut; }
+    static inline constexpr double getUt() { return Ut; }
     inline double getN16() const { return N16; }
 };
 

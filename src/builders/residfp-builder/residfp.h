@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -31,35 +31,22 @@
  */
 class SID_EXTERN ReSIDfpBuilder: public sidbuilder
 {
-public:
-    ReSIDfpBuilder(const char * const name) :
-        sidbuilder(name) {}
-    ~ReSIDfpBuilder();
-
-    /**
-     * Available sids.
-     *
-     * @return the number of available sids, 0 = endless.
-     */
-    unsigned int availDevices() const { return 0; }
-
+protected:
     /**
      * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
      */
-    unsigned int create(unsigned int sids);
+    libsidplayfp::sidemu* create();
 
-    const char *credits() const;
+public:
+    ReSIDfpBuilder(const char * const name);
+    ~ReSIDfpBuilder();
+
+
+    const char *getCredits() const;
 
     /// @name global settings
     /// Settings that affect all SIDs.
     //@{
-    /**
-     * enable/disable filter.
-     */
-    void filter(bool enable);
-
     /**
      * Set 6581 filter curve.
      *
@@ -87,8 +74,10 @@ public:
      * @param cws 
      */
     void combinedWaveformsStrength(SidConfig::sid_cw_t cws);
-
     //@}
+private:
+    struct config;
+    config *m_config;
 };
 
 #endif // RESIDFP_H

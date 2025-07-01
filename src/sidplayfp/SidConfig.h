@@ -153,16 +153,6 @@ public:
     sidbuilder *sidEmulation;
 
     /**
-     * Left channel volume.
-     */
-    uint_least32_t leftVolume;
-
-    /**
-     * Right channel volume.
-     */
-    uint_least32_t rightVolume;
-
-    /**
      * Power on delay cycles.
      */
     uint_least16_t powerOnDelay;

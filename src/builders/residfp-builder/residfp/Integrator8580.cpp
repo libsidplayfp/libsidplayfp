@@ -20,6 +20,8 @@
 
 #include "Integrator8580.h"
 
+#include <cstdint>
+
 namespace reSIDfp
 {
 
@@ -42,8 +44,8 @@ int Integrator8580::solve(int vi) const
     vc += n_I_dac;
 
     // vx = g(vc)
-    const int tmp = (vc >> 15) + (1 << 15);
-    assert(tmp < (1 << 16));
+    const int tmp = (vc >> 15) - INT16_MIN;
+    assert(tmp <= UINT16_MAX);
     vx = fmc.getOpampRev(tmp);
 
     // Return vo.

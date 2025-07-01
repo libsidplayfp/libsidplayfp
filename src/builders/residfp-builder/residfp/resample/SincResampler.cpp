@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -22,13 +22,10 @@
 
 #include "SincResampler.h"
 
-#ifdef HAVE_CXX20
-#  include <numbers>
-#endif
-
 #include <algorithm>
 #include <iterator>
 #include <numeric>
+#include <version>
 #include <cassert>
 #include <cstring>
 #include <cmath>
@@ -36,14 +33,19 @@
 
 #include "siddefs-fp.h"
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
+#include "sidcxx11.h"
+
+#ifdef __cpp_lib_math_constants
+#  include <numbers>
 #endif
 
-#ifdef HAVE_SMMINTRIN_H
-#  include <smmintrin.h>
-#elif defined(HAVE_ARM_NEON_H)
-#  include <arm_neon.h>
+
+#if __cpp_lib_constexpr_cmath >= 202306L
+#  define CONSTEXPR_FUNC  constexpr
+#  define CONSTEXPR_VAR   constexpr
+#else
+#  define CONSTEXPR_FUNC
+#  define CONSTEXPR_VAR   const
 #endif
 
 namespace reSIDfp
@@ -62,7 +64,8 @@ constexpr int BITS = 16;
  * @param x evaluate I0 at x
  * @return value of I0 at x.
  */
-constexpr double I0(double x)
+CONSTEXPR_FUNC
+double I0(double x)
 {
     double sum = 1.;
     double u = 1.;
@@ -94,136 +97,7 @@ int convolve(const int* a, const short* b, int bLength)
 #if defined(__has_cpp_attribute) && __has_cpp_attribute( assume )
     [[assume( bLength > 0 )]];
 #endif
-#ifdef HAVE_SMMINTRIN_H
     int out = 0;
-
-    const uintptr_t offset = (uintptr_t)(b) & 0x0f;
-
-    // check for aligned accesses
-    if (offset)
-    {
-        const int l = (0x10 - offset) / 2;
-
-        for (int i = 0; i < l; i++)
-        {
-            out += a[i] * static_cast<int>(b[i]);
-        }
-
-        a += l;
-        b += l;
-        bLength -= l;
-    }
-
-    __m128i acc = _mm_setzero_si128();
-
-    const int n = bLength / 8;
-
-    for (int i = 0; i < n; i++)
-    {
-        const __m128i tmp_b = _mm_stream_load_si128((__m128i*)b);
-
-        __m128i val_b = _mm_cvtepi16_epi32(tmp_b);
-        __m128i prod = _mm_mullo_epi32(*(__m128i*)a, val_b);
-        acc = _mm_add_epi32(acc, prod);
-        a += 4;
-
-        val_b = _mm_cvtepi16_epi32(_mm_srli_si128(tmp_b, 8));
-        prod = _mm_mullo_epi32(*(__m128i*)a, val_b);
-        acc = _mm_add_epi32(acc, prod);
-        a += 4;
-
-        b += 8;
-    }
-
-    __m128i vsum = _mm_add_epi32(acc, _mm_srli_si128(acc, 8));
-    vsum = _mm_add_epi32(vsum, _mm_srli_si128(vsum, 4));
-    out += _mm_cvtsi128_si32(vsum);
-
-    bLength &= 7;
-
-/*#elif defined(HAVE_ARM_NEON_H)
-#if (defined(__arm64__) && defined(__APPLE__)) || defined(__aarch64__)
-    int32x4_t acc1Low = vdupq_n_s32(0);
-    int32x4_t acc1High = vdupq_n_s32(0);
-    int32x4_t acc2Low = vdupq_n_s32(0);
-    int32x4_t acc2High = vdupq_n_s32(0);
-
-    const int n = bLength / 16;
-
-    for (int i = 0; i < n; i++)
-    {
-        int16x8_t v11 = vld1q_s16(a);
-        int16x8_t v12 = vld1q_s16(a + 8);
-        int16x8_t v21 = vld1q_s16(b);
-        int16x8_t v22 = vld1q_s16(b + 8);
-
-        acc1Low  = vmlal_s16(acc1Low, vget_low_s16(v11), vget_low_s16(v21));
-        acc1High = vmlal_high_s16(acc1High, v11, v21);
-        acc2Low  = vmlal_s16(acc2Low, vget_low_s16(v12), vget_low_s16(v22));
-        acc2High = vmlal_high_s16(acc2High, v12, v22);
-
-        a += 16;
-        b += 16;
-    }
-
-    bLength &= 15;
-
-    if (bLength >= 8)
-    {
-        int16x8_t v1 = vld1q_s16(a);
-        int16x8_t v2 = vld1q_s16(b);
-
-        acc1Low  = vmlal_s16(acc1Low, vget_low_s16(v1), vget_low_s16(v2));
-        acc1High = vmlal_high_s16(acc1High, v1, v2);
-
-        a += 8;
-        b += 8;
-    }
-
-    bLength &= 7;
-
-    if (bLength >= 4)
-    {
-        int16x4_t v1 = vld1_s16(a);
-        int16x4_t v2 = vld1_s16(b);
-
-        acc1Low  = vmlal_s16(acc1Low, v1, v2);
-
-        a += 4;
-        b += 4;
-    }
-
-    int32x4_t accSumsNeon = vaddq_s32(acc1Low, acc1High);
-    accSumsNeon = vaddq_s32(accSumsNeon, acc2Low);
-    accSumsNeon = vaddq_s32(accSumsNeon, acc2High);
-
-    int out = vaddvq_s32(accSumsNeon);
-
-    bLength &= 3;
-#else
-    int32x4_t acc = vdupq_n_s32(0);
-
-    const int n = bLength / 4;
-
-    for (int i = 0; i < n; i++)
-    {
-        const int16x4_t h_vec = vld1_s16(a);
-        const int16x4_t x_vec = vld1_s16(b);
-        acc = vmlal_s16(acc, h_vec, x_vec);
-        a += 4;
-        b += 4;
-    }
-
-    int out = vgetq_lane_s32(acc, 0) +
-              vgetq_lane_s32(acc, 1) +
-              vgetq_lane_s32(acc, 2) +
-              vgetq_lane_s32(acc, 3);
-
-    bLength &= 3;
-#endif*/
-#else
-    int out = 0;
-#endif
 #ifndef __clang__
     out = std::inner_product(a, a+bLength, b, out);
 #else
@@ -270,7 +144,7 @@ SincResampler::SincResampler(
         double highestAccurateFrequency) :
     cyclesPerSample(static_cast<int>(clockFrequency / samplingFrequency * 1024.))
 {
-#if defined(HAVE_CXX20) && defined(__cpp_lib_constexpr_cmath)
+#ifdef __cpp_lib_math_constants
     constexpr double PI = std::numbers::pi;
 #else
 #  ifdef M_PI
@@ -281,7 +155,7 @@ SincResampler::SincResampler(
 #endif
 
     // 16 bits -> -96dB stopband attenuation.
-    const double A = -20. * std::log10(1.0 / (1 << BITS));
+    CONSTEXPR_VAR double A = -20. * std::log10(1.0 / (1 << BITS));
     // A fraction of the bandwidth is allocated to the transition band, which we double
     // because we design the filter to transition halfway at nyquist.
     const double dw = (1. - 2.*highestAccurateFrequency / samplingFrequency) * PI * 2.;
@@ -289,8 +163,8 @@ SincResampler::SincResampler(
     // For calculation of beta and N see the reference for the kaiserord
     // function in the MATLAB Signal Processing Toolbox:
     // http://www.mathworks.com/help/signal/ref/kaiserord.html
-    const double beta = 0.1102 * (A - 8.7);
-    const double I0beta = I0(beta);
+    CONSTEXPR_VAR double beta = 0.1102 * (A - 8.7);
+    CONSTEXPR_VAR double I0beta = I0(beta);
     const double cyclesPerSampleD = clockFrequency / samplingFrequency;
     const double inv_cyclesPerSampleD = samplingFrequency / clockFrequency;
 

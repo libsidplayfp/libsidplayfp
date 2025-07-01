@@ -38,7 +38,7 @@ namespace libsidplayfp
 class Sprites
 {
 private:
-    static constexpr int SPRITES = 8;
+    static constexpr unsigned int SPRITES = 8;
 
     const uint8_t &enable, &y_expansion;
 

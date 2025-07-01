@@ -140,6 +140,8 @@ private:
 private:
     static double getCpuFreq(model_t model);
 
+    static void deleteSids(sidBankMap_t &extraSidBanks);
+
 private:
     /**
      * IRQ trigger signal.

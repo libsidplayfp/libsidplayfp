@@ -1,3 +1,36 @@
+2.15.0 2025-0x-xx
+* Compile with fast math, without unsafe optimizations
+* residfp: reworked the SIMD support, removed the intrinsics code leaving the compiler vectorize the loop
+* Extended the new play API
+* Marked old play API functions as deprecated
+
+
+
+2.14.0 2025-05-11
+* Rough approximation of MDAC saturation for the 6581 (#177) (#185)
+* New play API for client side mixing (#41) (#184)
+* Minor fixes and optimizations
+
+
+
+2.13.1 2025-04-25
+* Fix build with inlining disabled (#181)
+* Add missing files to the tarball (#182)
+* Update exsid driver
+* Fixed an uninitialized warning
+
+
+
+2.13.0 2025-04-13
+* Add support for c++23 where available
+* Reworked power on delay (#82)
+* Correctly link to pthread library (#179)
+* Add proper compiler flag when enabling sse4 (#172)
+* resid/residfp: Use more bits for the 8580 filter cutoff (VICE bug 2098)
+* resid: reduce aliasing noise (VICE bug 2116)
+
+
+
 2.12.0 2024-12-01
 * Better mixing for multi chip tunes (#167)
 * residfp: fixed voice sync when a saw-combined waveform is selected (#169)

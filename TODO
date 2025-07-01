@@ -1,7 +1,5 @@
 3.0
 * wrap everything into a library namespace (?)
-* require c++11 (?)
-* add API to allow mixing client side
 
 
 someday/maybe:
@@ -10,4 +8,3 @@ someday/maybe:
 * relocate only psid tunes (?)
 * add SIDid support
 * implement support for mus data embedded in psid files
-* test hardsid support

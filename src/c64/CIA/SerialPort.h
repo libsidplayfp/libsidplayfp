@@ -66,7 +66,7 @@ private:
     void flipCnt();
     void flipFake();
 
-    void doStartSdr();
+    void doStartSdr() { (loaded ? pending : loaded) = true; }
 
     void syncCntHistory();
 
@@ -84,7 +84,7 @@ public:
 
     void setModel4485(bool is4485) { model4485 = is4485; }
 
-    void startSdr();
+    void startSdr() { eventScheduler.schedule(startSdrEvent, 1); }
 
     void switchSerialDirection(bool input);
 

@@ -23,6 +23,7 @@
 #include "FilterModelConfig.h"
 
 #include <vector>
+#include <cstdint>
 
 namespace reSIDfp
 {
@@ -44,8 +45,12 @@ FilterModelConfig::FilterModelConfig(
     vmax(std::max(Vddt, opamp_voltage[0].y)),
     denorm(vmax - vmin),
     norm(1.0 / denorm),
-    N16(norm * ((1 << 16) - 1)),
-    voice_voltage_range(vvr)
+    N16(norm * UINT16_MAX),
+    voice_voltage_range(vvr),
+    mixer(new unsigned short[mixer_offset<8>::value]),
+    summer(new unsigned short[summer_offset<5>::value]),
+    volume(new unsigned short[16 * (1 << 16)]),
+    resonance(new unsigned short[16 * (1 << 16)])
 {
     setUCox(ucox);
 
@@ -70,29 +75,16 @@ FilterModelConfig::FilterModelConfig(
     {
         const Spline::Point out = s.evaluate(x);
         // When interpolating outside range the first elements may be negative
-        double tmp = out.x > 0. ? out.x : 0.;
-        assert(tmp < 65535.5);
-        opamp_rev[x] = static_cast<unsigned short>(tmp + 0.5);
+        opamp_rev[x] = out.x > 0. ? to_ushort(out.x) : 0;
     }
 }
 
 FilterModelConfig::~FilterModelConfig()
 {
-    for (int i = 0; i < 8; i++)
-    {
-        delete [] mixer[i];
-    }
-
-    for (int i = 0; i < 5; i++)
-    {
-        delete [] summer[i];
-    }
-
-    for (int i = 0; i < 16; i++)
-    {
-        delete [] volume[i];
-        delete [] resonance[i];
-    }
+    delete [] mixer;
+    delete [] summer;
+    delete [] volume;
+    delete [] resonance;
 }
 
 void FilterModelConfig::setUCox(double new_uCox)

@@ -47,13 +47,13 @@ protected:
     virtual uint8_t read(uint_least8_t addr) = 0;
     virtual void writeReg(uint_least8_t addr, uint8_t data) = 0;
 
-public:
     virtual void reset(uint8_t volume) = 0;
 
+public:
     void reset()
     {
         std::fill(std::begin(lastpoke), std::end(lastpoke), 0);
-        reset(0);
+        reset(0xf);
     }
 
     // Bank functions

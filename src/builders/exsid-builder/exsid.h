@@ -21,36 +21,18 @@
 
 class SID_EXTERN exSIDBuilder : public sidbuilder
 {
-private:
-    static bool m_initialised;
-
-    static unsigned int m_count;
+protected:
+    /**
+     * Create the sid emu.
+     */
+    libsidplayfp::sidemu* create();
 
 public:
     exSIDBuilder(const char * const name);
     ~exSIDBuilder();
 
-    /**
-     * Available sids.
-     *
-     * @return the number of available sids, 0 = endless.
-     */
-    unsigned int availDevices() const;
-
-    const char *credits() const;
+    const char *getCredits() const;
     void flush();
-
-    /**
-     * enable/disable filter.
-     */
-    void filter(bool enable);
-
-    /**
-     * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
-     */
-    unsigned int create(unsigned int sids);
 };
 
 #endif // EXSID_H

@@ -151,16 +151,6 @@ void exSID::model(SidConfig::sid_model_t model, MAYBE_UNUSED bool digiboost)
 
 void exSID::flush() {}
 
-bool exSID::lock(EventScheduler* env)
-{
-    return sidemu::lock(env);
-}
-
-void exSID::unlock()
-{
-    sidemu::unlock();
-}
-
 void exSID::sampling(float systemclock, MAYBE_UNUSED float freq,
         MAYBE_UNUSED SidConfig::sampling_method_t method, bool)
 {

@@ -63,13 +63,10 @@ enabled by default
 enable branch hints in reSID engine so the compiler can produce more optimized code
 enabled by default
 
---with-simd=<sse4/neon/none>
-enable SIMD code in reSIDfp that might increase resampling performance.
-Requires compiler support for the SIMD instruction set, (i.e. -msse4).
-Be aware that this is processor specific and the compiler could actually produce
-more optimized code with the appropriate flags (i.e. -march=x86-64-v3 -ftree-vectorize).
-Use only if you know what you're doing.
-neon is currently unimplemented.
+--with-simd=<mmx/sse2/sse4/avx2/avx512f/none>
+enable SIMD code, mostly useful for resampling performance in reSIDfp.
+Not required if -march or -mcpu is already included in the compiler flags
+(i.e. CXXFLAGS=-march=x86-64-v3).
 none by default
 
 --enable-testsuite=PATH_TO_TESTSUITE
@@ -81,9 +78,6 @@ disabled by default
 --enable-tests
 enables unit tests. Use "make check" to launch the testsuite
 disabled by default
-
---enable-hardsid
-enables hardsid support
 
 --with-gcrypt / --without-gcrypt
 force/disable libgcrypt support for MD5 computation
@@ -100,4 +94,3 @@ can be built by invoking "make doc".
 
 Known bugs/limitations:
 * mus data embedded in psid file is not supported
-* hardsid support is untested and possibly broken

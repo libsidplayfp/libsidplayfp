@@ -45,10 +45,6 @@ namespace libsidplayfp
  */
 class sidemu : public c64sid
 {
-public:
-    /// Buffer size. 5000 is roughly 5 ms at 96 kHz
-    static constexpr unsigned int OUTPUTBUFFERSIZE = 5000;
-
 private:
     sidbuilder* const m_builder;
 

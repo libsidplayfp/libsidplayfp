@@ -37,10 +37,10 @@ namespace reSIDfp
 class Filter
 {
 private:
-    unsigned short** mixer;
-    unsigned short** summer;
-    unsigned short** resonance;
-    unsigned short** volume;
+    unsigned short* mixer;
+    unsigned short* summer;
+    unsigned short* resonance;
+    unsigned short* volume;
 
     FilterModelConfig& fmc;
 
@@ -119,7 +119,7 @@ protected:
      *
      * @param res the new resonance value
      */
-    void updateResonance(unsigned char res) { currentResonance = resonance[res]; }
+    void updateResonance(unsigned char res) { currentResonance = resonance + (res * (1<<16)); }
 
     /**
      * Mixing configuration modified (offsets change)
@@ -144,7 +144,7 @@ public:
      * @param v1 voice 1 in
      * @param v2 voice 2 in
      * @param v3 voice 3 in
-     * @return filtered output
+     * @return filtered output, unsigned 16 bit
      */
     unsigned short clock(Voice& v1, Voice& v2, Voice& v3);
 
@@ -226,8 +226,8 @@ unsigned short Filter::clock(Voice& voice1, Voice& voice2, Voice& voice3)
     return currentVolume[currentMixer[Vmix]];
 }
 
-#endif
-
 } // namespace reSIDfp
+
+#endif
 
 #endif

@@ -31,6 +31,7 @@
 #include <mutex>
 #include <thread>
 #include <cmath>
+#include <cstdint>
 
 namespace reSIDfp
 {
@@ -215,9 +216,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         {
             // The table index is right-shifted 16 times in order to fit in
             // 16 bits; the argument to sqrt is thus multiplied by (1 << 16).
-            const double tmp = nVddt - std::sqrt(static_cast<double>(i << 16));
-            assert(tmp > -0.5 && tmp < 65535.5);
-            vcr_nVg[i] = static_cast<unsigned short>(tmp + 0.5);
+            vcr_nVg[i] = to_ushort(nVddt - std::sqrt(static_cast<double>(i << 16)));
         }
     };
 
@@ -235,7 +234,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         const double Is = (2. * Ut * Ut) * WL_vcr;
 
         // Normalized current factor for 1 cycle at 1MHz.
-        const double N15 = norm * ((1 << 15) - 1);
+        const double N15 = norm * INT16_MAX;
         const double n_Is = N15 * 1.0e-6 / C * Is;
 
         // kVgt_Vx = k*(Vg - Vt) - Vx
@@ -243,7 +242,7 @@ FilterModelConfig6581::FilterModelConfig6581() :
         const double  r_N16_2Ut = 1.0 / (N16 * 2.0 * Ut);
         for (int i = 0; i < (1 << 16); i++)
         {
-            const int kVgt_Vx = i - (1 << 15);
+            const int kVgt_Vx = i + INT16_MIN;
             const double log_term = std::log1p(std::exp(kVgt_Vx * r_N16_2Ut));
             // Scaled by m*2^15
             vcr_n_Ids_term[i] = n_Is * log_term * log_term;

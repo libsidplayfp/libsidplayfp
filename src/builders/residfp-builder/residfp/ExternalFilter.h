@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -79,7 +79,8 @@ public:
     /**
      * SID clocking.
      *
-     * @param input
+     * @param input input sample, signed 16 bit
+     * @return filtered sample, signed 16 bit
      */
     int clock(int input);
 
@@ -111,7 +112,7 @@ namespace reSIDfp
 RESID_INLINE
 int ExternalFilter::clock(int input)
 {
-    const int Vi = (input<<11) - (1 << (11+15));
+    const int Vi = input << 11;
     const int dVlp = (w0lp_1_s7 * (Vi - Vlp) >> 7);
     const int dVhp = (w0hp_1_s17 * (Vlp - Vhp) >> 17);
     Vlp += dVlp;

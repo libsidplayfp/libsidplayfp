@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2019 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -28,19 +28,20 @@
 
 libsidplayfp::sidemu *sidbuilder::lock(libsidplayfp::EventScheduler *env, SidConfig::sid_model_t model, bool digiboost)
 {
-    m_status = true;
-
-    for (libsidplayfp::sidemu *sid: sidobjs)
+    // create new emu
+    if (libsidplayfp::sidemu* sid = create())
     {
         if (sid->lock(env))
         {
             sid->model(model, digiboost);
+            sidobjs.insert(sid);
             return sid;
         }
+        else
+            delete sid;
     }
 
     // Unable to locate free SID
-    m_status = false;
     m_errorBuffer.assign(name()).append(" ERROR: No available SIDs to lock");
     return nullptr;
 }
@@ -51,6 +52,9 @@ void sidbuilder::unlock(libsidplayfp::sidemu *device)
     if (it != sidobjs.end())
     {
         (*it)->unlock();
+        // should we cache these for later use?
+        sidobjs.erase(it);
+        delete *it;
     }
 }
 
@@ -60,4 +64,9 @@ void sidbuilder::remove()
         delete sidobj;
 
     sidobjs.clear();
+}
+
+const char* sidbuilder::credits() const
+{
+    return getCredits();
 }

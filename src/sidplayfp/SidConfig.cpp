@@ -22,8 +22,6 @@
 
 #include "SidConfig.h"
 
-#include "mixer.h"
-
 #include "sidcxx11.h"
 
 SidConfig::SidConfig() :
@@ -38,8 +36,6 @@ SidConfig::SidConfig() :
     secondSidAddress(0),
     thirdSidAddress(0),
     sidEmulation(nullptr),
-    leftVolume(libsidplayfp::Mixer::VOLUME_MAX),
-    rightVolume(libsidplayfp::Mixer::VOLUME_MAX),
     powerOnDelay(DEFAULT_POWER_ON_DELAY),
     samplingMethod(RESAMPLE_INTERPOLATE),
     fastSampling(false)
@@ -58,8 +54,6 @@ bool SidConfig::compare(const SidConfig &config)
         || secondSidAddress != config.secondSidAddress
         || thirdSidAddress != config.thirdSidAddress
         || sidEmulation != config.sidEmulation
-        || leftVolume != config.leftVolume
-        || rightVolume != config.rightVolume
         || powerOnDelay != config.powerOnDelay
         || samplingMethod != config.samplingMethod
         || fastSampling != config.fastSampling;

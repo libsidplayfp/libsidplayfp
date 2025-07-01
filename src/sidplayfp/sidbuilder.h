@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -50,13 +50,15 @@ protected:
 
     emuset_t sidobjs;
 
-    bool m_status;
+protected:
+    virtual libsidplayfp::sidemu* create() = 0;
+
+    virtual const char *getCredits() const = 0;
 
 public:
     sidbuilder(const char * const name) :
         m_name(name),
-        m_errorBuffer("N/A"),
-        m_status(true) {}
+        m_errorBuffer("N/A") {}
     virtual ~sidbuilder() {}
 
     /**
@@ -67,34 +69,24 @@ public:
     unsigned int usedDevices() const { return sidobjs.size(); }
 
     /**
-     * Available devices.
-     *
-     * @return the number of available sids, 0 = endless.
+     * @deprecated does nothing
      */
-    virtual unsigned int availDevices() const = 0;
-
-    /**
-     * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
-     * @return the number of actually created sid emus
-     */
-    virtual unsigned int create(unsigned int sids) = 0;
+    SID_DEPRECATED unsigned int create(unsigned int sids) { return sids; }
 
     /**
      * Find a free SID of the required specs
      *
-     * @param env the event context
+     * @param scheduler the event scheduler
      * @param model the required sid model
      * @param digiboost whether to enable digiboost for 8580
-     * @return pointer to the locked sid emu
+     * @return pointer to the locked sid, null if none is available
      */
     libsidplayfp::sidemu *lock(libsidplayfp::EventScheduler *scheduler, SidConfig::sid_model_t model, bool digiboost);
 
     /**
      * Release this SID.
      *
-     * @param device the sid emu to unlock
+     * @param device the sid to unlock
      */
     void unlock(libsidplayfp::sidemu *device);
 
@@ -118,27 +110,11 @@ public:
     const char *error() const { return m_errorBuffer.c_str(); }
 
     /**
-     * Determine current state of object.
-     *
-     * @return true = okay, false = error
-     */
-    bool getStatus() const { return m_status; }
-
-    /**
      * Get the builder's credits.
      *
      * @return credits
      */
-    virtual const char *credits() const = 0;
-
-    /**
-     * Toggle sid filter emulation.
-     *
-     * @param enable true = enable, false = disable
-     * @deprecated use #sidplayfp.filter
-     */
-    SID_DEPRECATED
-    virtual void filter(bool enable) = 0;
+    const char *credits() const;
 };
 
 #endif // SIDBUILDER_H

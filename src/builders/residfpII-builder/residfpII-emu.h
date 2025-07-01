@@ -20,38 +20,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef RESID_EMU_H
-#define RESID_EMU_H
+#ifndef RESIDFPII_EMU_H
+#define RESIDFPII_EMU_H
 
 #include <stdint.h>
 
+#include "residfpII/SID.h"
 #include "sidplayfp/SidConfig.h"
 #include "sidemu.h"
 #include "Event.h"
-#include "resid/sid.h"
 
 #include "sidcxx11.h"
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
 
+class sidbuilder;
 
 namespace libsidplayfp
 {
 
-class ReSID final : public sidemu
+class ReSIDfpII final : public sidemu
 {
 private:
-    reSID::SID   &m_sid;
-    uint8_t       m_voiceMask;
+    reSIDfpII::SID &m_sid;
 
 public:
     static const char* getCredits();
 
 public:
-    ReSID(sidbuilder *builder);
-    ~ReSID() override;
+    ReSIDfpII(sidbuilder *builder);
+    ~ReSIDfpII() override;
 
     bool getStatus() const { return m_status; }
 
@@ -65,15 +62,18 @@ public:
     void clock() override;
 
     void sampling(float systemclock, float freq,
-        SidConfig::sampling_method_t method, bool fast) override;
+        SidConfig::sampling_method_t method, bool) override;
 
     void model(SidConfig::sid_model_t model, bool digiboost) override;
 
-    // Specific to resid
-    void bias(double dac_bias);
+    // Specific to residfp
     void filter(bool enable);
+    void filter6581Curve(double filterCurve);
+    void filter6581Range(double adjustment);
+    void filter8580Curve(double filterCurve);
+    void combinedWaveforms(SidConfig::sid_cw_t cws);
 };
 
 }
 
-#endif // RESID_EMU_H
+#endif // RESIDFPII_EMU_H

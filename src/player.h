@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -33,7 +33,7 @@
 
 #include "SidInfoImpl.h"
 #include "sidrandom.h"
-#include "mixer.h"
+#include "simpleMixer.h"
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
@@ -41,6 +41,7 @@
 #endif
 
 #include <atomic>
+#include <memory>
 #include <vector>
 
 class SidTune;
@@ -51,22 +52,13 @@ class sidbuilder;
 namespace libsidplayfp
 {
 
+class sidemu;
+
 class Player
 {
 private:
-    enum class state_t
-    {
-        STOPPED,
-        PLAYING,
-        STOPPING
-    };
-
-private:
     /// Commodore 64 emulator
     c64 m_c64;
-
-    /// Mixer
-    Mixer m_mixer;
 
     /// Emulator info
     SidTune *m_tune;
@@ -80,14 +72,16 @@ private:
     /// Error message
     const char *m_errorString;
 
-    std::atomic<state_t> m_isPlaying;
-
     sidrandom m_rand;
 
     uint_least32_t m_startTime = 0;
 
     /// PAL/NTSC switch value
     uint8_t videoSwitch;
+
+    std::vector<sidemu*> m_chips;
+
+    std::unique_ptr<SimpleMixer> m_simpleMixer;
 
 private:
     /**
@@ -141,15 +135,11 @@ public:
 
     bool config(const SidConfig &cfg, bool force=false);
 
-    bool fastForward(unsigned int percent);
-
     bool load(SidTune *tune);
 
-    uint_least32_t play(short *buffer, uint_least32_t samples);
+    void buffers(short** buffers) const;
 
-    bool isPlaying() const { return m_isPlaying != state_t::STOPPED; }
-
-    void stop();
+    int play(unsigned int cycles);
 
     uint_least32_t timeMs() const { return m_c64.getTimeMs() - m_startTime; }
 
@@ -168,6 +158,14 @@ public:
     uint_least16_t getCia1TimerA() const { return m_c64.getCia1TimerA(); }
 
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
+
+    unsigned int installedSIDs() const { return m_chips.size(); }
+
+    void initMixer(bool stereo);
+
+    unsigned int mix(short *buffer, unsigned int samples);
+
+    bool reset();
 };
 
 }

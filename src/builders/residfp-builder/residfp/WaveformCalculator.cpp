@@ -60,7 +60,7 @@ WaveformCalculator* WaveformCalculator::getInstance()
 // Distance functions
 static float exponentialDistance(float distance, int i)
 {
-    return pow(distance, -i);
+    return std::pow(distance, -i);
 }
 
 MAYBE_UNUSED static float linearDistance(float distance, int i)

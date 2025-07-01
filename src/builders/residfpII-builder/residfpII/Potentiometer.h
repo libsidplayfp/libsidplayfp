@@ -3,7 +3,7 @@
  *
  * Copyright 2011-2013 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
- * Copyright 2000-2002 Simon White
+ * Copyright (C) 2004  Dag Lem <resid@nimrod.no>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,52 +20,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef  HARDSID_H
-#define  HARDSID_H
+#ifndef POTENTIOMETER_H
+#define POTENTIOMETER_H
 
-#include "sidplayfp/sidbuilder.h"
-#include "sidplayfp/siddefs.h"
+namespace reSIDfpII
+{
 
 /**
- * HardSID Builder Class
+ * Potentiometer representation.
+ *
+ * This class will probably never be implemented in any real way.
+ *
+ * @author Ken Händel
+ * @author Dag Lem
  */
-class SID_EXTERN HardSIDBuilder : public sidbuilder
+class Potentiometer
 {
-private:
-    static bool m_initialised;
-
-#ifndef _WIN32
-    static unsigned int m_count;
-#endif
-
-    int init();
-
 public:
-    HardSIDBuilder(const char * const name);
-    ~HardSIDBuilder();
-
     /**
-     * Available sids.
+     * Read paddle value. Not modeled.
      *
-     * @return the number of available sids, 0 = endless.
+     * @return paddle value (always 0xff)
      */
-    unsigned int availDevices() const;
-
-    const char *credits() const;
-
-    void flush();
-
-    /**
-     * enable/disable filter.
-     */
-    void filter(bool enable);
-
-    /**
-     * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
-     */
-    unsigned int create(unsigned int sids);
+    unsigned char readPOT() const { return 0xff; }
 };
 
-#endif // HARDSID_H
+} // namespace reSIDfpII
+
+#endif
