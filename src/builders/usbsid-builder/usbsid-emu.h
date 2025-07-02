@@ -17,8 +17,6 @@
 #  include "config.h"
 #endif
 
-// Approx 60ms
-#define USBSID_DELAY_CYCLES 60000
 namespace libsidplayfp
 {
 
@@ -30,26 +28,21 @@ class USBSID final : public sidemu, private Event//, public USBSIDBuilder
 private:
     /* USBSID specific data */
     USBSID_NS::USBSID_Class &m_sid;
-    static unsigned int m_sidFree[4];
-    static unsigned int m_sidsUsed;
-    static bool m_sidInitDone;
-    const unsigned int sidno;
     int m_handle;
+    int sidno;
 
     uint8_t busValue;  /* Return value on read */
 
     SidConfig::sid_model_t runmodel;  /* Read model type */
 
-private:
     event_clock_t delay();  /* Event */
 
 public:
     static const char* getCredits();
 
 public:
-    USBSID(sidbuilder *builder, bool cycled, unsigned int sidno);
+    USBSID(sidbuilder *builder);
     ~USBSID() override;
-    bool m_iscycled;  /* Attempt to do cycle exact writes */
 
     bool getStatus() const { return m_status; }
 
@@ -60,7 +53,8 @@ public:
     void reset(uint8_t volume) override;
 
     /* Standard SID functions */
-    void clock() override;
+    // void clock() override;
+    void clock() {};
 
 
     void sampling(float systemclock, MAYBE_UNUSED float freq,
@@ -74,8 +68,8 @@ public:
 
     /* ISSUE: Disabled, blocks playing */
     // Must lock the SID before using the standard functions.
-    bool lock(EventScheduler *env) override;
-    void unlock() override;
+    // bool lock(EventScheduler *env) override;
+    // void unlock() override;
 
 private:
     // Fixed interval timer delay to prevent sidplay2

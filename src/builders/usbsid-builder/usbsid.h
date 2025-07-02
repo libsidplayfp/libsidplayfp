@@ -11,21 +11,17 @@ class SID_EXTERN USBSIDBuilder : public sidbuilder
 private:
     static bool m_initialised;
 
+protected:
+    /**
+     * Create the sid emu.
+     */
+    libsidplayfp::sidemu* create();
+
 public:
     USBSIDBuilder(const char * const name);
     ~USBSIDBuilder();
 
-    bool m_isthreaded;
-    bool m_iscycled;
-
-    /**
-     * Available sids.
-     *
-     * @return the number of available sids, 0 = endless.
-     */
-    unsigned int availDevices() const;
-
-    const char *credits() const;
+    const char *getCredits() const;
     void flush();
 
     /**
@@ -33,12 +29,6 @@ public:
      */
     void filter(bool enable);
 
-    /**
-     * Create the sid emu.
-     *
-     * @param sids the number of required sid emu
-     */
-    unsigned int create(unsigned int sids);
 };
 
 #endif // USBSID_H
