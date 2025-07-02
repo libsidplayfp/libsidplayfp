@@ -57,14 +57,10 @@ noinst_LTLIBRARIES = \
 src/builders/residfp-builder/residfp/libresidfp.la \
 src/builders/residfpII-builder/residfpII/libresidfpII.la \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
-src/builders/residfpII-builder/libsidplayfp-residfpII.l
+src/builders/residfpII-builder/libsidplayfp-residfpII.la
 
 if USBSID_SUPPORT
   noinst_LTLIBRARIES += src/builders/usbsid-builder/libsidplayfp-usbsid.la
-endif
-
-if HARDSID
-  noinst_LTLIBRARIES += src/builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
 if EXSID_SUPPORT
@@ -209,10 +205,6 @@ src_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
 
 if USBSID_SUPPORT
   src_libsidplayfp_la_LIBADD += src/builders/usbsid-builder/libsidplayfp-usbsid.la
-endif
-
-if HARDSID
-  src_libsidplayfp_la_LIBADD += src/builders/hardsid-builder/libsidplayfp-hardsid.la
 endif
 
 if EXSID_SUPPORT
@@ -364,25 +356,6 @@ src_builders_usbsid_builder_libsidplayfp_usbsid_la_LIBADD = \
     $(PTHREAD_LIBS)
 
 endif
-
-if HARDSID
-src_builders_hardsid_builder_libsidplayfp_hardsid_ladir = $(includedir)/sidplayfp/builders
-src_builders_hardsid_builder_libsidplayfp_hardsid_la_HEADERS = \
-src/builders/hardsid-builder/hardsid.h
-
-if MINGW32
-  hardsid_src = src/builders/hardsid-builder/hardsid-emu-win.cpp
-else
-  hardsid_src = src/builders/hardsid-builder/hardsid-emu-unix.cpp
-endif
-
-src_builders_hardsid_builder_libsidplayfp_hardsid_la_SOURCES = \
-src/builders/hardsid-builder/hardsid-builder.cpp  \
-src/builders/hardsid-builder/hardsid-emu.h \
-$(hardsid_src)
-
-endif
-
 
 if EXSID_SUPPORT
 
