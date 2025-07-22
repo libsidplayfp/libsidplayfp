@@ -111,7 +111,7 @@ void ReSIDfp::filter(bool enable)
 }
 
 void ReSIDfp::sampling(float systemclock, float freq,
-        SidConfig::sampling_method_t method, bool)
+        SidConfig::sampling_method_t method)
 {
     reSIDfp::SamplingMethod sampleMethod;
     switch (method)

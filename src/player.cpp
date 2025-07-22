@@ -341,7 +341,7 @@ bool Player::config(const SidConfig &cfg, bool force)
             const c64::cia_model_t ciaModel = getCiaModel(cfg.ciaModel);
             m_c64.setCiaModel(ciaModel);
 
-            sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
+            sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod);
 
             // Configure, setup and install C64 environment/events
             initialise();
@@ -556,11 +556,11 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 }
 
 void Player::sidParams(double cpuFreq, int frequency,
-                        SidConfig::sampling_method_t sampling, bool fastSampling)
+                        SidConfig::sampling_method_t sampling)
 {
     for (sidemu *s: m_chips)
     {
-        s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
+        s->sampling((float)cpuFreq, frequency, sampling);
     }
 }
 

@@ -37,8 +37,7 @@ SidConfig::SidConfig() :
     thirdSidAddress(0),
     sidEmulation(nullptr),
     powerOnDelay(DEFAULT_POWER_ON_DELAY),
-    samplingMethod(RESAMPLE_INTERPOLATE),
-    fastSampling(false)
+    samplingMethod(RESAMPLE_INTERPOLATE)
 {}
 
 bool SidConfig::compare(const SidConfig &config)
@@ -55,6 +54,5 @@ bool SidConfig::compare(const SidConfig &config)
         || thirdSidAddress != config.thirdSidAddress
         || sidEmulation != config.sidEmulation
         || powerOnDelay != config.powerOnDelay
-        || samplingMethod != config.samplingMethod
-        || fastSampling != config.fastSampling;
+        || samplingMethod != config.samplingMethod;
 }
