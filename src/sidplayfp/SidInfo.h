@@ -26,6 +26,7 @@
 #include <stdint.h>
 
 #include "sidplayfp/siddefs.h"
+#include "sidplayfp/SidTuneInfo.h"
 
 /**
  * This interface is used to get sid engine informations.
@@ -70,6 +71,13 @@ public:
     const char *chargenDesc() const;
     //@}
 
+    /// SID chips
+    /// @since 3.0
+    //@{
+    unsigned int numberOfSIDs() const;
+    SidTuneInfo::model_t sidModel(unsigned int i) const;
+    //@}
+
 private:
     virtual const char *getName() const =0;
 
@@ -93,6 +101,9 @@ private:
     virtual const char *getKernalDesc() const =0;
     virtual const char *getBasicDesc() const =0;
     virtual const char *getChargenDesc() const =0;
+
+    virtual unsigned int getNumberOfSIDs() const =0;
+    virtual SidTuneInfo::model_t getSidModel(unsigned int i) const =0;
 
 protected:
     ~SidInfo() {}

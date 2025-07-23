@@ -59,9 +59,11 @@ public:
         PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\n"
             "\tCopyright (C) 2000 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
-            "\tCopyright (C) 2010-2024 Leandro Nini\n"
+            "\tCopyright (C) 2010-2025 Leandro Nini\n"
             "\t" PACKAGE_URL "\n"
     };
+
+    std::vector<SidTuneInfo::model_t> m_sidModels;
 
     std::string m_speedString;
 
@@ -106,6 +108,12 @@ public:
     const char *getKernalDesc() const override { return m_kernalDesc.c_str(); }
     const char *getBasicDesc() const override { return m_basicDesc.c_str(); }
     const char *getChargenDesc() const override { return m_chargenDesc.c_str(); }
+
+    unsigned int getNumberOfSIDs() const override { return m_sidModels.size(); }
+    SidTuneInfo::model_t getSidModel(unsigned int i) const override
+    {
+        return i<m_sidModels.size() ? m_sidModels[i] : SidTuneInfo::model_t::SIDMODEL_UNKNOWN;
+    }
 };
 
 #endif  /* SIDTUNEINFOIMPL_H */

@@ -45,3 +45,6 @@ const char *SidInfo::speedString() const { return getSpeedString(); }
 const char *SidInfo::kernalDesc() const { return getKernalDesc(); }
 const char *SidInfo::basicDesc() const { return getBasicDesc(); }
 const char *SidInfo::chargenDesc() const { return getChargenDesc(); }
+
+unsigned int SidInfo::numberOfSIDs() const { return getNumberOfSIDs(); }
+SidTuneInfo::model_t SidInfo::sidModel(unsigned int i) const { return getSidModel(i); }

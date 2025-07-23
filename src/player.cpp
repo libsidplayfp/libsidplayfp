@@ -176,8 +176,6 @@ void Player::initialise()
     }
 
     m_c64.resetCpu();
-
-    m_startTime = m_c64.getTimeMs();
 #if 0
     // Run for some cycles until the initialization routine is done
     for (int j = 0; j < 50; j++)
@@ -186,6 +184,8 @@ void Player::initialise()
     m_mixer.clockChips();
     m_mixer.resetBufs();
 #endif
+
+    m_startTime = m_c64.getTimeMs();
 }
 
 bool Player::load(SidTune *tune)
@@ -570,6 +570,19 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
     return model;
 }
 
+SidTuneInfo::model_t getSidModel(SidConfig::sid_model_t sidModel)
+{
+    switch (sidModel)
+    {
+    case SidConfig::MOS6581:
+        return SidTuneInfo::SIDMODEL_6581;
+    case SidConfig::MOS8580:
+        return SidTuneInfo::SIDMODEL_8580;
+    default:
+        return SidTuneInfo::SIDMODEL_UNKNOWN;
+    }
+}
+
 /**
  * Get the SID model.
  *
@@ -637,6 +650,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 {
     if (builder != nullptr)
     {
+        m_info.m_sidModels.clear();
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
         // Setup base SID
@@ -647,8 +661,10 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
             throw configError(builder->error());
         }
 
+
         m_c64.setBaseSid(s);
         m_mixer.addSid(s);
+        m_info.m_sidModels.push_back(getSidModel(userModel));
 
         // Setup extra SIDs if needed
         if (extraSidAddresses.size() != 0)
@@ -673,6 +689,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                     throw configError(ERR_UNSUPPORTED_SID_ADDR);
 
                 m_mixer.addSid(s);
+                m_info.m_sidModels.push_back(getSidModel(userModel));
             }
         }
     }
