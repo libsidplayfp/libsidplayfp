@@ -24,6 +24,8 @@
 
 #include "Integrator6581.h"
 
+#include <cassert>
+
 namespace reSIDfp
 {
 
@@ -40,7 +42,10 @@ int Filter6581::solveIntegrators()
     // The filter input resistors are slightly bigger than the voice ones
     // Scale the values accordingly
     constexpr int filterGain = static_cast<int>(0.93 * (1 << 12));
-    return (Vfilt * filterGain) >> 12;
+    // Scaling unsigned values adds a DC offset
+    constexpr int offset = 32767 * ((1 << 12) - filterGain);
+    assert(Vfilt >= 0);
+    return (Vfilt * filterGain + offset) >> 12;
 }
 
 Filter6581::~Filter6581()
