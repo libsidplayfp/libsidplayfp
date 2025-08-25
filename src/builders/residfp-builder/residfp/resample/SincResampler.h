@@ -51,6 +51,13 @@ private:
     /// Size of the ring buffer, must be a power of 2
     static constexpr int RINGSIZE = 2048;
 
+#ifdef RUNTIME_DISPATCH
+private:
+    using convolve_func_t = auto (*)(const int*, const short*, int) -> int;
+
+    convolve_func_t simd_convolve;
+#endif
+
 private:
     /// Table of the fir filter coefficients
     matrix_t* firTable;

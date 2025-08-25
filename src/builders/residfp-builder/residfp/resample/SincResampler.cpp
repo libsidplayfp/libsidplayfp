@@ -88,6 +88,37 @@ double I0(double x)
     return sum;
 }
 
+#ifdef RUNTIME_DISPATCH
+
+// https://godbolt.org/z/hz51cTT8s
+
+#if defined(__has_cpp_attribute) && __has_cpp_attribute( assume )
+#define CONVOLVE_SIMD(simd, name) \
+    __attribute__ ((__target__ (#simd))) \
+    int convolve_ ## name(const int* a, const short* b, int bLength)  \
+    { \
+        [[assume( bLength > 0 )]]; \
+        int out = std::inner_product(a, a+bLength, b, out); \
+        return (out + (1 << 14)) >> 15; \
+    }
+#else
+#define CONVOLVE_SIMD(simd, name) \
+    __attribute__ ((__target__ (#simd))) \
+    int convolve_ ## name(const int* a, const short* b, int bLength)  \
+    { \
+        int out = std::inner_product(a, a+bLength, b, out); \
+        return (out + (1 << 14)) >> 15; \
+    }
+#endif
+
+CONVOLVE_SIMD(mmx, mmx)
+CONVOLVE_SIMD(sse2, sse2)
+CONVOLVE_SIMD(sse4.1, sse4)
+CONVOLVE_SIMD(avx2, avx2)
+CONVOLVE_SIMD(avx512f, avx512f)
+
+#endif
+
 /**
  * Calculate convolution with sample and sinc.
  *
@@ -127,7 +158,11 @@ int SincResampler::fir(int subcycle)
     // Find firN most recent samples, plus one extra in case the FIR wraps.
     int sampleStart = sampleIndex - firN + RINGSIZE - 1;
 
+#ifdef RUNTIME_DISPATCH
+    const int v1 = simd_convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+#else
     const int v1 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+#endif
 
     // Use next FIR table, wrap around to first FIR table using
     // previous sample.
@@ -137,7 +172,11 @@ int SincResampler::fir(int subcycle)
         ++sampleStart;
     }
 
+#ifdef RUNTIME_DISPATCH
+    const int v2 = simd_convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+#else
     const int v2 = convolve(sample + sampleStart, (*firTable)[firTableFirst], firN);
+#endif
 
     // Linear interpolation between the sinc tables yields good
     // approximation for the exact value.
@@ -232,6 +271,25 @@ SincResampler::SincResampler(
             }
         }
     }
+
+#ifdef RUNTIME_DISPATCH
+
+#define DISPATCH(simd, name) \
+    if (__builtin_cpu_supports (#simd)) \
+        simd_convolve = convolve_ ## name;
+
+    DISPATCH(avx512f, avx512f)
+    else
+    DISPATCH(avx2, avx2)
+    else
+    DISPATCH(sse4.1, sse4)
+    else
+    DISPATCH(sse2, sse2)
+    else
+    DISPATCH(mmx, mmx)
+    else
+        simd_convolve = convolve;
+#endif
 }
 
 SincResampler::~SincResampler()
