@@ -147,10 +147,12 @@ void Player::initialise()
         powerOnDelay = (uint_least16_t)((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
     }
 
-    // Run for calculated number of cycles
-    for (int i = 0; i <= powerOnDelay; i++)
+    powerOnDelay += 8000;
+
+    // Run for ~ [25000,50000] cycles
+    for (int i = 0; i < powerOnDelay; i++)
     {
-        for (int j = 0; j < 100; j++)
+        for (int j = 0; j < 3; j++)
             m_c64.clock();
         m_mixer.clockChips();
         m_mixer.resetBufs();
