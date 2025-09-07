@@ -34,6 +34,11 @@
 #include <type_traits>
 #include <algorithm>
 #include <iterator>
+#ifdef __cpp_lib_to_underlying
+#  include <utility>
+#else
+#  include <type_traits>
+#endif
 
 #include "sidendian.h"
 
