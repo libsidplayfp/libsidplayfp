@@ -100,7 +100,10 @@ protected:
     /// Transistor parameters.
     //@{
     /// Thermal voltage: Ut = kT/q = 8.61734315e-5*T ~ 26mV
-    static constexpr double Ut = 26.0e-3;
+    static constexpr double k = 1.380649e-23;    // Boltzmann Constant
+    static constexpr double q = 1.602176634e-19; // charge of an electron
+    static constexpr double temp = 27;           // temperature in °C
+    static constexpr double Ut = (k * (temp + 273.15)) / q;
 
     const double Vdd;           ///< Positive supply voltage
     const double Vth;           ///< Threshold voltage
