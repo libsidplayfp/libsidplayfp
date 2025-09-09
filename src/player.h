@@ -77,7 +77,7 @@ private:
     uint_least32_t m_startTime = 0;
 
     /// PAL/NTSC switch value
-    uint8_t videoSwitch;
+    uint8_t m_videoSwitch;
 
     std::vector<sidemu*> m_chips;
 

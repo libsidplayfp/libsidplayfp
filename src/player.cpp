@@ -158,7 +158,7 @@ void Player::initialise()
     m_info.m_driverLength = driver.driverLength();
     m_info.m_powerOnDelay = powerOnDelay;
 
-    driver.install(m_c64.getMemInterface(), videoSwitch);
+    driver.install(m_c64.getMemInterface(), m_videoSwitch);
 
     if (!m_tune->placeSidTuneInC64mem(m_c64.getMemInterface())) UNLIKELY
     {
@@ -387,27 +387,27 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
         case SidConfig::PAL:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
             model = c64::PAL_B;
-            videoSwitch = 1;
+            m_videoSwitch = 1;
             break;
         case SidConfig::DREAN:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
             model = c64::PAL_N;
-            videoSwitch = 1; // TODO verify
+            m_videoSwitch = 1; // TODO verify
             break;
         case SidConfig::NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::NTSC_M;
-            videoSwitch = 0;
+            m_videoSwitch = 0;
             break;
         case SidConfig::OLD_NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::OLD_NTSC_M;
-            videoSwitch = 0;
+            m_videoSwitch = 0;
             break;
         case SidConfig::PAL_M:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::PAL_M;
-            videoSwitch = 0; // TODO verify
+            m_videoSwitch = 0; // TODO verify
             break;
         }
     }
@@ -418,11 +418,11 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
         default:
         case SidTuneInfo::CLOCK_PAL:
             model = c64::PAL_B;
-            videoSwitch = 1;
+            m_videoSwitch = 1;
             break;
         case SidTuneInfo::CLOCK_NTSC:
             model = c64::NTSC_M;
-            videoSwitch = 0;
+            m_videoSwitch = 0;
             break;
         }
     }
