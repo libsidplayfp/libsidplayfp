@@ -492,20 +492,14 @@ SidConfig::sid_model_t getSidModel(SidTuneInfo::model_t sidModel, SidConfig::sid
         }
     }
 
-    SidConfig::sid_model_t newModel;
-
     switch (tuneModel)
     {
     default:
     case SidTuneInfo::SIDMODEL_6581:
-        newModel = SidConfig::MOS6581;
-        break;
+        return SidConfig::MOS6581;
     case SidTuneInfo::SIDMODEL_8580:
-        newModel = SidConfig::MOS8580;
-        break;
+        return SidConfig::MOS8580;
     }
-
-    return newModel;
 }
 
 void Player::sidRelease()
