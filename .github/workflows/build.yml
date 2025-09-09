@@ -2,9 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+    - master
+    - libsidplayfp-2.15
   pull_request:
-    branches: [ master ]
+    - master
+    - libsidplayfp-2.15
 
 permissions:
   contents: read
