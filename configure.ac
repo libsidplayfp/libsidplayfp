@@ -56,7 +56,8 @@ dnl check for hidden visibility support
 AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden -fvisibility-inlines-hidden])
 
 dnl enable fast math
-AX_APPEND_COMPILE_FLAGS([-ffast-math -fno-unsafe-math-optimizations])
+AX_APPEND_COMPILE_FLAGS([-ffast-math -fno-unsafe-math-optimizations], [RESIDFP_CXXFLAGS])
+AC_SUBST([RESIDFP_CXXFLAGS])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
