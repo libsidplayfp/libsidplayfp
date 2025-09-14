@@ -265,6 +265,10 @@ src/builders/residfp-builder/residfp/resample/SincResampler.h \
 src/builders/residfp-builder/residfp/resample/TwoPassSincResampler.h \
 src/builders/residfp-builder/residfp/version.cc
 
+
+src_builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = \
+@RESIDFP_CXXFLAGS@
+
 #=========================================================
 # resid
 
@@ -317,6 +321,9 @@ noinst_SCRIPTS = src/builders/resid-builder/resid/samp2src.pl
 
 .dat.h:
 	$(PERL) $(srcdir)/src/builders/resid-builder/resid/samp2src.pl $* $< $@
+
+src_builders_residfpII_builder_residfpII_libresidfpII_la_CXXFLAGS = \
+@RESIDFP_CXXFLAGS@
 
 #=========================================================
 # builders
