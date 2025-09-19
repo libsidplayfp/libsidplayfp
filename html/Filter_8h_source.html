@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.15.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.15.1</span>
    </div>
   </td>
  </tr>
@@ -146,102 +146,110 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">return</span> fmc.getNormalizedVoice(v.<a class="code hl_function" href="classreSIDfp_1_1Voice.html#abccc38a3df21969d62997436c2fb6345">output</a>(), v.envelope()-&gt;<a class="code hl_function" href="classreSIDfp_1_1EnvelopeGenerator.html#a07c062ea2465158e8e35f1f719fccabc">output</a>());</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#aa4ccd48a64641d2de80bde216c602299">  115</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa4ccd48a64641d2de80bde216c602299">updateCenterFrequency</a>() = 0;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#a2757797699cd1065f834799fef9515d6">  122</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a2757797699cd1065f834799fef9515d6">updateResonance</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> res) { currentResonance = resonance + (res * (1&lt;&lt;16)); }</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="comment">// If voice 3 is off we still need to clock the waveform generator</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">inline</span> <span class="keywordtype">int</span> getSilentVoice(<a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; v)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        v.wave()-&gt;<a class="code hl_function" href="classreSIDfp_1_1WaveformGenerator.html#a87e56c8cd977f555bdcabb3ddec560ec">output</a>();</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#aa4ccd48a64641d2de80bde216c602299">  122</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa4ccd48a64641d2de80bde216c602299">updateCenterFrequency</a>() = 0;</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa857d5efb3725e8171d078155536b628">updateMixing</a>();</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#ae93bef21b1ce439a4837e99cdeb789a6">  132</a></span>    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ae93bef21b1ce439a4837e99cdeb789a6">getFC</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> fc; }</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">virtual</span> <span class="keywordtype">int</span> solveIntegrators() = 0;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#a2757797699cd1065f834799fef9515d6">  129</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a2757797699cd1065f834799fef9515d6">updateResonance</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> res) { currentResonance = resonance + (res * (1&lt;&lt;16)); }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa857d5efb3725e8171d078155536b628">updateMixing</a>();</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <a class="code hl_class" href="classreSIDfp_1_1Filter.html">Filter</a>(<a class="code hl_class" href="classreSIDfp_1_1FilterModelConfig.html">FilterModelConfig</a>&amp; fmc);</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classreSIDfp_1_1Filter.html">~Filter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#ae93bef21b1ce439a4837e99cdeb789a6">  139</a></span>    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ae93bef21b1ce439a4837e99cdeb789a6">getFC</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> fc; }</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">clock</a>(<a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; v1, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; v2, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; v3);</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa1448375bdf13af37ddf8aa830fda581">enable</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa1448375bdf13af37ddf8aa830fda581">enable</a>);</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keyword">virtual</span> <span class="keywordtype">int</span> solveIntegrators() = 0;</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <a class="code hl_class" href="classreSIDfp_1_1Filter.html">Filter</a>(<a class="code hl_class" href="classreSIDfp_1_1FilterModelConfig.html">FilterModelConfig</a>&amp; fmc);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classreSIDfp_1_1Filter.html">~Filter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">clock</a>(<a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; v1, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; v2, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; v3);</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa283c9b57731cdae9ba3183cb80feb76">reset</a>();</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a2e05d32916966d73df943d6af2116e70">writeFC_LO</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> fc_lo);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa1448375bdf13af37ddf8aa830fda581">enable</a>(<span class="keywordtype">bool</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa1448375bdf13af37ddf8aa830fda581">enable</a>);</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#aa283c9b57731cdae9ba3183cb80feb76">reset</a>();</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a4bd724b60538b84e134580683f1e6bc7">writeFC_HI</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> fc_hi);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a2e05d32916966d73df943d6af2116e70">writeFC_LO</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> fc_lo);</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a389ce155f80c6b5a201aa7ced2a98d4a">writeRES_FILT</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> res_filt);</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a4bd724b60538b84e134580683f1e6bc7">writeFC_HI</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> fc_hi);</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ac56a22eceff41f2fdafbe2e4e42acf8c">writeMODE_VOL</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> mode_vol);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a389ce155f80c6b5a201aa7ced2a98d4a">writeRES_FILT</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> res_filt);</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">  196</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>(<span class="keywordtype">short</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>) { Ve = fmc.getNormalizedVoice(<a class="code hl_function" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>/32768.f, 0); }</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>};</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ac56a22eceff41f2fdafbe2e4e42acf8c">writeMODE_VOL</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> mode_vol);</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">  203</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>(<span class="keywordtype">short</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>) { Ve = fmc.getNormalizedVoice(<a class="code hl_function" href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">input</a>/32768.f, 0); }</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>};</div>
 </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>} <span class="comment">// namespace reSIDfp</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="preprocessor">#if RESID_INLINING || defined(FILTER_CPP)</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="keyword">namespace </span>reSIDfp</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>{</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>RESID_INLINE</div>
-<div class="foldopen" id="foldopen00207" data-start="{" data-end="}">
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">  207</a></span><span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">Filter::clock</a>(<a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; voice1, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; voice2, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; voice3)</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>{</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> V1 = getNormalizedVoice(voice1);</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> V2 = getNormalizedVoice(voice2);</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="comment">// Voice 3 is silenced by voice3off if it is not routed through the filter.</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> V3 = (filt3 || !voice3off) ? getNormalizedVoice(voice3) : 0;</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keywordtype">int</span> Vsum = 0;</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keywordtype">int</span> Vmix = 0;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    (filt1 ? Vsum : Vmix) += V1;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    (filt2 ? Vsum : Vmix) += V2;</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    (filt3 ? Vsum : Vmix) += V3;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    (filtE ? Vsum : Vmix) += Ve;</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <a class="code hl_variable" href="classreSIDfp_1_1Filter.html#a58d52f2b167fa4b8f66b4c555f54ab94">Vhp</a> = currentSummer[currentResonance[<a class="code hl_variable" href="classreSIDfp_1_1Filter.html#a1c719e23718f806304672bbc7064340a">Vbp</a>] + <a class="code hl_variable" href="classreSIDfp_1_1Filter.html#a941d749d905f66879e78f632c45f19a1">Vlp</a> + Vsum];</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span><span class="preprocessor">#if RESID_INLINING || defined(FILTER_CPP)</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="keyword">namespace </span>reSIDfp</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>{</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>RESID_INLINE</div>
+<div class="foldopen" id="foldopen00214" data-start="{" data-end="}">
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">  214</a></span><span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code hl_function" href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">Filter::clock</a>(<a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; voice1, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; voice2, <a class="code hl_class" href="classreSIDfp_1_1Voice.html">Voice</a>&amp; voice3)</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>{</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> V1 = getNormalizedVoice(voice1);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> V2 = getNormalizedVoice(voice2);</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="comment">// Voice 3 is silenced by voice3off if it is not routed through the filter.</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keyword">const</span> <span class="keywordtype">int</span> V3 = (filt3 || !voice3off) ? getNormalizedVoice(voice3) : getSilentVoice(voice3);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keywordtype">int</span> Vsum = 0;</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keywordtype">int</span> Vmix = 0;</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    Vmix += solveIntegrators();</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordflow">return</span> currentVolume[currentMixer[Vmix]];</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>}</div>
-</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    (filt1 ? Vsum : Vmix) += V1;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    (filt2 ? Vsum : Vmix) += V2;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    (filt3 ? Vsum : Vmix) += V3;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    (filtE ? Vsum : Vmix) += Ve;</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <a class="code hl_variable" href="classreSIDfp_1_1Filter.html#a58d52f2b167fa4b8f66b4c555f54ab94">Vhp</a> = currentSummer[currentResonance[<a class="code hl_variable" href="classreSIDfp_1_1Filter.html#a1c719e23718f806304672bbc7064340a">Vbp</a>] + <a class="code hl_variable" href="classreSIDfp_1_1Filter.html#a941d749d905f66879e78f632c45f19a1">Vlp</a> + Vsum];</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    Vmix += solveIntegrators();</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordflow">return</span> currentVolume[currentMixer[Vmix]];</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>}</div>
+</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>} <span class="comment">// namespace reSIDfp</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassreSIDfp_1_1EnvelopeGenerator_html_a07c062ea2465158e8e35f1f719fccabc"><div class="ttname"><a href="classreSIDfp_1_1EnvelopeGenerator.html#a07c062ea2465158e8e35f1f719fccabc">reSIDfp::EnvelopeGenerator::output</a></div><div class="ttdeci">unsigned int output() const</div><div class="ttdef"><b>Definition</b> EnvelopeGenerator.h:130</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1FilterModelConfig_html"><div class="ttname"><a href="classreSIDfp_1_1FilterModelConfig.html">reSIDfp::FilterModelConfig</a></div><div class="ttdef"><b>Definition</b> FilterModelConfig.h:40</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html"><div class="ttname"><a href="classreSIDfp_1_1Filter.html">reSIDfp::Filter</a></div><div class="ttdef"><b>Definition</b> Filter.h:38</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a0cb685bf1f271613d5cc3d4ae4d5fc6f"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a0cb685bf1f271613d5cc3d4ae4d5fc6f">reSIDfp::Filter::hp</a></div><div class="ttdeci">bool hp</div><div class="ttdoc">Highpass, bandpass, and lowpass filter modes.</div><div class="ttdef"><b>Definition</b> Filter.h:90</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a1c719e23718f806304672bbc7064340a"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a1c719e23718f806304672bbc7064340a">reSIDfp::Filter::Vbp</a></div><div class="ttdeci">int Vbp</div><div class="ttdoc">Filter bandpass state.</div><div class="ttdef"><b>Definition</b> Filter.h:64</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a2757797699cd1065f834799fef9515d6"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a2757797699cd1065f834799fef9515d6">reSIDfp::Filter::updateResonance</a></div><div class="ttdeci">void updateResonance(unsigned char res)</div><div class="ttdef"><b>Definition</b> Filter.h:122</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a2757797699cd1065f834799fef9515d6"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a2757797699cd1065f834799fef9515d6">reSIDfp::Filter::updateResonance</a></div><div class="ttdeci">void updateResonance(unsigned char res)</div><div class="ttdef"><b>Definition</b> Filter.h:129</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a2e05d32916966d73df943d6af2116e70"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a2e05d32916966d73df943d6af2116e70">reSIDfp::Filter::writeFC_LO</a></div><div class="ttdeci">void writeFC_LO(unsigned char fc_lo)</div><div class="ttdef"><b>Definition</b> Filter.cpp:75</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a389ce155f80c6b5a201aa7ced2a98d4a"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a389ce155f80c6b5a201aa7ced2a98d4a">reSIDfp::Filter::writeRES_FILT</a></div><div class="ttdeci">void writeRES_FILT(unsigned char res_filt)</div><div class="ttdef"><b>Definition</b> Filter.cpp:87</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a4bd724b60538b84e134580683f1e6bc7"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a4bd724b60538b84e134580683f1e6bc7">reSIDfp::Filter::writeFC_HI</a></div><div class="ttdeci">void writeFC_HI(unsigned char fc_hi)</div><div class="ttdef"><b>Definition</b> Filter.cpp:81</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a58d52f2b167fa4b8f66b4c555f54ab94"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a58d52f2b167fa4b8f66b4c555f54ab94">reSIDfp::Filter::Vhp</a></div><div class="ttdeci">int Vhp</div><div class="ttdoc">Filter highpass state.</div><div class="ttdef"><b>Definition</b> Filter.h:61</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a8cecf865ee8a5742973f032a1dd6a61d"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">reSIDfp::Filter::clock</a></div><div class="ttdeci">unsigned short clock(Voice &amp;v1, Voice &amp;v2, Voice &amp;v3)</div><div class="ttdef"><b>Definition</b> Filter.h:207</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html_a8cecf865ee8a5742973f032a1dd6a61d"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a8cecf865ee8a5742973f032a1dd6a61d">reSIDfp::Filter::clock</a></div><div class="ttdeci">unsigned short clock(Voice &amp;v1, Voice &amp;v2, Voice &amp;v3)</div><div class="ttdef"><b>Definition</b> Filter.h:214</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_a941d749d905f66879e78f632c45f19a1"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#a941d749d905f66879e78f632c45f19a1">reSIDfp::Filter::Vlp</a></div><div class="ttdeci">int Vlp</div><div class="ttdoc">Filter lowpass state.</div><div class="ttdef"><b>Definition</b> Filter.h:67</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_aa1448375bdf13af37ddf8aa830fda581"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#aa1448375bdf13af37ddf8aa830fda581">reSIDfp::Filter::enable</a></div><div class="ttdeci">void enable(bool enable)</div><div class="ttdef"><b>Definition</b> Filter.cpp:125</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_aa283c9b57731cdae9ba3183cb80feb76"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#aa283c9b57731cdae9ba3183cb80feb76">reSIDfp::Filter::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition</b> Filter.cpp:139</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_aa4ccd48a64641d2de80bde216c602299"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#aa4ccd48a64641d2de80bde216c602299">reSIDfp::Filter::updateCenterFrequency</a></div><div class="ttdeci">virtual void updateCenterFrequency()=0</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_aa857d5efb3725e8171d078155536b628"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#aa857d5efb3725e8171d078155536b628">reSIDfp::Filter::updateMixing</a></div><div class="ttdeci">void updateMixing()</div><div class="ttdef"><b>Definition</b> Filter.cpp:51</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html_ab06e17a7575b82503c35120b4769fd65"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(short input)</div><div class="ttdef"><b>Definition</b> Filter.h:196</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html_ab06e17a7575b82503c35120b4769fd65"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ab06e17a7575b82503c35120b4769fd65">reSIDfp::Filter::input</a></div><div class="ttdeci">void input(short input)</div><div class="ttdef"><b>Definition</b> Filter.h:203</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Filter_html_ac56a22eceff41f2fdafbe2e4e42acf8c"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ac56a22eceff41f2fdafbe2e4e42acf8c">reSIDfp::Filter::writeMODE_VOL</a></div><div class="ttdeci">void writeMODE_VOL(unsigned char mode_vol)</div><div class="ttdef"><b>Definition</b> Filter.cpp:104</div></div>
-<div class="ttc" id="aclassreSIDfp_1_1Filter_html_ae93bef21b1ce439a4837e99cdeb789a6"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ae93bef21b1ce439a4837e99cdeb789a6">reSIDfp::Filter::getFC</a></div><div class="ttdeci">unsigned int getFC() const</div><div class="ttdef"><b>Definition</b> Filter.h:132</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1Filter_html_ae93bef21b1ce439a4837e99cdeb789a6"><div class="ttname"><a href="classreSIDfp_1_1Filter.html#ae93bef21b1ce439a4837e99cdeb789a6">reSIDfp::Filter::getFC</a></div><div class="ttdeci">unsigned int getFC() const</div><div class="ttdef"><b>Definition</b> Filter.h:139</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html"><div class="ttname"><a href="classreSIDfp_1_1Voice.html">reSIDfp::Voice</a></div><div class="ttdef"><b>Definition</b> Voice.h:37</div></div>
 <div class="ttc" id="aclassreSIDfp_1_1Voice_html_abccc38a3df21969d62997436c2fb6345"><div class="ttname"><a href="classreSIDfp_1_1Voice.html#abccc38a3df21969d62997436c2fb6345">reSIDfp::Voice::output</a></div><div class="ttdeci">RESID_INLINE float output()</div><div class="ttdef"><b>Definition</b> Voice.h:65</div></div>
+<div class="ttc" id="aclassreSIDfp_1_1WaveformGenerator_html_a87e56c8cd977f555bdcabb3ddec560ec"><div class="ttname"><a href="classreSIDfp_1_1WaveformGenerator.html#a87e56c8cd977f555bdcabb3ddec560ec">reSIDfp::WaveformGenerator::output</a></div><div class="ttdeci">unsigned int output()</div><div class="ttdef"><b>Definition</b> WaveformGenerator.h:352</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 29 2025 14:22:57 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri Sep 19 2025 14:41:39 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
