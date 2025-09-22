@@ -18,7 +18,11 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        include:
+        - os: ubuntu-latest
+        - os: ubuntu-latest
+          cxxflags: -std=c++11
+        - os: macos-latest
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -57,6 +61,7 @@ jobs:
       run: ./configure
     - name: make distcheck
       run: |
+        [[ -n "${{ matrix.cxxflags }}" ]] && export DISTCHECK_CONFIGURE_FLAGS='CXXFLAGS="${CXXFLAGS} ${{ matrix.cxxflags }}"'
         if [ '${{ runner.os }}' == 'macOS' ]; then
           # Assumes `sed` is GNU sed:
           # sed: illegal option -- r
