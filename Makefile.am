@@ -5,7 +5,7 @@ AUTOMAKE_OPTIONS = foreign subdir-objects
 
 SUBDIRS = tests
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-tests
+AM_DISTCHECK_CONFIGURE_FLAGS = --enable-tests
 
 
 if MINGW32
