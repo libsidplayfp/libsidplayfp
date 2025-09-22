@@ -25,7 +25,11 @@
 #include <algorithm>
 #include <iterator>
 #include <numeric>
-#include <version>
+#ifdef __has_include
+#  if __has_include(<version>)
+#    include <version>
+#  endif
+#endif
 #include <cassert>
 #include <cstring>
 #include <cmath>
