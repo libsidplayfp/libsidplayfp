@@ -98,8 +98,10 @@ double I0(double x)
  */
 int convolve(const int* a, const short* b, int bLength)
 {
-#if defined(__has_cpp_attribute) && __has_cpp_attribute( assume )
+#if defined(__has_cpp_attribute)
+#  if __has_cpp_attribute( assume )
     [[assume( bLength > 0 )]];
+#  endif
 #endif
     int out = 0;
 #ifndef __clang__
