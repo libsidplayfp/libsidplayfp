@@ -77,7 +77,7 @@ private:
     uint_least32_t m_startTime = 0;
 
     /// PAL/NTSC switch value
-    uint8_t videoSwitch;
+    uint8_t m_videoSwitch;
 
     std::vector<sidemu*> m_chips;
 
@@ -118,10 +118,9 @@ private:
      * @param cpuFreq the CPU clock frequency
      * @param frequency the output sampling frequency
      * @param sampling the sampling method to use
-     * @param fastSampling true to enable fast low quality resampling (only for reSID)
      */
     void sidParams(double cpuFreq, int frequency,
-                    SidConfig::sampling_method_t sampling, bool fastSampling);
+                    SidConfig::sampling_method_t sampling);
 
     inline void run(unsigned int events);
 

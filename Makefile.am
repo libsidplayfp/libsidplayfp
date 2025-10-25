@@ -5,7 +5,7 @@ AUTOMAKE_OPTIONS = foreign subdir-objects
 
 SUBDIRS = tests
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-tests
+AM_DISTCHECK_CONFIGURE_FLAGS = --enable-tests
 
 
 if MINGW32
@@ -258,6 +258,10 @@ src/builders/residfp-builder/residfp/resample/SincResampler.h \
 src/builders/residfp-builder/residfp/resample/TwoPassSincResampler.h \
 src/builders/residfp-builder/residfp/version.cc
 
+
+src_builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = \
+@RESIDFP_CXXFLAGS@
+
 #=========================================================
 # residfpII
 
@@ -304,6 +308,9 @@ src/builders/residfpII-builder/residfpII/resample/SincResampler.cpp \
 src/builders/residfpII-builder/residfpII/resample/SincResampler.h \
 src/builders/residfpII-builder/residfpII/resample/TwoPassSincResampler.h \
 src/builders/residfpII-builder/residfpII/version.cc
+
+src_builders_residfpII_builder_residfpII_libresidfpII_la_CXXFLAGS = \
+@RESIDFP_CXXFLAGS@
 
 #=========================================================
 # builders
