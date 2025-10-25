@@ -8,9 +8,6 @@
 
 class SID_EXTERN USBSIDBuilder : public sidbuilder
 {
-private:
-    static bool m_initialised;
-
 protected:
     /**
      * Create the sid emu.

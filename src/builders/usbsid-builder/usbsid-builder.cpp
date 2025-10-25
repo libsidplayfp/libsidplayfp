@@ -10,16 +10,10 @@
 #include "usbsid.h"
 #include "usbsid-emu.h"
 
-bool USBSIDBuilder::m_initialised = false;
 
 USBSIDBuilder::USBSIDBuilder(const char * const name) :
     sidbuilder(name)
-{
-    if (!m_initialised)
-    {
-        m_initialised = true;
-    }
-}
+{}
 
 USBSIDBuilder::~USBSIDBuilder()
 {
