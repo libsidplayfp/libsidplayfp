@@ -133,10 +133,12 @@ void Player::initialise()
         powerOnDelay = (uint_least16_t)((m_rand.next() >> 3) & SidConfig::MAX_POWER_ON_DELAY);
     }
 
-    // Run for calculated number of cycles
-    for (int i = 0; i <= powerOnDelay; i++)
+    powerOnDelay += 8000;
+
+    // Run for ~ [25000,50000] cycles
+    for (int i = 0; i < powerOnDelay; i++)
     {
-        for (int j = 0; j < 100; j++)
+        for (int j = 0; j < 3; j++)
             m_c64.clock();
 
         for (sidemu* chip: m_chips)
@@ -156,7 +158,7 @@ void Player::initialise()
     m_info.m_driverLength = driver.driverLength();
     m_info.m_powerOnDelay = powerOnDelay;
 
-    driver.install(m_c64.getMemInterface(), videoSwitch);
+    driver.install(m_c64.getMemInterface(), m_videoSwitch);
 
     if (!m_tune->placeSidTuneInC64mem(m_c64.getMemInterface())) UNLIKELY
     {
@@ -164,8 +166,6 @@ void Player::initialise()
     }
 
     m_c64.resetCpu();
-
-    m_startTime = m_c64.getTimeMs();
 #if 0
     // Run for some cycles until the initialization routine is done
     for (int j = 0; j < 50; j++)
@@ -177,6 +177,8 @@ void Player::initialise()
         chip->bufferpos(0);
     }
 #endif
+
+    m_startTime = m_c64.getTimeMs();
 }
 
 bool Player::load(SidTune *tune)
@@ -341,7 +343,7 @@ bool Player::config(const SidConfig &cfg, bool force)
             const c64::cia_model_t ciaModel = getCiaModel(cfg.ciaModel);
             m_c64.setCiaModel(ciaModel);
 
-            sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod, cfg.fastSampling);
+            sidParams(m_c64.getMainCpuSpeed(), cfg.frequency, cfg.samplingMethod);
 
             // Configure, setup and install C64 environment/events
             initialise();
@@ -385,27 +387,27 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
         case SidConfig::PAL:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
             model = c64::PAL_B;
-            videoSwitch = 1;
+            m_videoSwitch = 1;
             break;
         case SidConfig::DREAN:
             clockSpeed = SidTuneInfo::CLOCK_PAL;
             model = c64::PAL_N;
-            videoSwitch = 1; // TODO verify
+            m_videoSwitch = 1; // TODO verify
             break;
         case SidConfig::NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::NTSC_M;
-            videoSwitch = 0;
+            m_videoSwitch = 0;
             break;
         case SidConfig::OLD_NTSC:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::OLD_NTSC_M;
-            videoSwitch = 0;
+            m_videoSwitch = 0;
             break;
         case SidConfig::PAL_M:
             clockSpeed = SidTuneInfo::CLOCK_NTSC;
             model = c64::PAL_M;
-            videoSwitch = 0; // TODO verify
+            m_videoSwitch = 0; // TODO verify
             break;
         }
     }
@@ -416,11 +418,11 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
         default:
         case SidTuneInfo::CLOCK_PAL:
             model = c64::PAL_B;
-            videoSwitch = 1;
+            m_videoSwitch = 1;
             break;
         case SidTuneInfo::CLOCK_NTSC:
             model = c64::NTSC_M;
-            videoSwitch = 0;
+            m_videoSwitch = 0;
             break;
         }
     }
@@ -450,6 +452,19 @@ c64::model_t Player::c64model(SidConfig::c64_model_t defaultModel, bool forced)
     return model;
 }
 
+SidTuneInfo::model_t getSidModel(SidConfig::sid_model_t sidModel)
+{
+    switch (sidModel)
+    {
+    case SidConfig::MOS6581:
+        return SidTuneInfo::SIDMODEL_6581;
+    case SidConfig::MOS8580:
+        return SidTuneInfo::SIDMODEL_8580;
+    default:
+        return SidTuneInfo::SIDMODEL_UNKNOWN;
+    }
+}
+
 /**
  * Get the SID model.
  *
@@ -477,20 +492,14 @@ SidConfig::sid_model_t getSidModel(SidTuneInfo::model_t sidModel, SidConfig::sid
         }
     }
 
-    SidConfig::sid_model_t newModel;
-
     switch (tuneModel)
     {
     default:
     case SidTuneInfo::SIDMODEL_6581:
-        newModel = SidConfig::MOS6581;
-        break;
+        return SidConfig::MOS6581;
     case SidTuneInfo::SIDMODEL_8580:
-        newModel = SidConfig::MOS8580;
-        break;
+        return SidConfig::MOS8580;
     }
-
-    return newModel;
 }
 
 void Player::sidRelease()
@@ -514,6 +523,7 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
     if (builder != nullptr)
     {
         m_chips.clear();
+        m_info.m_sidModels.clear();
         const SidTuneInfo* tuneInfo = m_tune->getInfo();
 
         // Setup base SID
@@ -524,8 +534,10 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
             throw configError(builder->error());
         }
 
+
         m_c64.setBaseSid(s);
         m_chips.push_back(s);
+        m_info.m_sidModels.push_back(getSidModel(userModel));
 
         // Setup extra SIDs if needed
         if (extraSidAddresses.size() != 0)
@@ -550,17 +562,18 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
                     throw configError(ERR_UNSUPPORTED_SID_ADDR);
 
                 m_chips.push_back(s);
+                m_info.m_sidModels.push_back(getSidModel(userModel));
             }
         }
     }
 }
 
 void Player::sidParams(double cpuFreq, int frequency,
-                        SidConfig::sampling_method_t sampling, bool fastSampling)
+                        SidConfig::sampling_method_t sampling)
 {
     for (sidemu *s: m_chips)
     {
-        s->sampling((float)cpuFreq, frequency, sampling, fastSampling);
+        s->sampling((float)cpuFreq, frequency, sampling);
     }
 }
 

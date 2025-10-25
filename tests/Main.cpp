@@ -21,7 +21,7 @@
 #include "utpp/utpp.h"
 
 
-int main(int, char const *[])
+TEST_MAIN(int, char const *[])
 {
     return UnitTest::RunAllTests();
 }
