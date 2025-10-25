@@ -57,8 +57,8 @@ public:
     void clock() {};
 
 
-    void sampling(float systemclock, MAYBE_UNUSED float freq,
-        MAYBE_UNUSED SidConfig::sampling_method_t method, bool) override;
+    void sampling(float systemclock, float freq,
+        SidConfig::sampling_method_t method, bool);
 
     void model(SidConfig::sid_model_t model, MAYBE_UNUSED bool digiboost) override;
 
