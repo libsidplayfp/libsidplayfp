@@ -31,19 +31,20 @@ USBSID::USBSID(sidbuilder *builder) :
     busValue(0),
     sidno(0)
 {
-    sidno = m_sid.us_InstanceID;
-
-    if (!m_sid.us_Initialised)
-    {
-        m_error = "out of memory";
-        return;
-    }
 
     /* Start the fucker */
     m_handle = m_sid.USBSID_Init(true, true);
     if (m_handle < 0)
     {
         m_error = "USBSID init failed";
+        return;
+    }
+
+    sidno = m_sid.USBSID_GetInstanceID();
+
+    if (!m_sid.USBSID_isInitialised())
+    {
+        m_error = "out of memory";
         return;
     }
 
