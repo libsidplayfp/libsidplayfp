@@ -9,7 +9,7 @@
 #include "Event.h"
 #include "EventScheduler.h"
 #include "sidplayfp/siddefs.h"
-#include "driver/USBSID.h"
+#include "driver/src/USBSID.h"
 
 #include "sidcxx11.h"
 
