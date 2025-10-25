@@ -342,8 +342,8 @@ src/builders/residfpII-builder/residfpII/libresidfpII.la
 if USBSID_SUPPORT
 
 usbsid_src = \
-  src/builders/usbsid-builder/driver/USBSID.cpp \
-  src/builders/usbsid-builder/driver/USBSID.h
+  src/builders/usbsid-builder/driver/src/USBSID.cpp \
+  src/builders/usbsid-builder/driver/src/USBSID.h
 
   # src/builders/usbsid-builder/driver/USBSIDInterface.cpp \
   # src/builders/usbsid-builder/driver/USBSIDInterface.h
