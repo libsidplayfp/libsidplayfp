@@ -7,7 +7,7 @@
 #include <sstream>
 #include <unistd.h>
 
-#include "driver/USBSID.h"
+#include "driver/src/USBSID.h"
 
 #include "sidcxx11.h"
 
