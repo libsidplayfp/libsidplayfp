@@ -8,7 +8,7 @@ if ENABLE_TEST
 AM_CPPFLAGS = \
 -I$(top_srcdir)/src \
 -I$(top_builddir)/src/builders/residfp-builder/residfp \
--I/usr/local/include/libusb-1.0 -L/usr/local/lib -lusb-1.0
+$(pkg-config --cflags --libs libusb-1.0)
 
 TESTS = \
 TestEnvelopeGenerator \
