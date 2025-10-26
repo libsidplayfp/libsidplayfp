@@ -359,8 +359,8 @@ src/builders/usbsid-builder/usbsid-emu.h \
 $(usbsid_src)
 
 src_builders_usbsid_builder_libsidplayfp_usbsid_la_LIBADD = \
-    $(USBSID_LIBS) \
-    $(PTHREAD_LIBS)
+  $(USBSID_LIBS) \
+  $(PTHREAD_LIBS)
 
 endif
 
