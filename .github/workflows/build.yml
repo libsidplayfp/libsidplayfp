@@ -6,9 +6,6 @@ on:
       - master
       - libsidplayfp-2.15
   pull_request:
-    branches: [ master ]
-    # Allows you to run this workflow manually from the Actions tab when needed
-  workflow_dispatch:
     branches:
       - master
       - libsidplayfp-2.15
