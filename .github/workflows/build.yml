@@ -61,7 +61,7 @@ jobs:
     - name: bootstrap
       run: autoreconf -vfi
     - name: configure
-      run: ./configure --with-usbsid
+      run: ./configure
     - name: make distcheck
       run: |
         [[ -n "${{ matrix.cxxflags }}" ]] && export DISTCHECK_CONFIGURE_FLAGS='CXXFLAGS="${CXXFLAGS} ${{ matrix.cxxflags }}"'
