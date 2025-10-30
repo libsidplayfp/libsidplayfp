@@ -264,22 +264,16 @@ AC_ARG_WITH(
 # USBSID support requires libusb
 AS_IF(
     [test "x$with_usbsid" != "xno"],
-    [PKG_CHECK_MODULES(USBSID,
+    [PKG_CHECK_MODULES([USBSID],
         [libusb-1.0],
         [AC_DEFINE([HAVE_USBSID], 1, [Define to 1 if you have libusb (-libusb-1.0).])
         build_usbsid_builder=yes],
         [AC_MSG_WARN([$USBSID_PKG_ERRORS] [- using internal driver])
-            # AS_IF([test "x$MINGW32" != "xyes"],
-            #     AC_SEARCH_LIBS([dlopen], [dl dld], [],
-            #       [AC_MSG_ERROR([unable to find the dlopen() function])]
-            #     )
-            # )
             AC_MSG_CHECKING([for libusb-1.0])
             AC_CHECK_HEADERS(libusb-1.0/libusb.h,
                 [AC_DEFINE([HAVE_LIBUSB], 1, [Define to 1 if you have libusb.h])
                 build_usbsid_builder=yes
                 build_usbsid_driver=yes
-                # USBSID_CFLAGS=`$PKG_CONFIG --cflags libusb-1.0`
                 AC_MSG_RESULT([yes])],
                 [AC_MSG_WARN([libsub.h not found, support will not be available])]
             )]
