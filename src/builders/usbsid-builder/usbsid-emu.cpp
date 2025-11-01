@@ -81,7 +81,8 @@ void USBSID::reset(uint8_t volume)
 
 event_clock_t USBSID::delay()
 {
-    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - (m_accessClk - 1);
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
+    // event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - (m_accessClk - 1);
     m_accessClk += cycles;
     while (cycles > 0xffff)
     {
