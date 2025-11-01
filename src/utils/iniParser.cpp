@@ -78,7 +78,7 @@ bool iniParser::open_internal(std::ifstream & iniFile)
         return false;
     }
 
-    sections_t::iterator mIt;
+    sections_t::iterator mIt = sections.end();
 
     while (iniFile.good())
     {
@@ -107,7 +107,8 @@ bool iniParser::open_internal(std::ifstream & iniFile)
         default:
             try
             {
-                (*mIt).second.insert(parseKey(buffer));
+                if (mIt != sections.end())
+                    (*mIt).second.insert(parseKey(buffer));
             }
             catch (parseError const &) {};
             break;
