@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2015 Leandro Nini
+ *  Copyright (C) 2010-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 #include "sidcxx11.h"
 
 #include <fstream>
+#include <string>
+#include <utility>
 
 namespace libsidplayfp
 {
@@ -50,7 +52,7 @@ iniParser::keys_t::value_type iniParser::parseKey(const std::string &buffer)
 
     const std::string key = buffer.substr(0, buffer.find_last_not_of(' ', pos-1) + 1);
     const std::string value = buffer.substr(pos + 1);
-    return make_pair(key, value);
+    return std::make_pair(key, value);
 }
 
 bool iniParser::open(const char *fName)
@@ -76,12 +78,12 @@ bool iniParser::open_internal(std::ifstream & iniFile)
         return false;
     }
 
-    sections_t::iterator mIt;
+    sections_t::iterator mIt = sections.end();
 
     while (iniFile.good())
     {
         std::string buffer;
-        getline(iniFile, buffer);
+        std::getline(iniFile, buffer);
 
         if (buffer.empty())
             continue;
@@ -97,7 +99,7 @@ bool iniParser::open_internal(std::ifstream & iniFile)
             {
                 const std::string section = parseSection(buffer);
                 const keys_t keys;
-                std::pair<sections_t::iterator, bool> it = sections.insert(make_pair(section, keys));
+                std::pair<sections_t::iterator, bool> it = sections.insert(std::make_pair(section, keys));
                 mIt = it.first;
             }
             catch (parseError const &) {};
@@ -105,7 +107,8 @@ bool iniParser::open_internal(std::ifstream & iniFile)
         default:
             try
             {
-                (*mIt).second.insert(parseKey(buffer));
+                if (mIt != sections.end())
+                    (*mIt).second.insert(parseKey(buffer));
             }
             catch (parseError const &) {};
             break;
