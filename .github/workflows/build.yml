@@ -53,7 +53,6 @@ jobs:
           libgcrypt \
           xa \
           libusb \
-          libusb-compat \
           libftdi
     - uses: actions/checkout@v4
       with:
