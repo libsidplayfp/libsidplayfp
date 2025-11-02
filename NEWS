@@ -1,3 +1,9 @@
+2.15.2 2025-11-02
+* Fix building with pre c++20 standards (#214)
+* Fixed crash in SidDatabase parser (#217)
+
+
+
 2.15.1 2025-09-19
 * resid/residfp: remove accidental DC offset (#205)
 * residfp: clock voice 3 even if muted (#211)
