@@ -178,7 +178,7 @@ src/utils/md5Factory.h \
 src/utils/SidDatabase.cpp \
 $(MD5SRC)
 
-src_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS) $(USBSID_LDFLAGS)
+src_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS)
 
 src_libsidplayfp_ladir = $(includedir)/sidplayfp
 
