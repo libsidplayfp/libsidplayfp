@@ -267,8 +267,9 @@ AS_IF(
     [PKG_CHECK_MODULES([USBSID],
         [libusb-1.0],
         [AC_DEFINE([HAVE_USBSID], 1, [Define to 1 if you have libusb (-libusb-1.0).])
-        build_usbsid_builder=yes],
-        [AC_MSG_WARN([$USBSID_PKG_ERRORS] [- using internal driver])
+        build_usbsid_builder=yes
+        build_usbsid_driver=yes],
+        [AC_MSG_WARN([$USBSID_PKG_ERRORS] [- checking for libusb header])
             AC_MSG_CHECKING([for libusb-1.0])
             AC_CHECK_HEADERS(libusb-1.0/libusb.h,
                 [AC_DEFINE([HAVE_LIBUSB], 1, [Define to 1 if you have libusb.h])
