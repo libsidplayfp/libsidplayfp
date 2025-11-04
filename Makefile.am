@@ -341,12 +341,11 @@ src/builders/residfpII-builder/residfpII/libresidfpII.la
 
 if USBSID_SUPPORT
 
-usbsid_src = \
-  src/builders/usbsid-builder/driver/src/USBSID.cpp \
-  src/builders/usbsid-builder/driver/src/USBSID.h
-
-  # src/builders/usbsid-builder/driver/USBSIDInterface.cpp \
-  # src/builders/usbsid-builder/driver/USBSIDInterface.h
+if USBSID_DRIVER
+  usbsid_src = \
+src/builders/usbsid-builder/driver/src/USBSID.cpp \
+src/builders/usbsid-builder/driver/src/USBSID.h
+endif
 
 src_builders_usbsid_builder_libsidplayfp_usbsid_ladir = $(includedir)/sidplayfp/builders
 src_builders_usbsid_builder_libsidplayfp_usbsid_la_HEADERS = \
@@ -359,9 +358,8 @@ src/builders/usbsid-builder/usbsid-emu.h \
 $(usbsid_src)
 
 src_builders_usbsid_builder_libsidplayfp_usbsid_la_LIBADD = \
-  $(USBSID_LIBS) \
-  $(PTHREAD_LIBS)
-
+$(USBSID_LIBS) \
+$(PTHREAD_LIBS)
 endif
 
 if EXSID_SUPPORT
