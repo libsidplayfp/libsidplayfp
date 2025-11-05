@@ -34,7 +34,8 @@ jobs:
         sudo apt-get install \
           libgcrypt20-dev \
           xa65 \
-          libftdi1-dev
+          libftdi1-dev \
+          libusb-1.0-0-dev
     - name: deps [macOS]
       if: runner.os == 'macOS'
       run: |
@@ -51,6 +52,7 @@ jobs:
           gnu-sed \
           libgcrypt \
           xa \
+          libusb \
           libftdi
     - uses: actions/checkout@v4
       with:
