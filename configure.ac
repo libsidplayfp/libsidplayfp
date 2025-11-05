@@ -253,6 +253,45 @@ AC_SUBST(RESID_BRANCH_HINTS)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
 
+# USBSID support
+AC_ARG_WITH(
+    [usbsid],
+    [AS_HELP_STRING([--with-usbsid], [Build with usbsid support [@<:@yes/no/check, default=check@:>@]])],
+    [],
+    [with_usbsid=check]
+)
+
+# USBSID support requires libusb
+AS_IF(
+    [test "x$with_usbsid" != "xno"],
+    [PKG_CHECK_MODULES([USBSID],
+        [libusb-1.0],
+        [AC_DEFINE([HAVE_USBSID], 1, [Define to 1 if you have libusb (-libusb-1.0).])
+        build_usbsid_builder=yes
+        build_usbsid_driver=yes],
+        [AC_MSG_WARN([$USBSID_PKG_ERRORS] [- checking for libusb header])
+            AC_MSG_CHECKING([for libusb-1.0])
+            AC_CHECK_HEADERS(libusb-1.0/libusb.h,
+                [AC_DEFINE([HAVE_LIBUSB], 1, [Define to 1 if you have libusb.h])
+                build_usbsid_builder=yes
+                build_usbsid_driver=yes
+                AC_MSG_RESULT([yes])],
+                [AC_MSG_WARN([libsub.h not found, support will not be available])]
+            )]
+
+       )]
+)
+
+AS_IF(
+    [test "x$with_usbsid" = "xyes" -a "x$build_usbsid_builder" != xyes],
+    [AC_MSG_ERROR([libusb not found])]
+)
+
+AC_SUBST([USBSID_CFLAGS])
+
+AM_CONDITIONAL([USBSID_SUPPORT], [ test "x${build_usbsid_builder}" = xyes])
+AM_CONDITIONAL([USBSID_DRIVER], [ test "x${build_usbsid_driver}" = xyes])
+
 # exSID support
 AC_ARG_WITH(
     [exsid],
