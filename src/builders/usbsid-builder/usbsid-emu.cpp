@@ -14,7 +14,8 @@
 namespace libsidplayfp
 {
 
-static long raster_rate = 19950; /* Start on PAL */
+long USBSID::raster_rate = 19950; /* Start on PAL */
+event_clock_t USBSID::m_delayClk = 0;
 
 const char* USBSID::getCredits()
 {
@@ -23,8 +24,10 @@ const char* USBSID::getCredits()
         "\t(C) 2024-2025 LouD\n";
 }
 
+
 USBSID::USBSID(sidbuilder *builder) :
     sidemu(builder),
+    m_status(false),
     Event("USBSID Delay"),
     m_handle(-1),
     m_sid(*(new USBSID_NS::USBSID_Class)),
@@ -42,54 +45,51 @@ USBSID::USBSID(sidbuilder *builder) :
 
     sidno = m_sid.USBSID_GetInstanceID();
 
-    if (!m_sid.USBSID_isInitialised())
+    m_status = m_sid.USBSID_isOpen();
+    if (!m_status)
     {
         m_error = "out of memory";
         return;
     }
 
     if (sidno == 0) {
-        m_sid.USBSID_Mute();
-        m_sid.USBSID_ClearBus();
         raster_rate = m_sid.USBSID_GetRasterRate();    /* Get the USBSID internal raster rate */
-        m_sid.USBSID_SetBufferSize(8192);
-        m_sid.USBSID_SetDiffSize(64);
-        m_sid.USBSID_RestartRingBuffer();
     }
 }
 
 USBSID::~USBSID()
 {
     if (sidno == 0) {
-        reset(0);
-        delete &m_sid;
+        m_sid.USBSID_Mute();
     }
+    delete &m_sid;
 }
 
 void USBSID::reset(uint8_t volume)
 {
     using namespace std;
 
-    m_accessClk = 0;
+    m_delayClk = 0;
     if (sidno == 0) {
         m_sid.USBSID_Reset();
-        if (eventScheduler != nullptr) {
-            eventScheduler->schedule(*this, raster_rate, EVENT_CLOCK_PHI1);
-        }
+        m_sid.USBSID_UnMute();
+    }
+    if (eventScheduler != nullptr) {
+        eventScheduler->schedule(*this, raster_rate, EVENT_CLOCK_PHI1);
     }
 }
 
 event_clock_t USBSID::delay()
 {
-    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
-    // event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - (m_accessClk - 1);
-    m_accessClk += cycles;
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_delayClk;
+    // event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - (m_delayClk - 1);
+    m_delayClk += cycles;
     while (cycles > 0xffff)
     {
-        if (sidno == 0) m_sid.USBSID_WaitForCycle(0xffff);
+        m_sid.USBSID_WaitForCycle(0xffff);
         cycles -= 0xffff;
     }
-    if (sidno == 0) m_sid.USBSID_WaitForCycle(cycles);
+    m_sid.USBSID_WaitForCycle(cycles);
     return cycles;
 }
 
@@ -128,21 +128,18 @@ void USBSID::sampling(float systemclock, float freq,
 
 void USBSID::event()
 {
-    if (sidno == 0) {
-        event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
-        if (cycles < raster_rate)
-        {
-            eventScheduler->schedule(*this, raster_rate - cycles, EVENT_CLOCK_PHI1);
-        }
-        else
-        {
-            m_accessClk += cycles;
-            if (sidno == 0) {
-                m_sid.USBSID_Flush();
-                m_sid.USBSID_WaitForCycle(cycles);
-            }
-            eventScheduler->schedule(*this, raster_rate, EVENT_CLOCK_PHI1);
-        }
+    event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_delayClk;
+    if (cycles < raster_rate)
+    {
+        eventScheduler->schedule(*this, raster_rate - cycles, EVENT_CLOCK_PHI1);
+    }
+    else
+    {
+        m_accessClk += cycles;
+        m_delayClk += cycles;
+        m_sid.USBSID_WaitForCycle(cycles);
+        m_sid.USBSID_Flush();
+        eventScheduler->schedule(*this, raster_rate, EVENT_CLOCK_PHI1);
     }
 }
 

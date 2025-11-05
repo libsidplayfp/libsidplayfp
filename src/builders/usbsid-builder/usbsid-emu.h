@@ -31,6 +31,8 @@ private:
     int m_handle;
     int sidno;
 
+    bool m_status;
+
     uint8_t busValue;  /* Return value on read */
 
     SidConfig::sid_model_t runmodel;  /* Read model type */
@@ -43,6 +45,11 @@ public:
 public:
     USBSID(sidbuilder *builder);
     ~USBSID() override;
+
+    /* static variables required due to
+     * multiple class initializations */
+    static long raster_rate;
+    static event_clock_t m_delayClk;
 
     bool getStatus() const { return m_status; }
 
