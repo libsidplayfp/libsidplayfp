@@ -52,16 +52,18 @@
 #  define STIL_DEPRECATED
 #endif
 
-#if defined(__linux__) || defined(__FreeBSD__) || defined(solaris2) || defined(sun) || defined(sparc) || defined(sgi)
-#  define UNIX
+// https://sourceforge.net/p/predef/wiki/OperatingSystems/
+
+#if defined(_WIN32)
+#  define WINDOWS_OS
 #endif
 
 #if defined(__MACOS__)
-#  define MAC
+#  define MAC_OS
 #endif
 
 #if defined(__amigaos__)
-#  define AMIGA
+#  define AMIGA_OS
 #endif
 
 //
@@ -72,14 +74,14 @@
 // - what function compares portions of strings case-insensitively.
 //
 
-#ifdef UNIX
-#  define SLASH '/'
-#elif defined MAC
-#  define SLASH ':'
-#elif defined AMIGA
-#  define SLASH '/'
-#else // WinDoze
+#ifdef WINDOWS_OS
 #  define SLASH '\\'
+#elif defined MAC_OS
+#  define SLASH ':'
+#elif defined AMIGA_OS
+#  define SLASH '/'
+#else // UNIX
+#  define SLASH '/'
 #endif
 
 // Default HVSC path to STIL.
