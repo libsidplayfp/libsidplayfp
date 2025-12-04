@@ -144,15 +144,17 @@ AS_IF([test x"$enable_inline" != "xno"],
 )
 
 dnl define compiler flag to enable SIMD instructions, not required if -march or -mcpu is defined
+AC_MSG_CHECKING([for SIMD instructions])
 AC_ARG_WITH(
     [simd],
-    [AS_HELP_STRING([--with-simd], [Build with SIMD optimizations [@<:@mmx/sse2/sse4/avx2/avx512f/none, default=none@:>@]])],
+    [AS_HELP_STRING([--with-simd=], [Build with SIMD optimizations @<:@runtime/mmx/sse2/sse4/avx2/avx512f/none, default=none@:>@])],
     [],
     [with_simd=none]
 )
 
 AS_IF([test x"$with_simd" != xnone],
     [AS_CASE([$with_simd],
+        [runtime], [AC_DEFINE([RUNTIME_DISPATCH], 1, [Define to 1 to enable runtime SIMD dispatch.])],
         [mmx], [SID_X86_SIMD_SUPPORTS([mmx])],
         [sse2], [SID_X86_SIMD_SUPPORTS([sse2])],
         [sse4], [SID_X86_SIMD_SUPPORTS([sse4])],
@@ -161,6 +163,7 @@ AS_IF([test x"$with_simd" != xnone],
         [AC_MSG_ERROR([Unrecognized SIMD specified])]
     )]
 )
+AC_MSG_RESULT([$with_simd])
 
 dnl gcc needs this flag to enable vectorization
 AX_APPEND_COMPILE_FLAGS([-ftree-loop-vectorize])

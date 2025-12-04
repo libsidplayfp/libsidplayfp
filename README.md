@@ -65,10 +65,12 @@ Enabled by default
 enable branch hints in the reSID engine so the compiler can produce more optimized code,
 enabled by default
 
-`--with-simd=<mmx/sse2/sse4/avx2/avx512f/none>`:
-enable SIMD code, mostly useful for resampling performance in reSIDfp.
+`--with-simd=<runtime/mmx/sse2/sse4/avx2/avx512f/none>`:
+enable x86 SIMD code, mostly useful for resampling performance in reSIDfp.
 Not required if `-march` or `-mcpu` is already included in the compiler flags
 (i.e. `CXXFLAGS=-march=x86-64-v3`).
+_runtime_ enables runtime dispatch of the resampling function depending on the CPU
+supported instruction set. Works only when compiling with gcc.
 None by default
 
 `--enable-testsuite=PATH_TO_TESTSUITE`:
