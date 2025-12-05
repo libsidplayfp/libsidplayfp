@@ -52,20 +52,6 @@
 #  define STIL_DEPRECATED
 #endif
 
-// https://sourceforge.net/p/predef/wiki/OperatingSystems/
-
-#if defined(_WIN32)
-#  define WINDOWS_OS
-#endif
-
-#if defined(__MACOS__)
-#  define MAC_OS
-#endif
-
-#if defined(__amigaos__)
-#  define AMIGA_OS
-#endif
-
 //
 // Here you should define:
 // - what the pathname separator is on your system (attempted to be defined
@@ -74,12 +60,9 @@
 // - what function compares portions of strings case-insensitively.
 //
 
-#ifdef WINDOWS_OS
+// https://sourceforge.net/p/predef/wiki/OperatingSystems/
+#if defined(_WIN32)
 #  define SLASH '\\'
-#elif defined MAC_OS
-#  define SLASH ':'
-#elif defined AMIGA_OS
-#  define SLASH '/'
 #else // UNIX
 #  define SLASH '/'
 #endif
