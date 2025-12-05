@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - master
-      - libsidplayfp-2.15
+      - libsidplayfp-2.16
   pull_request:
     branches:
       - master
-      - libsidplayfp-2.15
+      - libsidplayfp-2.16
 
 permissions:
   contents: read
