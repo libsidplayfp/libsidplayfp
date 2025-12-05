@@ -1,4 +1,26 @@
-2.15.0 2025-0x-xx
+2.16.0 2025-12-xx
+* Fix opening STIL on MacOS (#225)
+* Expose the SID models actually used
+* residfp: implemented runtime SIMD dispatch for resampler (#206)
+* Added usbsid support (#216)
+
+
+
+2.15.2 2025-11-02
+* Fix building with pre c++20 standards (#214)
+* Fixed crash in SidDatabase parser (#217)
+
+
+
+2.15.1 2025-09-19
+* resid/residfp: remove accidental DC offset (#205)
+* residfp: clock voice 3 even if muted (#211)
+* resid: fix silenced tunes (#212)
+* fixed load performance regression (#207)
+
+
+
+2.15.0 2025-06-29
 * Compile with fast math, without unsafe optimizations
 * residfp: reworked the SIMD support, removed the intrinsics code leaving the compiler vectorize the loop
 * Extended the new play API
