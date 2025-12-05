@@ -21,30 +21,45 @@ USBSIDBuilder::~USBSIDBuilder()
     remove();
 }
 
-libsidplayfp::sidemu* USBSIDBuilder::create()
+// Create a new sid emulation.
+unsigned int USBSIDBuilder::create(unsigned int sids)
 {
-    /* Always init a new Object */
-    try
-    {
-        std::unique_ptr<libsidplayfp::USBSID> sid(new libsidplayfp::USBSID(this));
+    m_status = true;
 
-        // SID init failed?
-        if (!sid->getStatus())
-        {
-            m_errorBuffer = sid->error();
-            return nullptr;
-        }
-        return sid.release();
-    }
-    /* Memory alloc failed? */
-    catch (std::bad_alloc const &)
+    // Check available devices
+    unsigned int count = availDevices();
+
+    if (count && (count < sids))
+        sids = count;
+
+    for (count = 0; count < sids; count++)
     {
-        m_errorBuffer.assign(name()).append(" ERROR: Unable to create USBSID object");
-        return nullptr;
+        try
+        {
+            std::unique_ptr<libsidplayfp::USBSID> sid(new libsidplayfp::USBSID(this));
+
+            // SID init failed?
+            if (!sid->getStatus())
+            {
+                m_errorBuffer = sid->error();
+                m_status = false;
+                return count;
+            }
+            sidobjs.insert(sid.release());
+        }
+        // Memory alloc failed?
+        catch (std::bad_alloc const &)
+        {
+            m_errorBuffer.assign(name()).append(" ERROR: Unable to create USBSID object");
+            m_status = false;
+            break;
+        }
     }
+    return count;
+
 }
 
-const char *USBSIDBuilder::getCredits() const
+const char *USBSIDBuilder::credits() const
 {
     return libsidplayfp::USBSID::getCredits();
 }
