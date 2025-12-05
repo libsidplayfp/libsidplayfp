@@ -24,6 +24,7 @@ supplied contributions or code was derived from their work:
     André Fachat      - reloc65
     Jarno Paananen    - HardSID UNIX builder
     Thibaut VARENE    - exSID driver and builder
+    LouD              - USBSID-Pico driver and builder
 
 VIC II, CIA and cpu-port emulation is based on VICE code.
 CIA SDR and interrupt handling are based on Denise emulator
