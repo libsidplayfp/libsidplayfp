@@ -72,7 +72,7 @@ public:
     //@}
 
     /// SID chips
-    /// @since 3.0
+    /// @since 2.16
     //@{
     unsigned int numberOfSIDs() const;
     SidTuneInfo::model_t sidModel(unsigned int i) const;
