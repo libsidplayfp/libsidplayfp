@@ -15,11 +15,12 @@ on:
   push:
     branches:
       - master
-      - libsidplayfp-2.15
+      - libsidplayfp-2.16
   pull_request:
+    # The branches below must be a subset of the branches above
     branches:
       - master
-      - libsidplayfp-2.15
+      - libsidplayfp-2.16
 
 jobs:
   analyze:
