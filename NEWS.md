@@ -3,6 +3,7 @@
 * Expose the SID models actually used
 * residfp: implemented runtime SIMD dispatch for resampler (#206)
 * Added usbsid support (#216)
+* Improve interrupt handling in kernal stub
 
 
 
