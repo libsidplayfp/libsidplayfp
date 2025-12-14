@@ -97,24 +97,41 @@ public:
         if (kernal == nullptr)
         {
             // IRQ entry point
-            setVal(0xffa0, PHAn); // Save regs
-            setVal(0xffa1, TXAn);
-            setVal(0xffa2, PHAn);
-            setVal(0xffa3, TYAn);
-            setVal(0xffa4, PHAn);
-            setVal(0xffa5, JMPi); // Jump to IRQ routine
-            setVal(0xffa6, 0x14);
-            setVal(0xffa7, 0x03);
+            setVal(0xff48, PHAn); // Save regs
+            setVal(0xff49, TXAn);
+            setVal(0xff4a, PHAn);
+            setVal(0xff4b, TYAn);
+            setVal(0xff4c, PHAn);
+            setVal(0xff4d, JMPi); // Jump to IRQ routine (Default: $EA31)
+            setVal(0xff4e, 0x14);
+            setVal(0xff4f, 0x03);
 
-            // Halt
-            setVal(0xea39, 0x02);
+            // IRQ routine
+            setVal(0xea31, PLAn); // Restore regs
+            setVal(0xea32, TAYn);
+            setVal(0xea33, PLAn);
+            setVal(0xea34, TAXn);
+            setVal(0xea35, PLAn);
+            setVal(0xea36, RTIn); // Return from interrupt
+
+            // NMI entry point
+            setVal(0xfe43, SEIn);
+            setVal(0xfe44, JMPi); // Jump to NMI routine (Default: $FE47)
+            setVal(0xfe45, 0x18);
+            setVal(0xfe46, 0x03);
+
+            // NMI routine
+            setVal(0xfe47, RTIn);
+
+            // RESET
+            setVal(0xfce2, 0x02); // Halt
 
             // Hardware vectors
-            setVal(0xfffa, 0x39); // NMI vector
-            setVal(0xfffb, 0xea);
-            setVal(0xfffc, 0x39); // RESET vector
-            setVal(0xfffd, 0xea);
-            setVal(0xfffe, 0xa0); // IRQ/BRK vector
+            setVal(0xfffa, 0x43); // NMI vector $FE43
+            setVal(0xfffb, 0xfe);
+            setVal(0xfffc, 0xe2); // RESET vector $FCE2
+            setVal(0xfffd, 0xfc);
+            setVal(0xfffe, 0x48); // IRQ/BRK vector $FF48
             setVal(0xffff, 0xff);
         }
 
