@@ -1,0 +1,19 @@
+<map id="libsidplayfp::USBSID" name="libsidplayfp::USBSID">
+<area shape="rect" id="Node000001" title=" " alt="" coords="385,257,539,283"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1sidemu.html" title=" " alt="" coords="298,183,453,208"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="401,215,450,255,446,259,398,219"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="5,95,153,120"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,121,336,180,335,185,131,126"/>
+<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="10,13,149,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="82,52,82,95,77,95,77,52"/>
+<area shape="rect" id="Node000005" href="$classlibsidplayfp_1_1EventScheduler.html" title=" " alt="" coords="177,95,384,120"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="306,128,364,180,360,184,302,132"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="409,95,534,120"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="463,134,444,161,426,174,406,185,404,180,423,170,440,157,459,131"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="559,95,645,120"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="576,130,518,161,437,185,436,180,516,156,573,125"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="533,5,671,45"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="605,59,605,94,599,94,599,59"/>
+<area shape="rect" id="Node000009" href="$classlibsidplayfp_1_1Event.html" title=" " alt="" coords="477,183,620,208"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="526,219,478,259,474,255,523,215"/>
+</map>

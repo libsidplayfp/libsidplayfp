@@ -1,0 +1,7 @@
+<map id="usbsid.USBSID" name="usbsid.USBSID">
+<area shape="rect" id="Node000001" title=" " alt="" coords="111,79,228,104"/>
+<area shape="rect" id="Node000002" href="$classusbsid_1_1USBSIDDevice.html" title=" " alt="" coords="5,5,168,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,38,158,76,154,80,109,42"/>
+<area shape="rect" id="Node000003" href="$interfaceusbsid_1_1IUSBSID.html" title=" " alt="" coords="193,5,314,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,42,185,80,181,76,228,38"/>
+</map>

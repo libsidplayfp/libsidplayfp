@@ -1,3 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classSidDatabase.html" title=" " alt="" coords="5,5,109,31"/>
+<area shape="rect" id="Node000000" href="$classsidbuilder.html" title=" " alt="" coords="5,104,92,129"/>
+<area shape="rect" id="Node000001" href="$classHardSIDBuilder.html" title=" " alt="" coords="140,5,261,31"/>
+<area shape="poly" id="edge71_Node000000_Node000001" title=" " alt="" coords="71,92,102,66,139,40,162,28,164,33,141,44,105,70,75,96"/>
+<area shape="rect" id="Node000002" href="$classReSIDBuilder.html" title=" " alt="" coords="147,55,254,80"/>
+<area shape="poly" id="edge72_Node000000_Node000002" title=" " alt="" coords="101,97,160,78,161,83,102,102"/>
+<area shape="rect" id="Node000003" href="$classReSIDfpBuilder.html" title=" " alt="" coords="141,104,261,129"/>
+<area shape="poly" id="edge73_Node000000_Node000003" title=" " alt="" coords="106,114,140,114,140,119,106,119"/>
+<area shape="rect" id="Node000004" href="$classUSBSIDBuilder.html" title=" " alt="" coords="142,153,259,179"/>
+<area shape="poly" id="edge74_Node000000_Node000004" title=" " alt="" coords="102,131,161,151,160,156,101,136"/>
+<area shape="rect" id="Node000005" href="$classexSIDBuilder.html" title=" " alt="" coords="147,203,254,228"/>
+<area shape="poly" id="edge75_Node000000_Node000005" title=" " alt="" coords="75,137,106,163,141,188,166,200,163,205,139,192,102,167,72,141"/>
 </map>
