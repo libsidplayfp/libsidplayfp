@@ -23,6 +23,8 @@
 #define SYSTEMROMBANKS_H
 
 #include <stdint.h>
+#include <algorithm>
+#include <iterator>
 #include <cstring>
 
 #include "Bank.h"
@@ -96,6 +98,8 @@ public:
 
         if (kernal == nullptr)
         {
+            std::fill(std::begin(rom), std::end(rom), RTSn);
+
             // IRQ entry point
             setVal(0xff48, PHAn); // Save regs
             setVal(0xff49, TXAn);
