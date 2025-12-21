@@ -49,10 +49,14 @@ const char TXT_NTSC_UNKNOWN[]   = "UNKNOWN (NTSC)";
 
 // Error Strings
 const char ERR_NA[]                   = "NA";
+const char ERR_NO_TUNE_LOADED[]       = "SIDPLAYER ERROR: No tune loaded";
 const char ERR_UNSUPPORTED_FREQ[]     = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID address.";
 const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
 const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
+const char ERR_ILLEGAL_INSN[]         = "SIDPLAYER ERROR: Illegal instruction executed";
+const char ERR_BAD_BUF_SIZE[]         = "SIDPLAYER ERROR: Bad buffer size";
+const char ERR_INVALID_CONF[]         = "SIDPLAYER ERROR: Invalid configuration";
 
 /**
  * Configuration error exception.
@@ -236,7 +240,7 @@ int Player::play(unsigned int cycles)
     // Make sure a tune is loaded
     if (m_tune == nullptr) UNLIKELY
     {
-        m_errorString = "No tune loaded";
+        m_errorString = ERR_NO_TUNE_LOADED;
         return -1;
     }
 
@@ -267,7 +271,7 @@ int Player::play(unsigned int cycles)
     }
     catch (MOS6510::haltInstruction const &)
     {
-        m_errorString = "Illegal instruction executed";
+        m_errorString = ERR_ILLEGAL_INSN;
         return -1;
     }
 }
@@ -351,7 +355,8 @@ bool Player::config(const SidConfig &cfg, bool force)
         catch (configError const &e)
         {
             sidRelease();
-            m_errorString = e.message();
+            //m_errorString = e.message(); // FIXME
+            m_errorString = ERR_INVALID_CONF;
             m_cfg.sidEmulation = nullptr;
             if (&m_cfg != &cfg)
             {
