@@ -1,4 +1,4 @@
-2.16.0 2025-12-xx
+2.16.0 2025-12-23
 * Fix opening STIL on MacOS (#225)
 * Expose the SID models actually used
 * residfp: implemented runtime SIMD dispatch for resampler (#206)
