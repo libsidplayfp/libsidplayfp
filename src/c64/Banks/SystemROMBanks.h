@@ -100,23 +100,23 @@ public:
         {
             std::fill(std::begin(rom), std::end(rom), RTSn);
 
-            // IRQ entry point
-            setVal(0xff48, PHAn); // Save regs
-            setVal(0xff49, TXAn);
-            setVal(0xff4a, PHAn);
-            setVal(0xff4b, TYAn);
-            setVal(0xff4c, PHAn);
-            setVal(0xff4d, JMPi); // Jump to IRQ routine (Default: $EA31)
-            setVal(0xff4e, 0x14);
-            setVal(0xff4f, 0x03);
-
             // IRQ routine
-            setVal(0xea31, PLAn); // Restore regs
-            setVal(0xea32, TAYn);
-            setVal(0xea33, PLAn);
-            setVal(0xea34, TAXn);
-            setVal(0xea35, PLAn);
-            setVal(0xea36, RTIn); // Return from interrupt
+            setVal(0xea31, JMPw);
+            setVal(0xea32, 0x7e);
+            setVal(0xea33, 0xea);
+
+            setVal(0xea7e, NOPa);  // Clear IRQ
+            setVal(0xea7f, 0x0d);
+            setVal(0xea80, 0xdc);
+            setVal(0xea81, PLAn);  // Restore registers
+            setVal(0xea82, TAYn);
+            setVal(0xea83, PLAn);
+            setVal(0xea84, TAXn);
+            setVal(0xea85, PLAn);
+            setVal(0xea86, RTIn); // Return from interrupt
+
+            // Reset
+            setVal(0xfce2, 0x02); // Halt
 
             // NMI entry point
             setVal(0xfe43, SEIn);
@@ -127,8 +127,15 @@ public:
             // NMI routine
             setVal(0xfe47, RTIn);
 
-            // RESET
-            setVal(0xfce2, 0x02); // Halt
+            // IRQ entry point
+            setVal(0xff48, PHAn); // Save regs
+            setVal(0xff49, TXAn);
+            setVal(0xff4a, PHAn);
+            setVal(0xff4b, TYAn);
+            setVal(0xff4c, PHAn);
+            setVal(0xff4d, JMPi); // Jump to IRQ routine (Default: $EA31)
+            setVal(0xff4e, 0x14);
+            setVal(0xff4f, 0x03);
 
             // Hardware vectors
             setVal(0xfffa, 0x43); // NMI vector $FE43
