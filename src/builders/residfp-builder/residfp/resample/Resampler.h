@@ -39,6 +39,39 @@ namespace reSIDfp
 class Resampler
 {
 private:
+#if defined(PADE_TANH)
+    // Padé approximation of tanh
+    static constexpr inline double sid_tanh(double x) noexcept
+    {
+        if (likely(x < 3.))
+        {
+            const double x2 = x * x;
+            const double num = x*(945. + x2*(105. + x2));
+            const double den = 945. + x2*(420. + x2*15.);
+            return num/den;
+        }
+        return 1.;
+    }
+#elif defined(LAMBERT_TANH)
+    // 7th-degree Lambert approximation of tanh
+    static constexpr inline double sid_tanh(double x) noexcept
+    {
+        if (likely(x < 4.))
+        {
+            const double x2 = x * x;
+            const double num = x*(135135. + x2*(17325. + x2*(378 + x2)));
+            const double den = 135135. + x2*(62370. + x2*(3150. + x2*28.));
+            return num/den;
+        }
+        return 1.;
+    }
+#else
+    static inline double sid_tanh(double x)
+    {
+        return std::tanh(x);
+    }
+#endif
+
     template<int m>
     static inline int clipper(int x)
     {
@@ -53,7 +86,7 @@ private:
         constexpr double b = 1. / a;
 
         double value = static_cast<double>(x - threshold) / max_val;
-        value = t + a * std::tanh(b * value);
+        value = t + a * sid_tanh(b * value);
         return static_cast<int>(value * max_val);
     }
 
