@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: deps
       run: sudo apt-get install libgcrypt20-dev xa65 doxygen graphviz
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: 'true'
         ref: ${{ github.ref }}
