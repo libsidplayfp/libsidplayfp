@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2024 Leandro Nini
+ *  Copyright (C) 2024-2025 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include "../src/builders/residfp-builder/residfp/resample/Resampler.h"
 
 #include <limits>
+#include <cstdint>
 
 using namespace UnitTest;
 using namespace reSIDfp;
@@ -34,11 +35,31 @@ SUITE(Resampler)
 
 TEST(TestSoftClip)
 {
-    CHECK(Resampler::softClipImpl(0) == 0);
-    CHECK(Resampler::softClipImpl(28000) == 28000);
-    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::max()) <= 32767);
-    CHECK(Resampler::softClipImpl(-28000) == -28000);
-    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::min()+1) >= -32768);
+    // Same value as defined in Resampler.h
+    constexpr int threshold = 28000;
+    // We assume values stay below this peak
+    constexpr int peak = 38000;
+
+    // Values within threshold should pass unchanged
+    for (int i=-threshold; i<=threshold; i++)
+        CHECK(Resampler::softClipImpl(i) == i);
+
+    // Values above threshold should be compressed
+    for (int i=threshold; i<=peak; i++)
+    {
+        auto x = Resampler::softClipImpl(i);
+        CHECK((x <= i) && (x <= INT16_MAX));
+    }
+
+    for (int i=-threshold; i<=-peak; i--)
+    {
+        auto x = Resampler::softClipImpl(i);
+        CHECK((x >= i) && (x >= INT16_MIN));
+    }
+
+    // Check the extremes too
+    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::max()) <= INT16_MAX);
+    CHECK(Resampler::softClipImpl(std::numeric_limits<int>::min()+1) >= INT16_MIN);
 }
 
 }
