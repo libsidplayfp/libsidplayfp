@@ -53,8 +53,8 @@ void sidbuilder::unlock(libsidplayfp::sidemu *device)
     {
         (*it)->unlock();
         // should we cache these for later use?
-        sidobjs.erase(it);
         delete *it;
+        sidobjs.erase(it);
     }
 }
 
