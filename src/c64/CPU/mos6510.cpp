@@ -34,6 +34,9 @@
 
 #include "sidcxx11.h"
 
+#include <iomanip>
+#include <sstream>
+
 
 namespace libsidplayfp
 {
@@ -1281,7 +1284,13 @@ void MOS6510::tya_instr()
 
 void MOS6510::invalidOpcode()
 {
-    throw haltInstruction();
+    std::ostringstream msg;
+    msg << std::setfill('0')
+        << "Illegal instruction $"
+        << std::setw(2) << std::hex << (cycleCount >> 3)
+        << " at address $"
+        << std::setw(4) << (Register_ProgramCounter-1);
+    throw haltInstruction(msg.str());
 }
 
 

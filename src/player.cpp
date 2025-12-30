@@ -54,7 +54,6 @@ const char ERR_UNSUPPORTED_FREQ[]     = "SIDPLAYER ERROR: Unsupported sampling f
 const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID address.";
 const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
 const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
-const char ERR_ILLEGAL_INSN[]         = "SIDPLAYER ERROR: Illegal instruction executed";
 const char ERR_BAD_BUF_SIZE[]         = "SIDPLAYER ERROR: Bad buffer size";
 const char ERR_INVALID_CONF[]         = "SIDPLAYER ERROR: Invalid configuration";
 
@@ -269,9 +268,9 @@ int Player::play(unsigned int cycles)
         }
         return sampleCount;
     }
-    catch (MOS6510::haltInstruction const &)
+    catch (MOS6510::haltInstruction const &ill)
     {
-        m_errorString = ERR_ILLEGAL_INSN;
+        m_errorString = ill.message();
         return -1;
     }
 }
@@ -355,8 +354,7 @@ bool Player::config(const SidConfig &cfg, bool force)
         catch (configError const &e)
         {
             sidRelease();
-            //m_errorString = e.message(); // FIXME
-            m_errorString = ERR_INVALID_CONF;
+            m_errorString = e.message();
             m_cfg.sidEmulation = nullptr;
             if (&m_cfg != &cfg)
             {

@@ -24,6 +24,7 @@
 #define MOS6510_H
 
 #include <stdint.h>
+#include <string>
 #include <cstdio>
 
 #include "flags.h"
@@ -74,7 +75,16 @@ class MOS6510
 #endif
 
 public:
-    class haltInstruction {};
+    class haltInstruction {
+private:
+    const std::string m_msg;
+
+public:
+    explicit haltInstruction(const std::string msg) :
+        m_msg(msg) {}
+
+    std::string message() const { return m_msg; }
+};
 
 private:
     /**

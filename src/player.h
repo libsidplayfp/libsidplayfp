@@ -70,7 +70,7 @@ private:
     SidConfig m_cfg;
 
     /// Error message
-    const char *m_errorString;
+    std::string m_errorString;
 
     sidrandom m_rand;
 
@@ -148,7 +148,7 @@ public:
 
     void filter(unsigned int sidNum, bool enable);
 
-    const char *error() const { return m_errorString; }
+    const char *error() const { return m_errorString.c_str(); }
 
     void setKernal(const uint8_t* rom);
     void setBasic(const uint8_t* rom);
