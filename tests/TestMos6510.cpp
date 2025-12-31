@@ -29,6 +29,7 @@
 #include "../src/c64/CPU/mos6510.h"
 #include "../src/c64/CPU/opcodes.h"
 #include "../src/c64/CPU/mos6510.cpp"
+#include "../src/c64/CPU/mos6510debug.cpp"
 
 #include <iostream>
 #include <iomanip>

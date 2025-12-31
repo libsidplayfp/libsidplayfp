@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2020 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -27,10 +27,8 @@
 
 #include "opcodes.h"
 
-#ifdef DEBUG
-#  include <cstdio>
-#  include "mos6510debug.h"
-#endif
+#include <cstdio>
+#include "mos6510debug.h"
 
 #include "sidcxx11.h"
 
@@ -235,18 +233,17 @@ void MOS6510::interruptsAndNextOpcode()
 {
     if (cycleCount > interruptCycle + interruptDelay)
     {
-#ifdef DEBUG
-        if (dodump)
+        if (cpu_debug) UNLIKELY
         {
             const event_clock_t cycles = eventScheduler.getTime(EVENT_CLOCK_PHI2);
             MOS6510Debug::DumpState(cycles, *this);
-            fprintf(m_fdbg, "****************************************************\n");
-            fprintf(m_fdbg, " interrupt (%d)\n", static_cast<int>(cycles));
-            fprintf(m_fdbg, "****************************************************\n");
+            fprintf(cpu_debug->m_fdbg, "****************************************************\n");
+            fprintf(cpu_debug->m_fdbg, " interrupt (%d)\n", static_cast<int>(cycles));
+            fprintf(cpu_debug->m_fdbg, "****************************************************\n");
+
+            cpu_debug->instrStartPC = -1;
         }
 
-        instrStartPC = -1;
-#endif
         cpuRead(Register_ProgramCounter);
         cycleCount = BRKn << 3;
         d1x1 = true;
@@ -260,14 +257,12 @@ void MOS6510::interruptsAndNextOpcode()
 
 void MOS6510::fetchNextOpcode()
 {
-#ifdef DEBUG
-    if (dodump)
+    if (cpu_debug) UNLIKELY
     {
         MOS6510Debug::DumpState(eventScheduler.getTime(EVENT_CLOCK_PHI2), *this);
-    }
 
-    instrStartPC = Register_ProgramCounter;
-#endif
+        cpu_debug->instrStartPC = Register_ProgramCounter;
+    }
 
     rdyOnThrowAwayRead = false;
 
@@ -346,9 +341,10 @@ void MOS6510::FetchDataByte()
         Register_ProgramCounter++;
     }
 
-#ifdef DEBUG
-    instrOperand = Cycle_Data;
-#endif
+    if (cpu_debug) UNLIKELY
+    {
+        cpu_debug->instrOperand = Cycle_Data;
+    }
 }
 
 /**
@@ -367,9 +363,10 @@ void MOS6510::FetchLowAddr()
     Cycle_EffectiveAddress = cpuRead(Register_ProgramCounter);
     Register_ProgramCounter++;
 
-#ifdef DEBUG
-    instrOperand = Cycle_EffectiveAddress;
-#endif
+    if (cpu_debug) UNLIKELY
+    {
+        cpu_debug->instrOperand = Cycle_EffectiveAddress;
+    }
 }
 
 /**
@@ -408,9 +405,10 @@ void MOS6510::FetchHighAddr()
     endian_16hi8(Cycle_EffectiveAddress, cpuRead(Register_ProgramCounter));
     Register_ProgramCounter++;
 
-#ifdef DEBUG
-    endian_16hi8(instrOperand, endian_16hi8(Cycle_EffectiveAddress));
-#endif
+    if (cpu_debug) UNLIKELY
+    {
+        endian_16hi8(cpu_debug->instrOperand, endian_16hi8(Cycle_EffectiveAddress));
+    }
 }
 
 /**
@@ -473,9 +471,10 @@ void MOS6510::FetchLowPointer()
     Cycle_Pointer = cpuRead(Register_ProgramCounter);
     Register_ProgramCounter++;
 
-#ifdef DEBUG
-    instrOperand = Cycle_Pointer;
-#endif
+    if (cpu_debug) UNLIKELY
+    {
+        cpu_debug->instrOperand = Cycle_Pointer;
+    }
 }
 
 /**
@@ -500,9 +499,10 @@ void MOS6510::FetchHighPointer()
     endian_16hi8(Cycle_Pointer, cpuRead(Register_ProgramCounter));
     Register_ProgramCounter++;
 
-#ifdef DEBUG
-    endian_16hi8(instrOperand, endian_16hi8(Cycle_Pointer));
-#endif
+    if (cpu_debug) UNLIKELY
+    {
+        endian_16hi8(cpu_debug->instrOperand, endian_16hi8(Cycle_Pointer));
+    }
 }
 
 /**
@@ -697,10 +697,10 @@ void MOS6510::rti_instr()
     Register_ProgramCounter = Cycle_EffectiveAddress;
     interruptsAndNextOpcode();
 
-#ifdef DEBUG
-    if (dodump)
-        fprintf(m_fdbg, "****************************************************\n\n");
-#endif
+    if (cpu_debug) UNLIKELY
+    {
+        fprintf(cpu_debug->m_fdbg, "****************************************************\n\n");
+    }
 }
 
 void MOS6510::rts_instr()
@@ -1481,12 +1481,10 @@ void MOS6510::rra_instr()
 MOS6510::MOS6510(EventScheduler &scheduler, CPUDataBus &bus) :
     eventScheduler(scheduler),
     dataBus(bus),
-#ifdef DEBUG
-    m_fdbg(stdout),
-#endif
     m_nosteal("CPU-nosteal", *this),
     m_steal("CPU-steal", *this),
-    clearInt("Remove IRQ", *this)
+    clearInt("Remove IRQ", *this),
+    cpu_debug(nullptr)
 {
     buildInstructionTable();
 
@@ -1497,9 +1495,7 @@ MOS6510::MOS6510(EventScheduler &scheduler, CPUDataBus &bus) :
 
     Cycle_EffectiveAddress = 0;
     Cycle_Data             = 0;
-#ifdef DEBUG
-    dodump = false;
-#endif
+
     Initialise();
 }
 
@@ -1510,7 +1506,7 @@ void MOS6510::buildInstructionTable()
 {
     for (unsigned int i = 0; i < 0x100; i++)
     {
-#if DEBUG > 1
+#ifndef NDEBUG
         printf("Building Command %d[%02x]... ", i, i);
 #endif
 
@@ -2147,7 +2143,7 @@ void MOS6510::buildInstructionTable()
         // check for IRQ triggers or fetch next opcode...
         instrTable[buildCycle].func = &StaticFuncWrapper<&MOS6510::interruptsAndNextOpcode>;
 
-#if DEBUG > 1
+#ifndef NDEBUG
         printf("Done [%d Cycles]\n", buildCycle - (i << 3));
 #endif
     }
@@ -2164,9 +2160,11 @@ void MOS6510::Initialise()
     // Reset Cycle Count
     cycleCount = (BRKn << 3) + 6; // fetchNextOpcode
 
-#ifdef DEBUG
-    instrStartPC = -1;
-#endif
+
+    if (cpu_debug) UNLIKELY
+    {
+        cpu_debug->instrStartPC = -1;
+    }
 
     // Reset Status Register
     flags.reset();
@@ -2215,18 +2213,20 @@ const char *MOS6510::credits()
         "MOS6510 Cycle Exact Emulation\n"
         "\t(C) 2000 Simon A. White\n"
         "\t(C) 2008-2010 Antti S. Lankila\n"
-        "\t(C) 2011-2020 Leandro Nini\n";
+        "\t(C) 2011-2025 Leandro Nini\n";
 }
 
 void MOS6510::debug(MAYBE_UNUSED bool enable, MAYBE_UNUSED FILE *out)
 {
-#ifdef DEBUG
-    dodump = enable;
-    if (!(out && enable))
-        m_fdbg = stdout;
+    if (enable)
+    {
+        cpu_debug = MAKE_UNIQUE(CPUDebug);
+        cpu_debug->m_fdbg = out ? out : stdout;
+    }
     else
-        m_fdbg = out;
-#endif
+    {
+        cpu_debug.reset();
+    }
 }
 
 }

@@ -27,8 +27,6 @@
 #  include "config.h"
 #endif
 
-#ifdef DEBUG
-
 #include "Event.h"
 
 namespace libsidplayfp
@@ -42,7 +40,5 @@ namespace MOS6510Debug
 }
 
 }
-
-#endif // DEBUG
 
 #endif // MOS6510DEBUG_H

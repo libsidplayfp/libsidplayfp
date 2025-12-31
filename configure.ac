@@ -121,15 +121,12 @@ LIBSTILVIEWAGE=0
 LIBSTILVIEWVERSION=$LIBSTILVIEWCUR:$LIBSTILVIEWREV:$LIBSTILVIEWAGE
 
 AC_MSG_CHECKING([for debugging])
-AC_ARG_ENABLE(debug, [AS_HELP_STRING([--enable-debug], [compile for debugging @<:@no/yes/full, default=no@:>@])],
+AC_ARG_ENABLE(debug, [AS_HELP_STRING([--enable-debug], [compile for debugging @<:@no/yes, default=no@:>@])],
  [], [enable_debug=no])
 
 AS_IF([test "x$enable_debug" = "xno"],
   [AC_MSG_RESULT([Build without debugging messages]); debug_flags=-DNDEBUG],
-  [AS_IF([test "x$enable_debug" = "xyes"],
-    [AC_MSG_RESULT([Build with debugging messages]); debug_flags=-DDEBUG=1],
-    [AC_MSG_RESULT([Build with all debugging messages]); debug_flags=-DDEBUG=10]
-  )]
+  [AC_MSG_RESULT([Build with debugging messages]); debug_flags=""]
 )
 
 AC_SUBST([debug_flags])
