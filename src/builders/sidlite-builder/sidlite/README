@@ -1,0 +1,148 @@
+          cRSID-1.56 by Hermit (Mihaly Horvath) - Year 2025
+          -------------------------------------------------
+
+ cRSID is a serious integer-only update (rewrite) to my cSID and cSID-light
+commandline SID-players, aiming for an ongoing inclusion into RockBox,
+as per a request by Ninja earlier at CSDb.
+
+ Version 1.56 contains some interesting new code, first of all there is an OSC3
+waveform address correction. (Added example tune 'Echo.sid' from Geir Tjelta.)
+ The other important extra is the direct ALSA backend support beside SDL-audio
+used by 'crsid_cli' (and 'testapp_alsa') which therefore has no SDL-dependence.
+(And I improved the CLI keyboard-control too to be non-blocking and nonechoing.)
+I also made a make-target called 'intSDL' which can be built with the internal
+stripped SDL source-code available in SDL folder, having a GUI without libsdl.
+ From now on I only support and prebuild for Linux but the Makefile and the
+source-code should remain cross-platform and buildable on mainstream systems.
+
+ Version 1.55 brings better default sound-quality by replacing the simple
+averager oversampling by proper Sinc-based bandlimiting nyquist-filter. Other
+notable additions are the possibility to add full KERNAL and BASIC ROM files
+for more compatible RSID playback, and the built-in file-chooser GUI.
+(In file-chooser use Enter/Shift+Enter or Left/Right-click to Open/Add file.)
+ CIA emulation has been improved to play new SounDemon-digi tunes too. Also the
+testapp.c is available for checking buildability on embedded/non-SDL systems.
+(GUI's dependence on math.h with sqrt/sin functions is now eliminated entirely.)
+ Pressing Shift/Ctrl/Alt with Cursor/Page-keys now adds new playlist features.
+(And M key opens Menu/File-dialog, Q key sets quality, Ctrl+S saves playlist,
+Home/End and Ins/Del keys are further conveniences to the playlist-navigation.)
+ Any strong filter's distortion can be compensated now by lowering volume-knob.
+Selected folder, Quality, MainVolume, etc. are now remembered by a config-file.
+(Playlist can also be saved and can be edited from the GUI to a limited extent.)
+
+Since v1.5 cRSID sports a major improvement in the API (header) and the source.
+The Makefiles and sources were corrected to be buildable on GCC-4.9 and TCC-0.9
+like eliminating nested functions, and libcRSID is now separate and more usable.
+The code was speed-optimized (GUI, single cRSID_C64/VIC/CPU instance), memory
+bank-switching is now table-based, and emulation-code has more switch-case and
+predicate conditional branches, helping GCC to eliminate branch-miss slowdowns.
+Fixed: a missing CLI newline and VUmeter wraparound, stabilized tune-switching.
+
+Since 1.41 version there's MacOS build-support and fixes to a Segfault at
+the end of cRSID.c when trying to free up SongLengths even if it was not found
+and loaded+allocated.) Building for MacOS needs gcc-14, make and sdl12-compat
+packages that can be installed by brew, e.g.: 'brew install sdl12-compat'
+
+Since v1.4 cRSID has now proper playlist support (that's already in cRTED).
+Since version 1.2 it includes 4SID-support and both commandline and GUI players,
+from now on GUI is the default, so select commandline-player by adding '-cli'
+as an argument.
+
+I prebuilt fresh runnables for Linux x86/64 and 32bit-ARMel RaspberryPi.
+ The Linux version has a .deb installer in this package which takes care
+of associating .sid and .sil (playlist) music files to cRSID. (The only
+dependence of the program is the SDL library, and of course ALSA runtime,
+and nothing else is essential from the program package, just the runnable.)
+ Now there is file-open dialog in cRSID, so you can open files from within
+the app. That said, there are still many ways to open a list of files.
+Clicking on the '.sil' simple textfiles open the files/folders listed
+in it. The folders given as argument or in the playlist-file, are searched
+for music files recursively (including subfolders). If there's no argument
+given to crsid it will try to open the music/playlist files in the current
+folder, or if none found, it will play a nice built-in music and display a
+short help about the usage. These possibilities can be combined so you can
+give more files/folders or playlist-files as arguments.
+
+Unfortunately SID files don't have a field for playtime/duration information.
+Usually this information is taken from a separate Songlengths.md5 database
+file, regularly updated and available at HVSC webpage. Apart from that it's
+possible to give a duration in 'seconds' or 'minutes:seconds' format after
+the filename of the SID files, separated by whitespace at the ends of lines.
+But if you have the fresh Songlengths.md5 file put it into your home/user
+or the '.cRSID' created in user folder, and cRSID will find and process it, but
+explicitly given time in the playlist will override it (for the 1st subtune).
+You can also add a fallback playtime/duration in commandline with the
+-playtime <xxx> format (xxx is playtime in seconds), that will be used 
+for every tune, subtune that cRSID couldn't get playtime info for...
+
+ The GUI must be straightforward, the buttons at the bottom restart/pause and
+fast-forward the tune, or select subtune, or toggle stereo/mono and force
+6581 or 8580 chipmodels. Keys are still usable in the GUI: Enter:restart,
+SPACE:pause/continue, TAB/`/END/right:fast-forward, 1..9,+/-: select subtune,
+cursor-up/down: adjust main volume. (Shift/Control/Alt held while pressing
+'SID' button gives back the overridden SID-model control to the SID-headers.
+ Beside the config-file, for the volume/stereo settings the editable crsids
+file in Linux can be used to start crsid with specific settings (overriding
+those in the new real config-file).
+
+ cRSID has high-quality 5.6x oversampled wave-generators by default since 1.1
+so the combined waveforms are clean too now but CPU usage increased a bit,
+so now its default behaviour is not primarily aimed for the RockBox inclusion
+but for better SID-playback on a PC. (See below how to decrease CPU usage.)
+ The commandline playback is enhanced too with keys for toggling pause/continue
+(SPACE) and fast-forward (TAB) and subtune-selection (1..9) and the following
+parameters (their order is unimportant but always the latest of them have
+the priority):
+The more lightweight wave-generator can still be called with '-sidlight'
+option and should still work for RockBox, the simpler oversampler can be
+called with '-resamplight', the SID-model can be forced by '-sid6581' or
+'-sid8580' options, the 2SID/3SID tunes can be played in stereo by adding
+'-stereo' option. The '-info' parameter can display SID-info just
+like selecting a subtune by giving it as a standalone number anywhere.
+(These parameters can be given after the linux script 'crsida' too, for
+ example in a folder full of SIDs play them by:  crsida - -sid8580 -info )
+Buffersize can be set between 256..32768 by '-buflen xx' argument.
+A '-volume xx' argument can be given to set main-volume between 0 and 255.
+
+The app-name now contains the 'R' because now a RealSID-like environment-mode
+(CIA, VIC, IRQ, NMI) is mostly supported ('RealSIDmode' in source).
+There are probably still some RSID tunes that are not played properly, mainly
+the tricky modern dige tunes which use advanced CIA-based and NMI trickery.
+These complex tunes would require cycle-perfect timing which might defeat the
+purposeful light-weightedness of the cRSID, but a workaround is made for most,
+for example Hi_Fi_Sky.sid and the like is now played with a listenable quality.
+ For even better RSID support now the 'kernal' and 'basic' ROM files are looked
+for in user home-folder and the created .cRSID folder, or can be given by
+'-kernal <filename>' and '-basic <filename>' arguments. The same applies now
+for the SongLengths file, it can also be given by '-songlengths <filename>.
+PSID-only playback has improved a lot since cSID-light-1.1,
+and now many PlaySID-digis are supported as well if that still matters.
+
+The CPU and ADSR went through serious timing improvements,
+it's now can be called nearly cycle-exact, and hardrestarts and delaybugs are
+now simulated well, no missed notes, whatever.
+
+This release also contains shared and static library forms for better
+inclusion in other SID-playback projects (like FlexSID for example).
+I completely eliminated global variables and definitions, except a
+'cRSID' & 'cRSID_c64' instance which is for faster access of struct members.
+(Emulated C64 memory accesses are made to this for faster operation.)
+
+More info (the API for the library) is seen in the 'libcRSID.h' file.
+
+cRSID-1.0 was tried already on a SanDisk RockBox device and tunes not
+containing digis were already played on it fine. Tunes with 2SID/3SID or
+digis however are too much for the player (38MHz..192MHz ARM) at this form.
+So maybe the code will be optimized by eliminating overheads of structs,
+pointers, optimizing function-calls, inlining, and by other possible means.
+
+Building the code (necessity on MacOS) can be done by 'make' if prerequisites
+are present: GCC, make, SDL 1.2 development library. This creates the
+main application and a shared & static libraries, but 'make crsid' is enough
+to build the 'crsid' executable, it doesn't need these libraries actually.
+(Since version 1.5 libcRSID has its own Makefile and can be built separately.)
+Creating the .deb package for Linux can be done by 'make package'.
+Installing the .deb package can be done by 'sudo make install' (or 'dpkg' tool).
+
+License is still WTF: Do what the frick you want with this code, but
+                      it would be nice mentioning me as the original author.

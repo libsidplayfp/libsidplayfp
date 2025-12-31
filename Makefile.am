@@ -40,6 +40,7 @@ src/builders/residfp-builder/residfp/README \
 src/builders/residfpII-builder/residfpII/AUTHORS \
 src/builders/residfpII-builder/residfpII/COPYING \
 src/builders/residfpII-builder/residfpII/README \
+src/builders/sidlitep-builder/sidlite/README \
 src/builders/exsid-builder/driver/docs \
 src/builders/exsid-builder/driver/m4 \
 $(noinst_DATA) \
@@ -55,9 +56,11 @@ src/libstilview.la
 
 noinst_LTLIBRARIES = \
 src/builders/residfp-builder/residfp/libresidfp.la \
-src/builders/residfpII-builder/residfpII/libresidfpII.la \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
-src/builders/residfpII-builder/libsidplayfp-residfpII.la
+src/builders/residfpII-builder/residfpII/libresidfpII.la \
+src/builders/residfpII-builder/libsidplayfp-residfpII.la \
+src/builders/sidlite-builder/sidlite/libsidlite.la \
+src/builders/sidlite-builder/libsidplayfp-sidlite.la
 
 if USBSID_SUPPORT
   noinst_LTLIBRARIES += src/builders/usbsid-builder/libsidplayfp-usbsid.la
@@ -313,7 +316,20 @@ src_builders_residfpII_builder_residfpII_libresidfpII_la_CXXFLAGS = \
 @RESIDFP_CXXFLAGS@
 
 #=========================================================
+# sidlite
+
+src_builders_sidlite_builder_sidlite_libsidlite_la_SOURCES = \
+src/builders/sidlite-builder/sidlite/SID.cpp \
+src/builders/sidlite-builder/sidlite/SID.h
+
+
+#src_builders_sidlite_builder_sidlite_libsidlite_la_CXXFLAGS = \
+@SIDLITE_CXXFLAGS@
+
+#=========================================================
 # builders
+
+# residfp
 src_builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
 src_builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
 src/builders/residfp-builder/residfp.h
@@ -326,7 +342,20 @@ src/builders/residfp-builder/residfp-emu.h
 src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 src/builders/residfp-builder/residfp/libresidfp.la
 
+# sidlite
+src_builders_sidlite_builder_libsidplayfp_sidlite_ladir = $(includedir)/sidplayfp/builders
+src_builders_sidlite_builder_libsidplayfp_sidlite_la_HEADERS = \
+src/builders/sidlite-builder/sidlite.h
 
+src_builders_sidlite_builder_libsidplayfp_sidlite_la_SOURCES = \
+src/builders/sidlite-builder/sidlite-builder.cpp \
+src/builders/sidlite-builder/sidlite-emu.cpp \
+src/builders/sidlite-builder/sidlite-emu.h
+
+src_builders_sidlite_builder_libsidplayfp_sidlite_la_LIBADD = \
+src/builders/sidlite-builder/sidlite/libsidlite.la
+
+# residfpII
 src_builders_residfpII_builder_libsidplayfp_residfpII_ladir = $(includedir)/sidplayfp/builders
 src_builders_residfpII_builder_libsidplayfp_residfpII_la_HEADERS = \
 src/builders/residfpII-builder/residfpII.h
@@ -339,6 +368,7 @@ src/builders/residfpII-builder/residfpII-emu.h
 src_builders_residfpII_builder_libsidplayfp_residfpII_la_LIBADD = \
 src/builders/residfpII-builder/residfpII/libresidfpII.la
 
+# usbsid
 if USBSID_SUPPORT
 
 if USBSID_DRIVER
@@ -362,6 +392,7 @@ $(USBSID_LIBS) \
 $(PTHREAD_LIBS)
 endif
 
+#exsid
 if EXSID_SUPPORT
 
 if EXSID_DRIVER
