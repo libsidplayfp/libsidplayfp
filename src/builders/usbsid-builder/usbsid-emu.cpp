@@ -4,7 +4,6 @@
 
 #include <cstdio>
 #include <fcntl.h>
-#include <sstream>
 #include <unistd.h>
 
 #include "driver/src/USBSID.h"

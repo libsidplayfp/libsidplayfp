@@ -17,7 +17,6 @@
 
 #include <cstdio>
 #include <fcntl.h>
-#include <sstream>
 #include <unistd.h>
 
 #ifdef HAVE_EXSID

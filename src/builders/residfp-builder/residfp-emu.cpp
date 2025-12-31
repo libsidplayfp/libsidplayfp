@@ -22,9 +22,6 @@
 
 #include "residfp-emu.h"
 
-#include <sstream>
-#include <string>
-#include <algorithm>
 #include <cmath>
 
 #include "residfp/siddefs-fp.h"
