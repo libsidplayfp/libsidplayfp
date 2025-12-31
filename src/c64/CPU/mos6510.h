@@ -24,6 +24,7 @@
 #define MOS6510_H
 
 #include <stdint.h>
+#include <memory>
 #include <string>
 #include <cstdio>
 
@@ -55,6 +56,16 @@ public:
   virtual uint8_t cpuRead(uint_least16_t addr) =0;
 
   virtual void cpuWrite(uint_least16_t addr, uint8_t data) =0;
+};
+
+struct CPUDebug
+{
+    int_least32_t instrStartPC;
+    uint_least16_t instrOperand;
+
+    FILE *m_fdbg;
+
+    bool dodump;
 };
 
 /**
@@ -158,12 +169,7 @@ private:
     struct ProcessorCycle instrTable[0x101 << 3];
 
     // Debug info
-    int_least32_t instrStartPC;
-    uint_least16_t instrOperand;
-
-    FILE *m_fdbg;
-
-    bool dodump;
+    std::unique_ptr<CPUDebug> cpu_debug;
 
 private:
     void eventWithoutSteals();

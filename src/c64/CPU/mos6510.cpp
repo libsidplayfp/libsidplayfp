@@ -233,15 +233,15 @@ void MOS6510::interruptsAndNextOpcode()
 {
     if (cycleCount > interruptCycle + interruptDelay)
     {
-        if (dodump) UNLIKELY
+        if (cpu_debug) UNLIKELY
         {
             const event_clock_t cycles = eventScheduler.getTime(EVENT_CLOCK_PHI2);
             MOS6510Debug::DumpState(cycles, *this);
-            fprintf(m_fdbg, "****************************************************\n");
-            fprintf(m_fdbg, " interrupt (%d)\n", static_cast<int>(cycles));
-            fprintf(m_fdbg, "****************************************************\n");
+            fprintf(cpu_debug->m_fdbg, "****************************************************\n");
+            fprintf(cpu_debug->m_fdbg, " interrupt (%d)\n", static_cast<int>(cycles));
+            fprintf(cpu_debug->m_fdbg, "****************************************************\n");
 
-            instrStartPC = -1;
+            cpu_debug->instrStartPC = -1;
         }
 
         cpuRead(Register_ProgramCounter);
@@ -257,11 +257,11 @@ void MOS6510::interruptsAndNextOpcode()
 
 void MOS6510::fetchNextOpcode()
 {
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
         MOS6510Debug::DumpState(eventScheduler.getTime(EVENT_CLOCK_PHI2), *this);
 
-        instrStartPC = Register_ProgramCounter;
+        cpu_debug->instrStartPC = Register_ProgramCounter;
     }
 
     rdyOnThrowAwayRead = false;
@@ -341,9 +341,9 @@ void MOS6510::FetchDataByte()
         Register_ProgramCounter++;
     }
 
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
-        instrOperand = Cycle_Data;
+        cpu_debug->instrOperand = Cycle_Data;
     }
 }
 
@@ -363,9 +363,9 @@ void MOS6510::FetchLowAddr()
     Cycle_EffectiveAddress = cpuRead(Register_ProgramCounter);
     Register_ProgramCounter++;
 
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
-        instrOperand = Cycle_EffectiveAddress;
+        cpu_debug->instrOperand = Cycle_EffectiveAddress;
     }
 }
 
@@ -405,9 +405,9 @@ void MOS6510::FetchHighAddr()
     endian_16hi8(Cycle_EffectiveAddress, cpuRead(Register_ProgramCounter));
     Register_ProgramCounter++;
 
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
-        endian_16hi8(instrOperand, endian_16hi8(Cycle_EffectiveAddress));
+        endian_16hi8(cpu_debug->instrOperand, endian_16hi8(Cycle_EffectiveAddress));
     }
 }
 
@@ -471,9 +471,9 @@ void MOS6510::FetchLowPointer()
     Cycle_Pointer = cpuRead(Register_ProgramCounter);
     Register_ProgramCounter++;
 
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
-        instrOperand = Cycle_Pointer;
+        cpu_debug->instrOperand = Cycle_Pointer;
     }
 }
 
@@ -499,9 +499,9 @@ void MOS6510::FetchHighPointer()
     endian_16hi8(Cycle_Pointer, cpuRead(Register_ProgramCounter));
     Register_ProgramCounter++;
 
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
-        endian_16hi8(instrOperand, endian_16hi8(Cycle_Pointer));
+        endian_16hi8(cpu_debug->instrOperand, endian_16hi8(Cycle_Pointer));
     }
 }
 
@@ -697,9 +697,9 @@ void MOS6510::rti_instr()
     Register_ProgramCounter = Cycle_EffectiveAddress;
     interruptsAndNextOpcode();
 
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
-        fprintf(m_fdbg, "****************************************************\n\n");
+        fprintf(cpu_debug->m_fdbg, "****************************************************\n\n");
     }
 }
 
@@ -1481,10 +1481,10 @@ void MOS6510::rra_instr()
 MOS6510::MOS6510(EventScheduler &scheduler, CPUDataBus &bus) :
     eventScheduler(scheduler),
     dataBus(bus),
-    m_fdbg(stdout),
     m_nosteal("CPU-nosteal", *this),
     m_steal("CPU-steal", *this),
-    clearInt("Remove IRQ", *this)
+    clearInt("Remove IRQ", *this),
+    cpu_debug(nullptr)
 {
     buildInstructionTable();
 
@@ -1495,8 +1495,6 @@ MOS6510::MOS6510(EventScheduler &scheduler, CPUDataBus &bus) :
 
     Cycle_EffectiveAddress = 0;
     Cycle_Data             = 0;
-
-    dodump = false;
 
     Initialise();
 }
@@ -2163,9 +2161,9 @@ void MOS6510::Initialise()
     cycleCount = (BRKn << 3) + 6; // fetchNextOpcode
 
 
-    if (dodump) UNLIKELY
+    if (cpu_debug) UNLIKELY
     {
-        instrStartPC = -1;
+        cpu_debug->instrStartPC = -1;
     }
 
     // Reset Status Register
@@ -2220,11 +2218,15 @@ const char *MOS6510::credits()
 
 void MOS6510::debug(MAYBE_UNUSED bool enable, MAYBE_UNUSED FILE *out)
 {
-    dodump = enable;
-    if (!(out && enable))
-        m_fdbg = stdout;
+    if (enable)
+    {
+        cpu_debug = MAKE_UNIQUE(CPUDebug);
+        cpu_debug->m_fdbg = out ? out : stdout;
+    }
     else
-        m_fdbg = out;
+    {
+        cpu_debug.reset();
+    }
 }
 
 }
