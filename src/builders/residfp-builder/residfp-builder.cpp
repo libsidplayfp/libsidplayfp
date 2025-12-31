@@ -55,7 +55,7 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
 {
     try
     {
-        auto sid = new libsidplayfp::ReSIDfp(this);
+        auto sid = new libsidplayfp::reSIDfpEmu(this);
         if (m_config->filter6581Curve.has_value())
             sid->filter6581Curve(m_config->filter6581Curve.value());
         if (m_config->filter8580Curve.has_value())
@@ -77,33 +77,33 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
 
 const char *ReSIDfpBuilder::getCredits() const
 {
-    return libsidplayfp::ReSIDfp::getCredits();
+    return libsidplayfp::reSIDfpEmu::getCredits();
 }
 
 void ReSIDfpBuilder::filter6581Curve(double filterCurve)
 {
     m_config->filter6581Curve = filterCurve;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Curve(filterCurve);
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->filter6581Curve(filterCurve);
 }
 
 void ReSIDfpBuilder::filter6581Range(double filterRange)
 {
     m_config->filter6581Range = filterRange;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->filter6581Range(filterRange);
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->filter6581Range(filterRange);
 }
 
 void ReSIDfpBuilder::filter8580Curve(double filterCurve)
 {
     m_config->filter8580Curve = filterCurve;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->filter8580Curve(filterCurve);
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->filter8580Curve(filterCurve);
 }
 
 void ReSIDfpBuilder::combinedWaveformsStrength(SidConfig::sid_cw_t cws)
 {
     m_config->cws = cws;
     for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::ReSIDfp*>(e)->combinedWaveforms(cws);
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->combinedWaveforms(cws);
 }

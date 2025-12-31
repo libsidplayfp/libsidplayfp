@@ -38,7 +38,7 @@ class sidbuilder;
 namespace libsidplayfp
 {
 
-class ReSIDfp final : public sidemu
+class reSIDfpEmu final : public sidemu
 {
 private:
     reSIDfp::SID &m_sid;
@@ -47,8 +47,8 @@ public:
     static const char* getCredits();
 
 public:
-    ReSIDfp(sidbuilder *builder);
-    ~ReSIDfp() override;
+    reSIDfpEmu(sidbuilder *builder);
+    ~reSIDfpEmu() override;
 
     bool getStatus() const { return m_status; }
 
