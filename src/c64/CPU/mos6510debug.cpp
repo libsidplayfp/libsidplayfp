@@ -22,8 +22,6 @@
 
 #include "mos6510debug.h"
 
-#ifdef DEBUG
-
 #include <cstdio>
 #include <cstdlib>
 
@@ -339,9 +337,7 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
         fprintf(cpu.m_fdbg, "z  %02x {%02x}", endian_16lo8(cpu.instrOperand), cpu.Cycle_Data);
         break;
     case SAXz: case STAz: case STXz: case STYz:
-#ifdef DEBUG
     case NOPz_:
-#endif
         fprintf(cpu.m_fdbg, "z  %02x", endian_16lo8(cpu.instrOperand));
         break;
 
@@ -355,9 +351,7 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
         fprintf(cpu.m_fdbg, " [%04x]{%02x}", cpu.Cycle_EffectiveAddress, cpu.Cycle_Data);
         break;
     case STAzx: case STYzx:
-#ifdef DEBUG
     case NOPzx_:
-#endif
         fprintf(cpu.m_fdbg, "zx %02x,X", endian_16lo8(cpu.instrOperand));
         fprintf(cpu.m_fdbg, " [%04x]", cpu.Cycle_EffectiveAddress);
         break;
@@ -383,9 +377,7 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
         fprintf(cpu.m_fdbg, "a  %04x {%02x}", cpu.instrOperand, cpu.Cycle_Data);
         break;
     case SAXa: case STAa: case STXa: case STYa:
-#ifdef DEBUG
     case NOPa:
-#endif
         fprintf(cpu.m_fdbg, "a  %04x", cpu.instrOperand);
         break;
     case JMPw: case JSRw:
@@ -402,9 +394,7 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
         fprintf(cpu.m_fdbg, " [%04x]{%02x}", cpu.Cycle_EffectiveAddress, cpu.Cycle_Data);
         break;
     case SHYax: case STAax:
-#ifdef DEBUG
     case NOPax_:
-#endif
         fprintf(cpu.m_fdbg, "ax %04x,X", cpu.instrOperand);
         fprintf(cpu.m_fdbg, " [%04x]", cpu.Cycle_EffectiveAddress);
         break;
@@ -427,9 +417,7 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
     case CMPb: case CPXb: case CPYb:  case EORb: case LDAb:  case LDXb:
     case LDYb: case LXAb: case ORAb: case SBCb_: case SBXb:
     // OALb ALRb XAAb - Optional Opcode Names
-#ifdef DEBUG
     case NOPb_:
-#endif
         fprintf(cpu.m_fdbg, "b  #%02x", endian_16lo8(cpu.instrOperand));
         break;
 
@@ -481,5 +469,3 @@ void MOS6510Debug::DumpState (event_clock_t time, MOS6510 &cpu)
 }
 
 }
-
-#endif
