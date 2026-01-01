@@ -18,6 +18,8 @@ AM_CPPFLAGS = \
 -I $(top_builddir)/src/builders/residfp-builder/residfp \
 -I $(top_builddir)/src/builders/residfpII-builder \
 -I $(top_builddir)/src/builders/residfpII-builder/residfpII \
+-I $(top_builddir)/src/builders/sidlite-builder \
+-I $(top_builddir)/src/builders/sidlite-builder/sidlite \
 -I $(top_builddir)/src \
 -I $(top_builddir)/src/sidtune \
 -I $(top_srcdir)/src \
@@ -319,6 +321,8 @@ src_builders_residfpII_builder_residfpII_libresidfpII_la_CXXFLAGS = \
 # sidlite
 
 src_builders_sidlite_builder_sidlite_libsidlite_la_SOURCES = \
+src/builders/sidlite-builder/sidlite/ADSR.cpp \
+src/builders/sidlite-builder/sidlite/ADSR.h \
 src/builders/sidlite-builder/sidlite/SID.cpp \
 src/builders/sidlite-builder/sidlite/SID.h
 

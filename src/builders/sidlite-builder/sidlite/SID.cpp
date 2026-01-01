@@ -22,14 +22,17 @@
 
 #include "SID.h"
 
+#include "sidlite_defs.h"
+
 namespace SIDLite
 {
 
-enum C64clocks { C64_PAL_CPUCLK=985248, DEFAULT_SAMPLERATE=44100 };
+constexpr unsigned int CRSID_CLOCK_FRACTIONAL_BITS = 4;
+constexpr unsigned int CRSID_RESAMPLER_FRACTIONAL_BITS = 12;
 
 int SID::clock(int cycles)
 {
-    //adsr.clock(cycles);
+    adsr.clock(cycles);
 /*
     if (C64->HighQualitySID) { //oversampled waveform-generation
         HQsampleCount=0;
@@ -61,17 +64,20 @@ void SID::setChipModel(unsigned short model) {
     ChipModel = model;
 }
 
-void SID::setSamplingRate(unsigned int samplerate) {
-    //SampleClockRatio = (C64_PAL_CPUCLK<<4)/samplerate; //shifting (multiplication) enhances SampleClockRatio precision
+void SID::setSamplingRate(double clockFrequency, double samplerate) {
+    unsigned int cpuclock = static_cast<unsigned int>(clockFrequency);
+    SampleClockRatio = (cpuclock << CRSID_CLOCK_FRACTIONAL_BITS) / samplerate; //shifting (multiplication) enhances SampleClockRatio precision
 }
 
-SID::SID() /*:
-        adsr(this),
-        waves(this)*/ {
+SID::SID() :
+        adsr(this)
+        /*waves(this)*/ {
 }
 
 void SID::reset() {
-    for (int Channel = 0; Channel < 21; Channel+=7) {
+    adsr.reset();
+
+    for (int Channel = 0; Channel < SID_CHANNELS_RANGE; Channel += SID_CHANNEL_SPACING) {
         PhaseAccu[Channel] = 0;
         PrevPhaseAccu[Channel] = 0;
         NoiseLFSR[Channel] = 0x7FFFFF;

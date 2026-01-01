@@ -23,7 +23,7 @@
 #ifndef SIDLITE_SID_H
 #define SIDLITE_SID_H
 
-//#include "ADSR.h"
+#include "ADSR.h"
 //#include "OutputStage.h"
 //#include "Waveforms.h"
 
@@ -37,7 +37,7 @@ class SID
     friend class Waveforms;
 
 private:
-    //ADSR adsr;
+    ADSR adsr;
     //Waveforms waves;
     //OutputStage output;
 
@@ -47,6 +47,8 @@ private:
     unsigned short     BaseAddress;   //SID-baseaddress location in C64-memory (IO)
     unsigned char*     BasePtr;       //SID-baseaddress location in host's memory (for writing to SID)
     unsigned char*     BasePtrRD;     //SID-baseaddress location in host's memory (SID OSC3/ENV3 written here for readback)
+
+    unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate (for CPU/CIA/VIC/ADSR timing)
 
     //Wave-related:
     int                PhaseAccu[15];       //28bit precision instead of 24bit
@@ -73,6 +75,7 @@ private:
     int                Output;     //not attenuated (range:0..0xFFFFF depending on SID's main-volume)
     int                Level;      //filtered version, good for VU-meter display
 
+
     unsigned char regs[0x40];
 
 public:
@@ -80,7 +83,7 @@ public:
     ~SID();
 
     void setChipModel(unsigned short model);
-    void setSamplingRate(unsigned int samplerate);
+    void setSamplingRate(double clockFrequency, double samplerate);
     void reset();
 
     int clock(int cycles);

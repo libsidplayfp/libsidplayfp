@@ -1,0 +1,38 @@
+/*
+ * This file is part of libsidplayfp, a SID player engine.
+ *
+ * Copyright 2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+// Based on cRSID-1.56 by Hermit (Mihaly Horvath)
+
+#define HAVE_BUILTIN_EXPECT @HAVE_BUILTIN_EXPECT@
+
+#if HAVE_BUILTIN_EXPECT
+#  define UNLIKELY(expression)  __builtin_expect(!!(expression), 0) //condition is unlikely to happen most of the times
+#  define LIKELY(expression)    __builtin_expect(!!(expression), 1) //condition is likely to be true most of the times
+#else
+#  define UNLIKELY(expression)  (expression)
+#  define LIKELY(expression)    (expression)
+#endif
+
+enum {
+    SID_CHANNEL_SPACING = 7,
+    SID_CHANNEL_COUNT = 3,
+    CHANNEL2_INDEX = (2*SID_CHANNEL_SPACING),
+    SID_CHANNELS_RANGE = (SID_CHANNEL_SPACING * SID_CHANNEL_COUNT)
+};
