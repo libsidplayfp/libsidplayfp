@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2021 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #include "sidplayfp/sidplayfp.h"
 #include "sidplayfp/SidTune.h"
 #include "sidplayfp/sidbuilder.h"
-#include "sidplayfp/builders/residfp.h"
+#include "builders/residfp-builder/residfp.h"
 
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
@@ -92,7 +92,6 @@ int main(int argc, char* argv[])
                 if (!strcmp(&argv[i][0], "old"))
                 {
                     config.sidEmulation = new ReSIDfpBuilder("test");
-                    config.sidEmulation->create(1);
                     config.forceSidModel = true;
                     config.defaultSidModel = SidConfig::MOS6581;
                 }
@@ -100,7 +99,6 @@ int main(int argc, char* argv[])
                 if (!strcmp(&argv[i][0], "new"))
                 {
                     config.sidEmulation = new ReSIDfpBuilder("test");
-                    config.sidEmulation->create(1);
                     config.forceSidModel = true;
                     config.defaultSidModel = SidConfig::MOS8580;
                 }
@@ -195,7 +193,7 @@ int main(int argc, char* argv[])
 
     for (;;)
     {
-        m_engine.play(nullptr, 0);
+        m_engine.play(5000);
         std::cerr << ".";
     }
 }

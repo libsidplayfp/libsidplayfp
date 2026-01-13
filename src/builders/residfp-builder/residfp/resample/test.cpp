@@ -48,7 +48,7 @@ int main(int, const char*[])
     const double RATE = 985248.4;
     const int RINGSIZE = 2048;
 
-    std::unique_ptr<reSIDfp::TwoPassSincResampler> r(reSIDfp::TwoPassSincResampler::create(RATE, 48000.0, 20000.0));
+    std::unique_ptr<reSIDfp::TwoPassSincResampler> r(reSIDfp::TwoPassSincResampler::create(RATE, 48000.0));
 
     std::map<double, double> results;
     clock_t start = clock();

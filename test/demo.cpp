@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2023 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@
 #include <vector>
 #include <iostream>
 
-#include <sidplayfp/sidplayfp.h>
-#include <sidplayfp/SidTune.h>
-#include <sidplayfp/SidInfo.h>
-#include <sidplayfp/builders/residfp.h>
+#include "sidplayfp/sidplayfp.h"
+#include "sidplayfp/SidTune.h"
+#include "sidplayfp/SidInfo.h"
+#include "builders/residfp-builder/residfp.h"
 
 /**
  * Works on UNIX using OSS
@@ -96,14 +96,14 @@ int main(int, char* argv[])
 
     // Set up a SID builder
     std::unique_ptr<ReSIDfpBuilder> rs(new ReSIDfpBuilder("Demo"));
-
+/*
     // Check if builder is ok
     if (!rs->getStatus())
     {
         std::cerr << rs->error() << std::endl;
         return -1;
     }
-
+*/
     // Load tune from file
     std::unique_ptr<SidTune> tune(new SidTune(argv[1]));
 
@@ -121,7 +121,6 @@ int main(int, char* argv[])
     SidConfig cfg;
     cfg.frequency = SAMPLERATE;
     cfg.samplingMethod = SidConfig::INTERPOLATE;
-    cfg.fastSampling = false;
     cfg.playback = SidConfig::MONO;
     cfg.sidEmulation = rs.get();
     if (!m_engine.config(cfg))
