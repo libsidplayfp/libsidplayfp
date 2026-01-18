@@ -70,3 +70,37 @@ jobs:
           export PATH="$(brew --prefix)/opt/gnu-sed/libexec/gnubin:$PATH"
         fi
         make distcheck
+
+  build-mingw:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: true
+        install: >-
+          git
+          zip
+          upx
+          base-devel
+        pacboy: >-
+          toolchain:p
+          autotools:p
+          xa65:p
+          libusb:p
+          libftdi:p
+    - uses: actions/checkout@v6
+      with:
+        submodules: true
+    - name: build
+      run: |
+        export LDFLAGS="-s -Wl,-no-undefined -Wl,-O1 -static"
+        export CXXFLAGS="-O2 -march=x86-64 -fomit-frame-pointer -pipe -DUNICODE -D_UNICODE"
+        export PKG_CONFIG="pkg-config --static"
+        autoreconf -vfi
+        ./configure --disable-shared --enable-static --without-gcrypt --enable-hardsid --with-usbsid --with-exsid --with-simd=runtime
+        make distcheck
