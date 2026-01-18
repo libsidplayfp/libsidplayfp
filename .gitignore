@@ -2,6 +2,7 @@ aclocal.m4
 autom4te.cache
 build-aux
 configure
+configure~
 config.log
 config.status
 libtool
@@ -20,13 +21,14 @@ src/config.h.in
 *.o
 *.la
 *.lo
-src/builders/residfp-builder/residfp/siddefs-fp.h
+*.diff
+*.bin
+siddefs*.h
 src/config.h
-src/stamp-h1
 src/sidplayfp/sidversion.h
-src/sidtune/sidplayer1.bin
-src/sidtune/sidplayer2.bin
+src/stamp-h1
 tests/*.exe
 tests/*.log
 tests/*.trs
 libsidplayfp-*.tar.gz
+*build/
