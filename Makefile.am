@@ -16,8 +16,6 @@ endif
 AM_CPPFLAGS = \
 -I $(top_builddir)/src/builders/residfp-builder \
 -I $(top_builddir)/src/builders/residfp-builder/residfp \
--I $(top_builddir)/src/builders/residfpII-builder \
--I $(top_builddir)/src/builders/residfpII-builder/residfpII \
 -I $(top_builddir)/src \
 -I $(top_builddir)/src/sidtune \
 -I $(top_srcdir)/src \
@@ -37,9 +35,6 @@ src/sidtune/sidplayer2.a65 \
 src/builders/residfp-builder/residfp/AUTHORS \
 src/builders/residfp-builder/residfp/COPYING \
 src/builders/residfp-builder/residfp/README \
-src/builders/residfpII-builder/residfpII/AUTHORS \
-src/builders/residfpII-builder/residfpII/COPYING \
-src/builders/residfpII-builder/residfpII/README \
 src/builders/exsid-builder/driver/docs \
 src/builders/exsid-builder/driver/m4 \
 $(noinst_DATA) \
@@ -55,9 +50,7 @@ src/libstilview.la
 
 noinst_LTLIBRARIES = \
 src/builders/residfp-builder/residfp/libresidfp.la \
-src/builders/residfpII-builder/residfpII/libresidfpII.la \
-src/builders/residfp-builder/libsidplayfp-residfp.la \
-src/builders/residfpII-builder/libsidplayfp-residfpII.la
+src/builders/residfp-builder/libsidplayfp-residfp.la
 
 if USBSID_SUPPORT
   noinst_LTLIBRARIES += src/builders/usbsid-builder/libsidplayfp-usbsid.la
@@ -197,7 +190,6 @@ src/sidplayfp/sidversion.h
 
 src_libsidplayfp_la_LIBADD = \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
-src/builders/residfpII-builder/libsidplayfp-residfpII.la \
 $(LIBGCRYPT_LIBS) \
 $(PTHREAD_LIBS)
 
@@ -263,56 +255,6 @@ src_builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = \
 @RESIDFP_CXXFLAGS@
 
 #=========================================================
-# residfpII
-
-src_builders_residfpII_builder_residfpII_libresidfpII_la_SOURCES = \
-src/builders/residfpII-builder/residfpII/array.h \
-src/builders/residfpII-builder/residfpII/Dac.cpp \
-src/builders/residfpII-builder/residfpII/Dac.h \
-src/builders/residfpII-builder/residfpII/EnvelopeGenerator.cpp \
-src/builders/residfpII-builder/residfpII/EnvelopeGenerator.h \
-src/builders/residfpII-builder/residfpII/ExternalFilter.cpp \
-src/builders/residfpII-builder/residfpII/ExternalFilter.h \
-src/builders/residfpII-builder/residfpII/Filter.cpp \
-src/builders/residfpII-builder/residfpII/Filter.h \
-src/builders/residfpII-builder/residfpII/Filter6581.cpp \
-src/builders/residfpII-builder/residfpII/Filter6581.h \
-src/builders/residfpII-builder/residfpII/Filter8580.cpp \
-src/builders/residfpII-builder/residfpII/Filter8580.h \
-src/builders/residfpII-builder/residfpII/FilterModelConfig.cpp \
-src/builders/residfpII-builder/residfpII/FilterModelConfig.h \
-src/builders/residfpII-builder/residfpII/FilterModelConfig6581.cpp \
-src/builders/residfpII-builder/residfpII/FilterModelConfig6581.h \
-src/builders/residfpII-builder/residfpII/FilterModelConfig8580.cpp \
-src/builders/residfpII-builder/residfpII/FilterModelConfig8580.h \
-src/builders/residfpII-builder/residfpII/Integrator.h \
-src/builders/residfpII-builder/residfpII/Integrator6581.cpp \
-src/builders/residfpII-builder/residfpII/Integrator6581.h \
-src/builders/residfpII-builder/residfpII/Integrator8580.cpp \
-src/builders/residfpII-builder/residfpII/Integrator8580.h \
-src/builders/residfpII-builder/residfpII/OpAmp.cpp \
-src/builders/residfpII-builder/residfpII/OpAmp.h \
-src/builders/residfpII-builder/residfpII/Potentiometer.h \
-src/builders/residfpII-builder/residfpII/SID.cpp \
-src/builders/residfpII-builder/residfpII/SID.h \
-src/builders/residfpII-builder/residfpII/Spline.cpp \
-src/builders/residfpII-builder/residfpII/Spline.h \
-src/builders/residfpII-builder/residfpII/Voice.h \
-src/builders/residfpII-builder/residfpII/WaveformCalculator.cpp \
-src/builders/residfpII-builder/residfpII/WaveformCalculator.h \
-src/builders/residfpII-builder/residfpII/WaveformGenerator.cpp \
-src/builders/residfpII-builder/residfpII/WaveformGenerator.h \
-src/builders/residfpII-builder/residfpII/resample/Resampler.h \
-src/builders/residfpII-builder/residfpII/resample/ZeroOrderResampler.h \
-src/builders/residfpII-builder/residfpII/resample/SincResampler.cpp \
-src/builders/residfpII-builder/residfpII/resample/SincResampler.h \
-src/builders/residfpII-builder/residfpII/resample/TwoPassSincResampler.h \
-src/builders/residfpII-builder/residfpII/version.cc
-
-src_builders_residfpII_builder_residfpII_libresidfpII_la_CXXFLAGS = \
-@RESIDFP_CXXFLAGS@
-
-#=========================================================
 # builders
 src_builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
 src_builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
@@ -325,19 +267,6 @@ src/builders/residfp-builder/residfp-emu.h
 
 src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 src/builders/residfp-builder/residfp/libresidfp.la
-
-
-src_builders_residfpII_builder_libsidplayfp_residfpII_ladir = $(includedir)/sidplayfp/builders
-src_builders_residfpII_builder_libsidplayfp_residfpII_la_HEADERS = \
-src/builders/residfpII-builder/residfpII.h
-
-src_builders_residfpII_builder_libsidplayfp_residfpII_la_SOURCES = \
-src/builders/residfpII-builder/residfpII-builder.cpp \
-src/builders/residfpII-builder/residfpII-emu.cpp \
-src/builders/residfpII-builder/residfpII-emu.h
-
-src_builders_residfpII_builder_libsidplayfp_residfpII_la_LIBADD = \
-src/builders/residfpII-builder/residfpII/libresidfpII.la
 
 if USBSID_SUPPORT
 
