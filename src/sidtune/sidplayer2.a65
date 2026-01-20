@@ -1,3 +1,11 @@
+; Compute's Gazette sidplayer sources, disassembled with dxa
+;
+; C64 "Enhanced Sidplayer" by Craig Chamberlain
+; Copyright 1986 COMPUTE!
+;
+; extracted from CGSC/00_Commodore64/MusicSys.d64/SID PLAYER.64
+;
+
 	.word $f000
 	* = $f000
 
