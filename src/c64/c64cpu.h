@@ -30,10 +30,11 @@
 
 #ifdef VICE_TESTSUITE
 #  include <iostream>
+#  include <utility>
 #  include <cstdlib>
 #endif
 
-//#define PRINTSCREENCODES
+#define PRINTSCREENCODES
 
 #include "sidcxx11.h"
 
@@ -70,16 +71,41 @@ protected:
 #  ifdef PRINTSCREENCODES
         if (addr >= 0x0400 && addr <= 0x07ff)
         {
-            const char *fg = "[0;94";
-            const char *bg = ";44";
+            uint8_t fg_color = m_mmu.readMemByte(addr - 0x0400 + 0xd800) & 0xf;
+            uint8_t bg_color = m_mmu.readMemByte(0xd021) & 0xf;
+
+            const char* colodore[16][3] = {
+                "0",   "0",   "0",   // black
+                "15",  "15",  "15",  // white
+                "150", "40",  "46",  // red
+                "91",  "214", "206", // cyan
+                "159", "45",  "173", // purple
+                "65",  "185", "54",  // green
+                "39",  "36",  "196", // blue
+                "239", "243", "71",  // yellow
+                "159", "72",  "21",  // orange
+                "94",  "53",  "0",   // brown
+                "218", "95",  "102", // light red
+                "71",  "71",  "71",  // dark grey
+                "120", "120", "120", // grey
+                "145", "255", "132", // light green
+                "104", "100", "255", // light blue
+                "174", "174", "174"  // light grey
+            };
             uint8_t chr = data;
             if (chr & 0x80)
             {
                 chr >>= 1;
-                fg = "[0;34";
-                bg = ";104";
+                std::swap(fg_color, bg_color);
             }
-            std::cout << '\x1b' << fg << bg << 'm';
+            std::cout << "\x1b[38;2;"
+                << colodore[fg_color][0] << ';'
+                << colodore[fg_color][1] << ';'
+                << colodore[fg_color][2] << 'm';
+            std::cout << "\x1b[48;2;"
+                << colodore[bg_color][0] << ';'
+                << colodore[bg_color][1] << ';'
+                << colodore[bg_color][2] << 'm';
             std::cout << CHRtab[chr];
         }
 #  endif
