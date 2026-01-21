@@ -87,7 +87,7 @@ void MOS656X::reset()
     irqMask             = 0;
     yscroll             = 0;
     rasterY             = maxRasters - 1;
-    lineCycle           = 0;
+    lineCycle           = 6;
     areBadLinesEnabled  = false;
     isBadLine           = false;
     rasterYIRQCondition = false;
