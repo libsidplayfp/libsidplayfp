@@ -1481,10 +1481,10 @@ void MOS6510::rra_instr()
 MOS6510::MOS6510(EventScheduler &scheduler, CPUDataBus &bus) :
     eventScheduler(scheduler),
     dataBus(bus),
+    cpu_debug(nullptr),
     m_nosteal("CPU-nosteal", *this),
     m_steal("CPU-steal", *this),
-    clearInt("Remove IRQ", *this),
-    cpu_debug(nullptr)
+    clearInt("Remove IRQ", *this)
 {
     buildInstructionTable();
 

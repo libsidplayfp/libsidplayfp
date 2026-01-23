@@ -26,12 +26,12 @@ const char* USBSID::getCredits()
 
 USBSID::USBSID(sidbuilder *builder) :
     sidemu(builder),
-    m_status(false),
     Event("USBSID Delay"),
-    m_handle(-1),
     m_sid(*(new USBSID_NS::USBSID_Class)),
-    busValue(0),
-    sidno(0)
+    m_handle(-1),
+    sidno(0),
+    m_status(false),
+    busValue(0)
 {
 
     /* Start the fucker */
