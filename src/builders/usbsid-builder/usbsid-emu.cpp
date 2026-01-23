@@ -65,7 +65,7 @@ USBSID::~USBSID()
     delete &m_sid;
 }
 
-void USBSID::reset(uint8_t volume)
+void USBSID::reset(uint8_t)
 {
     using namespace std;
 
@@ -93,7 +93,7 @@ event_clock_t USBSID::delay()
     return cycles;
 }
 
-uint8_t USBSID::read(uint_least8_t addr)
+uint8_t USBSID::read(uint_least8_t)
 {
     return busValue;  /* Always return the busValue */
 }
