@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -28,7 +28,6 @@
 
 #include "siddefs-fp.h"
 #include "ExternalFilter.h"
-#include "Potentiometer.h"
 #include "Voice.h"
 
 #include "sidcxx11.h"
@@ -78,12 +77,6 @@ private:
      * to adjust sound tone slightly.
      */
     ExternalFilter externalFilter;
-
-    /// Paddle X register support
-    Potentiometer potX;
-
-    /// Paddle Y register support
-    Potentiometer potY;
 
     /// SID voices
     Voice voice[3];

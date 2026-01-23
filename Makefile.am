@@ -233,7 +233,6 @@ src/builders/residfp-builder/residfp/Integrator8580.cpp \
 src/builders/residfp-builder/residfp/Integrator8580.h \
 src/builders/residfp-builder/residfp/OpAmp.cpp \
 src/builders/residfp-builder/residfp/OpAmp.h \
-src/builders/residfp-builder/residfp/Potentiometer.h \
 src/builders/residfp-builder/residfp/SID.cpp \
 src/builders/residfp-builder/residfp/SID.h \
 src/builders/residfp-builder/residfp/Spline.cpp \

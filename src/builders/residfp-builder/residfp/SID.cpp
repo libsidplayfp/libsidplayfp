@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2004 Dag Lem <resid@nimrod.no>
  *
@@ -335,12 +335,12 @@ unsigned char SID::read(int offset)
     switch (offset)
     {
     case 0x19: // X value of paddle
-        busValue = potX.readPOT();
+        busValue = 0xff;
         busValueTtl = modelTTL;
         break;
 
     case 0x1a: // Y value of paddle
-        busValue = potY.readPOT();
+        busValue = 0xff;
         busValueTtl = modelTTL;
         break;
 
