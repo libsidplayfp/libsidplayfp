@@ -31,7 +31,7 @@ src/sidtune/sidplayer2.a65 \
 src/builders/residfp-builder/residfp/AUTHORS \
 src/builders/residfp-builder/residfp/COPYING \
 src/builders/residfp-builder/residfp/README \
-src/builders/sidlitep-builder/sidlite/README \
+src/builders/sidlite-builder/sidlite/README \
 src/builders/exsid-builder/driver/docs \
 src/builders/exsid-builder/driver/m4 \
 $(noinst_DATA) \
@@ -47,7 +47,7 @@ src/libstilview.la
 
 noinst_LTLIBRARIES = \
 src/builders/residfp-builder/residfp/libresidfp.la \
-src/builders/residfp-builder/libsidplayfp-residfp.la
+src/builders/residfp-builder/libsidplayfp-residfp.la \
 src/builders/sidlite-builder/sidlite/libsidlite.la \
 src/builders/sidlite-builder/libsidplayfp-sidlite.la
 
@@ -292,19 +292,6 @@ src/builders/sidlite-builder/sidlite-emu.h
 
 src_builders_sidlite_builder_libsidplayfp_sidlite_la_LIBADD = \
 src/builders/sidlite-builder/sidlite/libsidlite.la
-
-# residfpII
-src_builders_residfpII_builder_libsidplayfp_residfpII_ladir = $(includedir)/sidplayfp/builders
-src_builders_residfpII_builder_libsidplayfp_residfpII_la_HEADERS = \
-src/builders/residfpII-builder/residfpII.h
-
-src_builders_residfpII_builder_libsidplayfp_residfpII_la_SOURCES = \
-src/builders/residfpII-builder/residfpII-builder.cpp \
-src/builders/residfpII-builder/residfpII-emu.cpp \
-src/builders/residfpII-builder/residfpII-emu.h
-
-src_builders_residfpII_builder_libsidplayfp_residfpII_la_LIBADD = \
-src/builders/residfpII-builder/residfpII/libresidfpII.la
 
 # usbsid
 if USBSID_SUPPORT

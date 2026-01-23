@@ -41,7 +41,7 @@ const char* SIDLiteEmu::getCredits()
         "\t(C) 2025 Leandro Nini\n"
         "MOS6581/CSG8580 (SID) Emulation:\n"
         "\t(C) 2025 Leandro Nini\n"
-        "\tBased on cRSID-1.56 by Hermit (Mihaly Horvath)\n";
+        "\tBased on cRSID by Hermit (Mihaly Horvath)\n";
 }
 
 SIDLiteEmu::SIDLiteEmu(sidbuilder *builder) :
@@ -81,7 +81,7 @@ void SIDLiteEmu::clock()
 {
     const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
-    m_bufferpos += m_sid.clock(cycles/*, m_buffer+m_bufferpos*/);
+    m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
 }
 /*
 void SIDLiteEmu::filter(bool enable)
@@ -106,18 +106,18 @@ void SIDLiteEmu::sampling(float systemclock, float freq,
         m_error = ERR_INVALID_SAMPLING;
         return;
     }
-
-    try
-    {
-        m_sid.setSamplingParameters(systemclock, sampleMethod, freq);
-    }
-    catch (SIDLite::SIDError const &)
-    {
-        m_status = false;
-        m_error = ERR_UNSUPPORTED_FREQ;
-        return;
-    }
 */
+    //try
+    {
+        m_sid.setSamplingParameters(systemclock, freq);
+    }
+    //catch (SIDLite::SIDError const &)
+    //{
+    //    m_status = false;
+    //    m_error = ERR_UNSUPPORTED_FREQ;
+    //    return;
+    //}
+
     if (m_buffer)
         delete[] m_buffer;
 
