@@ -41,7 +41,7 @@ const char* SIDLiteEmu::getCredits()
         "\t(C) 2025 Leandro Nini\n"
         "MOS6581/CSG8580 (SID) Emulation:\n"
         "\t(C) 2025 Leandro Nini\n"
-        "\tBased on cRSID-1.56 by Hermit (Mihaly Horvath)\n";
+        "\tBased on cRSID by Hermit (Mihaly Horvath)\n";
 }
 
 SIDLiteEmu::SIDLiteEmu(sidbuilder *builder) :
