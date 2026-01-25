@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -2213,10 +2213,10 @@ const char *MOS6510::credits()
         "MOS6510 Cycle Exact Emulation\n"
         "\t(C) 2000 Simon A. White\n"
         "\t(C) 2008-2010 Antti S. Lankila\n"
-        "\t(C) 2011-2025 Leandro Nini\n";
+        "\t(C) 2011-2026 Leandro Nini\n";
 }
 
-void MOS6510::debug(MAYBE_UNUSED bool enable, MAYBE_UNUSED FILE *out)
+void MOS6510::debug(bool enable, FILE *out)
 {
     if (enable)
     {
