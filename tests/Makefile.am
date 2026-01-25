@@ -17,7 +17,8 @@ TestDac \
 TestPSID \
 TestMUS \
 TestMos6510 \
-TestResampler
+TestResampler \
+TestMD5
 
 check_PROGRAMS = $(TESTS)
 
@@ -54,5 +55,10 @@ TestMos6510.cpp
 TestResampler_SOURCES = \
 Main.cpp \
 TestResampler.cpp
+
+TestMD5_SOURCES = \
+Main.cpp \
+TestMD5.cpp \
+$(top_srcdir)/src/utils/MD5/MD5.cpp
 
 endif

@@ -45,45 +45,6 @@
 #   define MD5_EXPORT __declspec(dllexport)
 #endif
 
-/*
- * Compile with -DMD5_TEST to create a self-contained executable test program.
- * The test program should print out the same values as given in section
- * A.5 of RFC 1321, reproduced below.
- */
-
-#ifdef MD5_TEST
-
-#include <iostream.h>
-#include <iomanip.h>
-#include <cstdint>
-
-main()
-{
-    static const char *const test[7] = {
-	"", /*d41d8cd98f00b204e9800998ecf8427e*/
-	"a", /*0cc175b9c0f1b6a831c399e269772661*/
-	"abc", /*900150983cd24fb0d6963f7d28e17f72*/
-	"message digest", /*f96b697d7cb7938d525a2f31aaf161d0*/
-	"abcdefghijklmnopqrstuvwxyz", /*c3fcd3d76192e4007dfb496cca67e13b*/
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-				/*d174ab98d277d9f5a5611c2c9f419d9f*/
-	"12345678901234567890123456789012345678901234567890123456789012345678901234567890" /*57edf4a22be3c955ac49da2e2107b67a*/
-    };
-
-    for (int i = 0; i < 7; ++i)
-    {
-        MD5 myMD5;
-        myMD5.append((const md5_byte_t *)test[i], strlen(test[i]));
-        myMD5.finish();
-        cout << "MD5 (\"" << test[i] << "\") = ";
-        for (int di = 0; di < 16; ++di)
-            cout << hex << setw(2) << setfill('0') << static_cast<int>(myMD5.getDigest()[di]);
-        cout << endl;
-    }
-    return 0;
-}
-#endif  /* MD5_TEST */
-
 #define T1 0xd76aa478
 #define T2 0xe8c7b756
 #define T3 0x242070db
