@@ -188,6 +188,15 @@ AS_IF([test "$resid_cv_builtin_expect" = no],
   [HAVE_BUILTIN_EXPECT=1]
 )
 
+AC_ARG_ENABLE([lto],
+  [AS_HELP_STRING([--enable-lto],
+    [enable link time optimization [default=no]])]
+)
+
+AS_IF([test "x$enable_lto" = "xyes"],
+  [AX_APPEND_COMPILE_FLAGS([-flto])]
+)
+
 
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
 AS_IF([test -z "$DOXYGEN"],
