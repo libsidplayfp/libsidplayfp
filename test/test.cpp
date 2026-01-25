@@ -163,6 +163,10 @@ int main(int argc, char* argv[])
                     return -1;
                 }
             }
+            if (!strcmp(&argv[i][1], "-debug"))
+            {
+                m_engine.debug(true, nullptr);
+            }
         }
         else
         {
@@ -188,8 +192,6 @@ int main(int argc, char* argv[])
         std::cerr << m_engine.error() << std::endl;
         return -1;
     }
-
-    //m_engine.debug(true, nullptr);
 
     for (;;)
     {
