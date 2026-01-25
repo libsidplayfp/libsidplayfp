@@ -282,8 +282,8 @@ general/Lorenz-2.15/src/mmufetch
 general/Lorenz-2.15/src/mmu
 general/Lorenz-2.15/src/cpuport
 general/Lorenz-2.15/src/cputiming
-general/Lorenz-2.15/src/irq
-general/Lorenz-2.15/src/nmi
+general/Lorenz-2.15/src/irq                          --cia old
+general/Lorenz-2.15/src/nmi                          --cia old
 general/Lorenz-2.15/src/cia1tb123                    --cia old
 general/Lorenz-2.15/src/cia2tb123                    --cia old
 general/Lorenz-2.15/src/cia1pb6                      --cia old
