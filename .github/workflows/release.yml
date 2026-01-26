@@ -35,12 +35,3 @@ jobs:
         args: ${{ steps.package-generator.outputs.filename }} application/gzip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Prepare docs
-      run: make doc
-    - name: Deploy docs
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        publish_dir: ./docs/html
-        destination_dir: html
-        commit_message: Update docs
-        github_token: ${{ secrets.GITHUB_TOKEN }}
