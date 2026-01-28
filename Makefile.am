@@ -20,10 +20,6 @@ AM_CPPFLAGS = \
 -I $(top_builddir)/src/sidtune \
 -I $(top_srcdir)/src \
 ${W32_CPPFLAGS} \
-$(EXSID_CFLAGS) \
-$(USBSID_CFLAGS) \
-$(PTHREAD_CFLAGS) \
-$(FTDI_CFLAGS) \
 @debug_flags@
 
 #=========================================================
@@ -188,12 +184,13 @@ src/utils/SidDatabase.h
 nodist_src_libsidplayfp_la_HEADERS = \
 src/sidplayfp/sidversion.h
 
+src_libsidplayfp_la_CPPFLAGS = \
+$(LIBGCRYPT_CFLAGS) \
+$(AM_CPPFLAGS)
+
 src_libsidplayfp_la_LIBADD = \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
-$(LIBGCRYPT_LIBS) \
-$(PTHREAD_LIBS)
-
-src_libsidplayfp_la_CPPFLAGS = $(LIBGCRYPT_CFLAGS) $(AM_CPPFLAGS)
+$(LIBGCRYPT_LIBS)
 
 if USBSID_SUPPORT
   src_libsidplayfp_la_LIBADD += src/builders/usbsid-builder/libsidplayfp-usbsid.la
@@ -285,9 +282,15 @@ src/builders/usbsid-builder/usbsid-emu.cpp \
 src/builders/usbsid-builder/usbsid-emu.h \
 $(usbsid_src)
 
+src_builders_usbsid_builder_libsidplayfp_usbsid_la_CPPFLAGS = \
+$(USBSID_CFLAGS) \
+$(PTHREAD_CFLAGS) \
+$(AM_CPPFLAGS)
+
 src_builders_usbsid_builder_libsidplayfp_usbsid_la_LIBADD = \
 $(USBSID_LIBS) \
 $(PTHREAD_LIBS)
+
 endif
 
 if EXSID_SUPPORT
@@ -311,9 +314,17 @@ src/builders/exsid-builder/exsid-emu.cpp \
 src/builders/exsid-builder/exsid-emu.h \
 $(exsid_src)
 
+src_builders_exsid_builder_libsidplayfp_exsid_la_CPPFLAGS = \
+$(EXSID_CFLAGS) \
+$(FTDI_CFLAGS) \
+$(PTHREAD_CFLAGS) \
+$(AM_CPPFLAGS)
+
 src_builders_exsid_builder_libsidplayfp_exsid_la_LIBADD = \
 $(EXSID_LIBS) \
+$(FTDI_LIBS) \
 $(PTHREAD_LIBS)
+
 endif
 
 #=========================================================
