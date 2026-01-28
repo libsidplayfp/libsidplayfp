@@ -60,8 +60,7 @@ public:
     void reset(uint8_t volume) override;
 
     /* Standard SID functions */
-    // void clock() override;
-    void clock() {};
+    void clock() override {};
 
 
     void sampling(float systemclock, float freq,
