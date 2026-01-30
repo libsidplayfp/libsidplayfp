@@ -441,7 +441,7 @@ const char *PSID::createMD5New(char *md5)
         // The calculation is now simplified
         // All the header + all the data
         sidmd5 myMD5;
-        myMD5.append(&cache[0], cache.size());
+        myMD5.append(cache.data(), cache.size());
 
         myMD5.finish();
 
