@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2015 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,14 +22,8 @@
 #define SIDMD5_H
 
 #include <string>
-#include <sstream>
-#include <iomanip>
-#include <memory>
 
-#include "utils/md5Factory.h"
-#include "utils/iMd5.h"
-
-#include "sidcxx11.h"
+#include "libs/hashlib/md5.hpp"
 
 namespace libsidplayfp
 {
@@ -41,52 +35,18 @@ namespace libsidplayfp
 class sidmd5
 {
 private:
-    std::unique_ptr<iMd5> m_md5;
+    hashlib::md5 m_md5;
 
 public:
     /**
-     * @throw md5Error
-     */
-    sidmd5() :
-        m_md5(md5Factory::get())
-    {}
-
-    /**
      * Append a string to the message.
      */
-    void append(const void* data, int nbytes) { m_md5->append(data, nbytes); }
-
-    /**
-     * Finish the message.
-     */
-    void finish() { m_md5->finish(); }
-
-    /**
-     * Initialize the algorithm. Reset starting values.
-     */
-    void reset() { m_md5->reset(); }
+    inline void append(const uint8_t* data, int nbytes) { m_md5.update(data, data+nbytes); }
 
     /**
      * Return pointer to 32-byte hex fingerprint.
      */
-    std::string getDigest()
-    {
-        const unsigned char* digest = m_md5->getDigest();
-        if (digest == nullptr)
-            return std::string();
-
-        // Construct fingerprint.
-        std::ostringstream ss;
-        ss.fill('0');
-        ss.flags(std::ios::hex);
-
-        for (int di = 0; di < 16; ++di)
-        {
-            ss << std::setw(2) << static_cast<int>(digest[di]);
-        }
-
-        return ss.str();
-    }
+    inline std::string getDigest() { return m_md5.hexdigest(); }
 };
 
 }

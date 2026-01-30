@@ -239,21 +239,6 @@ AC_ARG_ENABLE([tests],
 
 AM_CONDITIONAL([ENABLE_TEST], [test x$enable_tests = xyes])
 
-
-AC_ARG_WITH([gcrypt], AS_HELP_STRING([--with-gcrypt], [Build with the gcrypt library]))
-AS_IF([test "x$with_gcrypt" != "xno"],
-  [PKG_CHECK_MODULES(LIBGCRYPT,
-    [libgcrypt >= 1.8],
-    [USE_LIBGCRYPT=yes
-    AC_DEFINE([HAVE_LIBGCRYPT], 1, [Define to 1 if you have libgcrypt (-lgcrypt).])],
-    [AS_IF([test "x$with_gcrypt" = "xyes"],
-      [AC_MSG_ERROR([gcrypt requested but not found])]
-    )]
-  )]
-)
-AM_CONDITIONAL([LIBGCRYPT], [test x$USE_LIBGCRYPT = xyes])
-
-
 AC_SUBST(HAVE_BUILTIN_EXPECT)
 AC_SUBST(RESID_INLINING)
 AC_SUBST(RESID_INLINE)

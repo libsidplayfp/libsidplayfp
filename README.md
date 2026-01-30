@@ -96,3 +96,11 @@ can be built by invoking `make doc`.
 
 Known bugs/limitations:
 * mus data embedded in psid file is not supported
+
+-----------------------------------------------------------------------------
+
+# 3rd party software
+
+* hashlib
+  https://github.com/Cra3z/hashlib
+  distributed under MIT license

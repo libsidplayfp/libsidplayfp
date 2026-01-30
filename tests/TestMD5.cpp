@@ -20,11 +20,7 @@
 
 #include "utpp/utpp.h"
 
-#include "../src/utils/MD5/MD5.h"
-
-#include <string>
-#include <sstream>
-#include <iomanip>
+#include "../src/sidmd5.h"
 
 using namespace UnitTest;
 
@@ -61,23 +57,12 @@ TEST(TestMD5)
 
     for (int i = 0; i < c; ++i)
     {
-        MD5 myMD5;
-        myMD5.append((const md5_byte_t *)test[i], strlen(test[i]));
-        myMD5.finish();
+        libsidplayfp::sidmd5 myMD5;
+        myMD5.append((const uint8_t*)test[i], strlen(test[i]));
 
         auto digest = myMD5.getDigest();
 
-        // Construct fingerprint.
-        std::ostringstream ss;
-        ss.fill('0');
-        ss.flags(std::ios::hex);
-
-        for (int di = 0; di < 16; ++di)
-        {
-            ss << std::setw(2) << static_cast<int>(digest[di]);
-        }
-
-        CHECK_EQUAL(res[i], ss.str());
+        CHECK_EQUAL(res[i], digest);
     }
 }
 
