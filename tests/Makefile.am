@@ -58,7 +58,6 @@ TestResampler.cpp
 
 TestMD5_SOURCES = \
 Main.cpp \
-TestMD5.cpp \
-$(top_srcdir)/src/utils/MD5/MD5.cpp
+TestMD5.cpp
 
 endif
