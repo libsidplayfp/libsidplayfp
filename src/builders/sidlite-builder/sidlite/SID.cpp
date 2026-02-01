@@ -3,11 +3,14 @@
 
 #include "tables.h"
 
+#include <algorithm>
+
 namespace SIDLite
 {
 
 
-SID::SID()
+SID::SID() :
+    BasePtr(regs)
 {
     setChipModel(8580);
     reset();
@@ -30,6 +33,7 @@ void SID::reset()
     SyncSourceMSBrise = 0;
     RingSourceMSB = 0;
     PrevLowPass = PrevBandPass = PrevVolume = 0;
+    SampleCycleCnt = 0;
 }
 
 void SID::write(int addr, int value)
@@ -48,7 +52,7 @@ int SID::read(int addr)
 
 int SID::clock(unsigned int cycles, short* buf)
 {
-    return 0;
+    return generateSound(buf, cycles);
 }
 
 void SID::setChipModel(int model)
@@ -83,23 +87,17 @@ void SID::emulateADSRs(char cycles)
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
  };
 
- unsigned char Channel, PrevGate, AD, SR;
- unsigned short PrescalePeriod;
- unsigned char *ChannelPtr, *ADSRstatePtr, *EnvelopeCounterPtr, *ExponentCounterPtr;
- unsigned short *RateCounterPtr;
+ for (int Channel=0; Channel<21; Channel+=7) {
 
+  unsigned char *ChannelPtr = &BasePtr[Channel];
+  unsigned char AD = ChannelPtr[5];
+  unsigned char SR = ChannelPtr[6];
+  unsigned char *ADSRstatePtr = &(ADSRstate[Channel]);
+  unsigned short *RateCounterPtr = &(RateCounter[Channel]);
+  unsigned char *EnvelopeCounterPtr = &(EnvelopeCounter[Channel]);
+  unsigned char *ExponentCounterPtr = &(ExponentCounter[Channel]);
 
- for (Channel=0; Channel<21; Channel+=7) {
-
-  ChannelPtr = &BasePtr[Channel];
-  AD = ChannelPtr[5];
-  SR = ChannelPtr[6];
-  ADSRstatePtr = &(ADSRstate[Channel]);
-  RateCounterPtr = &(RateCounter[Channel]);
-  EnvelopeCounterPtr = &(EnvelopeCounter[Channel]);
-  ExponentCounterPtr = &(ExponentCounter[Channel]);
-
-  PrevGate = (*ADSRstatePtr & GATE_BITVAL);
+  unsigned char PrevGate = (*ADSRstatePtr & GATE_BITVAL);
   if ( PrevGate != (ChannelPtr[4] & GATE_BITVAL) ) { //gatebit-change?
    if (PrevGate)
        *ADSRstatePtr &= ~ (GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL); //falling edge
@@ -107,6 +105,7 @@ void SID::emulateADSRs(char cycles)
        *ADSRstatePtr = (GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL | HOLDZEROn_BITVAL); //rising edge
   }
 
+  unsigned short PrescalePeriod;
   if (*ADSRstatePtr & ATTACK_BITVAL)
       PrescalePeriod = ADSRprescalePeriods[ AD >> 4 ];
   else if (*ADSRstatePtr & DECAYSUSTAIN_BITVAL)
@@ -144,18 +143,23 @@ int SID::emulateWaves()
 
  const unsigned char FilterSwitchVal[] = {1,1,1,1,1,1,1,2,2,2,2,2,2,2,4};
 
- char MainVolume;
- unsigned char Channel, WF, TestBit, Envelope, FilterSwitchReso, VolumeBand;
- unsigned int Utmp, PhaseAccuStep, MSB, WavGenOut, PW;
+ unsigned char TestBit, Envelope;
+ unsigned int Utmp, PhaseAccuStep, MSB, PW;
  int Tmp, Feedback, Steepness, PulsePeak;
- int FilterInput, Cutoff, Resonance, FilterOutput, NonFilted, Output;
+ int Cutoff, Resonance, FilterOutput, Output;
  unsigned char *ChannelPtr;
  int *PhaseAccuPtr;
 
- FilterInput = NonFilted = 0;
- FilterSwitchReso = BasePtr[0x17];
- VolumeBand = BasePtr[0x18];
+ unsigned int WavGenOut = 0;
 
+ int FilterInput = 0;
+ int NonFilted = 0;
+ unsigned char FilterSwitchReso = BasePtr[0x17];
+ unsigned char VolumeBand = BasePtr[0x18];
+
+ //Waveform-generator //(phase accumulator and waveform-selector)
+
+ int Channel=0;
  auto combinedWF = [&](const unsigned char* WFarray, unsigned short oscval) {
     unsigned char Pitch;
     unsigned short Filt;
@@ -167,13 +171,10 @@ int SID::emulateWaves()
     return PrevWavData[Channel] << 8;
  };
 
- //Waveform-generator //(phase accumulator and waveform-selector)
-
-
- for (Channel=0; Channel<21; Channel+=7) {
+ for (; Channel<21; Channel+=7) {
   ChannelPtr=&(BasePtr[Channel]);
 
-  WF = ChannelPtr[4];
+  unsigned char WF = ChannelPtr[4];
   TestBit = ( (WF & TEST_BITVAL) != 0 );
   PhaseAccuPtr = &(PhaseAccu[Channel]);
 
@@ -309,6 +310,7 @@ int SID::emulateWaves()
  //sending AC (highpass) value to a 4th 'digi' channel mixed to the master output, and set ONLY the DC (lowpass) value to the volume-control.
  //This solved 2 issues: Thanks to the lowpass filtering of the volume-control, SID tunes where digi is played together with normal SID channels,
  //won't sound distorted anymore, and the volume-clicks disappear when setting SID-volume. (This is useful for fade-in/out tunes like Hades Nebula, where clicking ruins the intro.)
+ char MainVolume;
  if (RealSIDmode) {
   Tmp = (signed int) ( (VolumeBand&0xF) << 12 );
   NonFilted += (Tmp - PrevVolume) * D418_DIGI_VOLUME; //highpass is digi, adding it to output must be before digifilter-code
@@ -320,25 +322,26 @@ int SID::emulateWaves()
  Output = ((NonFilted+FilterOutput) * MainVolume) / ( (CHANNELS*VOLUME_MAX) + Attenuation );
 
  return Output; // master output
-
 }
 
-void SID::generateSound(unsigned char *buf, unsigned short len)
+int SID::generateSound(short *buf, unsigned int cycles)
 {
- unsigned short i;
- int Output;
- for(i=0;i<len;i+=2) {
-  Output = generateSample(); //cRSID_emulateC64(C64instance);
-  //if (Output>=32767) Output=32767; else if (Output<=-32768) Output=-32768; //saturation logic on overflow
-  buf[i] = Output&0xFF;
-  buf[i+1]=Output>>8;
+ int i = 0;
+ while(cycles>0)
+ {
+  int Output = generateSample(cycles);
+  int j = i<<1;
+  buf[j] = Output&0xFF;
+  buf[j+1]=Output>>8;
+  i++;
  }
+ return i;
 }
 
-inline signed short SID::generateSample()
+inline signed short SID::generateSample(unsigned int &cycles)
 { //call this from custom buffer-filler
  int Output;
- Output = emulateC64();
+ Output = emulateC64(cycles);
  if (PSIDdigiMode)
      Output += playPSIDdigi();
  if (Output>=32767)
@@ -349,59 +352,24 @@ inline signed short SID::generateSample()
 }
 
 
-int SID::emulateC64() {
- static unsigned char InstructionCycles;
- static int Output;
-
-
+int SID::emulateC64(unsigned int &cycles)
+{
  //Cycle-based part of emulations:
 
+ while (SampleCycleCnt <= SampleClockRatio && cycles) {
 
- while (SampleCycleCnt <= SampleClockRatio) {
-/*
-  if (!RealSIDmode) {
-   if (FrameCycleCnt >= FrameCycles) {
-    FrameCycleCnt -= FrameCycles;
-    if (Finished) { //some tunes (e.g. Barbarian, A-Maze-Ing) doesn't always finish in 1 frame
-     cRSID_initCPU ( &C64->CPU, C64->PlayAddress ); //(PSID docs say bank-register should always be set for each call's region)
-     C64->Finished=0; //C64->SampleCycleCnt=0; //PSID workaround for some tunes (e.g. Galdrumway):
-     if (C64->TimerSource==0) C64->IObankRD[0xD019] = 0x81; //always simulate to player-calls that VIC-IRQ happened
-     else C64->IObankRD[0xDC0D] = 0x83; //always simulate to player-calls that CIA TIMERA/TIMERB-IRQ happened
-   }}
-   if (C64->Finished==0) {
-    if ( (InstructionCycles = cRSID_emulateCPU()) >= 0xFE ) { InstructionCycles=6; C64->Finished=1; }
-   }
-   else InstructionCycles=7; //idle between player-calls
-   C64->FrameCycleCnt += InstructionCycles;
-   C64->IObankRD[0xDC04] += InstructionCycles; //very simple CIA1 TimerA simulation for PSID (e.g. Delta-Mix_E-Load_loader)
-  }
-
-  else { //RealSID emulations:
-   if ( cRSID_handleCPUinterrupts(&C64->CPU) ) { C64->Finished=0; InstructionCycles=7; }
-   else if (C64->Finished==0) {
-    if ( (InstructionCycles = cRSID_emulateCPU()) >= 0xFE ) {
-     InstructionCycles=6; C64->Finished=1;
-    }
-   }
-   else InstructionCycles=7; //idle between IRQ-calls
-   C64->IRQ = C64->NMI = 0; //prepare for collecting IRQ sources
-   C64->IRQ |= cRSID_emulateCIA (&C64->CIA[1], InstructionCycles);
-   C64->NMI |= cRSID_emulateCIA (&C64->CIA[2], InstructionCycles);
-   C64->IRQ |= cRSID_emulateVIC (&C64->VIC, InstructionCycles);
-  }
-*/
+  unsigned char InstructionCycles = std::min(7u, cycles);
   SampleCycleCnt += (InstructionCycles<<4);
+  cycles -= InstructionCycles;
 
   emulateADSRs(InstructionCycles);
-
  }
- SampleCycleCnt -= SampleClockRatio;
 
+ SampleCycleCnt -= SampleClockRatio;
 
  //Samplerate-based part of emulations:
 
-
- Output = emulateWaves();
+ int Output = emulateWaves();
 
  return Output;
 }
@@ -410,10 +378,10 @@ int SID::emulateC64() {
 inline short SID::playPSIDdigi()
 {
  enum PSIDdigiSpecs { DIGI_VOLUME = 1200 }; //80 };
- static unsigned char PlaybackEnabled=0, NybbleCounter=0, RepeatCounter=0, Shifts;
- static unsigned short SampleAddress, RatePeriod;
- static short Output=0;
- static int PeriodCounter;
+ unsigned char PlaybackEnabled=0, NybbleCounter=0, RepeatCounter=0, Shifts;
+ unsigned short SampleAddress, RatePeriod;
+ short Output=0;
+ int PeriodCounter;
 
  if (regs[0x1D]) {
   PlaybackEnabled = (regs[0x1D] >= 0xFE);
@@ -436,7 +404,8 @@ inline short SID::playPSIDdigi()
      Shifts = regs[0x7D] ? 4:0;
      ++SampleAddress;
     }
-    else Shifts = regs[0x7D] ? 0:4;
+    else
+        Shifts = regs[0x7D] ? 0:4;
     Output = ( ( (RAMbank[SampleAddress]>>Shifts) & 0xF) - 8 ) * DIGI_VOLUME; //* (regs[0xD418]&0xF);
     NybbleCounter^=1;
    }

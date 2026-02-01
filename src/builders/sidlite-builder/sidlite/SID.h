@@ -24,7 +24,6 @@ private:
 
     //SID-chip data:
     unsigned short     ChipModel;     //values: 8580 / 6581
-    unsigned short     BaseAddress;   //SID-baseaddress location in C64-memory (IO)
     unsigned char*     BasePtr;       //SID-baseaddress location in host's memory
     //ADSR-related:
     unsigned char      ADSRstate[15];
@@ -47,14 +46,13 @@ private:
 
     //C64-machine related:
     unsigned int      CPUfrequency;
-    unsigned char     VideoStandard; //0:NTSC, 1:PAL (based on the SID-header field)
     unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate
     unsigned short    Attenuation;
-    char              RealSIDmode;
-    char              PSIDdigiMode;
+    bool              RealSIDmode;
+    bool              PSIDdigiMode = false;
     //PSID-playback related:
-    int               FrameCycles;
-    int               FrameCycleCnt; //this is a substitution in PSID-mode for CIA/VIC counters
+    //int               FrameCycles;
+    //int               FrameCycleCnt; //this is a substitution in PSID-mode for CIA/VIC counters
     short             SampleCycleCnt;
     unsigned short    SampleRate;
 
@@ -73,9 +71,9 @@ private:
     void emulateADSRs(char cycles);
     int emulateWaves();
 
-    void generateSound(unsigned char* buf, unsigned short len);
-    inline signed short generateSample();
-    int emulateC64();
+    int generateSound(short* buf, unsigned int cycles);
+    inline signed short generateSample(unsigned int &cycles);
+    int emulateC64(unsigned int &cycles);
     inline short playPSIDdigi();
 };
 

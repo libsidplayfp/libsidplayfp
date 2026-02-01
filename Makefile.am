@@ -193,6 +193,7 @@ $(AM_CPPFLAGS)
 
 src_libsidplayfp_la_LIBADD = \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
+src/builders/sidlite-builder/libsidplayfp-sidlite.la \
 $(LIBGCRYPT_LIBS)
 
 if USBSID_SUPPORT
