@@ -20,6 +20,8 @@ public:
     void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
 
 private:
+    unsigned char regs[0xff];
+
     //SID-chip data:
     unsigned short     ChipModel;     //values: 8580 / 6581
     unsigned short     BaseAddress;   //SID-baseaddress location in C64-memory (IO)
@@ -44,6 +46,7 @@ private:
     signed int         PrevVolume; //lowpass-filtered version of Volume-band register
 
     //C64-machine related:
+    unsigned int      CPUfrequency;
     unsigned char     VideoStandard; //0:NTSC, 1:PAL (based on the SID-header field)
     unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate
     unsigned short    Attenuation;
@@ -53,33 +56,29 @@ private:
     int               FrameCycles;
     int               FrameCycleCnt; //this is a substitution in PSID-mode for CIA/VIC counters
     short             SampleCycleCnt;
+    unsigned short    SampleRate;
 
     unsigned char oscReg;
     unsigned char envReg;
 
+enum cRSID_MemAddresses {
+ CRSID_C64_MEMBANK_SIZE = 0x10000, CRSID_MEMBANK_SAFETY_ZONE_SIZE = 0x100, CRSID_SID_SAFETY_ZONE_SIZE = 0x100,
+ CRSID_MEMBANK_SIZE = (CRSID_C64_MEMBANK_SIZE + CRSID_MEMBANK_SAFETY_ZONE_SIZE + CRSID_SID_SAFETY_ZONE_SIZE),
+ CRSID_SID_SAFE_ADDRESS = (CRSID_C64_MEMBANK_SIZE + CRSID_MEMBANK_SAFETY_ZONE_SIZE)
+};
+
+    unsigned char RAMbank[CRSID_MEMBANK_SIZE];
+
 private:
     void emulateADSRs(char cycles);
     int emulateWaves();
+
+    void generateSound(unsigned char* buf, unsigned short len);
+    inline signed short generateSample();
+    int emulateC64();
+    inline short playPSIDdigi();
 };
 
 }
-/*
-// Main API functions (mainly in libcRSID.c)
-cRSID_C64instance* cRSID_init           (unsigned short samplerate, unsigned short buflen); //init emulation objects and sound
-
-static inline signed short cRSID_generateSample (cRSID_C64instance* C64); //in host/audio.c, calculate a single sample
-
-
-//Internal functions
-
-// C64/C64.c
-cRSID_C64instance*  cRSID_createC64     (cRSID_C64instance* C64, unsigned short samplerate);
-int                 cRSID_emulateC64    (cRSID_C64instance* C64);
-static inline short cRSID_playPSIDdigi  (cRSID_C64instance* C64);
-
-// host/audio.c
-void               cRSID_generateSound (cRSID_C64instance* C64, unsigned char* buf, unsigned short len);
-
-*/
 
 #endif // SIDLITE_H
