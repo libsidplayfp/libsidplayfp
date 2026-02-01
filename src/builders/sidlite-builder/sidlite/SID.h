@@ -53,16 +53,17 @@ private:
     int               FrameCycles;
     int               FrameCycleCnt; //this is a substitution in PSID-mode for CIA/VIC counters
     short             SampleCycleCnt;
+
+    unsigned char oscReg;
+    unsigned char envReg;
+
+private:
+    void emulateADSRs(char cycles);
+    int emulateWaves();
 };
 
 }
 /*
-typedef struct cRSID_C64instance cRSID_C64instance;
-typedef struct cRSID_SIDinstance cRSID_SIDinstance;
-
-extern cRSID_C64instance cRSID_C64; //the only global object (for faster & simpler access than with struct-pointers, in some places)
-
-
 // Main API functions (mainly in libcRSID.c)
 cRSID_C64instance* cRSID_init           (unsigned short samplerate, unsigned short buflen); //init emulation objects and sound
 
@@ -75,12 +76,6 @@ static inline signed short cRSID_generateSample (cRSID_C64instance* C64); //in h
 cRSID_C64instance*  cRSID_createC64     (cRSID_C64instance* C64, unsigned short samplerate);
 int                 cRSID_emulateC64    (cRSID_C64instance* C64);
 static inline short cRSID_playPSIDdigi  (cRSID_C64instance* C64);
-
-// C64/SID.c
-void               cRSID_createSIDchip (cRSID_C64instance* C64, cRSID_SIDinstance* SID, unsigned short model);
-void               cRSID_initSIDchip   (cRSID_SIDinstance* SID);
-void               cRSID_emulateADSRs  (cRSID_SIDinstance *SID, char cycles);
-int                cRSID_emulateWaves  (cRSID_SIDinstance* SID);
 
 // host/audio.c
 void               cRSID_generateSound (cRSID_C64instance* C64, unsigned char* buf, unsigned short len);
