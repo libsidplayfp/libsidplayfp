@@ -259,7 +259,8 @@ src_builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = \
 
 src_builders_sidlite_builder_sidlite_libsidlite_la_SOURCES = \
 src/builders/sidlite-builder/sidlite/SID.cpp \
-src/builders/sidlite-builder/sidlite/SID.h
+src/builders/sidlite-builder/sidlite/SID.h \
+src/builders/sidlite-builder/sidlite/tables.h
 
 
 #src_builders_sidlite_builder_sidlite_libsidlite_la_CXXFLAGS = \
