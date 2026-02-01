@@ -130,7 +130,7 @@ public:
     unsigned int installedSIDs() const;
 
     /**
-     * Init mixer.
+     * Initialize the mixer.
      *
      * @param stereo whether to mix in stereo or mono
      * @since 2.15
@@ -148,9 +148,8 @@ public:
     unsigned int mix(short *buffer, unsigned int samples);
 
     /**
-     * Control debugging.
-     * Only has effect if library have been compiled
-     * with the --enable-debug option.
+     * Control CPU tracing.
+     * @note: Must be called before #reset
      *
      * @param enable enable/disable debugging.
      * @param out the file where to redirect the debug info.
@@ -168,7 +167,7 @@ public:
 
     /**
      * Enable/disable SID filter.
-     * Must be called after #config or it has no effect.
+     * @note: Must be called after #config or it has no effect.
      *
      * @param sidNum the SID chip, 0 for the first one, 1 for the second or 2 for the third.
      * @param enable true enable the filter, false disable it.
