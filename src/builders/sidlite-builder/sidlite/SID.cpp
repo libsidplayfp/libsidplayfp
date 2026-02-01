@@ -1,3 +1,24 @@
+/*
+ * This file is part of libsidplayfp, a SID player engine.
+ *
+ *  Copyright (C) 2025-2026 Leandro Nini
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+// Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
 #include "SID.h"
 
@@ -142,14 +163,6 @@ int SID::emulateWaves()
  enum FilterBits { OFF3_BITVAL=0x80, HIGHPASS_BITVAL=0x40, BANDPASS_BITVAL=0x20, LOWPASS_BITVAL=0x10 };
 
  const unsigned char FilterSwitchVal[] = {1,1,1,1,1,1,1,2,2,2,2,2,2,2,4};
-
- unsigned char TestBit, Envelope;
- unsigned int Utmp, PhaseAccuStep, MSB, PW;
- int Tmp, Feedback, Steepness, PulsePeak;
- int Cutoff, Resonance, FilterOutput, Output;
- unsigned char *ChannelPtr;
- int *PhaseAccuPtr;
-
  unsigned int WavGenOut = 0;
 
  int FilterInput = 0;
@@ -160,6 +173,7 @@ int SID::emulateWaves()
  //Waveform-generator //(phase accumulator and waveform-selector)
 
  int Channel=0;
+ unsigned char *ChannelPtr;
  auto combinedWF = [&](const unsigned char* WFarray, unsigned short oscval) {
     unsigned char Pitch;
     unsigned short Filt;
@@ -171,29 +185,30 @@ int SID::emulateWaves()
     return PrevWavData[Channel] << 8;
  };
 
- for (; Channel<21; Channel+=7) {
+ for (; Channel<21; Channel+=7)
+ {
   ChannelPtr=&(BasePtr[Channel]);
 
   unsigned char WF = ChannelPtr[4];
-  TestBit = ( (WF & TEST_BITVAL) != 0 );
-  PhaseAccuPtr = &(PhaseAccu[Channel]);
+  unsigned char TestBit = ( (WF & TEST_BITVAL) != 0 );
+  int *PhaseAccuPtr = &(PhaseAccu[Channel]);
 
 
-  PhaseAccuStep = ( (ChannelPtr[1]<<8) + ChannelPtr[0] ) * SampleClockRatio;
+  unsigned int PhaseAccuStep = ( (ChannelPtr[1]<<8) + ChannelPtr[0] ) * SampleClockRatio;
   if (TestBit || ((WF & SYNC_BITVAL) && SyncSourceMSBrise)) *PhaseAccuPtr = 0;
   else { //stepping phase-accumulator (oscillator)
    *PhaseAccuPtr += PhaseAccuStep;
    if (*PhaseAccuPtr >= 0x10000000) *PhaseAccuPtr -= 0x10000000;
   }
   *PhaseAccuPtr &= 0xFFFFFFF;
-  MSB = *PhaseAccuPtr & 0x8000000;
+  unsigned int MSB = *PhaseAccuPtr & 0x8000000;
   SyncSourceMSBrise = (MSB > (PrevPhaseAccu[Channel] & 0x8000000)) ? 1 : 0;
 
 
   if (WF & NOISE_BITVAL) { //noise waveform
-   Tmp = NoiseLFSR[Channel]; //clock LFSR all time if clockrate exceeds observable at given samplerate (last term):
+   int Tmp = NoiseLFSR[Channel]; //clock LFSR all time if clockrate exceeds observable at given samplerate (last term):
    if ( ((*PhaseAccuPtr & 0x1000000) != (PrevPhaseAccu[Channel] & 0x1000000)) || PhaseAccuStep >= 0x1000000 ) {
-    Feedback = ( (Tmp & 0x400000) ^ ((Tmp & 0x20000) << 5) ) != 0;
+    int Feedback = ( (Tmp & 0x400000) ^ ((Tmp & 0x20000) << 5) ) != 0;
     Tmp = ( (Tmp << 1) | Feedback|TestBit ) & 0x7FFFFF; //TEST-bit turns all bits in noise LFSR to 1 (on real SID slowly, in approx. 8000 microseconds ~ 300 samples)
     NoiseLFSR[Channel] = Tmp;
    } //we simply zero output when other waveform is mixed with noise. On real SID LFSR continuously gets filled by zero and locks up. ($C1 waveform with pw<8 can keep it for a while.)
@@ -201,25 +216,31 @@ int SID::emulateWaves()
                                  | ((Tmp & 0x200) << 2) | ((Tmp & 0x20) << 5) | ((Tmp & 0x04) << 7) | ((Tmp & 0x01) << 8);
   }
 
-  else if (WF & PULSE_BITVAL) { //simple pulse
-   PW = ( ((ChannelPtr[3]&0xF) << 8) + ChannelPtr[2] ) << 4; //PW=0000..FFF0 from SID-register
-   Utmp = (int) (PhaseAccuStep >> 13); if (0 < PW && PW < Utmp) PW = Utmp; //Too thin pulsewidth? Correct...
-   Utmp ^= 0xFFFF;  if (PW > Utmp) PW = Utmp; //Too thin pulsewidth? Correct it to a value representable at the current samplerate
+  else if (WF & PULSE_BITVAL)
+  { //simple pulse
+   unsigned int PW = ( ((ChannelPtr[3]&0xF) << 8) + ChannelPtr[2] ) << 4; //PW=0000..FFF0 from SID-register
+   unsigned int Utmp = (int) (PhaseAccuStep >> 13);
+   if (0 < PW && PW < Utmp)
+       PW = Utmp; //Too thin pulsewidth? Correct...
+   Utmp ^= 0xFFFF;
+   if (PW > Utmp)
+       PW = Utmp; //Too thin pulsewidth? Correct it to a value representable at the current samplerate
    Utmp = *PhaseAccuPtr >> 12;
 
-   if ( (WF&0xF0) == PULSE_BITVAL ) { //simple pulse, most often used waveform, make it sound as clean as possible (by making it trapezoid)
-    Steepness = (PhaseAccuStep>=4096) ? 0xFFFFFFF/PhaseAccuStep : 0xFFFF; //rising/falling-edge steepness (add/sub at samples)
+   if ( (WF&0xF0) == PULSE_BITVAL )
+   { //simple pulse, most often used waveform, make it sound as clean as possible (by making it trapezoid)
+    int Steepness = (PhaseAccuStep>=4096) ? 0xFFFFFFF/PhaseAccuStep : 0xFFFF; //rising/falling-edge steepness (add/sub at samples)
     if (TestBit) WavGenOut = 0xFFFF;
     else if (Utmp<PW) { //rising edge (interpolation)
-     PulsePeak = (0xFFFF-PW) * Steepness; //very thin pulses don't make a full swing between 0 and max but make a little spike
+     int PulsePeak = (0xFFFF-PW) * Steepness; //very thin pulses don't make a full swing between 0 and max but make a little spike
      if (PulsePeak>0xFFFF) PulsePeak=0xFFFF; //but adequately thick trapezoid pulses reach the maximum level
-     Tmp = PulsePeak - (PW-Utmp)*Steepness; //draw the slope from the peak
+     int Tmp = PulsePeak - (PW-Utmp)*Steepness; //draw the slope from the peak
      WavGenOut = (Tmp<0)? 0:Tmp;           //but stop at 0-level
     }
     else { //falling edge (interpolation)
-     PulsePeak = PW*Steepness; //very thin pulses don't make a full swing between 0 and max but make a little spike
+     int PulsePeak = PW*Steepness; //very thin pulses don't make a full swing between 0 and max but make a little spike
      if (PulsePeak>0xFFFF) PulsePeak=0xFFFF; //adequately thick trapezoid pulses reach the maximum level
-     Tmp = (0xFFFF-Utmp)*Steepness - PulsePeak; //draw the slope from the peak
+     int Tmp = (0xFFFF-Utmp)*Steepness - PulsePeak; //draw the slope from the peak
      WavGenOut = (Tmp>=0)? 0xFFFF:Tmp;         //but stop at max-level
    }}
 
@@ -230,7 +251,7 @@ int SID::emulateWaves()
       if (WavGenOut) WavGenOut = combinedWF( PulseSawTriangle, Utmp);
      }
      else { //pulse+triangle
-      Tmp = *PhaseAccuPtr ^ ( (WF&RING_BITVAL)? RingSourceMSB : 0 );
+      int Tmp = *PhaseAccuPtr ^ ( (WF&RING_BITVAL)? RingSourceMSB : 0 );
       if (WavGenOut) WavGenOut = combinedWF( PulseTriangle, Tmp >> 12);
     }}
     else if (WF & SAW_BITVAL) { //pulse+saw
@@ -242,13 +263,13 @@ int SID::emulateWaves()
    WavGenOut = *PhaseAccuPtr >> 12; //saw (this row would be enough for simple but aliased-at-high-pitch saw)
    if (WF & TRI_BITVAL) WavGenOut = combinedWF( SawTriangle, WavGenOut); //saw+triangle
    else { //simple cleaned (bandlimited) saw
-    Steepness = (PhaseAccuStep>>4)/288; if(Steepness==0) Steepness=1; //avoid division by zero in next steps
+    int Steepness = (PhaseAccuStep>>4)/288; if(Steepness==0) Steepness=1; //avoid division by zero in next steps
     WavGenOut += (WavGenOut * Steepness) >> 16; //1st half (rising edge) of asymmetric triangle-like saw waveform
     if (WavGenOut>0xFFFF) WavGenOut = 0xFFFF - ( ((WavGenOut-0x10000)<<16) / Steepness ); //2nd half (falling edge, reciprocal steepness)
   }}
 
   else if (WF & TRI_BITVAL) { //triangle (this waveform has no harsh edges, so it doesn't suffer from strong aliasing at high pitches)
-   Tmp = *PhaseAccuPtr ^ ( WF&RING_BITVAL? RingSourceMSB : 0 );
+   int Tmp = *PhaseAccuPtr ^ ( WF&RING_BITVAL? RingSourceMSB : 0 );
    WavGenOut = ( Tmp ^ (Tmp&0x8000000? 0xFFFFFFF:0) ) >> 11;
   }
 
@@ -262,7 +283,7 @@ int SID::emulateWaves()
   RingSourceMSB = MSB;
 
   //routing the channel signal to either the filter or the unfiltered master output depending on filter-switch SID-registers
-  Envelope = ChipModel==8580 ? EnvelopeCounter[Channel] : ADSR_DAC_6581[EnvelopeCounter[Channel]];
+  unsigned char Envelope = ChipModel==8580 ? EnvelopeCounter[Channel] : ADSR_DAC_6581[EnvelopeCounter[Channel]];
   if (FilterSwitchReso & FilterSwitchVal[Channel]) {
    FilterInput += ( ((int)WavGenOut-0x8000) * Envelope ) >> 8;
   }
@@ -275,12 +296,10 @@ int SID::emulateWaves()
  oscReg = WavGenOut>>8; //OSC3, ENV3 (some players rely on it, unfortunately even for timing)
  envReg = EnvelopeCounter[14]; //Envelope
 
-
  //Filter
 
-
- Cutoff = (BasePtr[0x16] << 3) + (BasePtr[0x15] & 7);
- Resonance = FilterSwitchReso >> 4;
+ int Cutoff = (BasePtr[0x16] << 3) + (BasePtr[0x15] & 7);
+ int Resonance = FilterSwitchReso >> 4;
  if (ChipModel == 8580) {
   Cutoff = CutoffMul8580_44100Hz[Cutoff];
   Resonance = Resonances8580[Resonance];
@@ -291,8 +310,8 @@ int SID::emulateWaves()
   Resonance = Resonances6581[Resonance];
  }
 
- FilterOutput=0;
- Tmp = FilterInput + ((PrevBandPass * Resonance)>>12) + PrevLowPass;
+ int FilterOutput = 0;
+ int Tmp = FilterInput + ((PrevBandPass * Resonance)>>12) + PrevLowPass;
  if (VolumeBand & HIGHPASS_BITVAL)
      FilterOutput -= Tmp;
  Tmp = PrevBandPass - ( (Tmp * Cutoff) >> 12 );
@@ -303,7 +322,6 @@ int SID::emulateWaves()
  PrevLowPass = Tmp;
  if (VolumeBand & LOWPASS_BITVAL)
      FilterOutput += Tmp;
-
 
  //Output stage
  //For $D418 volume-register digi playback: an AC / DC separation for $D418 value at low (20Hz or so) cutoff-frequency,
@@ -319,105 +337,51 @@ int SID::emulateWaves()
  }
  else MainVolume = VolumeBand & 0xF;
 
- Output = ((NonFilted+FilterOutput) * MainVolume) / ( (CHANNELS*VOLUME_MAX) + Attenuation );
+ int Output = ((NonFilted+FilterOutput) * MainVolume) / ( (CHANNELS*VOLUME_MAX) + Attenuation );
 
  return Output; // master output
 }
 
 int SID::generateSound(short *buf, unsigned int cycles)
 {
- int i = 0;
- while(cycles>0)
- {
-  int Output = generateSample(cycles);
-  int j = i<<1;
-  buf[j] = Output&0xFF;
-  buf[j+1]=Output>>8;
-  i++;
- }
- return i;
+    int i = 0;
+    while (cycles>0)
+    {
+        buf[i] = generateSample(cycles);
+        i++;
+    }
+    return i;
 }
 
 inline signed short SID::generateSample(unsigned int &cycles)
 { //call this from custom buffer-filler
- int Output;
- Output = emulateC64(cycles);
- if (PSIDdigiMode)
-     Output += playPSIDdigi();
- if (Output>=32767)
-     Output=32767;
- else if (Output<=-32768)
-     Output=-32768; //saturation logic on overflow
- return (signed short) Output;
+    int Output = emulateC64(cycles);
+    if (Output>=32767)
+        Output=32767;
+    else if (Output<=-32768)
+        Output=-32768; //saturation logic on overflow
+    return (signed short) Output;
 }
 
 
 int SID::emulateC64(unsigned int &cycles)
 {
- //Cycle-based part of emulations:
+    //Cycle-based part of emulations:
 
- while (SampleCycleCnt <= SampleClockRatio && cycles) {
+    while (SampleCycleCnt <= SampleClockRatio && cycles)
+    {
+        unsigned char InstructionCycles = std::min(7u, cycles);
+        SampleCycleCnt += (InstructionCycles<<4);
+        cycles -= InstructionCycles;
 
-  unsigned char InstructionCycles = std::min(7u, cycles);
-  SampleCycleCnt += (InstructionCycles<<4);
-  cycles -= InstructionCycles;
-
-  emulateADSRs(InstructionCycles);
- }
-
- SampleCycleCnt -= SampleClockRatio;
-
- //Samplerate-based part of emulations:
-
- int Output = emulateWaves();
-
- return Output;
-}
-
-
-inline short SID::playPSIDdigi()
-{
- enum PSIDdigiSpecs { DIGI_VOLUME = 1200 }; //80 };
- unsigned char PlaybackEnabled=0, NybbleCounter=0, RepeatCounter=0, Shifts;
- unsigned short SampleAddress, RatePeriod;
- short Output=0;
- int PeriodCounter;
-
- if (regs[0x1D]) {
-  PlaybackEnabled = (regs[0x1D] >= 0xFE);
-  PeriodCounter = 0;
-  NybbleCounter = 0;
-  SampleAddress = regs[0x1E] + (regs[0x1F]<<8);
-  RepeatCounter = regs[0x3F];
- }
- regs[0x1D] = 0;
-
- if (PlaybackEnabled) {
-  RatePeriod = regs[0x5D] + (regs[0x5E]<<8);
-  if (RatePeriod)
-      PeriodCounter += CPUfrequency / RatePeriod;
-  if ( PeriodCounter >= SampleRate ) {
-   PeriodCounter -= SampleRate;
-
-   if ( SampleAddress < regs[0x3D] + (regs[0x3E]<<8) ) {
-    if (NybbleCounter) {
-     Shifts = regs[0x7D] ? 4:0;
-     ++SampleAddress;
+        emulateADSRs(InstructionCycles);
     }
-    else
-        Shifts = regs[0x7D] ? 0:4;
-    Output = ( ( (RAMbank[SampleAddress]>>Shifts) & 0xF) - 8 ) * DIGI_VOLUME; //* (regs[0xD418]&0xF);
-    NybbleCounter^=1;
-   }
-   else if (RepeatCounter) {
-    SampleAddress = regs[0x7F] + (regs[0x7E]<<8);
-    RepeatCounter--;
-   }
 
-  }
- }
+    SampleCycleCnt -= SampleClockRatio;
 
- return Output;
+    //Samplerate-based part of emulations:
+
+    return emulateWaves();
 }
 
 }

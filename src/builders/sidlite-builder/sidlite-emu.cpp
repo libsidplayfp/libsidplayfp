@@ -90,7 +90,7 @@ void SIDLiteEmu::filter(bool enable)
 }
 */
 void SIDLiteEmu::sampling(float systemclock, float freq,
-        SidConfig::sampling_method_t method)
+        SidConfig::sampling_method_t /*method*/)
 {/*
     SIDLite::SamplingMethod sampleMethod;
     switch (method)
@@ -128,7 +128,7 @@ void SIDLiteEmu::sampling(float systemclock, float freq,
 }
 
 // Set the emulated SID model
-void SIDLiteEmu::model(SidConfig::sid_model_t model, bool digiboost)
+void SIDLiteEmu::model(SidConfig::sid_model_t model, bool /*digiboost*/)
 {
     unsigned short chipModel;
     switch (model)

@@ -1,8 +1,27 @@
-// cRSID lightweight RealSID (integer-only) library-header (with API-calls) by Hermit (Mihaly Horvath)
+/*
+ * This file is part of libsidplayfp, a SID player engine.
+ *
+ *  Copyright (C) 2025-2026 Leandro Nini
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+// Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
 #ifndef SID_H
 #define SID_H
-
 
 namespace SIDLite
 {
@@ -49,23 +68,12 @@ private:
     unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate
     unsigned short    Attenuation;
     bool              RealSIDmode;
-    bool              PSIDdigiMode = false;
     //PSID-playback related:
-    //int               FrameCycles;
-    //int               FrameCycleCnt; //this is a substitution in PSID-mode for CIA/VIC counters
     short             SampleCycleCnt;
     unsigned short    SampleRate;
 
     unsigned char oscReg;
     unsigned char envReg;
-
-enum cRSID_MemAddresses {
- CRSID_C64_MEMBANK_SIZE = 0x10000, CRSID_MEMBANK_SAFETY_ZONE_SIZE = 0x100, CRSID_SID_SAFETY_ZONE_SIZE = 0x100,
- CRSID_MEMBANK_SIZE = (CRSID_C64_MEMBANK_SIZE + CRSID_MEMBANK_SAFETY_ZONE_SIZE + CRSID_SID_SAFETY_ZONE_SIZE),
- CRSID_SID_SAFE_ADDRESS = (CRSID_C64_MEMBANK_SIZE + CRSID_MEMBANK_SAFETY_ZONE_SIZE)
-};
-
-    unsigned char RAMbank[CRSID_MEMBANK_SIZE];
 
 private:
     void emulateADSRs(char cycles);
@@ -74,7 +82,6 @@ private:
     int generateSound(short* buf, unsigned int cycles);
     inline signed short generateSample(unsigned int &cycles);
     int emulateC64(unsigned int &cycles);
-    inline short playPSIDdigi();
 };
 
 }
