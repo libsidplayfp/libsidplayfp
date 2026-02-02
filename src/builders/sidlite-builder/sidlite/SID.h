@@ -39,11 +39,10 @@ public:
     void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
 
 private:
-    unsigned char regs[0xff];
+    unsigned char regs[0x20];
 
     //SID-chip data:
     unsigned short     ChipModel;     //values: 8580 / 6581
-    unsigned char*     BasePtr;       //SID-baseaddress location in host's memory
     //ADSR-related:
     unsigned char      ADSRstate[15];
     unsigned short     RateCounter[15];
@@ -67,7 +66,7 @@ private:
     unsigned int      CPUfrequency;
     unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate
     unsigned short    Attenuation;
-    bool              RealSIDmode;
+    bool              RealSIDmode = true;
     //PSID-playback related:
     short             SampleCycleCnt;
     unsigned short    SampleRate;
