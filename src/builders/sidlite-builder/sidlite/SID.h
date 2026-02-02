@@ -54,6 +54,7 @@ private:
     unsigned char      SyncSourceMSBrise;
     unsigned int       RingSourceMSB;
     unsigned int       NoiseLFSR[15];
+    signed char        PrevSounDemonDigiWF[15];
     unsigned int       PrevWavGenOut[15];
     unsigned char      PrevWavData[15];
     //Filter-related:

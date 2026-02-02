@@ -262,9 +262,8 @@ src/builders/sidlite-builder/sidlite/SID.cpp \
 src/builders/sidlite-builder/sidlite/SID.h \
 src/builders/sidlite-builder/sidlite/tables.h
 
-
-#src_builders_sidlite_builder_sidlite_libsidlite_la_CXXFLAGS = \
-@SIDLITE_CXXFLAGS@
+src_builders_sidlite_builder_sidlite_libsidlite_la_CPPFLAGS = \
+-I $(top_builddir)/src/builders/sidlite-builder/sidlite
 
 #=========================================================
 # builders
