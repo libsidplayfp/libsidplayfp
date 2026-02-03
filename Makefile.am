@@ -31,6 +31,7 @@ src/sidtune/sidplayer2.a65 \
 src/builders/residfp-builder/residfp/AUTHORS \
 src/builders/residfp-builder/residfp/COPYING \
 src/builders/residfp-builder/residfp/README \
+src/builders/sidlite-builder/sidlite/README \
 src/builders/exsid-builder/driver/docs \
 src/builders/exsid-builder/driver/m4 \
 $(noinst_DATA) \
@@ -46,7 +47,9 @@ src/libstilview.la
 
 noinst_LTLIBRARIES = \
 src/builders/residfp-builder/residfp/libresidfp.la \
-src/builders/residfp-builder/libsidplayfp-residfp.la
+src/builders/residfp-builder/libsidplayfp-residfp.la \
+src/builders/sidlite-builder/sidlite/libsidlite.la \
+src/builders/sidlite-builder/libsidplayfp-sidlite.la
 
 if USBSID_SUPPORT
   noinst_LTLIBRARIES += src/builders/usbsid-builder/libsidplayfp-usbsid.la
@@ -190,6 +193,7 @@ $(AM_CPPFLAGS)
 
 src_libsidplayfp_la_LIBADD = \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
+src/builders/sidlite-builder/libsidplayfp-sidlite.la \
 $(LIBGCRYPT_LIBS)
 
 if USBSID_SUPPORT
@@ -251,7 +255,20 @@ src_builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = \
 @RESIDFP_CXXFLAGS@
 
 #=========================================================
+# sidlite
+
+src_builders_sidlite_builder_sidlite_libsidlite_la_SOURCES = \
+src/builders/sidlite-builder/sidlite/SID.cpp \
+src/builders/sidlite-builder/sidlite/SID.h \
+src/builders/sidlite-builder/sidlite/tables.h
+
+src_builders_sidlite_builder_sidlite_libsidlite_la_CPPFLAGS = \
+-I $(top_builddir)/src/builders/sidlite-builder/sidlite
+
+#=========================================================
 # builders
+
+# residfp
 src_builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
 src_builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
 src/builders/residfp-builder/residfp.h
@@ -264,6 +281,20 @@ src/builders/residfp-builder/residfp-emu.h
 src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 src/builders/residfp-builder/residfp/libresidfp.la
 
+# sidlite
+src_builders_sidlite_builder_libsidplayfp_sidlite_ladir = $(includedir)/sidplayfp/builders
+src_builders_sidlite_builder_libsidplayfp_sidlite_la_HEADERS = \
+src/builders/sidlite-builder/sidlite.h
+
+src_builders_sidlite_builder_libsidplayfp_sidlite_la_SOURCES = \
+src/builders/sidlite-builder/sidlite-builder.cpp \
+src/builders/sidlite-builder/sidlite-emu.cpp \
+src/builders/sidlite-builder/sidlite-emu.h
+
+src_builders_sidlite_builder_libsidplayfp_sidlite_la_LIBADD = \
+src/builders/sidlite-builder/sidlite/libsidlite.la
+
+# usbsid
 if USBSID_SUPPORT
 
 if USBSID_DRIVER
@@ -293,6 +324,7 @@ $(PTHREAD_LIBS)
 
 endif
 
+#exsid
 if EXSID_SUPPORT
 
 if EXSID_DRIVER
