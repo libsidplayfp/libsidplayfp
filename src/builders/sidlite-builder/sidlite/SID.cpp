@@ -251,6 +251,8 @@ constexpr int CRSID_FILTERTABLE_MAGNITUDE = 1 << CRSID_FILTERTABLE_RESOLUTION;
 constexpr int D418_DIGI_VOL = 1*16;
 constexpr int D418_DIGI_MUL = D418_DIGI_VOL / CRSID_WAVGEN_PREDIV;
 
+constexpr int OFF3_BITVAL = 0x80;
+
 static inline unsigned short getPW(unsigned char* channelptr)
 {
     return (((channelptr[3]&0xF) << 8) | channelptr[2]) << 4; //PW=0000..FFF0 from SID-register (000..FFF)
@@ -267,7 +269,6 @@ int SID::emulateWaves()
     enum WaveFormBits { NOISE_BITVAL=0x80, PULSE_BITVAL=0x40, SAW_BITVAL=0x20, TRI_BITVAL=0x10,
                PULSAWTRI_VAL=0x70, PULSAW_VAL=0x60, PULTRI_VAL=0x50, SAWTRI_VAL=0x30 };
     enum ControlBits { TEST_BITVAL=0x08, RING_BITVAL=0x04, SYNC_BITVAL=0x02, GATE_BITVAL=0x01 };
-    enum FilterBits { OFF3_BITVAL=0x80, HIGHPASS_BITVAL=0x40, BANDPASS_BITVAL=0x20, LOWPASS_BITVAL=0x10 };
 
     const unsigned char FilterSwitchVal[] = {1,1,1,1,1,1,1,2,2,2,2,2,2,2,4};
 
@@ -275,7 +276,7 @@ int SID::emulateWaves()
 
     unsigned int WavGenOut = 0;
     int FilterInput = 0;
-    int NonFilted = 0;
+    int NonFiltered = 0;
     unsigned char FilterSwitchReso = regs[0x17];
     unsigned char VolumeBand = regs[0x18];
 
@@ -440,14 +441,23 @@ int SID::emulateWaves()
         }
         else if (LIKELY(Channel!=14 || !(VolumeBand & OFF3_BITVAL)))
         {
-            NonFilted += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
+            NonFiltered += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
         }
     }
     //update readable SID1-registers (some SID tunes might use 3rd channel ENV3/OSC3 value as control)
     oscReg = WavGenOut >> WAVE_OSC3_SHIFTS; //OSC3, ENV3 (some players rely on it, unfortunately even for timing)
     envReg = EnvelopeCounter[CHANNEL2_INDEX]; //Envelope
 
+    return emulateSIDoutputStage(FilterInput, NonFiltered);
+}
+
+int SID::emulateSIDoutputStage(int FilterInput, int NonFiltered)
+{
+    enum SIDspecs { HIGHPASS_BITVAL=0x40, BANDPASS_BITVAL=0x20, LOWPASS_BITVAL=0x10 };
+
     //Filter
+    unsigned char FilterSwitchReso = regs[0x17];
+    unsigned char VolumeBand = regs[0x18];
 
     int Cutoff = (regs[0x16] << 3) + (regs[0x15] & 7);
     int Resonance = FilterSwitchReso >> 4;
@@ -496,7 +506,7 @@ int SID::emulateWaves()
     else
         MainVolume = VolumeBand & 0xF;
 
-    int Output = ((NonFilted+FilterOutput) * MainVolume) + Digi;// / ((CHANNELS*VOLUME_MAX) + Attenuation);
+    int Output = ((NonFiltered+FilterOutput) * MainVolume) + Digi;// / ((CHANNELS*VOLUME_MAX) + Attenuation);
 
     return Output / Attenuation; // master output
 }

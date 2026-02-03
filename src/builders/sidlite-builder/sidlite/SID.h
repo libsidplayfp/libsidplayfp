@@ -79,6 +79,7 @@ private:
 private:
     void emulateADSRs(char cycles);
     int emulateWaves();
+    inline int emulateSIDoutputStage(int FilterInput, int NonFiltered);
 
     int generateSound(short* buf, unsigned int cycles);
     inline signed short generateSample(unsigned int &cycles);
