@@ -68,6 +68,7 @@ private:
     unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate
     unsigned short    Attenuation;
     bool              RealSIDmode = true;
+    int               Digi;
     //PSID-playback related:
     short             SampleCycleCnt;
     unsigned short    SampleRate;

@@ -35,9 +35,22 @@ constexpr int SID_CHANNEL_COUNT = 3;
 constexpr int CHANNEL2_INDEX = 2*SID_CHANNEL_SPACING;
 constexpr int SID_CHANNELS_RANGE = SID_CHANNEL_SPACING * SID_CHANNEL_COUNT;
 
+constexpr int VOLUME_MAX = 0xF;
+constexpr int CHANNELS = 3+1;
+constexpr int SID_FULLVOLUME = CHANNELS*VOLUME_MAX; /*64*/
+
+constexpr int CRSID_PRESAT_ATT_NOM = 20;
+constexpr int CRSID_PRESAT_ATT_DENOM = 16;
+
+//attenuates wave-generator output not to overdrive resampler-input (and maybe filter-input):
+constexpr int CRSID_WAVGEN_PRESHIFT = 3;
+constexpr int CRSID_WAVGEN_PREDIV = 1 << CRSID_WAVGEN_PRESHIFT; //shift-value can be 1..4 (1..16x division)
+
 SID::SID()
 {
     setChipModel(8580);
+    Attenuation = ((SID_FULLVOLUME+26) * CRSID_PRESAT_ATT_NOM) / (CRSID_PRESAT_ATT_DENOM * CRSID_WAVGEN_PREDIV);
+
     reset();
 }
 
@@ -60,6 +73,7 @@ void SID::reset()
     RingSourceMSB = 0;
     PrevLowPass = PrevBandPass = PrevVolume = 0;
     SampleCycleCnt = 0;
+    Digi = 0;
 
     oscReg = envReg = 0;
 }
@@ -93,7 +107,6 @@ void SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samp
     CPUfrequency = clockFrequency;
     SampleRate = samplingFrequency;
     SampleClockRatio = ( CPUfrequency << 4 ) / SampleRate; //shifting (multiplication) enhances SampleClockRatio precision
-    Attenuation = 26;
 }
 
 static const unsigned char ADSR_DAC_6581[] = {
@@ -193,13 +206,12 @@ void SID::emulateADSRs(char cycles)
 }
 
 constexpr int CRSID_CLOCK_FRACTIONAL_BITS = 4;
+
 constexpr int CRSID_WAVE_RESOLUTION = 16;
 constexpr int OSC3_WAVE_RESOLUTION = 8;
-constexpr int CRSID_WAVGEN_PRESHIFT = 3;
-constexpr int CRSID_WAVGEN_PREDIV = 1 << CRSID_WAVGEN_PRESHIFT;
+constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; //bits
 
 constexpr int SID_PHASEACCU_RESOLUTION = 24;
-constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; //bits
 constexpr int PHASEACCU_SID__RANGE = 1 << SID_PHASEACCU_RESOLUTION;
 constexpr int PHASEACCU_RANGE = (PHASEACCU_SID__RANGE << CRSID_CLOCK_FRACTIONAL_BITS);
 constexpr int PHASEACCU_MAX = PHASEACCU_RANGE - 1;
@@ -226,6 +238,19 @@ constexpr int SID_ENVELOPE_RESOLUTION = 8;
 constexpr int SID_ENVELOPE_MAGNITUDE = 1 << SID_ENVELOPE_RESOLUTION; //256
 constexpr int ENVELOPE_MAGNITUDE_DIV = SID_ENVELOPE_MAGNITUDE * CRSID_WAVGEN_PREDIV; //256 * 1..16 = 256..4096
 
+constexpr int SID_CUTOFF_BITS = 11;
+constexpr int SID_CUTOFF_RANGE = (1 << SID_CUTOFF_BITS);
+constexpr int SID_CUTOFF_MAX = SID_CUTOFF_RANGE - 1;
+
+constexpr int FRACTIONAL_BITS = 12;
+constexpr int FRACTIONAL_SHIFTS = FRACTIONAL_BITS;
+constexpr int CRSID_FILTERTABLE_RESOLUTION = 12;
+constexpr int CRSID_FILTERTABLE_SHIFTS = CRSID_FILTERTABLE_RESOLUTION;
+constexpr int CRSID_FILTERTABLE_MAGNITUDE = 1 << CRSID_FILTERTABLE_RESOLUTION;
+
+constexpr int D418_DIGI_VOL = 1*16;
+constexpr int D418_DIGI_MUL = D418_DIGI_VOL / CRSID_WAVGEN_PREDIV;
+
 static inline unsigned short getPW(unsigned char* channelptr)
 {
     return (((channelptr[3]&0xF) << 8) | channelptr[2]) << 4; //PW=0000..FFF0 from SID-register (000..FFF)
@@ -238,7 +263,7 @@ static inline unsigned short getCombinedPW(unsigned char* channelptr)
 
 int SID::emulateWaves()
 {
-    enum SIDspecs { CHANNELS=3+1, VOLUME_MAX=0xF, D418_DIGI_VOLUME=2 }; //digi-channel is counted too
+    enum SIDspecs { D418_DIGI_VOLUME=2 }; //digi-channel is counted too
     enum WaveFormBits { NOISE_BITVAL=0x80, PULSE_BITVAL=0x40, SAW_BITVAL=0x20, TRI_BITVAL=0x10,
                PULSAWTRI_VAL=0x70, PULSAW_VAL=0x60, PULTRI_VAL=0x50, SAWTRI_VAL=0x30 };
     enum ControlBits { TEST_BITVAL=0x08, RING_BITVAL=0x04, SYNC_BITVAL=0x02, GATE_BITVAL=0x01 };
@@ -259,14 +284,20 @@ int SID::emulateWaves()
         unsigned char *ChannelPtr = &(regs[Channel]);
 
         auto combinedWF = [&](const unsigned char* WFarray, unsigned short oscval) {
-            unsigned char Pitch;
-            unsigned short Filt;
-            if (ChipModel==6581 && WFarray!=PulseTriangle)
-                oscval &= 0x7FFF;
-            Pitch = ChannelPtr[1] ? ChannelPtr[1] : 1; //avoid division by zero
-            Filt = 0x7777 + (0x8888/Pitch);
-            PrevWavData[Channel] = ( WFarray[oscval>>4]*Filt + PrevWavData[Channel]*(0xFFFF-Filt) ) >> 16;
-            return PrevWavData[Channel] << 8;
+            constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; //bits
+            constexpr int COMBINEDWF_FILT_RESOLUTION = 16; //bits
+            constexpr int COMBINEDWF_WAVE_RESOLUTION = 8; //bits
+            constexpr int COMBINEDWF_OSC_MSB_OFF_MASK = (1 << (COMBINEDWF_SAMPLE_RESOLUTION - 1)) - 1; //0x7FFF
+            constexpr int COMBINEDWF_FILTMUL_MAX = (1 << COMBINEDWF_FILT_RESOLUTION) - 1; //0xFFFF
+            constexpr int COMBINEDWF_FILT_FRACTION_SHIFTS = 16;
+            constexpr int COMBINEDWF_WAVE_SHIFTS = CRSID_WAVE_RESOLUTION - COMBINEDWF_WAVE_RESOLUTION; //8
+
+            if (UNLIKELY(ChipModel==6581 && WFarray!=PulseTriangle))
+                oscval &= COMBINEDWF_OSC_MSB_OFF_MASK;
+            unsigned char Pitch = (LIKELY(ChannelPtr[1])) ? ChannelPtr[1] : 1; //avoid division by zero
+            unsigned short Filt = 0x7777 + (0x8888/Pitch);
+            PrevWavData[Channel] = (WFarray[oscval]*Filt + PrevWavData[Channel]*(COMBINEDWF_FILTMUL_MAX-Filt)) >> COMBINEDWF_FILT_FRACTION_SHIFTS;
+            return PrevWavData[Channel] << COMBINEDWF_WAVE_SHIFTS;
         };
 
         unsigned char WF = ChannelPtr[4];
@@ -401,14 +432,15 @@ int SID::emulateWaves()
         RingSourceMSB = MSB;
 
         //routing the channel signal to either the filter or the unfiltered master output depending on filter-switch SID-registers
-        unsigned char Envelope = (LIKELY(ChipModel==8580)) ? EnvelopeCounter[Channel] : ADSR_DAC_6581[EnvelopeCounter[Channel]];
+        unsigned char Envelope = (LIKELY(ChipModel == 8580))
+            ? EnvelopeCounter[Channel] : ADSR_DAC_6581[EnvelopeCounter[Channel]];
         if (UNLIKELY(FilterSwitchReso & FilterSwitchVal[Channel]))
         {
-            FilterInput += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) >> 8;// / ENVELOPE_MAGNITUDE_DIV;
+            FilterInput += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
         }
         else if (LIKELY(Channel!=14 || !(VolumeBand & OFF3_BITVAL)))
         {
-            NonFilted += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) >> 8;// / ENVELOPE_MAGNITUDE_DIV;
+            NonFilted += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
         }
     }
     //update readable SID1-registers (some SID tunes might use 3rd channel ENV3/OSC3 value as control)
@@ -419,31 +451,31 @@ int SID::emulateWaves()
 
     int Cutoff = (regs[0x16] << 3) + (regs[0x15] & 7);
     int Resonance = FilterSwitchReso >> 4;
-    if (ChipModel == 8580)
+    if (LIKELY(ChipModel == 8580))
     {
         Cutoff = CutoffMul8580_44100Hz[Cutoff];
         Resonance = Resonances8580[Resonance];
     }
     else
     { //6581
-        Cutoff += (FilterInput*105)>>16;
-        if (Cutoff>0x7FF)
-            Cutoff=0x7FF;
-        else if (Cutoff<0)
-            Cutoff=0; //MOSFET-VCR control-voltage-modulation
-        Cutoff = CutoffMul6581_44100Hz[Cutoff]; //(resistance-modulation aka 6581 filter distortion) emulation
+        Cutoff += (FilterInput*105)>>16; //MOSFET-VCR control-voltage calculation (resistance-modulation aka 6581 filter distortion) emulation
+        if (Cutoff > SID_CUTOFF_MAX)
+            Cutoff = SID_CUTOFF_MAX;
+        else if (Cutoff < 0)
+            Cutoff = 0;
+        Cutoff = CutoffMul6581_44100Hz[Cutoff];
         Resonance = Resonances6581[Resonance];
     }
 
     int FilterOutput = 0;
-    int Tmp = FilterInput + ((PrevBandPass * Resonance)>>12) + PrevLowPass;
+    int Tmp = FilterInput + ((PrevBandPass * Resonance) / CRSID_FILTERTABLE_MAGNITUDE) + PrevLowPass;
     if (VolumeBand & HIGHPASS_BITVAL)
         FilterOutput -= Tmp;
-    Tmp = PrevBandPass - ((Tmp * Cutoff) >> 12);
+    Tmp = PrevBandPass - ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
     PrevBandPass = Tmp;
     if (VolumeBand & BANDPASS_BITVAL)
         FilterOutput -= Tmp;
-    Tmp = PrevLowPass + ((Tmp * Cutoff) >> 12);
+    Tmp = PrevLowPass + ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
     PrevLowPass = Tmp;
     if (VolumeBand & LOWPASS_BITVAL)
         FilterOutput += Tmp;
@@ -454,19 +486,19 @@ int SID::emulateWaves()
     //This solved 2 issues: Thanks to the lowpass filtering of the volume-control, SID tunes where digi is played together with normal SID channels,
     //won't sound distorted anymore, and the volume-clicks disappear when setting SID-volume. (This is useful for fade-in/out tunes like Hades Nebula, where clicking ruins the intro.)
     char MainVolume;
-    if (RealSIDmode)
+    if (LIKELY(RealSIDmode))
     {
-        Tmp = (signed int)((VolumeBand&0xF) << 12);
-        NonFilted += (Tmp - PrevVolume) * D418_DIGI_VOLUME; //highpass is digi, adding it to output must be before digifilter-code
-        PrevVolume += (Tmp - PrevVolume) >> 10; //arithmetic shift amount determines digi lowpass-frequency
-        MainVolume = PrevVolume >> 12; //lowpass is main volume
+        Tmp = (signed int)((VolumeBand & 0xF) << FRACTIONAL_SHIFTS);
+        Digi = (Tmp - PrevVolume) * D418_DIGI_MUL; //highpass is digi, adding it to output must be before digifilter-code
+        PrevVolume += (Tmp - PrevVolume) / 1024; //arithmetic shift amount determines digi lowpass-frequency
+        MainVolume = PrevVolume >> FRACTIONAL_SHIFTS; //lowpass is main volume
     }
     else
         MainVolume = VolumeBand & 0xF;
 
-    int Output = ((NonFilted+FilterOutput) * MainVolume) / ((CHANNELS*VOLUME_MAX) + Attenuation);
+    int Output = ((NonFilted+FilterOutput) * MainVolume) + Digi;// / ((CHANNELS*VOLUME_MAX) + Attenuation);
 
-    return Output; // master output
+    return Output / Attenuation; // master output
 }
 
 int SID::generateSound(short *buf, unsigned int cycles)
@@ -484,10 +516,10 @@ inline signed short SID::generateSample(unsigned int &cycles)
 {
     //call this from custom buffer-filler
     int Output = emulateC64(cycles);
-    if (Output>=32767)
-        Output=32767;
-    else if (Output<=-32768)
-        Output=-32768; //saturation logic on overflow
+    if (Output > 32767)
+        Output = 32767;
+    else if (Output < -32768)
+        Output = -32768; //saturation logic on overflow
     return (signed short) Output;
 }
 
