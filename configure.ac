@@ -131,53 +131,6 @@ AS_IF([test "x$enable_debug" = "xno"],
 
 AC_SUBST([debug_flags])
 
-AC_ARG_ENABLE([inline],
-  AS_HELP_STRING([--enable-inline],[enable inlining of functions [default=yes]])
-)
-
-AS_IF([test x"$enable_inline" != "xno"],
-  [RESID_INLINE=inline; RESID_INLINING=1],
-  [RESID_INLINE=""; RESID_INLINING=0]
-)
-
-dnl define compiler flag to enable SIMD instructions, not required if -march or -mcpu is defined
-AC_MSG_CHECKING([for SIMD instructions])
-AC_ARG_WITH(
-    [simd],
-    [AS_HELP_STRING([--with-simd=], [Build with SIMD optimizations @<:@runtime/mmx/sse2/sse4/avx2/avx512f/none, default=none@:>@])],
-    [],
-    [with_simd=none]
-)
-
-AS_IF([test x"$with_simd" != xnone],
-    [AS_CASE([$with_simd],
-        [runtime], [AC_DEFINE([RUNTIME_DISPATCH], 1, [Define to 1 to enable runtime SIMD dispatch.])],
-        [mmx], [SID_X86_SIMD_SUPPORTS([mmx])],
-        [sse2], [SID_X86_SIMD_SUPPORTS([sse2])],
-        [sse4], [SID_X86_SIMD_SUPPORTS([sse4])],
-        [avx2], [SID_X86_SIMD_SUPPORTS([avx2])],
-        [avx512f], [SID_X86_SIMD_SUPPORTS([avx512f])],
-        [AC_MSG_ERROR([Unrecognized SIMD specified])]
-    )]
-)
-AC_MSG_RESULT([$with_simd])
-
-dnl gcc needs this flag to enable vectorization
-AX_APPEND_COMPILE_FLAGS([-ftree-loop-vectorize])
-
-dnl Enable branch prediction hints.
-AC_ARG_ENABLE([branch-hints],
-  [AS_HELP_STRING([--enable-branch-hints],
-    [enable static branch prediction hints [default=yes]])],
-  [],
-  [enable_branch_hints=yes]
-)
-
-AS_IF([test "$enable_branch_hints" != no],
-  [RESID_BRANCH_HINTS=1],
-  [RESID_BRANCH_HINTS=0]
-)
-
 AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
   [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
     [resid_cv_builtin_expect=yes], [resid_cv_builtin_expect=no])]
@@ -239,10 +192,15 @@ AC_ARG_ENABLE([tests],
 
 AM_CONDITIONAL([ENABLE_TEST], [test x$enable_tests = xyes])
 
+PKG_CHECK_MODULES([RESIDFP],
+    [libresidfp >= 0.9],
+    [AC_DEFINE([HAVE_RESIDFP], 1, [Define to 1 if you have libresidfp (-lresidfp).])],
+    [AC_MSG_WARN([$RESIDFP_PKG_ERRORS])]
+)
+
+AM_CONDITIONAL([RESIDFP_SUPPORT], [ test "x$pkg_cv_RESIDFP_LIBS" != x ])
+
 AC_SUBST(HAVE_BUILTIN_EXPECT)
-AC_SUBST(RESID_INLINING)
-AC_SUBST(RESID_INLINE)
-AC_SUBST(RESID_BRANCH_HINTS)
 
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
@@ -352,7 +310,6 @@ Makefile
 libsidplayfp.pc
 libstilview.pc
 src/sidplayfp/sidversion.h
-src/builders/residfp-builder/residfp/siddefs-fp.h
 src/builders/sidlite-builder/sidlite/sl_defs.h
 tests/Makefile
 ])

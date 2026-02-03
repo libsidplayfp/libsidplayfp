@@ -24,7 +24,7 @@
 
 #include <cmath>
 
-#include "residfp/siddefs-fp.h"
+#include "residfp/residfp.h"
 #include "sidplayfp/siddefs.h"
 
 #ifdef HAVE_CONFIG_H
@@ -44,12 +44,12 @@ const char* reSIDfpEmu::getCredits()
         "MOS6581/CSG8580 (SID) Emulation:\n"
         "\t(C) 1999-2002 Dag Lem\n"
         "\t(C) 2005-2011 Antti S. Lankila\n"
-        "\t(C) 2010-2024 Leandro Nini\n";
+        "\t(C) 2010-2026 Leandro Nini\n";
 }
 
 reSIDfpEmu::reSIDfpEmu(sidbuilder *builder) :
     sidemu(builder),
-    m_sid(*(new reSIDfp::SID))
+    m_sid(*(new reSIDfp::residfp))
 {
     reset(0);
 }
@@ -125,11 +125,8 @@ void reSIDfpEmu::sampling(float systemclock, float freq,
         return;
     }
 
-    try
-    {
-        m_sid.setSamplingParameters(systemclock, sampleMethod, freq);
-    }
-    catch (reSIDfp::SIDError const &)
+    bool res = m_sid.setSamplingParameters(systemclock, sampleMethod, freq);
+    if  (!res)
     {
         m_status = false;
         m_error = ERR_UNSUPPORTED_FREQ;
@@ -156,7 +153,7 @@ void reSIDfpEmu::model(SidConfig::sid_model_t model, bool digiboost)
             m_sid.input(0);
             break;
         case SidConfig::MOS8580:
-            chipModel = reSIDfp::MOS8580;
+            chipModel = reSIDfp::CSG8580;
             m_sid.input(digiboost ? -32768 : 0);
             break;
         default:

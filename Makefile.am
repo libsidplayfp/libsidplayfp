@@ -15,7 +15,6 @@ endif
 
 AM_CPPFLAGS = \
 -I $(top_builddir)/src/builders/residfp-builder \
--I $(top_builddir)/src/builders/residfp-builder/residfp \
 -I $(top_builddir)/src \
 -I $(top_builddir)/src/sidtune \
 -I $(top_srcdir)/src \
@@ -28,9 +27,6 @@ docs/mainpage.dox \
 src/psiddrv.a65 \
 src/sidtune/sidplayer1.a65 \
 src/sidtune/sidplayer2.a65 \
-src/builders/residfp-builder/residfp/AUTHORS \
-src/builders/residfp-builder/residfp/COPYING \
-src/builders/residfp-builder/residfp/README \
 src/builders/sidlite-builder/sidlite/README \
 src/builders/exsid-builder/driver/docs \
 src/builders/exsid-builder/driver/m4 \
@@ -47,7 +43,6 @@ src/libsidplayfp.la \
 src/libstilview.la
 
 noinst_LTLIBRARIES = \
-src/builders/residfp-builder/residfp/libresidfp.la \
 src/builders/residfp-builder/libsidplayfp-residfp.la \
 src/builders/sidlite-builder/sidlite/libsidlite.la \
 src/builders/sidlite-builder/libsidplayfp-sidlite.la
@@ -191,56 +186,6 @@ if EXSID_SUPPORT
 endif
 
 #=========================================================
-# residfp
-
-src_builders_residfp_builder_residfp_libresidfp_la_SOURCES = \
-src/builders/residfp-builder/residfp/array.h \
-src/builders/residfp-builder/residfp/Dac.cpp \
-src/builders/residfp-builder/residfp/Dac.h \
-src/builders/residfp-builder/residfp/EnvelopeGenerator.cpp \
-src/builders/residfp-builder/residfp/EnvelopeGenerator.h \
-src/builders/residfp-builder/residfp/ExternalFilter.cpp \
-src/builders/residfp-builder/residfp/ExternalFilter.h \
-src/builders/residfp-builder/residfp/Filter.cpp \
-src/builders/residfp-builder/residfp/Filter.h \
-src/builders/residfp-builder/residfp/Filter6581.cpp \
-src/builders/residfp-builder/residfp/Filter6581.h \
-src/builders/residfp-builder/residfp/Filter8580.cpp \
-src/builders/residfp-builder/residfp/Filter8580.h \
-src/builders/residfp-builder/residfp/FilterModelConfig.cpp \
-src/builders/residfp-builder/residfp/FilterModelConfig.h \
-src/builders/residfp-builder/residfp/FilterModelConfig6581.cpp \
-src/builders/residfp-builder/residfp/FilterModelConfig6581.h \
-src/builders/residfp-builder/residfp/FilterModelConfig8580.cpp \
-src/builders/residfp-builder/residfp/FilterModelConfig8580.h \
-src/builders/residfp-builder/residfp/Integrator.h \
-src/builders/residfp-builder/residfp/Integrator6581.cpp \
-src/builders/residfp-builder/residfp/Integrator6581.h \
-src/builders/residfp-builder/residfp/Integrator8580.cpp \
-src/builders/residfp-builder/residfp/Integrator8580.h \
-src/builders/residfp-builder/residfp/OpAmp.cpp \
-src/builders/residfp-builder/residfp/OpAmp.h \
-src/builders/residfp-builder/residfp/SID.cpp \
-src/builders/residfp-builder/residfp/SID.h \
-src/builders/residfp-builder/residfp/Spline.cpp \
-src/builders/residfp-builder/residfp/Spline.h \
-src/builders/residfp-builder/residfp/Voice.h \
-src/builders/residfp-builder/residfp/WaveformCalculator.cpp \
-src/builders/residfp-builder/residfp/WaveformCalculator.h \
-src/builders/residfp-builder/residfp/WaveformGenerator.cpp \
-src/builders/residfp-builder/residfp/WaveformGenerator.h \
-src/builders/residfp-builder/residfp/resample/Resampler.h \
-src/builders/residfp-builder/residfp/resample/ZeroOrderResampler.h \
-src/builders/residfp-builder/residfp/resample/SincResampler.cpp \
-src/builders/residfp-builder/residfp/resample/SincResampler.h \
-src/builders/residfp-builder/residfp/resample/TwoPassSincResampler.h \
-src/builders/residfp-builder/residfp/version.cc
-
-
-src_builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = \
-@RESIDFP_CXXFLAGS@
-
-#=========================================================
 # sidlite
 
 src_builders_sidlite_builder_sidlite_libsidlite_la_SOURCES = \
@@ -264,6 +209,8 @@ src_builders_sidlite_builder_sidlite_libsidlite_la_CPPFLAGS = \
 # builders
 
 # residfp
+if RESIDFP_SUPPORT
+
 src_builders_residfp_builder_libsidplayfp_residfp_ladir = $(includedir)/sidplayfp/builders
 src_builders_residfp_builder_libsidplayfp_residfp_la_HEADERS = \
 src/builders/residfp-builder/residfp.h
@@ -275,6 +222,15 @@ src/builders/residfp-builder/residfp-emu.h
 
 src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 src/builders/residfp-builder/residfp/libresidfp.la
+
+src_builders_residfp_builder_libsidplayfp_residfp_la_CPPFLAGS = \
+$(RESIDFP_CFLAGS) \
+$(AM_CPPFLAGS)
+
+src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
+$(RESIDFP_LIBS)
+
+endif
 
 # sidlite
 src_builders_sidlite_builder_libsidplayfp_sidlite_ladir = $(includedir)/sidplayfp/builders
@@ -389,8 +345,7 @@ endif
 
 noinst_PROGRAMS = \
 $(DEMO_SRC) \
-test/test \
-src/builders/residfp-builder/residfp/resample/test
+test/test
 
 test_demo_SOURCES = test/demo.cpp
 
@@ -400,9 +355,6 @@ test_test_SOURCES = test/test.cpp
 
 test_test_LDADD = src/libsidplayfp.la
 
-src_builders_residfp_builder_residfp_resample_test_SOURCES = src/builders/residfp-builder/residfp/resample/test.cpp
-
-src_builders_residfp_builder_residfp_resample_test_LDADD = src/builders/residfp-builder/residfp/resample/SincResampler.lo
 endif
 
 #=========================================================
