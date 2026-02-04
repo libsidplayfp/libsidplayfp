@@ -43,9 +43,12 @@ src/libsidplayfp.la \
 src/libstilview.la
 
 noinst_LTLIBRARIES = \
-src/builders/residfp-builder/libsidplayfp-residfp.la \
 src/builders/sidlite-builder/sidlite/libsidlite.la \
 src/builders/sidlite-builder/libsidplayfp-sidlite.la
+
+if RESIDFP_SUPPORT
+  noinst_LTLIBRARIES += src/builders/residfp-builder/libsidplayfp-residfp.la 
+endif
 
 if USBSID_SUPPORT
   noinst_LTLIBRARIES += src/builders/usbsid-builder/libsidplayfp-usbsid.la
@@ -173,9 +176,12 @@ $(LIBGCRYPT_CFLAGS) \
 $(AM_CPPFLAGS)
 
 src_libsidplayfp_la_LIBADD = \
-src/builders/residfp-builder/libsidplayfp-residfp.la \
 src/builders/sidlite-builder/libsidplayfp-sidlite.la \
 $(LIBGCRYPT_LIBS)
+
+if RESIDFP_SUPPORT
+  src_libsidplayfp_la_LIBADD += src/builders/residfp-builder/libsidplayfp-residfp.la 
+endif
 
 if USBSID_SUPPORT
   src_libsidplayfp_la_LIBADD += src/builders/usbsid-builder/libsidplayfp-usbsid.la
