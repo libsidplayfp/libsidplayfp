@@ -38,6 +38,8 @@ public:
 
     void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
 
+    int getLevel() const { return Level; }
+
 private:
     unsigned char regs[0x20];
 
@@ -75,6 +77,9 @@ private:
 
     unsigned char oscReg;
     unsigned char envReg;
+
+    int                Level;      //filtered version, good for VU-meter display
+    unsigned char VUmeterUpdateCounter;
 
 private:
     void emulateADSRs(char cycles);

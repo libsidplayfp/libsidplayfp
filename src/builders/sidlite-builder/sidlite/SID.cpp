@@ -26,6 +26,7 @@
 #include "tables.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace SIDLite
 {
@@ -76,6 +77,8 @@ void SID::reset()
     Digi = 0;
 
     oscReg = envReg = 0;
+    Level = 0;
+    VUmeterUpdateCounter = 0;
 }
 
 void SID::write(int addr, int value)
@@ -451,6 +454,9 @@ int SID::emulateWaves()
     return emulateSIDoutputStage(FilterInput, NonFiltered);
 }
 
+constexpr int VUMETER_LOWPASS_DIV = 16;
+constexpr int VUMETER_DIVSHIFTS = 4 - CRSID_WAVGEN_PRESHIFT;
+
 int SID::emulateSIDoutputStage(int FilterInput, int NonFiltered)
 {
     enum SIDspecs { HIGHPASS_BITVAL=0x40, BANDPASS_BITVAL=0x20, LOWPASS_BITVAL=0x10 };
@@ -508,6 +514,11 @@ int SID::emulateSIDoutputStage(int FilterInput, int NonFiltered)
 
     int Output = ((NonFiltered+FilterOutput) * MainVolume) + Digi;// / ((CHANNELS*VOLUME_MAX) + Attenuation);
 
+    if (UNLIKELY(!++VUmeterUpdateCounter))
+    {
+        //average level (for VU-meter)
+        Level += ((std::abs(Output)>>VUMETER_DIVSHIFTS) - Level ) / VUMETER_LOWPASS_DIV;
+    }
     return Output / Attenuation; // master output
 }
 
