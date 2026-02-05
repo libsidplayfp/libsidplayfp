@@ -22,10 +22,10 @@
 
 #include <cmath>
 
-int Resonance8580[0xF];
-int Resonance6581[0xF];
-int Cutoff8580[0x800];
-int Cutoff6581[0x800];
+unsigned short Resonance8580[0xF];
+unsigned short Resonance6581[0xF];
+unsigned short Cutoff8580[0x800];
+unsigned short Cutoff6581[0x800];
 
 void curvegen(int samplerate)
 {

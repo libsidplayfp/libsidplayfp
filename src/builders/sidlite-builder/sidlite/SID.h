@@ -66,14 +66,14 @@ private:
     signed int         PrevVolume; //lowpass-filtered version of Volume-band register
 
     //C64-machine related:
-    unsigned int      CPUfrequency;
-    unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate
+    unsigned int      CPUfrequency = 0;
+    unsigned short    SampleClockRatio = 0; //ratio of CPU-clock and samplerate
     unsigned short    Attenuation;
     bool              RealSIDmode = true;
     int               Digi;
     //PSID-playback related:
     short             SampleCycleCnt;
-    unsigned short    SampleRate;
+    unsigned short    SampleRate = 44100;
 
     unsigned char oscReg;
     unsigned char envReg;
@@ -89,6 +89,8 @@ private:
     int generateSound(short* buf, unsigned int cycles);
     inline signed short generateSample(unsigned int &cycles);
     int emulateC64(unsigned int &cycles);
+
+    void rebuildCutoffTables(unsigned short samplerate);
 };
 
 }
