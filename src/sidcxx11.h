@@ -48,9 +48,11 @@
 
 #ifdef HAVE_CXX14
 #  define HAVE_CXX11
-#  define MAKE_UNIQUE(type, ...) std::make_unique<type>(__VA_ARGS__)
+#  define MAKE_UNIQUE(type) std::make_unique<type>()
+#  define MAKE_UNIQUE_ARGS(type, ...) std::make_unique<type>(__VA_ARGS__)
 #else
-#  define MAKE_UNIQUE(type, ...) std::unique_ptr<type>(new type(__VA_ARGS__))
+#  define MAKE_UNIQUE(type) std::unique_ptr<type>(new type())
+#  define MAKE_UNIQUE_ARGS(type, ...) std::unique_ptr<type>(new type(__VA_ARGS__))
 #endif
 
 #ifndef HAVE_CXX11
