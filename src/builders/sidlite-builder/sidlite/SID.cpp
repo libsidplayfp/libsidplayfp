@@ -23,19 +23,16 @@
 #include "SID.h"
 
 #include "sl_defs.h"
+#include "sl_constants.h"
 #include "filt_tables.h"
 #include "cw_tables.h"
 
 #include <algorithm>
+#include <iterator>
 #include <cmath>
 
 namespace SIDLite
 {
-
-constexpr int SID_CHANNEL_SPACING = 7;
-constexpr int SID_CHANNEL_COUNT = 3;
-constexpr int CHANNEL2_INDEX = 2*SID_CHANNEL_SPACING;
-constexpr int SID_CHANNELS_RANGE = SID_CHANNEL_SPACING * SID_CHANNEL_COUNT;
 
 constexpr int VOLUME_MAX = 0xF;
 constexpr int CHANNELS = 3+1;
@@ -48,7 +45,8 @@ constexpr int CRSID_PRESAT_ATT_DENOM = 16;
 constexpr int CRSID_WAVGEN_PRESHIFT = 3;
 constexpr int CRSID_WAVGEN_PREDIV = 1 << CRSID_WAVGEN_PRESHIFT; //shift-value can be 1..4 (1..16x division)
 
-SID::SID()
+SID::SID() :
+    adsr(regs)
 {
     setChipModel(8580);
     Attenuation = ((SID_FULLVOLUME+26) * CRSID_PRESAT_ATT_NOM) / (CRSID_PRESAT_ATT_DENOM * CRSID_WAVGEN_PREDIV);
@@ -58,12 +56,8 @@ SID::SID()
 
 void SID::reset()
 {
-    for (int Channel = 0; Channel < 21; Channel+=7)
+    for (int Channel=0; Channel<SID_CHANNELS_RANGE; Channel+=SID_CHANNEL_SPACING)
     {
-        ADSRstate[Channel] = 0;
-        RateCounter[Channel] = 0;
-        EnvelopeCounter[Channel] = 0;
-        ExponentCounter[Channel] = 0;
         PhaseAccu[Channel] = 0;
         PrevPhaseAccu[Channel] = 0;
         NoiseLFSR[Channel] = 0x7FFFFF;
@@ -80,6 +74,8 @@ void SID::reset()
     oscReg = envReg = 0;
     Level = 0;
     VUmeterUpdateCounter = 0;
+
+    std::fill(std::begin(regs), std::end(regs), 0);
 }
 
 void SID::write(int addr, int value)
@@ -134,83 +130,6 @@ static const unsigned char ADSR_DAC_6581[] = {
     0xDC,0xDE,0xDF,0xE1,0xE1,0xE3,0xE3,0xE5,0xE5,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xEE,
     0xED,0xEF,0xF0,0xF2,0xF2,0xF4,0xF4,0xF6,0xF6,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFF
 };
-
-void SID::emulateADSRs(char cycles)
-{
-    enum ADSRstateBits { GATE_BITVAL=0x01, ATTACK_BITVAL=0x80, DECAYSUSTAIN_BITVAL=0x40, HOLDZEROn_BITVAL=0x10 };
-
-    static const short ADSRprescalePeriods[16] = {
-        9, 32, 63, 95, 149, 220, 267, 313, 392, 977, 1954, 3126, 3907, 11720, 19532, 31251
-    };
-
-    static const unsigned char ADSRexponentPeriods[256] = {
-        1, 30, 30, 30, 30, 30, 30, 16, 16, 16, 16, 16, 16, 16, 16,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 4, //pos0:1  pos6:30  pos14:16  pos26:8
-        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, //pos54:4 //pos93:2
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-    };
-
-    for (int Channel=0; Channel<SID_CHANNELS_RANGE; Channel+=SID_CHANNEL_SPACING)
-    {
-        unsigned char *ChannelPtr = &regs[Channel];
-        unsigned char AD = ChannelPtr[5];
-        unsigned char SR = ChannelPtr[6];
-        unsigned char *ADSRstatePtr = &(ADSRstate[Channel]);
-        unsigned short *RateCounterPtr = &(RateCounter[Channel]);
-        unsigned char *EnvelopeCounterPtr = &(EnvelopeCounter[Channel]);
-        unsigned char *ExponentCounterPtr = &(ExponentCounter[Channel]);
-
-        unsigned char PrevGate = (*ADSRstatePtr & GATE_BITVAL);
-        if (UNLIKELY(PrevGate != (ChannelPtr[4] & GATE_BITVAL)))
-        { //gatebit-change?
-            if (PrevGate)
-                *ADSRstatePtr &= ~(GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL); //falling edge
-            else
-                *ADSRstatePtr = (GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL | HOLDZEROn_BITVAL); //rising edge
-        }
-
-        unsigned short PrescalePeriod;
-        if (*ADSRstatePtr & ATTACK_BITVAL)
-            PrescalePeriod = ADSRprescalePeriods[ AD >> 4 ];
-        else if (*ADSRstatePtr & DECAYSUSTAIN_BITVAL)
-            PrescalePeriod = ADSRprescalePeriods[ AD & 0x0F ];
-        else
-            PrescalePeriod = ADSRprescalePeriods[ SR & 0x0F ];
-
-        *RateCounterPtr += cycles;
-        if (UNLIKELY(*RateCounterPtr >= 0x8000))
-            *RateCounterPtr -= 0x8000; //*RateCounterPtr &= 0x7FFF; //can wrap around (ADSR delay-bug: short 1st frame)
-
-        if (UNLIKELY(PrescalePeriod <= *RateCounterPtr && *RateCounterPtr < PrescalePeriod+cycles))
-        { //ratecounter shot (matches rateperiod) (in genuine SID ratecounter is LFSR)
-            *RateCounterPtr -= PrescalePeriod; //reset rate-counter on period-match
-            if ((*ADSRstatePtr & ATTACK_BITVAL) || ++(*ExponentCounterPtr) == ADSRexponentPeriods[*EnvelopeCounterPtr])
-            {
-                *ExponentCounterPtr = 0;
-                if (*ADSRstatePtr & HOLDZEROn_BITVAL)
-                {
-                    if (*ADSRstatePtr & ATTACK_BITVAL)
-                    {
-                        ++(*EnvelopeCounterPtr);
-                        if (*EnvelopeCounterPtr==0xFF)
-                            *ADSRstatePtr &= ~ATTACK_BITVAL;
-                    }
-                    else if (!(*ADSRstatePtr & DECAYSUSTAIN_BITVAL) || *EnvelopeCounterPtr != (SR&0xF0)+(SR>>4))
-                    {
-                        --(*EnvelopeCounterPtr); //resid adds 1 cycle delay, we omit that mechanism here
-                        if (*EnvelopeCounterPtr==0)
-                            *ADSRstatePtr &= ~HOLDZEROn_BITVAL;
-                    }
-                }
-            }
-        }
-    }
-}
 
 constexpr int CRSID_CLOCK_FRACTIONAL_BITS = 4;
 
@@ -441,7 +360,7 @@ int SID::emulateWaves()
 
         //routing the channel signal to either the filter or the unfiltered master output depending on filter-switch SID-registers
         unsigned char Envelope = (LIKELY(ChipModel == 8580))
-            ? EnvelopeCounter[Channel] : ADSR_DAC_6581[EnvelopeCounter[Channel]];
+            ? adsr.counter(Channel) : ADSR_DAC_6581[adsr.counter(Channel)];
         if (UNLIKELY(FilterSwitchReso & FilterSwitchVal[Channel]))
         {
             FilterInput += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
@@ -453,7 +372,7 @@ int SID::emulateWaves()
     }
     //update readable SID1-registers (some SID tunes might use 3rd channel ENV3/OSC3 value as control)
     oscReg = WavGenOut >> WAVE_OSC3_SHIFTS; //OSC3, ENV3 (some players rely on it, unfortunately even for timing)
-    envReg = EnvelopeCounter[CHANNEL2_INDEX]; //Envelope
+    envReg = adsr.counter(CHANNEL2_INDEX); //Envelope
 
     return emulateSIDoutputStage(FilterInput, NonFiltered);
 }
@@ -559,7 +478,7 @@ int SID::emulateC64(unsigned int &cycles)
         SampleCycleCnt += (InstructionCycles<<4);
         cycles -= InstructionCycles;
 
-        emulateADSRs(InstructionCycles);
+        adsr.clock(InstructionCycles);
     }
 
     SampleCycleCnt -= SampleClockRatio;

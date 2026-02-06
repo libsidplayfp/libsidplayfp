@@ -20,8 +20,10 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-#ifndef SID_H
-#define SID_H
+#ifndef SIDLITE_SID_H
+#define SIDLITE_SID_H
+
+#include "ADSR.h"
 
 namespace SIDLite
 {
@@ -41,15 +43,11 @@ public:
     int getLevel() const { return Level; }
 
 private:
-    unsigned char regs[0x20];
+    unsigned char regs[0x20] = {0};
 
     //SID-chip data:
     unsigned short     ChipModel;     //values: 8580 / 6581
-    //ADSR-related:
-    unsigned char      ADSRstate[15];
-    unsigned short     RateCounter[15];
-    unsigned char      EnvelopeCounter[15];
-    unsigned char      ExponentCounter[15];
+    ADSR               adsr;
     //Wave-related:
     int                PhaseAccu[15];       //28bit precision instead of 24bit
     int                PrevPhaseAccu[15];   //(integerized ClockRatio fractionals, WebSID has similar solution)
@@ -82,7 +80,6 @@ private:
     unsigned char VUmeterUpdateCounter;
 
 private:
-    void emulateADSRs(char cycles);
     int emulateWaves();
     inline int emulateSIDoutputStage(int FilterInput, int NonFiltered);
 
@@ -95,4 +92,4 @@ private:
 
 }
 
-#endif // SIDLITE_H
+#endif // SIDLITE_SID_H
