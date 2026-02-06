@@ -64,25 +64,6 @@ char* loadRom(const char* path, size_t romSize)
     return buffer;
 }
 
-ReSIDfpBuilder* createEngine(int maxsids)
-{
-    // Set up a SID builder
-    ReSIDfpBuilder* rs = new ReSIDfpBuilder("Test-MT");
-
-    // Create SID emulators
-    rs->create(maxsids);
-
-    // Check if builder is ok
-    if (!rs->getStatus())
-    {
-        delete rs;
-        std::cerr << rs->error() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    return rs;
-}
-
 // Get the lo byte (8 bit) in a dword (32 bit)
 inline uint8_t endian_32lo8 (uint_least32_t dword)
 {
@@ -191,7 +172,7 @@ void writeWavHeader()
     // Fill in header with parameters and expected file size.
     riffHdr = defaultRiffHdr;
     endian_little32(riffHdr.length, sizeof(riffHeader)+sizeof(wavHeader)-8);
-    
+
     wavHdr = defaultWavHdr;
     endian_little16(wavHdr.channels, channels);
     endian_little16(wavHdr.format, 1);
@@ -235,9 +216,8 @@ void run(int i, const char* tuneName)
     SidConfig cfg;
     cfg.frequency = SAMPLERATE;
     cfg.samplingMethod = SidConfig::INTERPOLATE;
-    cfg.fastSampling = false;
     cfg.playback = SidConfig::MONO;
-    cfg.sidEmulation = createEngine((m_engine.info()).maxsids());
+    cfg.sidEmulation = new ReSIDfpBuilder("Test-MT");;
 
     if (!m_engine.config(cfg))
     {
@@ -253,16 +233,20 @@ void run(int i, const char* tuneName)
     }
 
     // Play
+    m_engine.initMixer(false);
+
     std::vector<short> buffer(bufferSamples);
     for (int i=0; i<1000; i++)
     {
-        uint_least32_t res = m_engine.play(&buffer.front(), bufferSamples);
-        if (!m_engine.isPlaying() || (res < bufferSamples))
+        int res = m_engine.play(5000);
+        if (res < 0)
         {
-            std::cerr <<  m_engine.error() << std::endl;
+            std::cerr << m_engine.error() << std::endl;
             break;
         }
-        handle.write((char*)&buffer.front(), buffer.size() * sizeof(short));
+        unsigned int s = m_engine.mix(&buffer.front(), res);
+
+        handle.write((char*)&buffer.front(), s*sizeof(short));
     }
     handle.close();
 }
