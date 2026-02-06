@@ -258,9 +258,10 @@ src_builders_residfp_builder_residfp_libresidfp_la_CXXFLAGS = \
 # sidlite
 
 src_builders_sidlite_builder_sidlite_libsidlite_la_SOURCES = \
+src/builders/sidlite-builder/sidlite/cw_tables.h \
+src/builders/sidlite-builder/sidlite/filt_tables.h \
 src/builders/sidlite-builder/sidlite/SID.cpp \
-src/builders/sidlite-builder/sidlite/SID.h \
-src/builders/sidlite-builder/sidlite/tables.h
+src/builders/sidlite-builder/sidlite/SID.h
 
 src_builders_sidlite_builder_sidlite_libsidlite_la_CPPFLAGS = \
 -I $(top_builddir)/src/builders/sidlite-builder/sidlite

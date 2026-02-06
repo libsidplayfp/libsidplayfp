@@ -23,7 +23,8 @@
 #include "SID.h"
 
 #include "sl_defs.h"
-#include "tables.h"
+#include "filt_tables.h"
+#include "cw_tables.h"
 
 #include <algorithm>
 #include <cmath>
@@ -290,7 +291,7 @@ int SID::emulateWaves()
     {
         unsigned char *ChannelPtr = &(regs[Channel]);
 
-        auto combinedWF = [&](const unsigned char* WFarray, unsigned short oscval) {
+        auto combinedWF = [&](cw_array_t WFarray, unsigned short oscval) {
             constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; //bits
             constexpr int COMBINEDWF_FILT_RESOLUTION = 16; //bits
             constexpr int COMBINEDWF_WAVE_RESOLUTION = 8; //bits
@@ -373,13 +374,13 @@ int SID::emulateWaves()
             { //pulse+saw+triangle (waveform nearly identical to tri+saw)
                 unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; //16; //12;
                 WavGenOut = Utmp >= getCombinedPW(ChannelPtr) || UNLIKELY(TestBit)
-                    ? combinedWF( PulseSawTriangle, Utmp) : CRSID_WAVE_MIN; //0;
+                    ? combinedWF(PulseSawTriangle, Utmp) : CRSID_WAVE_MIN; //0;
             } break;
             case PULSAW_VAL:
             { //pulse+saw
                 unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; //16; //12;
                 WavGenOut = Utmp >= getCombinedPW(ChannelPtr) //|| UNLIKELY(TestBit)
-                            ? combinedWF( PulseSawtooth, Utmp) : CRSID_WAVE_MIN; //0;
+                            ? combinedWF(PulseSawtooth, Utmp) : CRSID_WAVE_MIN; //0;
             } break;
             case PULTRI_VAL:
             { //pulse+triangle
@@ -568,6 +569,7 @@ int SID::emulateC64(unsigned int &cycles)
     return emulateWaves();
 }
 
+// FIXME not thread-safe, needs a static cache
 void SID::rebuildCutoffTables(unsigned short samplerate)
 {
     //8580
