@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2025-2026 Leandro Nini
+ *  Copyright (C) 2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,17 +20,26 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-#ifndef SIDLITE_CONSTANTS_H
-#define SIDLITE_CONSTANTS_H
+#ifndef SIDLITE_SETTINGS_H
+#define SIDLITE_SETTINGS_H
 
 namespace SIDLite
 {
 
-constexpr int SID_CHANNEL_COUNT = 3;
+class SID;
 
-//attenuates wave-generator output not to overdrive resampler-input (and maybe filter-input):
-constexpr int CRSID_WAVGEN_PRESHIFT = 3;
-constexpr int CRSID_WAVGEN_PREDIV = 1 << CRSID_WAVGEN_PRESHIFT; //shift-value can be 1..4 (1..16x division)
+class settings
+{
+    friend class SID;
+
+public:
+    inline unsigned short getChipModel() const { return ChipModel; }
+    inline bool getRealSIDmode() const { return RealSIDmode; }
+
+private:
+    unsigned short ChipModel   = 8580;     //values: 8580 / 6581
+    bool           RealSIDmode = true;
+};
 
 }
 

@@ -20,18 +20,42 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-#ifndef SIDLITE_CONSTANTS_H
-#define SIDLITE_CONSTANTS_H
+#ifndef SIDLITE_FILTER_H
+#define SIDLITE_FILTER_H
 
 namespace SIDLite
 {
 
-constexpr int SID_CHANNEL_COUNT = 3;
+class settings;
 
-//attenuates wave-generator output not to overdrive resampler-input (and maybe filter-input):
-constexpr int CRSID_WAVGEN_PRESHIFT = 3;
-constexpr int CRSID_WAVGEN_PREDIV = 1 << CRSID_WAVGEN_PRESHIFT; //shift-value can be 1..4 (1..16x division)
+class Filter
+{
+public:
+    Filter(settings *s, unsigned char *regs);
+    void reset();
+    int clock(int FilterInput, int NonFiltered);
+
+    inline int getLevel() const { return Level; }
+
+    void rebuildCutoffTables(unsigned short samplerate);
+
+private:
+    unsigned char *regs;
+    settings      *s;
+
+    unsigned short *CutoffMul8580;
+    unsigned short *CutoffMul6581;
+
+    signed int     PrevVolume; //lowpass-filtered version of Volume-band register
+    int            PrevLowPass;
+    int            PrevBandPass;
+    int            Digi;
+    int            Level;      //filtered version, good for VU-meter display
+    unsigned short Attenuation;
+    unsigned char  VUmeterUpdateCounter;
+};
 
 }
 
-#endif
+#endif // SIDLITE_FILTER_H
+

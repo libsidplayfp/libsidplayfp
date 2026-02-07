@@ -24,6 +24,8 @@
 #define SIDLITE_SID_H
 
 #include "ADSR.h"
+#include "Filter.h"
+#include "sl_settings.h"
 
 #include <array>
 
@@ -42,14 +44,15 @@ public:
 
     void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
 
-    int getLevel() const { return Level; }
+    int getLevel() const { return filter.getLevel(); }
 
 private:
     unsigned char regs[0x20] = {0};
 
-    //SID-chip data:
-    unsigned short     ChipModel;     //values: 8580 / 6581
     ADSR               adsr;
+    Filter             filter; 
+    settings           s;
+
     //Wave-related:
     int                PhaseAccu[3];       //28bit precision instead of 24bit
     int                PrevPhaseAccu[3];   //(integerized ClockRatio fractionals, WebSID has similar solution)
@@ -57,41 +60,20 @@ private:
     unsigned int       PrevWavGenOut[3];
     unsigned char      PrevWavData[3];
     signed char        PrevSounDemonDigiWF[3];
-    unsigned int       RingSourceMSB;
     unsigned char      SyncSourceMSBrise;
-    //Filter-related:
-    int                PrevLowPass;
-    int                PrevBandPass;
-    unsigned short     *CutoffMul8580;
-    unsigned short     *CutoffMul6581;
-    //Output-stage:
-    signed int         PrevVolume; //lowpass-filtered version of Volume-band register
+    unsigned int       RingSourceMSB;
 
-    //C64-machine related:
-    unsigned int      CPUfrequency = 0;
-    unsigned short    SampleClockRatio = 0; //ratio of CPU-clock and samplerate
-    unsigned short    Attenuation;
-    bool              RealSIDmode = true;
-    int               Digi;
-    //PSID-playback related:
+    unsigned short    SampleClockRatio; //ratio of CPU-clock and samplerate
     short             SampleCycleCnt;
-    unsigned short    SampleRate = 0;
 
     unsigned char oscReg;
     unsigned char envReg;
 
-    int                Level;      //filtered version, good for VU-meter display
-    unsigned char VUmeterUpdateCounter;
-
 private:
     int emulateWaves();
-    inline int emulateSIDoutputStage(int FilterInput, int NonFiltered);
 
-    int generateSound(short* buf, unsigned int cycles);
     inline signed short generateSample(unsigned int &cycles);
-    int emulateC64(unsigned int &cycles);
-
-    void rebuildCutoffTables(unsigned short samplerate);
+    inline int emulateC64(unsigned int &cycles);
 };
 
 }

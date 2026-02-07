@@ -27,32 +27,16 @@
 #include "filt_tables.h"
 #include "cw_tables.h"
 
-#include <algorithm>
 #include <iterator>
-#include <map>
-#include <mutex>
-#include <cmath>
 
 namespace SIDLite
 {
 
-constexpr int VOLUME_MAX = 0xF;
-constexpr int CHANNELS = 3+1;
-constexpr int SID_FULLVOLUME = CHANNELS*VOLUME_MAX; /*64*/
-
-constexpr int CRSID_PRESAT_ATT_NOM = 20;
-constexpr int CRSID_PRESAT_ATT_DENOM = 16;
-
-//attenuates wave-generator output not to overdrive resampler-input (and maybe filter-input):
-constexpr int CRSID_WAVGEN_PRESHIFT = 3;
-constexpr int CRSID_WAVGEN_PREDIV = 1 << CRSID_WAVGEN_PRESHIFT; //shift-value can be 1..4 (1..16x division)
-
 SID::SID() :
-    adsr(regs)
+    adsr(regs),
+    filter(&s, regs)
 {
     setChipModel(8580);
-    Attenuation = ((SID_FULLVOLUME+26) * CRSID_PRESAT_ATT_NOM) / (CRSID_PRESAT_ATT_DENOM * CRSID_WAVGEN_PREDIV);
-
     reset();
 }
 
@@ -69,13 +53,9 @@ void SID::reset()
     }
     SyncSourceMSBrise = 0;
     RingSourceMSB = 0;
-    PrevLowPass = PrevBandPass = PrevVolume = 0;
     SampleCycleCnt = 0;
-    Digi = 0;
 
     oscReg = envReg = 0;
-    Level = 0;
-    VUmeterUpdateCounter = 0;
 
     std::fill(std::begin(regs), std::end(regs), 0);
 }
@@ -96,22 +76,25 @@ int SID::read(int addr)
 
 int SID::clock(unsigned int cycles, short* buf)
 {
-    return generateSound(buf, cycles);
+    int i = 0;
+    while (cycles>0)
+    {
+        buf[i] = generateSample(cycles);
+        i++;
+    }
+    return i;
 }
 
 void SID::setChipModel(int model)
 {
-    ChipModel = model;
+    s.ChipModel = model;
 }
 
 void SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency)
 {
-    if (SampleRate != samplingFrequency)
-        rebuildCutoffTables(samplingFrequency);
+    filter.rebuildCutoffTables(samplingFrequency);
 
-    CPUfrequency = clockFrequency;
-    SampleRate = samplingFrequency;
-    SampleClockRatio = (CPUfrequency << 4) / SampleRate; //shifting (multiplication) enhances SampleClockRatio precision
+    SampleClockRatio = (clockFrequency << 4) / samplingFrequency; //shifting (multiplication) enhances SampleClockRatio precision
 }
 
 static const unsigned char ADSR_DAC_6581[] = {
@@ -166,19 +149,6 @@ constexpr int SID_ENVELOPE_RESOLUTION = 8;
 constexpr int SID_ENVELOPE_MAGNITUDE = 1 << SID_ENVELOPE_RESOLUTION; //256
 constexpr int ENVELOPE_MAGNITUDE_DIV = SID_ENVELOPE_MAGNITUDE * CRSID_WAVGEN_PREDIV; //256 * 1..16 = 256..4096
 
-constexpr int SID_CUTOFF_BITS = 11;
-constexpr int SID_CUTOFF_RANGE = (1 << SID_CUTOFF_BITS);
-constexpr int SID_CUTOFF_MAX = SID_CUTOFF_RANGE - 1;
-
-constexpr int FRACTIONAL_BITS = 12;
-constexpr int FRACTIONAL_SHIFTS = FRACTIONAL_BITS;
-constexpr int CRSID_FILTERTABLE_RESOLUTION = 12;
-constexpr int CRSID_FILTERTABLE_SHIFTS = CRSID_FILTERTABLE_RESOLUTION;
-constexpr int CRSID_FILTERTABLE_MAGNITUDE = 1 << CRSID_FILTERTABLE_RESOLUTION;
-
-constexpr int D418_DIGI_VOL = 1*16;
-constexpr int D418_DIGI_MUL = D418_DIGI_VOL / CRSID_WAVGEN_PREDIV;
-
 constexpr int OFF3_BITVAL = 0x80;
 
 static inline unsigned short getPW(unsigned char* channelptr)
@@ -193,7 +163,6 @@ static inline unsigned short getCombinedPW(unsigned char* channelptr)
 
 int SID::emulateWaves()
 {
-    enum SIDspecs { D418_DIGI_VOLUME=2 }; //digi-channel is counted too
     enum WaveFormBits { NOISE_BITVAL=0x80, PULSE_BITVAL=0x40, SAW_BITVAL=0x20, TRI_BITVAL=0x10,
                PULSAWTRI_VAL=0x70, PULSAW_VAL=0x60, PULTRI_VAL=0x50, SAWTRI_VAL=0x30 };
     enum ControlBits { TEST_BITVAL=0x08, RING_BITVAL=0x04, SYNC_BITVAL=0x02, GATE_BITVAL=0x01 };
@@ -219,7 +188,7 @@ int SID::emulateWaves()
             constexpr int COMBINEDWF_FILT_FRACTION_SHIFTS = 16;
             constexpr int COMBINEDWF_WAVE_SHIFTS = CRSID_WAVE_RESOLUTION - COMBINEDWF_WAVE_RESOLUTION; //8
 
-            if (UNLIKELY(ChipModel==6581 && WFarray!=PulseTriangle))
+            if (UNLIKELY(s.ChipModel==6581 && WFarray!=PulseTriangle))
                 oscval &= COMBINEDWF_OSC_MSB_OFF_MASK;
             unsigned char Pitch = (LIKELY(ChannelPtr[1])) ? ChannelPtr[1] : 1; //avoid division by zero
             unsigned short Filt = 0x7777 + (0x8888/Pitch);
@@ -323,7 +292,7 @@ int SID::emulateWaves()
             } break;
             case TRI_BITVAL:
             { //triangle (this waveform has no harsh edges, so it doesn't suffer from strong aliasing at high pitches)
-                if (LIKELY(!RealSIDmode || PrevSounDemonDigiWF[Channel] <= 0))
+                if (LIKELY(!s.RealSIDmode || PrevSounDemonDigiWF[Channel] <= 0))
                 {
                     int Tmp = *PhaseAccuPtr ^ (UNLIKELY(WF&RING_BITVAL) ? RingSourceMSB : 0);
                     WavGenOut = (Tmp ^ (Tmp&PHASEACCU_MSB_BITVAL ? PHASEACCU_MAX : 0)) >> (CRSID_WAVE_SHIFTS-1); //11;
@@ -336,7 +305,7 @@ int SID::emulateWaves()
             } break;
             case 0x00: //emulate waveform 00 floating wave-DAC (utilized by SounDemon digis) (on real SID waveform00 decays after about 5 seconds, here we just simply keep the value to avoid clicks)
                 //(Our jittery 'seeking' waveform=$01 part of SounDemon-digi is substituted directly by frequency-high register's value (as in SwinSID))
-                if (RealSIDmode && WF == SOUNDEMON_DIGI_SEEK_WAVEFORM)
+                if (s.RealSIDmode && WF == SOUNDEMON_DIGI_SEEK_WAVEFORM)
                 {
                     WavGenOut = ChannelPtr[1] << SOUNDEMON_DIGI_SHIFTS;
                     PrevSounDemonDigiWF[Channel] = SOUNDEMON_CARRIER_ELIMINATION_SAMPLECOUNT;
@@ -359,7 +328,7 @@ int SID::emulateWaves()
         RingSourceMSB = MSB;
 
         //routing the channel signal to either the filter or the unfiltered master output depending on filter-switch SID-registers
-        unsigned char Envelope = (LIKELY(ChipModel == 8580))
+        unsigned char Envelope = (LIKELY(s.ChipModel == 8580))
             ? adsr.counter(Channel) : ADSR_DAC_6581[adsr.counter(Channel)];
         if (UNLIKELY(FilterSwitchReso & (1 << Channel)))
         {
@@ -374,86 +343,7 @@ int SID::emulateWaves()
     oscReg = WavGenOut >> WAVE_OSC3_SHIFTS; //OSC3, ENV3 (some players rely on it, unfortunately even for timing)
     envReg = adsr.counter(2); //Envelope
 
-    return emulateSIDoutputStage(FilterInput, NonFiltered);
-}
-
-constexpr int VUMETER_LOWPASS_DIV = 16;
-constexpr int VUMETER_DIVSHIFTS = 4 - CRSID_WAVGEN_PRESHIFT;
-
-int SID::emulateSIDoutputStage(int FilterInput, int NonFiltered)
-{
-    enum SIDspecs { HIGHPASS_BITVAL=0x40, BANDPASS_BITVAL=0x20, LOWPASS_BITVAL=0x10 };
-
-    //Filter
-    unsigned char FilterSwitchReso = regs[0x17];
-    unsigned char VolumeBand = regs[0x18];
-
-    int Cutoff = (regs[0x16] << 3) + (regs[0x15] & 7);
-    int Resonance = FilterSwitchReso >> 4;
-    if (LIKELY(ChipModel == 8580))
-    {
-        Cutoff = CutoffMul8580[Cutoff];
-        Resonance = Resonances8580[Resonance];
-    }
-    else
-    { //6581
-        Cutoff += (FilterInput*105)>>16; //MOSFET-VCR control-voltage calculation (resistance-modulation aka 6581 filter distortion) emulation
-        if (Cutoff > SID_CUTOFF_MAX)
-            Cutoff = SID_CUTOFF_MAX;
-        else if (Cutoff < 0)
-            Cutoff = 0;
-        Cutoff = CutoffMul6581[Cutoff];
-        Resonance = Resonances6581[Resonance];
-    }
-
-    int FilterOutput = 0;
-    int Tmp = FilterInput + ((PrevBandPass * Resonance) / CRSID_FILTERTABLE_MAGNITUDE) + PrevLowPass;
-    if (VolumeBand & HIGHPASS_BITVAL)
-        FilterOutput -= Tmp;
-    Tmp = PrevBandPass - ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
-    PrevBandPass = Tmp;
-    if (VolumeBand & BANDPASS_BITVAL)
-        FilterOutput -= Tmp;
-    Tmp = PrevLowPass + ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
-    PrevLowPass = Tmp;
-    if (VolumeBand & LOWPASS_BITVAL)
-        FilterOutput += Tmp;
-
-    //Output stage
-    //For $D418 volume-register digi playback: an AC / DC separation for $D418 value at low (20Hz or so) cutoff-frequency,
-    //sending AC (highpass) value to a 4th 'digi' channel mixed to the master output, and set ONLY the DC (lowpass) value to the volume-control.
-    //This solved 2 issues: Thanks to the lowpass filtering of the volume-control, SID tunes where digi is played together with normal SID channels,
-    //won't sound distorted anymore, and the volume-clicks disappear when setting SID-volume. (This is useful for fade-in/out tunes like Hades Nebula, where clicking ruins the intro.)
-    char MainVolume;
-    if (LIKELY(RealSIDmode))
-    {
-        Tmp = (signed int)((VolumeBand & 0xF) << FRACTIONAL_SHIFTS);
-        Digi = (Tmp - PrevVolume) * D418_DIGI_MUL; //highpass is digi, adding it to output must be before digifilter-code
-        PrevVolume += (Tmp - PrevVolume) / 1024; //arithmetic shift amount determines digi lowpass-frequency
-        MainVolume = PrevVolume >> FRACTIONAL_SHIFTS; //lowpass is main volume
-    }
-    else
-        MainVolume = VolumeBand & 0xF;
-
-    int Output = ((NonFiltered+FilterOutput) * MainVolume) + Digi;// / ((CHANNELS*VOLUME_MAX) + Attenuation);
-
-    if (UNLIKELY(!++VUmeterUpdateCounter))
-    {
-        //average level (for VU-meter)
-        Level += ((std::abs(Output)>>VUMETER_DIVSHIFTS) - Level ) / VUMETER_LOWPASS_DIV;
-    }
-    return Output / Attenuation; // master output
-}
-
-int SID::generateSound(short *buf, unsigned int cycles)
-{
-    int i = 0;
-    while (cycles>0)
-    {
-        buf[i] = generateSample(cycles);
-        i++;
-    }
-    return i;
+    return filter.clock(FilterInput, NonFiltered);
 }
 
 inline signed short SID::generateSample(unsigned int &cycles)
@@ -468,7 +358,7 @@ inline signed short SID::generateSample(unsigned int &cycles)
 }
 
 
-int SID::emulateC64(unsigned int &cycles)
+inline int SID::emulateC64(unsigned int &cycles)
 {
     //Cycle-based part of emulations:
 
@@ -486,81 +376,6 @@ int SID::emulateC64(unsigned int &cycles)
     //Samplerate-based part of emulations:
 
     return emulateWaves();
-}
-
-constexpr int CF_LEN = 0x800;
-using co_tab_t = std::array<unsigned short, CF_LEN>;
-using co_cache_t = std::map<unsigned short, co_tab_t>;
-
-static co_cache_t CUTOFF_CACHE_8580;
-static co_cache_t CUTOFF_CACHE_6581;
-static std::mutex CUTOFF_CACHE_Lock;
-
-void SID::rebuildCutoffTables(unsigned short samplerate)
-{
-    constexpr int Magnitude = (1 << CRSID_FILTERTABLE_RESOLUTION);
-
-    std::lock_guard<std::mutex> lock(CUTOFF_CACHE_Lock);
-
-    //8580
-    {
-        co_cache_t::iterator lb = CUTOFF_CACHE_8580.lower_bound(samplerate);
-
-        if (lb != CUTOFF_CACHE_8580.end() && !(CUTOFF_CACHE_8580.key_comp()(samplerate, lb->first)))
-        {
-            auto ct = &(lb->second);
-            CutoffMul8580 = ct->data();
-        }
-        else
-        {
-            co_tab_t cutoff_tab;
-
-            const double cutoff_ratio_8580 = -2 * 3.14159 * (12500 / 2048) / samplerate;
-
-            //8580 Cutoff-curve (for samplerate)
-            for (int i=0; i<CF_LEN; i++)
-            {
-                cutoff_tab[i] = (1. - std::exp((i+2) * cutoff_ratio_8580)) * Magnitude; //linear curve by resistor-ladder VCR (with a little leakage)
-            }
-            auto ct = &(CUTOFF_CACHE_8580.emplace_hint(lb, co_cache_t::value_type(samplerate, cutoff_tab))->second);
-            CutoffMul8580 = ct->data();
-        }
-    }
-
-    //6581
-    {
-        co_cache_t::iterator lb = CUTOFF_CACHE_6581.lower_bound(samplerate);
-
-        if (lb != CUTOFF_CACHE_6581.end() && !(CUTOFF_CACHE_6581.key_comp()(samplerate, lb->first)))
-        {
-            auto ct = &(lb->second);
-            CutoffMul6581 = ct->data();
-        }
-        else
-        {
-            co_tab_t cutoff_tab;
-
-            constexpr double VCR_SHUNT_6581 = 1500.; //kOhm //cca 1.5 MOhm Rshunt across VCR FET drain and source (causing 220Hz bottom cutoff with 470pF integrator capacitors in old C64)
-            constexpr int VCR_FET_TRESHOLD = 192; //Vth (on cutoff numeric range 0..2048) for the VCR cutoff-frequency control FET below which it doesn't conduct
-            constexpr double CAP_6581 = 0.470; //nF //filter capacitor value for 6581
-            constexpr double FILTER_DARKNESS_6581 = 22.0; //the bigger the value, the darker the filter control is (that is, cutoff frequency increases less with the same cutoff-value)
-            //constexpr double FILTER_DISTORTION_6581 = 0.0016; //the bigger the value the more of resistance-modulation (filter distortion) is applied for 6581 cutoff-control
-
-            constexpr double cap_6581_reciprocal = -1000000./CAP_6581;
-            constexpr double cutoff_steepness_6581 = FILTER_DARKNESS_6581*(2048-VCR_FET_TRESHOLD); //pre-scale for 0...2048 cutoff-value range
-
-            // 6581 Cutoff-curve: (for samplerate)
-            for (int i=0; i<CF_LEN; ++i)
-            {
-                double rDS_VCR_FET = i<=VCR_FET_TRESHOLD ? 100000000.0 //below Vth treshold Vgs control-voltage FET presents an open circuit
-                    : cutoff_steepness_6581/(i-VCR_FET_TRESHOLD);  // rDS ~ (-Vth*rDSon) / (Vgs-Vth)  //above Vth FET drain-source resistance is proportional to reciprocal of cutoff-control voltage
-
-                cutoff_tab[i] = (1. - std::exp(cap_6581_reciprocal / (VCR_SHUNT_6581*rDS_VCR_FET/(VCR_SHUNT_6581+rDS_VCR_FET)) / samplerate)) * Magnitude; //curve with 1.5MOhm VCR parallel Rshunt emulation
-            }
-            auto ct = &(CUTOFF_CACHE_6581.emplace_hint(lb, co_cache_t::value_type(samplerate, cutoff_tab))->second);
-            CutoffMul6581 = ct->data();
-        }
-    }
 }
 
 }
