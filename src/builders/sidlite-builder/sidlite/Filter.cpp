@@ -28,7 +28,6 @@
 #include "sl_constants.h"
 #include "sl_settings.h"
 
-#include <algorithm>
 #include <map>
 #include <mutex>
 #include <cmath>

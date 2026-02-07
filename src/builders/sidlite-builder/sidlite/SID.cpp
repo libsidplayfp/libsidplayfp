@@ -27,6 +27,7 @@
 #include "filt_tables.h"
 #include "cw_tables.h"
 
+#include <algorithm>
 #include <iterator>
 
 namespace SIDLite
