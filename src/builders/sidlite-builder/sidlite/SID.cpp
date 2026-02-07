@@ -29,6 +29,8 @@
 
 #include <algorithm>
 #include <iterator>
+#include <map>
+#include <mutex>
 #include <cmath>
 
 namespace SIDLite
@@ -488,35 +490,78 @@ int SID::emulateC64(unsigned int &cycles)
     return emulateWaves();
 }
 
-// FIXME not thread-safe, needs a static cache
+constexpr int CF_LEN = 0x800;
+using co_tab_t = std::array<unsigned short, CF_LEN>;
+using co_cache_t = std::map<unsigned short, co_tab_t>;
+
+static co_cache_t CUTOFF_CACHE_8580;
+static co_cache_t CUTOFF_CACHE_6581;
+static std::mutex CUTOFF_CACHE_Lock;
+
 void SID::rebuildCutoffTables(unsigned short samplerate)
 {
-    //8580
-    const float cutoff_ratio_8580 = -2 * 3.14 * (12500 / 2048) / samplerate;
+    constexpr int Magnitude = (1 << CRSID_FILTERTABLE_RESOLUTION);
 
-    //8580 Cutoff-curve (for samplerate)
-    for (int i=0; i<0x800; i++)
+    std::lock_guard<std::mutex> lock(CUTOFF_CACHE_Lock);
+
+    //8580
     {
-        CutoffMul8580[i] = (1. - std::exp((i+2) * cutoff_ratio_8580)) * 0x1000; //linear curve by resistor-ladder VCR (with a little leakage)
+        co_cache_t::iterator lb = CUTOFF_CACHE_8580.lower_bound(samplerate);
+
+        if (lb != CUTOFF_CACHE_8580.end() && !(CUTOFF_CACHE_8580.key_comp()(samplerate, lb->first)))
+        {
+            auto ct = &(lb->second);
+            CutoffMul8580 = ct->data();
+        }
+        else
+        {
+            co_tab_t cutoff_tab;
+
+            const double cutoff_ratio_8580 = -2 * 3.14159 * (12500 / 2048) / samplerate;
+
+            //8580 Cutoff-curve (for samplerate)
+            for (int i=0; i<CF_LEN; i++)
+            {
+                cutoff_tab[i] = (1. - std::exp((i+2) * cutoff_ratio_8580)) * Magnitude; //linear curve by resistor-ladder VCR (with a little leakage)
+            }
+            auto ct = &(CUTOFF_CACHE_8580.emplace_hint(lb, co_cache_t::value_type(samplerate, cutoff_tab))->second);
+            CutoffMul8580 = ct->data();
+        }
     }
 
     //6581
-    constexpr float VCR_SHUNT_6581 = 1500.f; //kOhm //cca 1.5 MOhm Rshunt across VCR FET drain and source (causing 220Hz bottom cutoff with 470pF integrator capacitors in old C64)
-    constexpr int VCR_FET_TRESHOLD = 192; //Vth (on cutoff numeric range 0..2048) for the VCR cutoff-frequency control FET below which it doesn't conduct
-    constexpr float CAP_6581 = 0.470f; //nF //filter capacitor value for 6581
-    constexpr float FILTER_DARKNESS_6581 = 22.0f; //the bigger the value, the darker the filter control is (that is, cutoff frequency increases less with the same cutoff-value)
-    //constexpr float FILTER_DISTORTION_6581 = 0.0016f; //the bigger the value the more of resistance-modulation (filter distortion) is applied for 6581 cutoff-control
-
-    const float cap_6581_reciprocal = -1000000.f/CAP_6581;
-    const float cutoff_steepness_6581 = FILTER_DARKNESS_6581*(2048.0-VCR_FET_TRESHOLD); //pre-scale for 0...2048 cutoff-value range
-
-    // 6581 Cutoff-curve: (for samplerate)
-    for (int i=0; i<0x800; ++i)
     {
-        float rDS_VCR_FET = i<=VCR_FET_TRESHOLD ? 100000000.0f //below Vth treshold Vgs control-voltage FET presents an open circuit
-            : cutoff_steepness_6581/(i-VCR_FET_TRESHOLD);  // rDS ~ (-Vth*rDSon) / (Vgs-Vth)  //above Vth FET drain-source resistance is proportional to reciprocal of cutoff-control voltage
+        co_cache_t::iterator lb = CUTOFF_CACHE_6581.lower_bound(samplerate);
 
-        CutoffMul6581[i] = (1.f - std::exp(cap_6581_reciprocal / (VCR_SHUNT_6581*rDS_VCR_FET/(VCR_SHUNT_6581+rDS_VCR_FET)) / samplerate)) * 0x1000; //curve with 1.5MOhm VCR parallel Rshunt emulation
+        if (lb != CUTOFF_CACHE_6581.end() && !(CUTOFF_CACHE_6581.key_comp()(samplerate, lb->first)))
+        {
+            auto ct = &(lb->second);
+            CutoffMul6581 = ct->data();
+        }
+        else
+        {
+            co_tab_t cutoff_tab;
+
+            constexpr double VCR_SHUNT_6581 = 1500.; //kOhm //cca 1.5 MOhm Rshunt across VCR FET drain and source (causing 220Hz bottom cutoff with 470pF integrator capacitors in old C64)
+            constexpr int VCR_FET_TRESHOLD = 192; //Vth (on cutoff numeric range 0..2048) for the VCR cutoff-frequency control FET below which it doesn't conduct
+            constexpr double CAP_6581 = 0.470; //nF //filter capacitor value for 6581
+            constexpr double FILTER_DARKNESS_6581 = 22.0; //the bigger the value, the darker the filter control is (that is, cutoff frequency increases less with the same cutoff-value)
+            //constexpr double FILTER_DISTORTION_6581 = 0.0016; //the bigger the value the more of resistance-modulation (filter distortion) is applied for 6581 cutoff-control
+
+            constexpr double cap_6581_reciprocal = -1000000./CAP_6581;
+            constexpr double cutoff_steepness_6581 = FILTER_DARKNESS_6581*(2048-VCR_FET_TRESHOLD); //pre-scale for 0...2048 cutoff-value range
+
+            // 6581 Cutoff-curve: (for samplerate)
+            for (int i=0; i<CF_LEN; ++i)
+            {
+                double rDS_VCR_FET = i<=VCR_FET_TRESHOLD ? 100000000.0 //below Vth treshold Vgs control-voltage FET presents an open circuit
+                    : cutoff_steepness_6581/(i-VCR_FET_TRESHOLD);  // rDS ~ (-Vth*rDSon) / (Vgs-Vth)  //above Vth FET drain-source resistance is proportional to reciprocal of cutoff-control voltage
+
+                cutoff_tab[i] = (1. - std::exp(cap_6581_reciprocal / (VCR_SHUNT_6581*rDS_VCR_FET/(VCR_SHUNT_6581+rDS_VCR_FET)) / samplerate)) * Magnitude; //curve with 1.5MOhm VCR parallel Rshunt emulation
+            }
+            auto ct = &(CUTOFF_CACHE_6581.emplace_hint(lb, co_cache_t::value_type(samplerate, cutoff_tab))->second);
+            CutoffMul6581 = ct->data();
+        }
     }
 }
 

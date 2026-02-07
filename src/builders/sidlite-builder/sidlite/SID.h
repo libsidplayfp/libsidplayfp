@@ -25,6 +25,8 @@
 
 #include "ADSR.h"
 
+#include <array>
+
 namespace SIDLite
 {
 
@@ -60,6 +62,8 @@ private:
     //Filter-related:
     int                PrevLowPass;
     int                PrevBandPass;
+    unsigned short     *CutoffMul8580;
+    unsigned short     *CutoffMul6581;
     //Output-stage:
     signed int         PrevVolume; //lowpass-filtered version of Volume-band register
 
@@ -71,7 +75,7 @@ private:
     int               Digi;
     //PSID-playback related:
     short             SampleCycleCnt;
-    unsigned short    SampleRate = 44100;
+    unsigned short    SampleRate = 0;
 
     unsigned char oscReg;
     unsigned char envReg;
