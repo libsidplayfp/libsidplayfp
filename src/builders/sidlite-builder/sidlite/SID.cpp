@@ -58,7 +58,7 @@ SID::SID() :
 
 void SID::reset()
 {
-    for (int Channel=0; Channel<SID_CHANNELS_RANGE; Channel+=SID_CHANNEL_SPACING)
+    for (int Channel=0; Channel<SID_CHANNEL_COUNT; Channel++)
     {
         PhaseAccu[Channel] = 0;
         PrevPhaseAccu[Channel] = 0;
@@ -198,8 +198,6 @@ int SID::emulateWaves()
                PULSAWTRI_VAL=0x70, PULSAW_VAL=0x60, PULTRI_VAL=0x50, SAWTRI_VAL=0x30 };
     enum ControlBits { TEST_BITVAL=0x08, RING_BITVAL=0x04, SYNC_BITVAL=0x02, GATE_BITVAL=0x01 };
 
-    const unsigned char FilterSwitchVal[] = {1,1,1,1,1,1,1,2,2,2,2,2,2,2,4};
-
     //Waveform-generator //(phase accumulator and waveform-selector)
 
     unsigned int WavGenOut = 0;
@@ -208,9 +206,9 @@ int SID::emulateWaves()
     unsigned char FilterSwitchReso = regs[0x17];
     unsigned char VolumeBand = regs[0x18];
 
-    for (int Channel=0; Channel<SID_CHANNELS_RANGE; Channel+=SID_CHANNEL_SPACING)
+    for (int Channel=0; Channel<SID_CHANNEL_COUNT; Channel++)
     {
-        unsigned char *ChannelPtr = &(regs[Channel]);
+        unsigned char *ChannelPtr = &(regs[Channel*7]);
 
         auto combinedWF = [&](cw_array_t WFarray, unsigned short oscval) {
             constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; //bits
@@ -363,7 +361,7 @@ int SID::emulateWaves()
         //routing the channel signal to either the filter or the unfiltered master output depending on filter-switch SID-registers
         unsigned char Envelope = (LIKELY(ChipModel == 8580))
             ? adsr.counter(Channel) : ADSR_DAC_6581[adsr.counter(Channel)];
-        if (UNLIKELY(FilterSwitchReso & FilterSwitchVal[Channel]))
+        if (UNLIKELY(FilterSwitchReso & (1 << Channel)))
         {
             FilterInput += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
         }
@@ -374,7 +372,7 @@ int SID::emulateWaves()
     }
     //update readable SID1-registers (some SID tunes might use 3rd channel ENV3/OSC3 value as control)
     oscReg = WavGenOut >> WAVE_OSC3_SHIFTS; //OSC3, ENV3 (some players rely on it, unfortunately even for timing)
-    envReg = adsr.counter(CHANNEL2_INDEX); //Envelope
+    envReg = adsr.counter(2); //Envelope
 
     return emulateSIDoutputStage(FilterInput, NonFiltered);
 }

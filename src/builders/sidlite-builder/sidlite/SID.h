@@ -51,14 +51,14 @@ private:
     unsigned short     ChipModel;     //values: 8580 / 6581
     ADSR               adsr;
     //Wave-related:
-    int                PhaseAccu[15];       //28bit precision instead of 24bit
-    int                PrevPhaseAccu[15];   //(integerized ClockRatio fractionals, WebSID has similar solution)
-    unsigned char      SyncSourceMSBrise;
+    int                PhaseAccu[3];       //28bit precision instead of 24bit
+    int                PrevPhaseAccu[3];   //(integerized ClockRatio fractionals, WebSID has similar solution)
+    unsigned int       NoiseLFSR[3];
+    unsigned int       PrevWavGenOut[3];
+    unsigned char      PrevWavData[3];
+    signed char        PrevSounDemonDigiWF[3];
     unsigned int       RingSourceMSB;
-    unsigned int       NoiseLFSR[15];
-    signed char        PrevSounDemonDigiWF[15];
-    unsigned int       PrevWavGenOut[15];
-    unsigned char      PrevWavData[15];
+    unsigned char      SyncSourceMSBrise;
     //Filter-related:
     int                PrevLowPass;
     int                PrevBandPass;

@@ -38,10 +38,10 @@ public:
 private:
     unsigned char *regs;
 
-    unsigned char  ADSRstate[15];
-    unsigned short RateCounter[15];
-    unsigned char  EnvelopeCounter[15];
-    unsigned char  ExponentCounter[15];
+    unsigned short RateCounter[3];
+    unsigned char  ADSRstate[3];
+    unsigned char  EnvelopeCounter[3];
+    unsigned char  ExponentCounter[3];
 };
 
 }

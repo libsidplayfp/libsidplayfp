@@ -20,7 +20,4 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-constexpr int SID_CHANNEL_SPACING = 7;
 constexpr int SID_CHANNEL_COUNT = 3;
-constexpr int CHANNEL2_INDEX = 2*SID_CHANNEL_SPACING;
-constexpr int SID_CHANNELS_RANGE = SID_CHANNEL_SPACING * SID_CHANNEL_COUNT;
