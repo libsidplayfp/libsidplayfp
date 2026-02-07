@@ -21,6 +21,11 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
+#ifndef SIDLITE_CWTABLES_H
+#define SIDLITE_CWTABLES_H
+
+#include <array>
+
 //The anatomy of combined waveforms: The resid source simply uses 4kbyte 8bit samples from wavetable arrays, says these waveforms are mystic due to the analog behaviour.
 //It's true, the analog things inside SID play a significant role in how the combined waveforms look like, but process variations are not so huge that cause much differences in SIDs.
 //After checking these waveforms by eyes, it turned out for me that these waveform are fractal-like, recursively approachable waveforms.
@@ -645,3 +650,5 @@ using cw_array_t = std::array<unsigned char, Length>;
     };
 
 #endif
+
+#endif // SIDLITE_CWTABLES_H

@@ -34,10 +34,12 @@ class settings
 
 public:
     inline unsigned short getChipModel() const { return ChipModel; }
+    inline unsigned short getSampleClockRatio() const { return SampleClockRatio; }
     inline bool getRealSIDmode() const { return RealSIDmode; }
 
 private:
     unsigned short ChipModel   = 8580;     //values: 8580 / 6581
+    unsigned short SampleClockRatio; //ratio of CPU-clock and samplerate
     bool           RealSIDmode = true;
 };
 

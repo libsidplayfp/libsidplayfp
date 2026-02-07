@@ -58,6 +58,8 @@ constexpr int D418_DIGI_MUL = D418_DIGI_VOL / CRSID_WAVGEN_PREDIV;
 constexpr int VUMETER_LOWPASS_DIV = 16;
 constexpr int VUMETER_DIVSHIFTS = 4 - CRSID_WAVGEN_PRESHIFT;
 
+constexpr int Attenuation = ((SID_FULLVOLUME+26) * CRSID_PRESAT_ATT_NOM) / (CRSID_PRESAT_ATT_DENOM * CRSID_WAVGEN_PREDIV);
+
 int Filter::clock(int FilterInput, int NonFiltered)
 {
     enum SIDspecs { HIGHPASS_BITVAL=0x40, BANDPASS_BITVAL=0x20, LOWPASS_BITVAL=0x10 };
@@ -127,8 +129,6 @@ Filter::Filter(settings *s, unsigned char *regs) :
     regs(regs),
     s(s)
 {
-    Attenuation = ((SID_FULLVOLUME+26) * CRSID_PRESAT_ATT_NOM) / (CRSID_PRESAT_ATT_DENOM * CRSID_WAVGEN_PREDIV);
-
     reset();
 }
 

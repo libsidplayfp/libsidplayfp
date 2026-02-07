@@ -20,48 +20,46 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-#ifndef SIDLITE_SID_H
-#define SIDLITE_SID_H
+#ifndef SIDLITE_WAVGEN_H
+#define SIDLITE_WAVGEN_H
 
-#include "ADSR.h"
-#include "Filter.h"
-#include "WavGen.h"
-#include "sl_settings.h"
-
-#include <array>
+#include <utility>
 
 namespace SIDLite
 {
 
-class SID
+class ADSR;
+class settings;
+
+using wg_output_t = std::pair<int, int>;
+
+class WavGen
 {
 public:
-    SID();
+    WavGen(settings *s, unsigned char *regs);
     void reset();
-    void write(int addr, int value);
-    int read(int addr);
-    int clock(unsigned int cycles, short* buf);
-    void setChipModel(int model);
+    wg_output_t clock(ADSR *adsr);
 
-    void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
-
-    int getLevel() const { return filter.getLevel(); }
+    inline unsigned char getOsc3() const { return oscReg; }
+    inline unsigned char getEnv3() const { return envReg; }
 
 private:
-    unsigned char regs[0x20] = {0};
+    unsigned char *regs;
+    settings      *s;
 
-    ADSR              adsr;
-    Filter            filter;
-    WavGen            wavgen;
-    settings          s;
+    int           PhaseAccu[3];       //28bit precision instead of 24bit
+    int           PrevPhaseAccu[3];   //(integerized ClockRatio fractionals, WebSID has similar solution)
+    unsigned int  NoiseLFSR[3];
+    unsigned int  PrevWavGenOut[3];
+    unsigned char PrevWavData[3];
+    unsigned int  RingSourceMSB;
+    unsigned char SyncSourceMSBrise;
+    signed char   PrevSounDemonDigiWF[3];
 
-    short             SampleCycleCnt;
-
-private:
-    inline signed short generateSample(unsigned int &cycles);
-    inline int emulateC64(unsigned int &cycles);
+    unsigned char oscReg;
+    unsigned char envReg;
 };
 
 }
 
-#endif // SIDLITE_SID_H
+#endif // SIDLITE_WAVGEN_H

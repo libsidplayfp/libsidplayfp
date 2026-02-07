@@ -51,7 +51,6 @@ private:
     int            PrevBandPass;
     int            Digi;
     int            Level;      //filtered version, good for VU-meter display
-    unsigned short Attenuation;
     unsigned char  VUmeterUpdateCounter;
 };
 

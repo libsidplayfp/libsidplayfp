@@ -267,7 +267,9 @@ src/builders/sidlite-builder/sidlite/ADSR.h \
 src/builders/sidlite-builder/sidlite/Filter.cpp \
 src/builders/sidlite-builder/sidlite/Filter.h \
 src/builders/sidlite-builder/sidlite/SID.cpp \
-src/builders/sidlite-builder/sidlite/SID.h
+src/builders/sidlite-builder/sidlite/SID.h \
+src/builders/sidlite-builder/sidlite/WavGen.cpp \
+src/builders/sidlite-builder/sidlite/WavGen.h
 
 src_builders_sidlite_builder_sidlite_libsidlite_la_CPPFLAGS = \
 -I $(top_builddir)/src/builders/sidlite-builder/sidlite
