@@ -4,7 +4,7 @@ libsidplayfp
 https://github.com/libsidplayfp/libsidplayfp
 
 libsidplayfp is a C64 music player library which integrates
-the reSID SID chip emulation engine into a cycle-based emulator
+the reSIDfp SID chip emulation engine into a cycle-based emulator
 environment, constantly aiming to improve emulation of the
 C64 system and the SID chips.
 
@@ -48,28 +48,14 @@ the libraries. If cloning the bare sources the package needs to be bootstrapped
 in advance with the `autoreconf -vfi` command. This step requires the xa cross-assembler
 to compile the 6502 code, usually provided by distributions with the xa65 package
 or available at http://www.floodgap.com/retrotech/xa/.
+To enable full quality SID emulation [libresidfp](https://github.com/libsidplayfp/libresidfp)
+is required.
 
 In addition to the standard build options the following are available:
 
 * `--enable-debug[=no/yes/full]`:
 compile with debugging messages
 (disabled by default)
-
-* `--enable-inline`:
-enable inlinig in the reSID engine, increases performances at the expense of bigger code size
-(enabled by default)
-
-* `--enable-branch-hints`:
-enable branch hints in the reSID engine so the compiler can produce more optimized code
-(enabled by default)
-
-* `--with-simd=<runtime/mmx/sse2/sse4/avx2/avx512f/none>`:
-enable x86 SIMD code, mostly useful for resampling performance in reSIDfp.
-Not required if `-march` or `-mcpu` is already included in the compiler flags
-(i.e. `CXXFLAGS=-march=x86-64-v3`).
-_runtime_ enables runtime dispatch of the resampling function depending on the CPU
-supported instruction set. Works only when compiling with gcc
-(none by default)
 
 * `--enable-testsuite=PATH_TO_TESTSUITE`:
 add support for running VICE's testsuite (in PRG format). The testsuite is available

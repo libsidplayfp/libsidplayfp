@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef RESIDFP_H
-#define RESIDFP_H
+#ifndef RESIDFP_BUILDER_H
+#define RESIDFP_BUILDER_H
 
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/siddefs.h"
@@ -80,4 +80,4 @@ private:
     config *m_config;
 };
 
-#endif // RESIDFP_H
+#endif // RESIDFP_BUILDER_H

@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include "residfp/SID.h"
+#include "residfp/residfp.h"
 #include "sidplayfp/SidConfig.h"
 #include "sidemu.h"
 #include "Event.h"
@@ -41,7 +41,7 @@ namespace libsidplayfp
 class reSIDfpEmu final : public sidemu
 {
 private:
-    reSIDfp::SID &m_sid;
+    reSIDfp::residfp &m_sid;
 
 public:
     static const char* getCredits();
