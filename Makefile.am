@@ -37,7 +37,8 @@ src/builders/exsid-builder/driver/m4 \
 $(noinst_DATA) \
 $(noinst_SCRIPTS) \
 test/testsuite.sh \
-test/testlist
+test/testlist \
+src/libs
 
 #=========================================================
 # Libraries
@@ -61,17 +62,6 @@ endif
 
 #=========================================================
 # libsidplayfp
-
-if LIBGCRYPT
-   MD5SRC = \
-src/utils/md5Gcrypt.h
-else
-   MD5SRC = \
-src/utils/md5Internal.h \
-src/utils/MD5/MD5.cpp \
-src/utils/MD5/MD5.h \
-src/utils/MD5/MD5_Defs.h
-endif
 
 src_libsidplayfp_la_SOURCES = \
 src/Event.h \
@@ -162,13 +152,9 @@ src/sidtune/SidTuneInfoImpl.h \
 src/sidtune/SidTuneTools.cpp \
 src/sidtune/SidTuneTools.h \
 src/sidtune/SmartPtr.h \
-src/utils/iMd5.h \
 src/utils/iniParser.cpp \
 src/utils/iniParser.h \
-src/utils/md5Factory.cpp \
-src/utils/md5Factory.h \
-src/utils/SidDatabase.cpp \
-$(MD5SRC)
+src/utils/SidDatabase.cpp
 
 src_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS)
 

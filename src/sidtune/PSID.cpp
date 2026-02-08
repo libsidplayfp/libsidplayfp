@@ -366,65 +366,56 @@ const char *PSID::createMD5(char *md5)
 
     *md5 = '\0';
 
-    try
+    // Include C64 data.
+    sidmd5 myMD5;
+    myMD5.append(&cache[fileOffset], info->m_c64dataLen);
+
+    uint8_t tmp[2];
+    // Include INIT and PLAY address.
+    endian_little16(tmp, info->m_initAddr);
+    myMD5.append(tmp, sizeof(tmp));
+    endian_little16(tmp, info->m_playAddr);
+    myMD5.append(tmp, sizeof(tmp));
+
+    // Include number of songs.
+    endian_little16(tmp, info->m_songs);
+    myMD5.append(tmp, sizeof(tmp));
+
     {
-        // Include C64 data.
-        sidmd5 myMD5;
-        myMD5.append(&cache[fileOffset], info->m_c64dataLen);
-
-        uint8_t tmp[2];
-        // Include INIT and PLAY address.
-        endian_little16(tmp, info->m_initAddr);
-        myMD5.append(tmp, sizeof(tmp));
-        endian_little16(tmp, info->m_playAddr);
-        myMD5.append(tmp, sizeof(tmp));
-
-        // Include number of songs.
-        endian_little16(tmp, info->m_songs);
-        myMD5.append(tmp, sizeof(tmp));
-
+        // Include song speed for each song.
+        const unsigned int currentSong = info->m_currentSong;
+        for (unsigned int s = 1; s <= info->m_songs; s++)
         {
-            // Include song speed for each song.
-            const unsigned int currentSong = info->m_currentSong;
-            for (unsigned int s = 1; s <= info->m_songs; s++)
-            {
-                selectSong(s);
-                const uint8_t songSpeed = static_cast<uint8_t>(info->m_songSpeed);
-                myMD5.append(&songSpeed, sizeof(songSpeed));
-            }
-            // Restore old song
-            selectSong(currentSong);
+            selectSong(s);
+            const uint8_t songSpeed = static_cast<uint8_t>(info->m_songSpeed);
+            myMD5.append(&songSpeed, sizeof(songSpeed));
         }
-
-        // Deal with PSID v2NG clock speed flags: Let only NTSC
-        // clock speed change the MD5 fingerprint. That way the
-        // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
-        // PSID v2NG format is the same.
-        if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
-        {
-            const uint8_t ntsc_val = 2;
-            myMD5.append(&ntsc_val, sizeof(ntsc_val));
-        }
-
-        // NB! If the fingerprint is used as an index into a
-        // song-lengths database or cache, modify above code to
-        // allow for PSID v2NG files which have clock speed set to
-        // SIDTUNE_CLOCK_ANY. If the SID player program fully
-        // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
-        // either create two different fingerprints depending on
-        // the clock speed chosen by the player, or there could be
-        // two different values stored in the database/cache.
-
-        myMD5.finish();
-
-        // Get fingerprint.
-        myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
-        md5[SidTune::MD5_LENGTH] = '\0';
+        // Restore old song
+        selectSong(currentSong);
     }
-    catch (md5Error const &)
+
+    // Deal with PSID v2NG clock speed flags: Let only NTSC
+    // clock speed change the MD5 fingerprint. That way the
+    // fingerprint of a PAL-speed sidtune in PSID v1, v2, and
+    // PSID v2NG format is the same.
+    if (info->m_clockSpeed == SidTuneInfo::CLOCK_NTSC)
     {
-        return nullptr;
+        const uint8_t ntsc_val = 2;
+        myMD5.append(&ntsc_val, sizeof(ntsc_val));
     }
+
+    // NB! If the fingerprint is used as an index into a
+    // song-lengths database or cache, modify above code to
+    // allow for PSID v2NG files which have clock speed set to
+    // SIDTUNE_CLOCK_ANY. If the SID player program fully
+    // supports the SIDTUNE_CLOCK_ANY setting, a sidtune could
+    // either create two different fingerprints depending on
+    // the clock speed chosen by the player, or there could be
+    // two different values stored in the database/cache.
+
+    // Get fingerprint.
+    myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
+    md5[SidTune::MD5_LENGTH] = '\0';
 
     return md5;
 }
@@ -436,23 +427,14 @@ const char *PSID::createMD5New(char *md5)
 
     *md5 = '\0';
 
-    try
-    {
-        // The calculation is now simplified
-        // All the header + all the data
-        sidmd5 myMD5;
-        myMD5.append(cache.data(), cache.size());
+    // The calculation is now simplified
+    // All the header + all the data
+    sidmd5 myMD5;
+    myMD5.append(&cache[0], cache.size());
 
-        myMD5.finish();
-
-        // Get fingerprint.
-        myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
-        md5[SidTune::MD5_LENGTH] = '\0';
-    }
-    catch (md5Error const &)
-    {
-        return nullptr;
-    }
+    // Get fingerprint.
+    myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);
+    md5[SidTune::MD5_LENGTH] = '\0';
 
     return md5;
 }
