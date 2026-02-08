@@ -226,9 +226,6 @@ src/builders/residfp-builder/residfp-builder.cpp \
 src/builders/residfp-builder/residfp-emu.cpp \
 src/builders/residfp-builder/residfp-emu.h
 
-src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
-src/builders/residfp-builder/residfp/libresidfp.la
-
 src_builders_residfp_builder_libsidplayfp_residfp_la_CPPFLAGS = \
 $(RESIDFP_CFLAGS) \
 $(AM_CPPFLAGS)
