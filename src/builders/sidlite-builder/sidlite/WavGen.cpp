@@ -138,8 +138,8 @@ wg_output_t WavGen::clock(ADSR *adsr)
             constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; // bits
             constexpr int COMBINEDWF_FILT_RESOLUTION = 16; // bits
             constexpr int COMBINEDWF_WAVE_RESOLUTION = 8; // bits
-            constexpr int COMBINEDWF_OSC_MSB_OFF_MASK = (1 << (COMBINEDWF_SAMPLE_RESOLUTION - 1)) - 1; // 0x7FFF
-            constexpr int COMBINEDWF_FILTMUL_MAX = (1 << COMBINEDWF_FILT_RESOLUTION) - 1; // 0xFFFF
+            constexpr int COMBINEDWF_OSC_MSB_OFF_MASK = (1 << (COMBINEDWF_SAMPLE_RESOLUTION - 1)) - 1; // 0x7FF
+            constexpr int COMBINEDWF_FILTMUL_MAX = (1 << COMBINEDWF_FILT_RESOLUTION) - 1; // 0xFFF
             constexpr int COMBINEDWF_FILT_FRACTION_SHIFTS = 16;
             constexpr int COMBINEDWF_WAVE_SHIFTS = CRSID_WAVE_RESOLUTION - COMBINEDWF_WAVE_RESOLUTION; // 8
 
@@ -249,7 +249,7 @@ wg_output_t WavGen::clock(ADSR *adsr)
             case PULSAW_VAL:
             {
                 // pulse+saw
-                unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; //16; //12;
+                unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; // 16
                 WavGenOut = Utmp >= getCombinedPW(ChannelPtr) //|| UNLIKELY(TestBit)
                             ? combinedWF(PulseSawtooth, Utmp) : CRSID_WAVE_MIN; // 0
             } break;
