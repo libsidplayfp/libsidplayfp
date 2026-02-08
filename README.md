@@ -67,12 +67,11 @@ code execution. The path to testsuite must include terminal path separator.
 enables unit tests. Use `make check` to launch the testsuite
 (disabled by default)
 
-* `--with-gcrypt` / `--without-gcrypt`:
-force/disable libgcrypt support for MD5 computation
-(default check)
-
 * `--with-exsid`:
 Build with exsid support. Requires either libexsid or one of libfdti1 or libftd2xx
+
+* `--with-usbsid`:
+Build with usbsid support. Requires either libusb
 
 
 If [doxygen](https://doxygen.nl) is installed and detected by the configure script, the documentation
