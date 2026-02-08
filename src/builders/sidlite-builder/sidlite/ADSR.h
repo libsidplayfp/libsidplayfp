@@ -20,49 +20,30 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-#ifndef SIDLITE_SID_H
-#define SIDLITE_SID_H
-
-#include "ADSR.h"
-#include "Filter.h"
-#include "WavGen.h"
-#include "sl_settings.h"
-
-#include <array>
+#ifndef SIDLITE_ADSR_H
+#define SIDLITE_ADSR_H
 
 namespace SIDLite
 {
 
-class SID
+class ADSR
 {
 public:
-    SID();
+    ADSR(unsigned char *regs);
     void reset();
-    void write(int addr, int value);
-    int read(int addr);
-    int clock(unsigned int cycles, short* buf);
+    void clock(char cycles);
 
-    void setChipModel(int model);
-    void setRealSIDmode(bool mode);
-    void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
-
-    int getLevel() const { return filter.getLevel(); }
+    inline unsigned char counter(int channel) const { return EnvelopeCounter[channel]; }
 
 private:
-    unsigned char regs[0x20] = {0};
+    unsigned char *regs;
 
-    ADSR              adsr;
-    Filter            filter;
-    WavGen            wavgen;
-    settings          s;
-
-    short             SampleCycleCnt;
-
-private:
-    inline signed short generateSample(unsigned int &cycles);
-    inline int emulateC64(unsigned int &cycles);
+    unsigned short RateCounter[3];
+    unsigned char  ADSRstate[3];
+    unsigned char  EnvelopeCounter[3];
+    unsigned char  ExponentCounter[3];
 };
 
 }
 
-#endif // SIDLITE_SID_H
+#endif // SIDLITE_ADSR_H

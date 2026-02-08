@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- *  Copyright (C) 2025-2026 Leandro Nini
+ *  Copyright (C) 2026 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,49 +20,29 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-#ifndef SIDLITE_SID_H
-#define SIDLITE_SID_H
-
-#include "ADSR.h"
-#include "Filter.h"
-#include "WavGen.h"
-#include "sl_settings.h"
-
-#include <array>
+#ifndef SIDLITE_SETTINGS_H
+#define SIDLITE_SETTINGS_H
 
 namespace SIDLite
 {
 
-class SID
+class SID;
+
+class settings
 {
+    friend class SID;
+
 public:
-    SID();
-    void reset();
-    void write(int addr, int value);
-    int read(int addr);
-    int clock(unsigned int cycles, short* buf);
-
-    void setChipModel(int model);
-    void setRealSIDmode(bool mode);
-    void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
-
-    int getLevel() const { return filter.getLevel(); }
+    inline bool is8580() const { return ChipModel == 8580; }
+    inline unsigned short getSampleClockRatio() const { return SampleClockRatio; }
+    inline bool getRealSIDmode() const { return RealSIDmode; }
 
 private:
-    unsigned char regs[0x20] = {0};
-
-    ADSR              adsr;
-    Filter            filter;
-    WavGen            wavgen;
-    settings          s;
-
-    short             SampleCycleCnt;
-
-private:
-    inline signed short generateSample(unsigned int &cycles);
-    inline int emulateC64(unsigned int &cycles);
+    unsigned short SampleClockRatio;    // ratio of CPU-clock and samplerate
+    unsigned short ChipModel   = 8580;  // values: 8580 / 6581
+    bool           RealSIDmode = true;
 };
 
 }
 
-#endif // SIDLITE_SID_H
+#endif

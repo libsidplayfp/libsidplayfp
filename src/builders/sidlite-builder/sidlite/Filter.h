@@ -20,49 +20,40 @@
 
 // Based on cRSID lightweight RealSID by Hermit (Mihaly Horvath)
 
-#ifndef SIDLITE_SID_H
-#define SIDLITE_SID_H
-
-#include "ADSR.h"
-#include "Filter.h"
-#include "WavGen.h"
-#include "sl_settings.h"
-
-#include <array>
+#ifndef SIDLITE_FILTER_H
+#define SIDLITE_FILTER_H
 
 namespace SIDLite
 {
 
-class SID
+class settings;
+
+class Filter
 {
 public:
-    SID();
+    Filter(settings *s, unsigned char *regs);
     void reset();
-    void write(int addr, int value);
-    int read(int addr);
-    int clock(unsigned int cycles, short* buf);
+    int clock(int FilterInput, int NonFiltered);
 
-    void setChipModel(int model);
-    void setRealSIDmode(bool mode);
-    void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
+    inline int getLevel() const { return Level; }
 
-    int getLevel() const { return filter.getLevel(); }
+    void rebuildCutoffTables(unsigned short samplerate);
 
 private:
-    unsigned char regs[0x20] = {0};
+    unsigned char *regs;
+    settings      *s;
 
-    ADSR              adsr;
-    Filter            filter;
-    WavGen            wavgen;
-    settings          s;
+    unsigned short *CutoffMul8580;
+    unsigned short *CutoffMul6581;
 
-    short             SampleCycleCnt;
-
-private:
-    inline signed short generateSample(unsigned int &cycles);
-    inline int emulateC64(unsigned int &cycles);
+    signed int     PrevVolume; // lowpass-filtered version of Volume-band register
+    int            PrevLowPass;
+    int            PrevBandPass;
+    int            Level;      // filtered version, good for VU-meter display
+    unsigned char  VUmeterUpdateCounter;
 };
 
 }
 
-#endif // SIDLITE_SID_H
+#endif // SIDLITE_FILTER_H
+
