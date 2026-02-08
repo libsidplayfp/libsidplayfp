@@ -70,14 +70,15 @@ int Filter::clock(int FilterInput, int NonFiltered)
 
     int Cutoff = (regs[0x16] << 3) + (regs[0x15] & 7);
     int Resonance = FilterSwitchReso >> 4;
-    if (LIKELY(s->getChipModel() == 8580))
+    if (LIKELY(s->is8580()))
     {
         Cutoff = CutoffMul8580[Cutoff];
         Resonance = Resonances8580[Resonance];
     }
     else
     { //6581
-        Cutoff += (FilterInput*105)>>16; //MOSFET-VCR control-voltage calculation (resistance-modulation aka 6581 filter distortion) emulation
+        // MOSFET-VCR control-voltage calculation (resistance-modulation aka 6581 filter distortion) emulation
+        Cutoff += (FilterInput*105)>>16;
         if (Cutoff > SID_CUTOFF_MAX)
             Cutoff = SID_CUTOFF_MAX;
         else if (Cutoff < 0)
@@ -87,30 +88,38 @@ int Filter::clock(int FilterInput, int NonFiltered)
     }
 
     int FilterOutput = 0;
-    int Tmp = FilterInput + ((PrevBandPass * Resonance) / CRSID_FILTERTABLE_MAGNITUDE) + PrevLowPass;
-    if (VolumeBand & HIGHPASS_BITVAL)
-        FilterOutput -= Tmp;
-    Tmp = PrevBandPass - ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
-    PrevBandPass = Tmp;
-    if (VolumeBand & BANDPASS_BITVAL)
-        FilterOutput -= Tmp;
-    Tmp = PrevLowPass + ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
-    PrevLowPass = Tmp;
-    if (VolumeBand & LOWPASS_BITVAL)
-        FilterOutput += Tmp;
+    {
+        int Tmp = FilterInput + ((PrevBandPass * Resonance) / CRSID_FILTERTABLE_MAGNITUDE) + PrevLowPass;
+        if (VolumeBand & HIGHPASS_BITVAL)
+            FilterOutput -= Tmp;
+        Tmp = PrevBandPass - ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
+        PrevBandPass = Tmp;
+        if (VolumeBand & BANDPASS_BITVAL)
+            FilterOutput -= Tmp;
+        Tmp = PrevLowPass + ((Tmp * Cutoff) / CRSID_FILTERTABLE_MAGNITUDE);
+        PrevLowPass = Tmp;
+        if (VolumeBand & LOWPASS_BITVAL)
+            FilterOutput += Tmp;
+    }
 
-    //Output stage
-    //For $D418 volume-register digi playback: an AC / DC separation for $D418 value at low (20Hz or so) cutoff-frequency,
-    //sending AC (highpass) value to a 4th 'digi' channel mixed to the master output, and set ONLY the DC (lowpass) value to the volume-control.
-    //This solved 2 issues: Thanks to the lowpass filtering of the volume-control, SID tunes where digi is played together with normal SID channels,
-    //won't sound distorted anymore, and the volume-clicks disappear when setting SID-volume. (This is useful for fade-in/out tunes like Hades Nebula, where clicking ruins the intro.)
-    char MainVolume;
+    // Output stage
+    // For $D418 volume-register digi playback: an AC / DC separation for $D418 value at low (20Hz or so) cutoff-frequency,
+    // sending AC (highpass) value to a 4th 'digi' channel mixed to the master output,
+    // and set ONLY the DC (lowpass) value to the volume-control.
+    // This solved 2 issues:
+    //  Thanks to the lowpass filtering of the volume-control,
+    //    SID tunes where digi is played together with normal SID channels
+    //    won't sound distorted anymore,
+    //  the volume-clicks disappear when setting SID-volume.
+    //    (This is useful for fade-in/out tunes like Hades Nebula, where clicking ruins the intro.)
+    int MainVolume;
+    int Digi = 0;
     if (LIKELY(s->getRealSIDmode()))
     {
-        Tmp = (signed int)((VolumeBand & 0xF) << FRACTIONAL_SHIFTS);
-        Digi = (Tmp - PrevVolume) * D418_DIGI_MUL; //highpass is digi, adding it to output must be before digifilter-code
-        PrevVolume += (Tmp - PrevVolume) / 1024; //arithmetic shift amount determines digi lowpass-frequency
-        MainVolume = PrevVolume >> FRACTIONAL_SHIFTS; //lowpass is main volume
+        int Tmp = (signed int)((VolumeBand & 0xF) << FRACTIONAL_SHIFTS);
+        Digi = (Tmp - PrevVolume) * D418_DIGI_MUL; // highpass is digi, adding it to output must be before digifilter-code
+        PrevVolume += (Tmp - PrevVolume) / 1024; // arithmetic shift amount determines digi lowpass-frequency
+        MainVolume = PrevVolume >> FRACTIONAL_SHIFTS; // lowpass is main volume
     }
     else
         MainVolume = VolumeBand & 0xF;
@@ -119,7 +128,7 @@ int Filter::clock(int FilterInput, int NonFiltered)
 
     if (UNLIKELY(!++VUmeterUpdateCounter))
     {
-        //average level (for VU-meter)
+        // average level (for VU-meter)
         Level += ((std::abs(Output)>>VUMETER_DIVSHIFTS) - Level ) / VUMETER_LOWPASS_DIV;
     }
     return Output / Attenuation; // master output

@@ -87,7 +87,8 @@ constexpr int ENVELOPE_MAGNITUDE_DIV = SID_ENVELOPE_MAGNITUDE * CRSID_WAVGEN_PRE
 
 constexpr int OFF3_BITVAL = 0x80;
 
-static const unsigned char ADSR_DAC_6581[] = {
+static const unsigned char ADSR_DAC_6581[] =
+{
     0x00,0x02,0x03,0x04,0x05,0x06,0x07,0x09,0x09,0x0B,0x0B,0x0D,0x0D,0x0F,0x10,0x12,
     0x11,0x13,0x14,0x15,0x16,0x17,0x18,0x1A,0x1A,0x1C,0x1C,0x1E,0x1E,0x20,0x21,0x23, //used at output of ADSR envelope generator
     0x21,0x23,0x24,0x25,0x26,0x27,0x28,0x2A,0x2A,0x2C,0x2C,0x2E,0x2E,0x30,0x31,0x33, //(not used for wave-generator because of 8bit-only resolution)
@@ -108,19 +109,22 @@ static const unsigned char ADSR_DAC_6581[] = {
 
 static inline unsigned short getPW(unsigned char* channelptr)
 {
-    return (((channelptr[3]&0xF) << 8) | channelptr[2]) << 4; //PW=0000..FFF0 from SID-register (000..FFF)
+    // PW=0000..FFF0 from SID-register (000..FFF)
+    return (((channelptr[3]&0xF) << 8) | channelptr[2]) << 4;
 }
 
 static inline unsigned short getCombinedPW(unsigned char* channelptr)
 {
-    return ((channelptr[3]&0xF) << 8) | channelptr[2]; //PW=000..FFF (range for combined-waveform lookup) from SID-register (000..FFF)
+    // PW=000..FFF (range for combined-waveform lookup) from SID-register (000..FFF)
+    return ((channelptr[3]&0xF) << 8) | channelptr[2];
 }
 
 wg_output_t WavGen::clock(ADSR *adsr)
 {
-    //Waveform-generator //(phase accumulator and waveform-selector)
+    // Waveform-generator (phase accumulator and waveform-selector)
 
     unsigned int WavGenOut = 0;
+    unsigned char EnvOut = 0;
     int FilterInput = 0;
     int NonFiltered = 0;
     unsigned char FilterSwitchReso = regs[0x17];
@@ -131,17 +135,17 @@ wg_output_t WavGen::clock(ADSR *adsr)
         unsigned char *ChannelPtr = &(regs[Channel*7]);
 
         auto combinedWF = [&](cw_array_t WFarray, unsigned short oscval) {
-            constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; //bits
-            constexpr int COMBINEDWF_FILT_RESOLUTION = 16; //bits
-            constexpr int COMBINEDWF_WAVE_RESOLUTION = 8; //bits
-            constexpr int COMBINEDWF_OSC_MSB_OFF_MASK = (1 << (COMBINEDWF_SAMPLE_RESOLUTION - 1)) - 1; //0x7FFF
-            constexpr int COMBINEDWF_FILTMUL_MAX = (1 << COMBINEDWF_FILT_RESOLUTION) - 1; //0xFFFF
+            constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; // bits
+            constexpr int COMBINEDWF_FILT_RESOLUTION = 16; // bits
+            constexpr int COMBINEDWF_WAVE_RESOLUTION = 8; // bits
+            constexpr int COMBINEDWF_OSC_MSB_OFF_MASK = (1 << (COMBINEDWF_SAMPLE_RESOLUTION - 1)) - 1; // 0x7FFF
+            constexpr int COMBINEDWF_FILTMUL_MAX = (1 << COMBINEDWF_FILT_RESOLUTION) - 1; // 0xFFFF
             constexpr int COMBINEDWF_FILT_FRACTION_SHIFTS = 16;
-            constexpr int COMBINEDWF_WAVE_SHIFTS = CRSID_WAVE_RESOLUTION - COMBINEDWF_WAVE_RESOLUTION; //8
+            constexpr int COMBINEDWF_WAVE_SHIFTS = CRSID_WAVE_RESOLUTION - COMBINEDWF_WAVE_RESOLUTION; // 8
 
-            if (UNLIKELY(s->getChipModel()==6581 && WFarray!=PulseTriangle))
+            if (UNLIKELY(!s->is8580() && WFarray!=PulseTriangle))
                 oscval &= COMBINEDWF_OSC_MSB_OFF_MASK;
-            unsigned char Pitch = (LIKELY(ChannelPtr[1])) ? ChannelPtr[1] : 1; //avoid division by zero
+            unsigned char Pitch = (LIKELY(ChannelPtr[1])) ? ChannelPtr[1] : 1; // avoid division by zero
             unsigned short Filt = 0x7777 + (0x8888/Pitch);
             PrevWavData[Channel] = (WFarray[oscval]*Filt + PrevWavData[Channel]*(COMBINEDWF_FILTMUL_MAX-Filt)) >> COMBINEDWF_FILT_FRACTION_SHIFTS;
             return PrevWavData[Channel] << COMBINEDWF_WAVE_SHIFTS;
@@ -155,7 +159,8 @@ wg_output_t WavGen::clock(ADSR *adsr)
         if (UNLIKELY(TestBit || ((WF & SYNC_BITVAL) && SyncSourceMSBrise)))
             *PhaseAccuPtr = 0;
         else
-        { //stepping phase-accumulator (oscillator)
+        {
+            // stepping phase-accumulator (oscillator)
             *PhaseAccuPtr += PhaseAccuStep;
             if (UNLIKELY(*PhaseAccuPtr >= PHASEACCU_RANGE))
                 *PhaseAccuPtr -= PHASEACCU_RANGE; // 0x10000000
@@ -164,98 +169,139 @@ wg_output_t WavGen::clock(ADSR *adsr)
         unsigned int MSB = *PhaseAccuPtr & PHASEACCU_MSB_BITVAL; // 0x8000000
         SyncSourceMSBrise = (UNLIKELY(MSB > (PrevPhaseAccu[Channel] & PHASEACCU_MSB_BITVAL))) ? 1 : 0;
 
+        // switch-case encourages computed-goto compiler-optimization
         switch (WF & 0xF0)
-        { //switch-case encourages computed-goto compiler-optimization
+        {
             case NOISE_BITVAL:
-            { //noise waveform
-                int Tmp = NoiseLFSR[Channel]; //clock LFSR all time if clockrate exceeds observable at given samplerate (last term):
-                if (UNLIKELY(((*PhaseAccuPtr & NOISE_CLOCK) != (PrevPhaseAccu[Channel] & NOISE_CLOCK)) || PhaseAccuStep >= NOISE_CLOCK))
+            {
+                //noise waveform
+                int Tmp = NoiseLFSR[Channel];
+                // clock LFSR all time if clockrate exceeds observable at given samplerate (last term):
+                if (UNLIKELY(
+                    ((*PhaseAccuPtr & NOISE_CLOCK) != (PrevPhaseAccu[Channel] & NOISE_CLOCK))
+                    || (PhaseAccuStep >= NOISE_CLOCK)))
                 {
                     int Feedback = ((Tmp & 0x400000) ^ ((Tmp & 0x20000) << 5)) != 0;
-                    Tmp = ((Tmp << 1) | Feedback|TestBit) & 0x7FFFFF; //TEST-bit turns all bits in noise LFSR to 1 (on real SID slowly, in approx. 8000 microseconds ~ 300 samples)
+                    // TEST-bit turns all bits in noise LFSR to 1
+                    // (on real SID slowly, in approx. 8000 microseconds ~ 300 samples)
+                    Tmp = ((Tmp << 1) | Feedback|TestBit) & 0x7FFFFF;
                     NoiseLFSR[Channel] = Tmp;
-                } //we simply zero output when other waveform is mixed with noise. On real SID LFSR continuously gets filled by zero and locks up. ($C1 waveform with pw<8 can keep it for a while.)
-                WavGenOut = /*(WF & 0x70) ? 0 :*/ ((Tmp & 0x100000) >> 5) | ((Tmp & 0x40000) >> 4) | ((Tmp & 0x4000) >> 1) | ((Tmp & 0x800) << 1)
-                            | ((Tmp & 0x200) << 2) | ((Tmp & 0x20) << 5) | ((Tmp & 0x04) << 7) | ((Tmp & 0x01) << 8);
+                }
+                // we simply zero output when other waveform is mixed with noise.
+                // On real SID LFSR continuously gets filled by zero and locks up.
+                // ($C1 waveform with pw<8 can keep it for a while.)
+                WavGenOut = /*(WF & 0x70) ? 0 :*/
+                    ((Tmp & 0x100000) >> 5)
+                    | ((Tmp & 0x40000) >> 4)
+                    | ((Tmp & 0x4000) >> 1)
+                    | ((Tmp & 0x800) << 1)
+                    | ((Tmp & 0x200) << 2)
+                    | ((Tmp & 0x20) << 5)
+                    | ((Tmp & 0x04) << 7)
+                    | ((Tmp & 0x01) << 8);
             } break;
             case PULSE_BITVAL:
-            { //simple pulse
-                unsigned int PW = getPW(ChannelPtr); //PW=0000..FFF0 from SID-register
+            {
+                //simple pulse
+                unsigned int PW = getPW(ChannelPtr); // PW=0000..FFF0 from SID-register
                 unsigned int Utmp = (int)(PhaseAccuStep >> (CRSID_WAVE_SHIFTS+1));
                 if (UNLIKELY(0 < PW && PW < Utmp))
-                    PW = Utmp; //Too thin pulsewidth? Correct...
+                    PW = Utmp; // Too thin pulsewidth? Correct...
                 Utmp ^= CRSID_WAVE_MAX;
                 if (UNLIKELY(PW > Utmp))
-                    PW = Utmp; //Too thin pulsewidth? Correct it to a value representable at the current samplerate
+                    PW = Utmp; // Too thin pulsewidth? Correct it to a value representable at the current samplerate
                 Utmp = *PhaseAccuPtr >> CRSID_WAVE_SHIFTS; // 12
 
-                int Steepness = (PhaseAccuStep>=STEEPNESS_STEPLIMIT) ? PHASEACCU_MAX/PhaseAccuStep : CRSID_WAVE_MAX; //rising/falling-edge steepness (add/sub at samples)
+                // rising/falling-edge steepness (add/sub at samples)
+                int Steepness = (PhaseAccuStep>=STEEPNESS_STEPLIMIT) ? PHASEACCU_MAX/PhaseAccuStep : CRSID_WAVE_MAX;
                 if (UNLIKELY(TestBit))
-                    WavGenOut = CRSID_WAVE_MAX; //0xFFFF;
+                    WavGenOut = CRSID_WAVE_MAX; // 0xFFFF;
                 else if (Utmp<PW)
-                { //rising edge (interpolation)
-                    int PulsePeak = (CRSID_WAVE_MAX-PW) * Steepness; //very thin pulses don't make a full swing between 0 and max but make a little spike
-                    if (PulsePeak>CRSID_WAVE_MAX)
-                        PulsePeak=CRSID_WAVE_MAX; //but adequately thick trapezoid pulses reach the maximum level
-                    int Tmp = PulsePeak - (PW-Utmp)*Steepness; //draw the slope from the peak
-                    WavGenOut = (LIKELY(Tmp<CRSID_WAVE_MIN)) ? CRSID_WAVE_MIN : Tmp; //but stop at 0-level
+                {
+                    // rising edge (interpolation)
+                    int PulsePeak = (CRSID_WAVE_MAX-PW) * Steepness;
+                    // very thin pulses don't make a full swing between 0 and max but make a little spike
+                    if (PulsePeak > CRSID_WAVE_MAX)
+                        PulsePeak = CRSID_WAVE_MAX;
+                    // but adequately thick trapezoid pulses reach the maximum level
+                    int Tmp = PulsePeak - (PW-Utmp) * Steepness; // draw the slope from the peak
+                    WavGenOut = (LIKELY(Tmp<CRSID_WAVE_MIN)) ? CRSID_WAVE_MIN : Tmp; // but stop at 0-level
                 }
                 else
-                { //falling edge (interpolation)
-                    int PulsePeak = PW*Steepness; //very thin pulses don't make a full swing between 0 and max but make a little spike
-                    if (PulsePeak>CRSID_WAVE_MAX)
-                        PulsePeak=CRSID_WAVE_MAX; //adequately thick trapezoid pulses reach the maximum level
-                    int Tmp = (CRSID_WAVE_MAX-Utmp)*Steepness - PulsePeak; //draw the slope from the peak
-                    WavGenOut = (LIKELY(Tmp>=0)) ? CRSID_WAVE_MAX : Tmp;         //but stop at max-level
+                {
+                    // falling edge (interpolation)
+                    int PulsePeak = PW * Steepness;
+                    // very thin pulses don't make a full swing between 0 and max but make a little spike
+                    if (PulsePeak > CRSID_WAVE_MAX)
+                        PulsePeak = CRSID_WAVE_MAX;
+                    // adequately thick trapezoid pulses reach the maximum level
+                    int Tmp = (CRSID_WAVE_MAX-Utmp) * Steepness - PulsePeak; // draw the slope from the peak
+                    WavGenOut = (LIKELY(Tmp>=0)) ? CRSID_WAVE_MAX : Tmp;   // but stop at max-level
                 }
             } break;
             case PULSAWTRI_VAL:
-            { //pulse+saw+triangle (waveform nearly identical to tri+saw)
-                unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; //16; //12;
+            {
+                // pulse+saw+triangle (waveform nearly identical to tri+saw)
+                unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; // 16
                 WavGenOut = Utmp >= getCombinedPW(ChannelPtr) || UNLIKELY(TestBit)
-                    ? combinedWF(PulseSawTriangle, Utmp) : CRSID_WAVE_MIN; //0;
+                    ? combinedWF(PulseSawTriangle, Utmp) : CRSID_WAVE_MIN; // 0
             } break;
             case PULSAW_VAL:
-            { //pulse+saw
+            {
+                // pulse+saw
                 unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; //16; //12;
                 WavGenOut = Utmp >= getCombinedPW(ChannelPtr) //|| UNLIKELY(TestBit)
-                            ? combinedWF(PulseSawtooth, Utmp) : CRSID_WAVE_MIN; //0;
+                            ? combinedWF(PulseSawtooth, Utmp) : CRSID_WAVE_MIN; // 0
             } break;
             case PULTRI_VAL:
-            { //pulse+triangle
+            {
+                // pulse+triangle
                 int Tmp = *PhaseAccuPtr ^ ((WF&RING_BITVAL)? RingSourceMSB : 0);
                 WavGenOut = (*PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS) >= getCombinedPW(ChannelPtr) || UNLIKELY(TestBit)
-                ? combinedWF(PulseTriangle, Tmp >> COMBINEDWF_SAMPLE_SHIFTS) : CRSID_WAVE_MIN; //0;
+                ? combinedWF(PulseTriangle, Tmp >> COMBINEDWF_SAMPLE_SHIFTS) : CRSID_WAVE_MIN; // 0
             } break;
             case SAWTRI_VAL:
-            { //saw+triangle
+            {
+                // saw+triangle
                 WavGenOut = combinedWF(SawTriangle, *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS);
             } break;
             case SAW_BITVAL:
-            { //sawtooth
-                WavGenOut = *PhaseAccuPtr >> CRSID_WAVE_SHIFTS; //12; //saw (this row would be enough for simple but aliased-at-high-pitch saw)
+            {
+                // sawtooth
+                WavGenOut = *PhaseAccuPtr >> CRSID_WAVE_SHIFTS; // 12
+                // saw (this row would be enough for simple but aliased-at-high-pitch saw)
                 int Steepness = (PhaseAccuStep>>CRSID_CLOCK_FRACTIONAL_BITS) / 288;
-                if (UNLIKELY(Steepness==0))
-                    Steepness = 1; //avoid division by zero in next steps
-                WavGenOut += (WavGenOut * Steepness) >> STEEPNESS_FRACTION_SHIFTS; //16; //1st half (rising edge) of asymmetric triangle-like saw waveform
-                if (UNLIKELY(WavGenOut>CRSID_WAVE_MAX))
-                    WavGenOut = CRSID_WAVE_MAX - (((WavGenOut-CRSID_WAVE_RANGE)<<STEEPNESS_FRACTION_SHIFTS) / Steepness); //2nd half (falling edge, reciprocal steepness
+                // avoid division by zero in next steps
+                if (UNLIKELY(Steepness == 0))
+                    Steepness = 1;
+                // 1st half (rising edge) of asymmetric triangle-like saw waveform
+                WavGenOut += (WavGenOut * Steepness) >> STEEPNESS_FRACTION_SHIFTS; // 16
+                // 2nd half (falling edge, reciprocal steepness
+                if (UNLIKELY(WavGenOut > CRSID_WAVE_MAX))
+                    WavGenOut = CRSID_WAVE_MAX - (((WavGenOut-CRSID_WAVE_RANGE) << STEEPNESS_FRACTION_SHIFTS) / Steepness);
             } break;
             case TRI_BITVAL:
-            { //triangle (this waveform has no harsh edges, so it doesn't suffer from strong aliasing at high pitches)
-                if (LIKELY(!s->getRealSIDmode() || PrevSounDemonDigiWF[Channel] <= 0))
+            {
+                // triangle (this waveform has no harsh edges, so it doesn't suffer from strong aliasing at high pitches)
+                if (LIKELY(!s->getRealSIDmode() || (PrevSounDemonDigiWF[Channel] <= 0)))
                 {
                     int Tmp = *PhaseAccuPtr ^ (UNLIKELY(WF&RING_BITVAL) ? RingSourceMSB : 0);
-                    WavGenOut = (Tmp ^ (Tmp&PHASEACCU_MSB_BITVAL ? PHASEACCU_MAX : 0)) >> (CRSID_WAVE_SHIFTS-1); //11;
-                }  //SounDemon digi hack: if previous waveform was 01, don't modify output in this round:
+                    WavGenOut = (Tmp ^ (Tmp&PHASEACCU_MSB_BITVAL ? PHASEACCU_MAX : 0)) >> (CRSID_WAVE_SHIFTS-1); // 11
+                }
                 else
                 {
+                    // SounDemon digi hack: if previous waveform was 01 don't modify output in this round,
+                    // so carrier noise won't be heard due to non 1MHz emulation
                     WavGenOut = PrevWavGenOut[Channel];
                     --PrevSounDemonDigiWF[Channel];
-                } //(so carrier noise won't be heard due to non 1MHz emulation
+                }
             } break;
-            case 0x00: //emulate waveform 00 floating wave-DAC (utilized by SounDemon digis) (on real SID waveform00 decays after about 5 seconds, here we just simply keep the value to avoid clicks)
-                //(Our jittery 'seeking' waveform=$01 part of SounDemon-digi is substituted directly by frequency-high register's value (as in SwinSID))
+            case 0x00:
+                // emulate waveform 00 floating wave-DAC (utilized by SounDemon digis)
+                // (on real SID waveform00 decays after about 5 seconds,
+                // here we just simply keep the value to avoid clicks)
+                // (Our jittery 'seeking' waveform=$01 part of SounDemon-digi
+                // is substituted directly by frequency-high register's value (as in SwinSID))
                 if (s->getRealSIDmode() && WF == SOUNDEMON_DIGI_SEEK_WAVEFORM)
                 {
                     WavGenOut = ChannelPtr[1] << SOUNDEMON_DIGI_SHIFTS;
@@ -266,33 +312,34 @@ wg_output_t WavGen::clock(ADSR *adsr)
             break;
             default:
             {
+                // noise plus pulse/saw/triangle mostly yields silence
                 WavGenOut = CRSID_WAVE_MIN;
-            } break; //noise plus pulse/saw/triangle mostly yields silence
+            } break;
         }
 
-        WavGenOut &= CRSID_WAVE_MASK; //0xFFFF;
-        //if (WF&0xF0)
-            PrevWavGenOut[Channel] = WavGenOut; //emulate waveform 00 floating wave-DAC (utilized by SounDemon digis)
-        //else
-        //    WavGenOut = PrevWavGenOut[Channel];  //(on real SID waveform00 decays, we just simply keep the value to avoid clicks)
+        WavGenOut &= CRSID_WAVE_MASK; // 0xFFFF
+        PrevWavGenOut[Channel] = WavGenOut;
         PrevPhaseAccu[Channel] = *PhaseAccuPtr;
         RingSourceMSB = MSB;
 
-        //routing the channel signal to either the filter or the unfiltered master output depending on filter-switch SID-registers
-        unsigned char Envelope = (LIKELY(s->getChipModel() == 8580))
-            ? adsr->counter(Channel) : ADSR_DAC_6581[adsr->counter(Channel)];
+        // routing the channel signal to either the filter or the unfiltered master output
+        // depending on filter-switch SID-registers
+        EnvOut = adsr->counter(Channel);
+        unsigned char Envelope = (LIKELY(s->is8580()))
+            ? EnvOut : ADSR_DAC_6581[EnvOut];
+        int swave = static_cast<int>(WavGenOut) - CRSID_WAVE_MID;
         if (UNLIKELY(FilterSwitchReso & (1 << Channel)))
         {
-            FilterInput += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
+            FilterInput += (swave * Envelope) / ENVELOPE_MAGNITUDE_DIV;
         }
-        else if (LIKELY(Channel!=14 || !(VolumeBand & OFF3_BITVAL)))
+        else if (LIKELY(Channel!=3 || !(VolumeBand & OFF3_BITVAL)))
         {
-            NonFiltered += (((int)WavGenOut-CRSID_WAVE_MID) * Envelope) / ENVELOPE_MAGNITUDE_DIV;
+            NonFiltered += (swave * Envelope) / ENVELOPE_MAGNITUDE_DIV;
         }
     }
-    //update readable SID1-registers (some SID tunes might use 3rd channel ENV3/OSC3 value as control)
-    oscReg = WavGenOut >> WAVE_OSC3_SHIFTS; //OSC3, ENV3 (some players rely on it, unfortunately even for timing)
-    envReg = adsr->counter(2); //Envelope
+    // update readable SID1-registers (some SID tunes might use 3rd channel ENV3/OSC3 value as control)
+    oscReg = WavGenOut >> WAVE_OSC3_SHIFTS; // OSC3, ENV3 (some players rely on it, unfortunately even for timing)
+    envReg = EnvOut; // Envelope
 
     return std::make_pair(FilterInput, NonFiltered);
 }

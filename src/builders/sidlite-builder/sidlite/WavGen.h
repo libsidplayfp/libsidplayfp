@@ -47,14 +47,14 @@ private:
     unsigned char *regs;
     settings      *s;
 
-    int           PhaseAccu[3];       //28bit precision instead of 24bit
-    int           PrevPhaseAccu[3];   //(integerized ClockRatio fractionals, WebSID has similar solution)
+    int           PhaseAccu[3];       // 28bit precision instead of 24bit
+    int           PrevPhaseAccu[3];   // (integerized ClockRatio fractionals, WebSID has similar solution)
     unsigned int  NoiseLFSR[3];
     unsigned int  PrevWavGenOut[3];
     unsigned char PrevWavData[3];
+    signed char   PrevSounDemonDigiWF[3];
     unsigned int  RingSourceMSB;
     unsigned char SyncSourceMSBrise;
-    signed char   PrevSounDemonDigiWF[3];
 
     unsigned char oscReg;
     unsigned char envReg;

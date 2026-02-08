@@ -41,8 +41,9 @@ public:
     void write(int addr, int value);
     int read(int addr);
     int clock(unsigned int cycles, short* buf);
-    void setChipModel(int model);
 
+    void setChipModel(int model);
+    void setRealSIDmode(bool mode);
     void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
 
     int getLevel() const { return filter.getLevel(); }

@@ -36,7 +36,7 @@ namespace SIDLite
 int SID::clock(unsigned int cycles, short* buf)
 {
     int i = 0;
-    while (cycles>0)
+    while (cycles > 0)
     {
         buf[i] = generateSample(cycles);
         i++;
@@ -46,9 +46,9 @@ int SID::clock(unsigned int cycles, short* buf)
 
 inline signed short SID::generateSample(unsigned int &cycles)
 {
-    //call this from custom buffer-filler
+    // call this from custom buffer-filler
     int Output = emulateC64(cycles);
-    //saturation logic on overflow
+    // saturation logic on overflow
     if (Output > 32767)
         Output = 32767;
     else if (Output < -32768)
@@ -59,7 +59,7 @@ inline signed short SID::generateSample(unsigned int &cycles)
 
 inline int SID::emulateC64(unsigned int &cycles)
 {
-    //Cycle-based part of emulations:
+    // Cycle-based part of emulations:
 
     while ((SampleCycleCnt <= s.SampleClockRatio) && cycles)
     {
@@ -72,7 +72,7 @@ inline int SID::emulateC64(unsigned int &cycles)
 
     SampleCycleCnt -= s.SampleClockRatio;
 
-    //Samplerate-based part of emulations:
+    // Samplerate-based part of emulations:
 
     wg_output_t output = wavgen.clock(&adsr);
     return filter.clock(output.first, output.second);
@@ -112,12 +112,18 @@ void SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samp
 {
     filter.rebuildCutoffTables(samplingFrequency);
 
-    s.SampleClockRatio = (clockFrequency << 4) / samplingFrequency; //shifting (multiplication) enhances SampleClockRatio precision
+    // shifting (multiplication) enhances SampleClockRatio precision
+    s.SampleClockRatio = (clockFrequency << 4) / samplingFrequency;
 }
 
 void SID::setChipModel(int model)
 {
     s.ChipModel = model;
+}
+
+void SID::setRealSIDmode(bool mode)
+{
+    s.RealSIDmode = mode;
 }
 
 }

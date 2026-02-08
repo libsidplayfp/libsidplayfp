@@ -46,11 +46,10 @@ private:
     unsigned short *CutoffMul8580;
     unsigned short *CutoffMul6581;
 
-    signed int     PrevVolume; //lowpass-filtered version of Volume-band register
+    signed int     PrevVolume; // lowpass-filtered version of Volume-band register
     int            PrevLowPass;
     int            PrevBandPass;
-    int            Digi;
-    int            Level;      //filtered version, good for VU-meter display
+    int            Level;      // filtered version, good for VU-meter display
     unsigned char  VUmeterUpdateCounter;
 };
 

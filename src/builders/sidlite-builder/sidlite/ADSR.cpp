@@ -77,19 +77,20 @@ void ADSR::clock(char cycles)
 
         unsigned short PrescalePeriod;
         if (*ADSRstatePtr & ATTACK_BITVAL)
-            PrescalePeriod = ADSRprescalePeriods[ AD >> 4 ];
+            PrescalePeriod = ADSRprescalePeriods[AD >> 4];
         else if (*ADSRstatePtr & DECAYSUSTAIN_BITVAL)
-            PrescalePeriod = ADSRprescalePeriods[ AD & 0x0F ];
+            PrescalePeriod = ADSRprescalePeriods[AD & 0x0F];
         else
-            PrescalePeriod = ADSRprescalePeriods[ SR & 0x0F ];
+            PrescalePeriod = ADSRprescalePeriods[SR & 0x0F];
 
         *RateCounterPtr += cycles;
         if (UNLIKELY(*RateCounterPtr >= 0x8000))
-            *RateCounterPtr -= 0x8000; //*RateCounterPtr &= 0x7FFF; //can wrap around (ADSR delay-bug: short 1st frame)
+            *RateCounterPtr -= 0x8000; //*RateCounterPtr &= 0x7FFF; // can wrap around (ADSR delay-bug: short 1st frame)
 
         if (UNLIKELY(PrescalePeriod <= *RateCounterPtr && *RateCounterPtr < PrescalePeriod+cycles))
-        { //ratecounter shot (matches rateperiod) (in genuine SID ratecounter is LFSR)
-            *RateCounterPtr -= PrescalePeriod; //reset rate-counter on period-match
+        {
+            // ratecounter shot (matches rateperiod) (in genuine SID ratecounter is LFSR)
+            *RateCounterPtr -= PrescalePeriod; // reset rate-counter on period-match
             if ((*ADSRstatePtr & ATTACK_BITVAL) || ++(*ExponentCounterPtr) == ADSRexponentPeriods[*EnvelopeCounterPtr])
             {
                 *ExponentCounterPtr = 0;
@@ -98,13 +99,13 @@ void ADSR::clock(char cycles)
                     if (*ADSRstatePtr & ATTACK_BITVAL)
                     {
                         ++(*EnvelopeCounterPtr);
-                        if (*EnvelopeCounterPtr==0xFF)
+                        if (*EnvelopeCounterPtr == 0xFF)
                             *ADSRstatePtr &= ~ATTACK_BITVAL;
                     }
                     else if (!(*ADSRstatePtr & DECAYSUSTAIN_BITVAL) || *EnvelopeCounterPtr != (SR&0xF0)+(SR>>4))
                     {
-                        --(*EnvelopeCounterPtr); //resid adds 1 cycle delay, we omit that mechanism here
-                        if (*EnvelopeCounterPtr==0)
+                        --(*EnvelopeCounterPtr); // resid adds 1 cycle delay, we omit that mechanism here
+                        if (*EnvelopeCounterPtr == 0)
                             *ADSRstatePtr &= ~HOLDZEROn_BITVAL;
                     }
                 }
