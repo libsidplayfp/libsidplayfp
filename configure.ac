@@ -55,10 +55,6 @@ AS_IF([test $ax_cv_cxx_compile_cxx23__std_cpp23 != "yes"], [
 dnl check for hidden visibility support
 AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden -fvisibility-inlines-hidden])
 
-dnl enable fast math
-AX_APPEND_COMPILE_FLAGS([-ffast-math -fno-unsafe-math-optimizations], [RESIDFP_CXXFLAGS])
-AC_SUBST([RESIDFP_CXXFLAGS])
-
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 
@@ -131,12 +127,12 @@ AS_IF([test "x$enable_debug" = "xno"],
 
 AC_SUBST([debug_flags])
 
-AC_CACHE_CHECK([for __builtin_expect], [resid_cv_builtin_expect],
+AC_CACHE_CHECK([for __builtin_expect], [sid_cv_builtin_expect],
   [AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main() { __builtin_expect(0, 0); }])],
-    [resid_cv_builtin_expect=yes], [resid_cv_builtin_expect=no])]
+    [sid_cv_builtin_expect=yes], [sid_cv_builtin_expect=no])]
 )
 
-AS_IF([test "$resid_cv_builtin_expect" = no],
+AS_IF([test "$sid_cv_builtin_expect" = no],
   [HAVE_BUILTIN_EXPECT=0],
   [HAVE_BUILTIN_EXPECT=1]
 )
