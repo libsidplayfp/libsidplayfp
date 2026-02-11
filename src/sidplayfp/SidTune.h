@@ -23,7 +23,7 @@
 #ifndef SIDTUNE_H
 #define SIDTUNE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 #include "sidplayfp/siddefs.h"

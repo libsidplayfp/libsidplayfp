@@ -21,7 +21,7 @@
 #ifndef PSIDDRV_H
 #define PSIDDRV_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 class SidTuneInfo;

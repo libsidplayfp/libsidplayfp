@@ -23,7 +23,7 @@
 #ifndef SIDCONFIG_H
 #define SIDCONFIG_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "sidplayfp/siddefs.h"
 

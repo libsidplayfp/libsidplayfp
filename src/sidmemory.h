@@ -21,7 +21,7 @@
 #ifndef SIDMEMORY_H
 #define SIDMEMORY_H
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace libsidplayfp
 {

@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <iterator>
 #include <cstring>
-#include <stdint.h>
+#include <cstdint>
 
 namespace libsidplayfp
 {

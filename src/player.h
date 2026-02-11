@@ -24,7 +24,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstdio>
 
 #include "sidplayfp/siddefs.h"

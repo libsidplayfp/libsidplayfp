@@ -23,7 +23,7 @@
 #ifndef RESIDFP_EMU_H
 #define RESIDFP_EMU_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "residfp/residfp.h"
 #include "sidplayfp/SidConfig.h"

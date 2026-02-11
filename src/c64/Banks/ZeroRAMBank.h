@@ -23,7 +23,7 @@
 #ifndef ZERORAMBANK_H
 #define ZERORAMBANK_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "Bank.h"
 #include "SystemRAMBank.h"

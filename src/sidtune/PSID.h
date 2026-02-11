@@ -21,7 +21,7 @@
 #ifndef PSID_H
 #define PSID_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "SidTuneBase.h"
 

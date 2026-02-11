@@ -23,7 +23,7 @@
 #ifndef SIDTUNEINFOIMPL_H
 #define SIDTUNEINFOIMPL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include <string>
 

@@ -23,7 +23,7 @@
 #ifndef SIDDATABASE_H
 #define SIDDATABASE_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "sidplayfp/siddefs.h"
 

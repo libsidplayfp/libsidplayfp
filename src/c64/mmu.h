@@ -23,8 +23,6 @@
 #ifndef MMU_H
 #define MMU_H
 
-#include <stdint.h>
-
 #include "sidendian.h"
 #include "sidmemory.h"
 #include "EventScheduler.h"
@@ -36,6 +34,7 @@
 
 #include "sidcxx11.h"
 
+#include <cstdint>
 #include <cstring>
 
 namespace libsidplayfp

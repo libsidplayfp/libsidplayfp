@@ -23,8 +23,8 @@
 #ifndef SIDPLAYFP_H
 #define SIDPLAYFP_H
 
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
 
 #include "sidplayfp/siddefs.h"
 #include "sidplayfp/sidversion.h"

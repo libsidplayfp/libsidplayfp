@@ -27,7 +27,7 @@
 #include "EventScheduler.h"
 #include "EventCallback.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "sidcxx11.h"
 

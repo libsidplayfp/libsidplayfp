@@ -23,7 +23,7 @@
 #ifndef SIDINFO_H
 #define SIDINFO_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "sidplayfp/siddefs.h"
 #include "sidplayfp/SidTuneInfo.h"

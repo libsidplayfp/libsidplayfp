@@ -23,7 +23,7 @@
 #ifndef SIDINFOIMPL_H
 #define SIDINFOIMPL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include <string>
 

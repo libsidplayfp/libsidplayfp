@@ -2,7 +2,7 @@
 #ifndef USBSID_EMU_H
 #define USBSID_EMU_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "sidplayfp/SidConfig.h"
 #include "sidemu.h"

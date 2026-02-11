@@ -23,7 +23,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "Event.h"
 #include "EventCallback.h"

@@ -23,9 +23,9 @@
 #ifndef MOS6510_H
 #define MOS6510_H
 
-#include <stdint.h>
 #include <memory>
 #include <string>
+#include <cstdint>
 #include <cstdio>
 
 #include "flags.h"

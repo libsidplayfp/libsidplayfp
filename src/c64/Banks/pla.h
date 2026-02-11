@@ -21,7 +21,7 @@
 #ifndef PLA_H
 #define PLA_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "Event.h"
 

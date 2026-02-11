@@ -24,8 +24,7 @@
 #ifndef MOS656X_H
 #define MOS656X_H
 
-#include <stdint.h>
-
+#include <cstdint>
 
 #include "lightpen.h"
 #include "sprites.h"

@@ -23,7 +23,7 @@
 #ifndef SIDLITE_EMU_H
 #define SIDLITE_EMU_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "sidlite/SID.h"
 #include "sidplayfp/SidConfig.h"

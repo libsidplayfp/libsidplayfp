@@ -69,8 +69,10 @@ AS_IF([test $ac_cv_sizeof_int -lt 4],
   [AC_MSG_ERROR([only 32 bit or better CPUs are supported])]
 )
 
-AS_IF([test "x${ac_cv_header_stdint_h}" != "xyes"],
-  [AC_MSG_ERROR([Required header stdint.h not found])]
+AC_CHECK_TYPES([int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t],
+    [],
+    [AC_MSG_ERROR([missing fixed width integer types])],
+    [[#include <cstdint>]]
 )
 
 dnl Checks for non-standard functions.

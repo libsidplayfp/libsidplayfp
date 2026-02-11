@@ -21,7 +21,7 @@
 #ifndef ROMCHECK_H
 #define ROMCHECK_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 #include <string>
 #include <utility>

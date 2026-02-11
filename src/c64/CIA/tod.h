@@ -24,7 +24,7 @@
 #ifndef TOD_H
 #define TOD_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "EventScheduler.h"
 

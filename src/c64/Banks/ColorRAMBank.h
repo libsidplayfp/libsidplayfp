@@ -22,7 +22,7 @@
 #ifndef COLORRAMBANK_H
 #define COLORRAMBANK_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <algorithm>
 #include <iterator>
 

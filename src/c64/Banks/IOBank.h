@@ -22,7 +22,7 @@
 #ifndef IOBANK_H
 #define IOBANK_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "Bank.h"
 

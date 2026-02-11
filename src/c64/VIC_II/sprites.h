@@ -24,7 +24,7 @@
 #ifndef SPRITES_H
 #define SPRITES_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <algorithm>
 #include <iterator>

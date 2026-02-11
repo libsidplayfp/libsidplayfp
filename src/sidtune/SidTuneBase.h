@@ -23,7 +23,7 @@
 #ifndef SIDTUNEBASE_H
 #define SIDTUNEBASE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <memory>
 #include <vector>
 #include <string>

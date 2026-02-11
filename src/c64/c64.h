@@ -23,7 +23,7 @@
 #ifndef C64_H
 #define C64_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <cstdio>
 
 #include <map>

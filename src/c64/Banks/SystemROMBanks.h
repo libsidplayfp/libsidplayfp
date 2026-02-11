@@ -22,9 +22,9 @@
 #ifndef SYSTEMROMBANKS_H
 #define SYSTEMROMBANKS_H
 
-#include <stdint.h>
 #include <algorithm>
 #include <iterator>
+#include <cstdint>
 #include <cstring>
 
 #include "Bank.h"
