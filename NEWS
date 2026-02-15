@@ -1,3 +1,9 @@
+2.16.1 2026-02-15
+* Fixed MinGW build issues
+* Fixed warnings in USBSID builder
+
+
+
 2.16.0 2025-12-23
 * Fix opening STIL on MacOS (#225)
 * Expose the SID models actually used
