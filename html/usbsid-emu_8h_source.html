@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
    </div>
   </td>
  </tr>
@@ -118,47 +118,46 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span> reset(uint8_t volume) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">/* Standard SID functions */</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// void clock() override;</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1USBSID.html#af1a3e843f868f87fed6d6effcb9613e5">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classlibsidplayfp_1_1USBSID.html#af1a3e843f868f87fed6d6effcb9613e5">clock</a>() {};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1USBSID.html#a2d2448ed4a003e2003492e3f22c57151">   63</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classlibsidplayfp_1_1USBSID.html#a2d2448ed4a003e2003492e3f22c57151">clock</a>()<span class="keyword"> override </span>{};</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">void</span> sampling(<span class="keywordtype">float</span> systemclock, <span class="keywordtype">float</span> freq,</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <a class="code hl_enumeration" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a> method, <span class="keywordtype">bool</span>);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordtype">void</span> model(<a class="code hl_enumeration" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> model, MAYBE_UNUSED <span class="keywordtype">bool</span> digiboost) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">/* USBSID specific */</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">void</span> flush(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">void</span> filter(<span class="keywordtype">bool</span> enable);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">/* ISSUE: Disabled, blocks playing */</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// Must lock the SID before using the standard functions.</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// bool lock(EventScheduler *env) override;</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// void unlock() override;</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// Fixed interval timer delay to prevent sidplay2</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="comment">// shoot to 100% CPU usage when song no longer</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="comment">// writes to SID.</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">void</span> event() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">void</span> sampling(<span class="keywordtype">float</span> systemclock, <span class="keywordtype">float</span> freq,</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <a class="code hl_enumeration" href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a> method, <span class="keywordtype">bool</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">void</span> model(<a class="code hl_enumeration" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> model, MAYBE_UNUSED <span class="keywordtype">bool</span> digiboost) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">/* USBSID specific */</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">void</span> flush(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">void</span> filter(<span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">/* ISSUE: Disabled, blocks playing */</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// Must lock the SID before using the standard functions.</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">// bool lock(EventScheduler *env) override;</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// void unlock() override;</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">// Fixed interval timer delay to prevent sidplay2</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="comment">// shoot to 100% CPU usage when song no longer</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="comment">// writes to SID.</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">void</span> event() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
 </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#endif </span><span class="comment">// USBSID_EMU_H</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>}</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif </span><span class="comment">// USBSID_EMU_H</span></div>
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition</b> SidConfig.h:51</div></div>
 <div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition</b> SidConfig.h:84</div></div>
 <div class="ttc" id="aclassUSBSID__NS_1_1USBSID__Class_html"><div class="ttname"><a href="classUSBSID__NS_1_1USBSID__Class.html">USBSID_NS::USBSID_Class</a></div><div class="ttdef"><b>Definition</b> emscripten/src/USBSID.h:309</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1Event_html"><div class="ttname"><a href="classlibsidplayfp_1_1Event.html">libsidplayfp::Event</a></div><div class="ttdef"><b>Definition</b> Event.h:39</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1USBSID_html"><div class="ttname"><a href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a></div><div class="ttdef"><b>Definition</b> usbsid-emu.h:27</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1USBSID_html_af1a3e843f868f87fed6d6effcb9613e5"><div class="ttname"><a href="classlibsidplayfp_1_1USBSID.html#af1a3e843f868f87fed6d6effcb9613e5">libsidplayfp::USBSID::clock</a></div><div class="ttdeci">void clock()</div><div class="ttdef"><b>Definition</b> usbsid-emu.h:64</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1USBSID_html_a2d2448ed4a003e2003492e3f22c57151"><div class="ttname"><a href="classlibsidplayfp_1_1USBSID.html#a2d2448ed4a003e2003492e3f22c57151">libsidplayfp::USBSID::clock</a></div><div class="ttdeci">void clock() override</div><div class="ttdef"><b>Definition</b> usbsid-emu.h:63</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></div><div class="ttdef"><b>Definition</b> sidemu.h:47</div></div>
 <div class="ttc" id="aclasssidbuilder_html"><div class="ttname"><a href="classsidbuilder.html">sidbuilder</a></div><div class="ttdef"><b>Definition</b> sidbuilder.h:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 23 2025 15:08:00 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun Feb 15 2026 10:39:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

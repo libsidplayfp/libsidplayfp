@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
    </div>
   </td>
  </tr>
@@ -59,7 +59,7 @@
   <tr class="odd"><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#aa32ebf4a30dd887f595e736742be71a0">bufferpos</a>() const</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#ab05940b298ea6899e2a3bae5fedff290">bufferpos</a>(int pos)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>builder</b>() const (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html#af1a3e843f868f87fed6d6effcb9613e5">clock</a>()</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html#a2d2448ed4a003e2003492e3f22c57151">clock</a>() override</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>ERR_INVALID_CHIP</b> (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">static</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ERR_INVALID_SAMPLING</b> (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">static</span></td></tr>
   <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>ERR_UNSUPPORTED_FREQ</b> (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">static</span></td></tr>
@@ -87,7 +87,7 @@
   <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>read</b>(uint_least8_t addr) override (defined in <a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>reset</b>(uint8_t volume) override (defined in <a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>reset</b>() (defined in <a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1c64sid.html">libsidplayfp::c64sid</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sampling</b>(float systemclock, float freq, SidConfig::sampling_method_t method, bool) (defined in <a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sampling</b>(float systemclock, float freq, SidConfig::sampling_method_t method, bool) override (defined in <a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1USBSID.html">libsidplayfp::USBSID</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a96d9dc25105c569fb0c11656ac1e088a">libsidplayfp::sidemu::sampling</a>(float systemfreq SID_UNUSED, float outputfreq SID_UNUSED, SidConfig::sampling_method_t method SID_UNUSED, bool fast SID_UNUSED)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sidemu</b>(sidbuilder *builder) (defined in <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>)</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html#a754190edcc167c154394f62f1c91dfd2">unlock</a>()</td><td class="entry"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
@@ -102,7 +102,7 @@
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 23 2025 15:08:00 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun Feb 15 2026 10:39:29 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
