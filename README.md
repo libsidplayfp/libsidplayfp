@@ -53,7 +53,7 @@ is required.
 
 In addition to the standard build options the following are available:
 
-* `--enable-debug[=no/yes/full]`:
+* `--enable-debug[=no/yes]`:
 compile with debugging messages
 (disabled by default)
 
@@ -71,7 +71,7 @@ enables unit tests. Use `make check` to launch the testsuite
 Build with exsid support. Requires either libexsid or one of libfdti1 or libftd2xx
 
 * `--with-usbsid`:
-Build with usbsid support. Requires either libusb
+Build with usbsid support. Requires libusb
 
 
 If [doxygen](https://doxygen.nl) is installed and detected by the configure script, the documentation

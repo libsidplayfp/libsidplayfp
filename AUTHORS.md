@@ -31,6 +31,8 @@ VIC II, CIA and cpu-port emulation is based on VICE code.
 CIA SDR and interrupt handling are based on Denise emulator
 implementation.
 
+COMPUTE!'s Sidplayer by Craig Chamberlain and Harry Bratt.
+
 Credit where credit is due, so if I missed anyone please let me know.
 
 -----------------------------------------------------------------------------
