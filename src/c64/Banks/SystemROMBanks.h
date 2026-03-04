@@ -98,7 +98,7 @@ public:
 
         if (kernal == nullptr)
         {
-            std::fill(std::begin(rom), std::end(rom), RTSn);
+            std::fill(std::begin(rom), std::end(rom), NOPn);
 
             // IRQ routine
             setVal(0xea31, JMPw);
