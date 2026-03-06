@@ -1,6 +1,6 @@
 m4_define([lib_major], [3])
 m4_define([lib_minor], [0])
-m4_define([lib_level], [0a])
+m4_define([lib_level], [0a2])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_PREREQ([2.62])
