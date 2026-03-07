@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2012-2022 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2012-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2010 Antti Lankila
  *
  * This program is free software; you can redistribute it and/or modify
@@ -91,6 +91,30 @@ private:
     uint8_t resetVectorLo;  // 0xfffc
     uint8_t resetVectorHi;  // 0xfffd
 
+private:
+    uint8_t save_regs[5] =
+    {
+        PHAn,
+        TXAn,
+        PHAn,
+        TYAn,
+        PHAn
+    };
+
+    uint8_t restore_regs[5] =
+    {
+        PLAn,
+        TAYn,
+        PLAn,
+        TAXn,
+        PLAn
+    };
+
+    void fill(uint_least16_t address, uint8_t data[5])
+    {
+        std::memcpy(rom+(address & 0x1fff), data, 5);
+    }
+
 public:
     void set(const uint8_t* kernal)
     {
@@ -108,11 +132,7 @@ public:
             setVal(0xea7e, NOPa);  // Clear IRQ
             setVal(0xea7f, 0x0d);
             setVal(0xea80, 0xdc);
-            setVal(0xea81, PLAn);  // Restore registers
-            setVal(0xea82, TAYn);
-            setVal(0xea83, PLAn);
-            setVal(0xea84, TAXn);
-            setVal(0xea85, PLAn);
+            fill(0xea81, restore_regs);
             setVal(0xea86, RTIn); // Return from interrupt
 
             // Reset
@@ -125,14 +145,13 @@ public:
             setVal(0xfe46, 0x03);
 
             // NMI routine
-            setVal(0xfe47, RTIn);
+            fill(0xfe47, save_regs);
+
+            fill(0xfebc, restore_regs);
+            setVal(0xfc1, RTIn);
 
             // IRQ entry point
-            setVal(0xff48, PHAn); // Save regs
-            setVal(0xff49, TXAn);
-            setVal(0xff4a, PHAn);
-            setVal(0xff4b, TYAn);
-            setVal(0xff4c, PHAn);
+            fill(0xff48, save_regs);
             setVal(0xff4d, JMPi); // Jump to IRQ routine (Default: $EA31)
             setVal(0xff4e, 0x14);
             setVal(0xff4f, 0x03);
@@ -144,6 +163,9 @@ public:
             setVal(0xfffd, 0xfc);
             setVal(0xfffe, 0x48); // IRQ/BRK vector $FF48
             setVal(0xffff, 0xff);
+
+            // Standard KERNAL functions called by some unclean rips
+            setVal(0xea87, RTSn); // SCNKEY
         }
 
         // Backup Reset Vector
