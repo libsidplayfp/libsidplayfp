@@ -41,7 +41,7 @@ namespace libsidplayfp
 template <int N>
 class romBank : public Bank
 {
-    static_assert((N != 0) && ((N & (N - 1)) == 0), "N must be a power of two");
+    static_assert((N > 0) && ((N & (N - 1)) == 0), "N must be a power of two");
 
 protected:
     /// The ROM array
