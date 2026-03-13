@@ -33,22 +33,23 @@ namespace SIDLite
 
 enum WaveFormBits
 {
-    NOISE_BITVAL=0x80,
-    PULSE_BITVAL=0x40,
-    SAW_BITVAL=0x20,
-    TRI_BITVAL=0x10,
-    PULSAWTRI_VAL=0x70,
-    PULSAW_VAL=0x60,
-    PULTRI_VAL=0x50,
-    SAWTRI_VAL=0x30
+    NOISE_BITVAL    = 0x80,
+    PULSE_BITVAL    = 0x40,
+    SAW_BITVAL      = 0x20,
+    TRI_BITVAL      = 0x10,
+    // combined waveforms
+    PULSAWTRI_VAL   = PULSE_BITVAL|SAW_BITVAL|TRI_BITVAL,
+    PULSAW_VAL      = PULSE_BITVAL|SAW_BITVAL,
+    PULTRI_VAL      = PULSE_BITVAL|TRI_BITVAL,
+    SAWTRI_VAL      = SAW_BITVAL|TRI_BITVAL
 };
 
 enum ControlBits
 {
-    TEST_BITVAL=0x08,
-    RING_BITVAL=0x04,
-    SYNC_BITVAL=0x02,
-    GATE_BITVAL=0x01
+    TEST_BITVAL     = 0x08,
+    RING_BITVAL     = 0x04,
+    SYNC_BITVAL     = 0x02,
+    GATE_BITVAL     = 0x01
 };
 
 constexpr int CRSID_CLOCK_FRACTIONAL_BITS = 4;
@@ -87,11 +88,13 @@ constexpr int ENVELOPE_MAGNITUDE_DIV = SID_ENVELOPE_MAGNITUDE * CRSID_WAVGEN_PRE
 
 constexpr int OFF3_BITVAL = 0x80;
 
+// used at output of ADSR envelope generator
+// (not used for wave-generator because of 8bit-only resolution)
 static const unsigned char ADSR_DAC_6581[] =
 {
     0x00,0x02,0x03,0x04,0x05,0x06,0x07,0x09,0x09,0x0B,0x0B,0x0D,0x0D,0x0F,0x10,0x12,
-    0x11,0x13,0x14,0x15,0x16,0x17,0x18,0x1A,0x1A,0x1C,0x1C,0x1E,0x1E,0x20,0x21,0x23, //used at output of ADSR envelope generator
-    0x21,0x23,0x24,0x25,0x26,0x27,0x28,0x2A,0x2A,0x2C,0x2C,0x2E,0x2E,0x30,0x31,0x33, //(not used for wave-generator because of 8bit-only resolution)
+    0x11,0x13,0x14,0x15,0x16,0x17,0x18,0x1A,0x1A,0x1C,0x1C,0x1E,0x1E,0x20,0x21,0x23,
+    0x21,0x23,0x24,0x25,0x26,0x27,0x28,0x2A,0x2A,0x2C,0x2C,0x2E,0x2E,0x30,0x31,0x33,
     0x32,0x34,0x35,0x36,0x37,0x38,0x39,0x3B,0x3B,0x3D,0x3D,0x3F,0x3F,0x41,0x42,0x44,
     0x40,0x42,0x42,0x44,0x44,0x46,0x47,0x49,0x49,0x4A,0x4B,0x4D,0x4D,0x4F,0x50,0x52,
     0x51,0x53,0x53,0x55,0x55,0x57,0x58,0x5A,0x5A,0x5B,0x5C,0x5E,0x5E,0x60,0x61,0x63,
@@ -107,16 +110,16 @@ static const unsigned char ADSR_DAC_6581[] =
     0xED,0xEF,0xF0,0xF2,0xF2,0xF4,0xF4,0xF6,0xF6,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFF
 };
 
-static inline unsigned short getPW(unsigned char* channelptr)
-{
-    // PW=0000..FFF0 from SID-register (000..FFF)
-    return (((channelptr[3]&0xF) << 8) | channelptr[2]) << 4;
-}
-
 static inline unsigned short getCombinedPW(unsigned char* channelptr)
 {
     // PW=000..FFF (range for combined-waveform lookup) from SID-register (000..FFF)
     return ((channelptr[3]&0xF) << 8) | channelptr[2];
+}
+
+static inline unsigned short getPW(unsigned char* channelptr)
+{
+    // PW=0000..FFF0 from SID-register (000..FFF)
+    return getCombinedPW(channelptr) << 4;
 }
 
 wg_output_t WavGen::clock(ADSR *adsr)
@@ -127,14 +130,15 @@ wg_output_t WavGen::clock(ADSR *adsr)
     unsigned char EnvOut = 0;
     int FilterInput = 0;
     int NonFiltered = 0;
-    unsigned char FilterSwitchReso = regs[0x17];
-    unsigned char VolumeBand = regs[0x18];
+    const unsigned char FilterSwitchReso = regs[0x17];
+    const unsigned char VolumeBand = regs[0x18];
 
     for (int Channel=0; Channel<SID_CHANNEL_COUNT; Channel++)
     {
         unsigned char *ChannelPtr = &(regs[Channel*7]);
 
-        auto combinedWF = [&](cw_array_t WFarray, unsigned short oscval) {
+        auto combinedWF = [&](cw_array_t WFarray, unsigned short oscval)
+        {
             constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; // bits
             constexpr int COMBINEDWF_FILT_RESOLUTION = 16; // bits
             constexpr int COMBINEDWF_WAVE_RESOLUTION = 8; // bits
@@ -151,11 +155,11 @@ wg_output_t WavGen::clock(ADSR *adsr)
             return PrevWavData[Channel] << COMBINEDWF_WAVE_SHIFTS;
         };
 
-        unsigned char WF = ChannelPtr[4];
-        unsigned char TestBit = (UNLIKELY((WF & TEST_BITVAL) != 0));
+        const unsigned char WF = ChannelPtr[4];
+        const unsigned char TestBit = (UNLIKELY((WF & TEST_BITVAL) != 0));
         int *PhaseAccuPtr = &(PhaseAccu[Channel]);
 
-        unsigned int PhaseAccuStep = ((ChannelPtr[1]<<8) | ChannelPtr[0]) * s->getSampleClockRatio();
+        const unsigned int PhaseAccuStep = ((ChannelPtr[1]<<8) | ChannelPtr[0]) * s->getSampleClockRatio();
         if (UNLIKELY(TestBit || ((WF & SYNC_BITVAL) && SyncSourceMSBrise)))
             *PhaseAccuPtr = 0;
         else
@@ -166,7 +170,7 @@ wg_output_t WavGen::clock(ADSR *adsr)
                 *PhaseAccuPtr -= PHASEACCU_RANGE; // 0x10000000
         }
         *PhaseAccuPtr &= PHASEACCU_ANDMASK; // 0xFFFFFFF
-        unsigned int MSB = *PhaseAccuPtr & PHASEACCU_MSB_BITVAL; // 0x8000000
+        const unsigned int MSB = *PhaseAccuPtr & PHASEACCU_MSB_BITVAL; // 0x8000000
         SyncSourceMSBrise = (UNLIKELY(MSB > (PrevPhaseAccu[Channel] & PHASEACCU_MSB_BITVAL))) ? 1 : 0;
 
         // switch-case encourages computed-goto compiler-optimization
@@ -187,9 +191,6 @@ wg_output_t WavGen::clock(ADSR *adsr)
                     Tmp = ((Tmp << 1) | Feedback|TestBit) & 0x7FFFFF;
                     NoiseLFSR[Channel] = Tmp;
                 }
-                // we simply zero output when other waveform is mixed with noise.
-                // On real SID LFSR continuously gets filled by zero and locks up.
-                // ($C1 waveform with pw<8 can keep it for a while.)
                 WavGenOut = /*(WF & 0x70) ? 0 :*/
                     ((Tmp & 0x100000) >> 5)
                     | ((Tmp & 0x40000) >> 4)
@@ -251,14 +252,14 @@ wg_output_t WavGen::clock(ADSR *adsr)
                 // pulse+saw
                 unsigned int Utmp = *PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS; // 16
                 WavGenOut = Utmp >= getCombinedPW(ChannelPtr) //|| UNLIKELY(TestBit)
-                            ? combinedWF(PulseSawtooth, Utmp) : CRSID_WAVE_MIN; // 0
+                    ? combinedWF(PulseSawtooth, Utmp) : CRSID_WAVE_MIN; // 0
             } break;
             case PULTRI_VAL:
             {
                 // pulse+triangle
                 int Tmp = *PhaseAccuPtr ^ ((WF&RING_BITVAL)? RingSourceMSB : 0);
                 WavGenOut = (*PhaseAccuPtr >> COMBINEDWF_SAMPLE_SHIFTS) >= getCombinedPW(ChannelPtr) || UNLIKELY(TestBit)
-                ? combinedWF(PulseTriangle, Tmp >> COMBINEDWF_SAMPLE_SHIFTS) : CRSID_WAVE_MIN; // 0
+                    ? combinedWF(PulseTriangle, Tmp >> COMBINEDWF_SAMPLE_SHIFTS) : CRSID_WAVE_MIN; // 0
             } break;
             case SAWTRI_VAL:
             {
@@ -312,7 +313,9 @@ wg_output_t WavGen::clock(ADSR *adsr)
             break;
             default:
             {
-                // noise plus pulse/saw/triangle mostly yields silence
+                // we simply zero output when other waveform is mixed with noise.
+                // On real SID LFSR continuously gets filled by zero and locks up.
+                // ($C1 waveform with pw<8 can keep it for a while.)
                 WavGenOut = CRSID_WAVE_MIN;
             } break;
         }
