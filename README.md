@@ -86,6 +86,6 @@ Known bugs/limitations:
 
 # 3rd party software
 
-* hashlib
-  https://github.com/Cra3z/hashlib
+* hashlib  
+  https://github.com/Cra3z/hashlib  
   distributed under MIT license
