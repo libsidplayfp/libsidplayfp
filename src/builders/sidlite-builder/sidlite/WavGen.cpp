@@ -314,9 +314,31 @@ wg_output_t WavGen::clock(ADSR *adsr)
             default:
             {
                 // we simply zero output when other waveform is mixed with noise.
-                // On real SID LFSR continuously gets filled by zero and locks up.
+                // LFSR continuously gets filled by zero and locks up.
                 // ($C1 waveform with pw<8 can keep it for a while.)
                 WavGenOut = CRSID_WAVE_MIN;
+                bool shift =
+                    ((*PhaseAccuPtr & NOISE_CLOCK) != (PrevPhaseAccu[Channel] & NOISE_CLOCK))
+                    || (PhaseAccuStep >= NOISE_CLOCK);
+                if (!shift && !TestBit)
+                {
+                    // noise writeback
+                    NoiseLFSR[Channel] &= ~
+                        (0x100000
+                        | 0x40000
+                        |  0x4000
+                        |   0x800
+                        |   0x200
+                        |    0x20
+                        |    0x04
+                        |    0x01);
+                }
+                else
+                {
+                    int Tmp = NoiseLFSR[Channel];
+                    Tmp = ((Tmp << 1) | TestBit) & 0x7FFFFF;
+                    NoiseLFSR[Channel] = Tmp;
+                }
             } break;
         }
 
