@@ -122,6 +122,31 @@ static inline unsigned short getPW(unsigned char* channelptr)
     return getCombinedPW(channelptr) << 4;
 }
 
+static inline unsigned int getNoise(unsigned int nr)
+{
+    return
+          ((nr & 0x100000) >> 5)
+        | ((nr &  0x40000) >> 4)
+        | ((nr &   0x4000) >> 1)
+        | ((nr &    0x800) << 1)
+        | ((nr &    0x200) << 2)
+        | ((nr &     0x20) << 5)
+        | ((nr &     0x04) << 7)
+        | ((nr &     0x01) << 8);
+}
+
+constexpr unsigned int NOISE_MASK =
+(
+     0x100000
+    | 0x40000
+    |  0x4000
+    |   0x800
+    |   0x200
+    |    0x20
+    |    0x04
+    |    0x01
+);
+
 wg_output_t WavGen::clock(ADSR *adsr)
 {
     // Waveform-generator (phase accumulator and waveform-selector)
@@ -191,15 +216,7 @@ wg_output_t WavGen::clock(ADSR *adsr)
                     Tmp = ((Tmp << 1) | Feedback|TestBit) & 0x7FFFFF;
                     NoiseLFSR[Channel] = Tmp;
                 }
-                WavGenOut = /*(WF & 0x70) ? 0 :*/
-                    ((Tmp & 0x100000) >> 5)
-                    | ((Tmp & 0x40000) >> 4)
-                    | ((Tmp & 0x4000) >> 1)
-                    | ((Tmp & 0x800) << 1)
-                    | ((Tmp & 0x200) << 2)
-                    | ((Tmp & 0x20) << 5)
-                    | ((Tmp & 0x04) << 7)
-                    | ((Tmp & 0x01) << 8);
+                WavGenOut = getNoise(Tmp);
             } break;
             case PULSE_BITVAL:
             {
@@ -323,15 +340,7 @@ wg_output_t WavGen::clock(ADSR *adsr)
                 if (!shift && !TestBit)
                 {
                     // noise writeback
-                    NoiseLFSR[Channel] &= ~
-                        (0x100000
-                        | 0x40000
-                        |  0x4000
-                        |   0x800
-                        |   0x200
-                        |    0x20
-                        |    0x04
-                        |    0x01);
+                    NoiseLFSR[Channel] &= ~NOISE_MASK;
                 }
                 else
                 {
