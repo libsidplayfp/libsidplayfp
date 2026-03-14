@@ -152,7 +152,7 @@ public:
             fill(0xfe47, save_regs);
 
             fill(0xfebc, restore_regs);
-            setVal(0xfc1, RTIn);
+            setVal(0xfec1, RTIn);
 
             // IRQ entry point
             fill(0xff48, save_regs);
