@@ -111,6 +111,10 @@ void SID::reset()
     SampleCycleCnt = 0;
 
     std::fill(std::begin(regs), std::end(regs), 0);
+
+    adsr.reset();
+    filter.reset();
+    wavgen.reset();
 }
 
 void SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency)
