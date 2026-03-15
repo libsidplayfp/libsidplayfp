@@ -38,9 +38,9 @@ const char* SIDLiteEmu::getCredits()
 {
     return
         "SIDLiteEmu V" VERSION " Engine:\n"
-        "\t(C) 2025 Leandro Nini\n"
+        "\t(C) 2025-2026 Leandro Nini\n"
         "MOS6581/CSG8580 (SID) Emulation:\n"
-        "\t(C) 2025 Leandro Nini\n"
+        "\t(C) 2025-2026 Leandro Nini\n"
         "\tBased on cRSID by Hermit (Mihaly Horvath)\n";
 }
 
@@ -83,6 +83,12 @@ void SIDLiteEmu::clock()
     m_accessClk += cycles;
     m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
 }
+
+int SIDLiteEmu::getLevel() const
+{
+    return m_sid.getLevel();
+}
+
 /*
 void SIDLiteEmu::filter(bool enable)
 {
@@ -107,16 +113,9 @@ void SIDLiteEmu::sampling(float systemclock, float freq,
         return;
     }
 */
-    //try
     {
         m_sid.setSamplingParameters(systemclock, freq);
     }
-    //catch (SIDLite::SIDError const &)
-    //{
-    //    m_status = false;
-    //    m_error = ERR_UNSUPPORTED_FREQ;
-    //    return;
-    //}
 
     if (m_buffer)
         delete[] m_buffer;
