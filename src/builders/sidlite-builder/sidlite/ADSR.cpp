@@ -30,10 +30,10 @@ namespace SIDLite
 
 enum ADSRstateBits
 {
-    GATE_BITVAL=0x01,
-    ATTACK_BITVAL=0x80,
-    DECAYSUSTAIN_BITVAL=0x40,
-    HOLDZEROn_BITVAL=0x10
+    GATE_BITVAL         = 0x01,
+    ATTACK_BITVAL       = 0x80,
+    DECAYSUSTAIN_BITVAL = 0x40,
+    HOLDZEROn_BITVAL    = 0x10
 };
 
 static const short ADSRprescalePeriods[16] =
@@ -41,12 +41,14 @@ static const short ADSRprescalePeriods[16] =
     9, 32, 63, 95, 149, 220, 267, 313, 392, 977, 1954, 3126, 3907, 11720, 19532, 31251
 };
 
+// pos0:1  pos6:30  pos14:16  pos26:8
+// pos54:4 //pos93:2
 static const unsigned char ADSRexponentPeriods[256] =
 {
     1, 30, 30, 30, 30, 30, 30, 16, 16, 16, 16, 16, 16, 16, 16,
-    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 4, //pos0:1  pos6:30  pos14:16  pos26:8
+    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 4,
     4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, //pos54:4 //pos93:2
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -67,12 +69,15 @@ void ADSR::clock(char cycles)
         unsigned char *ExponentCounterPtr = &(ExponentCounter[Channel]);
 
         unsigned char PrevGate = (*ADSRstatePtr & GATE_BITVAL);
+        // gatebit-change?
         if (UNLIKELY(PrevGate != (ChannelPtr[4] & GATE_BITVAL)))
-        { //gatebit-change?
+        {
             if (PrevGate)
-                *ADSRstatePtr &= ~(GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL); //falling edge
+                // falling edge
+                *ADSRstatePtr &= ~(GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL);
             else
-                *ADSRstatePtr = (GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL | HOLDZEROn_BITVAL); //rising edge
+                // rising edge
+                *ADSRstatePtr = (GATE_BITVAL | ATTACK_BITVAL | DECAYSUSTAIN_BITVAL | HOLDZEROn_BITVAL);
         }
 
         unsigned short PrescalePeriod;
@@ -85,7 +90,8 @@ void ADSR::clock(char cycles)
 
         *RateCounterPtr += cycles;
         if (UNLIKELY(*RateCounterPtr >= 0x8000))
-            *RateCounterPtr -= 0x8000; //*RateCounterPtr &= 0x7FFF; // can wrap around (ADSR delay-bug: short 1st frame)
+            // can wrap around (ADSR delay-bug: short 1st frame)
+            *RateCounterPtr -= 0x8000; //*RateCounterPtr &= 0x7FFF;
 
         if (UNLIKELY(PrescalePeriod <= *RateCounterPtr && *RateCounterPtr < PrescalePeriod+cycles))
         {

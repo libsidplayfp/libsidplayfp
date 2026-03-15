@@ -63,7 +63,7 @@ using res_array_t = std::array<unsigned short, ResLength>;
     static constexpr auto Resonances6581 = createRes6581();
 #else
 
-    //8580 Resonance-DAC (1/Q) curve: Magnitude:$1000
+    // 8580 Resonance-DAC (1/Q) curve: Magnitude:$1000
     static const res_array_t Resonances8580 =
     {
         //  0     1      2      3      4      5      6      7      8      9      A      B      C      D      E      F
@@ -71,7 +71,7 @@ using res_array_t = std::array<unsigned short, ResLength>;
         //0xFF,  0xFE,  0xFC,  0xF8,  0xF0,  0xE8,  0xD5,  0xC5,  0xB3,  0xA4,  0x97,  0x8A,  0x80,  0x77,  0x6E,  0x66 <- calculated then refined manually to sound best
     };
 
-    //6581 Resonance-DAC (1/Q) curve: Magnitude:$1000
+    // 6581 Resonance-DAC (1/Q) curve: Magnitude:$1000
     static const res_array_t Resonances6581 =
     {
         //  0     1      2      3      4      5      6      7      8      9      A      B      C      D      E      F
