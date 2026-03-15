@@ -29,6 +29,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <cstdint>
 
 namespace SIDLite
 {
@@ -49,10 +50,10 @@ inline signed short SID::generateSample(unsigned int &cycles)
     // call this from custom buffer-filler
     int Output = emulateC64(cycles);
     // saturation logic on overflow
-    if (Output > 32767)
-        Output = 32767;
-    else if (Output < -32768)
-        Output = -32768;
+    if (Output > INT16_MAX)
+        Output = INT16_MAX;
+    else if (Output < INT16_MIN)
+        Output = INT16_MIN;
     return static_cast<signed short>(Output);
 }
 
