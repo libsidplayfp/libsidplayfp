@@ -86,11 +86,15 @@ void SID::write(int addr, int value)
 
 int SID::read(int addr)
 {
-    if (addr == 0x1B)
-        return wavgen.getOsc3();
-    if (addr == 0x1C)
-        return wavgen.getEnv3();
-    return 0;
+    switch (addr)
+    {
+        case 0x1B:
+            return wavgen.getOsc3();
+        case 0x1C:
+            return wavgen.getEnv3();
+        default:
+            return 0;
+    }
 }
 
 SID::SID() :
