@@ -51,7 +51,7 @@ public:
 
     void setChipModel(model_t model);
     void setRealSIDmode(bool mode);
-    void setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
+    bool setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency);
 
     int getLevel() const { return filter.getLevel(); }
 

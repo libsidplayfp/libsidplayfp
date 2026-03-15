@@ -113,8 +113,10 @@ void SIDLiteEmu::sampling(float systemclock, float freq,
         return;
     }
 */
+    if (!m_sid.setSamplingParameters(systemclock, freq))
     {
-        m_sid.setSamplingParameters(systemclock, freq);
+        m_status = false;
+        m_error = ERR_UNSUPPORTED_FREQ;
     }
 
     if (m_buffer)

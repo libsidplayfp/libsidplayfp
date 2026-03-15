@@ -117,12 +117,16 @@ void SID::reset()
     wavgen.reset();
 }
 
-void SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency)
+bool SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency)
 {
+    if ((samplingFrequency < 22050) || (samplingFrequency > 48000))
+        return false;
+
     filter.rebuildCutoffTables(samplingFrequency);
 
     // shifting (multiplication) enhances SampleClockRatio precision
     s.SampleClockRatio = (clockFrequency << CRSID_CLOCK_FRACTIONAL_BITS) / samplingFrequency;
+    return true;
 }
 
 void SID::setChipModel(model_t model)
