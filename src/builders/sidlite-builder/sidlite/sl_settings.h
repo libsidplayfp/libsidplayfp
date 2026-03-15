@@ -33,13 +33,13 @@ class settings
     friend class SID;
 
 public:
-    inline bool is8580() const { return ChipModel == 8580; }
+    inline bool is8580() const { return sid8580; }
     inline unsigned short getSampleClockRatio() const { return SampleClockRatio; }
     inline bool getRealSIDmode() const { return RealSIDmode; }
 
 private:
     unsigned short SampleClockRatio;    // ratio of CPU-clock and samplerate
-    unsigned short ChipModel   = 8580;  // values: 8580 / 6581
+    bool           sid8580     = true;  // SID model 8580 or 6581
     bool           RealSIDmode = true;
 };
 

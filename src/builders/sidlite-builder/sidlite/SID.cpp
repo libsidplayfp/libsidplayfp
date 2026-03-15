@@ -98,7 +98,7 @@ SID::SID() :
     filter(&s, regs),
     wavgen(&s, regs)
 {
-    setChipModel(8580);
+    setChipModel(model_t::MOS8580);
     reset();
 }
 
@@ -117,9 +117,9 @@ void SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samp
     s.SampleClockRatio = (clockFrequency << 4) / samplingFrequency;
 }
 
-void SID::setChipModel(int model)
+void SID::setChipModel(model_t model)
 {
-    s.ChipModel = model;
+    s.sid8580 = model == model_t::MOS8580;
 }
 
 void SID::setRealSIDmode(bool mode)

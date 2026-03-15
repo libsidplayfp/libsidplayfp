@@ -129,15 +129,15 @@ void SIDLiteEmu::sampling(float systemclock, float freq,
 // Set the emulated SID model
 void SIDLiteEmu::model(SidConfig::sid_model_t model, bool /*digiboost*/)
 {
-    unsigned short chipModel;
+    SIDLite::SID::model_t chip;
     switch (model)
     {
         case SidConfig::MOS6581:
-            chipModel = 6581;
+            chip = SIDLite::SID::model_t::MOS6581;
             //m_sid.input(0);
             break;
         case SidConfig::MOS8580:
-            chipModel = 8580;
+            chip = SIDLite::SID::model_t::MOS8580;
             //m_sid.input(digiboost ? -32768 : 0);
             break;
         default:
@@ -146,7 +146,7 @@ void SIDLiteEmu::model(SidConfig::sid_model_t model, bool /*digiboost*/)
             return;
     }
 
-    m_sid.setChipModel(chipModel);
+    m_sid.setChipModel(chip);
     m_status = true;
 }
 
