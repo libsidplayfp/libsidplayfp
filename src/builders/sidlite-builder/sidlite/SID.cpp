@@ -122,7 +122,7 @@ void SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samp
     filter.rebuildCutoffTables(samplingFrequency);
 
     // shifting (multiplication) enhances SampleClockRatio precision
-    s.SampleClockRatio = (clockFrequency << 4) / samplingFrequency;
+    s.SampleClockRatio = (clockFrequency << CRSID_CLOCK_FRACTIONAL_BITS) / samplingFrequency;
 }
 
 void SID::setChipModel(model_t model)

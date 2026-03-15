@@ -52,8 +52,6 @@ enum ControlBits
     GATE_BITVAL     = 0x01
 };
 
-constexpr int CRSID_CLOCK_FRACTIONAL_BITS = 4;
-
 constexpr int CRSID_WAVE_RESOLUTION = 16;
 constexpr int OSC3_WAVE_RESOLUTION = 8;
 constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; //bits

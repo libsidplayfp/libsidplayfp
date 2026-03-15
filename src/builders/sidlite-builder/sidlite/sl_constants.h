@@ -32,6 +32,8 @@ constexpr int SID_CHANNEL_COUNT = 3;
 constexpr int CRSID_WAVGEN_PRESHIFT = 3;
 constexpr int CRSID_WAVGEN_PREDIV = 1 << CRSID_WAVGEN_PRESHIFT; //shift-value can be 1..4 (1..16x division)
 
+constexpr int CRSID_CLOCK_FRACTIONAL_BITS = 4;
+
 }
 
 #endif
