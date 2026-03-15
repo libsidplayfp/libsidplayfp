@@ -223,11 +223,13 @@ wg_output_t WavGen::clock(ADSR *adsr)
                 //simple pulse
                 unsigned int PW = getPW(ChannelPtr); // PW=0000..FFF0 from SID-register
                 unsigned int Utmp = (int)(PhaseAccuStep >> (CRSID_WAVE_SHIFTS+1));
+                // Too thin pulsewidth? Correct...
                 if (UNLIKELY(0 < PW && PW < Utmp))
-                    PW = Utmp; // Too thin pulsewidth? Correct...
+                    PW = Utmp;
                 Utmp ^= CRSID_WAVE_MAX;
+                // Too thin pulsewidth? Correct it to a value representable at the current samplerate
                 if (UNLIKELY(PW > Utmp))
-                    PW = Utmp; // Too thin pulsewidth? Correct it to a value representable at the current samplerate
+                    PW = Utmp;
                 Utmp = *PhaseAccuPtr >> CRSID_WAVE_SHIFTS; // 12
 
                 // rising/falling-edge steepness (add/sub at samples)
