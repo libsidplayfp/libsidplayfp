@@ -35,12 +35,12 @@
 #  include "sidplayfp/sidplayfp.h"
 #  include "sidplayfp/SidTune.h"
 #  include "sidplayfp/SidInfo.h"
-#  include "builders/residfp-builder/residfp.h"
+#  include "builders/sidlite-builder/sidlite.h"
 #else
 #  include <sidplayfp/sidplayfp.h>
 #  include <sidplayfp/SidTune.h>
 #  include <sidplayfp/SidInfo.h>
-#  include <sidplayfp/builders/residfp.h>
+#  include <sidplayfp/builders/sidlite.h>
 #endif
 
 /**
@@ -102,7 +102,7 @@ int main(int, char* argv[])
     }
 
     // Set up a SID builder
-    std::unique_ptr<ReSIDfpBuilder> rs(new ReSIDfpBuilder("Demo"));
+    std::unique_ptr<SIDLiteBuilder> rs(new SIDLiteBuilder("Demo"));
 /*
     // Check if builder is ok
     if (!rs->getStatus())
