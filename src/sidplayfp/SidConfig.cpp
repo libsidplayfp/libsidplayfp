@@ -31,7 +31,6 @@ SidConfig::SidConfig() :
     forceSidModel(false),
     digiBoost(false),
     ciaModel(MOS8521),
-    playback(MONO),
     frequency(DEFAULT_SAMPLING_FREQ),
     secondSidAddress(0),
     thirdSidAddress(0),
@@ -48,7 +47,6 @@ bool SidConfig::compare(const SidConfig &config)
         || forceSidModel != config.forceSidModel
         || digiBoost != config.digiBoost
         || ciaModel != config.ciaModel
-        || playback != config.playback
         || frequency != config.frequency
         || secondSidAddress != config.secondSidAddress
         || thirdSidAddress != config.thirdSidAddress

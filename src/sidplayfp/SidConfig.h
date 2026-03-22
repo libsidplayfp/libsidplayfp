@@ -39,13 +39,6 @@ class sidbuilder;
 class SID_EXTERN SidConfig
 {
 public:
-    /// Playback mode
-    typedef enum
-    {
-        MONO = 1,      ///< One channel mono playback
-        STEREO         ///< Two channels stereo playback
-    } playback_t;
-
     /// SID chip model
     typedef enum
     {
@@ -127,11 +120,6 @@ public:
      * Intended cia model.
      */
     cia_model_t ciaModel;
-
-    /**
-     * Playbak mode.
-     */
-    playback_t playback;
 
     /**
      * Sampling frequency.

@@ -128,7 +128,6 @@ int main(int, char* argv[])
     SidConfig cfg;
     cfg.frequency = SAMPLERATE;
     cfg.samplingMethod = SidConfig::INTERPOLATE;
-    cfg.playback = SidConfig::MONO;
     cfg.sidEmulation = rs.get();
     if (!m_engine.config(cfg))
     {
