@@ -31,10 +31,17 @@
 #include <vector>
 #include <iostream>
 
-#include "sidplayfp/sidplayfp.h"
-#include "sidplayfp/SidTune.h"
-#include "sidplayfp/SidInfo.h"
-#include "builders/residfp-builder/residfp.h"
+#ifdef BUILD_INTERNAL
+#  include "sidplayfp/sidplayfp.h"
+#  include "sidplayfp/SidTune.h"
+#  include "sidplayfp/SidInfo.h"
+#  include "builders/residfp-builder/residfp.h"
+#else
+#  include <sidplayfp/sidplayfp.h>
+#  include <sidplayfp/SidTune.h>
+#  include <sidplayfp/SidInfo.h>
+#  include <sidplayfp/builders/residfp.h>
+#endif
 
 /**
  * Works on UNIX using OSS

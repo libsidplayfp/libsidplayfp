@@ -337,28 +337,37 @@ clean-local:
 endif
 
 #=========================================================
-# test
-if TESTSUITE
+# demo
 
 if MINGW32
 DEMO_SRC =
 else
 DEMO_SRC = test/demo
-endif
-
-noinst_PROGRAMS = \
-$(DEMO_SRC) \
-test/test
 
 test_demo_SOURCES = test/demo.cpp
 
 test_demo_LDADD = src/libsidplayfp.la
+
+test_demo_CPPFLAGS = -DBUILD_INTERNAL -I $(top_srcdir)/src
+
+endif
+
+#=========================================================
+# test
+if TESTSUITE
+
+TEST_SRC = \
+test/test
 
 test_test_SOURCES = test/test.cpp
 
 test_test_LDADD = src/libsidplayfp.la
 
 endif
+
+noinst_PROGRAMS = \
+$(DEMO_SRC) \
+$(TEST_SRC)
 
 #=========================================================
 
