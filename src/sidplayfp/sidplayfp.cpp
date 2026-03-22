@@ -141,3 +141,8 @@ unsigned int sidplayfp::mix(short *buffer, unsigned int samples)
 {
     return sidplayer.mix(buffer, samples);
 }
+
+int sidplayfp::getBufSize(int cycles)
+{
+    return sidplayer.getBufSize(cycles);
+}

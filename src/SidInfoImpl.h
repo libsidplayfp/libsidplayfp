@@ -57,7 +57,7 @@ public:
         PACKAGE_NAME " V" PACKAGE_VERSION " Engine:\n"
             "\tCopyright (C) 2000 Simon White\n"
             "\tCopyright (C) 2007-2010 Antti Lankila\n"
-            "\tCopyright (C) 2010-2025 Leandro Nini\n"
+            "\tCopyright (C) 2010-2026 Leandro Nini\n"
             "\t" PACKAGE_URL "\n"
     };
 
