@@ -191,7 +191,7 @@ AC_ARG_ENABLE([tests],
 AM_CONDITIONAL([ENABLE_TEST], [test x$enable_tests = xyes])
 
 PKG_CHECK_MODULES([RESIDFP],
-    [libresidfp >= 0.9.2],
+    [libresidfp >= 0.9.3],
     [AC_DEFINE([HAVE_RESIDFP], 1, [Define to 1 if you have libresidfp (-lresidfp).])],
     [AC_MSG_WARN([$RESIDFP_PKG_ERRORS])]
 )

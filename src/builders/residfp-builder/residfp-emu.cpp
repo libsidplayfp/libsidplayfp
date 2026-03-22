@@ -107,6 +107,11 @@ void reSIDfpEmu::filter(bool enable)
       m_sid.enableFilter(enable);
 }
 
+void reSIDfpEmu::enableOld6581caps(bool enable)
+{
+   m_sid.enableOld6581caps(enable);
+}
+
 void reSIDfpEmu::sampling(float systemclock, float freq,
         SidConfig::sampling_method_t method)
 {
