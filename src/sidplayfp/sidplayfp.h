@@ -225,6 +225,17 @@ public:
      * @since 2.2
      */
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
+
+    /**
+     * Get the required size of the buffer for the number of cycles to run,
+     * approximate value by excess.
+     * The mixer must have been initialized before with #initMixer
+     *
+     * @param cycles the number of cycles.
+     * @return size of buffer in bytes or zero if the mixer has not been initialized.
+     * @since 3.0
+     */
+    int getBufSize(int cycles);
 };
 
 #endif // SIDPLAYFP_H

@@ -32,6 +32,7 @@
 
 #include "sidcxx11.h"
 
+#include <cmath>
 #include <ctime>
 
 namespace libsidplayfp
@@ -56,6 +57,9 @@ const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exc
 const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
 const char ERR_BAD_BUF_SIZE[]         = "SIDPLAYER ERROR: Bad buffer size";
 const char ERR_INVALID_CONF[]         = "SIDPLAYER ERROR: Invalid configuration";
+
+// Limit to roughly 20ms
+constexpr unsigned int MAX_CYCLES = 20000;
 
 /**
  * Configuration error exception.
@@ -243,11 +247,9 @@ int Player::play(unsigned int cycles)
         return -1;
     }
 
-    // Limit to roughly 20ms
-    constexpr unsigned int max_cycles = 20000;
-    if (cycles > max_cycles)
+    if (cycles > MAX_CYCLES)
     {
-        cycles = max_cycles;
+        cycles = MAX_CYCLES;
     }
 
     try
@@ -584,6 +586,20 @@ bool Player::getSidStatus(unsigned int sidNum, uint8_t regs[32])
 
     m_chips[sidNum]->getStatus(regs);
     return true;
+}
+
+int Player::getBufSize(int cycles)
+{
+    if (!m_simpleMixer)
+        return 0;
+
+    if (cycles > MAX_CYCLES)
+    {
+        cycles = MAX_CYCLES;
+    }
+
+    double size = static_cast<double>(m_cfg.frequency) / m_c64.getMainCpuSpeed() * cycles;
+    return  static_cast<int>(std::ceil(size)) * m_simpleMixer->channels();
 }
 
 }

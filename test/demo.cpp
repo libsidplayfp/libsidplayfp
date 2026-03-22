@@ -85,8 +85,14 @@ char* loadRom(const char* path, size_t romSize)
  * to play a SID tune from a file.
  * It uses OSS for audio output.
  */
-int main(int, char* argv[])
+int main(int argc, char* argv[])
 {
+    if (argc<2)
+    {
+        std::cerr << "Argument required" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     sidplayfp m_engine;
 
     { // Load ROM files
@@ -153,22 +159,24 @@ int main(int, char* argv[])
     int bufferSize;
     ioctl(handle, SNDCTL_DSP_GETBLKSIZE, &bufferSize);
 
-    uint_least32_t bufferSamples = static_cast<uint_least32_t>(bufferSize) / sizeof(short);
+    //uint_least32_t bufferSamples = static_cast<uint_least32_t>(bufferSize) / sizeof(short);
 
-    // 48000/~1000000 * 5000 * 2
-    short buffer[512];
-    // Play for ~5 seconds
+    constexpr int CYCLES = 5000;
+
     m_engine.initMixer(true);
+    int bufSize = m_engine.getBufSize(CYCLES);
+    std::vector<short> buffer(bufSize);
+    // Play for ~5 seconds
     for (int i=0; i<1000; i++)
     {
-        int res = m_engine.play(5000);
+        int res = m_engine.play(CYCLES);
         if (res < 0)
         {
             std::cerr << m_engine.error() << std::endl;
             break;
         }
-        unsigned int s = m_engine.mix(buffer, res);
-        ::write(handle, buffer, s*sizeof(short));
+        unsigned int s = m_engine.mix(buffer.data(), res);
+        ::write(handle, buffer.data(), s*sizeof(short));
     }
 
     ::close(handle);

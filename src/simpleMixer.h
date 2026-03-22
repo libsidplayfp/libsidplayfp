@@ -135,6 +135,8 @@ public:
      * Do the mixing.
      */
     unsigned int doMix(short *buffer, unsigned int samples);
+
+    unsigned int channels() const { return m_mix.size(); }
 };
 
 }
