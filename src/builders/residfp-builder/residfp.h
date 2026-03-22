@@ -68,6 +68,8 @@ public:
      */
     void filter8580Curve(double filterCurve);
 
+    void enableOld6581caps(bool enable);
+
     /**
      * Set combined waveforms strength.
      *

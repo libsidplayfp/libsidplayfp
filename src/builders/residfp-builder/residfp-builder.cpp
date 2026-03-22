@@ -35,6 +35,7 @@ struct ReSIDfpBuilder::config
     Property<double> filter6581Curve;
     Property<double> filter6581Range;
     Property<SidConfig::sid_cw_t> cws;
+    Property<bool> old6581caps;
 };
 
 
@@ -64,6 +65,8 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
             sid->filter6581Range(m_config->filter6581Range.value());
         if (m_config->cws.has_value())
             sid->combinedWaveforms(m_config->cws.value());
+        if (m_config->old6581caps.has_value())
+            sid->enableOld6581caps(m_config->old6581caps.value());
         return sid;
     }
     catch (std::bad_alloc const &)
@@ -106,4 +109,11 @@ void ReSIDfpBuilder::combinedWaveformsStrength(SidConfig::sid_cw_t cws)
     m_config->cws = cws;
     for (libsidplayfp::sidemu* e: sidobjs)
         static_cast<libsidplayfp::reSIDfpEmu*>(e)->combinedWaveforms(cws);
+}
+
+void ReSIDfpBuilder::enableOld6581caps(bool enable)
+{
+    m_config->old6581caps = enable;
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->enableOld6581caps(enable);
 }
