@@ -303,6 +303,11 @@ eval loadable_shrext=$shrext_cmds
 AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
 
 
+# for demo
+DEMO_HEADERS=1
+AC_CHECK_HEADERS([fcntl.h sys/soundcard.h sys/ioctl.h unistd.h], [], [DEMO_HEADERS=0])
+AM_CONDITIONAL([BUILD_DEMO], [test "$DEMO_HEADERS" -eq 1])
+
 AC_CONFIG_FILES([
 Makefile
 libsidplayfp.pc

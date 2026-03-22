@@ -339,9 +339,8 @@ endif
 #=========================================================
 # demo
 
-if MINGW32
-DEMO_SRC =
-else
+if BUILD_DEMO
+
 DEMO_SRC = test/demo
 
 test_demo_SOURCES = test/demo.cpp
