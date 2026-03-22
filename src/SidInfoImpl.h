@@ -69,8 +69,6 @@ public:
     std::string m_basicDesc;
     std::string m_chargenDesc;
 
-    unsigned int m_channels = 1;
-
     uint_least16_t m_driverAddr = 0;
     uint_least16_t m_driverLength = 0;
 
@@ -89,8 +87,6 @@ public:
 
     unsigned int getNumberOfCredits() const override { return m_credits.size(); }
     const char *getCredits(unsigned int i) const override { return i<m_credits.size()?m_credits[i].c_str():""; }
-
-    unsigned int getChannels() const override { return m_channels; }
 
     uint_least16_t getDriverAddr() const override { return m_driverAddr; }
     uint_least16_t getDriverLength() const override { return m_driverLength; }

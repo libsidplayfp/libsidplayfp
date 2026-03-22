@@ -364,9 +364,6 @@ bool Player::config(const SidConfig &cfg, bool force)
         }
     }
 
-    const bool isStereo = cfg.playback == SidConfig::STEREO;
-    m_info.m_channels = isStereo ? 2 : 1;
-
     // Update Configuration
     m_cfg = cfg;
 

@@ -46,9 +46,6 @@ public:
     const char *credits(unsigned int i) const;
     //@}
 
-    /// Number of output channels (1-mono, 2-stereo)
-    unsigned int channels() const;
-
     /// Address of the driver
     uint_least16_t driverAddr() const;
 
@@ -82,8 +79,6 @@ private:
 
     virtual unsigned int getNumberOfCredits() const =0;
     virtual const char *getCredits(unsigned int i) const =0;
-
-    virtual unsigned int getChannels() const =0;
 
     virtual uint_least16_t getDriverAddr() const =0;
 

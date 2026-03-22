@@ -30,8 +30,6 @@ const char *SidInfo::version() const { return getVersion(); }
 unsigned int SidInfo::numberOfCredits() const { return getNumberOfCredits(); }
 const char *SidInfo::credits(unsigned int i) const { return getCredits(i); }
 
-unsigned int SidInfo::channels() const { return getChannels(); }
-
 uint_least16_t SidInfo::driverAddr() const { return getDriverAddr(); }
 
 uint_least16_t SidInfo::driverLength() const { return getDriverLength(); }
