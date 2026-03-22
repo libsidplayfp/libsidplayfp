@@ -60,21 +60,6 @@ reSIDfpEmu::~reSIDfpEmu()
     delete[] m_buffer;
 }
 
-void reSIDfpEmu::filter6581Curve(double filterCurve)
-{
-   m_sid.setFilter6581Curve(filterCurve);
-}
-
-void reSIDfpEmu::filter6581Range(double adjustment)
-{
-   m_sid.setFilter6581Range(adjustment);
-}
-
-void reSIDfpEmu::filter8580Curve(double filterCurve)
-{
-   m_sid.setFilter8580Curve(filterCurve);
-}
-
 // Standard component options
 void reSIDfpEmu::reset(uint8_t volume)
 {
@@ -100,16 +85,6 @@ void reSIDfpEmu::clock()
     const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
     m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
-}
-
-void reSIDfpEmu::filter(bool enable)
-{
-      m_sid.enableFilter(enable);
-}
-
-void reSIDfpEmu::enableOld6581caps(bool enable)
-{
-   m_sid.enableOld6581caps(enable);
 }
 
 void reSIDfpEmu::sampling(float systemclock, float freq,
