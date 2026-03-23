@@ -68,6 +68,12 @@ public:
      */
     void filter8580Curve(double filterCurve);
 
+    /**
+     * Enable/disable old caps for 6581 model.
+     *
+     * @param enable true to enable old 2200pF caps used on ASSY 326298
+     *               false to use the standard 470pF caps.
+     */
     void enableOld6581caps(bool enable);
 
     /**
