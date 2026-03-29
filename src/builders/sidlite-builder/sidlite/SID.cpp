@@ -123,7 +123,7 @@ void SID::reset()
 
 bool SID::setSamplingParameters(unsigned int clockFrequency, unsigned short samplingFrequency)
 {
-    if ((samplingFrequency < 22050) || (samplingFrequency > 48000))
+    if ((samplingFrequency < 8000) || (samplingFrequency > 48000))
         return false;
 
     filter.rebuildCutoffTables(samplingFrequency);
