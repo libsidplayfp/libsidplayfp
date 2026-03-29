@@ -66,8 +66,7 @@ private:
     short             SampleCycleCnt;
 
 private:
-    inline signed short generateSample(unsigned int &cycles);
-    inline int emulateC64(unsigned int &cycles);
+    inline bool generateSample(unsigned int &cycles, short &output);
 };
 
 }

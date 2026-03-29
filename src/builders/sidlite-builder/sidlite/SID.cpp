@@ -39,31 +39,26 @@ int SID::clock(unsigned int cycles, short* buf)
     int i = 0;
     while (cycles > 0)
     {
-        buf[i] = generateSample(cycles);
-        i++;
+        short output;
+        if (generateSample(cycles, output))
+        {
+            buf[i] = output;
+            i++;
+        }
     }
     return i;
 }
 
-inline signed short SID::generateSample(unsigned int &cycles)
-{
-    // call this from custom buffer-filler
-    int Output = emulateC64(cycles);
-    // saturation logic on overflow
-    if (Output > INT16_MAX)
-        Output = INT16_MAX;
-    else if (Output < INT16_MIN)
-        Output = INT16_MIN;
-    return static_cast<signed short>(Output);
-}
-
-
-inline int SID::emulateC64(unsigned int &cycles)
+inline bool SID::generateSample(unsigned int &cycles, short &output)
 {
     // Cycle-based part of emulations:
 
-    while ((SampleCycleCnt <= s.SampleClockRatio) && cycles)
+    while (SampleCycleCnt <= s.SampleClockRatio)
     {
+        // no more cycles, can't produce output
+        if (cycles == 0)
+            return false;
+
         unsigned char InstructionCycles = std::min(7u, cycles);
         SampleCycleCnt += InstructionCycles << 4;
         cycles -= InstructionCycles;
@@ -75,8 +70,17 @@ inline int SID::emulateC64(unsigned int &cycles)
 
     // Samplerate-based part of emulations:
 
-    wg_output_t output = wavgen.clock(&adsr);
-    return filter.clock(output.first, output.second);
+    wg_output_t wg_out = wavgen.clock(&adsr);
+    int sample = filter.clock(wg_out.first, wg_out.second);
+
+    // saturation logic on overflow
+    if (sample > INT16_MAX)
+        sample = INT16_MAX;
+    else if (sample < INT16_MIN)
+        sample = INT16_MIN;
+    output = static_cast<short>(sample);
+
+    return true;
 }
 
 void SID::write(int addr, int value)
