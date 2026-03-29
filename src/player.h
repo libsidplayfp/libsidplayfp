@@ -166,7 +166,7 @@ public:
 
     bool reset();
 
-    int getBufSize(int cycles);
+    int getBufSize(unsigned int cycles);
 };
 
 }

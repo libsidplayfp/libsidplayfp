@@ -588,7 +588,7 @@ bool Player::getSidStatus(unsigned int sidNum, uint8_t regs[32])
     return true;
 }
 
-int Player::getBufSize(int cycles)
+int Player::getBufSize(unsigned int cycles)
 {
     if (!m_simpleMixer)
         return 0;

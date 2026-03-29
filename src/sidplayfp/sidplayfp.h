@@ -235,7 +235,7 @@ public:
      * @return size of buffer in bytes or zero if the mixer has not been initialized.
      * @since 3.0
      */
-    int getBufSize(int cycles);
+    int getBufSize(unsigned int cycles);
 };
 
 #endif // SIDPLAYFP_H
