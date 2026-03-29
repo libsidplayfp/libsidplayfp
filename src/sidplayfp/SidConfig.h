@@ -88,7 +88,7 @@ public:
     static const uint_least16_t MAX_POWER_ON_DELAY = 0x1FFF;
     static const uint_least16_t DEFAULT_POWER_ON_DELAY = MAX_POWER_ON_DELAY + 1;
 
-    static const uint_least32_t DEFAULT_SAMPLING_FREQ  = 44100;
+    static const uint_least32_t DEFAULT_SAMPLING_FREQ  = 48000;
 
 public:
     /**
