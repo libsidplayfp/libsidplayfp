@@ -117,6 +117,51 @@ private:
         PLAn
     };
 
+    // https://sta.c64.org/cbm64krnfunc.html
+    uint16_t kernal_functions[78] =
+    {
+    //  address real address
+        0xFF81, 0xFF5B, // SCINIT
+        0xFF84, 0xFDA3, // IOINIT
+        0xFF87, 0xFD50, // RAMTAS
+        0xFF8A, 0xFD15, // RESTOR
+        0xFF8D, 0xFD1A, // VECTOR
+        0xFF90, 0xFE18, // SETMSG
+        0xFF93, 0xEDB9, // LSTNSA
+        0xFF96, 0xEDC7, // TALKSA
+        0xFF99, 0xFE25, // MEMTOP
+        0xFF9C, 0xFE34, // MEMBOT
+        0xFF9F, 0xEA87, // SCNKEY
+        0xFFA2, 0xFE21, // SETTMO
+        0xFFA5, 0xEE13, // IECIN.
+        0xFFA8, 0xEDDD, // IECOUT
+        0xFFAB, 0xEDEF, // UNTALK
+        0xFFAE, 0xEDFE, // UNLSTN
+        0xFFB1, 0xED0C, // LISTEN
+        0xFFB4, 0xED09, // TALK
+        0xFFB7, 0xFE07, // READST
+        0xFFBA, 0xFE00, // SETLFS
+        0xFFBD, 0xFDF9, // SETNAM
+        0xFFC0, 0xF34A, // OPEN
+        0xFFC3, 0xF291, // CLOSE
+        0xFFC6, 0xF20E, // CHKIN
+        0xFFC9, 0xF250, // CHKOUT
+        0xFFCC, 0xF333, // CLRCHN
+        0xFFCF, 0xF157, // CHRIN
+        0xFFD2, 0xF1CA, // CHROUT
+        0xFFD5, 0xF49E, // LOAD
+        0xFFD8, 0xF5DD, // SAVE
+        0xFFDB, 0xF6E4, // SETTIM
+        0xFFDE, 0xF6DD, // RDTIM
+        0xFFE1, 0xF6ED, // STOP
+        0xFFE4, 0xF13E, // GETIN
+        0xFFE7, 0xF32F, // CLALL
+        0xFFEA, 0xF69B, // UDTIM
+        0xFFED, 0xE505, // SCREEN
+        0xFFF0, 0xE50A, // PLOT
+        0xFFF3, 0xE500, // IOBASE
+    };
+
     void fill(uint_least16_t address, uint8_t data[5])
     {
         std::memcpy(getPtr(address), data, 5);
@@ -165,7 +210,8 @@ public:
             setVal16(0xfffe, 0xff48); // IRQ/BRK vector
 
             // Standard KERNAL functions called by some unclean rips
-            setVal(0xea87, RTSn); // SCNKEY
+            for (auto addr: kernal_functions)
+                setVal(addr, RTSn);
         }
 
         // Backup Reset Vector
