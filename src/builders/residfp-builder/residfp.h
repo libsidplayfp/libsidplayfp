@@ -63,21 +63,22 @@ public:
     /**
      * Set 6581 filter curve.
      *
-     * @param filterCurve from 0.0 (light) to 1.0 (dark) (default 0.5)
+     * @param filterCurve sets center frequency from 0.0 (dark) to 1.0 (bright). (default 0.5)
      */
     void filter6581Curve(double filterCurve);
 
     /**
      * Set 6581 filter curve.
      *
-     * @param filterCurve from 0.0 (dark) to 1.0 (light) (default 0.5)
+     * @param filterCurve sets center frequency from 0.0 (bright) to 1.0 (dark).
+     *                    This also affects the range. (default 0.5)
      */
     void filter6581Range(double filterRange);
 
     /**
      * Set 8580 filter curve.
      *
-     * @param filterCurve curve center frequency (default 12500)
+     * @param filterCurve sets center frequency from 0.0 (dark) to 1.0 (bright). (default 0.5)
      */
     void filter8580Curve(double filterCurve);
 
