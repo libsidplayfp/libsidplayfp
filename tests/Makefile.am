@@ -6,8 +6,7 @@ EXTRA_DIST = utpp
 if ENABLE_TEST
 
 AM_CPPFLAGS = \
--I$(top_srcdir)/src \
--I$(top_builddir)/src/builders/residfp-builder/residfp
+-I$(top_srcdir)/src
 
 TESTS = \
 TestPSID \
