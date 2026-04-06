@@ -1,6 +1,6 @@
 m4_define([lib_major], [3])
 m4_define([lib_minor], [0])
-m4_define([lib_level], [0a2])
+m4_define([lib_level], [0b1])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_PREREQ([2.62])
@@ -191,7 +191,7 @@ AC_ARG_ENABLE([tests],
 AM_CONDITIONAL([ENABLE_TEST], [test x$enable_tests = xyes])
 
 PKG_CHECK_MODULES([RESIDFP],
-    [libresidfp >= 0.9.3],
+    [libresidfp >= 1.0.0],
     [AC_DEFINE([HAVE_RESIDFP], 1, [Define to 1 if you have libresidfp (-lresidfp).])],
     [AC_MSG_WARN([$RESIDFP_PKG_ERRORS])]
 )
