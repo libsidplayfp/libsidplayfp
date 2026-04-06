@@ -55,7 +55,7 @@ public:
     void filter6581Curve(double filterCurve);
 
     /**
-     * Set 6581 filter filter offset and range.
+     * Set 6581 filter offset and range.
      *
      * @param filterRange sets center frequency from 0.0 (dark) to 1.0 (bright).
      *                    This also affects the range. (default 0.5)
