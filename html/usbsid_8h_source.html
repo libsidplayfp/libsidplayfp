@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
    </div>
   </td>
  </tr>
@@ -66,34 +66,29 @@ $(document).ready(function() { init_codefold(0); });
 <div class="foldopen" id="foldopen00009" data-start="{" data-end="};">
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classUSBSIDBuilder.html">    9</a></span><span class="keyword">class </span>SID_EXTERN <a class="code hl_class" href="classUSBSIDBuilder.html">USBSIDBuilder</a> : <span class="keyword">public</span> <a class="code hl_class" href="classsidbuilder.html">sidbuilder</a></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <a class="code hl_class" href="classUSBSIDBuilder.html">USBSIDBuilder</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * <span class="keyword">const</span> name);</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <a class="code hl_class" href="classUSBSIDBuilder.html">~USBSIDBuilder</a>();</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classUSBSIDBuilder.html#a0f10df1a193ac18d278a09be12ea50de">   20</a></span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classUSBSIDBuilder.html#a0f10df1a193ac18d278a09be12ea50de">availDevices</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> USBSID_MAXSID; }</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classsidbuilder.html#a32e0fe73df4084df340ab8046d18c2f3">create</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> sids);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <a class="code hl_class" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a>* create();</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <a class="code hl_class" href="classUSBSIDBuilder.html">USBSIDBuilder</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * <span class="keyword">const</span> name);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <a class="code hl_class" href="classUSBSIDBuilder.html">~USBSIDBuilder</a>();</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *getCredits() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keywordtype">void</span> flush();</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">void</span> filter(<span class="keywordtype">bool</span> enable);</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classsidbuilder.html#abfabaad546dfff5e9ebf0c1970851fa1">credits</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">void</span> flush();</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classsidbuilder.html#abb23f5319ae18e7564aad8b3da6c95d3">filter</a>(<span class="keywordtype">bool</span> enable);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>};</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
 </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#endif </span><span class="comment">// USBSID_H</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#endif </span><span class="comment">// USBSID_H</span></div>
 <div class="ttc" id="aclassUSBSIDBuilder_html"><div class="ttname"><a href="classUSBSIDBuilder.html">USBSIDBuilder</a></div><div class="ttdef"><b>Definition</b> usbsid.h:10</div></div>
-<div class="ttc" id="aclassUSBSIDBuilder_html_a0f10df1a193ac18d278a09be12ea50de"><div class="ttname"><a href="classUSBSIDBuilder.html#a0f10df1a193ac18d278a09be12ea50de">USBSIDBuilder::availDevices</a></div><div class="ttdeci">unsigned int availDevices() const</div><div class="ttdef"><b>Definition</b> usbsid.h:20</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1sidemu_html"><div class="ttname"><a href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a></div><div class="ttdef"><b>Definition</b> sidemu.h:47</div></div>
 <div class="ttc" id="aclasssidbuilder_html"><div class="ttname"><a href="classsidbuilder.html">sidbuilder</a></div><div class="ttdef"><b>Definition</b> sidbuilder.h:41</div></div>
-<div class="ttc" id="aclasssidbuilder_html_a32e0fe73df4084df340ab8046d18c2f3"><div class="ttname"><a href="classsidbuilder.html#a32e0fe73df4084df340ab8046d18c2f3">sidbuilder::create</a></div><div class="ttdeci">virtual unsigned int create(unsigned int sids)=0</div></div>
-<div class="ttc" id="aclasssidbuilder_html_abb23f5319ae18e7564aad8b3da6c95d3"><div class="ttname"><a href="classsidbuilder.html#abb23f5319ae18e7564aad8b3da6c95d3">sidbuilder::filter</a></div><div class="ttdeci">virtual SID_DEPRECATED void filter(bool enable)=0</div></div>
-<div class="ttc" id="aclasssidbuilder_html_abfabaad546dfff5e9ebf0c1970851fa1"><div class="ttname"><a href="classsidbuilder.html#abfabaad546dfff5e9ebf0c1970851fa1">sidbuilder::credits</a></div><div class="ttdeci">virtual const char * credits() const =0</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 15 2026 10:40:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

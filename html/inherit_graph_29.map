@@ -1,11 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classlibsidplayfp_1_1SidTuneBase.html" title=" " alt="" coords="5,80,193,105"/>
-<area shape="rect" id="Node000001" href="$classlibsidplayfp_1_1MUS.html" title=" " alt="" coords="241,5,377,31"/>
-<area shape="poly" id="edge57_Node000000_Node000001" title=" " alt="" coords="148,73,272,28,274,33,150,78"/>
-<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1PSID.html" title=" " alt="" coords="241,55,377,80"/>
-<area shape="poly" id="edge58_Node000000_Node000002" title=" " alt="" coords="207,77,240,73,241,78,207,82"/>
-<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1p00.html" title=" " alt="" coords="244,104,375,129"/>
-<area shape="poly" id="edge59_Node000000_Node000003" title=" " alt="" coords="207,102,244,107,244,112,207,108"/>
-<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1prg.html" title=" " alt="" coords="246,153,373,179"/>
-<area shape="poly" id="edge60_Node000000_Node000004" title=" " alt="" coords="150,107,273,151,271,156,149,112"/>
+<area shape="rect" id="Node000000" href="$classlibsidplayfp_1_1romCheck.html" title=" " alt="" coords="5,55,177,80"/>
+<area shape="rect" id="Node000001" href="$classlibsidplayfp_1_1basicCheck.html" title=" " alt="" coords="235,5,415,31"/>
+<area shape="poly" id="edge56_Node000000_Node000001" title=" " alt="" coords="165,49,263,28,264,33,166,54"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1chargenCheck.html" title=" " alt="" coords="225,55,424,80"/>
+<area shape="poly" id="edge57_Node000000_Node000002" title=" " alt="" coords="191,65,225,65,225,70,191,70"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1kernalCheck.html" title=" " alt="" coords="231,104,418,129"/>
+<area shape="poly" id="edge58_Node000000_Node000003" title=" " alt="" coords="166,80,264,101,263,107,165,85"/>
 </map>

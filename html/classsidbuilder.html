@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
    </div>
   </td>
  </tr>
@@ -48,6 +48,7 @@
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-types">Protected Types</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classsidbuilder-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sidbuilder Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
@@ -60,17 +61,15 @@ Inheritance diagram for sidbuilder:</div>
 <div class="dyncontent">
 <div class="center"><img src="classsidbuilder__inherit__graph.png" border="0" usemap="#asidbuilder_inherit__map" alt="Inheritance graph"/></div>
 <map name="asidbuilder_inherit__map" id="asidbuilder_inherit__map">
-<area shape="rect" title=" " alt="" coords="299,5,385,31"/>
-<area shape="rect" href="classHardSIDBuilder.html" title=" " alt="" coords="5,79,127,104"/>
-<area shape="poly" title=" " alt="" coords="286,37,111,81,110,76,284,31"/>
-<area shape="rect" href="classReSIDBuilder.html" title=" " alt="" coords="151,79,258,104"/>
-<area shape="poly" title=" " alt="" coords="309,39,228,81,226,76,307,34"/>
-<area shape="rect" href="classReSIDfpBuilder.html" title=" " alt="" coords="282,79,402,104"/>
-<area shape="poly" title=" " alt="" coords="345,44,345,79,339,79,339,44"/>
-<area shape="rect" href="classUSBSIDBuilder.html" title=" " alt="" coords="426,79,543,104"/>
-<area shape="poly" title=" " alt="" coords="378,34,463,76,460,81,376,39"/>
-<area shape="rect" href="classexSIDBuilder.html" title=" " alt="" coords="567,79,674,104"/>
-<area shape="poly" title=" " alt="" coords="399,31,576,76,575,81,398,36"/>
+<area shape="rect" title=" " alt="" coords="233,5,319,31"/>
+<area shape="rect" href="classReSIDfpBuilder.html" title=" " alt="" coords="5,79,125,104"/>
+<area shape="poly" title=" " alt="" coords="230,37,100,81,99,76,229,32"/>
+<area shape="rect" href="classSIDLiteBuilder.html" title=" " alt="" coords="149,79,264,104"/>
+<area shape="poly" title=" " alt="" coords="257,43,220,80,216,77,253,39"/>
+<area shape="rect" href="classUSBSIDBuilder.html" title=" " alt="" coords="288,79,405,104"/>
+<area shape="poly" title=" " alt="" coords="299,39,337,77,333,80,295,43"/>
+<area shape="rect" href="classexSIDBuilder.html" title=" " alt="" coords="429,79,536,104"/>
+<area shape="poly" title=" " alt="" coords="323,33,450,76,448,81,321,38"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -106,10 +105,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a82d8e43843f2c422763a86269a4c9e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b96333d06c8662bc493827413476ac1" id="r_a4b96333d06c8662bc493827413476ac1"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a4b96333d06c8662bc493827413476ac1">usedDevices</a> () const</td></tr>
 <tr class="separator:a4b96333d06c8662bc493827413476ac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58bb5c7f4fdb8ee563a3e33cb32e2968" id="r_a58bb5c7f4fdb8ee563a3e33cb32e2968"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a58bb5c7f4fdb8ee563a3e33cb32e2968">availDevices</a> () const =0</td></tr>
-<tr class="separator:a58bb5c7f4fdb8ee563a3e33cb32e2968"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32e0fe73df4084df340ab8046d18c2f3" id="r_a32e0fe73df4084df340ab8046d18c2f3"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a32e0fe73df4084df340ab8046d18c2f3">create</a> (unsigned int sids)=0</td></tr>
-<tr class="separator:a32e0fe73df4084df340ab8046d18c2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57f9e9baa647f6e5de1817c546d143fb" id="r_a57f9e9baa647f6e5de1817c546d143fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a57f9e9baa647f6e5de1817c546d143fb">lock</a> (<a class="el" href="classlibsidplayfp_1_1EventScheduler.html">libsidplayfp::EventScheduler</a> *scheduler, <a class="el" href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a> model, bool digiboost)</td></tr>
 <tr class="separator:a57f9e9baa647f6e5de1817c546d143fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a411f165888171a52bb9873bfdd7ddfbd" id="r_a411f165888171a52bb9873bfdd7ddfbd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a411f165888171a52bb9873bfdd7ddfbd">unlock</a> (<a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a> *device)</td></tr>
@@ -120,18 +115,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a65b79fd1a2bce26cd046a4288a8bffc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a408f4106c7dbdaa6baca26395240b02d" id="r_a408f4106c7dbdaa6baca26395240b02d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a408f4106c7dbdaa6baca26395240b02d">error</a> () const</td></tr>
 <tr class="separator:a408f4106c7dbdaa6baca26395240b02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23a0bb6ad1e85633d974f4cc773e9e81" id="r_a23a0bb6ad1e85633d974f4cc773e9e81"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a23a0bb6ad1e85633d974f4cc773e9e81">getStatus</a> () const</td></tr>
-<tr class="separator:a23a0bb6ad1e85633d974f4cc773e9e81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfabaad546dfff5e9ebf0c1970851fa1" id="r_abfabaad546dfff5e9ebf0c1970851fa1"><td class="memItemLeft" align="right" valign="top">virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#abfabaad546dfff5e9ebf0c1970851fa1">credits</a> () const =0</td></tr>
-<tr class="separator:abfabaad546dfff5e9ebf0c1970851fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb23f5319ae18e7564aad8b3da6c95d3" id="r_abb23f5319ae18e7564aad8b3da6c95d3"><td class="memItemLeft" align="right" valign="top">virtual SID_DEPRECATED void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#abb23f5319ae18e7564aad8b3da6c95d3">filter</a> (bool enable)=0</td></tr>
-<tr class="separator:abb23f5319ae18e7564aad8b3da6c95d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5553524b35af0f0570d9b4d8825db7e2" id="r_a5553524b35af0f0570d9b4d8825db7e2"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#a5553524b35af0f0570d9b4d8825db7e2">credits</a> () const</td></tr>
+<tr class="separator:a5553524b35af0f0570d9b4d8825db7e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-types" name="pro-types"></a>
 Protected Types</h2></td></tr>
 <tr class="memitem:ab685b716ea9ec09118a51b8d2057117a" id="r_ab685b716ea9ec09118a51b8d2057117a"><td class="memItemLeft" align="right" valign="top"><a id="ab685b716ea9ec09118a51b8d2057117a" name="ab685b716ea9ec09118a51b8d2057117a"></a>
 typedef std::set&lt; <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>emuset_t</b></td></tr>
 <tr class="separator:ab685b716ea9ec09118a51b8d2057117a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:ac1cc1438cadec82e4a7e69ddddcebb36" id="r_ac1cc1438cadec82e4a7e69ddddcebb36"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsidbuilder.html#ac1cc1438cadec82e4a7e69ddddcebb36">create</a> ()=0</td></tr>
+<tr class="separator:ac1cc1438cadec82e4a7e69ddddcebb36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b4a2cfd95d76067d4eddd32d21c530c" id="r_a7b4a2cfd95d76067d4eddd32d21c530c"><td class="memItemLeft" align="right" valign="top"><a id="a7b4a2cfd95d76067d4eddd32d21c530c" name="a7b4a2cfd95d76067d4eddd32d21c530c"></a>
+virtual const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getCredits</b> () const =0</td></tr>
+<tr class="separator:a7b4a2cfd95d76067d4eddd32d21c530c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -141,15 +140,12 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_errorBuffer<
 <tr class="memitem:a552e3b6a362b5614c276addc68054001" id="r_a552e3b6a362b5614c276addc68054001"><td class="memItemLeft" align="right" valign="top"><a id="a552e3b6a362b5614c276addc68054001" name="a552e3b6a362b5614c276addc68054001"></a>
 emuset_t&#160;</td><td class="memItemRight" valign="bottom"><b>sidobjs</b></td></tr>
 <tr class="separator:a552e3b6a362b5614c276addc68054001"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94fdd9ebbbbe61a13044063f6e734e09" id="r_a94fdd9ebbbbe61a13044063f6e734e09"><td class="memItemLeft" align="right" valign="top"><a id="a94fdd9ebbbbe61a13044063f6e734e09" name="a94fdd9ebbbbe61a13044063f6e734e09"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr>
-<tr class="separator:a94fdd9ebbbbe61a13044063f6e734e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for sid builders. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a58bb5c7f4fdb8ee563a3e33cb32e2968" name="a58bb5c7f4fdb8ee563a3e33cb32e2968"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58bb5c7f4fdb8ee563a3e33cb32e2968">&#9670;&#160;</a></span>availDevices()</h2>
+<a id="ac1cc1438cadec82e4a7e69ddddcebb36" name="ac1cc1438cadec82e4a7e69ddddcebb36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1cc1438cadec82e4a7e69ddddcebb36">&#9670;&#160;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,87 +154,39 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual unsigned int sidbuilder::availDevices </td>
+          <td class="memname">virtual <a class="el" href="classlibsidplayfp_1_1sidemu.html">libsidplayfp::sidemu</a> * sidbuilder::create </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Available devices.</p>
-<dl class="section return"><dt>Returns</dt><dd>the number of available sids, 0 = endless. </dd></dl>
-
-<p>Implemented in <a class="el" href="classexSIDBuilder.html#aa663de3dd467c06972b63770a5ee005f">exSIDBuilder</a>, <a class="el" href="classHardSIDBuilder.html#a60308d15ee38fb8ff93af78468504198">HardSIDBuilder</a>, <a class="el" href="classReSIDBuilder.html#a936535f95321dd3b1d0298860dbbd365">ReSIDBuilder</a>, <a class="el" href="classReSIDfpBuilder.html#a731c77ad48cfb33c93dc9e2ecef713ea">ReSIDfpBuilder</a>, and <a class="el" href="classUSBSIDBuilder.html#a0f10df1a193ac18d278a09be12ea50de">USBSIDBuilder</a>.</p>
-
-</div>
-</div>
-<a id="a32e0fe73df4084df340ab8046d18c2f3" name="a32e0fe73df4084df340ab8046d18c2f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32e0fe73df4084df340ab8046d18c2f3">&#9670;&#160;</a></span>create()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual unsigned int sidbuilder::create </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>sids</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Create the sid emu.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">sids</td><td>the number of required sid emu </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>the number of actually created sid emus </dd></dl>
 
-<p>Implemented in <a class="el" href="classexSIDBuilder.html#ae62b75f86d44e098fb643e481cd621de">exSIDBuilder</a>, <a class="el" href="classHardSIDBuilder.html#af2ab59fbaf361b2ac73f19892d7638e2">HardSIDBuilder</a>, <a class="el" href="classReSIDBuilder.html#a2a9952338c96e562899bf790846e9412">ReSIDBuilder</a>, <a class="el" href="classReSIDfpBuilder.html#ad03f045c75aa60ed96ead0e999f27014">ReSIDfpBuilder</a>, and <a class="el" href="classUSBSIDBuilder.html#a82eb45dcfbaf9c1e987be0675324fd2b">USBSIDBuilder</a>.</p>
+<p>Implemented in <a class="el" href="classexSIDBuilder.html#af7051eec01a8c14ed37981d6c76f69f4">exSIDBuilder</a>, <a class="el" href="classReSIDfpBuilder.html#a6f3bba1a1768b811a0d856e394da3319">ReSIDfpBuilder</a>, <a class="el" href="classSIDLiteBuilder.html#a9cf9a66259f9c971c96888da56e02237">SIDLiteBuilder</a>, and <a class="el" href="classUSBSIDBuilder.html#aab26ac57a1124bea6e0a42bcaa7d4126">USBSIDBuilder</a>.</p>
 
 </div>
 </div>
-<a id="abfabaad546dfff5e9ebf0c1970851fa1" name="abfabaad546dfff5e9ebf0c1970851fa1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfabaad546dfff5e9ebf0c1970851fa1">&#9670;&#160;</a></span>credits()</h2>
+<a id="a5553524b35af0f0570d9b4d8825db7e2" name="a5553524b35af0f0570d9b4d8825db7e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5553524b35af0f0570d9b4d8825db7e2">&#9670;&#160;</a></span>credits()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const char * sidbuilder::credits </td>
+          <td class="memname">const char * sidbuilder::credits </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Get the builder's credits.</p>
 <dl class="section return"><dt>Returns</dt><dd>credits </dd></dl>
-
-<p>Implemented in <a class="el" href="classexSIDBuilder.html#ab09abe236061899861bfd6bf5b16e3bb">exSIDBuilder</a>, <a class="el" href="classHardSIDBuilder.html#a0ce3a092593735cd610fd0ddeb75de52">HardSIDBuilder</a>, <a class="el" href="classReSIDBuilder.html#ab74227a58cacc6430b0d601e17adbb34">ReSIDBuilder</a>, <a class="el" href="classReSIDfpBuilder.html#aed439b955d374699fece7bb6d37d31a4">ReSIDfpBuilder</a>, and <a class="el" href="classUSBSIDBuilder.html#a4bc806dd223826afedfd0e7599eab935">USBSIDBuilder</a>.</p>
 
 </div>
 </div>
@@ -266,69 +214,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
 </div><div class="memdoc">
 <p>Error message.</p>
 <dl class="section return"><dt>Returns</dt><dd>string error message. </dd></dl>
-
-</div>
-</div>
-<a id="abb23f5319ae18e7564aad8b3da6c95d3" name="abb23f5319ae18e7564aad8b3da6c95d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb23f5319ae18e7564aad8b3da6c95d3">&#9670;&#160;</a></span>filter()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual SID_DEPRECATED void sidbuilder::filter </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>enable</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Toggle sid filter emulation.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">enable</td><td>true = enable, false = disable </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd>use <a class="el" href="classsidplayfp.html#a409fc3245a2896b41b2bd77cf9abfbf6">sidplayfp.filter</a> </dd></dl>
-
-<p>Implemented in <a class="el" href="classexSIDBuilder.html#a598a8b7c312f65f6cf40bb8e2dc8fc8d">exSIDBuilder</a>, <a class="el" href="classHardSIDBuilder.html#a138b5ccbecd06e35fda643bf28b39f82">HardSIDBuilder</a>, <a class="el" href="classReSIDBuilder.html#a3a47f21283d66fa121772ec9e0c40934">ReSIDBuilder</a>, <a class="el" href="classReSIDfpBuilder.html#aefc1a54435ea4ca29d3a858d1f1355bd">ReSIDfpBuilder</a>, and <a class="el" href="classUSBSIDBuilder.html#ae289b897174d67b6d87a2171411d267b">USBSIDBuilder</a>.</p>
-
-</div>
-</div>
-<a id="a23a0bb6ad1e85633d974f4cc773e9e81" name="a23a0bb6ad1e85633d974f4cc773e9e81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23a0bb6ad1e85633d974f4cc773e9e81">&#9670;&#160;</a></span>getStatus()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool sidbuilder::getStatus </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Determine current state of object.</p>
-<dl class="section return"><dt>Returns</dt><dd>true = okay, false = error </dd></dl>
 
 </div>
 </div>
@@ -366,13 +251,13 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
 <p>Find a free SID of the required specs</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">env</td><td>the event context </td></tr>
+    <tr><td class="paramname">scheduler</td><td>the event scheduler </td></tr>
     <tr><td class="paramname">model</td><td>the required sid model </td></tr>
     <tr><td class="paramname">digiboost</td><td>whether to enable digiboost for 8580 </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>pointer to the locked sid emu </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the locked sid, null if none is available </dd></dl>
 
 </div>
 </div>
@@ -439,7 +324,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
 <p>Release this SID.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">device</td><td>the sid emu to unlock </td></tr>
+    <tr><td class="paramname">device</td><td>the sid to unlock </td></tr>
   </table>
   </dd>
 </dl>
@@ -480,7 +365,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_status</b></td></tr
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 15 2026 10:40:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

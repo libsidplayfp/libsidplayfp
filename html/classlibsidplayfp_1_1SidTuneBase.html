@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
    </div>
   </td>
  </tr>
@@ -158,13 +158,13 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a743d3baa2d03cb87ecad485374561b51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38a9f989abdd4c454d374a4d3b18ef2a" id="r_a38a9f989abdd4c454d374a4d3b18ef2a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a38a9f989abdd4c454d374a4d3b18ef2a">acceptSidTune</a> (const char *dataFileName, const char *infoFileName, buffer_t &amp;buf, bool isSlashedFileName)</td></tr>
 <tr class="separator:a38a9f989abdd4c454d374a4d3b18ef2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b6d753daf17266fb9aad3c385b57224" id="r_a8b6d753daf17266fb9aad3c385b57224"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a8b6d753daf17266fb9aad3c385b57224">petsciiToAscii</a> (<a class="el" href="classlibsidplayfp_1_1SmartPtr__sidtt.html">SmartPtr_sidtt</a>&lt; const uint8_t &gt; &amp;spPet)</td></tr>
-<tr class="separator:a8b6d753daf17266fb9aad3c385b57224"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
 <tr class="memitem:af4c93b74b0bc1a7fb825e6dc8c31fd12" id="r_af4c93b74b0bc1a7fb825e6dc8c31fd12"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#af4c93b74b0bc1a7fb825e6dc8c31fd12">loadFile</a> (const char *fileName, buffer_t &amp;bufferRef)</td></tr>
 <tr class="separator:af4c93b74b0bc1a7fb825e6dc8c31fd12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b6d753daf17266fb9aad3c385b57224" id="r_a8b6d753daf17266fb9aad3c385b57224"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a8b6d753daf17266fb9aad3c385b57224">petsciiToAscii</a> (<a class="el" href="classlibsidplayfp_1_1SmartPtr__sidtt.html">SmartPtr_sidtt</a>&lt; const uint8_t &gt; &amp;spPet)</td></tr>
+<tr class="separator:a8b6d753daf17266fb9aad3c385b57224"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -412,7 +412,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Calculates the <a class="el" href="classMD5.html">MD5</a> hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
+<p>Calculates the MD5 hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the buffer containing the md5 string. </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1PSID.html#a19f24c90293459277c99d68db6ab04d0">libsidplayfp::PSID</a>.</p>
@@ -442,7 +442,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Calculates the <a class="el" href="classMD5.html">MD5</a> hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
+<p>Calculates the MD5 hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the buffer containing the md5 string. </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classlibsidplayfp_1_1PSID.html#ae1a90dcfa24b8cf9f887aaf3da7ffbdc">libsidplayfp::PSID</a>.</p>
@@ -702,7 +702,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -862,7 +862,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 15 2026 10:40:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

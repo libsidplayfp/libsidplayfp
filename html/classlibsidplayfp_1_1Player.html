@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
    </div>
   </td>
  </tr>
@@ -67,27 +67,15 @@ const <a class="el" href="classSidInfo.html">SidInfo</a> &amp;&#160;</td><td cla
 <tr class="memitem:a3e3a134bf34da1aed9eea9ea1a9197e6" id="r_a3e3a134bf34da1aed9eea9ea1a9197e6"><td class="memItemLeft" align="right" valign="top"><a id="a3e3a134bf34da1aed9eea9ea1a9197e6" name="a3e3a134bf34da1aed9eea9ea1a9197e6"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>config</b> (const <a class="el" href="classSidConfig.html">SidConfig</a> &amp;cfg, bool force=false)</td></tr>
 <tr class="separator:a3e3a134bf34da1aed9eea9ea1a9197e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66760f2b27073a8cbda305f592304be7" id="r_a66760f2b27073a8cbda305f592304be7"><td class="memItemLeft" align="right" valign="top"><a id="a66760f2b27073a8cbda305f592304be7" name="a66760f2b27073a8cbda305f592304be7"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>fastForward</b> (unsigned int percent)</td></tr>
-<tr class="separator:a66760f2b27073a8cbda305f592304be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8497aac45794c6318889966ed4a18df2" id="r_a8497aac45794c6318889966ed4a18df2"><td class="memItemLeft" align="right" valign="top"><a id="a8497aac45794c6318889966ed4a18df2" name="a8497aac45794c6318889966ed4a18df2"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>load</b> (<a class="el" href="classSidTune.html">SidTune</a> *tune)</td></tr>
 <tr class="separator:a8497aac45794c6318889966ed4a18df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06a661d2be61c0ba4725543c3e9ac293" id="r_a06a661d2be61c0ba4725543c3e9ac293"><td class="memItemLeft" align="right" valign="top"><a id="a06a661d2be61c0ba4725543c3e9ac293" name="a06a661d2be61c0ba4725543c3e9ac293"></a>
-uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>play</b> (short *buffer, uint_least32_t samples)</td></tr>
-<tr class="separator:a06a661d2be61c0ba4725543c3e9ac293"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70446506ca1cafc2ba592004033ea01e" id="r_a70446506ca1cafc2ba592004033ea01e"><td class="memItemLeft" align="right" valign="top"><a id="a70446506ca1cafc2ba592004033ea01e" name="a70446506ca1cafc2ba592004033ea01e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>buffers</b> (short **buffers) const</td></tr>
 <tr class="separator:a70446506ca1cafc2ba592004033ea01e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11ca3777f374fd10b542b89adf9e7e49" id="r_a11ca3777f374fd10b542b89adf9e7e49"><td class="memItemLeft" align="right" valign="top"><a id="a11ca3777f374fd10b542b89adf9e7e49" name="a11ca3777f374fd10b542b89adf9e7e49"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>play</b> (unsigned int cycles)</td></tr>
 <tr class="separator:a11ca3777f374fd10b542b89adf9e7e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a488ba48519604b062d3a8805e452e0ed" id="r_a488ba48519604b062d3a8805e452e0ed"><td class="memItemLeft" align="right" valign="top"><a id="a488ba48519604b062d3a8805e452e0ed" name="a488ba48519604b062d3a8805e452e0ed"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPlaying</b> () const</td></tr>
-<tr class="separator:a488ba48519604b062d3a8805e452e0ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac75ef363754198cb5a39a6c1f9842bf7" id="r_ac75ef363754198cb5a39a6c1f9842bf7"><td class="memItemLeft" align="right" valign="top"><a id="ac75ef363754198cb5a39a6c1f9842bf7" name="ac75ef363754198cb5a39a6c1f9842bf7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()</td></tr>
-<tr class="separator:ac75ef363754198cb5a39a6c1f9842bf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab16826acd6aa923f486d3d8ad5d02ed8" id="r_ab16826acd6aa923f486d3d8ad5d02ed8"><td class="memItemLeft" align="right" valign="top"><a id="ab16826acd6aa923f486d3d8ad5d02ed8" name="ab16826acd6aa923f486d3d8ad5d02ed8"></a>
 uint_least32_t&#160;</td><td class="memItemRight" valign="bottom"><b>timeMs</b> () const</td></tr>
 <tr class="separator:ab16826acd6aa923f486d3d8ad5d02ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +118,9 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>mix</b> (shor
 <tr class="memitem:a6a4c1c3311ffd828a84609ffcffc33b0" id="r_a6a4c1c3311ffd828a84609ffcffc33b0"><td class="memItemLeft" align="right" valign="top"><a id="a6a4c1c3311ffd828a84609ffcffc33b0" name="a6a4c1c3311ffd828a84609ffcffc33b0"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
 <tr class="separator:a6a4c1c3311ffd828a84609ffcffc33b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbfe3bbc3719bf5731a03b9a4d243896" id="r_afbfe3bbc3719bf5731a03b9a4d243896"><td class="memItemLeft" align="right" valign="top"><a id="afbfe3bbc3719bf5731a03b9a4d243896" name="afbfe3bbc3719bf5731a03b9a4d243896"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getBufSize</b> (unsigned int cycles)</td></tr>
+<tr class="separator:afbfe3bbc3719bf5731a03b9a4d243896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="player_8h_source.html">player.h</a></li>
@@ -138,7 +129,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 15 2026 10:40:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

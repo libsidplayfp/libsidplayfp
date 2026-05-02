@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
    </div>
   </td>
  </tr>
@@ -41,19 +41,19 @@
   <div class="headertitle"><div class="title">Tests, don't use in production :)</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md5"></a>This directory contains an edited copy of the driver for test use with emscripten and libusb</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a>This directory contains an edited copy of the driver for test use with emscripten and libusb</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
 Brainfarts</h1>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 webusb incoming control transfers on connect</h1>
 <div class="fragment"><div class="line">[tud_vendor_control_xfer_cb] stage:1, rhport:0, bRequest:0xb, wValue:0, wIndex:4, wLength:0, bmRequestType:1, type:0, recipient:1, direction:0</div>
 <div class="line">[tud_vendor_control_xfer_cb] stage:1, rhport:0, bRequest:0x22, wValue:1, wIndex:4, wLength:0, bmRequestType:21, type:1, recipient:1, direction:0</div>
 <div class="line">[tud_vendor_control_xfer_cb] stage:3, rhport:0, bRequest:0x22, wValue:1, wIndex:4, wLength:0, bmRequestType:21, type:1, recipient:1, direction:0</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
 cdc incoming control transfers on connect</h1>
 <div class="fragment"><div class="line">[tud_cdc_line_state_cb] itf:0, dtr:1, rts:1</div>
 <div class="line">[tud_cdc_line_coding_cb] itf:0, bit_rate:9000000, stop_bits:0, parity:0, data_bits:8</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 libusb control_transfer</h1>
 <div class="fragment"><div class="line">libusb_control_transfer(</div>
 <div class="line">  libusb_device_handle *dev_handle,</div>
@@ -65,7 +65,7 @@ libusb control_transfer</h1>
 <div class="line">  uint16_t wLength, </div>
 <div class="line">  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> timeout</div>
 <div class="line">);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
 testlibusb.c</h1>
 <div class="fragment"><div class="line">navigator.usb.requestDevice({</div>
 <div class="line">  filters: [</div>
@@ -76,7 +76,7 @@ testlibusb.c</h1>
 <div class="line">  ],</div>
 <div class="line">})</div>
 <div class="line">backend_SID.Module._runmeonmyass([&#39;-v&#39;])</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md11"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
 usbsid</h1>
 <div class="fragment"><div class="line">var device = await navigator.usb.requestDevice({</div>
 <div class="line">  filters: [</div>
@@ -88,7 +88,7 @@ usbsid</h1>
 <div class="line">});</div>
 <div class="line">var us = new Module.USBSID_Class();</div>
 <div class="line">us.USBSID_Init(true,true);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
 websid</h1>
 <div class="fragment"><div class="line">var device = await navigator.usb.requestDevice({</div>
 <div class="line">  filters: [</div>
@@ -104,7 +104,7 @@ websid</h1>
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 15 2026 10:40:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

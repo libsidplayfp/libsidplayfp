@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;2.16.1</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
    </div>
   </td>
  </tr>
@@ -147,11 +147,11 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>buffer_t</b> = std::
 <tr class="separator:a743d3baa2d03cb87ecad485374561b51 inherit pro_methods_classlibsidplayfp_1_1SidTuneBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38a9f989abdd4c454d374a4d3b18ef2a inherit pro_methods_classlibsidplayfp_1_1SidTuneBase" id="r_a38a9f989abdd4c454d374a4d3b18ef2a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a38a9f989abdd4c454d374a4d3b18ef2a">acceptSidTune</a> (const char *dataFileName, const char *infoFileName, buffer_t &amp;buf, bool isSlashedFileName)</td></tr>
 <tr class="separator:a38a9f989abdd4c454d374a4d3b18ef2a inherit pro_methods_classlibsidplayfp_1_1SidTuneBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b6d753daf17266fb9aad3c385b57224 inherit pro_methods_classlibsidplayfp_1_1SidTuneBase" id="r_a8b6d753daf17266fb9aad3c385b57224"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a8b6d753daf17266fb9aad3c385b57224">petsciiToAscii</a> (<a class="el" href="classlibsidplayfp_1_1SmartPtr__sidtt.html">SmartPtr_sidtt</a>&lt; const uint8_t &gt; &amp;spPet)</td></tr>
-<tr class="separator:a8b6d753daf17266fb9aad3c385b57224 inherit pro_methods_classlibsidplayfp_1_1SidTuneBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_methods_classlibsidplayfp_1_1SidTuneBase"><td colspan="2" onclick="javascript:toggleInherit('pro_static_methods_classlibsidplayfp_1_1SidTuneBase')"><img src="closed.png" alt="-"/>&#160;Static Protected Member Functions inherited from <a class="el" href="classlibsidplayfp_1_1SidTuneBase.html">libsidplayfp::SidTuneBase</a></td></tr>
 <tr class="memitem:af4c93b74b0bc1a7fb825e6dc8c31fd12 inherit pro_static_methods_classlibsidplayfp_1_1SidTuneBase" id="r_af4c93b74b0bc1a7fb825e6dc8c31fd12"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#af4c93b74b0bc1a7fb825e6dc8c31fd12">loadFile</a> (const char *fileName, buffer_t &amp;bufferRef)</td></tr>
 <tr class="separator:af4c93b74b0bc1a7fb825e6dc8c31fd12 inherit pro_static_methods_classlibsidplayfp_1_1SidTuneBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b6d753daf17266fb9aad3c385b57224 inherit pro_static_methods_classlibsidplayfp_1_1SidTuneBase" id="r_a8b6d753daf17266fb9aad3c385b57224"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a8b6d753daf17266fb9aad3c385b57224">petsciiToAscii</a> (<a class="el" href="classlibsidplayfp_1_1SmartPtr__sidtt.html">SmartPtr_sidtt</a>&lt; const uint8_t &gt; &amp;spPet)</td></tr>
+<tr class="separator:a8b6d753daf17266fb9aad3c385b57224 inherit pro_static_methods_classlibsidplayfp_1_1SidTuneBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classlibsidplayfp_1_1SidTuneBase"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classlibsidplayfp_1_1SidTuneBase')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classlibsidplayfp_1_1SidTuneBase.html">libsidplayfp::SidTuneBase</a></td></tr>
 <tr class="memitem:af89f2048c42a830278fdf58aae8fc151 inherit pro_attribs_classlibsidplayfp_1_1SidTuneBase" id="r_af89f2048c42a830278fdf58aae8fc151"><td class="memItemLeft" align="right" valign="top">
 std::unique_ptr&lt; <a class="el" href="classlibsidplayfp_1_1SidTuneInfoImpl.html">SidTuneInfoImpl</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>info</b></td></tr>
@@ -205,7 +205,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Calculates the <a class="el" href="classMD5.html">MD5</a> hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
+<p>Calculates the MD5 hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the buffer containing the md5 string. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#adaf1dd89626e1f811d8dd5b0af23179f">libsidplayfp::SidTuneBase</a>.</p>
@@ -235,7 +235,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Calculates the <a class="el" href="classMD5.html">MD5</a> hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
+<p>Calculates the MD5 hash of the tune. Not providing an md5 buffer will cause the internal one to be used. If provided, buffer must be MD5_LENGTH + 1</p>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the buffer containing the md5 string. </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classlibsidplayfp_1_1SidTuneBase.html#a7d16076edcbbd5fb324d6aa68f39e7b1">libsidplayfp::SidTuneBase</a>.</p>
@@ -282,7 +282,7 @@ static const char&#160;</td><td class="memItemRight" valign="bottom"><b>ERR_INVA
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 15 2026 10:40:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

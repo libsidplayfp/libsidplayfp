@@ -1,17 +1,15 @@
 <map id="libsidplayfp::sidemu" name="libsidplayfp::sidemu">
-<area shape="rect" id="Node000001" title=" " alt="" coords="388,104,543,129"/>
-<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1HardSID.html" title=" " alt="" coords="591,5,749,31"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="495,94,539,66,590,40,620,28,621,33,592,44,541,71,498,98"/>
-<area shape="rect" id="Node000005" href="$classlibsidplayfp_1_1ReSID.html" title=" " alt="" coords="597,55,743,80"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="531,98,616,77,617,83,532,103"/>
-<area shape="rect" id="Node000006" href="$classlibsidplayfp_1_1ReSIDfp.html" title=" " alt="" coords="591,104,749,129"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="557,114,591,114,591,119,557,119"/>
-<area shape="rect" id="Node000007" href="$classlibsidplayfp_1_1USBSID.html" title=" " alt="" coords="593,153,747,179"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="532,130,617,151,616,156,531,135"/>
-<area shape="rect" id="Node000008" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="598,203,742,228"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="498,135,541,162,592,189,621,200,620,205,590,194,539,167,495,139"/>
-<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="192,104,340,129"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="354,114,388,114,388,119,354,119"/>
-<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="5,104,144,129"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="158,114,192,114,192,119,158,119"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="388,80,543,105"/>
+<area shape="rect" id="Node000004" href="$classlibsidplayfp_1_1SIDLiteEmu.html" title=" " alt="" coords="591,5,773,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="506,72,590,39,628,28,629,33,592,45,508,77"/>
+<area shape="rect" id="Node000005" href="$classlibsidplayfp_1_1USBSID.html" title=" " alt="" coords="605,55,759,80"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="556,79,604,74,605,79,556,85"/>
+<area shape="rect" id="Node000006" href="$classlibsidplayfp_1_1exSID.html" title=" " alt="" coords="610,104,754,129"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="557,100,610,106,610,111,556,105"/>
+<area shape="rect" id="Node000007" href="$classlibsidplayfp_1_1reSIDfpEmu.html" title=" " alt="" coords="591,153,773,179"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="509,108,592,139,630,151,628,156,590,145,507,113"/>
+<area shape="rect" id="Node000002" href="$classlibsidplayfp_1_1c64sid.html" title=" " alt="" coords="192,80,340,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="354,90,388,90,388,95,354,95"/>
+<area shape="rect" id="Node000003" href="$classlibsidplayfp_1_1Bank.html" title=" " alt="" coords="5,80,144,105"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="158,90,192,90,192,95,158,95"/>
 </map>
