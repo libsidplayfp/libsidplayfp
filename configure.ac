@@ -88,12 +88,14 @@ AC_CHECK_DECL(
 )
 
 AC_CHECK_PROGS([XA], [xa])
+AS_IF([test -z "$XA"], [AC_MSG_ERROR([xa not found])])
 
 # od on macOS doesn't support the -w parameter
 AC_CACHE_CHECK([for od that supports -w], [ac_cv_path_OD],
   [AC_PATH_PROGS_FEATURE_CHECK([OD], [od god],
     [[$ac_path_OD -w > /dev/null 2>&1 && ac_cv_path_OD=$ac_path_OD ac_path_OD_found=:]])]
 )
+AS_IF([test -z "$ac_cv_path_OD"], [AC_MSG_ERROR([od not found])])
 AC_SUBST([OD], [$ac_cv_path_OD])
 
 AX_PTHREAD([], [AC_MSG_ERROR("pthreads not found")])
