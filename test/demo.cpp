@@ -109,18 +109,11 @@ int main(int argc, char* argv[])
 
     // Set up a SID builder
     std::unique_ptr<SIDLiteBuilder> rs(new SIDLiteBuilder("Demo"));
-/*
-    // Check if builder is ok
-    if (!rs->getStatus())
-    {
-        std::cerr << rs->error() << std::endl;
-        return -1;
-    }
-*/
+
     // Load tune from file
     std::unique_ptr<SidTune> tune(new SidTune(argv[1]));
 
-    // CHeck if the tune is valid
+    // Check if the tune is valid
     if (!tune->getStatus())
     {
         std::cerr << tune->statusString() << std::endl;
@@ -148,7 +141,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    // Setup audio device
+    // Setup audio device (platform dependent)
     int handle=::open("/dev/dsp", O_WRONLY, 0);
     int format=AFMT_S16_LE;
     ioctl(handle, SNDCTL_DSP_SETFMT, &format);
@@ -159,23 +152,33 @@ int main(int argc, char* argv[])
     int bufferSize;
     ioctl(handle, SNDCTL_DSP_GETBLKSIZE, &bufferSize);
 
-    //uint_least32_t bufferSamples = static_cast<uint_least32_t>(bufferSize) / sizeof(short);
-
+    // Number of cycles to run the emulation at each step
+    // 5000 cycles at ~1MHz = ~5ms
     constexpr int CYCLES = 5000;
 
+    // Initialize the mixer for stereo output
     m_engine.initMixer(true);
+
+    // Get an estimate for the buffer size required
     int bufSize = m_engine.getBufSize(CYCLES);
+
+    // Prepare the buffer
     std::vector<short> buffer(bufSize);
+
     // Play for ~5 seconds
     for (int i=0; i<1000; i++)
     {
+        // Run the emulation
         int res = m_engine.play(CYCLES);
         if (res < 0)
         {
             std::cerr << m_engine.error() << std::endl;
             break;
         }
+
+        // Mix the audio into the output buffer
         unsigned int s = m_engine.mix(buffer.data(), res);
+
         ::write(handle, buffer.data(), s*sizeof(short));
     }
 
