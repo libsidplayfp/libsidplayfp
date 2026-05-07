@@ -1,12 +1,12 @@
 libsidplayfp
 ============
 
-https://github.com/libsidplayfp/libsidplayfp
-
 libsidplayfp is a C64 music player library which integrates
 the reSIDfp SID chip emulation engine into a cycle-based emulator
 environment, constantly aiming to improve emulation of the
 C64 system and the SID chips.
+
+https://github.com/libsidplayfp/libsidplayfp
 
 Copyright (c) 2000-2001 Simon White  
 Copyright (c) 2007-2010 Antti Lankila  
