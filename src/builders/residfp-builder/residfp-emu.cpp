@@ -31,6 +31,16 @@
 #  include "config.h"
 #endif
 
+#define xstr(s) str(s)
+#define str(s) #s
+
+#define _VERSION(a,b,c) a ##.## b ##.## c
+#define SID_VERSION(a,b,c) _VERSION(a,b,c)
+#define LIBRESIDFP_VERSION \
+    SID_VERSION(LIBRESIDFP_VERSION_MAJ, \
+        LIBRESIDFP_VERSION_MIN, \
+        LIBRESIDFP_VERSION_LEV)
+
 namespace libsidplayfp
 {
 
@@ -41,7 +51,7 @@ const char* reSIDfpEmu::getCredits()
     return
         "reSIDfpEmu V" VERSION " Engine:\n"
         "\t(C) 1999-2002 Simon White\n"
-        "MOS6581/CSG8580 (SID) Emulation:\n"
+        "libresidfp V" xstr(LIBRESIDFP_VERSION) ":\n"
         "\t(C) 1999-2002 Dag Lem\n"
         "\t(C) 2005-2011 Antti S. Lankila\n"
         "\t(C) 2010-2026 Leandro Nini\n";
