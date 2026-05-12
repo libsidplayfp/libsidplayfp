@@ -35,14 +35,14 @@ protected:
     /**
      * Create the sid emu.
      */
-    libsidplayfp::sidemu* create();
+    libsidplayfp::sidemu* create() override;
 
 public:
     SIDLiteBuilder(const char * const name);
     ~SIDLiteBuilder();
 
 
-    const char *getCredits() const;
+    const char *getCredits() const override;
 
 private:
     struct config;

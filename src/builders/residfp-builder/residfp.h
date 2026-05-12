@@ -35,14 +35,14 @@ protected:
     /**
      * Create the sid emu.
      */
-    libsidplayfp::sidemu* create();
+    libsidplayfp::sidemu* create() override;
 
 public:
     ReSIDfpBuilder(const char * const name);
-    ~ReSIDfpBuilder();
+    ~ReSIDfpBuilder() override;
 
 
-    const char *getCredits() const;
+    const char *getCredits() const override;
 
     /// @name global settings
     /// Settings that affect all SIDs.
