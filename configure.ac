@@ -96,8 +96,6 @@ AC_CACHE_CHECK([for od that supports -w], [ac_cv_path_OD],
 )
 AC_SUBST([OD], [$ac_cv_path_OD])
 
-AX_PTHREAD([], [AC_MSG_ERROR("pthreads not found")])
-
 dnl libtool-style version-info number
 #
 # https://autotools.io/libtool/version.html
@@ -203,6 +201,13 @@ AC_SUBST(HAVE_BUILTIN_EXPECT)
 AC_SUBST(LIBSIDPLAYVERSION)
 AC_SUBST(LIBSTILVIEWVERSION)
 
+# used by exsid and usbsid
+AX_PTHREAD(
+    [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])]
+    [AC_DEFINE([HAVE_PTHREAD_H], 1, [Define to 1 if you have pthread.h])]
+    [have_pthreads=yes]
+)
+
 # USBSID support
 AC_ARG_WITH(
     [usbsid],
@@ -235,6 +240,11 @@ AS_IF(
 AS_IF(
     [test "x$with_usbsid" = "xyes" -a "x$build_usbsid_builder" != xyes],
     [AC_MSG_ERROR([libusb not found])]
+)
+
+AS_IF(
+    [test "x$with_usbsid" = "xyes" -a "x$have_pthreads" != xyes],
+    [AC_MSG_ERROR([pthreads not found])]
 )
 
 AC_SUBST([USBSID_CFLAGS])
@@ -286,18 +296,15 @@ AS_IF(
     [AC_MSG_ERROR([Neither libexsid nor ftd2xx nor libftdi1 found])]
 )
 
+AS_IF(
+    [test "x$with_exsid" = "xyes" -a "x$have_pthreads" != xyes],
+    [AC_MSG_ERROR([pthreads not found])]
+)
+
 AC_SUBST([FTDI_CFLAGS])
 
 AM_CONDITIONAL([EXSID_SUPPORT], [ test "x${build_exsid_builder}" = xyes])
 AM_CONDITIONAL([EXSID_DRIVER], [ test "x${build_exsid_driver}" = xyes])
-
-# check for thread model if available
-AS_IF([test "x$build_exsid_driver" = xyes],
-        [AX_PTHREAD(
-                [AC_DEFINE([EXSID_THREADED], 1, [Define for threaded driver])]
-                [AC_DEFINE([HAVE_PTHREAD_H], 1, [Define to 1 if you have pthread.h])]
-        )]
-)
 
 eval loadable_shrext=$shrext_cmds
 AC_DEFINE_UNQUOTED([SHLIBEXT], ["${loadable_shrext}"], [Shared library extension])
