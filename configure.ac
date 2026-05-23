@@ -231,7 +231,7 @@ AS_IF(
                 build_usbsid_builder=yes
                 build_usbsid_driver=yes
                 AC_MSG_RESULT([yes])],
-                [AC_MSG_WARN([libsub.h not found, support will not be available])]
+                [AC_MSG_WARN([libusb.h not found, support will not be available])]
             )]
 
        )]
