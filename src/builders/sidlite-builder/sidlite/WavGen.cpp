@@ -156,9 +156,9 @@ wg_output_t WavGen::clock(const ADSR *adsr)
     const unsigned char FilterSwitchReso = regs[0x17];
     const unsigned char VolumeBand = regs[0x18];
 
-    for (int Channel=0; Channel<SID_CHANNEL_COUNT; Channel++)
+    for (int Channel=0, ChBase=0; Channel<SID_CHANNEL_COUNT; Channel++, ChBase+=7)
     {
-        unsigned char *ChannelPtr = &(regs[Channel*7]);
+        unsigned char *ChannelPtr = &(regs[ChBase]);
 
         auto combinedWF = [&](const cw_array_t &WFarray, unsigned short oscval)
         {
