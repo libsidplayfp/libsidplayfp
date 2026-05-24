@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.1</span>
    </div>
   </td>
  </tr>
@@ -64,7 +64,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * This file is part of USBSID-Pico (https://github.com/LouDnl/USBSID-Pico-driver)</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * File author: LouD</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * Copyright (c) 2024-2025 LouD</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * Copyright (c) 2024-2026 LouD</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * This program is free software: you can redistribute it and/or modify</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * it under the terms of the GNU General Public License as published by</span></div>
@@ -344,7 +344,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>      <span class="comment">/* LIBUSB */</span></div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>      <span class="keywordtype">int</span> LIBUSB_Setup(<span class="keywordtype">bool</span> start_threaded, <span class="keywordtype">bool</span> with_cycles);</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>      <span class="keywordtype">int</span> LIBUSB_Exit(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>      <span class="keywordtype">int</span> LIBUSB_Available(uint16_t vendor_id, uint16_t product_id);</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>      <span class="keywordtype">int</span> LIBUSB_Available(libusb_context *ctx_, uint16_t vendor_id, uint16_t product_id);</div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>      <span class="keywordtype">void</span> LIBUSB_StopTransfers(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>      <span class="keywordtype">int</span> LIBUSB_OpenDevice(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>      <span class="keywordtype">void</span> LIBUSB_CloseDevice(<span class="keywordtype">void</span>);</div>
@@ -422,9 +422,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>      <span class="keywordtype">void</span> USBSID_ToggleStereo(<span class="keywordtype">void</span>);                                     <span class="comment">/* Toggle between mono and stereo ~ v1.3 PCB only */</span></div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>      <span class="comment">/* Synchronous direct */</span></div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      <span class="keywordtype">void</span> USBSID_SingleWrite(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buff, <span class="keywordtype">int</span> len);                <span class="comment">/* Single write buffer of size_t ~ example: config writing */</span></div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> USBSID_SingleRead(uint8_t reg);                            <span class="comment">/* Single read register, return result */</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> USBSID_SingleReadConfig(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buff, <span class="keywordtype">int</span> len);  <span class="comment">/* Single to buffer of specified length ~ example: config reading */</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      <span class="keywordtype">void</span> USBSID_SingleWrite(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buff, <span class="keywordtype">int</span> len);                 <span class="comment">/* Single write buffer of size_t ~ example: config writing */</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> USBSID_SingleRead(uint8_t reg);                          <span class="comment">/* Single read register, return result */</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> USBSID_SingleReadConfig(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buff, <span class="keywordtype">int</span> len);   <span class="comment">/* Single to buffer of specified length ~ example: config reading */</span></div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>      <span class="comment">/* Asynchronous direct */</span></div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>      <span class="keywordtype">void</span> USBSID_Write(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buff, <span class="keywordtype">size_t</span> len);                    <span class="comment">/* Write buffer of size_t len */</span></div>
@@ -479,7 +479,7 @@ $(document).ready(function() { init_codefold(0); });
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 24 2026 11:43:39 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

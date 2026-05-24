@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.1</span>
    </div>
   </td>
  </tr>
@@ -145,18 +145,11 @@
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Set up a SID builder</span></div>
 <div class="line">    std::unique_ptr&lt;SIDLiteBuilder&gt; rs(<span class="keyword">new</span> <a id="_a2" name="_a2"></a><a class="code hl_class" href="classSIDLiteBuilder.html">SIDLiteBuilder</a>(<span class="stringliteral">&quot;Demo&quot;</span>));</div>
-<div class="line"><span class="comment">/*</span></div>
-<div class="line"><span class="comment">    // Check if builder is ok</span></div>
-<div class="line"><span class="comment">    if (!rs-&gt;getStatus())</span></div>
-<div class="line"><span class="comment">    {</span></div>
-<div class="line"><span class="comment">        std::cerr &lt;&lt; rs-&gt;error() &lt;&lt; std::endl;</span></div>
-<div class="line"><span class="comment">        return -1;</span></div>
-<div class="line"><span class="comment">    }</span></div>
-<div class="line"><span class="comment">*/</span></div>
+<div class="line"> </div>
 <div class="line">    <span class="comment">// Load tune from file</span></div>
 <div class="line">    std::unique_ptr&lt;SidTune&gt; tune(<span class="keyword">new</span> <a id="_a3" name="_a3"></a><a class="code hl_class" href="classSidTune.html">SidTune</a>(argv[1]));</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// CHeck if the tune is valid</span></div>
+<div class="line">    <span class="comment">// Check if the tune is valid</span></div>
 <div class="line">    <span class="keywordflow">if</span> (!tune-&gt;getStatus())</div>
 <div class="line">    {</div>
 <div class="line">        std::cerr &lt;&lt; tune-&gt;statusString() &lt;&lt; std::endl;</div>
@@ -184,7 +177,7 @@
 <div class="line">        <span class="keywordflow">return</span> -1;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// Setup audio device</span></div>
+<div class="line">    <span class="comment">// Setup audio device (platform dependent)</span></div>
 <div class="line">    <span class="keywordtype">int</span> handle=::open(<span class="stringliteral">&quot;/dev/dsp&quot;</span>, O_WRONLY, 0);</div>
 <div class="line">    <span class="keywordtype">int</span> format=AFMT_S16_LE;</div>
 <div class="line">    ioctl(handle, SNDCTL_DSP_SETFMT, &amp;format);</div>
@@ -195,23 +188,33 @@
 <div class="line">    <span class="keywordtype">int</span> bufferSize;</div>
 <div class="line">    ioctl(handle, SNDCTL_DSP_GETBLKSIZE, &amp;bufferSize);</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">//uint_least32_t bufferSamples = static_cast&lt;uint_least32_t&gt;(bufferSize) / sizeof(short);</span></div>
-<div class="line"> </div>
+<div class="line">    <span class="comment">// Number of cycles to run the emulation at each step</span></div>
+<div class="line">    <span class="comment">// 5000 cycles at ~1MHz = ~5ms</span></div>
 <div class="line">    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> CYCLES = 5000;</div>
 <div class="line"> </div>
+<div class="line">    <span class="comment">// Initialize the mixer for stereo output</span></div>
 <div class="line">    m_engine.<a id="a12" name="a12"></a><a class="code hl_function" href="classsidplayfp.html#a5bd1b8c3364cd4e5a6d2c8a3145ad346">initMixer</a>(<span class="keyword">true</span>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Get an estimate for the buffer size required</span></div>
 <div class="line">    <span class="keywordtype">int</span> bufSize = m_engine.<a id="a13" name="a13"></a><a class="code hl_function" href="classsidplayfp.html#a8d3ea38e03e20512abf75e037133b1d4">getBufSize</a>(CYCLES);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Prepare the buffer</span></div>
 <div class="line">    std::vector&lt;short&gt; buffer(bufSize);</div>
+<div class="line"> </div>
 <div class="line">    <span class="comment">// Play for ~5 seconds</span></div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;1000; i++)</div>
 <div class="line">    {</div>
+<div class="line">        <span class="comment">// Run the emulation</span></div>
 <div class="line">        <span class="keywordtype">int</span> res = m_engine.<a id="a14" name="a14"></a><a class="code hl_function" href="classsidplayfp.html#a5e1f97c0701a83a01b76565c7c3bc468">play</a>(CYCLES);</div>
 <div class="line">        <span class="keywordflow">if</span> (res &lt; 0)</div>
 <div class="line">        {</div>
 <div class="line">            std::cerr &lt;&lt; m_engine.<a class="code hl_function" href="classsidplayfp.html#a8ad05fe52bd34636832684c6c08ca994">error</a>() &lt;&lt; std::endl;</div>
 <div class="line">            <span class="keywordflow">break</span>;</div>
 <div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Mix the audio into the output buffer</span></div>
 <div class="line">        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> s = m_engine.<a id="a15" name="a15"></a><a class="code hl_function" href="classsidplayfp.html#aa8b74ce4b2aa2fb3d439e9f2dee6e746">mix</a>(buffer.data(), res);</div>
+<div class="line"> </div>
 <div class="line">        ::write(handle, buffer.data(), s*<span class="keyword">sizeof</span>(<span class="keywordtype">short</span>));</div>
 <div class="line">    }</div>
 <div class="line"> </div>
@@ -236,7 +239,7 @@
 </div><!-- fragment --> </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 2 2026 08:37:54 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun May 24 2026 11:43:39 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
