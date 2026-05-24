@@ -1,3 +1,10 @@
+3.0.1 2026-05-24
+* residfp: added library version to credits (#260)
+* Properly check for pthreads, only error out if exsid or usbsid are required
+* Updated USBSID-Pico driver
+
+
+
 3.0.0 2026-05-02
 * removed deprecated stuff and cleaned up API
 * dropped hardsid support
