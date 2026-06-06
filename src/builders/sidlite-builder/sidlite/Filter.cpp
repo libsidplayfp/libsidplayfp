@@ -30,6 +30,7 @@
 
 #include <map>
 #include <mutex>
+#include <cstdlib>
 #include <cmath>
 
 namespace SIDLite
