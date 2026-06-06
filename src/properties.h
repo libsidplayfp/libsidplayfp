@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2025-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,12 @@
 #include "sidcxx11.h"
 
 #ifdef HAVE_CXX17
+#  if __has_include(<optional>)
+#    define HAS_OPTIONAL 1
+#  endif
+#endif
+
+#ifdef HAS_OPTIONAL
 
 #include <optional>
 
