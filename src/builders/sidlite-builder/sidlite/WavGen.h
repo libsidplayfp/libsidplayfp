@@ -44,8 +44,8 @@ public:
     inline unsigned char getEnv3() const { return envReg; }
 
 private:
-    unsigned char *regs;
-    settings      *s;
+    unsigned char *m_regs;
+    settings      *m_settings;
 
     int           PhaseAccu[3];       // 28bit precision instead of 24bit
     int           PrevPhaseAccu[3];   // (integerized ClockRatio fractionals, WebSID has similar solution)

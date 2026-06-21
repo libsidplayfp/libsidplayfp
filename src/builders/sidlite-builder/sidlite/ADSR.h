@@ -36,7 +36,7 @@ public:
     inline unsigned char counter(int channel) const { return EnvelopeCounter[channel]; }
 
 private:
-    unsigned char *regs;
+    unsigned char *m_regs;
 
     unsigned short RateCounter[3];
     unsigned char  ADSRstate[3];

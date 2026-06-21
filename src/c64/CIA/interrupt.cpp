@@ -55,7 +55,7 @@ void InterruptSource::setIrq()
     {
         if (!asserted)
         {
-            parent.interrupt(true);
+            m_parent.interrupt(true);
             asserted = true;
         }
     }
@@ -65,7 +65,7 @@ void InterruptSource::clearIrq()
 {
     if (asserted)
     {
-        parent.interrupt(false);
+        m_parent.interrupt(false);
         asserted = false;
     }
 }

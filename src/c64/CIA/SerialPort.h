@@ -37,7 +37,7 @@ class SerialPort : private Event
 {
 private:
     /// Pointer to the MOS6526 which this Serial Port belongs to.
-    MOS652X &parent;
+    MOS652X &m_parent;
 
     /// Event context.
     EventScheduler &eventScheduler;
@@ -73,7 +73,7 @@ private:
 public:
     SerialPort(EventScheduler &scheduler, MOS652X &parent) :
         Event("Serial Port interrupt"),
-        parent(parent),
+        m_parent(parent),
         eventScheduler(scheduler),
         flipCntEvent("flip CNT", *this, &SerialPort::flipCnt),
         flipFakeEvent("flip fake", *this, &SerialPort::flipFake),

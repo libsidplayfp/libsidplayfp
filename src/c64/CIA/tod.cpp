@@ -35,10 +35,10 @@ void Tod::reset()
     cycles = 0;
     todtickcounter = 0;
 
-    std::memset(clock, 0, sizeof(clock));
-    clock[HOURS] = 1; // the most common value
-    std::memcpy(latch, clock, sizeof(latch));
-    std::memset(alarm, 0, sizeof(alarm));
+    std::memset(m_clock, 0, sizeof(m_clock));
+    m_clock[HOURS] = 1; // the most common value
+    std::memcpy(m_latch, m_clock, sizeof(m_latch));
+    std::memset(m_alarm, 0, sizeof(m_alarm));
 
     isLatched = false;
     isStopped = true;
@@ -53,14 +53,14 @@ uint8_t Tod::read(uint_least8_t reg)
     // keeps ticking all the time.
     // Also note that this latching is different from the input one.
     if (!isLatched)
-        std::memcpy(latch, clock, sizeof(latch));
+        std::memcpy(m_latch, m_clock, sizeof(m_latch));
 
     if (reg == TENTHS)
         isLatched = false;
     else if (reg == HOURS)
         isLatched = true;
 
-    return latch[reg];
+    return m_latch[reg];
 }
 
 void Tod::write(uint_least8_t reg, uint8_t data)
@@ -86,10 +86,10 @@ void Tod::write(uint_least8_t reg, uint8_t data)
     if (crb & 0x80)
     {
         // set alarm
-        if (alarm[reg] != data)
+        if (m_alarm[reg] != data)
         {
             changed = true;
-            alarm[reg] = data;
+            m_alarm[reg] = data;
         }
     }
     else
@@ -111,7 +111,7 @@ void Tod::write(uint_least8_t reg, uint8_t data)
             isStopped = true;
         }
 
-        if (clock[reg] != data)
+        if (m_clock[reg] != data)
         {
             // see https://sourceforge.net/p/vice-emu/bugs/1988/
             // Flip AM/PM on hour 12 on the rising edge of the comparator
@@ -119,7 +119,7 @@ void Tod::write(uint_least8_t reg, uint8_t data)
             //    data ^= 0x80;
 
             changed = true;
-            clock[reg] = data;
+            m_clock[reg] = data;
         }
     }
 
@@ -171,14 +171,14 @@ void Tod::updateCounters()
     // advance the counters.
     // - individual counters are 4 bit
     //   except for sh and mh which are 3 bits
-    uint8_t ts = clock[TENTHS] & 0x0f;
-    uint8_t sl = clock[SECONDS] & 0x0f;
-    uint8_t sh = (clock[SECONDS] >> 4) & 0x07;
-    uint8_t ml = clock[MINUTES] & 0x0f;
-    uint8_t mh = (clock[MINUTES] >> 4) & 0x07;
-    uint8_t hl = clock[HOURS] & 0x0f;
-    uint8_t hh = (clock[HOURS] >> 4) & 0x01;
-    uint8_t pm = clock[HOURS] & 0x80;
+    uint8_t ts = m_clock[TENTHS] & 0x0f;
+    uint8_t sl = m_clock[SECONDS] & 0x0f;
+    uint8_t sh = (m_clock[SECONDS] >> 4) & 0x07;
+    uint8_t ml = m_clock[MINUTES] & 0x0f;
+    uint8_t mh = (m_clock[MINUTES] >> 4) & 0x07;
+    uint8_t hl = m_clock[HOURS] & 0x0f;
+    uint8_t hh = (m_clock[HOURS] >> 4) & 0x01;
+    uint8_t pm = m_clock[HOURS] & 0x80;
 
     // tenth seconds (0-9)
     ts = (ts + 1) & 0x0f;
@@ -227,19 +227,19 @@ void Tod::updateCounters()
         }
     }
 
-    clock[TENTHS]  = ts;
-    clock[SECONDS] = sl | (sh << 4);
-    clock[MINUTES] = ml | (mh << 4);
-    clock[HOURS]   = hl | (hh << 4) | pm;
+    m_clock[TENTHS]  = ts;
+    m_clock[SECONDS] = sl | (sh << 4);
+    m_clock[MINUTES] = ml | (mh << 4);
+    m_clock[HOURS]   = hl | (hh << 4) | pm;
 
     checkAlarm();
 }
 
 void Tod::checkAlarm()
 {
-    if (!std::memcmp(alarm, clock, sizeof(alarm)))
+    if (!std::memcmp(m_alarm, m_clock, sizeof(m_alarm)))
     {
-        parent.todInterrupt();
+        m_parent.todInterrupt();
     }
 }
 

@@ -92,7 +92,7 @@ public:
     {
         // we pretend that we are CPU doing a write to ctrl register
         syncWithCpu();
-        state |= CIAT_STEP;
+        m_state |= CIAT_STEP;
         wakeUpAfterSyncWithCpu();
     }
 
@@ -101,7 +101,7 @@ public:
      *
      * @return true if start flag is set, false otherwise
      */
-    bool started() const { return (state & CIAT_CR_START) != 0; }
+    bool started() const { return (m_state & CIAT_CR_START) != 0; }
 };
 
 /**

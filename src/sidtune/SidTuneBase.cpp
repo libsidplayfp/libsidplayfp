@@ -129,14 +129,14 @@ unsigned int SidTuneBase::selectSong(unsigned int songNum)
         // sidtunes, which have been converted from .SID format and vice versa.
         // The .SID format does the bit-wise/song-wise evaluation of the SPEED
         // value correctly, like it is described in the PlaySID documentation.
-        info->m_songSpeed = songSpeed[(song - 1) & 31];
+        info->m_songSpeed = m_songSpeed[(song - 1) & 31];
         break;
     default:
-        info->m_songSpeed = songSpeed[song - 1];
+        info->m_songSpeed = m_songSpeed[song - 1];
         break;
     }
 
-    info->m_clockSpeed = clockSpeed[song - 1];
+    info->m_clockSpeed = m_clockSpeed[song - 1];
 
     return info->m_currentSong;
 }
@@ -156,7 +156,7 @@ void SidTuneBase::placeSidTuneInC64mem(sidmemory& mem)
     mem.writeMemWord(0xae, end);
 
     // Copy data from cache to the correct destination.
-    mem.fillRam(info->m_loadAddr, &cache[fileOffset], info->m_c64dataLen);
+    mem.fillRam(info->m_loadAddr, &m_cache[m_fileOffset], info->m_c64dataLen);
 }
 
 void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
@@ -202,13 +202,13 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
 
 SidTuneBase::SidTuneBase() :
     info(new SidTuneInfoImpl()),
-    fileOffset(0)
+    m_fileOffset(0)
 {
     // Initialize the object with some safe defaults.
     for (unsigned int si = 0; si < MAX_SONGS; si++)
     {
-        songSpeed[si] = info->m_songSpeed;
-        clockSpeed[si] = info->m_clockSpeed;
+        m_songSpeed[si] = info->m_songSpeed;
+        m_clockSpeed[si] = info->m_clockSpeed;
     }
 }
 
@@ -293,11 +293,11 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
 
     info->m_dataFileLen = buf.size();
-    info->m_c64dataLen = buf.size() - fileOffset;
+    info->m_c64dataLen = buf.size() - m_fileOffset;
 
     // Calculate any remaining addresses and then
     // confirm all the file details are correct
-    resolveAddrs(&buf[fileOffset]);
+    resolveAddrs(&buf[m_fileOffset]);
 
     if (checkRelocInfo() == false)
     {
@@ -313,7 +313,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
         // We only detect an offset of two. Some position independent
         // sidtunes contain a load address of 0xE000, but are loaded
         // to 0x0FFE and call player at 0x1000.
-        info->m_fixLoad = (endian_little16(&buf[fileOffset])==(info->m_loadAddr+2));
+        info->m_fixLoad = (endian_little16(&buf[m_fileOffset])==(info->m_loadAddr+2));
     }
 
     // Check the size of the data.
@@ -326,7 +326,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
         throw loadError(ERR_EMPTY);
     }
 
-    cache.swap(buf);
+    m_cache.swap(buf);
 }
 
 void SidTuneBase::createNewFileName(std::string& destString,
@@ -420,8 +420,8 @@ void SidTuneBase::convertOldStyleSpeedToTables(uint_least32_t speed, SidTuneInfo
     const unsigned int toDo = std::min(info->m_songs, static_cast<unsigned int>(MAX_SONGS));
     for (unsigned int s = 0; s < toDo; s++)
     {
-        clockSpeed[s] = clock;
-        songSpeed[s] = (speed & 1) ? SidTuneInfo::SPEED_CIA_1A : SidTuneInfo::SPEED_VBI;
+        m_clockSpeed[s] = clock;
+        m_songSpeed[s] = (speed & 1) ? SidTuneInfo::SPEED_CIA_1A : SidTuneInfo::SPEED_VBI;
 
         if (s < 31)
         {
@@ -495,7 +495,7 @@ void SidTuneBase::resolveAddrs(const uint_least8_t *c64data)
         }
 
         info->m_loadAddr = endian_16(*(c64data+1), *c64data);
-        fileOffset += 2;
+        m_fileOffset += 2;
         info->m_c64dataLen -= 2;
     }
 

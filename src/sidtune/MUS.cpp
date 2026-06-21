@@ -203,8 +203,8 @@ void MUS::tryLoad(const buffer_t& musBuf,
         info->m_songs = 1;
         info->m_startSong = 1;
 
-        songSpeed[0]  = SidTuneInfo::SPEED_CIA_1A;
-        clockSpeed[0] = SidTuneInfo::CLOCK_ANY;
+        m_songSpeed[0]  = SidTuneInfo::SPEED_CIA_1A;
+        m_clockSpeed[0] = SidTuneInfo::CLOCK_ANY;
     }
 
     // Check setting compatibility for MUS playback
@@ -219,7 +219,7 @@ void MUS::tryLoad(const buffer_t& musBuf,
         // All subtunes should be CIA
         for (unsigned int i = 0; i < info->m_songs; i++)
         {
-            if (songSpeed[i] != SidTuneInfo::SPEED_CIA_1A)
+            if (m_songSpeed[i] != SidTuneInfo::SPEED_CIA_1A)
             {
                 throw loadError(ERR_INVALID);
             }

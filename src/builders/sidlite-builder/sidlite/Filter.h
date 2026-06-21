@@ -40,8 +40,8 @@ public:
     void rebuildCutoffTables(unsigned short samplerate);
 
 private:
-    unsigned char *regs;
-    settings      *s;
+    unsigned char *m_regs;
+    settings      *m_settings;
 
     unsigned short *CutoffMul8580;
     unsigned short *CutoffMul6581;

@@ -135,10 +135,10 @@ private:
     static bool const tape_sense = false;
 
 private:
-    PLA &pla;
+    PLA &m_pla;
 
     /// C64 RAM area
-    SystemRAMBank &ramBank;
+    SystemRAMBank &m_ramBank;
 
     /// Unused bits of the data port.
     //@{
@@ -166,7 +166,7 @@ private:
 
         dataRead = (data | ~dir) & (procPortPins | 0x17);
 
-        pla.setCpuPort((data | ~dir) & 0x07);
+        m_pla.setCpuPort((data | ~dir) & 0x07);
 
         if ((dir & 0x20) == 0)
         {
@@ -180,8 +180,8 @@ private:
 
 public:
     ZeroRAMBank(PLA &pla, SystemRAMBank &ramBank) :
-        pla(pla),
-        ramBank(ramBank)
+        m_pla(pla),
+        m_ramBank(ramBank)
     {}
 
     void reset()
@@ -213,20 +213,20 @@ public:
             if (!(dir & 0x40))
             {
                 retval &= ~0x40;
-                retval |= dataBit6.readBit(pla.getPhi2Time());
+                retval |= dataBit6.readBit(m_pla.getPhi2Time());
             }
 
             // set real value of bit 7
             if (!(dir & 0x80))
             {
                 retval &= ~0x80;
-                retval |= dataBit7.readBit(pla.getPhi2Time());
+                retval |= dataBit7.readBit(m_pla.getPhi2Time());
             }
 
             return retval;
         }
         default:
-            return ramBank.peek(address);
+            return m_ramBank.peek(address);
         }
     }
 
@@ -243,27 +243,27 @@ public:
             {
                 // check if bit 6 has flipped from 1 to 0
                 if ((dir & 0x40) && !(value & 0x40))
-                    dataBit6.writeBit(pla.getPhi2Time(), data);
+                    dataBit6.writeBit(m_pla.getPhi2Time(), data);
 
                 // check if bit 7 has flipped from 1 to 0
                 if ((dir & 0x80) && !(value & 0x80))
-                    dataBit7.writeBit(pla.getPhi2Time(), data);
+                    dataBit7.writeBit(m_pla.getPhi2Time(), data);
 
                 dir = value;
                 updateCpuPort();
             }
 
-            value = pla.getLastReadByte();
+            value = m_pla.getLastReadByte();
             break;
         case 1:
             // when writing to an unused bit that is output, charge the "capacitor",
             // otherwise don't touch it
 
             if (dir & 0x40)
-                dataBit6.writeBit(pla.getPhi2Time(), value);
+                dataBit6.writeBit(m_pla.getPhi2Time(), value);
 
             if (dir & 0x80)
-                dataBit7.writeBit(pla.getPhi2Time(), value);
+                dataBit7.writeBit(m_pla.getPhi2Time(), value);
 
             if (data != value)
             {
@@ -271,13 +271,13 @@ public:
                 updateCpuPort();
             }
 
-            value = pla.getLastReadByte();
+            value = m_pla.getLastReadByte();
             break;
         default:
             break;
         }
 
-        ramBank.poke(address, value);
+        m_ramBank.poke(address, value);
     }
 };
 

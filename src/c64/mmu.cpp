@@ -36,14 +36,14 @@ uint8_t readBank(MMU &self, uint_least16_t addr)
 
 uint8_t readIO(MMU &self, uint_least16_t addr)
 {
-    return self.ioBank->peek(addr);
+    return self.m_ioBank->peek(addr);
 }
 
 class Bank;
 
 MMU::MMU(EventScheduler &scheduler, IOBank* ioBank) :
     eventScheduler(scheduler),
-    ioBank(ioBank),
+    m_ioBank(ioBank),
     zeroRAMBank(*this, ramBank)
 {
     cpuReadMap[0] = &readBank<ZeroRAMBank, &MMU::zeroRAMBank>;
@@ -74,7 +74,7 @@ void MMU::updateMappingPHI2()
     if (charen && (loram || hiram))
     {
         cpuReadMap[0xd] = &readIO;
-        cpuWriteMap[0xd] = ioBank;
+        cpuWriteMap[0xd] = m_ioBank;
     }
     else
     {

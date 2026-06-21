@@ -56,19 +56,19 @@ enum
 
 void TimerA::underFlow()
 {
-    parent.underflowA();
+    m_parent.underflowA();
 }
 
 void TimerA::serialPort()
 {
-    parent.handleSerialPort();
+    m_parent.handleSerialPort();
 }
 
 // Timer B
 
 void TimerB::underFlow()
 {
-    parent.underflowB();
+    m_parent.underflowB();
 }
 
 // Interrupt Source 8521
