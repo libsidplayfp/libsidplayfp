@@ -1,6 +1,6 @@
 m4_define([lib_major], [3])
 m4_define([lib_minor], [0])
-m4_define([lib_level], [1])
+m4_define([lib_level], [2])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_PREREQ([2.62])
@@ -98,16 +98,20 @@ AC_SUBST([OD], [$ac_cv_path_OD])
 
 dnl libtool-style version-info number
 #
-# https://autotools.io/libtool/version.html
+# https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 #
-# Always increase the revision value.
+# Update the version information only immediately before a public release of your software.
 #
-# Increase the current value whenever an interface has been added, removed or changed.
+# If the library source code has changed at all since the last update, then increment revision.
 #
-# Increase the age value only if the changes made to the ABI are backward compatible.
+# If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
+#
+# If any interfaces have been added since the last public release, then increment age.
+#
+# If any interfaces have been removed or changed since the last public release, then set age to 0.
 
 LIBSIDPLAYCUR=14
-LIBSIDPLAYREV=47
+LIBSIDPLAYREV=48
 LIBSIDPLAYAGE=7
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 

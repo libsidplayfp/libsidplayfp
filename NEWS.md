@@ -1,3 +1,8 @@
+3.0.2 2026-06-21
+* Fix build on older macOS (#262)
+
+
+
 3.0.1 2026-05-24
 * residfp: added library version to credits (#260)
 * Properly check for pthreads, only error out if exsid or usbsid are required
