@@ -52,7 +52,7 @@ private:
     EventScheduler &eventScheduler;
 
     /// Pointer to the MOS6526 which this Timer belongs to.
-    MOS652X &parent;
+    MOS652X &m_parent;
 
     const uint8_t &cra;
     const uint8_t &crb;
@@ -65,9 +65,9 @@ private:
     bool isLatched;
     bool isStopped;
 
-    uint8_t clock[4];
-    uint8_t latch[4];
-    uint8_t alarm[4];
+    uint8_t m_clock[4];
+    uint8_t m_latch[4];
+    uint8_t m_alarm[4];
 
 private:
     inline void checkAlarm();
@@ -80,7 +80,7 @@ public:
     Tod(EventScheduler &scheduler, MOS652X &parent, uint8_t regs[0x10]) :
         Event("CIA Time of Day"),
         eventScheduler(scheduler),
-        parent(parent),
+        m_parent(parent),
         cra(regs[0x0e]),
         crb(regs[0x0f]),
         period(~0), // Dummy

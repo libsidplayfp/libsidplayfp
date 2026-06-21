@@ -89,10 +89,10 @@ private:
 
 protected:
     /// Pointer to the MOS6526 which this Timer belongs to.
-    MOS652X &parent;
+    MOS652X &m_parent;
 
     /// CRA/CRB control register / state.
-    int_least32_t state = 0;
+    int_least32_t m_state = 0;
 
 private:
     /**
@@ -139,7 +139,7 @@ protected:
         Event(name),
         m_cycleSkippingEvent("Skip CIA clock decrement cycles", *this, &Timer::cycleSkippingEvent),
         eventScheduler(scheduler),
-        parent(parent) {}
+        m_parent(parent) {}
 
 public:
     /**
@@ -197,7 +197,7 @@ public:
      *
      * @return current state value
      */
-    inline int_least32_t getState() const { return state; }
+    inline int_least32_t getState() const { return m_state; }
 
     /**
      * Get current timer value.
@@ -212,7 +212,7 @@ public:
      * @param reg value of the control register
      * @return PB6/PB7 flipflop state
      */
-    inline bool getPb(uint8_t reg) const { return (reg & 0x04) ? pbToggle : (state & CIAT_OUT); }
+    inline bool getPb(uint8_t reg) const { return (reg & 0x04) ? pbToggle : (m_state & CIAT_OUT); }
 };
 
 void Timer::reschedule()
@@ -226,19 +226,19 @@ void Timer::reschedule()
     // Additionally, there are numerous flags that are present only in passing manner,
     // but which we need to let cycle through the CIA state machine.
     const int_least32_t unwanted = CIAT_OUT | CIAT_CR_FLOAD | CIAT_LOAD1 | CIAT_LOAD;
-    if ((state & unwanted) != 0)
+    if ((m_state & unwanted) != 0)
     {
         eventScheduler.schedule(*this, 1);
         return;
     }
 
-    if ((state & CIAT_COUNT3) != 0)
+    if ((m_state & CIAT_COUNT3) != 0)
     {
         // Test the conditions that keep COUNT2 and thus COUNT3 alive, and also
         // ensure that all of them are set indicating steady state operation.
 
         const int_least32_t wanted = CIAT_CR_START | CIAT_PHI2IN | CIAT_COUNT2 | CIAT_COUNT3;
-        if (timer > 2 && (state & wanted) == wanted)
+        if (timer > 2 && (m_state & wanted) == wanted)
         {
             // we executed this cycle, therefore the pauseTime is +1. If we are called
             // to execute on the very next clock, we need to get 0 because there's
@@ -259,8 +259,8 @@ void Timer::reschedule()
         const int_least32_t unwanted1 = CIAT_CR_START | CIAT_PHI2IN;
         const int_least32_t unwanted2 = CIAT_CR_START | CIAT_STEP;
 
-        if ((state & unwanted1) == unwanted1
-            || (state & unwanted2) == unwanted2)
+        if ((m_state & unwanted1) == unwanted1
+            || (m_state & unwanted2) == unwanted2)
         {
             eventScheduler.schedule(*this, 1);
             return;

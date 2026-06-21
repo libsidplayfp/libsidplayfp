@@ -68,7 +68,7 @@ private:
     Bank* cpuWriteMap[16];
 
     /// IO region handler
-    IOBank* ioBank;
+    IOBank* m_ioBank;
 
     /// Kernal ROM
     KernalRomBank kernalRomBank;

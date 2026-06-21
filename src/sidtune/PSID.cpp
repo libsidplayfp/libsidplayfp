@@ -244,7 +244,7 @@ void PSID::tryLoad(const psidHeader &pHeader)
        compatibility = SidTuneInfo::COMPATIBILITY_R64;
     }
 
-    fileOffset             = pHeader.data;
+    m_fileOffset           = pHeader.data;
     info->m_loadAddr       = pHeader.load;
     info->m_initAddr       = pHeader.init;
     info->m_playAddr       = pHeader.play;
@@ -368,7 +368,7 @@ const char *PSID::createMD5(char *md5)
 
     // Include C64 data.
     sidmd5 myMD5;
-    myMD5.append(&cache[fileOffset], info->m_c64dataLen);
+    myMD5.append(&m_cache[m_fileOffset], info->m_c64dataLen);
 
     uint8_t tmp[2];
     // Include INIT and PLAY address.
@@ -430,7 +430,7 @@ const char *PSID::createMD5New(char *md5)
     // The calculation is now simplified
     // All the header + all the data
     sidmd5 myMD5;
-    myMD5.append(&cache[0], cache.size());
+    myMD5.append(&m_cache[0], m_cache.size());
 
     // Get fingerprint.
     myMD5.getDigest().copy(md5, SidTune::MD5_LENGTH);

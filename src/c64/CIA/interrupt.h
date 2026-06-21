@@ -56,7 +56,7 @@ public:
 
 private:
     /// Pointer to the MOS6526 which this Interrupt belongs to.
-    MOS652X &parent;
+    MOS652X &m_parent;
 
 protected:
     /// Event scheduler.
@@ -124,7 +124,7 @@ protected:
      * @param parent the CIA chip which this Interrupt belongs to
      */
     InterruptSource(EventScheduler &scheduler, MOS652X &parent) :
-        parent(parent),
+        m_parent(parent),
         eventScheduler(scheduler),
         interruptEvent("CIA Interrupt", *this, &InterruptSource::interrupt),
         updateIdrEvent("CIA update ICR", *this, &InterruptSource::updateIdr),

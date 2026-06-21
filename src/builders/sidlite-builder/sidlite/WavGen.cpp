@@ -153,16 +153,15 @@ wg_output_t WavGen::clock(const ADSR *adsr)
     unsigned char EnvOut = 0;
     int FilterInput = 0;
     int NonFiltered = 0;
-    const unsigned char FilterSwitchReso = regs[0x17];
-    const unsigned char VolumeBand = regs[0x18];
+    const unsigned char FilterSwitchReso = m_regs[0x17];
+    const unsigned char VolumeBand = m_regs[0x18];
 
     for (int Channel=0, ChBase=0; Channel<SID_CHANNEL_COUNT; Channel++, ChBase+=7)
     {
-        unsigned char *ChannelPtr = &(regs[ChBase]);
+        unsigned char *ChannelPtr = &(m_regs[ChBase]);
 
         auto combinedWF = [&](const cw_array_t &WFarray, unsigned short oscval)
         {
-            constexpr int COMBINEDWF_SAMPLE_RESOLUTION = 12; // bits
             constexpr int COMBINEDWF_FILT_RESOLUTION = 16; // bits
             constexpr int COMBINEDWF_WAVE_RESOLUTION = 8; // bits
             constexpr int COMBINEDWF_OSC_MSB_OFF_MASK = (1 << (COMBINEDWF_SAMPLE_RESOLUTION - 1)) - 1; // 0x7FF
@@ -170,7 +169,7 @@ wg_output_t WavGen::clock(const ADSR *adsr)
             constexpr int COMBINEDWF_FILT_FRACTION_SHIFTS = 16;
             constexpr int COMBINEDWF_WAVE_SHIFTS = CRSID_WAVE_RESOLUTION - COMBINEDWF_WAVE_RESOLUTION; // 8
 
-            if (UNLIKELY(!s->is8580() && WFarray!=PulseTriangle))
+            if (UNLIKELY(!m_settings->is8580() && WFarray!=PulseTriangle))
                 oscval &= COMBINEDWF_OSC_MSB_OFF_MASK;
             unsigned char Pitch = (LIKELY(ChannelPtr[1])) ? ChannelPtr[1] : 1; // avoid division by zero
             unsigned short Filt = 0x7777 + (0x8888/Pitch);
@@ -182,7 +181,7 @@ wg_output_t WavGen::clock(const ADSR *adsr)
         const unsigned char TestBit = (UNLIKELY((WF & TEST_BITVAL) != 0));
         int *PhaseAccuPtr = &(PhaseAccu[Channel]);
 
-        const unsigned int PhaseAccuStep = ((ChannelPtr[1]<<8) | ChannelPtr[0]) * s->getSampleClockRatio();
+        const unsigned int PhaseAccuStep = ((ChannelPtr[1]<<8) | ChannelPtr[0]) * m_settings->getSampleClockRatio();
         if (UNLIKELY(TestBit || ((WF & SYNC_BITVAL) && SyncSourceMSBrise)))
             *PhaseAccuPtr = 0;
         else
@@ -301,7 +300,7 @@ wg_output_t WavGen::clock(const ADSR *adsr)
             case TRI_BITVAL:
             {
                 // triangle (this waveform has no harsh edges, so it doesn't suffer from strong aliasing at high pitches)
-                if (LIKELY(!s->getRealSIDmode() || (PrevSounDemonDigiWF[Channel] <= 0)))
+                if (LIKELY(!m_settings->getRealSIDmode() || (PrevSounDemonDigiWF[Channel] <= 0)))
                 {
                     int Tmp = *PhaseAccuPtr ^ (UNLIKELY(WF&RING_BITVAL) ? RingSourceMSB : 0);
                     WavGenOut = (Tmp ^ ((Tmp&PHASEACCU_MSB_BITVAL) ? PHASEACCU_MAX : 0)) >> (CRSID_WAVE_SHIFTS-1); // 11
@@ -320,7 +319,7 @@ wg_output_t WavGen::clock(const ADSR *adsr)
                 // here we just simply keep the value to avoid clicks)
                 // (Our jittery 'seeking' waveform=$01 part of SounDemon-digi
                 // is substituted directly by frequency-high register's value (as in SwinSID))
-                if (s->getRealSIDmode() && WF == SOUNDEMON_DIGI_SEEK_WAVEFORM)
+                if (m_settings->getRealSIDmode() && WF == SOUNDEMON_DIGI_SEEK_WAVEFORM)
                 {
                     WavGenOut = ChannelPtr[1] << SOUNDEMON_DIGI_SHIFTS;
                     PrevSounDemonDigiWF[Channel] = SOUNDEMON_CARRIER_ELIMINATION_SAMPLECOUNT;
@@ -359,7 +358,7 @@ wg_output_t WavGen::clock(const ADSR *adsr)
         // routing the channel signal to either the filter or the unfiltered master output
         // depending on filter-switch SID-registers
         EnvOut = adsr->counter(Channel);
-        unsigned char Envelope = (LIKELY(s->is8580()))
+        unsigned char Envelope = (LIKELY(m_settings->is8580()))
             ? EnvOut : ADSR_DAC_6581[EnvOut];
         int swave = static_cast<int>(WavGenOut) - CRSID_WAVE_MID;
         if (UNLIKELY(FilterSwitchReso & (1 << Channel)))
@@ -379,8 +378,8 @@ wg_output_t WavGen::clock(const ADSR *adsr)
 }
 
 WavGen::WavGen(settings *s, unsigned char *regs) :
-    regs(regs),
-    s(s)
+    m_regs(regs),
+    m_settings(s)
 {
     reset();
 }

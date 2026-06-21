@@ -530,15 +530,15 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 
         // Setup base SID
         const SidConfig::sid_model_t userModel = getSidModel(tuneInfo->sidModel(0), defaultModel, forced);
-        sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel, digiboost);
-        if (!s) UNLIKELY
+        sidemu *emu = builder->lock(m_c64.getEventScheduler(), userModel, digiboost);
+        if (!emu) UNLIKELY
         {
             throw configError(builder->error());
         }
 
 
-        m_c64.setBaseSid(s);
-        m_chips.push_back(s);
+        m_c64.setBaseSid(emu);
+        m_chips.push_back(emu);
         m_info.m_sidModels.push_back(getSidModel(userModel));
 
         // Setup extra SIDs if needed
@@ -552,19 +552,19 @@ void Player::sidCreate(sidbuilder *builder, SidConfig::sid_model_t defaultModel,
 
             for (unsigned int i = 0; i < extraSidChips; i++)
             {
-                const SidConfig::sid_model_t userModel = getSidModel(tuneInfo->sidModel(i+1), defaultModel, forced);
+                const SidConfig::sid_model_t extraUserModel = getSidModel(tuneInfo->sidModel(i+1), defaultModel, forced);
 
-                sidemu *s = builder->lock(m_c64.getEventScheduler(), userModel, digiboost);
-                if (!s) UNLIKELY
+                sidemu *extraEmu = builder->lock(m_c64.getEventScheduler(), extraUserModel, digiboost);
+                if (!extraEmu) UNLIKELY
                 {
                     throw configError(builder->error());
                 }
 
-                if (!m_c64.addExtraSid(s, extraSidAddresses[i])) UNLIKELY
+                if (!m_c64.addExtraSid(extraEmu, extraSidAddresses[i])) UNLIKELY
                     throw configError(ERR_UNSUPPORTED_SID_ADDR);
 
-                m_chips.push_back(s);
-                m_info.m_sidModels.push_back(getSidModel(userModel));
+                m_chips.push_back(extraEmu);
+                m_info.m_sidModels.push_back(getSidModel(extraUserModel));
             }
         }
     }

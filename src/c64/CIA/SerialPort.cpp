@@ -42,7 +42,7 @@ void SerialPort::reset()
 
 void SerialPort::event()
 {
-    parent.spInterrupt();
+    m_parent.spInterrupt();
 }
 
 void SerialPort::syncCntHistory()

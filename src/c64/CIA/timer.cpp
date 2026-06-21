@@ -29,8 +29,8 @@ namespace libsidplayfp
 
 void Timer::setControlRegister(uint8_t cr)
 {
-    state &= ~CIAT_CR_MASK;
-    state |= (cr & CIAT_CR_MASK) ^ CIAT_PHI2IN;
+    m_state &= ~CIAT_CR_MASK;
+    m_state |= (cr & CIAT_CR_MASK) ^ CIAT_PHI2IN;
     lastControlValue = cr;
 }
 
@@ -43,7 +43,7 @@ void Timer::syncWithCpu()
 
         // It's possible for CIA to determine that it wants to go to sleep starting from the next
         // cycle, and then have its plans aborted by CPU. Thus, we must avoid modifying
-        // the CIA state if the first sleep clock was still in the future.
+        // the CIA m_state if the first sleep clock was still in the future.
         if (elapsed >= 0)
         {
             timer -= elapsed;
@@ -79,34 +79,34 @@ void Timer::cycleSkippingEvent()
 
 void Timer::clock()
 {
-    if ((state & CIAT_COUNT3) != 0)
+    if ((m_state & CIAT_COUNT3) != 0)
     {
         timer--;
     }
 
     /* ciatimer.c block start */
-    int_least32_t adj = state & (CIAT_CR_START | CIAT_CR_ONESHOT | CIAT_PHI2IN);
-    if ((state & (CIAT_CR_START | CIAT_PHI2IN)) == (CIAT_CR_START | CIAT_PHI2IN))
+    int_least32_t adj = m_state & (CIAT_CR_START | CIAT_CR_ONESHOT | CIAT_PHI2IN);
+    if ((m_state & (CIAT_CR_START | CIAT_PHI2IN)) == (CIAT_CR_START | CIAT_PHI2IN))
     {
         adj |= CIAT_COUNT2;
     }
-    if ((state & CIAT_COUNT2) != 0
-            || (state & (CIAT_STEP | CIAT_CR_START)) == (CIAT_STEP | CIAT_CR_START))
+    if ((m_state & CIAT_COUNT2) != 0
+            || (m_state & (CIAT_STEP | CIAT_CR_START)) == (CIAT_STEP | CIAT_CR_START))
     {
         adj |= CIAT_COUNT3;
     }
     // CR_FLOAD -> LOAD1, CR_ONESHOT -> ONESHOT0, LOAD1 -> LOAD, ONESHOT0 -> ONESHOT
-    adj |= (state & (CIAT_CR_FLOAD | CIAT_CR_ONESHOT | CIAT_LOAD1 | CIAT_ONESHOT0)) << 8;
-    state = adj;
+    adj |= (m_state & (CIAT_CR_FLOAD | CIAT_CR_ONESHOT | CIAT_LOAD1 | CIAT_ONESHOT0)) << 8;
+    m_state = adj;
     /* ciatimer.c block end */
 
-    if ((timer == 0) && ((state & CIAT_COUNT3) != 0))
+    if ((timer == 0) && ((m_state & CIAT_COUNT3) != 0))
     {
-        state |= CIAT_LOAD | CIAT_OUT;
+        m_state |= CIAT_LOAD | CIAT_OUT;
 
-        if ((state & (CIAT_ONESHOT | CIAT_ONESHOT0)) != 0)
+        if ((m_state & (CIAT_ONESHOT | CIAT_ONESHOT0)) != 0)
         {
-            state &= ~(CIAT_CR_START | CIAT_COUNT2);
+            m_state &= ~(CIAT_CR_START | CIAT_COUNT2);
         }
 
         // By setting bits 2&3 of the control register,
@@ -121,10 +121,10 @@ void Timer::clock()
         underFlow();
     }
 
-    if ((state & CIAT_LOAD) != 0)
+    if ((m_state & CIAT_LOAD) != 0)
     {
         timer = latch;
-        state &= ~CIAT_COUNT3;
+        m_state &= ~CIAT_COUNT3;
     }
 }
 
@@ -133,7 +133,7 @@ void Timer::reset()
     eventScheduler.cancel(*this);
     timer = latch = 0xffff;
     pbToggle = false;
-    state = 0;
+    m_state = 0;
     lastControlValue = 0;
     ciaEventPauseTime = 0;
     eventScheduler.schedule(*this, 1, EVENT_CLOCK_PHI1);
@@ -142,18 +142,18 @@ void Timer::reset()
 void Timer::latchLo(uint8_t data)
 {
     endian_16lo8(latch, data);
-    if ((state & CIAT_LOAD) != 0)
+    if ((m_state & CIAT_LOAD) != 0)
         timer = latch;
 }
 
 void Timer::latchHi(uint8_t data)
 {
     endian_16hi8(latch, data);
-    if ((state & CIAT_LOAD) != 0)
+    if ((m_state & CIAT_LOAD) != 0)
         timer = latch;
     // Reload timer if stopped
-    else if ((state & CIAT_CR_START) == 0)
-        state |= CIAT_LOAD1;
+    else if ((m_state & CIAT_CR_START) == 0)
+        m_state |= CIAT_LOAD1;
 }
 
 }
