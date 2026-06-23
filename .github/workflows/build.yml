@@ -54,7 +54,7 @@ jobs:
           xa \
           libusb \
           libftdi
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
     - name: bootstrap
@@ -93,7 +93,7 @@ jobs:
           xa65:p
           libusb:p
           libftdi:p
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         submodules: true
     - name: build
