@@ -391,5 +391,5 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 	[ -n "$(OD)" ] || { echo "od not found"; false; } &&\
 	[ -n "$(XA)" ] || { echo "xa not found"; false; } &&\
 	${XA} -R -G $< -o $$o65file &&\
-	${OD} -v -An -w8 -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g' > $@ &&\
+	${OD} -v -An -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g ; s/^[[:blank:]]*// ; s/, /,\n/8' > $@ &&\
 	${RM} $$o65file

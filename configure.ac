@@ -89,12 +89,7 @@ AC_CHECK_DECL(
 
 AC_CHECK_PROGS([XA], [xa xa65])
 
-# od on macOS doesn't support the -w parameter
-AC_CACHE_CHECK([for od that supports -w], [ac_cv_path_OD],
-  [AC_PATH_PROGS_FEATURE_CHECK([OD], [od god],
-    [[$ac_path_OD -w > /dev/null 2>&1 && ac_cv_path_OD=$ac_path_OD ac_path_OD_found=:]])]
-)
-AC_SUBST([OD], [$ac_cv_path_OD])
+AC_CHECK_PROGS([OD], [od god])
 
 dnl libtool-style version-info number
 #
