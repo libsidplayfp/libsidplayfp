@@ -392,4 +392,4 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 	[ -n "$(XA)" ] || { echo "xa not found"; false; } &&\
 	${XA} -R -G $< -o $$o65file &&\
 	${OD} -v -An -tx1 $$o65file | sed -re 's/[[:alnum:]]+/0x&,/g ; s/^[[:blank:]]*// ; s/, /,\n/8' > $@ &&\
-	${RM} $$o65file
+	rm -f $$o65file
