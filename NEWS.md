@@ -1,3 +1,9 @@
+3.0.1 2026-07-xx
+* Improved BSD support in configure script
+* Cleaned up shadow warnings
+
+
+
 3.0.2 2026-06-21
 * Fix build on older macOS (#262)
 
