@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2001 Simon White
  *
@@ -34,6 +34,9 @@ struct ReSIDfpBuilder::config
     Property<double> filter8580Curve;
     Property<double> filter6581Curve;
     Property<double> filter6581Range;
+    Property<double> dacLeak;
+    Property<double> offset6581;
+    Property<double> dcbRes;
     Property<SidConfig::sid_cw_t> cws;
     Property<bool> old6581caps;
 };
@@ -63,6 +66,12 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
             sid->filter8580Curve(m_config->filter8580Curve.value());
         if (m_config->filter6581Range.has_value())
             sid->filter6581Range(m_config->filter6581Range.value());
+        if (m_config->dacLeak.has_value())
+            sid->dacLeakage(m_config->dacLeak.value());
+        if (m_config->offset6581.has_value())
+            sid->offset6581(m_config->offset6581.value());
+        if (m_config->dcbRes.has_value())
+            sid->dcbRes(m_config->dcbRes.value());
         if (m_config->cws.has_value())
             sid->combinedWaveforms(m_config->cws.value());
         if (m_config->old6581caps.has_value())
@@ -116,4 +125,25 @@ void ReSIDfpBuilder::enableOld6581caps(bool enable)
     m_config->old6581caps = enable;
     for (libsidplayfp::sidemu* e: sidobjs)
         static_cast<libsidplayfp::reSIDfpEmu*>(e)->enableOld6581caps(enable);
+}
+
+void ReSIDfpBuilder::dacLeakage(double level)
+{
+    m_config->dacLeak = level;
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->dacLeakage(level);
+}
+
+void ReSIDfpBuilder::offset6581(double offset)
+{
+    m_config->offset6581 = offset;
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->offset6581(offset);
+}
+
+void ReSIDfpBuilder::dcbRes(double res)
+{
+    m_config->dcbRes = res;
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->dcbRes(res);
 }

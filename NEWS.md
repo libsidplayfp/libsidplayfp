@@ -1,6 +1,7 @@
-3.0.1 2026-07-xx
+3.1.0 2026-08-xx
 * Improved BSD support in configure script
 * Cleaned up shadow warnings
+* Support new residfp tunables
 
 
 
