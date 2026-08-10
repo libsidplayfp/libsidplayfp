@@ -84,7 +84,6 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
         m_errorBuffer.assign(name()).append(" ERROR: Unable to create ReSIDfp object");
         return nullptr;
     }
-
 }
 
 const char *ReSIDfpBuilder::getCredits() const
