@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.2</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.1.0</span>
    </div>
   </td>
  </tr>
@@ -162,18 +162,18 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1SidTuneBase.html#a7d16076edcbbd5fb324d6aa68f39e7b1">  178</a></span>    <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classlibsidplayfp_1_1SidTuneBase.html#a7d16076edcbbd5fb324d6aa68f39e7b1">createMD5New</a>(<span class="keywordtype">char</span> *) { <span class="keywordflow">return</span> <span class="keyword">nullptr</span>; }</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1SidTuneBase.html#aea6e0ad22907cd45892c7036530faf35">  183</a></span>    <span class="keyword">const</span> uint_least8_t* <a class="code hl_function" href="classlibsidplayfp_1_1SidTuneBase.html#aea6e0ad22907cd45892c7036530faf35">c64Data</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;cache[<a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#af4c2ca2b8c0c9e66ccc69879ea77c1e5">fileOffset</a>]; }</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1SidTuneBase.html#aea6e0ad22907cd45892c7036530faf35">  183</a></span>    <span class="keyword">const</span> uint_least8_t* <a class="code hl_function" href="classlibsidplayfp_1_1SidTuneBase.html#aea6e0ad22907cd45892c7036530faf35">c64Data</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;m_cache[<a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#a5c5d5f07cf5e92ad649394585beff41a">m_fileOffset</a>]; }</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="keyword">protected</span>:  <span class="comment">// -------------------------------------------------------------</span></div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    std::unique_ptr&lt;SidTuneInfoImpl&gt; info;</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    uint_least8_t songSpeed[<a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#a9c50b44c6d57c6e31567c4f058afb8c9">MAX_SONGS</a>];</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    SidTuneInfo::clock_t clockSpeed[<a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#a9c50b44c6d57c6e31567c4f058afb8c9">MAX_SONGS</a>];</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    uint_least8_t m_songSpeed[<a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#a9c50b44c6d57c6e31567c4f058afb8c9">MAX_SONGS</a>];</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    SidTuneInfo::clock_t m_clockSpeed[<a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#a9c50b44c6d57c6e31567c4f058afb8c9">MAX_SONGS</a>];</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1SidTuneBase.html#af4c2ca2b8c0c9e66ccc69879ea77c1e5">  193</a></span>    uint_least32_t <a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#af4c2ca2b8c0c9e66ccc69879ea77c1e5">fileOffset</a>;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="classlibsidplayfp_1_1SidTuneBase.html#a5c5d5f07cf5e92ad649394585beff41a">  193</a></span>    uint_least32_t <a class="code hl_variable" href="classlibsidplayfp_1_1SidTuneBase.html#a5c5d5f07cf5e92ad649394585beff41a">m_fileOffset</a>;</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    buffer_t cache;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    buffer_t m_cache;</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <a class="code hl_class" href="classlibsidplayfp_1_1SidTuneBase.html">SidTuneBase</a>();</div>
@@ -225,6 +225,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html">libsidplayfp::SidTuneBase</a></div><div class="ttdef"><b>Definition</b> SidTuneBase.h:61</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_a27f0e403846d3f1615adee99dd61efd0"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#a27f0e403846d3f1615adee99dd61efd0">libsidplayfp::SidTuneBase::checkCompatibility</a></div><div class="ttdeci">bool checkCompatibility()</div><div class="ttdef"><b>Definition</b> SidTuneBase.cpp:515</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_a38a9f989abdd4c454d374a4d3b18ef2a"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#a38a9f989abdd4c454d374a4d3b18ef2a">libsidplayfp::SidTuneBase::acceptSidTune</a></div><div class="ttdeci">virtual void acceptSidTune(const char *dataFileName, const char *infoFileName, buffer_t &amp;buf, bool isSlashedFileName)</div><div class="ttdef"><b>Definition</b> SidTuneBase.cpp:257</div></div>
+<div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_a5c5d5f07cf5e92ad649394585beff41a"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#a5c5d5f07cf5e92ad649394585beff41a">libsidplayfp::SidTuneBase::m_fileOffset</a></div><div class="ttdeci">uint_least32_t m_fileOffset</div><div class="ttdoc">For files with header: offset to real data.</div><div class="ttdef"><b>Definition</b> SidTuneBase.h:193</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_a730dd1b306f438be74a6958c0de0e5bf"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#a730dd1b306f438be74a6958c0de0e5bf">libsidplayfp::SidTuneBase::getInfo</a></div><div class="ttdeci">const SidTuneInfo * getInfo() const</div><div class="ttdef"><b>Definition</b> SidTuneBase.h:141</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_a743d3baa2d03cb87ecad485374561b51"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#a743d3baa2d03cb87ecad485374561b51">libsidplayfp::SidTuneBase::resolveAddrs</a></div><div class="ttdeci">void resolveAddrs(const uint_least8_t *c64data)</div><div class="ttdef"><b>Definition</b> SidTuneBase.cpp:480</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_a7d16076edcbbd5fb324d6aa68f39e7b1"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#a7d16076edcbbd5fb324d6aa68f39e7b1">libsidplayfp::SidTuneBase::createMD5New</a></div><div class="ttdeci">virtual const char * createMD5New(char *)</div><div class="ttdef"><b>Definition</b> SidTuneBase.h:178</div></div>
@@ -239,7 +240,6 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_aea6e0ad22907cd45892c7036530faf35"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#aea6e0ad22907cd45892c7036530faf35">libsidplayfp::SidTuneBase::c64Data</a></div><div class="ttdeci">const uint_least8_t * c64Data() const</div><div class="ttdef"><b>Definition</b> SidTuneBase.h:183</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_aec8ee458c74bb73ecf95060a422f02c9"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#aec8ee458c74bb73ecf95060a422f02c9">libsidplayfp::SidTuneBase::checkRelocInfo</a></div><div class="ttdeci">bool checkRelocInfo()</div><div class="ttdef"><b>Definition</b> SidTuneBase.cpp:433</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_af0aedbd65cce2d5c2df15769201c9063"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#af0aedbd65cce2d5c2df15769201c9063">libsidplayfp::SidTuneBase::selectSong</a></div><div class="ttdeci">unsigned int selectSong(unsigned int songNum)</div><div class="ttdef"><b>Definition</b> SidTuneBase.cpp:111</div></div>
-<div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_af4c2ca2b8c0c9e66ccc69879ea77c1e5"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#af4c2ca2b8c0c9e66ccc69879ea77c1e5">libsidplayfp::SidTuneBase::fileOffset</a></div><div class="ttdeci">uint_least32_t fileOffset</div><div class="ttdoc">For files with header: offset to real data.</div><div class="ttdef"><b>Definition</b> SidTuneBase.h:193</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SidTuneBase_html_af4c93b74b0bc1a7fb825e6dc8c31fd12"><div class="ttname"><a href="classlibsidplayfp_1_1SidTuneBase.html#af4c93b74b0bc1a7fb825e6dc8c31fd12">libsidplayfp::SidTuneBase::loadFile</a></div><div class="ttdeci">static void loadFile(const char *fileName, buffer_t &amp;bufferRef)</div><div class="ttdef"><b>Definition</b> SidTuneBase.cpp:162</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1SmartPtr__sidtt_html"><div class="ttname"><a href="classlibsidplayfp_1_1SmartPtr__sidtt.html">libsidplayfp::SmartPtr_sidtt</a></div><div class="ttdef"><b>Definition</b> SmartPtr.h:193</div></div>
 <div class="ttc" id="aclasslibsidplayfp_1_1loadError_html"><div class="ttname"><a href="classlibsidplayfp_1_1loadError.html">libsidplayfp::loadError</a></div><div class="ttdef"><b>Definition</b> SidTuneBase.h:49</div></div>
@@ -247,7 +247,7 @@ $(document).ready(function() { init_codefold(0); });
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 21 2026 09:25:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 10 2026 14:31:33 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.2</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.1.0</span>
    </div>
   </td>
  </tr>
@@ -142,6 +142,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:ab80230d5d3fdcdd24530da2aa1777c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad79cb4ce2508ae34de8202d246e14d3a" id="r_ad79cb4ce2508ae34de8202d246e14d3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#ad79cb4ce2508ae34de8202d246e14d3a">combinedWaveformsStrength</a> (<a class="el" href="classSidConfig.html#ac8c66f2f3221d2413b53e9c8389b1535">SidConfig::sid_cw_t</a> cws)</td></tr>
 <tr class="separator:ad79cb4ce2508ae34de8202d246e14d3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5825d74652849a47f6e7d08ce8e79211" id="r_a5825d74652849a47f6e7d08ce8e79211"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#a5825d74652849a47f6e7d08ce8e79211">dacLeakage</a> (double level)</td></tr>
+<tr class="separator:a5825d74652849a47f6e7d08ce8e79211"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a673946a1fad4a31c2495d63eea15f138" id="r_a673946a1fad4a31c2495d63eea15f138"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#a673946a1fad4a31c2495d63eea15f138">offset6581</a> (double offset)</td></tr>
+<tr class="separator:a673946a1fad4a31c2495d63eea15f138"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b5816c29ae6e6efe8bbd6a93afddefc" id="r_a8b5816c29ae6e6efe8bbd6a93afddefc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReSIDfpBuilder.html#a8b5816c29ae6e6efe8bbd6a93afddefc">dcbRes</a> (double res)</td></tr>
+<tr class="separator:a8b5816c29ae6e6efe8bbd6a93afddefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -213,6 +219,58 @@ emuset_t&#160;</td><td class="memItemRight" valign="bottom"><b>sidobjs</b></td><
 
 </div>
 </div>
+<a id="a5825d74652849a47f6e7d08ce8e79211" name="a5825d74652849a47f6e7d08ce8e79211"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5825d74652849a47f6e7d08ce8e79211">&#9670;&#160;</a></span>dacLeakage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReSIDfpBuilder::dacLeakage </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>level</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set the DAC leakage level. Affects the envelope and waveforms.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>the leakage level, between 0 (no leakage) and 1 (standard leakage) (default 1.0) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>3.1 </dd></dl>
+
+</div>
+</div>
+<a id="a8b5816c29ae6e6efe8bbd6a93afddefc" name="a8b5816c29ae6e6efe8bbd6a93afddefc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b5816c29ae6e6efe8bbd6a93afddefc">&#9670;&#160;</a></span>dcbRes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReSIDfpBuilder::dcbRes </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>res</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set the DC-Blocker resistance. Affects the highpass cutoff frequency.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">res</td><td>the resistance value, between 0 (10KOhm =&gt; ~1.6Hz) and 1 (1KOhm =&gt; ~16Hz) (default 0.0) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>3.1 </dd></dl>
+
+</div>
+</div>
 <a id="ab80230d5d3fdcdd24530da2aa1777c2d" name="ab80230d5d3fdcdd24530da2aa1777c2d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab80230d5d3fdcdd24530da2aa1777c2d">&#9670;&#160;</a></span>enableOld6581caps()</h2>
 
@@ -231,7 +289,7 @@ emuset_t&#160;</td><td class="memItemRight" valign="bottom"><b>sidobjs</b></td><
 <p>Enable/disable old caps for 6581 model.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enable</td><td>true to enable old 2200pF caps used on ASSY 326298 false to use the standard 470pF caps. </td></tr>
+    <tr><td class="paramname">enable</td><td>true to enable old 2200pF caps used on ASSY 326298 false to use the standard 470pF caps. (default off) </td></tr>
   </table>
   </dd>
 </dl>
@@ -340,6 +398,32 @@ emuset_t&#160;</td><td class="memItemRight" valign="bottom"><b>sidobjs</b></td><
 
 </div>
 </div>
+<a id="a673946a1fad4a31c2495d63eea15f138" name="a673946a1fad4a31c2495d63eea15f138"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a673946a1fad4a31c2495d63eea15f138">&#9670;&#160;</a></span>offset6581()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReSIDfpBuilder::offset6581 </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>offset</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set the 6581 wave offset. Affects the volume of digi samples.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">offset</td><td>the waveform offset, between 0 (average digis) and 1 (loud digis) (default 1.0) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section since"><dt>Since</dt><dd>3.1 </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="residfp_8h_source.html">residfp.h</a></li>
 <li><b>residfp-builder.cpp</b></li>
@@ -347,7 +431,7 @@ emuset_t&#160;</td><td class="memItemRight" valign="bottom"><b>sidobjs</b></td><
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 21 2026 09:25:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 10 2026 14:31:33 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

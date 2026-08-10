@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.0.2</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.1.0</span>
    </div>
   </td>
  </tr>
@@ -58,7 +58,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * This file is part of libsidplayfp, a SID player engine.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * Copyright 2011-2019 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * Copyright 2011-2026 Leandro Nini &lt;drfiemost@users.sourceforge.net&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * Copyright 2007-2010 Antti Lankila</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Copyright 2001 Simon White</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
@@ -136,12 +136,33 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordtype">void</span> enableOld6581caps(<span class="keywordtype">bool</span> enable) { m_sid.enableOld6581caps(enable); }</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordtype">void</span> combinedWaveforms(<a class="code hl_enumeration" href="classSidConfig.html#ac8c66f2f3221d2413b53e9c8389b1535">SidConfig::sid_cw_t</a> cws);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>};</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordtype">void</span> dacLeakage(<span class="keywordtype">double</span> level)</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#if (LIBRESIDFP_VERSION_MAJ &gt; 1) || (LIBRESIDFP_VERSION_MIN &gt;= 2)</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        m_sid.setDacLeakage(level);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordtype">void</span> offset6581(<span class="keywordtype">double</span> offset)</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="preprocessor">#if (LIBRESIDFP_VERSION_MAJ &gt; 1) || (LIBRESIDFP_VERSION_MIN &gt;= 2)</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        m_sid.setOffset6581(offset);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordtype">void</span> dcbRes(<span class="keywordtype">double</span> res)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">#if (LIBRESIDFP_VERSION_MAJ &gt; 1) || (LIBRESIDFP_VERSION_MIN &gt;= 2)</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        m_sid.setDCBRes(res);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>};</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="preprocessor">#endif </span><span class="comment">// RESIDFP_EMU_H</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="preprocessor">#endif </span><span class="comment">// RESIDFP_EMU_H</span></div>
 <div class="ttc" id="aclassSidConfig_html_a8535f7d740659fed81932913054f3b7f"><div class="ttname"><a href="classSidConfig.html#a8535f7d740659fed81932913054f3b7f">SidConfig::sid_model_t</a></div><div class="ttdeci">sid_model_t</div><div class="ttdoc">SID chip model.</div><div class="ttdef"><b>Definition</b> SidConfig.h:44</div></div>
 <div class="ttc" id="aclassSidConfig_html_a9813080c2fa519d22dc9612d71cef463"><div class="ttname"><a href="classSidConfig.html#a9813080c2fa519d22dc9612d71cef463">SidConfig::sampling_method_t</a></div><div class="ttdeci">sampling_method_t</div><div class="ttdoc">Sampling method.</div><div class="ttdef"><b>Definition</b> SidConfig.h:77</div></div>
 <div class="ttc" id="aclassSidConfig_html_ac8c66f2f3221d2413b53e9c8389b1535"><div class="ttname"><a href="classSidConfig.html#ac8c66f2f3221d2413b53e9c8389b1535">SidConfig::sid_cw_t</a></div><div class="ttdeci">sid_cw_t</div><div class="ttdoc">SID combined waveforms strength.</div><div class="ttdef"><b>Definition</b> SidConfig.h:51</div></div>
@@ -153,7 +174,7 @@ $(document).ready(function() { init_codefold(0); });
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jun 21 2026 09:25:52 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 10 2026 14:31:33 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
