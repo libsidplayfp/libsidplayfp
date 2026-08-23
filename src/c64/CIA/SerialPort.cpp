@@ -59,6 +59,15 @@ void SerialPort::syncCntHistory()
 void SerialPort::switchSerialDirection(bool input)
 {
     syncCntHistory();
+/*
+ https://sourceforge.net/p/vice-emu/code/45957/
+ https://github.com/piciji/denise/commit/f8f02f5cb54fae93435a3d8669e56d75c4f538c8
+*/
+    if ((count > 1 && count < 15) || (count == 15 && !(cntHistory & 0x4)))
+    {
+        eventScheduler.cancel(*this);
+        eventScheduler.schedule(*this, 2);
+    }
 
     if (input)
     {
