@@ -61,9 +61,9 @@ void SerialPort::switchSerialDirection(bool input)
     syncCntHistory();
 /*
  https://sourceforge.net/p/vice-emu/code/45957/
- https://bitbucket.org/piciji/denise/commits/f8f02f5cb54fae93435a3d8669e56d75c4f538c8
+ https://github.com/piciji/denise/commit/f8f02f5cb54fae93435a3d8669e56d75c4f538c8
 */
-    if ((count > 1 && count < 15) || (count == 15 && !(cntHistory & 0x2)))
+    if ((count > 1 && count < 15) || (count == 15 && !(cntHistory & 0x4)))
     {
         eventScheduler.cancel(*this);
         eventScheduler.schedule(*this, 2);
@@ -71,7 +71,7 @@ void SerialPort::switchSerialDirection(bool input)
 
     if (input)
     {
-        const uint8_t cntVal = /*model4485 ? 0x7 :*/ 0x6;
+        const uint8_t cntVal = model4485 ? 0x7 : 0x6;
         forceFinish = (cntHistory & cntVal) != cntVal;
 
         if (!forceFinish)
