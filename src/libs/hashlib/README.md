@@ -62,7 +62,7 @@ cmake --install <your-build-dir> --prefix <your-install-dir>
 
 | Option | Default | Description            |
 |--------|---------|------------------------|
-| HASHLIB_TESTS | ON      | enable tests           |
+| HASHLIB_TESTS | ON for top-level builds, OFF for subprojects | enable tests |
 | HASHLIB_BUILD_SINGLE_HEADER | OFF     | generate single header |
 | HASHLIB_BUILD_MODULE | OFF     | generate C++20 module  |
 
@@ -76,6 +76,20 @@ cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_SINGLE_HEADER=ON
 using the following command, the module file `hashlib.cppm` will be generated in your build directory.
 ```shell
 cmake -S . -B <your-build-dir> -DHASHLIB_BUILD_MODULE=ON
+```
+
+### using CPM
+Yan can use [CPM](https://github.com/cpm-cmake/CPM.cmake) to fetch and configure `hashlib` automatically from your `CMakeLists.txt`:
+```cmake
+CPMAddPackage(
+    NAME hashlib
+    GITHUB_REPOSITORY Cra3z/hashlib
+    GIT_TAG v1.1.2
+    OPTIONS
+    "HASHLIB_TESTS OFF"
+)
+
+target_link_libraries(<your-target> PRIVATE hashlib::hashlib)
 ```
 
 ### using conan package manager
