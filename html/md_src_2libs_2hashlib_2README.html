@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.1.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.1.1</span>
    </div>
   </td>
  </tr>
@@ -42,7 +42,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>简体中文 | English </p>
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md22"></a>
 hashlib</h1>
 <p>[<img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" style="pointer-events: none;" class="inline"/>](LICENSE) [<img src="https://img.shields.io/badge/Language-C%2B%2B11-blue.svg" alt="Language" style="pointer-events: none;" class="inline"/>]()</p>
 <p>&lsquo;Cra3z&rsquo; hashlib` is a C++11 header-only hash algorithm library which like Python's hashlib.</p>
@@ -58,16 +58,16 @@ hashlib</h1>
 <li>sha3_384</li>
 <li>sha3_512</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 Usage</h2>
-<h3><a class="anchor" id="autotoc_md23"></a>
+<h3><a class="anchor" id="autotoc_md24"></a>
 Using headers</h3>
 <p>hashlib is a header-only library, so you can simply copy the headers in the directory <code>include/hashlib</code> to where you need it. However, it is recommended to embed hashlib as a subproject in your project, or install it first and then import it via CMake's <code>find_package</code>. </p><div class="fragment"><div class="line">find_package(hashlib REQUIRED)</div>
 <div class="line">target_link_libraries(&lt;your-target&gt; hashlib::hashlib)</div>
-</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md24"></a>
+</div><!-- fragment --> <h4><a class="anchor" id="autotoc_md25"></a>
 Single header</h4>
 <p>You can also generate a single header <code>hashlib.hpp</code> which combines all headers in the directory <code>include/hashlib</code>, see Generate single header.</p>
-<h3><a class="anchor" id="autotoc_md25"></a>
+<h3><a class="anchor" id="autotoc_md26"></a>
 Using C++20 module</h3>
 <p>hashlib supports C++20 module (need the standard module <code>std</code>); you can generate the module file, and then import it, see Generate C++20 module. </p><div class="fragment"><div class="line"><span class="keyword">import</span> std;</div>
 <div class="line"><span class="keyword">import</span> hashlib;</div>
@@ -78,9 +78,9 @@ Using C++20 module</h3>
 <div class="line">    std::println(<span class="stringliteral">&quot;{}&quot;</span>, md5.hexdigest());</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasshashlib_1_1context_html"><div class="ttname"><a href="classhashlib_1_1context.html">hashlib::context</a></div><div class="ttdef"><b>Definition</b> core.hpp:434</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md26"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md27"></a>
 Building &amp; Installation</h2>
-<h3><a class="anchor" id="autotoc_md27"></a>
+<h3><a class="anchor" id="autotoc_md28"></a>
 Requirements</h3>
 <ul>
 <li>CMake 3.22+ (for building)</li>
@@ -91,28 +91,39 @@ Requirements</h3>
 <div class="line">cmake -S . -B &lt;your-build-dir&gt;</div>
 <div class="line">cmake --build &lt;your-build-dir&gt;</div>
 <div class="line">cmake --install &lt;your-build-dir&gt; --prefix &lt;your-install-dir&gt;</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md28"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md29"></a>
 CMake Options</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">Default   </th><th class="markdownTableHeadNone">Description    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">HASHLIB_TESTS   </td><td class="markdownTableBodyNone">ON   </td><td class="markdownTableBodyNone">enable tests    </td></tr>
+<td class="markdownTableBodyNone">HASHLIB_TESTS   </td><td class="markdownTableBodyNone">ON for top-level builds, OFF for subprojects   </td><td class="markdownTableBodyNone">enable tests    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">HASHLIB_BUILD_SINGLE_HEADER   </td><td class="markdownTableBodyNone">OFF   </td><td class="markdownTableBodyNone">generate single header    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">HASHLIB_BUILD_MODULE   </td><td class="markdownTableBodyNone">OFF   </td><td class="markdownTableBodyNone">generate C++20 module   </td></tr>
 </table>
-<h4><a class="anchor" id="autotoc_md29"></a>
+<h4><a class="anchor" id="autotoc_md30"></a>
 Generate single header</h4>
 <p>using the following command, the single header <code>hashlib.hpp</code> which combines all headers in the directory <code>include/hashlib</code> will be generated in your build directory. </p><div class="fragment"><div class="line">cmake -S . -B &lt;your-build-dir&gt; -DHASHLIB_BUILD_SINGLE_HEADER=ON</div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md30"></a>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md31"></a>
 Generate C++20 module</h4>
 <p>using the following command, the module file <code>hashlib.cppm</code> will be generated in your build directory. </p><div class="fragment"><div class="line">cmake -S . -B &lt;your-build-dir&gt; -DHASHLIB_BUILD_MODULE=ON</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md31"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md32"></a>
+using CPM</h3>
+<p>Yan can use <a href="https://github.com/cpm-cmake/CPM.cmake">CPM</a> to fetch and configure <code>hashlib</code> automatically from your <code>CMakeLists.txt</code>: </p><div class="fragment"><div class="line">CPMAddPackage(</div>
+<div class="line">    NAME hashlib</div>
+<div class="line">    GITHUB_REPOSITORY Cra3z/hashlib</div>
+<div class="line">    GIT_TAG v1.1.2</div>
+<div class="line">    OPTIONS</div>
+<div class="line">    &quot;HASHLIB_TESTS OFF&quot;</div>
+<div class="line">)</div>
+<div class="line"> </div>
+<div class="line">target_link_libraries(&lt;your-target&gt; PRIVATE hashlib::hashlib)</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md33"></a>
 using conan package manager</h3>
 <p>You can also install hashlib by <a href="https://github.com/conan-io">conan package manager</a>. </p><div class="fragment"><div class="line">conan install --requires=hashlib/[*]</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md32"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md34"></a>
 Examples</h2>
 <ul>
 <li>get md5 of a string by using <code>hashlib::md5</code></li>
@@ -176,7 +187,7 @@ Examples</h2>
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 10 2026 14:31:33 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun Aug 30 2026 14:56:55 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

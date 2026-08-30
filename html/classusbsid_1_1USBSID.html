@@ -18,7 +18,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.1.0</span>
+   <div id="projectname">libsidplayfp<span id="projectnumber">&#160;3.1.1</span>
    </div>
   </td>
  </tr>
@@ -96,8 +96,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a01f34b8903c9b92faa47577f39acc07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8641d068fc0bd5435ed9aa92d3020fea" id="r_a8641d068fc0bd5435ed9aa92d3020fea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#a8641d068fc0bd5435ed9aa92d3020fea">USBSID_setflush</a> ()</td></tr>
 <tr class="separator:a8641d068fc0bd5435ed9aa92d3020fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2a0f9ca20258b78f8600d2fbe930ead" id="r_ad2a0f9ca20258b78f8600d2fbe930ead"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#ad2a0f9ca20258b78f8600d2fbe930ead">USBSID_resetringbuffer</a> ()</td></tr>
+<tr class="separator:ad2a0f9ca20258b78f8600d2fbe930ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7672160811909e9728eef40a669c398b" id="r_a7672160811909e9728eef40a669c398b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#a7672160811909e9728eef40a669c398b">USBSID_sendconfigcommand</a> (int command, Byte...args)</td></tr>
+<tr class="separator:a7672160811909e9728eef40a669c398b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93b622be44629b479babf5745e7887f1" id="r_a93b622be44629b479babf5745e7887f1"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#a93b622be44629b479babf5745e7887f1">USBSID_rwconfigcommand</a> (int command, int len, Byte...args)</td></tr>
+<tr class="separator:a93b622be44629b479babf5745e7887f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c756360e818ce17deab78695ea7ee82" id="r_a1c756360e818ce17deab78695ea7ee82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#a1c756360e818ce17deab78695ea7ee82">USBSID_reset</a> (byte volume)</td></tr>
 <tr class="separator:a1c756360e818ce17deab78695ea7ee82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5286a2f30be54238ac1a338432192a1" id="r_ab5286a2f30be54238ac1a338432192a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#ab5286a2f30be54238ac1a338432192a1">USBSID_resetallregisters</a> ()</td></tr>
+<tr class="separator:ab5286a2f30be54238ac1a338432192a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4cc07b74dadded7b6c82ad90ef479fb" id="r_aa4cc07b74dadded7b6c82ad90ef479fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#aa4cc07b74dadded7b6c82ad90ef479fb">USBSID_setclock</a> (double CpuClock)</td></tr>
 <tr class="separator:aa4cc07b74dadded7b6c82ad90ef479fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adee499a86628dd33f430b493a1599272" id="r_adee499a86628dd33f430b493a1599272"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classusbsid_1_1USBSID.html#adee499a86628dd33f430b493a1599272">USBSID_setstereo</a> (int stereo)</td></tr>
@@ -570,6 +578,142 @@ static boolean&#160;</td><td class="memItemRight" valign="bottom"><b>us_override
 
 </div>
 </div>
+<a id="ab5286a2f30be54238ac1a338432192a1" name="ab5286a2f30be54238ac1a338432192a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5286a2f30be54238ac1a338432192a1">&#9670;&#160;</a></span>USBSID_resetallregisters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void usbsid.USBSID.USBSID_resetallregisters </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interfaceusbsid_1_1IUSBSID.html">usbsid.IUSBSID</a>.</p>
+
+</div>
+</div>
+<a id="ad2a0f9ca20258b78f8600d2fbe930ead" name="ad2a0f9ca20258b78f8600d2fbe930ead"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2a0f9ca20258b78f8600d2fbe930ead">&#9670;&#160;</a></span>USBSID_resetringbuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void usbsid.USBSID.USBSID_resetringbuffer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interfaceusbsid_1_1IUSBSID.html">usbsid.IUSBSID</a>.</p>
+
+</div>
+</div>
+<a id="a93b622be44629b479babf5745e7887f1" name="a93b622be44629b479babf5745e7887f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93b622be44629b479babf5745e7887f1">&#9670;&#160;</a></span>USBSID_rwconfigcommand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">byte[] usbsid.USBSID.USBSID_rwconfigcommand </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>command</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Byte...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interfaceusbsid_1_1IUSBSID.html">usbsid.IUSBSID</a>.</p>
+
+</div>
+</div>
+<a id="a7672160811909e9728eef40a669c398b" name="a7672160811909e9728eef40a669c398b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7672160811909e9728eef40a669c398b">&#9670;&#160;</a></span>USBSID_sendconfigcommand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void usbsid.USBSID.USBSID_sendconfigcommand </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>command</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Byte...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interfaceusbsid_1_1IUSBSID.html">usbsid.IUSBSID</a>.</p>
+
+</div>
+</div>
 <a id="aa4cc07b74dadded7b6c82ad90ef479fb" name="aa4cc07b74dadded7b6c82ad90ef479fb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4cc07b74dadded7b6c82ad90ef479fb">&#9670;&#160;</a></span>USBSID_setclock()</h2>
 
@@ -741,7 +885,7 @@ static boolean&#160;</td><td class="memItemRight" valign="bottom"><b>us_override
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 10 2026 14:31:33 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sun Aug 30 2026 14:56:56 for libsidplayfp by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
