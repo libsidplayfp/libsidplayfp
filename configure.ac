@@ -1,6 +1,6 @@
 m4_define([lib_major], [3])
 m4_define([lib_minor], [1])
-m4_define([lib_level], [0])
+m4_define([lib_level], [1])
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_PREREQ([2.62])
@@ -106,7 +106,7 @@ dnl libtool-style version-info number
 # If any interfaces have been removed or changed since the last public release, then set age to 0.
 
 LIBSIDPLAYCUR=15
-LIBSIDPLAYREV=0
+LIBSIDPLAYREV=1
 LIBSIDPLAYAGE=8
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 

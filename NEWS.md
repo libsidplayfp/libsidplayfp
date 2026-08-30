@@ -1,3 +1,9 @@
+3.1.1 2026-08-30
+* USBSID-Pico: Fix issue in reset and delay routine
+* Fixed serial port for test sdr-icr-test2-0_7f
+
+
+
 3.1.0 2026-08-10
 * Improved BSD support in configure script
 * Cleaned up shadow warnings
