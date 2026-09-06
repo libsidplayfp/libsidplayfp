@@ -25,6 +25,7 @@
 
 #include "sidplayfp/sidbuilder.h"
 #include "sidplayfp/siddefs.h"
+#include "sidplayfp/SidConfig.h"
 
 /**
  * ReSIDfp Builder Class
@@ -73,8 +74,10 @@ public:
      *
      * @param enable true to enable old 2200pF caps used on ASSY 326298
      *               false to use the standard 470pF caps. (default off)
+     *
+     * @deprecated
      */
-    void enableOld6581caps(bool enable);
+    SID_DEPRECATED void enableOld6581caps(bool enable);
 
     /**
      * Set combined waveforms strength.
@@ -82,7 +85,6 @@ public:
      * @param cws 
      */
     void combinedWaveformsStrength(SidConfig::sid_cw_t cws);
-    //@}
 
     /**
      * Set the DAC leakage level.
@@ -110,6 +112,15 @@ public:
      * @since 3.1
      */
     void dcbRes(double res);
+
+    /**
+     * Set caps for 6581 model.
+     *
+     * @param caps 
+     * @since 3.2
+     */
+    void set6581caps(SidConfig::sid_caps_t caps);
+    //@}
 
 private:
     struct config;

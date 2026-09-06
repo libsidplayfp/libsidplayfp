@@ -45,6 +45,7 @@ namespace libsidplayfp
 {
 
 const char ERR_INVALID_CW[]     = "Invalid combined waveforms strength.";
+const char ERR_INVALID_CAPS[]   = "Invalid caps type.";
 
 const char* reSIDfpEmu::getCredits()
 {
@@ -179,6 +180,52 @@ void reSIDfpEmu::combinedWaveforms(SidConfig::sid_cw_t cws)
 
     m_sid.setCombinedWaveforms(combinedWaveforms);
     m_status = true;
+}
+
+// Set the emulated SID caps
+void reSIDfpEmu::set6581caps(SidConfig::sid_caps_t caps)
+{
+#if (LIBRESIDFP_VERSION_MAJ > 1) || (LIBRESIDFP_VERSION_MIN > 2)
+    reSIDfp::CapsType capsType;
+    switch (caps)
+    {
+        case SidConfig::C2200PF:
+            capsType = reSIDfp::CAPS2200;
+            break;
+        case SidConfig::C470PF:
+            capsType = reSIDfp::CAPS470;
+            break;
+        case SidConfig::C330PF:
+            capsType = reSIDfp::CAPS330;
+            break;
+        default:
+            m_status = false;
+            m_error = ERR_INVALID_CAPS;
+            return;
+    }
+
+    m_sid.set6581caps(capsType);
+    m_status = true;
+#else
+    bool enableOld;
+    switch (caps)
+    {
+        case SidConfig::C2200PF:
+            enableOld = true;
+            break;
+        case SidConfig::C470PF:
+        case SidConfig::C330PF:
+            enableOld = false;
+            break;
+        default:
+            m_status = false;
+            m_error = ERR_INVALID_CAPS;
+            return;
+    }
+
+    m_sid.enableOld6581caps(enableOld);
+    m_status = true;
+#endif
 }
 
 }

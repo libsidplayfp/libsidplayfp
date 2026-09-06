@@ -54,6 +54,14 @@ public:
         STRONG
     } sid_cw_t;
 
+    /// SID caps for 6581
+    typedef enum
+    {
+        C2200PF,        ///< Old 2200pF
+        C470PF,         ///< New 440pF
+        C330PF          ///< "Galway" 330pF
+    } sid_caps_t;
+
     /// CIA chip model
     typedef enum
     {
