@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: deps
-      run: sudo apt-get install libgcrypt20-dev xa65 doxygen graphviz
+      run: sudo apt-get update && sudo apt-get install libgcrypt20-dev xa65 doxygen graphviz
     - uses: actions/checkout@v7
       with:
         submodules: 'true'

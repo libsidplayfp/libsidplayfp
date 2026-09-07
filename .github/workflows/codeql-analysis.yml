@@ -41,6 +41,7 @@ jobs:
     steps:
     - name: deps
       run: |
+        sudo apt-get update
         sudo apt-get install \
           libgcrypt20-dev \
           xa65 \
