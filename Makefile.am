@@ -172,8 +172,8 @@ nodist_src_libsidplayfp_la_HEADERS = \
 src/sidplayfp/sidversion.h
 
 src_libsidplayfp_la_CPPFLAGS = \
-$(LIBGCRYPT_CFLAGS) \
-$(AM_CPPFLAGS)
+$(AM_CPPFLAGS) \
+$(LIBGCRYPT_CFLAGS)
 
 src_libsidplayfp_la_LIBADD = \
 src/builders/sidlite-builder/libsidplayfp-sidlite.la \
@@ -227,8 +227,8 @@ src/builders/residfp-builder/residfp-emu.cpp \
 src/builders/residfp-builder/residfp-emu.h
 
 src_builders_residfp_builder_libsidplayfp_residfp_la_CPPFLAGS = \
-$(RESIDFP_CFLAGS) \
-$(AM_CPPFLAGS)
+$(AM_CPPFLAGS) \
+$(RESIDFP_CFLAGS)
 
 src_builders_residfp_builder_libsidplayfp_residfp_la_LIBADD = \
 $(RESIDFP_LIBS)
@@ -268,9 +268,9 @@ src/builders/usbsid-builder/usbsid-emu.h \
 $(usbsid_src)
 
 src_builders_usbsid_builder_libsidplayfp_usbsid_la_CPPFLAGS = \
+$(AM_CPPFLAGS) \
 $(USBSID_CFLAGS) \
-$(PTHREAD_CFLAGS) \
-$(AM_CPPFLAGS)
+$(PTHREAD_CFLAGS)
 
 src_builders_usbsid_builder_libsidplayfp_usbsid_la_LIBADD = \
 $(USBSID_LIBS) \
@@ -301,10 +301,10 @@ src/builders/exsid-builder/exsid-emu.h \
 $(exsid_src)
 
 src_builders_exsid_builder_libsidplayfp_exsid_la_CPPFLAGS = \
+$(AM_CPPFLAGS) \
 $(EXSID_CFLAGS) \
 $(FTDI_CFLAGS) \
-$(PTHREAD_CFLAGS) \
-$(AM_CPPFLAGS)
+$(PTHREAD_CFLAGS)
 
 src_builders_exsid_builder_libsidplayfp_exsid_la_LIBADD = \
 $(EXSID_LIBS) \
