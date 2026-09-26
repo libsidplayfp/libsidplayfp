@@ -254,7 +254,9 @@ if USBSID_SUPPORT
 if USBSID_DRIVER
   usbsid_src = \
 src/builders/usbsid-builder/driver/src/USBSID.cpp \
-src/builders/usbsid-builder/driver/src/USBSID.h
+src/builders/usbsid-builder/driver/src/USBSID.h \
+src/builders/usbsid-builder/driver/src/USBSID_Manager.cpp \
+src/builders/usbsid-builder/driver/src/USBSID_Manager.h
 endif
 
 src_builders_usbsid_builder_libsidplayfp_usbsid_ladir = $(includedir)/sidplayfp/builders
