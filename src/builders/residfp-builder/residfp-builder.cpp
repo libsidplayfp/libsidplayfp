@@ -38,7 +38,7 @@ struct ReSIDfpBuilder::config
     Property<double> offset6581;
     Property<double> dcbRes;
     Property<SidConfig::sid_cw_t> cws;
-    Property<bool> old6581caps;
+    Property<SidConfig::sid_caps_t> caps6581;
 };
 
 
@@ -74,8 +74,8 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
             sid->dcbRes(m_config->dcbRes.value());
         if (m_config->cws.has_value())
             sid->combinedWaveforms(m_config->cws.value());
-        if (m_config->old6581caps.has_value())
-            sid->enableOld6581caps(m_config->old6581caps.value());
+        if (m_config->caps6581.has_value())
+            sid->set6581caps(m_config->caps6581.value());
         return sid;
     }
     catch (std::bad_alloc const &)
@@ -121,9 +121,7 @@ void ReSIDfpBuilder::combinedWaveformsStrength(SidConfig::sid_cw_t cws)
 
 void ReSIDfpBuilder::enableOld6581caps(bool enable)
 {
-    m_config->old6581caps = enable;
-    for (libsidplayfp::sidemu* e: sidobjs)
-        static_cast<libsidplayfp::reSIDfpEmu*>(e)->enableOld6581caps(enable);
+    set6581caps(enable ? SidConfig::C2200PF : SidConfig::C470PF);
 }
 
 void ReSIDfpBuilder::dacLeakage(double level)
@@ -145,4 +143,11 @@ void ReSIDfpBuilder::dcbRes(double res)
     m_config->dcbRes = res;
     for (libsidplayfp::sidemu* e: sidobjs)
         static_cast<libsidplayfp::reSIDfpEmu*>(e)->dcbRes(res);
+}
+
+void ReSIDfpBuilder::set6581caps(SidConfig::sid_caps_t caps)
+{
+    m_config->caps6581 = caps;
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->set6581caps(caps);
 }

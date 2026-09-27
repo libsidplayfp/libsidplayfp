@@ -302,6 +302,8 @@ wg_output_t WavGen::clock(const ADSR *adsr)
                 // triangle (this waveform has no harsh edges, so it doesn't suffer from strong aliasing at high pitches)
                 if (LIKELY(!m_settings->getRealSIDmode() || (PrevSounDemonDigiWF[Channel] <= 0)))
                 {
+                    // TODO check
+                    // if the sawtooth waveform is not selected the oscillator bits are inverted when ring modulation is disabled and the MSB is 1 or when ring modulation is enabled and the two MSBs, from the current and the modulating voices, are equal. 
                     int Tmp = *PhaseAccuPtr ^ (UNLIKELY(WF&RING_BITVAL) ? RingSourceMSB : 0);
                     WavGenOut = (Tmp ^ ((Tmp&PHASEACCU_MSB_BITVAL) ? PHASEACCU_MAX : 0)) >> (CRSID_WAVE_SHIFTS-1); // 11
                 }

@@ -75,7 +75,7 @@ public:
 
     void filter8580Curve(double filterCurve) { m_sid.setFilter8580Curve(filterCurve); }
 
-    void enableOld6581caps(bool enable) { m_sid.enableOld6581caps(enable); }
+    void set6581caps(SidConfig::sid_caps_t caps);
 
     void combinedWaveforms(SidConfig::sid_cw_t cws);
 
