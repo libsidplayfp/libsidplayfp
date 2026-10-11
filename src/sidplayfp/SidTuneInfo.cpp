@@ -70,3 +70,15 @@ const char* SidTuneInfo::path() const { return getPath(); }
 const char* SidTuneInfo::dataFileName() const { return getDataFileName(); }
 
 const char* SidTuneInfo::infoFileName() const { return getInfoFileName(); }
+
+uint_least32_t SidTuneInfo::songLength(unsigned int song) const { return getSongLength(song); }
+
+bool SidTuneInfo::hasPanning() const { return getHasPanning(); }
+
+SidTuneInfo::panlayout_t SidTuneInfo::panLayout() const { return getPanLayout(); }
+
+SidTuneInfo::panmode_t SidTuneInfo::panMode() const { return getPanMode(); }
+
+SidTuneInfo::pan_t SidTuneInfo::sidPanning(unsigned int i) const { return getSidPanning(i); }
+
+bool SidTuneInfo::fmOpl() const { return getFmOpl(); }

@@ -192,6 +192,9 @@ protected:  // -------------------------------------------------------------
     /// For files with header: offset to real data
     uint_least32_t m_fileOffset;
 
+    /// For files with trailer: length of the appended data that is not C64 data
+    uint_least32_t m_trailerLen;
+
     buffer_t m_cache;
 
 protected:

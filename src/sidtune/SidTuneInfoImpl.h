@@ -80,6 +80,20 @@ public:
 
     bool m_fixLoad;
 
+    /// Embedded song lengths in milliseconds, empty if none
+    std::vector<uint_least32_t> m_songLengths;
+
+    /// Per SID panning, empty if the file carries no hint
+    std::vector<pan_t> m_sidPannings;
+
+    bool m_hasPanning;
+
+    panlayout_t m_panLayout;
+
+    panmode_t m_panMode;
+
+    bool m_fmOpl;
+
 private:    // prevent copying
     SidTuneInfoImpl(const SidTuneInfoImpl&) = delete;
     SidTuneInfoImpl& operator=(SidTuneInfoImpl&) = delete;
@@ -100,7 +114,11 @@ public:
         m_playAddr(0),
         m_relocStartPage(0),
         m_relocPages(0),
-        m_fixLoad(false)
+        m_fixLoad(false),
+        m_hasPanning(false),
+        m_panLayout(PANLAYOUT_STANDARD),
+        m_panMode(PANMODE_DIRECT),
+        m_fmOpl(false)
     {
         m_sidModels.push_back(SIDMODEL_UNKNOWN);
         m_sidChipAddresses.push_back(0xd400);
@@ -159,6 +177,24 @@ public:
     const char* getDataFileName() const override { return m_dataFileName.c_str(); }
 
     const char* getInfoFileName() const override { return !m_infoFileName.empty() ? m_infoFileName.c_str() : nullptr; }
+
+    uint_least32_t getSongLength(unsigned int song) const override
+    {
+        return (song >= 1 && song <= m_songLengths.size()) ? m_songLengths[song - 1] : 0;
+    }
+
+    bool getHasPanning() const override { return m_hasPanning; }
+
+    panlayout_t getPanLayout() const override { return m_panLayout; }
+
+    panmode_t getPanMode() const override { return m_panMode; }
+
+    pan_t getSidPanning(unsigned int i) const override
+    {
+        return i < m_sidPannings.size() ? m_sidPannings[i] : PAN_CENTER;
+    }
+
+    bool getFmOpl() const override { return m_fmOpl; }
 };
 
 }

@@ -59,6 +59,26 @@ public:
         COMPATIBILITY_BASIC  ///< File requires C64 Basic
     } compatibility_t;
 
+    typedef enum {
+        PAN_CENTER, ///< Output to both left and right channel
+        PAN_LEFT,   ///< Output to the left channel
+        PAN_RIGHT   ///< Output to the right channel
+    } pan_t;
+
+    typedef enum {
+        PANLAYOUT_STANDARD,    ///< One SID centered, else alternate left and right
+        PANLAYOUT_LCR,         ///< One SID centered, else alternate left, center and right
+        PANLAYOUT_CENTERFIRST, ///< Centered SIDs first, the rest alternates left and right
+        PANLAYOUT_CENTERED     ///< All SIDs centered
+    } panlayout_t;
+
+    typedef enum {
+        PANMODE_DIRECT,  ///< Use the layout unchanged
+        PANMODE_REVERSE, ///< Mirror the layout from left to right
+        PANMODE_GROUP,   ///< Group consecutive assignments
+        PANMODE_SPREAD   ///< Distribute the SIDs across the panning positions
+    } panmode_t;
+
 public:
     /// Vertical-Blanking-Interrupt
     static const int SPEED_VBI = 0;
@@ -198,6 +218,32 @@ public:
      */
     const char* infoFileName() const;
 
+    /**
+     * Length of a song embedded in the file, in milliseconds.
+     *
+     * @param song the song number, 1 to songs()
+     * @return 0 if the file holds no length for the song or the entry is invalid
+     */
+    uint_least32_t songLength(unsigned int song) const;
+
+    /**
+     * @name Panning hint
+     * Stereo placement requested by the sidtune.
+     * Only PSID/RSID version 5 files carry a hint.
+     */
+    //@{
+    bool hasPanning() const;               ///< Whether the file carries a panning hint
+    panlayout_t panLayout() const;         ///< The panning layout, PANLAYOUT_STANDARD without a hint
+    panmode_t panMode() const;             ///< The panning mode, PANMODE_DIRECT without a hint
+    pan_t sidPanning(unsigned int i) const; ///< Position of the nth SID, PAN_CENTER without a hint
+    //@}
+
+    /**
+     * Whether the tune requires an FM OPL chip
+     * (SFX Sound Expander or FM YAM compatible) in the $DF00-$DFFF range.
+     */
+    bool fmOpl() const;
+
 private:
     virtual uint_least16_t getLoadAddr() const =0;
 
@@ -246,6 +292,18 @@ private:
     virtual const char* getDataFileName() const =0;
 
     virtual const char* getInfoFileName() const =0;
+
+    virtual uint_least32_t getSongLength(unsigned int song) const =0;
+
+    virtual bool getHasPanning() const =0;
+
+    virtual panlayout_t getPanLayout() const =0;
+
+    virtual panmode_t getPanMode() const =0;
+
+    virtual pan_t getSidPanning(unsigned int i) const =0;
+
+    virtual bool getFmOpl() const =0;
 
 protected:
     ~SidTuneInfo() {}
