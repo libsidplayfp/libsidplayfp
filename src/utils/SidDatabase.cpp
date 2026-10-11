@@ -62,7 +62,7 @@ SidDatabase::~SidDatabase()
 const char *parseTime(const char *str, int_least32_t &result)
 {
     char *end;
-    const long minutes = strtol(str, &end, 10);
+    const long minutes = std::strtol(str, &end, 10);
 
     if (*end != ':')
     {
@@ -70,13 +70,13 @@ const char *parseTime(const char *str, int_least32_t &result)
     }
 
     end++;
-    const long seconds = strtol(end, &end, 10);
+    const long seconds = std::strtol(end, &end, 10);
     result = ((minutes * 60) + seconds) * 1000;
 
     if (*end == '.')
     {
         const char *start = end + 1;
-        long milliseconds = strtol(start, &end, 10);
+        long milliseconds = std::strtol(start, &end, 10);
         switch (end - start)
         {
         case 1: milliseconds *= 100; break;
