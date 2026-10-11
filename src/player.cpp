@@ -223,7 +223,20 @@ void Player::initMixer(bool stereo)
 {
     std::unique_ptr<short*[]> bufs(new short*[m_chips.size()]);
     buffers(bufs.get());
-    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.get(), installedSIDs()));
+
+    // Per chip positions for a panning hint or more than 3 chips, else the fixed matrix
+    std::vector<SidTuneInfo::pan_t> pans;
+    if (stereo && m_tune != nullptr)
+    {
+        const SidTuneInfo* tuneInfo = m_tune->getInfo();
+        if (tuneInfo->hasPanning() || (m_chips.size() > 3))
+        {
+            for (unsigned int i = 0; i < m_chips.size(); i++)
+                pans.push_back(tuneInfo->sidPanning(i));
+        }
+    }
+
+    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.get(), installedSIDs(), pans.empty() ? nullptr : pans.data()));
 }
 
 unsigned int Player::mix(short *buffer, unsigned int samples)
@@ -343,6 +356,14 @@ bool Player::config(const SidConfig &cfg, bool force)
                 cfg.thirdSidAddress;
             if (thirdSidAddress != 0)
                 addresses.push_back(thirdSidAddress);
+
+            // Only version 5 files require more than 3 chips
+            if (tuneInfo->sidChips() > 3)
+            {
+                addresses.clear();
+                for (int i = 1; i < tuneInfo->sidChips(); i++)
+                    addresses.push_back(tuneInfo->sidChipBase(i));
+            }
 
             // SID emulation setup (must be performed before the
             // environment setup call)

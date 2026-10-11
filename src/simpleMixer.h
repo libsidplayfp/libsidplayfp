@@ -30,7 +30,10 @@
 #    include <version>
 #  endif
 #endif
+#include <cstddef>
 #include <cstdint>
+
+#include "sidplayfp/SidTuneInfo.h"
 
 #ifdef __cpp_lib_math_constants
 #  include <numbers>
@@ -71,8 +74,20 @@ private:
 
     std::vector<mixer_func_t> m_mix;
 
+    // Gains of the generic mixers, fixed point with SCALE_FACTOR as unity
+    std::vector<int_least32_t> m_gainL;
+    std::vector<int_least32_t> m_gainR;
+
+    int_least32_t m_monoScale = SCALE_FACTOR;
+
 private:
     void updateParams();
+
+    // Fixed point gain 1/sqrt(n)
+    static int_least32_t invSqrt(unsigned int n);
+
+    // Setup the mixers for more than 3 chips or for per chip panning
+    void setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int chips);
 
     /*
      * Channel matrix
@@ -121,6 +136,26 @@ private:
         return (0.5*m_iSamples[0] + m_iSamples[1] + m_iSamples[2]) * SCALE[2] / SCALE_FACTOR;
     }
 
+    // Generic mixing, any number of chips
+    int_least32_t monoGeneric() const
+    {
+        int_least64_t res = 0;
+        for (std::size_t i = 0; i < m_iSamples.size(); i++)
+            res += m_iSamples[i];
+        return static_cast<int_least32_t>(res * m_monoScale / SCALE_FACTOR);
+    }
+
+    int_least32_t stereoGeneric(const std::vector<int_least32_t> &gain) const
+    {
+        int_least64_t res = 0;
+        for (std::size_t i = 0; i < m_iSamples.size(); i++)
+            res += static_cast<int_least64_t>(m_iSamples[i]) * gain[i];
+        return static_cast<int_least32_t>(res / SCALE_FACTOR);
+    }
+
+    int_least32_t stereo_ch1_Generic() const { return stereoGeneric(m_gainL); }
+    int_least32_t stereo_ch2_Generic() const { return stereoGeneric(m_gainR); }
+
 private:
     SimpleMixer() = delete;
     SimpleMixer(const SimpleMixer&) = delete;
@@ -128,8 +163,10 @@ private:
 public:
     /**
      * Create a new mixer.
+     *
+     * @param pans position of each chip, nullptr for the fixed matrix of 1 to 3 chips
      */
-    SimpleMixer(bool stereo, short** buffers, int chips);
+    SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneInfo::pan_t *pans = nullptr);
 
     /**
      * Do the mixing.
