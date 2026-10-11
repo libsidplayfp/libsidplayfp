@@ -45,7 +45,7 @@ private:
      *
      * @throw loadError
      */
-    void tryLoad(const psidHeader &pHeader);
+    void tryLoad(const psidHeader &pHeader, const buffer_t &dataBuf);
 
     /**
      * Read PSID file header.

@@ -10,6 +10,7 @@ AM_CPPFLAGS = \
 
 TESTS = \
 TestPSID \
+TestPSIDv5 \
 TestMUS \
 TestMos6510 \
 TestMD5
@@ -20,6 +21,11 @@ TestPSID_SOURCES = \
 Main.cpp \
 TestPSID.cpp
 TestPSID_LDADD = $(top_builddir)/src/libsidplayfp.la
+
+TestPSIDv5_SOURCES = \
+Main.cpp \
+TestPSIDv5.cpp
+TestPSIDv5_LDADD = $(top_builddir)/src/libsidplayfp.la
 
 TestMUS_SOURCES = \
 Main.cpp \

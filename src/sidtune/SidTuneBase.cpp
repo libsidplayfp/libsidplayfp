@@ -91,6 +91,19 @@ constexpr uint_least32_t MAX_MEMORY = 65536;
 /// C64KB + LOAD + PSID
 constexpr uint_least32_t MAX_FILELEN = MAX_MEMORY + 2 + 0x7C;
 
+/// Embedded song length table of a PSID/RSID v5 file (256 songs * 4 bytes)
+constexpr uint_least32_t MAX_V5_TRAILERLEN = 256 * 4;
+
+/**
+ * Check for a PSID/RSID v5 header, the only format allowed to exceed MAX_FILELEN.
+ */
+static bool isPsidV5(const uint_least8_t* buffer, size_t len)
+{
+    return len >= 6
+        && (std::memcmp(buffer, "PSID", 4) == 0 || std::memcmp(buffer, "RSID", 4) == 0)
+        && buffer[4] == 0 && buffer[5] == 5;
+}
+
 /// Minimum load address for real c64 only tunes
 constexpr uint_least16_t SIDTUNE_R64_MIN_LOAD_ADDR = 0x07e8;
 
@@ -202,7 +215,8 @@ void SidTuneBase::loadFile(const char* fileName, buffer_t& bufferRef)
 
 SidTuneBase::SidTuneBase() :
     info(new SidTuneInfoImpl()),
-    m_fileOffset(0)
+    m_fileOffset(0),
+    m_trailerLen(0)
 {
     // Initialize the object with some safe defaults.
     for (unsigned int si = 0; si < MAX_SONGS; si++)
@@ -221,9 +235,12 @@ SidTuneBase* SidTuneBase::getFromStdIn()
     // We only read as much as fits in the buffer.
     // This way we avoid choking on huge data.
     char datb;
-    while (std::cin.get(datb) && fileBuf.size() < MAX_FILELEN)
+    uint_least32_t maxLen = MAX_FILELEN;
+    while (std::cin.get(datb) && fileBuf.size() < maxLen)
     {
         fileBuf.push_back((uint_least8_t)datb);
+        if (fileBuf.size() == 6 && isPsidV5(&fileBuf.front(), fileBuf.size()))
+            maxLen += MAX_V5_TRAILERLEN;
     }
 
     return getFromBuffer(&fileBuf.front(), fileBuf.size());
@@ -238,7 +255,8 @@ SidTuneBase* SidTuneBase::getFromBuffer(const uint_least8_t* const buffer, uint_
         throw loadError(ERR_EMPTY);
     }
 
-    if (bufferLen > MAX_FILELEN)
+    const uint_least32_t maxLen = isPsidV5(buffer, bufferLen) ? MAX_FILELEN + MAX_V5_TRAILERLEN : MAX_FILELEN;
+    if (bufferLen > maxLen)
     {
         throw loadError(ERR_FILE_TOO_LONG);
     }
@@ -293,7 +311,7 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
     }
 
     info->m_dataFileLen = buf.size();
-    info->m_c64dataLen = buf.size() - m_fileOffset;
+    info->m_c64dataLen = buf.size() - m_fileOffset - m_trailerLen;
 
     // Calculate any remaining addresses and then
     // confirm all the file details are correct

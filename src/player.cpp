@@ -53,6 +53,7 @@ const char ERR_NA[]                   = "NA";
 const char ERR_NO_TUNE_LOADED[]       = "SIDPLAYER ERROR: No tune loaded";
 const char ERR_UNSUPPORTED_FREQ[]     = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID address.";
+const char ERR_UNSUPPORTED_FMOPL[]    = "SIDPLAYER ERROR: FM OPL tunes are not supported.";
 const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
 const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
 const char ERR_BAD_BUF_SIZE[]         = "SIDPLAYER ERROR: Bad buffer size";
@@ -322,6 +323,12 @@ bool Player::config(const SidConfig &cfg, bool force)
 
         try
         {
+            // No FM OPL emulation, reject per spec (MAY reject).
+            if (tuneInfo->fmOpl())
+            {
+                throw configError(ERR_UNSUPPORTED_FMOPL);
+            }
+
             sidRelease();
 
             std::vector<unsigned int> addresses;
