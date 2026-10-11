@@ -24,6 +24,7 @@
 
 #include <cassert>
 #include <climits>
+#include <cmath>
 #include <cstring>
 #include <iostream>
 #ifdef __cpp_lib_unreachable
@@ -58,26 +59,71 @@ unsigned int SimpleMixer::doMix(short *buffer, unsigned int samples)
     return j;
 }
 
-SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips)
+int_least32_t SimpleMixer::invSqrt(unsigned int n)
 {
-    switch (chips)
+    return static_cast<int_least32_t>((1.0 / std::sqrt(static_cast<double>(n))) * SCALE_FACTOR);
+}
+
+void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int chips)
+{
+    if (!stereo)
     {
-    case 1:
-        m_mix.push_back(stereo ? &SimpleMixer::stereo_OneChip : &SimpleMixer::template mono<1>);
-        if (stereo) m_mix.push_back(&SimpleMixer::stereo_OneChip);
-        break;
-    case 2:
-        m_mix.push_back(stereo ? &SimpleMixer::stereo_ch1_TwoChips : &SimpleMixer::template mono<2>);
-        if (stereo) m_mix.push_back(&SimpleMixer::stereo_ch2_TwoChips);
-        break;
-    case 3:
-        m_mix.push_back(stereo ? &SimpleMixer::stereo_ch1_ThreeChips : &SimpleMixer::template mono<3>);
-        if (stereo) m_mix.push_back(&SimpleMixer::stereo_ch2_ThreeChips);
-        break;
+        m_monoScale = invSqrt(chips);
+        m_mix.push_back(&SimpleMixer::monoGeneric);
+        return;
+    }
+
+    // Chips feeding each channel, a centered chip feeds both
+    unsigned int countL = 0;
+    unsigned int countR = 0;
+    for (int i = 0; i < chips; i++)
+    {
+        const SidTuneInfo::pan_t pan = pans ? pans[i] : SidTuneInfo::PAN_CENTER;
+        if (pan != SidTuneInfo::PAN_RIGHT) countL++;
+        if (pan != SidTuneInfo::PAN_LEFT) countR++;
+    }
+
+    const int_least32_t scaleL = countL ? invSqrt(countL) : 0;
+    const int_least32_t scaleR = countR ? invSqrt(countR) : 0;
+
+    for (int i = 0; i < chips; i++)
+    {
+        const SidTuneInfo::pan_t pan = pans ? pans[i] : SidTuneInfo::PAN_CENTER;
+        m_gainL.push_back(pan != SidTuneInfo::PAN_RIGHT ? scaleL : 0);
+        m_gainR.push_back(pan != SidTuneInfo::PAN_LEFT ? scaleR : 0);
+    }
+
+    m_mix.push_back(&SimpleMixer::stereo_ch1_Generic);
+    m_mix.push_back(&SimpleMixer::stereo_ch2_Generic);
+}
+
+SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneInfo::pan_t *pans)
+{
+    if ((stereo && pans) || (chips > 3))
+    {
+        setupGeneric(stereo, pans, chips);
+    }
+    else
+    {
+        switch (chips)
+        {
+        case 1:
+            m_mix.push_back(stereo ? &SimpleMixer::stereo_OneChip : &SimpleMixer::template mono<1>);
+            if (stereo) m_mix.push_back(&SimpleMixer::stereo_OneChip);
+            break;
+        case 2:
+            m_mix.push_back(stereo ? &SimpleMixer::stereo_ch1_TwoChips : &SimpleMixer::template mono<2>);
+            if (stereo) m_mix.push_back(&SimpleMixer::stereo_ch2_TwoChips);
+            break;
+        case 3:
+            m_mix.push_back(stereo ? &SimpleMixer::stereo_ch1_ThreeChips : &SimpleMixer::template mono<3>);
+            if (stereo) m_mix.push_back(&SimpleMixer::stereo_ch2_ThreeChips);
+            break;
 #ifdef __cpp_lib_unreachable
-    default:
-        std::unreachable();
+        default:
+            std::unreachable();
 #endif
+        }
     }
 
     m_iSamples.resize(chips);
