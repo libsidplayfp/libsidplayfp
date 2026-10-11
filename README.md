@@ -53,6 +53,10 @@ is required.
 
 In addition to the standard build options the following are available:
 
+* `--enable-lto`:
+enable Link Time Optimization if supported by compiler
+(disabled by default)
+
 * `--enable-debug[=no/yes]`:
 compile with debugging messages
 (disabled by default)
