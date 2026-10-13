@@ -24,7 +24,6 @@
 
 #include <cassert>
 #include <climits>
-#include <cmath>
 #include <cstring>
 #include <iostream>
 #ifdef __cpp_lib_unreachable
@@ -59,16 +58,16 @@ unsigned int SimpleMixer::doMix(short *buffer, unsigned int samples)
     return j;
 }
 
-int_least32_t SimpleMixer::invSqrt(unsigned int n)
+int_least32_t SimpleMixer::invCount(unsigned int n)
 {
-    return static_cast<int_least32_t>((1.0 / std::sqrt(static_cast<double>(n))) * SCALE_FACTOR);
+    return SCALE_FACTOR / static_cast<int_least32_t>(n);
 }
 
 void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int chips)
 {
     if (!stereo)
     {
-        m_monoScale = invSqrt(chips);
+        m_monoScale = invCount(chips);
         m_mix.push_back(&SimpleMixer::monoGeneric);
         return;
     }
@@ -83,8 +82,9 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
         if (pan != SidTuneInfo::PAN_LEFT) countR++;
     }
 
-    const int_least32_t scaleL = countL ? invSqrt(countL) : 0;
-    const int_least32_t scaleR = countR ? invSqrt(countR) : 0;
+    // Scale by chips in channel, empty channel stays silent
+    const int_least32_t scaleL = countL ? invCount(countL) : 0;
+    const int_least32_t scaleR = countR ? invCount(countR) : 0;
 
     for (int i = 0; i < chips; i++)
     {

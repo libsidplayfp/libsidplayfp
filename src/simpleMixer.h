@@ -83,8 +83,8 @@ private:
 private:
     void updateParams();
 
-    // Fixed point gain 1/sqrt(n)
-    static int_least32_t invSqrt(unsigned int n);
+    // Fixed point gain 1/n, keeps the sum of n full scale chips in 16 bit
+    static int_least32_t invCount(unsigned int n);
 
     // Setup the mixers for more than 3 chips or for per chip panning
     void setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int chips);
