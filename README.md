@@ -93,3 +93,7 @@ Known bugs/limitations:
 * hashlib 1.1.2  
   https://github.com/Cra3z/hashlib  
   distributed under MIT license
+
+* emu8950 1.2.2  
+  https://github.com/digital-sound-antiques/emu8950  
+  distributed under MIT license
