@@ -102,7 +102,7 @@ private:
     /**
      * Release the SID builders.
      */
-    void sidRelease();
+    void releaseChips();
 
     /**
      * Create the SID emulation(s).
