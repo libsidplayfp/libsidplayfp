@@ -182,6 +182,12 @@ bool c64::addExtraSid(c64sid *s, int address)
     return true;
 }
 
+void c64::setOpl(c64opl *o)
+{
+    oplBank.setOPL(o);
+    ioBank.setBank(0xf, &oplBank);
+}
+
 void c64::deleteSids(sidBankMap_t &extraSidBanks)
 {
     for (auto sidBank: extraSidBanks)

@@ -33,6 +33,7 @@
 #include "Banks/DisconnectedBusBank.h"
 #include "Banks/SidBank.h"
 #include "Banks/ExtraSidBank.h"
+#include "Banks/OplBank.h"
 
 #include "EventScheduler.h"
 
@@ -52,6 +53,7 @@ namespace libsidplayfp
 {
 
 class c64sid;
+class c64opl;
 class sidmemory;
 
 /**
@@ -121,6 +123,9 @@ private:
 
     /// Extra SIDs
     sidBankMap_t extraSidBanks;
+
+    /// OPL
+    OplBank oplBank;
 
     /// I/O Area #1 and #2
     DisconnectedBusBank disconnectedBusBank;
@@ -242,6 +247,13 @@ public:
      * @return false if address is unsupported
      */
     bool addExtraSid(c64sid *s, int address);
+
+    /**
+     * Add an OPL.
+     *
+     * @param o the opl emu to set
+     */
+    void setOpl(c64opl *o);
 
     /**
      * Remove all the SIDs.
