@@ -39,6 +39,7 @@ struct ReSIDfpBuilder::config
     Property<double> dcbRes;
     Property<SidConfig::sid_cw_t> cws;
     Property<SidConfig::sid_caps_t> caps6581;
+    Property<int> noiseLevel;
 };
 
 
@@ -76,6 +77,8 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
             sid->combinedWaveforms(m_config->cws.value());
         if (m_config->caps6581.has_value())
             sid->set6581caps(m_config->caps6581.value());
+        if (m_config->noiseLevel.has_value())
+            sid->noiseLevel(m_config->noiseLevel.value());
         return sid;
     }
     catch (std::bad_alloc const &)
@@ -150,4 +153,11 @@ void ReSIDfpBuilder::set6581caps(SidConfig::sid_caps_t caps)
     m_config->caps6581 = caps;
     for (libsidplayfp::sidemu* e: sidobjs)
         static_cast<libsidplayfp::reSIDfpEmu*>(e)->set6581caps(caps);
+}
+
+void ReSIDfpBuilder::setNoiseLevel(int level)
+{
+    m_config->noiseLevel = level;
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->noiseLevel(level);
 }
