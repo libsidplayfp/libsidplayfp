@@ -105,9 +105,9 @@ dnl libtool-style version-info number
 #
 # If any interfaces have been removed or changed since the last public release, then set age to 0.
 
-LIBSIDPLAYCUR=15
-LIBSIDPLAYREV=1
-LIBSIDPLAYAGE=8
+LIBSIDPLAYCUR=16
+LIBSIDPLAYREV=0
+LIBSIDPLAYAGE=9
 LIBSIDPLAYVERSION=$LIBSIDPLAYCUR:$LIBSIDPLAYREV:$LIBSIDPLAYAGE
 
 LIBSTILVIEWCUR=0
