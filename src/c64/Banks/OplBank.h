@@ -27,8 +27,6 @@
 
 #include "sidcxx11.h"
 
-#include "NullOpl.h"
-
 namespace libsidplayfp
 {
 
@@ -41,34 +39,27 @@ class OplBank final : public Bank
 {
 private:
     /// OPL chip
-    c64opl *opl;
+    c64opl *m_opl;
 
 public:
-    OplBank()
-      : opl(NullOpl::getInstance())
+    OplBank(c64opl *opl)
+      : m_opl(opl)
     {}
 
     void reset()
     {
-        opl->reset();
+        m_opl->reset();
     }
 
     uint8_t peek(uint_least16_t addr) override
     {
-        return opl->peek(addr);
+        return m_opl->peek(addr);
     }
 
     void poke(uint_least16_t addr, uint8_t data) override
     {
-        opl->poke(addr, data);
+        m_opl->poke(addr, data);
     }
-
-    /**
-     * Set OPL emulation.
-     *
-     * @param s the emulation, nullptr to remove current opl
-     */
-    void setOPL(c64opl *s) { opl = (s != nullptr) ? s : NullOpl::getInstance(); }
 };
 
 }

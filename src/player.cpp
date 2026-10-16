@@ -339,10 +339,12 @@ bool Player::config(const SidConfig &cfg, bool force)
             // No FM OPL emulation, reject per spec (MAY reject).
             if (tuneInfo->fmOpl())
             {
+                // TODO
+                //m_c64.setOpl(model);
                 throw configError(ERR_UNSUPPORTED_FMOPL);
             }
 
-            sidRelease();
+            releaseChips();
 
             std::vector<unsigned int> addresses;
             const uint_least16_t secondSidAddress = tuneInfo->sidChipBase(1) != 0 ?
@@ -383,7 +385,7 @@ bool Player::config(const SidConfig &cfg, bool force)
         }
         catch (configError const &e)
         {
-            sidRelease();
+            releaseChips();
             m_errorString = e.message();
             m_cfg.sidEmulation = nullptr;
             if (&m_cfg != &cfg)
@@ -532,9 +534,9 @@ SidConfig::sid_model_t getSidModel(SidTuneInfo::model_t sidModel, SidConfig::sid
     }
 }
 
-void Player::sidRelease()
+void Player::releaseChips()
 {
-    m_c64.clearSids();
+    m_c64.clearChips();
 
     for (sidemu *s: m_chips)
     {

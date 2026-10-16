@@ -125,7 +125,7 @@ private:
     sidBankMap_t extraSidBanks;
 
     /// OPL
-    OplBank oplBank;
+    OplBank *m_oplBank;
 
     /// I/O Area #1 and #2
     DisconnectedBusBank disconnectedBusBank;
@@ -256,9 +256,9 @@ public:
     void setOpl(c64opl *o);
 
     /**
-     * Remove all the SIDs.
+     * Remove all the SID/OPL chips.
      */
-    void clearSids();
+    void clearChips();
 
     /**
      * Get the components credits
