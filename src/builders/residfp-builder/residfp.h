@@ -75,14 +75,14 @@ public:
      * @param enable true to enable old 2200pF caps used on ASSY 326298
      *               false to use the standard 470pF caps. (default off)
      *
-     * @deprecated
+     * @deprecated use #set6581caps
      */
     SID_DEPRECATED void enableOld6581caps(bool enable);
 
     /**
      * Set combined waveforms strength.
      *
-     * @param cws 
+     * @param cws combined waveforms strength, weak/average/strong
      */
     void combinedWaveformsStrength(SidConfig::sid_cw_t cws);
 
@@ -115,16 +115,18 @@ public:
 
     /**
      * Set caps for 6581 model.
+     * Affects the filter cutoff frequency, lower capacitance -> brighter filter.
      *
-     * @param caps 
+     * @param caps capacitance value, 330/470/2200uF
      * @since 3.2
      */
     void set6581caps(SidConfig::sid_caps_t caps);
 
     /**
      * Set background noise level.
+     * @note: if noise is disabled there will be audible quantization noise.
      *
-     * @param level 
+     * @param level from 0 (no noise) to 8 (max noise)
      * @since 3.2
      */
     void setNoiseLevel(int level);
