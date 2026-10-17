@@ -340,7 +340,7 @@ bool Player::config(const SidConfig &cfg, bool force)
             if (tuneInfo->fmOpl())
             {
                 // TODO
-                //m_c64.setOpl(model);
+                //m_c64.setOpl(new c64opl(cfg.frequency));
                 throw configError(ERR_UNSUPPORTED_FMOPL);
             }
 

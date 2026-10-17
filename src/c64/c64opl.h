@@ -45,10 +45,10 @@ private:
     OPL *m_opl;
 
 public:
-    c64opl()
+    c64opl(uint32_t rate)
     {
-        m_opl = OPL_new(1, 1); // FIXME
-        OPL_setChipType(m_opl, 1); // 1:YM3526, 2:YM3812
+        m_opl = OPL_new(3579545, rate);
+        OPL_setChipType(m_opl, 2); // 1:YM3526, 2:YM3812
     }
 
     ~c64opl()
@@ -69,6 +69,7 @@ public:
         OPL_writeIO(m_opl, 0, address & 0x1f);
         OPL_writeIO(m_opl, 1, value);
     }
+
     uint8_t peek(uint_least16_t address) override
     {
         OPL_writeIO(m_opl, 0, address & 0x1f);
