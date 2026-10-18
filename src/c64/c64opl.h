@@ -28,7 +28,7 @@
 
 #include <algorithm>
 #include <iterator>
-#include <cstring>
+#include <cmath>
 #include <cstdint>
 
 namespace libsidplayfp
@@ -40,20 +40,29 @@ namespace libsidplayfp
 class c64opl : public Bank
 {
 private:
-    //uint8_t lastpoke[0x20];
+    //uint8_t lastpoke[0x80];
 
     OPL *m_opl;
+
+    /// The sample buffer
+    short *m_buffer = nullptr;
+
+    static constexpr uint32_t OPL_CLOCK = 3579545;
 
 public:
     c64opl(uint32_t rate)
     {
-        m_opl = OPL_new(3579545, rate);
+        m_opl = OPL_new(OPL_CLOCK, rate);
         OPL_setChipType(m_opl, 2); // 1:YM3526, 2:YM3812
+        // 20ms buffer
+        const int buffersize = std::ceil((rate / 1000.f) * 20.f);
+        m_buffer = new short[buffersize];
     }
 
     ~c64opl()
     {
         OPL_delete(m_opl);
+        delete [] m_buffer;
     }
 
     void reset()
@@ -65,18 +74,21 @@ public:
     // Bank functions
     void poke(uint_least16_t address, uint8_t value) override
     {
-        //lastpoke[address & 0x1f] = value;
-        OPL_writeIO(m_opl, 0, address & 0x1f);
-        OPL_writeIO(m_opl, 1, value);
+        //lastpoke[address & 0x7f] = value;
+        if ((address & 0x7f) == 0x40)
+            OPL_writeIO(m_opl, 0, value); // register select
+        if ((address & 0x7f) == 0x50)
+            OPL_writeIO(m_opl, 1, value); // register write
     }
 
     uint8_t peek(uint_least16_t address) override
     {
-        OPL_writeIO(m_opl, 0, address & 0x1f);
-        return OPL_readIO(m_opl);
+        if ((address & 0x7f) == 0x60)
+            return OPL_readIO(m_opl); // register read
+        return 0;
     }
 
-    //void getStatus(uint8_t regs[0x20]) const { std::memcpy(regs, lastpoke, 0x20); }
+    //void getStatus(uint8_t regs[0x80]) const { std::memcpy(regs, lastpoke, 0x80); }
 };
 
 }

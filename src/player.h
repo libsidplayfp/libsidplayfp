@@ -53,6 +53,7 @@ namespace libsidplayfp
 {
 
 class sidemu;
+class oplemu;
 
 class Player
 {
@@ -82,6 +83,8 @@ private:
     std::vector<sidemu*> m_chips;
 
     std::unique_ptr<SimpleMixer> m_simpleMixer;
+
+    oplemu *m_oplemu;
 
 private:
     /**
