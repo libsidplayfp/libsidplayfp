@@ -51,6 +51,8 @@ protected:
     /// The sample buffer
     short *m_buffer = nullptr;
 
+    float m_clockRatio;
+
     /// Current position in buffer
     int m_bufferpos = 0;
 
@@ -59,16 +61,15 @@ protected:
 
     std::string m_error;
 
-protected:
-    virtual void write(uint_least8_t addr, uint8_t data) = 0;
-
-    void writeReg(uint_least8_t addr, uint8_t data) override final;
-
 public:
     oplemu() :
         m_error("N/A")
     {}
-    ~oplemu() override = default;
+
+    ~oplemu() override
+    {
+        delete [] m_buffer;
+    }
 
     /**
      * Clock the OPL chip.
@@ -77,8 +78,7 @@ public:
     {
         const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
         m_accessClk += cycles;
-        //m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
-        //m_buffer[i] = OPL_calc(m_opl);
+        m_bufferpos += clock(cycles * m_clockRatio, m_buffer+m_bufferpos);
     }
 
     /**
@@ -97,12 +97,18 @@ public:
     //void model(SidConfig::opl_model_t model) {}
 
     /**
-     * Set the sampling method.
+     * Set the sampling frequency.
      *
      * @param systemfreq
      * @param outputfreq
      */
-    //void sampling(float systemfreq, float outputfreq) {}
+    void sampling(float systemfreq, float outputfreq)
+    {
+        // 20ms buffer
+        const int buffersize = std::ceil(20.f * outputfreq / 1000.f);
+        m_buffer = new short[buffersize];
+        m_clockRatio = outputfreq / systemfreq;
+    }
 
     /**
      * Get a detailed error message.
