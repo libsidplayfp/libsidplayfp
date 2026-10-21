@@ -41,7 +41,6 @@ public:
     SIDLiteBuilder(const char * const name);
     ~SIDLiteBuilder();
 
-
     const char *getCredits() const;
 
 private:

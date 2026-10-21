@@ -93,7 +93,7 @@ void SidTune::load(LoaderFunc loader, const char* fileName, bool separatorIsSlas
     }
     catch (loadError const &e)
     {
-        tune =  nullptr;
+        tune = nullptr;
         m_status = false;
         m_statusString = e.message();
     }
@@ -110,7 +110,7 @@ void SidTune::read(const uint_least8_t* sourceBuffer, uint_least32_t bufferLen)
     }
     catch (loadError const &e)
     {
-        tune =  nullptr;
+        tune = nullptr;
         m_status = false;
         m_statusString = e.message();
     }
