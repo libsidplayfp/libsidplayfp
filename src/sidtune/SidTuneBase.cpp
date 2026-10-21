@@ -294,6 +294,10 @@ void SidTuneBase::acceptSidTune(const char* dataFileName, const char* infoFileNa
         info->m_infoFileName = std::string(infoFileName + fileNamePos);
     }
 
+    // Check that offset is inside file limits
+    if ((m_fileOffset + m_trailerLen) > buf.size())
+        throw loadError(ERR_TRUNCATED);
+
     // Fix bad sidtune set up.
     if (info->m_songs > MAX_SONGS)
     {

@@ -51,7 +51,7 @@
 using namespace UnitTest;
 
 uint8_t const bufferRSID[BUFFERSIZE] = {
-    0x52, 0x53, 0x49, 0x44, // magicID
+    0x52, 0x53, 0x49, 0x44, // magicID (RSID)
     0x00, 0x02,             // version
     0x00, 0x7C,             // dataOffset
     0x00, 0x00,             // loadAddress
@@ -343,6 +343,22 @@ TEST_FIXTURE(TestFixture, TestWrongThirdSIDAddressLikeSecond)
     SidTune tune(data, BUFFERSIZE);
 
     CHECK_EQUAL(0, tune.getInfo()->sidChipBase(2));
+}
+
+/*
+ * Data offset must not exceed file size.
+ * CVE-2026-111148
+ */
+TEST_FIXTURE(TestFixture, TestBadDaatOffset)
+{
+    data[DATAOFFSET_HI] = 0x7c;
+    data[DATAOFFSET_LO] = 0x00;
+    data[SONGS_LO] = 0x00;
+
+    SidTune tune(data, BUFFERSIZE);
+    CHECK(!tune.getStatus());
+
+    CHECK_EQUAL("SIDTUNE ERROR: File is most likely truncated", tune.statusString());
 }
 
 }
