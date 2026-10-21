@@ -101,7 +101,7 @@ public:
     }
 
     void noiseLevel(int level) {
-#if (LIBRESIDFP_VERSION_MAJ > 1) || (LIBRESIDFP_VERSION_MIN >= 2)
+#if (LIBRESIDFP_VERSION_MAJ > 1) || (LIBRESIDFP_VERSION_MIN > 2)
         m_sid.noiseLevel(level);
 #endif
     }
