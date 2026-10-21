@@ -165,8 +165,8 @@ int main(int argc, char* argv[])
     // Prepare the buffer
     std::vector<short> buffer(bufSize);
 
-    // Play for ~5 seconds
-    for (int i=0; i<1000; i++)
+    // Play for ~30 seconds
+    for (int i=0; i<6000; i++)
     {
         // Run the emulation
         int res = m_engine.play(CYCLES);
