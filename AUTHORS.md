@@ -18,13 +18,13 @@ supplied contributions or code was derived from their work:
     Antti Lankila     - SID distortion simulation (reSID-fp),
                         emulation improvements
     Leandro Nini      - build system rewrite, code refactoring,
-                        backporting fixes from jsidplay2 and VICE,
-                        emulation improvements
+                        backporting fixes from jsidplay2, VICE and Denise,
+                        emulation improvements, PSID/RSID v4 support
     LaLa              - stilview
     André Fachat      - reloc65
     Jarno Paananen    - HardSID UNIX builder
     Thibaut VARENE    - exSID driver and builder
-    LouD              - USBSID-Pico driver and builder
+    LouD              - USBSID-Pico driver and builder, PSID/RSID v5 support
     Mihály Horváth    - crSID, base of the sidlite engine
 
 VIC II, CIA and cpu-port emulation is based on VICE code.
