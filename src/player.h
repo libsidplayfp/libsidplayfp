@@ -34,6 +34,7 @@
 #include "SidInfoImpl.h"
 #include "sidrandom.h"
 #include "simpleMixer.h"
+#include "oplemu.h"
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
@@ -53,7 +54,6 @@ namespace libsidplayfp
 {
 
 class sidemu;
-class oplemu;
 
 class Player
 {
@@ -84,7 +84,7 @@ private:
 
     std::unique_ptr<SimpleMixer> m_simpleMixer;
 
-    oplemu *m_oplemu;
+    oplemu m_oplemu;
 
 private:
     /**

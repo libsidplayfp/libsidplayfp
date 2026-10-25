@@ -37,7 +37,7 @@
 namespace libsidplayfp
 {
 
-class oplemu : public c64opl
+class oplemu
 {
 protected:
     static const char ERR_UNSUPPORTED_FREQ[];
@@ -45,6 +45,8 @@ protected:
 
 protected:
     EventScheduler *eventScheduler = nullptr;
+
+    c64opl *m_opl = nullptr;
 
     event_clock_t m_accessClk = 0;
 
@@ -66,7 +68,7 @@ public:
         m_error("N/A")
     {}
 
-    ~oplemu() override
+    ~oplemu()
     {
         delete [] m_buffer;
     }
@@ -78,18 +80,18 @@ public:
     {
         const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
         m_accessClk += cycles;
-        m_bufferpos += clock(cycles * m_clockRatio, m_buffer+m_bufferpos);
+        m_bufferpos += m_opl->clock(cycles * m_clockRatio, m_buffer+m_bufferpos);
     }
 
     /**
      * Set execution environment and lock opl to it.
      */
-    bool lock(EventScheduler *scheduler) { eventScheduler = scheduler; return true; }
+    c64opl* lock(EventScheduler *scheduler, uint32_t rate) { m_opl = new c64opl(rate); eventScheduler = scheduler; return m_opl; }
 
     /**
      * Unlock opl.
      */
-    void unlock() { eventScheduler = nullptr; }
+    void unlock() { delete m_opl; m_opl = nullptr; eventScheduler = nullptr; }
 
     /**
      * Set OPL model.

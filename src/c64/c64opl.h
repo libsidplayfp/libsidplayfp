@@ -77,10 +77,11 @@ public:
         return 0;
     }
 
-    void clock(int bytes, short* buf)
+    int clock(int bytes, short* buf)
     {
-        for (int i=0; i< bytes; i++)
+        for (int i=0; i<bytes; i++)
             buf[i] = OPL_calc(m_opl);
+        return bytes;
     }
 };
 
