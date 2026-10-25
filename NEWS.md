@@ -1,3 +1,7 @@
+3.1.2 2026-10-25
+* Fixed possible out-of-bounds read (#280) - CVE-2026-111148
+
+
 3.1.1 2026-08-30
 * USBSID-Pico: Fix issue in reset and delay routine
 * Fixed serial port for test sdr-icr-test2-0_7f
