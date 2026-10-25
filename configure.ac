@@ -1,6 +1,11 @@
 m4_define([lib_major], [3])
+<<<<<<< HEAD
 m4_define([lib_minor], [2])
 m4_define([lib_level], [0a])
+=======
+m4_define([lib_minor], [1])
+m4_define([lib_level], [2])
+>>>>>>> f8442ce9 (Prepare for release)
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_PREREQ([2.62])
