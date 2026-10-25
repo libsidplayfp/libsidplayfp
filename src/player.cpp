@@ -336,15 +336,13 @@ bool Player::config(const SidConfig &cfg, bool force)
 
         try
         {
-            // No FM OPL emulation, reject per spec (MAY reject).
+            releaseChips();
+
             if (tuneInfo->fmOpl())
             {
-                // TODO
-                //m_c64.setOpl(new c64opl(cfg.frequency));
-                throw configError(ERR_UNSUPPORTED_FMOPL);
+                c64opl* opl = m_oplemu.lock(m_c64.getEventScheduler(), cfg.frequency);
+                m_c64.setOpl(opl);
             }
-
-            releaseChips();
 
             std::vector<unsigned int> addresses;
             const uint_least16_t secondSidAddress = tuneInfo->sidChipBase(1) != 0 ?
@@ -537,6 +535,8 @@ SidConfig::sid_model_t getSidModel(SidTuneInfo::model_t sidModel, SidConfig::sid
 void Player::releaseChips()
 {
     m_c64.clearChips();
+
+    m_oplemu.unlock();
 
     for (sidemu *s: m_chips)
     {
