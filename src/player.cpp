@@ -53,7 +53,6 @@ const char ERR_NA[]                   = "NA";
 const char ERR_NO_TUNE_LOADED[]       = "SIDPLAYER ERROR: No tune loaded";
 const char ERR_UNSUPPORTED_FREQ[]     = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID address.";
-const char ERR_UNSUPPORTED_FMOPL[]    = "SIDPLAYER ERROR: FM OPL tunes are not supported.";
 const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
 const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
 const char ERR_BAD_BUF_SIZE[]         = "SIDPLAYER ERROR: Bad buffer size";
@@ -154,6 +153,11 @@ void Player::initialise()
             chip->clock();
             chip->bufferpos(0);
         }
+        if (m_oplemu.locked())
+        {
+            m_oplemu.clock();
+            m_oplemu.bufferpos(0);
+        }
     }
 
     psiddrv driver(m_tune->getInfo());
@@ -221,7 +225,10 @@ void Player::filter(unsigned int sidNum, bool enable)
 
 void Player::initMixer(bool stereo)
 {
-    std::unique_ptr<short*[]> bufs(new short*[m_chips.size()]);
+    int chips = m_chips.size();
+    if (m_oplemu.locked())
+        chips++;
+    std::unique_ptr<short*[]> bufs(new short*[chips]);
     buffers(bufs.get());
 
     // Per chip positions for a panning hint or more than 3 chips, else the fixed matrix
@@ -236,7 +243,7 @@ void Player::initMixer(bool stereo)
         }
     }
 
-    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.get(), installedSIDs(), pans.empty() ? nullptr : pans.data()));
+    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.get(), installedSIDs(), m_oplemu.locked(), pans.empty() ? nullptr : pans.data()));
 }
 
 unsigned int Player::mix(short *buffer, unsigned int samples)
@@ -250,6 +257,8 @@ void Player::buffers(short** buffers) const
     {
         buffers[i] = m_chips[i]->buffer();
     }
+    if (m_oplemu.locked())
+        buffers[m_chips.size()] = m_oplemu.buffer();
 }
 
 int Player::play(unsigned int cycles)
@@ -281,6 +290,11 @@ int Player::play(unsigned int cycles)
             sampleCount = s->bufferpos();
             // Reset the buffer
             s->bufferpos(0);
+        }
+        if (m_oplemu.locked())
+        {
+            m_oplemu.clock();
+            m_oplemu.bufferpos(0);
         }
         return sampleCount;
     }
@@ -340,8 +354,9 @@ bool Player::config(const SidConfig &cfg, bool force)
 
             if (tuneInfo->fmOpl())
             {
-                c64opl* opl = m_oplemu.lock(m_c64.getEventScheduler(), cfg.frequency);
-                m_c64.setOpl(opl);
+                m_oplemu.sampling(m_c64.getMainCpuSpeed(), cfg.frequency);
+                m_oplemu.lock(m_c64.getEventScheduler(), cfg.frequency);
+                m_c64.setOpl(&m_oplemu);
             }
 
             std::vector<unsigned int> addresses;

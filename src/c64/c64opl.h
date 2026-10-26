@@ -22,14 +22,8 @@
 #define C64OPL_H
 
 #include "Banks/Bank.h"
-#include "libs/emu8950/emu8950.h"
 
 #include "sidcxx11.h"
-
-#include <algorithm>
-#include <iterator>
-#include <cmath>
-#include <cstdint>
 
 namespace libsidplayfp
 {
@@ -39,49 +33,24 @@ namespace libsidplayfp
  */
 class c64opl : public Bank
 {
-private:
-    static constexpr uint32_t OPL_CLOCK = 3579545;
+protected:
+    virtual ~c64opl() = default;
 
-    OPL *m_opl;
+    virtual uint8_t read(uint_least8_t addr) = 0;
+    virtual void write(uint_least8_t addr, uint8_t data) = 0;
 
 public:
-    c64opl(uint32_t rate)
-    {
-        m_opl = OPL_new(OPL_CLOCK, rate);
-        OPL_setChipType(m_opl, 2); // 1:YM3526, 2:YM3812
-    }
-
-    ~c64opl()
-    {
-        OPL_delete(m_opl);
-    }
-
-    void reset()
-    {
-        OPL_reset(m_opl);
-    }
+    virtual void reset() = 0;
 
     // Bank functions
     void poke(uint_least16_t address, uint8_t value) override
     {
-        if ((address & 0x7f) == 0x40)
-            OPL_writeIO(m_opl, 0, value); // register select
-        if ((address & 0x7f) == 0x50)
-            OPL_writeIO(m_opl, 1, value); // register write
+        write(address & 0x7f, value);
     }
 
     uint8_t peek(uint_least16_t address) override
     {
-        if ((address & 0x7f) == 0x60)
-            return OPL_readIO(m_opl); // register read
-        return 0;
-    }
-
-    int clock(int bytes, short* buf)
-    {
-        for (int i=0; i<bytes; i++)
-            buf[i] = OPL_calc(m_opl);
-        return bytes;
+        return read(address & 0x7f);
     }
 };
 
