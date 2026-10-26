@@ -38,6 +38,7 @@
 #ifdef __cpp_lib_math_constants
 #  include <numbers>
 #endif
+#include <iostream>
 
 namespace libsidplayfp
 {
@@ -77,6 +78,10 @@ private:
     // Gains of the generic mixers, fixed point with SCALE_FACTOR as unity
     std::vector<int_least32_t> m_gainL;
     std::vector<int_least32_t> m_gainR;
+
+    short* m_oplBuffer = nullptr;
+
+    int_least32_t m_oplSample = 0;
 
     int_least32_t m_monoScale = SCALE_FACTOR;
 
@@ -147,9 +152,12 @@ private:
 
     int_least32_t stereoGeneric(const std::vector<int_least32_t> &gain) const
     {
+        //std::cout << " stereoGeneric " << m_oplSample<< std::endl;
+
         int_least64_t res = 0;
         for (std::size_t i = 0; i < m_iSamples.size(); i++)
             res += static_cast<int_least64_t>(m_iSamples[i]) * gain[i];
+        res += m_oplSample * SCALE_FACTOR; // FIXME
         return static_cast<int_least32_t>(res / SCALE_FACTOR);
     }
 
@@ -166,7 +174,7 @@ public:
      *
      * @param pans position of each chip, nullptr for the fixed matrix of 1 to 3 chips
      */
-    SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneInfo::pan_t *pans = nullptr);
+    SimpleMixer(bool stereo, short** buffers, int chips, bool opl, const SidTuneInfo::pan_t *pans = nullptr);
 
     /**
      * Do the mixing.

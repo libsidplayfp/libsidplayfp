@@ -25,7 +25,7 @@
 #include <cassert>
 #include <climits>
 #include <cstring>
-#include <iostream>
+
 #ifdef __cpp_lib_unreachable
 #  include <utility>
 #endif
@@ -46,6 +46,8 @@ unsigned int SimpleMixer::doMix(short *buffer, unsigned int samples)
             const short *buf = m_buffers[k];
             m_iSamples[k] = buf[i];
         }
+        if (m_oplBuffer)
+            m_oplSample = m_oplBuffer[i];
 
         for (auto mix: m_mix)
         {
@@ -97,7 +99,7 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
     m_mix.push_back(&SimpleMixer::stereo_ch2_Generic);
 }
 
-SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneInfo::pan_t *pans)
+SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, bool opl, const SidTuneInfo::pan_t *pans)
 {
     if ((stereo && pans) || (chips > 3))
     {
@@ -129,6 +131,9 @@ SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneI
     m_iSamples.resize(chips);
     for (int i=0; i<chips; i++)
         m_buffers.push_back(buffers[i]);
+
+    if (opl)
+        m_oplBuffer = buffers[chips];
 }
 
 }
