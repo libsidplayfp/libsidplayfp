@@ -72,7 +72,9 @@ private:
      *
      * - -1: the CIA timer is stopped.
      * - 0: the CIA timer runs one clock at a time.
-     * - otherwise: the first PHI1 of a skipped countdown.
+     * - otherwise: the first PHI1 of a skipped countdown, or the clock when
+     *   a deferred CNT pulse decreases the counter (state START | COUNT3).
+     *   Synchronisation or the next cascade applies that decrease.
      */
     event_clock_t ciaEventPauseTime;
 
@@ -128,7 +130,34 @@ private:
      */
     virtual void serialPort() {}
 
-protected:
+  protected:
+    /**
+     * Defer a quiet CNT pulse until its decrement is due on PHI1.
+     * Before a CPU read on PHI2, synchronisation applies any counter
+     * decrease due on PHI1.
+     *
+     * @return true if the pulse was deferred.
+     */
+    bool deferQuietCascade()
+    {
+        if (eventScheduler.phase() != EVENT_CLOCK_PHI2)
+            return false;
+        if (m_state == (CIAT_CR_START | CIAT_COUNT3) && ciaEventPauseTime > 0 &&
+            eventScheduler.getTime(EVENT_CLOCK_PHI2) >= ciaEventPauseTime)
+        {
+            // The previous quiet pulse has completed exactly one decrement.
+            --timer;
+            m_state = CIAT_CR_START;
+            ciaEventPauseTime = -1;
+        }
+        if (m_state != CIAT_CR_START || timer == 0 || ciaEventPauseTime != -1)
+            return false;
+        m_state |= CIAT_COUNT3;
+        ciaEventPauseTime = eventScheduler.getTime(EVENT_CLOCK_PHI1) + 1;
+        // No event is needed: a nonzero counter cannot underflow in this pulse.
+        return true;
+    }
+
     /**
      * Create a new timer.
      *
