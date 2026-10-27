@@ -266,6 +266,11 @@ public:
 
     sidmemory& getMemInterface() { return mmu; }
 
+    void fastVicSeek(bool enable)
+    {
+        vic.fastSeek(enable);
+    }
+
     void clockCycles(unsigned cycles)
     {
         eventScheduler.clockCycles(cycles);

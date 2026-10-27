@@ -269,7 +269,9 @@ int Player::play(unsigned int cycles)
 
     try
     {
-        if (m_c64.nativePcmSeeking())
+        const bool nativeSeeking = m_c64.nativePcmSeeking();
+        m_c64.fastVicSeek(nativeSeeking);
+        if (nativeSeeking)
         {
             const unsigned int limit = static_cast<unsigned int>(m_c64.getMainCpuSpeed() / 50) - 1;
             m_c64.clockCycles(cycles < limit ? cycles : limit);

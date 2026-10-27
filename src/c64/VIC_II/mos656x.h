@@ -46,6 +46,8 @@ class MOS656X : private Event
     friend struct SeekStateAccess;
 
   public:
+    void fastSeek(bool enable);
+
     enum class model_t
     {
         MOS6567R56A = 0  ///< OLD NTSC CHIP
@@ -143,6 +145,7 @@ private:
 
 private:
     event_clock_t clockPAL();
+    event_clock_t clockPALSeek();
     event_clock_t clockNTSC();
     event_clock_t clockOldNTSC();
 
