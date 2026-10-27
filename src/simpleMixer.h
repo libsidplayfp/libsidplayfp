@@ -157,7 +157,7 @@ private:
         int_least64_t res = 0;
         for (std::size_t i = 0; i < m_iSamples.size(); i++)
             res += static_cast<int_least64_t>(m_iSamples[i]) * gain[i];
-        res += m_oplSample * SCALE_FACTOR; // FIXME
+        res += static_cast<int_least64_t>(m_oplSample) * SCALE[1]; // FIXME
         return static_cast<int_least32_t>(res / SCALE_FACTOR);
     }
 

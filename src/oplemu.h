@@ -60,6 +60,7 @@ protected:
     short *m_buffer = nullptr;
 
     float m_clockRatio;
+    float m_err = 0.f;
 
     /// Current position in buffer
     int m_bufferpos = 0;
@@ -101,7 +102,9 @@ public:
     {
         const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
         m_accessClk += cycles;
-        int bytes = cycles * m_clockRatio;
+        float integral;
+        m_err = std::modf(cycles * m_clockRatio + m_err, &integral);
+        int bytes = integral;
         short *buf = m_buffer + m_bufferpos;
         for (int i=0; i<bytes; i++)
             buf[i] = OPL_calc(m_opl);
