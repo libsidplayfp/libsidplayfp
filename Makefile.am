@@ -24,6 +24,7 @@ ${W32_CPPFLAGS} \
 #=========================================================
 EXTRA_DIST = \
 docs/mainpage.dox \
+  docs/playsid.md \
 src/psiddrv.a65 \
 src/sidtune/sidplayer1.a65 \
 src/sidtune/sidplayer2.a65 \
@@ -71,6 +72,8 @@ src/call.cpp \
 src/call.h \
 src/seekstate.cpp \
 src/seekstate.h \
+src/xsid/xsid.cpp \
+src/xsid/xsid.h \
 src/player.h \
 src/psiddrv.cpp \
 src/psiddrv.h \

@@ -593,6 +593,22 @@ struct SeekStateAccess
         auto& z = m.zeroRAMBank;
         fields(z.dataBit6, z.dataBit7, z.dir, z.data, z.dataRead, z.procPortPins);
     }
+    void xsidChannel(XsidChannel& c)
+    {
+        event(c.sampleEvent);
+        event(c.galwayEvent);
+        fields(c.m_phase, c.reg, c.mode, c.active, c.address, c.cycleCount, c.volShift,
+               c.sampleLimit, c.sample, c.samRepeat, c.samScale, c.samOrder, c.samNibble,
+               c.samEndAddr, c.samRepeatAddr, c.samPeriod, c.galTones, c.galInitLength, c.galLength,
+               c.galVolume, c.galLoopWait, c.galNullWait, c.cycles, c.outputs);
+    }
+    void xsid(XSID& x)
+    {
+        event(x);
+        xsidChannel(x.ch4);
+        xsidChannel(x.ch5);
+        fields(x.muted, x.suppressed, x.sidData0x18, x._sidSamples, x.sampleOffset, x.wasRunning);
+    }
     void machine(c64& c)
     {
         fields(c.cpuFrequency, c.irqCount, c.oldBAState, c.eventScheduler.firstEvent,
@@ -605,6 +621,7 @@ struct SeekStateAccess
         field(c.colorRAMBank.ram);
         memory(c.mmu);
         cpu(c.cpu);
+        xsid(c.playSid);
     }
     void chip(reSIDfpEmu& s)
     {
