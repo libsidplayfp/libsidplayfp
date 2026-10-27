@@ -279,6 +279,8 @@ public:
     {
         return cpu.nativePcmSeeking();
     }
+    void fastCpuSeek(bool enable) { cpu.fastCpuSeek(enable); }
+    uint64_t fastLoopCycles() const { return cpu.fastLoopCycles(); }
     void nativePcmSeek(bool enable)
     {
         cpu.nativePcmSeek(enable);

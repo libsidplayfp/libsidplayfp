@@ -174,6 +174,7 @@ void Player::initialise()
         throw configError(m_tune->statusString());
     }
 
+    initTrackerSeek();
     m_c64.resetCpu();
 #if 0
     // Run for some cycles until the initialization routine is done
@@ -641,5 +642,3 @@ int Player::getBufSize(unsigned int cycles)
 }
 
 }
-
-#include "seekstate.h"

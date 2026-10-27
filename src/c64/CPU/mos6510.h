@@ -27,6 +27,7 @@
 #include <string>
 #include <cstdint>
 #include <cstring>
+#include <bitset>
 #include <cstdio>
 
 #include "flags.h"
@@ -52,6 +53,10 @@ namespace MOS6510Debug
 class CPUDataBus
 {
 public:
+    /// RAM view for recognised player calls.
+    const uint8_t* directReadRAM = nullptr;
+    explicit CPUDataBus(const uint8_t* ram = nullptr) : directReadRAM(ram) {}
+
   virtual ~CPUDataBus() = default;
 
   virtual uint8_t cpuRead(uint_least16_t addr) =0;
@@ -124,9 +129,10 @@ private:
     /// Event scheduler
     EventScheduler &eventScheduler;
 
+    bool m_loopEnabled = false;
+    bool m_playerCallActive = false;
     bool m_loopCacheUsed = false;
-    uint8_t m_loopCache[65536] = {};
-    bool m_loopSeenPages[256] = {};
+    uint64_t m_loopSkippedCycles = 0;
     void loopCodeWrite(uint16_t address)
     {
         if (!m_loopCacheUsed)
@@ -201,7 +207,8 @@ private:
         Dac,
         Ack,
         Finish,
-        MixerFinish
+        MixerFinish,
+        PlayerFinish
     };
     struct PcmAction
     {
@@ -227,6 +234,10 @@ private:
     event_clock_t m_idleClock = 0;
     void nativePcmSchedule();
     void nativePcmSync();
+    void playerCallSync();
+    void playerCallSchedule();
+    void playerCallCycle();
+    bool beginPlayerCall(uint16_t pc);
     void idleSync();
     void idleWake();
     bool cachePcmRoutine(uint16_t pc);
@@ -399,10 +410,15 @@ public:
         pcmCodeWrite(addr);
         dataBus.cpuWrite(addr, data);
     }
+    void fastCpuSeek(bool enable);
+    uint64_t fastLoopCycles() const
+    {
+        return m_loopSkippedCycles;
+    }
     void nativePcmSeek(bool enable);
     bool nativePcmSeeking() const
     {
-        return m_pcmEnabled || m_pcmActive || m_idleActive;
+        return m_loopEnabled || m_pcmEnabled || m_pcmActive || m_idleActive;
     }
     uint64_t nativePcmCalls() const
     {
@@ -421,6 +437,15 @@ public:
     void triggerNMI();
     void triggerIRQ();
     void clearIRQ();
+
+  private:
+    uint32_t m_loopMapGeneration = 0;
+    uint32_t m_loopPageGeneration[256] = {};
+    uint8_t m_loopCache[65536] = {};
+    bool m_loopSeenPages[256] = {};
+    bool m_playerCallAllowed = true;
+    PcmAction m_playerActions[2048] = {};
+    std::bitset<65536> m_playerWriteCycle;
 };
 
 }

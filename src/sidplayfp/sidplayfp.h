@@ -38,7 +38,8 @@ class  EventContext;
 // Private Sidplayer
 namespace libsidplayfp
 {
-    class Player;
+class Player;
+struct SeekStateAccess;
 }
 
 /**
@@ -46,8 +47,9 @@ namespace libsidplayfp
  */
 class SID_EXTERN sidplayfp
 {
-private:
-    libsidplayfp::Player &sidplayer;
+  private:
+    friend struct libsidplayfp::SeekStateAccess;
+    libsidplayfp::Player& sidplayer;
 
   public:
     /**
@@ -64,6 +66,27 @@ private:
      * @return true if the checkpoint was restored.
      */
     bool restoreState(const std::vector<uint8_t>& state);
+    /**
+     * Enable a checked tracker layout identified in the original tune file.
+     *
+     * @param sidIdIdentity SIDId identity supplied by the caller
+     * @return true if the recognised layout passes the engine guards.
+     */
+    bool enableTrackerSeek(const char* sidIdIdentity);
+    /**
+     * Advance recognised tracker state during inaudible seeking.
+     * The caller renders the usual SID warm-up before audible playback.
+     *
+     * @param targetMs target playback position in milliseconds
+     * @return true if tracker calls were skipped.
+     */
+    bool seekTracker(unsigned targetMs);
+    /**
+     * Get the number of tracker calls skipped.
+     *
+     * @return the skipped tracker-call count.
+     */
+    uint64_t trackerCallsSkipped() const;
 
     sidplayfp();
     ~sidplayfp();
@@ -239,6 +262,8 @@ private:
      *
      * @param enable true to enable accelerated PCM seeking
      */
+    void fastCpuSeek(bool enable);
+    uint64_t fastLoopCycles() const;
     void nativePcmSeek(bool enable);
     /**
      * Get the number of accelerated native PCM calls.

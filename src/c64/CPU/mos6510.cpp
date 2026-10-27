@@ -21,6 +21,7 @@
  */
 
 #include "mos6510.h"
+#include "call.h"
 #include "sidplayfp/sidplayfp.h"
 
 #include "Event.h"
@@ -66,7 +67,10 @@ void MOS6510::eventWithoutSteals()
 {
     if (m_pcmActive)
     {
-        nativePcmCycle();
+        if (m_playerCallActive)
+            playerCallCycle();
+        else
+            nativePcmCycle();
         return;
     }
     do
@@ -226,6 +230,8 @@ void MOS6510::triggerNMI()
         idleWake();
     if (m_pcmActive)
     {
+        if (m_playerCallActive)
+            m_playerCallAllowed = false;
         throw sidplayfp::SeekReplayRequired();
     }
     nmiFlag = true;
@@ -346,7 +352,7 @@ void MOS6510::fetchNextOpcode()
         ((pc > 1 && pc < 0xcffe) || (pc >= 0xe000 && pc < 0xfffe)) &&
         cpuRead(pc + 1) == (pc & 0xff) && cpuRead(pc + 2) == (pc >> 8) && !checkInterrupts())
     {
-        if (m_pcmEnabled)
+        if (m_pcmEnabled || m_loopEnabled)
         {
             m_idleActive = true;
             m_idlePC = pc;
@@ -356,6 +362,9 @@ void MOS6510::fetchNextOpcode()
         else
             eventScheduler.skipCPULoops(3);
     }
+
+    if (m_loopEnabled && (cycleCount >> 3) == 0x4c && pc == 0x1003 && beginPlayerCall(pc))
+        return;
 
     if (!checkInterrupts())
     {
@@ -2247,9 +2256,12 @@ void MOS6510::buildInstructionTable()
 void MOS6510::Initialise()
 {
     m_pcmActive = false;
+    m_playerCallActive = false;
     m_idleActive = false;
     m_pcmCached = false;
+    m_loopEnabled = false;
     m_loopCacheUsed = false;
+    m_loopSkippedCycles = 0;
     std::memset(m_loopCache, 0, sizeof(m_loopCache));
     std::memset(m_loopSeenPages, 0, sizeof(m_loopSeenPages));
     m_pcmEnabled = false;
@@ -2341,6 +2353,8 @@ void MOS6510::pcmCodeWrite(uint16_t address)
     {
         if (m_pcmActive)
         {
+            if (m_playerCallActive)
+                m_playerCallAllowed = false;
             throw sidplayfp::SeekReplayRequired();
         }
         m_pcmCached = false;
@@ -2542,7 +2556,8 @@ bool MOS6510::beginNativePcm(uint16_t pc)
 
 void MOS6510::updatePcmCycleKind()
 {
-    const auto& action = m_pcmActions[m_pcmActionIndex];
+    const auto& action =
+        m_playerCallActive ? m_playerActions[m_pcmActionIndex] : m_pcmActions[m_pcmActionIndex];
     instrTable[nativeSlot].nosteal =
         action.cycle == m_pcmCycle &&
         (action.kind == PcmActionKind::Write || action.kind == PcmActionKind::Scratch ||
@@ -2552,7 +2567,7 @@ void MOS6510::updatePcmCycleKind()
 void MOS6510::nativePcmSeek(bool enable)
 {
     m_pcmEnabled = enable;
-    if (!enable && m_idleActive)
+    if (!enable && !m_loopEnabled && m_idleActive)
         idleWake();
 }
 
@@ -2584,6 +2599,11 @@ void MOS6510::idleWake()
 
 void MOS6510::nativePcmSync()
 {
+    if (m_playerCallActive)
+    {
+        playerCallSync();
+        return;
+    }
     const auto now = eventScheduler.halfTime();
     if (now <= m_pcmClock)
         return;
@@ -2605,6 +2625,11 @@ void MOS6510::nativePcmSync()
 
 void MOS6510::nativePcmSchedule()
 {
+    if (m_playerCallActive)
+    {
+        playerCallSchedule();
+        return;
+    }
     eventScheduler.cancel(m_nosteal);
     eventScheduler.cancel(m_steal);
     const auto action = m_pcmActions[m_pcmActionIndex];
@@ -2797,6 +2822,140 @@ bool MOS6510::beginDigiMixer(uint16_t pc)
     cycleCount = nativeSlot;
     updatePcmCycleKind();
     return true;
+}
+
+void MOS6510::fastCpuSeek(bool enable)
+{
+    m_loopEnabled = enable;
+    if (!enable && !m_pcmEnabled && m_idleActive)
+        idleWake();
+}
+void MOS6510::playerCallSync()
+{
+    const auto now = eventScheduler.halfTime();
+    if (now <= m_pcmClock)
+        return;
+    unsigned clocks = static_cast<unsigned>((now - m_pcmClock - 1) / 2);
+    const auto next = m_playerActions[m_pcmActionIndex].cycle;
+    if (clocks >= next - m_pcmCycle)
+        clocks = next - m_pcmCycle - 1;
+    if (!rdy)
+    {
+        unsigned writes = 0;
+        while (m_pcmCycle + writes + 1 < 65536 && m_playerWriteCycle[m_pcmCycle + writes + 1])
+            ++writes;
+        if (clocks > writes)
+            clocks = writes;
+    }
+    m_pcmCycle += clocks;
+    m_pcmClock = now - ((now & 1) ? 2 : 1);
+}
+void MOS6510::playerCallSchedule()
+{
+    eventScheduler.cancel(m_nosteal);
+    eventScheduler.cancel(m_steal);
+    while (m_playerActions[m_pcmActionIndex].kind == PcmActionKind::Write &&
+           m_playerActions[m_pcmActionIndex].address < 0xd000)
+        ++m_pcmActionIndex;
+    const auto action = m_playerActions[m_pcmActionIndex];
+    const auto gap = action.cycle - m_pcmCycle;
+    if (!rdy)
+    {
+        unsigned writes = 0;
+        while (m_pcmCycle + writes + 1 < 65536 && m_playerWriteCycle[m_pcmCycle + writes + 1])
+            ++writes;
+        if (gap > writes)
+            return;
+    }
+    const auto next = eventScheduler.halfTime() | 1;
+    const auto target = m_pcmClock + static_cast<event_clock_t>(gap) * 2;
+    if (target < next)
+    {
+        m_playerCallAllowed = false;
+        throw sidplayfp::SeekReplayRequired();
+    }
+    eventScheduler.schedule(m_nosteal, static_cast<unsigned>((target - next) / 2),
+                            EVENT_CLOCK_PHI2);
+}
+bool MOS6510::beginPlayerCall(uint16_t pc)
+{
+    if (!m_playerCallAllowed || !rdy || cpu_debug || m_pcmActive || m_idleActive || !flags.getI() ||
+        flags.getD() || nmiFlag || rstFlag || interruptCycle != MAX || !dataBus.directReadRAM)
+        return false;
+    const auto* ram = dataBus.directReadRAM;
+    if (std::memcmp(ram + 0x1011, " SID-WIZARD 1.9", 14) &&
+        std::memcmp(ram + 0x1011, " SID-WIZARD 1.8", 14))
+        return false;
+    const auto port = cpuRead(1);
+    if (!(port & 4) || !(port & 3))
+        return false;
+    PlayerCall call;
+    std::memcpy(call.memory, ram, 65536);
+    call.pc = pc;
+    call.a = Register_Accumulator;
+    call.x = Register_X;
+    call.y = Register_Y;
+    call.sp = Register_StackPointer;
+    call.p = flags.get();
+    if (!prepare_player_call(&call))
+        return false;
+    m_pcmActionCount = m_pcmActionIndex = m_pcmCycle = 0;
+    m_playerWriteCycle.reset();
+    for (unsigned i = 0; i < call.count; ++i)
+    {
+        const auto& w = call.writes[i];
+        if (w.cycle == 0)
+            return false;
+        m_playerActions[m_pcmActionCount++] = {w.cycle, PcmActionKind::Write, w.address, w.value};
+        m_playerWriteCycle[w.cycle] = true;
+    }
+    m_playerActions[m_pcmActionCount++] = {call.cycles, PcmActionKind::PlayerFinish, call.pc, 0};
+    m_pcmSavedA = call.a;
+    m_pcmPointer = call.x;
+    m_pcmSavedY = call.y;
+    m_pcmSavedSP = call.sp;
+    m_pcmEndValue = call.p;
+    m_pcmClock = eventScheduler.halfTime();
+    m_pcmActive = true;
+    m_playerCallActive = true;
+    m_pcmCached = false;
+    m_pcmActions[0].kind = PcmActionKind::Write;
+    ++m_pcmCalls;
+    cycleCount = nativeSlot;
+    updatePcmCycleKind();
+    return true;
+}
+void MOS6510::playerCallCycle()
+{
+    const auto action = m_playerActions[m_pcmActionIndex++];
+    m_pcmCycle = action.cycle;
+    m_pcmClock = eventScheduler.halfTime();
+    if (action.kind == PcmActionKind::PlayerFinish)
+    {
+        for (unsigned i = 0; i + 1 < m_pcmActionCount; ++i)
+        {
+            const auto& w = m_playerActions[i];
+            if (w.address < 0xd000)
+                cpuWrite(w.address, w.value);
+        }
+        Register_Accumulator = m_pcmSavedA;
+        Register_X = m_pcmPointer;
+        Register_Y = m_pcmSavedY;
+        Register_StackPointer = m_pcmSavedSP;
+        flags.set(m_pcmEndValue);
+        m_pcmActive = false;
+        m_playerCallActive = false;
+        Register_ProgramCounter = action.address;
+        interruptCycle = MAX;
+        fetchNextOpcode();
+        if (rdy)
+            eventScheduler.schedule(m_nosteal, 1);
+        else
+            eventScheduler.schedule(m_steal, 1);
+        return;
+    }
+    cpuWrite(action.address, action.value);
+    playerCallSchedule();
 }
 
 }

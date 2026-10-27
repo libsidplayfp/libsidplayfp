@@ -107,6 +107,11 @@ public:
     void setBasic(const uint8_t* rom) override { basicRomBank.set(rom); }
     void setChargen(const uint8_t* rom) override { characterRomBank.set(rom); }
 
+    const uint8_t* directReadRAM() const
+    {
+        return ramBank.ram;
+    }
+
     // RAM access methods
     uint8_t readMemByte(uint_least16_t addr) override { return ramBank.peek(addr); }
     uint_least16_t readMemWord(uint_least16_t addr) override { return endian_little16(ramBank.ram+addr); }
