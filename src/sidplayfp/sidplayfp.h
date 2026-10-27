@@ -24,6 +24,7 @@
 #define SIDPLAYFP_H
 
 #include <cstdint>
+#include <vector>
 #include <cstdio>
 
 #include "sidplayfp/siddefs.h"
@@ -48,7 +49,22 @@ class SID_EXTERN sidplayfp
 private:
     libsidplayfp::Player &sidplayer;
 
-public:
+  public:
+    /**
+     * Save an in-memory checkpoint of the current machine state.
+     * The checkpoint belongs to this player instance and load generation.
+     *
+     * @return the checkpoint data, or an empty vector if unsupported.
+     */
+    std::vector<uint8_t> saveState();
+    /**
+     * Restore a checkpoint from this player instance and load generation.
+     *
+     * @param state the saved checkpoint
+     * @return true if the checkpoint was restored.
+     */
+    bool restoreState(const std::vector<uint8_t>& state);
+
     sidplayfp();
     ~sidplayfp();
 
@@ -57,14 +73,14 @@ public:
      *
      * @return a const reference to the current configuration.
      */
-    const SidConfig &config() const;
+    const SidConfig& config() const;
 
     /**
      * Get the current player informations.
      *
      * @return a const reference to the current info.
      */
-    const SidInfo &info() const;
+    const SidInfo& info() const;
 
     /**
      * Configure the engine.
@@ -73,14 +89,14 @@ public:
      * @param cfg the new configuration
      * @return true on success, false otherwise.
      */
-    bool config(const SidConfig &cfg);
+    bool config(const SidConfig& cfg);
 
     /**
      * Error message.
      *
      * @return string error message.
      */
-    const char *error() const;
+    const char* error() const;
 
     /**
      * Load a tune.
@@ -89,7 +105,7 @@ public:
      * @param tune the SidTune to load, 0 unloads current tune.
      * @return true on sucess, false otherwise.
      */
-    bool load(SidTune *tune);
+    bool load(SidTune* tune);
 
     /**
      * Get the buffer pointers for each of the installed SID chip.
@@ -145,7 +161,7 @@ public:
      * @return number of samples generated (samples for mono, samples*2 for stereo)
      * @since 2.15
      */
-    unsigned int mix(short *buffer, unsigned int samples);
+    unsigned int mix(short* buffer, unsigned int samples);
 
     /**
      * Control CPU tracing.
@@ -154,7 +170,7 @@ public:
      * @param enable enable/disable debugging.
      * @param out the file where to redirect the debug info.
      */
-    void debug(bool enable, FILE *out);
+    void debug(bool enable, FILE* out);
 
     /**
      * Mute/unmute a SID channel.
@@ -197,7 +213,7 @@ public:
      * @param basic pointer to Basic ROM, generally needed only for BASIC tunes.
      * @param character pointer to character generator ROM.
      */
-    void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
+    void setRoms(const uint8_t* kernal, const uint8_t* basic = 0, const uint8_t* character = 0);
 
     /**
      * Set the ROM banks.

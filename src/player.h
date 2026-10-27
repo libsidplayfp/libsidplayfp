@@ -56,7 +56,11 @@ class sidemu;
 
 class Player
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
+    uint64_t m_stateGeneration = 0;
+
     /// Commodore 64 emulator
     c64 m_c64;
 
@@ -124,11 +128,17 @@ private:
 
     inline void run(unsigned int events);
 
-public:
+  public:
+    std::vector<uint8_t> saveState();
+    bool restoreState(const std::vector<uint8_t>& state);
+
     Player();
     ~Player() = default;
 
-    const SidConfig &config() const { return m_cfg; }
+    const SidConfig& config() const
+    {
+        return m_cfg;
+    }
 
     const SidInfo &info() const { return m_info; }
 

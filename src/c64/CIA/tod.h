@@ -38,7 +38,9 @@ class MOS652X;
  */
 class Tod : private Event
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     enum
     {
         TENTHS  = 0,

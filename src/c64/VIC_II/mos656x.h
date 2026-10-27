@@ -43,7 +43,9 @@ namespace libsidplayfp
  */
 class MOS656X : private Event
 {
-public:
+    friend struct SeekStateAccess;
+
+  public:
     enum class model_t
     {
         MOS6567R56A = 0  ///< OLD NTSC CHIP

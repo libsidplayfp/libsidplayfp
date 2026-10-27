@@ -124,6 +124,7 @@ void Player::setChargen(const uint8_t* rom)
 
 void Player::initialise()
 {
+    ++m_stateGeneration;
     m_c64.reset();
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
@@ -540,6 +541,7 @@ SidConfig::sid_model_t getSidModel(SidTuneInfo::model_t sidModel, SidConfig::sid
 
 void Player::sidRelease()
 {
+    ++m_stateGeneration;
     m_c64.clearSids();
 
     for (sidemu *s: m_chips)
@@ -637,3 +639,5 @@ int Player::getBufSize(unsigned int cycles)
 }
 
 }
+
+#include "seekstate.h"

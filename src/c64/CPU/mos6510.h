@@ -79,6 +79,7 @@ struct CPUDebug
  */
 class MOS6510
 {
+    friend struct SeekStateAccess;
     friend void MOS6510Debug::DumpState(event_clock_t time, MOS6510 &cpu);
 
 public:

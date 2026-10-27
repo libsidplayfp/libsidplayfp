@@ -51,6 +51,8 @@ public:
     explicit reSIDfpEmu(sidbuilder *builder);
     ~reSIDfpEmu() override;
 
+    friend struct SeekStateAccess;
+
     bool getStatus() const { return m_status; }
 
     uint8_t read(uint_least8_t addr) override;

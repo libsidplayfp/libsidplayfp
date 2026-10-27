@@ -37,6 +37,7 @@ using event_clock_t = int_fast64_t;
  */
 class Event
 {
+    friend struct SeekStateAccess;
     friend class EventScheduler;
 
 private:

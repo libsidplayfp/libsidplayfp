@@ -142,6 +142,15 @@ unsigned int sidplayfp::mix(short *buffer, unsigned int samples)
     return sidplayer.mix(buffer, samples);
 }
 
+std::vector<uint8_t> sidplayfp::saveState()
+{
+    return sidplayer.saveState();
+}
+bool sidplayfp::restoreState(const std::vector<uint8_t>& state)
+{
+    return sidplayer.restoreState(state);
+}
+
 int sidplayfp::getBufSize(unsigned int cycles)
 {
     return sidplayer.getBufSize(cycles);

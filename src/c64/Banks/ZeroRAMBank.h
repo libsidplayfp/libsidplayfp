@@ -130,7 +130,9 @@ public:
  */
 class ZeroRAMBank final : public Bank
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     // not emulated
     static bool const tape_sense = false;
 

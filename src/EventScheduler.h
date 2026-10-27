@@ -60,7 +60,9 @@ using event_phase_t = enum
  */
 class EventScheduler
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     /// The first event of the chain.
     Event *firstEvent = nullptr;
 

@@ -152,6 +152,7 @@ public:
  */
 class MOS652X
 {
+    friend struct SeekStateAccess;
     friend class InterruptSource;
     friend class SerialPort;
     friend class TimerA;

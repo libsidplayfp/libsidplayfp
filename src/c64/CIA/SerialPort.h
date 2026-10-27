@@ -35,7 +35,9 @@ class MOS652X;
 
 class SerialPort : private Event
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     /// Pointer to the MOS6526 which this Serial Port belongs to.
     MOS652X &m_parent;
 

@@ -71,7 +71,9 @@ class sidmemory;
  */
 class c64 final : private c64env
 {
-public:
+    friend struct SeekStateAccess;
+
+  public:
     using model_t = enum
     {
         PAL_B = 0     ///< PAL C64

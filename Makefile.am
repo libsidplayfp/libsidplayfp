@@ -69,6 +69,8 @@ src/EventScheduler.h \
 src/player.cpp \
 src/call.cpp \
 src/call.h \
+src/seekstate.cpp \
+src/seekstate.h \
 src/player.h \
 src/psiddrv.cpp \
 src/psiddrv.h \

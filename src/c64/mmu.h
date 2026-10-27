@@ -48,7 +48,9 @@ class IOBank;
  */
 class MMU final : public PLA, public sidmemory
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     EventScheduler &eventScheduler;
 
     /// CPU port signals

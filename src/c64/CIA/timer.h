@@ -41,7 +41,9 @@ class MOS652X;
  */
 class Timer : private Event
 {
-protected:
+    friend struct SeekStateAccess;
+
+  protected:
     static constexpr int_least32_t CIAT_CR_START   = 0x01;
     static constexpr int_least32_t CIAT_STEP       = 0x04;
     static constexpr int_least32_t CIAT_CR_ONESHOT = 0x08;
@@ -66,12 +68,11 @@ private:
     EventScheduler &eventScheduler;
 
     /**
-     * This is a tri-state:
+     * CIA timer scheduling:
      *
-     * - when -1: cia is completely stopped
-     * - when 0: cia 1-clock events are ticking.
-     * - otherwise: cycle skip event is ticking, and the value is the first
-     *   phi1 clock of skipping.
+     * - -1: the CIA timer is stopped.
+     * - 0: the CIA timer runs one clock at a time.
+     * - otherwise: the first PHI1 of a skipped countdown.
      */
     event_clock_t ciaEventPauseTime;
 
