@@ -89,6 +89,20 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
     }
 }
 
+void ReSIDfpBuilder::fastPcmSeek(bool enable)
+{
+    for (libsidplayfp::sidemu* e : sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->fastPcmSeek(enable);
+}
+
+bool ReSIDfpBuilder::pcmDetected() const
+{
+    for (const libsidplayfp::sidemu* e : sidobjs)
+        if (static_cast<const libsidplayfp::reSIDfpEmu*>(e)->pcmDetected())
+            return true;
+    return false;
+}
+
 const char *ReSIDfpBuilder::getCredits() const
 {
     return libsidplayfp::reSIDfpEmu::getCredits();
