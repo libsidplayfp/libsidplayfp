@@ -164,6 +164,13 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
 {
     addr &= 0x3f;
 
+    // During seeking, colour writes need no VIC timing update.
+    if (clock == &MOS656X::clockPALSeek && addr >= 0x20 && addr < 0x2f)
+    {
+        regs[addr] = data;
+        return;
+    }
+
     // Process the skipped phases using the current register values before
     // applying this PHI2 write, which could enable sprite DMA.
     if (clock == &MOS656X::clockPALSeek && sprites.canSkipUpdates() &&
