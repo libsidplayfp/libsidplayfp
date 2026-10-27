@@ -38,6 +38,22 @@ void Timer::syncWithCpu()
 {
     if (ciaEventPauseTime > 0)
     {
+        if (m_state == (CIAT_CR_START | CIAT_COUNT3))
+        {
+            const auto elapsed = eventScheduler.getTime(EVENT_CLOCK_PHI2) - ciaEventPauseTime;
+            if (elapsed >= 0)
+            {
+                --timer;
+                m_state = CIAT_CR_START;
+            }
+            else if (elapsed < -1)
+            {
+                // A CPU read can follow the cascade on the same PHI2.
+                m_state = CIAT_CR_START | CIAT_STEP;
+            }
+            ciaEventPauseTime = -1;
+            return;
+        }
         eventScheduler.cancel(m_cycleSkippingEvent);
         const event_clock_t elapsed = eventScheduler.getTime(EVENT_CLOCK_PHI2) - ciaEventPauseTime;
 
