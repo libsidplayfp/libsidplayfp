@@ -1,11 +1,6 @@
 m4_define([lib_major], [3])
-<<<<<<< HEAD
 m4_define([lib_minor], [2])
 m4_define([lib_level], [0a])
-=======
-m4_define([lib_minor], [1])
-m4_define([lib_level], [2])
->>>>>>> f8442ce9 (Prepare for release)
 m4_define([lib_version], [lib_major.lib_minor.lib_level])
 
 AC_PREREQ([2.62])
@@ -195,7 +190,7 @@ AM_CONDITIONAL([ENABLE_TEST], [test x$enable_tests = xyes])
 PKG_CHECK_MODULES([RESIDFP],
     [libresidfp >= 1.0.0],
     [AC_DEFINE([HAVE_RESIDFP], 1, [Define to 1 if you have libresidfp (-lresidfp).])],
-    [AC_MSG_WARN([$RESIDFP_PKG_ERRORS])]
+    [AC_MSG_ERROR([This branch requires libresidfp from the companion performance/seek-support branch; see docs/engine-extensions.md. $RESIDFP_PKG_ERRORS])]
 )
 
 AM_CONDITIONAL([RESIDFP_SUPPORT], [ test "x$pkg_cv_RESIDFP_LIBS" != x ])

@@ -44,6 +44,25 @@ public:
 
     const char *getCredits() const;
 
+    /**
+     * Signal that a SID read requires replay after digital clocking was skipped.
+     */
+    struct SeekReadbackRequired
+    {
+    };
+    /**
+     * Enable or disable the guarded fast PCM seek path.
+     *
+     * @param enable true to enable fast PCM seeking
+     */
+    void fastPcmSeek(bool enable);
+    /**
+     * Check whether a SID chip has detected volume-register PCM.
+     *
+     * @return true if PCM activity has been detected.
+     */
+    bool pcmDetected() const;
+
     /// @name global settings
     /// Settings that affect all SIDs.
     //@{
@@ -130,9 +149,15 @@ public:
      * @since 3.2
      */
     void setNoiseLevel(int level);
-    //@}
 
-private:
+    /**
+     * Enable or disable silent clocking during seeking.
+     *
+     * @param enable "true" to advance SID state without generating audio
+     */
+    void silent(bool enable);
+
+  private:
     struct config;
     config *m_config;
 };

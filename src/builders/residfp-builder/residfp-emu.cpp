@@ -21,6 +21,7 @@
  */
 
 #include "residfp-emu.h"
+#include "residfp.h"
 
 #include <cmath>
 
@@ -75,12 +76,25 @@ reSIDfpEmu::~reSIDfpEmu()
 void reSIDfpEmu::reset(uint8_t volume)
 {
     m_accessClk = 0;
+    m_fastPcm = false;
+    m_pcmDetected = false;
+    m_readbackUsed = false;
+    m_volumeWrites = 0;
+    m_lastVolume = volume & 0x0f;
+    m_volumeProbeStart = 0;
     m_sid.reset();
     m_sid.write(0x18, volume);
 }
 
 uint8_t reSIDfpEmu::read(uint_least8_t addr)
 {
+    if (addr == 0x18 || addr == 0x1b || addr == 0x1c)
+    {
+        if (m_sid.fastSilentUsed())
+            throw ReSIDfpBuilder::SeekReadbackRequired();
+        m_readbackUsed = true;
+        m_sid.fastSilent(false);
+    }
     clock();
     return m_sid.read(addr);
 }
@@ -89,18 +103,42 @@ void reSIDfpEmu::write(uint_least8_t addr, uint8_t data)
 {
     clock();
     m_sid.write(addr, data);
+    if (addr == 0x18 && !m_pcmDetected)
+    {
+        const uint8_t volume = data & 0x0f;
+        if (volume == m_lastVolume)
+            return;
+        m_lastVolume = volume;
+        if (m_volumeWrites++ == 0)
+            m_volumeProbeStart = m_accessClk;
+        const event_clock_t elapsed = m_accessClk - m_volumeProbeStart;
+        if (elapsed >= m_probeWindow)
+        {
+            // More than 100 volume writes/second over at least 250 ms.
+            m_pcmDetected = static_cast<uint64_t>(m_volumeWrites - 1) * m_probeWindow >
+                            static_cast<uint64_t>(elapsed) * 25;
+            m_volumeWrites = 0;
+            m_sid.fastSilent(m_fastPcm && m_pcmDetected && !m_readbackUsed);
+        }
+    }
 }
 
 void reSIDfpEmu::clock()
 {
     const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
+    if (m_silent)
+    {
+        m_sid.clockSilent(cycles);
+        return;
+    }
     m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
 }
 
 void reSIDfpEmu::sampling(float systemclock, float freq,
         SidConfig::sampling_method_t method)
 {
+    m_probeWindow = static_cast<event_clock_t>(systemclock / 4);
     reSIDfp::SamplingMethod sampleMethod;
     switch (method)
     {

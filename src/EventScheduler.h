@@ -60,14 +60,18 @@ using event_phase_t = enum
  */
 class EventScheduler
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     /// The first event of the chain.
     Event *firstEvent = nullptr;
 
     /// EventScheduler's current clock.
     event_clock_t currentTime = 0;
+    unsigned int batchLimit = 1;
+    unsigned int batchCount = 1;
 
-private:
+  private:
     /**
      * Scan the event queue and schedule event for execution.
      *
@@ -131,14 +135,58 @@ public:
     void reset();
 
     /**
-     * Fire next event, advance system time to that event.
+     * Fire the next event and advance system time to that event.
+     *
+     * @param budget maximum batch budget
+     * @return the batch budget consumed.
      */
-    void clock()
+    unsigned int clock(unsigned int budget = 1)
     {
+        batchLimit = budget;
+        batchCount = 1;
         Event &event = *firstEvent;
         firstEvent = firstEvent->next;
         currentTime = event.triggerTime;
         event.event();
+        return batchCount;
+    }
+
+    /**
+     * Skip complete side-effect-free CPU loops before the next chip event.
+     * Process events scheduled for the same clock in queue order.
+     *
+     * @param cycles CPU cycles per recognised loop iteration
+     */
+    void skipCPULoops(unsigned int cycles)
+    {
+        unsigned int available = batchLimit - batchCount;
+        if (firstEvent)
+        {
+            const auto gap = firstEvent->triggerTime - currentTime;
+            if (gap <= 0)
+                return;
+            const auto untilEvent = (gap - 1) / 2;
+            if (untilEvent < available)
+                available = static_cast<unsigned int>(untilEvent);
+        }
+        const unsigned int skipped = available / cycles * cycles;
+        currentTime += static_cast<event_clock_t>(skipped) * 2;
+        batchCount += skipped;
+    }
+
+    /**
+     * Continue the current CPU callback within the batch when scheduling permits.
+     *
+     * @return true if execution may continue in the current callback.
+     */
+    bool clockCPU()
+    {
+        const event_clock_t next = currentTime + 2;
+        if (batchCount >= batchLimit || (firstEvent && firstEvent->triggerTime <= next))
+            return false;
+        currentTime = next;
+        ++batchCount;
+        return true;
     }
 
     /**
@@ -165,6 +213,22 @@ public:
      *
      * @return The current phase
      */
+    event_clock_t halfTime() const
+    {
+        return currentTime;
+    }
+
+    void clockCycles(unsigned int cycles)
+    {
+        const event_clock_t end = currentTime + static_cast<event_clock_t>(cycles) * 2;
+        while (firstEvent && firstEvent->triggerTime < end)
+        {
+            const auto remaining = (end - firstEvent->triggerTime) / 2;
+            clock(static_cast<unsigned int>(remaining > 0 ? remaining : 1));
+        }
+        currentTime = end;
+    }
+
     event_phase_t phase() const { return static_cast<event_phase_t>(currentTime & 1); }
 
     event_clock_t remaining(const Event &event) const { return event.triggerTime - currentTime; }

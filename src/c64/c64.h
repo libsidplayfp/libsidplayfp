@@ -69,9 +69,31 @@ class sidmemory;
  * - Basic ROM 2364
  * - Kernal ROM 2364
  */
+class PlaySidSamples final : public XSID
+{
+    MMU& memory;
+    SidBank& bank;
+    uint8_t readMemByte(uint_least16_t address) override
+    {
+        return memory.readMemByte(address);
+    }
+    void writeMemByte(uint8_t value) override
+    {
+        bank.pokeHardware(value);
+    }
+
+  public:
+    PlaySidSamples(EventScheduler& scheduler, MMU& memory, SidBank& bank)
+        : XSID(&scheduler), memory(memory), bank(bank)
+    {
+    }
+};
+
 class c64 final : private c64env
 {
-public:
+    friend struct SeekStateAccess;
+
+  public:
     using model_t = enum
     {
         PAL_B = 0     ///< PAL C64
@@ -130,6 +152,8 @@ private:
 
     /// MMU chip
     MMU mmu;
+
+    PlaySidSamples playSid;
 
     /// CPUBus
     c64cpubus cpubus;
@@ -199,13 +223,26 @@ public:
     /**
      * Clock the emulation.
      *
+     * @param budget maximum event batch budget
+     * @return the batch budget consumed.
      * @throws haltInstruction
      */
-    void clock() { eventScheduler.clock(); }
+    unsigned int clock(unsigned int budget = 1)
+    {
+        return eventScheduler.clock(budget);
+    }
 
     void debug(bool enable, FILE *out) { cpu.debug(enable, out); }
 
     void reset();
+    void enablePlaySid(bool enabled)
+    {
+        sidBank.setPlaySid(enabled ? &playSid : nullptr);
+    }
+    void mutePlaySid(bool muted)
+    {
+        playSid.mute(muted);
+    }
     void resetCpu() { cpu.reset(); }
 
     /**
@@ -214,7 +251,7 @@ public:
     void setModel(model_t model);
 
     /**
-     * Set the cia model.
+     * Set the CIA model.
      */
     void setCiaModel(cia_model_t model);
 
@@ -258,6 +295,30 @@ public:
     //@}
 
     sidmemory& getMemInterface() { return mmu; }
+
+    void fastVicSeek(bool enable)
+    {
+        vic.fastSeek(enable);
+    }
+
+    void clockCycles(unsigned cycles)
+    {
+        eventScheduler.clockCycles(cycles);
+    }
+    bool nativePcmSeeking() const
+    {
+        return cpu.nativePcmSeeking();
+    }
+    void fastCpuSeek(bool enable) { cpu.fastCpuSeek(enable); }
+    uint64_t fastLoopCycles() const { return cpu.fastLoopCycles(); }
+    void nativePcmSeek(bool enable)
+    {
+        cpu.nativePcmSeek(enable);
+    }
+    uint64_t nativePcmCalls() const
+    {
+        return cpu.nativePcmCalls();
+    }
 
     uint_least16_t getCia1TimerA() const { return cia1.getTimerA(); }
 };

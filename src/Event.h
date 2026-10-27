@@ -37,17 +37,18 @@ using event_clock_t = int_fast64_t;
  */
 class Event
 {
+    friend struct SeekStateAccess;
     friend class EventScheduler;
 
 private:
     /// The next event in sequence.
-    Event *next;
+    Event* next = nullptr;
 
     /// The clock this event fires.
-    event_clock_t triggerTime;
+    event_clock_t triggerTime = 0;
 
     /// Describe event for humans.
-    const char * const m_name;
+    const char* const m_name;
 
 public:
     /**

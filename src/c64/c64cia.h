@@ -45,7 +45,9 @@ namespace libsidplayfp
  */
 class c64cia1 final : public MOS652X, public Bank
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     c64env &m_env;
     uint_least16_t last_ta;
 

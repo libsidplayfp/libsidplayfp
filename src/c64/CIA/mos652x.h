@@ -90,6 +90,8 @@ public:
      */
     void cascade()
     {
+        if (deferQuietCascade())
+            return;
         // we pretend that we are CPU doing a write to ctrl register
         syncWithCpu();
         m_state |= CIAT_STEP;
@@ -152,6 +154,7 @@ public:
  */
 class MOS652X
 {
+    friend struct SeekStateAccess;
     friend class InterruptSource;
     friend class SerialPort;
     friend class TimerA;

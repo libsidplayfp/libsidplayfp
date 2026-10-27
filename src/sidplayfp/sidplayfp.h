@@ -24,6 +24,7 @@
 #define SIDPLAYFP_H
 
 #include <cstdint>
+#include <vector>
 #include <cstdio>
 
 #include "sidplayfp/siddefs.h"
@@ -37,7 +38,8 @@ class  EventContext;
 // Private Sidplayer
 namespace libsidplayfp
 {
-    class Player;
+class Player;
+struct SeekStateAccess;
 }
 
 /**
@@ -45,10 +47,47 @@ namespace libsidplayfp
  */
 class SID_EXTERN sidplayfp
 {
-private:
-    libsidplayfp::Player &sidplayer;
+  private:
+    friend struct libsidplayfp::SeekStateAccess;
+    libsidplayfp::Player& sidplayer;
 
-public:
+  public:
+    /**
+     * Save an in-memory checkpoint of the current machine state.
+     * The checkpoint belongs to this player instance and load generation.
+     *
+     * @return the checkpoint data, or an empty vector if unsupported.
+     */
+    std::vector<uint8_t> saveState();
+    /**
+     * Restore a checkpoint from this player instance and load generation.
+     *
+     * @param state the saved checkpoint
+     * @return true if the checkpoint was restored.
+     */
+    bool restoreState(const std::vector<uint8_t>& state);
+    /**
+     * Enable a checked tracker layout identified in the original tune file.
+     *
+     * @param sidIdIdentity SIDId identity supplied by the caller
+     * @return true if the recognised layout passes the engine guards.
+     */
+    bool enableTrackerSeek(const char* sidIdIdentity);
+    /**
+     * Advance recognised tracker state during inaudible seeking.
+     * The caller renders the usual SID warm-up before audible playback.
+     *
+     * @param targetMs target playback position in milliseconds
+     * @return true if tracker calls were skipped.
+     */
+    bool seekTracker(unsigned targetMs);
+    /**
+     * Get the number of tracker calls skipped.
+     *
+     * @return the skipped tracker-call count.
+     */
+    uint64_t trackerCallsSkipped() const;
+
     sidplayfp();
     ~sidplayfp();
 
@@ -57,14 +96,14 @@ public:
      *
      * @return a const reference to the current configuration.
      */
-    const SidConfig &config() const;
+    const SidConfig& config() const;
 
     /**
      * Get the current player informations.
      *
      * @return a const reference to the current info.
      */
-    const SidInfo &info() const;
+    const SidInfo& info() const;
 
     /**
      * Configure the engine.
@@ -73,14 +112,14 @@ public:
      * @param cfg the new configuration
      * @return true on success, false otherwise.
      */
-    bool config(const SidConfig &cfg);
+    bool config(const SidConfig& cfg);
 
     /**
      * Error message.
      *
      * @return string error message.
      */
-    const char *error() const;
+    const char* error() const;
 
     /**
      * Load a tune.
@@ -89,7 +128,7 @@ public:
      * @param tune the SidTune to load, 0 unloads current tune.
      * @return true on sucess, false otherwise.
      */
-    bool load(SidTune *tune);
+    bool load(SidTune* tune);
 
     /**
      * Get the buffer pointers for each of the installed SID chip.
@@ -145,7 +184,7 @@ public:
      * @return number of samples generated (samples for mono, samples*2 for stereo)
      * @since 2.15
      */
-    unsigned int mix(short *buffer, unsigned int samples);
+    unsigned int mix(short* buffer, unsigned int samples);
 
     /**
      * Control CPU tracing.
@@ -154,7 +193,7 @@ public:
      * @param enable enable/disable debugging.
      * @param out the file where to redirect the debug info.
      */
-    void debug(bool enable, FILE *out);
+    void debug(bool enable, FILE* out);
 
     /**
      * Mute/unmute a SID channel.
@@ -197,7 +236,7 @@ public:
      * @param basic pointer to Basic ROM, generally needed only for BASIC tunes.
      * @param character pointer to character generator ROM.
      */
-    void setRoms(const uint8_t* kernal, const uint8_t* basic=0, const uint8_t* character=0);
+    void setRoms(const uint8_t* kernal, const uint8_t* basic = 0, const uint8_t* character = 0);
 
     /**
      * Set the ROM banks.
@@ -212,7 +251,31 @@ public:
     //@}
 
     /**
-     * Get the CIA 1 Timer A programmed value.
+     * Signal that an interrupt or code change prevents safe accelerated seeking.
+     * The caller must reload and replay with native PCM seeking disabled.
+     */
+    struct SeekReplayRequired
+    {
+    };
+    /**
+     * Enable or disable recognised PCM player-call acceleration.
+     *
+     * @param enable true to enable accelerated PCM seeking
+     */
+    void fastCpuSeek(bool enable);
+    uint64_t fastLoopCycles() const;
+    void nativePcmSeek(bool enable);
+    /**
+     * Get the number of accelerated native PCM calls.
+     *
+     * @return the accelerated call count.
+     */
+    uint64_t nativePcmCalls() const;
+
+    /**
+     * Get the programmed CIA 1 Timer A value.
+     *
+     * @return the timer value.
      */
     uint_least16_t getCia1TimerA() const;
 

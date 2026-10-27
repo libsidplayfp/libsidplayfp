@@ -124,9 +124,11 @@ void Player::setChargen(const uint8_t* rom)
 
 void Player::initialise()
 {
+    ++m_stateGeneration;
     m_c64.reset();
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
+    m_c64.enablePlaySid(tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_PSID);
 
     const uint_least32_t size = static_cast<uint_least32_t>(tuneInfo->loadAddr()) + tuneInfo->c64dataLen() - 1;
     if (size > 0xffff) UNLIKELY
@@ -173,6 +175,7 @@ void Player::initialise()
         throw configError(m_tune->statusString());
     }
 
+    initTrackerSeek();
     m_c64.resetCpu();
 #if 0
     // Run for some cycles until the initialization routine is done
@@ -209,6 +212,8 @@ bool Player::load(SidTune *tune)
 
 void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
 {
+    if (sidNum == 0 && voice == 3)
+        m_c64.mutePlaySid(enable);
     if (sidemu *s = (sidNum < m_chips.size()) ? m_chips[sidNum] : nullptr)
         s->voice(voice, enable);
 }
@@ -268,8 +273,16 @@ int Player::play(unsigned int cycles)
 
     try
     {
-        for (unsigned int i = 0; i < cycles; i++)
-            m_c64.clock();
+        const bool nativeSeeking = m_c64.nativePcmSeeking();
+        m_c64.fastVicSeek(nativeSeeking);
+        if (nativeSeeking)
+        {
+            const unsigned int limit = static_cast<unsigned int>(m_c64.getMainCpuSpeed() / 50) - 1;
+            m_c64.clockCycles(cycles < limit ? cycles : limit);
+        }
+        else
+            for (unsigned int i = 0; i < cycles;)
+                i += m_c64.clock(cycles - i);
 
         int sampleCount = 0;
         for (sidemu *s: m_chips)
@@ -534,6 +547,7 @@ SidConfig::sid_model_t getSidModel(SidTuneInfo::model_t sidModel, SidConfig::sid
 
 void Player::sidRelease()
 {
+    ++m_stateGeneration;
     m_c64.clearSids();
 
     for (sidemu *s: m_chips)
