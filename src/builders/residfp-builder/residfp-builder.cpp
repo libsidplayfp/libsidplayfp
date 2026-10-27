@@ -94,6 +94,12 @@ const char *ReSIDfpBuilder::getCredits() const
     return libsidplayfp::reSIDfpEmu::getCredits();
 }
 
+void ReSIDfpBuilder::silent(bool enable)
+{
+    for (libsidplayfp::sidemu* e : sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->silent(enable);
+}
+
 void ReSIDfpBuilder::filter6581Curve(double filterCurve)
 {
     m_config->filter6581Curve = filterCurve;

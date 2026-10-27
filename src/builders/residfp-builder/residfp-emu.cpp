@@ -95,6 +95,11 @@ void reSIDfpEmu::clock()
 {
     const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
     m_accessClk += cycles;
+    if (m_silent)
+    {
+        m_sid.clockSilent(cycles);
+        return;
+    }
     m_bufferpos += m_sid.clock(cycles, m_buffer+m_bufferpos);
 }
 

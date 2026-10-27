@@ -42,8 +42,9 @@ class reSIDfpEmu final : public sidemu
 {
 private:
     reSIDfp::residfp &m_sid;
+    bool m_silent = false;
 
-public:
+  public:
     static const char* getCredits();
 
 public:
@@ -65,6 +66,11 @@ public:
         SidConfig::sampling_method_t method) override;
 
     void model(SidConfig::sid_model_t model, bool digiboost) override;
+
+    void silent(bool enable)
+    {
+        m_silent = enable;
+    }
 
     // Specific to residfp
     void enableFilter(bool enable) { m_sid.enableFilter(enable); }

@@ -130,9 +130,15 @@ public:
      * @since 3.2
      */
     void setNoiseLevel(int level);
-    //@}
 
-private:
+    /**
+     * Enable or disable silent clocking during seeking.
+     *
+     * @param enable "true" to advance SID state without generating audio
+     */
+    void silent(bool enable);
+
+  private:
     struct config;
     config *m_config;
 };
