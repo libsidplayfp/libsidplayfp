@@ -69,6 +69,26 @@ class sidmemory;
  * - Basic ROM 2364
  * - Kernal ROM 2364
  */
+class PlaySidSamples final : public XSID
+{
+    MMU& memory;
+    SidBank& bank;
+    uint8_t readMemByte(uint_least16_t address) override
+    {
+        return memory.readMemByte(address);
+    }
+    void writeMemByte(uint8_t value) override
+    {
+        bank.pokeHardware(value);
+    }
+
+  public:
+    PlaySidSamples(EventScheduler& scheduler, MMU& memory, SidBank& bank)
+        : XSID(&scheduler), memory(memory), bank(bank)
+    {
+    }
+};
+
 class c64 final : private c64env
 {
 public:
@@ -130,6 +150,8 @@ private:
 
     /// MMU chip
     MMU mmu;
+
+    PlaySidSamples playSid;
 
     /// CPUBus
     c64cpubus cpubus;
@@ -206,6 +228,14 @@ public:
     void debug(bool enable, FILE *out) { cpu.debug(enable, out); }
 
     void reset();
+    void enablePlaySid(bool enabled)
+    {
+        sidBank.setPlaySid(enabled ? &playSid : nullptr);
+    }
+    void mutePlaySid(bool muted)
+    {
+        playSid.mute(muted);
+    }
     void resetCpu() { cpu.reset(); }
 
     /**

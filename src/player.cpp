@@ -127,6 +127,7 @@ void Player::initialise()
     m_c64.reset();
 
     const SidTuneInfo* tuneInfo = m_tune->getInfo();
+    m_c64.enablePlaySid(tuneInfo->compatibility() == SidTuneInfo::COMPATIBILITY_PSID);
 
     const uint_least32_t size = static_cast<uint_least32_t>(tuneInfo->loadAddr()) + tuneInfo->c64dataLen() - 1;
     if (size > 0xffff) UNLIKELY
@@ -209,6 +210,8 @@ bool Player::load(SidTune *tune)
 
 void Player::mute(unsigned int sidNum, unsigned int voice, bool enable)
 {
+    if (sidNum == 0 && voice == 3)
+        m_c64.mutePlaySid(enable);
     if (sidemu *s = (sidNum < m_chips.size()) ? m_chips[sidNum] : nullptr)
         s->voice(voice, enable);
 }
