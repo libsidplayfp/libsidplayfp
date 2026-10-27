@@ -98,6 +98,18 @@ const char *parseTime(const char *str, int_least32_t &result)
     return end;
 }
 
+bool SidDatabase::open(std::istream& input)
+{
+    delete m_parser;
+    m_parser = new libsidplayfp::iniParser();
+    if (!m_parser->open(input))
+    {
+        close();
+        errorString = ERR_UNABLE_TO_LOAD_DATABASE;
+        return false;
+    }
+    return true;
+}
 
 bool SidDatabase::open(const char *filename)
 {

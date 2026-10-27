@@ -71,7 +71,12 @@ bool iniParser::open(const wchar_t *fName)
 }
 #endif
 
-bool iniParser::open_internal(std::ifstream & iniFile)
+bool iniParser::open(std::istream& input)
+{
+    return open_internal(input);
+}
+
+bool iniParser::open_internal(std::istream& iniFile)
 {
     if (iniFile.fail())
     {
