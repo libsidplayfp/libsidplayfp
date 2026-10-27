@@ -67,6 +67,8 @@ src/EventCallback.h \
 src/EventScheduler.cpp \
 src/EventScheduler.h \
 src/player.cpp \
+src/call.cpp \
+src/call.h \
 src/player.h \
 src/psiddrv.cpp \
 src/psiddrv.h \

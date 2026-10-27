@@ -211,6 +211,22 @@ public:
      *
      * @return The current phase
      */
+    event_clock_t halfTime() const
+    {
+        return currentTime;
+    }
+
+    void clockCycles(unsigned int cycles)
+    {
+        const event_clock_t end = currentTime + static_cast<event_clock_t>(cycles) * 2;
+        while (firstEvent && firstEvent->triggerTime < end)
+        {
+            const auto remaining = (end - firstEvent->triggerTime) / 2;
+            clock(static_cast<unsigned int>(remaining > 0 ? remaining : 1));
+        }
+        currentTime = end;
+    }
+
     event_phase_t phase() const { return static_cast<event_phase_t>(currentTime & 1); }
 
     event_clock_t remaining(const Event &event) const { return event.triggerTime - currentTime; }

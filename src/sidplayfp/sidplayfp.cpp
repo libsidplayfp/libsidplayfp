@@ -146,3 +146,13 @@ int sidplayfp::getBufSize(unsigned int cycles)
 {
     return sidplayer.getBufSize(cycles);
 }
+
+void sidplayfp::nativePcmSeek(bool enable)
+{
+    sidplayer.nativePcmSeek(enable);
+}
+
+uint64_t sidplayfp::nativePcmCalls() const
+{
+    return sidplayer.nativePcmCalls();
+}

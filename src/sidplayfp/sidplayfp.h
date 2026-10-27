@@ -212,7 +212,29 @@ public:
     //@}
 
     /**
-     * Get the CIA 1 Timer A programmed value.
+     * Signal that an interrupt or code change prevents safe accelerated seeking.
+     * The caller must reload and replay with native PCM seeking disabled.
+     */
+    struct SeekReplayRequired
+    {
+    };
+    /**
+     * Enable or disable recognised PCM player-call acceleration.
+     *
+     * @param enable true to enable accelerated PCM seeking
+     */
+    void nativePcmSeek(bool enable);
+    /**
+     * Get the number of accelerated native PCM calls.
+     *
+     * @return the accelerated call count.
+     */
+    uint64_t nativePcmCalls() const;
+
+    /**
+     * Get the programmed CIA 1 Timer A value.
+     *
+     * @return the timer value.
      */
     uint_least16_t getCia1TimerA() const;
 

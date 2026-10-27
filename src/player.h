@@ -154,6 +154,15 @@ public:
     void setBasic(const uint8_t* rom);
     void setChargen(const uint8_t* rom);
 
+    void nativePcmSeek(bool enable)
+    {
+        m_c64.nativePcmSeek(enable);
+    }
+    uint64_t nativePcmCalls() const
+    {
+        return m_c64.nativePcmCalls();
+    }
+
     uint_least16_t getCia1TimerA() const { return m_c64.getCia1TimerA(); }
 
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);

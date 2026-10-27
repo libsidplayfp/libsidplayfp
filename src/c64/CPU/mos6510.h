@@ -166,7 +166,51 @@ private:
     uint8_t Register_Y;
 
     /// Table of CPU opcode implementations
-    struct ProcessorCycle instrTable[0x101 << 3];
+    struct ProcessorCycle instrTable[0x102 << 3];
+
+    static constexpr int nativeSlot = 0x101 << 3;
+    enum class PcmActionKind
+    {
+        Write,
+        ReadLow,
+        ReadHigh,
+        Scratch,
+        Dac,
+        Ack,
+        Finish
+    };
+    struct PcmAction
+    {
+        unsigned int cycle;
+        PcmActionKind kind;
+        uint16_t address;
+        uint8_t value;
+    };
+    PcmAction m_pcmActions[16];
+    unsigned int m_pcmActionCount = 0, m_pcmActionIndex = 0, m_pcmCycle = 0;
+    bool m_pcmEnabled = false, m_pcmActive = false, m_pcmCached = false;
+    uint16_t m_pcmLow = 0, m_pcmHigh = 0, m_pcmScratch = 0, m_pcmEnd = 0, m_pcmDac = 0;
+    uint8_t m_pcmPointer = 0, m_pcmAdd = 0, m_pcmEndValue = 0;
+    uint8_t m_pcmSample = 0, m_pcmSavedA = 0, m_pcmSavedY = 0, m_pcmSavedSP = 0;
+    uint64_t m_pcmCalls = 0;
+    PcmAction m_pcmMemoryWrites[16];
+    unsigned int m_pcmMemoryCount = 0;
+    bool m_pcmWriteCycle[96] = {};
+    event_clock_t m_pcmClock = 0;
+    bool m_idleActive = false;
+    uint16_t m_idlePC = 0;
+    unsigned int m_idlePhase = 0;
+    event_clock_t m_idleClock = 0;
+    void nativePcmSchedule();
+    void nativePcmSync();
+    void idleSync();
+    void idleWake();
+    bool cachePcmRoutine(uint16_t pc);
+    bool beginNativePcm(uint16_t pc);
+    void nativePcmCycle();
+    void pcmCodeWrite(uint16_t address);
+    void addPcmAction(unsigned cycle, PcmActionKind kind, uint16_t address = 0, uint8_t value = 0);
+    void updatePcmCycleKind();
 
     // Debug info
     std::unique_ptr<CPUDebug> cpu_debug;
@@ -324,7 +368,20 @@ public:
 
     inline uint8_t cpuRead(uint_least16_t addr) { return dataBus.cpuRead(addr); }
 
-    inline void cpuWrite(uint_least16_t addr, uint8_t data) { dataBus.cpuWrite(addr, data); }
+    inline void cpuWrite(uint_least16_t addr, uint8_t data)
+    {
+        pcmCodeWrite(addr);
+        dataBus.cpuWrite(addr, data);
+    }
+    void nativePcmSeek(bool enable);
+    bool nativePcmSeeking() const
+    {
+        return m_pcmEnabled || m_pcmActive || m_idleActive;
+    }
+    uint64_t nativePcmCalls() const
+    {
+        return m_pcmCalls;
+    }
 
     void reset();
 

@@ -268,8 +268,14 @@ int Player::play(unsigned int cycles)
 
     try
     {
-        for (unsigned int i = 0; i < cycles;)
-            i += m_c64.clock(cycles - i);
+        if (m_c64.nativePcmSeeking())
+        {
+            const unsigned int limit = static_cast<unsigned int>(m_c64.getMainCpuSpeed() / 50) - 1;
+            m_c64.clockCycles(cycles < limit ? cycles : limit);
+        }
+        else
+            for (unsigned int i = 0; i < cycles;)
+                i += m_c64.clock(cycles - i);
 
         int sampleCount = 0;
         for (sidemu *s: m_chips)

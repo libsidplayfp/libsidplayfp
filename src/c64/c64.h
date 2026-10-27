@@ -264,6 +264,23 @@ public:
 
     sidmemory& getMemInterface() { return mmu; }
 
+    void clockCycles(unsigned cycles)
+    {
+        eventScheduler.clockCycles(cycles);
+    }
+    bool nativePcmSeeking() const
+    {
+        return cpu.nativePcmSeeking();
+    }
+    void nativePcmSeek(bool enable)
+    {
+        cpu.nativePcmSeek(enable);
+    }
+    uint64_t nativePcmCalls() const
+    {
+        return cpu.nativePcmCalls();
+    }
+
     uint_least16_t getCia1TimerA() const { return cia1.getTimerA(); }
 };
 
