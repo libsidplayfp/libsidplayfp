@@ -26,6 +26,7 @@
 #include <memory>
 #include <string>
 #include <cstdint>
+#include <cstring>
 #include <cstdio>
 
 #include "flags.h"
@@ -123,6 +124,27 @@ private:
     /// Event scheduler
     EventScheduler &eventScheduler;
 
+    bool m_loopCacheUsed = false;
+    uint8_t m_loopCache[65536] = {};
+    bool m_loopSeenPages[256] = {};
+    void loopCodeWrite(uint16_t address)
+    {
+        if (!m_loopCacheUsed)
+            return;
+        if (address <= 1)
+        {
+            std::memset(m_loopCache, 0, sizeof(m_loopCache));
+            return;
+        }
+        if (address >= 0xd000 && address < 0xe000)
+            return;
+        const unsigned page = address >> 8;
+        if (m_loopSeenPages[page])
+            std::memset(m_loopCache + (page << 8), 0, 256);
+        if (page && m_loopSeenPages[page - 1])
+            std::memset(m_loopCache + ((page - 1) << 8), 0, 256);
+    }
+
     /// Data bus
     CPUDataBus &dataBus;
 
@@ -178,7 +200,8 @@ private:
         Scratch,
         Dac,
         Ack,
-        Finish
+        Finish,
+        MixerFinish
     };
     struct PcmAction
     {
@@ -208,6 +231,7 @@ private:
     void idleWake();
     bool cachePcmRoutine(uint16_t pc);
     bool beginNativePcm(uint16_t pc);
+    bool beginDigiMixer(uint16_t pc);
     void nativePcmCycle();
     void pcmCodeWrite(uint16_t address);
     void addPcmAction(unsigned cycle, PcmActionKind kind, uint16_t address = 0, uint8_t value = 0);
@@ -371,6 +395,7 @@ public:
 
     inline void cpuWrite(uint_least16_t addr, uint8_t data)
     {
+        loopCodeWrite(addr);
         pcmCodeWrite(addr);
         dataBus.cpuWrite(addr, data);
     }

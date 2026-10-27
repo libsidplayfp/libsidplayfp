@@ -367,7 +367,8 @@ void MOS6510::fetchNextOpcode()
     }
 
     if (m_pcmEnabled && cycleCount == (PHAn << 3) && flags.getI())
-        beginNativePcm(pc);
+        if (!beginDigiMixer(pc))
+            beginNativePcm(pc);
 }
 
 /**
@@ -2248,6 +2249,9 @@ void MOS6510::Initialise()
     m_pcmActive = false;
     m_idleActive = false;
     m_pcmCached = false;
+    m_loopCacheUsed = false;
+    std::memset(m_loopCache, 0, sizeof(m_loopCache));
+    std::memset(m_loopSeenPages, 0, sizeof(m_loopSeenPages));
     m_pcmEnabled = false;
     m_pcmCalls = 0;
     // Reset stack
@@ -2327,6 +2331,9 @@ void MOS6510::debug(bool enable, FILE *out)
 
 void MOS6510::pcmCodeWrite(uint16_t address)
 {
+    if (m_pcmActive && m_pcmActions[0].kind == PcmActionKind::MixerFinish &&
+        (address < 2 || (address >= m_pcmLow && address < m_pcmHigh)))
+        throw sidplayfp::SeekReplayRequired();
     if (m_idleActive && address >= m_idlePC && address <= m_idlePC + 2)
         idleWake();
     if (m_pcmCached && (address < 2 || (address >= m_pcmLow && address < m_pcmLow + 50) ||
@@ -2632,6 +2639,18 @@ void MOS6510::nativePcmCycle()
         Register_Accumulator = cpuRead(action.address);
         flags.setNZ(Register_Accumulator);
         break;
+    case PcmActionKind::MixerFinish:
+        for (unsigned i = 0; i < m_pcmMemoryCount; ++i)
+            cpuWrite(m_pcmMemoryWrites[i].address, m_pcmMemoryWrites[i].value);
+        Register_StackPointer = static_cast<uint8_t>(m_pcmSavedSP - 2);
+        m_pcmActive = false;
+        Register_ProgramCounter = action.address;
+        fetchNextOpcode();
+        if (rdy)
+            eventScheduler.schedule(m_nosteal, 1);
+        else
+            eventScheduler.schedule(m_steal, 1);
+        return;
     case PcmActionKind::Finish:
         Register_Accumulator = cpuRead(0xdd0d);
         for (unsigned i = 0; i < m_pcmMemoryCount; ++i)
@@ -2651,6 +2670,133 @@ void MOS6510::nativePcmCycle()
         break;
     }
     nativePcmSchedule();
+}
+
+bool MOS6510::beginDigiMixer(uint16_t pc)
+{
+    if (pc < 0x9d00 || pc > 0x9f50 || ((pc & 255) != 0 && (pc & 255) != 0x50))
+        return false;
+    static constexpr uint8_t code0[] = {72,  152, 72,  160, 0,   177, 81, 41,  15, 74, 24,
+                                        105, 8,   141, 24,  212, 169, 80, 141, 24, 3};
+    static constexpr uint8_t code1[] = {72,  152, 72,  160, 0,   177, 81,  74,  74,
+                                        74,  74,  74,  24,  105, 8,   141, 24,  212,
+                                        169, 0,   141, 24,  3,   230, 81,  208, 15};
+    static constexpr uint8_t code2[] = {72,  152, 72,  160, 0,   177, 76,  74,  74,
+                                        74,  74,  74,  24,  105, 8,   141, 24,  212,
+                                        169, 80,  141, 24,  3,   230, 76,  208, 15};
+    static constexpr uint8_t code3[] = {72,  152, 72,  160, 0,   177, 76, 41,  15, 74, 24,
+                                        105, 8,   141, 24,  212, 169, 0,  141, 24, 3};
+    static constexpr uint8_t code4[] = {72,  152, 72,  160, 0,  177, 76,  74, 74,  74, 74,  141, 64,
+                                        3,   177, 81,  41,  15, 24,  109, 64, 3,   74, 24,  73,  15,
+                                        141, 24,  212, 169, 80, 141, 24,  3,  230, 76, 208, 17};
+    static constexpr uint8_t code5[] = {72,  152, 72,  160, 0,  177, 81,  74, 74,  74, 74,  141, 64,
+                                        3,   177, 76,  41,  15, 24,  109, 64, 3,   74, 24,  73,  15,
+                                        141, 24,  212, 169, 0,  141, 24,  3,  230, 81, 208, 17};
+    static constexpr const uint8_t* codes[] = {code0, code1, code2, code3, code4, code5};
+    const unsigned mode = ((pc >> 8) - 0x9d) * 2 + ((pc & 255) ? 1 : 0);
+    const bool mix = mode >= 4, advance = mix || mode == 1 || mode == 2;
+    const unsigned length = mix ? 38 : advance ? 27 : 21;
+    if (m_loopCache[pc] != 3)
+    {
+        for (unsigned i = 0; i < length; ++i)
+            if (cpuRead(pc + i) != codes[mode][i])
+                return false;
+        m_loopCache[pc] = 3;
+        m_loopCacheUsed = true;
+        m_loopSeenPages[pc >> 8] = true;
+    }
+    const auto* code = codes[mode];
+    const unsigned finish = mix ? 55 : advance ? 42 : 21;
+    // Keep sample-end and page-crossing control flow interpreted.
+    const uint8_t pointer = code[6], other = mix ? code[15] : 0;
+    const uint8_t lo = cpuRead(pointer), hi = cpuRead(static_cast<uint8_t>(pointer + 1));
+    if (advance && lo == 255)
+        return false;
+    const unsigned branch = mix ? 36 : 25;
+    if (advance &&
+        (cpuRead(pc + branch) != 0xd0 ||
+         static_cast<uint16_t>(pc + branch + 2 + static_cast<int8_t>(cpuRead(pc + branch + 1))) !=
+             pc + finish))
+        return false;
+    if (cpuRead(pc + finish) != 0x68 || cpuRead(pc + finish + 1) != 0xa8 ||
+        cpuRead(pc + finish + 2) != 0x68)
+        return false;
+    const uint16_t address = lo | (hi << 8),
+                   address2 =
+                       mix ? (cpuRead(other) | (cpuRead(static_cast<uint8_t>(other + 1)) << 8)) : 0;
+    const auto safe = [](uint16_t a) { return a >= 0x400 && (a < 0xd000 || a >= 0xe000); };
+    if (!safe(address) || (mix && !safe(address2)))
+        return false;
+    m_pcmCached = false;
+    m_pcmLow = pc;
+    m_pcmHigh = pc + length;
+    m_pcmSavedSP = Register_StackPointer;
+    m_pcmSavedA = Register_Accumulator;
+    m_pcmSavedY = Register_Y;
+    m_pcmActionCount = m_pcmActionIndex = m_pcmMemoryCount = m_pcmCycle = 0;
+    for (auto& w : m_pcmWriteCycle)
+        w = false;
+    const auto write = [&](unsigned cycle, uint16_t a, uint8_t v)
+    {
+        m_pcmWriteCycle[cycle] = true;
+        m_pcmMemoryWrites[m_pcmMemoryCount++] = {cycle, PcmActionKind::Write, a, v};
+    };
+    write(2, 0x100 | m_pcmSavedSP, m_pcmSavedA);
+    write(7, 0x100 | static_cast<uint8_t>(m_pcmSavedSP - 1), m_pcmSavedY);
+    Register_Y = 0;
+    unsigned clocks;
+    if (mix)
+    {
+        const uint8_t a = cpuRead(address) >> 4, b = cpuRead(address2) & 15;
+        const uint16_t scratch = code[12] | (code[13] << 8);
+        if (scratch < 0x200 || scratch >= 0xd000)
+            throw sidplayfp::SeekReplayRequired();
+        write(26, scratch, a);
+        Register_Accumulator = b;
+        Cycle_Data = a;
+        flags.setC(false);
+        doADC();
+        Register_Accumulator = (Register_Accumulator >> 1) ^ 15;
+        flags.setC(false);
+        flags.setNZ(Register_Accumulator);
+        write(49, 0xd418, Register_Accumulator);
+        Register_Accumulator = code[30];
+        write(55, 0x318, Register_Accumulator);
+        clocks = 64;
+        write(59, pointer, lo);
+        write(60, pointer, static_cast<uint8_t>(lo + 1));
+        flags.setNZ(static_cast<uint8_t>(lo + 1));
+    }
+    else
+    {
+        const uint8_t sample = cpuRead(address);
+        Register_Accumulator = advance ? sample >> 5 : (sample & 15) >> 1;
+        Cycle_Data = code[advance ? 14 : 12];
+        flags.setC(false);
+        doADC();
+        write(advance ? 32 : 26, 0xd418, Register_Accumulator);
+        const uint8_t next = code[advance ? 19 : 17];
+        Register_Accumulator = next;
+        write(advance ? 38 : 32, 0x318, next);
+        flags.setNZ(next);
+        clocks = advance ? 47 : 33;
+        if (advance)
+        {
+            write(42, pointer, lo);
+            write(43, pointer, static_cast<uint8_t>(lo + 1));
+            flags.setNZ(static_cast<uint8_t>(lo + 1));
+        }
+    }
+    if (advance && ((pc + branch + 2) ^ (pc + finish)) & 0xff00)
+        ++clocks;
+    addPcmAction(clocks, PcmActionKind::MixerFinish, pc + finish);
+    m_pcmClock = eventScheduler.halfTime();
+    m_pcmActive = true;
+    ++m_pcmCalls;
+    instrTable[nativeSlot].func = &StaticFuncWrapper<&MOS6510::nativePcmCycle>;
+    cycleCount = nativeSlot;
+    updatePcmCycleKind();
+    return true;
 }
 
 }

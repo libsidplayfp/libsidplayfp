@@ -112,6 +112,12 @@ struct SeekStateAccess
                c.m_pcmSavedSP, c.m_pcmCalls, c.m_pcmMemoryWrites, c.m_pcmMemoryCount,
                c.m_pcmWriteCycle, c.m_pcmClock, c.m_idleActive, c.m_idlePC, c.m_idlePhase,
                c.m_idleClock);
+        if (reading)
+        {
+            std::memset(c.m_loopCache, 0, sizeof(c.m_loopCache));
+            std::memset(c.m_loopSeenPages, 0, sizeof(c.m_loopSeenPages));
+            c.m_loopCacheUsed = false;
+        }
         event(c.m_nosteal);
         event(c.m_steal);
         event(c.clearInt);
