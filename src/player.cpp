@@ -268,8 +268,8 @@ int Player::play(unsigned int cycles)
 
     try
     {
-        for (unsigned int i = 0; i < cycles; i++)
-            m_c64.clock();
+        for (unsigned int i = 0; i < cycles;)
+            i += m_c64.clock(cycles - i);
 
         int sampleCount = 0;
         for (sidemu *s: m_chips)

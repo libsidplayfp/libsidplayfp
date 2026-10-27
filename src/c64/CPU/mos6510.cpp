@@ -63,8 +63,11 @@ void StaticFuncWrapper(MOS6510& self)
  */
 void MOS6510::eventWithoutSteals()
 {
-    const ProcessorCycle &instr = instrTable[cycleCount++];
-    (instr.func)(*this);
+    do
+    {
+        const ProcessorCycle& instr = instrTable[cycleCount++];
+        (instr.func)(*this);
+    } while (rdy && eventScheduler.clockCPU());
     eventScheduler.schedule(m_nosteal, 1);
 }
 
@@ -268,6 +271,16 @@ void MOS6510::fetchNextOpcode()
 
     cycleCount = cpuRead(Register_ProgramCounter) << 3;
     Register_ProgramCounter++;
+
+    // A self-jump in RAM/ROM has no side effects between hardware events.
+    // Exclude the processor port, I/O and operands crossing either boundary.
+    const uint_least16_t pc = Register_ProgramCounter - 1;
+    if (cycleCount == (JMPw << 3) && rdy &&
+        ((pc > 1 && pc < 0xcffe) || (pc >= 0xe000 && pc < 0xfffe)) &&
+        cpuRead(pc + 1) == (pc & 0xff) && cpuRead(pc + 2) == (pc >> 8) && !checkInterrupts())
+    {
+        eventScheduler.skipCPULoops(3);
+    }
 
     if (!checkInterrupts())
     {
