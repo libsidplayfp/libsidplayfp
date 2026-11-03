@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright (C) 2000 Simon White
  *
@@ -38,7 +38,6 @@
 #ifdef __cpp_lib_math_constants
 #  include <numbers>
 #endif
-#include <iostream>
 
 namespace libsidplayfp
 {
@@ -147,17 +146,17 @@ private:
         int_least64_t res = 0;
         for (std::size_t i = 0; i < m_iSamples.size(); i++)
             res += m_iSamples[i];
+        res += static_cast<int_least64_t>(m_oplSample);
         return static_cast<int_least32_t>(res * m_monoScale / SCALE_FACTOR);
     }
 
     int_least32_t stereoGeneric(const std::vector<int_least32_t> &gain) const
     {
-        //std::cout << " stereoGeneric " << m_oplSample<< std::endl;
-
         int_least64_t res = 0;
         for (std::size_t i = 0; i < m_iSamples.size(); i++)
             res += static_cast<int_least64_t>(m_iSamples[i]) * gain[i];
-        res += static_cast<int_least64_t>(m_oplSample) * SCALE[1]; // FIXME
+        if (m_oplBuffer)
+            res += static_cast<int_least64_t>(m_oplSample) * gain[m_iSamples.size()];
         return static_cast<int_least32_t>(res / SCALE_FACTOR);
     }
 

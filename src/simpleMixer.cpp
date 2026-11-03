@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -69,6 +69,8 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
 {
     if (!stereo)
     {
+        if (m_oplBuffer)
+            chips++;
         m_monoScale = invCount(chips);
         m_mix.push_back(&SimpleMixer::monoGeneric);
         return;
@@ -83,6 +85,11 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
         if (pan != SidTuneInfo::PAN_RIGHT) countL++;
         if (pan != SidTuneInfo::PAN_LEFT) countR++;
     }
+    if (m_oplBuffer)
+    {
+        countL++;
+        countR++;
+    }
 
     // Scale by chips in channel, empty channel stays silent
     const int_least32_t scaleL = countL ? invCount(countL) : 0;
@@ -93,6 +100,11 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
         const SidTuneInfo::pan_t pan = pans ? pans[i] : SidTuneInfo::PAN_CENTER;
         m_gainL.push_back(pan != SidTuneInfo::PAN_RIGHT ? scaleL : 0);
         m_gainR.push_back(pan != SidTuneInfo::PAN_LEFT ? scaleR : 0);
+    }
+    if (m_oplBuffer)
+    {
+        m_gainL.push_back(scaleL);
+        m_gainR.push_back(scaleR);
     }
 
     m_mix.push_back(&SimpleMixer::stereo_ch1_Generic);
