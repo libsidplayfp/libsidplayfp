@@ -66,6 +66,7 @@ src/Event.h \
 src/EventCallback.h \
 src/EventScheduler.cpp \
 src/EventScheduler.h \
+src/oplemu.h \
 src/player.cpp \
 src/player.h \
 src/psiddrv.cpp \
@@ -103,8 +104,8 @@ src/c64/Banks/DisconnectedBusBank.h \
 src/c64/Banks/ExtraSidBank.h \
 src/c64/Banks/IOBank.h \
 src/c64/Banks/NullSid.h \
-src/c64/Banks/pla.h \
 src/c64/Banks/OplBank.h \
+src/c64/Banks/pla.h \
 src/c64/Banks/SidBank.h \
 src/c64/Banks/SystemRAMBank.h \
 src/c64/Banks/SystemROMBanks.h \
