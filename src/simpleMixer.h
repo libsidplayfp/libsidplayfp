@@ -78,11 +78,9 @@ private:
     std::vector<int_least32_t> m_gainL;
     std::vector<int_least32_t> m_gainR;
 
-    short* m_oplBuffer = nullptr;
-
-    int_least32_t m_oplSample = 0;
-
     int_least32_t m_monoScale = SCALE_FACTOR;
+
+    bool m_opl;
 
 private:
     void updateParams();
@@ -146,7 +144,6 @@ private:
         int_least64_t res = 0;
         for (std::size_t i = 0; i < m_iSamples.size(); i++)
             res += m_iSamples[i];
-        res += static_cast<int_least64_t>(m_oplSample);
         return static_cast<int_least32_t>(res * m_monoScale / SCALE_FACTOR);
     }
 
@@ -155,8 +152,6 @@ private:
         int_least64_t res = 0;
         for (std::size_t i = 0; i < m_iSamples.size(); i++)
             res += static_cast<int_least64_t>(m_iSamples[i]) * gain[i];
-        if (m_oplBuffer)
-            res += static_cast<int_least64_t>(m_oplSample) * gain[m_iSamples.size()];
         return static_cast<int_least32_t>(res / SCALE_FACTOR);
     }
 

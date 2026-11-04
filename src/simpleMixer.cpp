@@ -46,8 +46,6 @@ unsigned int SimpleMixer::doMix(short *buffer, unsigned int samples)
             const short *buf = m_buffers[k];
             m_iSamples[k] = buf[i];
         }
-        if (m_oplBuffer)
-            m_oplSample = m_oplBuffer[i];
 
         for (auto mix: m_mix)
         {
@@ -69,7 +67,7 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
 {
     if (!stereo)
     {
-        if (m_oplBuffer)
+        if (m_opl)
             chips++;
         m_monoScale = invCount(chips);
         m_mix.push_back(&SimpleMixer::monoGeneric);
@@ -85,7 +83,7 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
         if (pan != SidTuneInfo::PAN_RIGHT) countL++;
         if (pan != SidTuneInfo::PAN_LEFT) countR++;
     }
-    if (m_oplBuffer)
+    if (m_opl)
     {
         countL++;
         countR++;
@@ -101,7 +99,7 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
         m_gainL.push_back(pan != SidTuneInfo::PAN_RIGHT ? scaleL : 0);
         m_gainR.push_back(pan != SidTuneInfo::PAN_LEFT ? scaleR : 0);
     }
-    if (m_oplBuffer)
+    if (m_opl)
     {
         m_gainL.push_back(scaleL);
         m_gainR.push_back(scaleR);
@@ -113,6 +111,8 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
 
 SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, bool opl, const SidTuneInfo::pan_t *pans)
 {
+    m_opl = opl;
+
     if ((stereo && pans) || (chips > 3))
     {
         setupGeneric(stereo, pans, chips);
@@ -140,12 +140,12 @@ SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, bool opl, cons
         }
     }
 
+    if (opl)
+        chips++;
+
     m_iSamples.resize(chips);
     for (int i=0; i<chips; i++)
         m_buffers.push_back(buffers[i]);
-
-    if (opl)
-        m_oplBuffer = buffers[chips];
 }
 
 }
