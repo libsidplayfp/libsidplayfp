@@ -34,6 +34,7 @@
 #include "SidInfoImpl.h"
 #include "sidrandom.h"
 #include "simpleMixer.h"
+#include "oplemu.h"
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
@@ -83,6 +84,8 @@ private:
 
     std::unique_ptr<SimpleMixer> m_simpleMixer;
 
+    oplemu m_oplemu;
+
 private:
     /**
      * Get the C64 model for the current loaded tune.
@@ -102,7 +105,7 @@ private:
     /**
      * Release the SID builders.
      */
-    void sidRelease();
+    void releaseChips();
 
     /**
      * Create the SID emulation(s).

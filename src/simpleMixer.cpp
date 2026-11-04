@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -25,7 +25,7 @@
 #include <cassert>
 #include <climits>
 #include <cstring>
-#include <iostream>
+
 #ifdef __cpp_lib_unreachable
 #  include <utility>
 #endif
@@ -67,6 +67,8 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
 {
     if (!stereo)
     {
+        if (m_opl)
+            chips++;
         m_monoScale = invCount(chips);
         m_mix.push_back(&SimpleMixer::monoGeneric);
         return;
@@ -81,6 +83,11 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
         if (pan != SidTuneInfo::PAN_RIGHT) countL++;
         if (pan != SidTuneInfo::PAN_LEFT) countR++;
     }
+    if (m_opl)
+    {
+        countL++;
+        countR++;
+    }
 
     // Scale by chips in channel, empty channel stays silent
     const int_least32_t scaleL = countL ? invCount(countL) : 0;
@@ -92,13 +99,20 @@ void SimpleMixer::setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int 
         m_gainL.push_back(pan != SidTuneInfo::PAN_RIGHT ? scaleL : 0);
         m_gainR.push_back(pan != SidTuneInfo::PAN_LEFT ? scaleR : 0);
     }
+    if (m_opl)
+    {
+        m_gainL.push_back(scaleL);
+        m_gainR.push_back(scaleR);
+    }
 
     m_mix.push_back(&SimpleMixer::stereo_ch1_Generic);
     m_mix.push_back(&SimpleMixer::stereo_ch2_Generic);
 }
 
-SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneInfo::pan_t *pans)
+SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, bool opl, const SidTuneInfo::pan_t *pans)
 {
+    m_opl = opl;
+
     if ((stereo && pans) || (chips > 3))
     {
         setupGeneric(stereo, pans, chips);
@@ -125,6 +139,9 @@ SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneI
 #endif
         }
     }
+
+    if (opl)
+        chips++;
 
     m_iSamples.resize(chips);
     for (int i=0; i<chips; i++)

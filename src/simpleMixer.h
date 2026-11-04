@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright (C) 2000 Simon White
  *
@@ -79,6 +79,8 @@ private:
     std::vector<int_least32_t> m_gainR;
 
     int_least32_t m_monoScale = SCALE_FACTOR;
+
+    bool m_opl;
 
 private:
     void updateParams();
@@ -166,7 +168,7 @@ public:
      *
      * @param pans position of each chip, nullptr for the fixed matrix of 1 to 3 chips
      */
-    SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneInfo::pan_t *pans = nullptr);
+    SimpleMixer(bool stereo, short** buffers, int chips, bool opl, const SidTuneInfo::pan_t *pans = nullptr);
 
     /**
      * Do the mixing.
