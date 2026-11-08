@@ -37,7 +37,9 @@ namespace libsidplayfp
  */
 class Sprites
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     static constexpr unsigned int SPRITES = 8;
 
     const uint8_t &enable, &y_expansion;
@@ -51,6 +53,21 @@ public:
     explicit Sprites(uint8_t regs[0x40]) :
         enable(regs[0x15]),
         y_expansion(regs[0x17]) {}
+
+    /**
+     * Check whether sprite update and display phases leave the state unchanged.
+     *
+     * @return true when DMA is inactive and the counters already agree.
+     */
+    bool canSkipUpdates() const
+    {
+        if (dma)
+            return false;
+        for (unsigned i = 0; i < SPRITES; ++i)
+            if (mc[i] != mc_base[i])
+                return false;
+        return true;
+    }
 
     void reset()
     {

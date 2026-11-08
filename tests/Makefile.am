@@ -6,6 +6,7 @@ EXTRA_DIST = utpp
 if ENABLE_TEST
 
 AM_CPPFLAGS = \
+-I$(top_builddir)/src \
 -I$(top_srcdir)/src
 
 TESTS = \
@@ -13,9 +14,12 @@ TestPSID \
 TestPSIDv5 \
 TestMUS \
 TestMos6510 \
-TestMD5
+TestMD5 \
+TestXSID
 
 check_PROGRAMS = $(TESTS)
+
+TestXSID_SOURCES = TestXSID.cpp ../src/xsid/xsid.cpp ../src/EventScheduler.cpp
 
 TestPSID_SOURCES = \
 Main.cpp \

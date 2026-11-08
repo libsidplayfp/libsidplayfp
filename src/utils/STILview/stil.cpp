@@ -137,6 +137,27 @@ STIL::getSTILVersionNo()
     return STILVersion;
 }
 
+std::istream& STIL::openInput(std::ifstream& disk, bool bugs, const char* filename)
+{
+    if (!memoryMode)
+    {
+        disk.open(filename, STILopenFlags);
+        return disk;
+    }
+    std::istringstream& input = bugs ? bugMemory : stilMemory;
+    input.clear();
+    input.seekg(0);
+    return input;
+}
+
+bool STIL::setData(const std::string& stil, const std::string& bugs)
+{
+    memoryMode = true;
+    stilMemory.str(stil);
+    bugMemory.str(bugs);
+    return setBaseDir("/memory");
+}
+
 bool
 STIL::setBaseDir(const char *pathToHVSC)
 {
@@ -176,7 +197,8 @@ STIL::setBaseDir(const char *pathToHVSC)
     tempName.append(PATH_TO_STIL);
     convertSlashes(tempName);
 
-    ifstream stilFile(tempName.c_str(), STILopenFlags);
+    ifstream stilDisk;
+    istream& stilFile = openInput(stilDisk, false, tempName.c_str());
 
     if (stilFile.fail())
     {
@@ -194,7 +216,8 @@ STIL::setBaseDir(const char *pathToHVSC)
     tempName.append(PATH_TO_BUGLIST);
     convertSlashes(tempName);
 
-    ifstream bugFile(tempName.c_str(), STILopenFlags);
+    ifstream bugDisk;
+    istream& bugFile = openInput(bugDisk, true, tempName.c_str());
 
     if (bugFile.fail())
     {
@@ -350,7 +373,8 @@ STIL::getEntry(const char *relPathToEntry, int tuneNo, STILField field)
         tempName.append(PATH_TO_STIL);
         convertSlashes(tempName);
 
-        ifstream stilFile(tempName.c_str(), STILopenFlags);
+        ifstream stilDisk;
+        istream& stilFile = openInput(stilDisk, false, tempName.c_str());
 
         if (stilFile.fail())
         {
@@ -450,7 +474,8 @@ STIL::getBug(const char *relPathToEntry, int tuneNo)
         tempName.append(PATH_TO_BUGLIST);
         convertSlashes(tempName);
 
-        ifstream bugFile(tempName.c_str(), STILopenFlags);
+        ifstream bugDisk;
+        istream& bugFile = openInput(bugDisk, true, tempName.c_str());
 
         if (bugFile.fail())
         {
@@ -554,7 +579,8 @@ STIL::getGlobalComment(const char *relPathToEntry)
         tempName.append(PATH_TO_STIL);
         convertSlashes(tempName);
 
-        ifstream stilFile(tempName.c_str(), STILopenFlags);
+        ifstream stilDisk;
+        istream& stilFile = openInput(stilDisk, false, tempName.c_str());
 
         if (stilFile.fail())
         {
@@ -591,8 +617,7 @@ STIL::getGlobalComment(const char *relPathToEntry)
 
 //////// PRIVATE
 
-bool
-STIL::determineEOL(ifstream &stilFile)
+bool STIL::determineEOL(istream& stilFile)
 {
     CERR_STIL_DEBUG << "detEOL() called" << endl;
 
@@ -645,8 +670,7 @@ STIL::determineEOL(ifstream &stilFile)
     return true;
 }
 
-bool
-STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
+bool STIL::getDirs(istream& inFile, dirList& dirs, bool isSTILFile)
 {
     bool newDir = !isSTILFile;
 
@@ -732,8 +756,7 @@ STIL::getDirs(ifstream &inFile, dirList &dirs, bool isSTILFile)
     return true;
 }
 
-bool
-STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
+bool STIL::positionToEntry(const char* entryStr, istream& inFile, dirList& dirs)
 {
     CERR_STIL_DEBUG << "pos2Entry() called, entryStr=" << entryStr << endl;
 
@@ -830,8 +853,7 @@ STIL::positionToEntry(const char *entryStr, ifstream &inFile, dirList &dirs)
     }
 }
 
-void
-STIL::readEntry(ifstream &inFile, string &buffer)
+void STIL::readEntry(istream& inFile, string& buffer)
 {
     string line;
 
@@ -1208,8 +1230,7 @@ STIL::getOneField(string &result, const char *start, const char *end, STILField 
     return true;
 }
 
-void
-STIL::getStilLine(ifstream &infile, string &line)
+void STIL::getStilLine(istream& infile, string& line)
 {
     if (STIL_EOL2 != '\0')
     {

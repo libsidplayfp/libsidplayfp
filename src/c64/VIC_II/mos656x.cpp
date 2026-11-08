@@ -164,6 +164,18 @@ void MOS656X::write(uint_least8_t addr, uint8_t data)
 {
     addr &= 0x3f;
 
+    // During seeking, colour writes need no VIC timing update.
+    if (clock == &MOS656X::clockPALSeek && addr >= 0x20 && addr < 0x2f)
+    {
+        regs[addr] = data;
+        return;
+    }
+
+    // Process the skipped phases using the current register values before
+    // applying this PHI2 write, which could enable sprite DMA.
+    if (clock == &MOS656X::clockPALSeek && sprites.canSkipUpdates() &&
+        eventScheduler.phase() == EVENT_CLOCK_PHI2)
+        sync();
     regs[addr] = data;
 
     // Sync up timers
@@ -421,6 +433,42 @@ event_clock_t MOS656X::clockPAL()
     }
 
     return delay;
+}
+
+// Coalesce idempotent sprite phases while retaining line, bad-line and IRQ edges.
+event_clock_t MOS656X::clockPALSeek()
+{
+    const auto delay = clockPAL();
+    if (sprites.canSkipUpdates())
+    {
+        switch (lineCycle)
+        {
+        case 0:
+            if (!vblanking)
+                return 11;
+            break;
+        case 11:
+            return 43;
+        case 54:
+            if (!regs[0x15])
+                return 9;
+            break;
+        }
+    }
+    return delay;
+}
+
+void MOS656X::fastSeek(bool enable)
+{
+    if (clock != &MOS656X::clockPAL && clock != &MOS656X::clockPALSeek)
+        return;
+    const auto next = enable ? &MOS656X::clockPALSeek : &MOS656X::clockPAL;
+    if (clock != next)
+    {
+        sync();
+        clock = next;
+        sync();
+    }
 }
 
 event_clock_t MOS656X::clockNTSC()

@@ -42,13 +42,16 @@ class reSIDfpEmu final : public sidemu
 {
 private:
     reSIDfp::residfp &m_sid;
+    bool m_silent = false;
 
-public:
+  public:
     static const char* getCredits();
 
 public:
     explicit reSIDfpEmu(sidbuilder *builder);
     ~reSIDfpEmu() override;
+
+    friend struct SeekStateAccess;
 
     bool getStatus() const { return m_status; }
 
@@ -65,6 +68,11 @@ public:
         SidConfig::sampling_method_t method) override;
 
     void model(SidConfig::sid_model_t model, bool digiboost) override;
+
+    void silent(bool enable)
+    {
+        m_silent = enable;
+    }
 
     // Specific to residfp
     void enableFilter(bool enable) { m_sid.enableFilter(enable); }
@@ -100,11 +108,31 @@ public:
 #endif
     }
 
+    void fastPcmSeek(bool enable)
+    {
+        m_fastPcm = enable;
+        m_sid.fastSilent(enable && m_pcmDetected && !m_readbackUsed);
+    }
+
+    bool pcmDetected() const
+    {
+        return m_pcmDetected;
+    }
+
     void noiseLevel(int level) {
 #if (LIBRESIDFP_VERSION_MAJ > 1) || (LIBRESIDFP_VERSION_MIN > 2)
         m_sid.noiseLevel(level);
 #endif
     }
+
+  private:
+    bool m_fastPcm = false;
+    bool m_pcmDetected = false;
+    bool m_readbackUsed = false;
+    unsigned int m_volumeWrites = 0;
+    uint8_t m_lastVolume = 0;
+    event_clock_t m_volumeProbeStart = 0;
+    event_clock_t m_probeWindow = 250000;
 };
 
 }

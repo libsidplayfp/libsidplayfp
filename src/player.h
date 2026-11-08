@@ -56,7 +56,11 @@ class sidemu;
 
 class Player
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
+    uint64_t m_stateGeneration = 0;
+
     /// Commodore 64 emulator
     c64 m_c64;
 
@@ -75,6 +79,10 @@ private:
     sidrandom m_rand;
 
     uint_least32_t m_startTime = 0;
+    uint64_t m_trackerSkippedCycles = 0, m_trackerSkippedCalls = 0;
+    uint16_t m_trackerEntry = 0;
+    bool m_trackerSeekAllowed = true;
+    void initTrackerSeek();
 
     /// PAL/NTSC switch value
     uint8_t m_videoSwitch;
@@ -124,11 +132,17 @@ private:
 
     inline void run(unsigned int events);
 
-public:
+  public:
+    std::vector<uint8_t> saveState();
+    bool restoreState(const std::vector<uint8_t>& state);
+
     Player();
     ~Player() = default;
 
-    const SidConfig &config() const { return m_cfg; }
+    const SidConfig& config() const
+    {
+        return m_cfg;
+    }
 
     const SidInfo &info() const { return m_info; }
 
@@ -140,7 +154,18 @@ public:
 
     int play(unsigned int cycles);
 
-    uint_least32_t timeMs() const { return m_c64.getTimeMs() - m_startTime; }
+    uint_least32_t timeMs() const
+    {
+        return m_c64.getTimeMs() - m_startTime +
+               static_cast<uint_least32_t>(m_trackerSkippedCycles * 1000.0 /
+                                           m_c64.getMainCpuSpeed());
+    }
+    bool enableTrackerSeek(const char* identity);
+    bool seekTracker(unsigned targetMs);
+    uint64_t trackerCallsSkipped() const
+    {
+        return m_trackerSkippedCalls;
+    }
 
     void debug(const bool enable, FILE *out) { m_c64.debug(enable, out); }
 
@@ -153,6 +178,17 @@ public:
     void setKernal(const uint8_t* rom);
     void setBasic(const uint8_t* rom);
     void setChargen(const uint8_t* rom);
+
+    void fastCpuSeek(bool enable) { m_c64.fastCpuSeek(enable); }
+    uint64_t fastLoopCycles() const { return m_c64.fastLoopCycles(); }
+    void nativePcmSeek(bool enable)
+    {
+        m_c64.nativePcmSeek(enable);
+    }
+    uint64_t nativePcmCalls() const
+    {
+        return m_c64.nativePcmCalls();
+    }
 
     uint_least16_t getCia1TimerA() const { return m_c64.getCia1TimerA(); }
 

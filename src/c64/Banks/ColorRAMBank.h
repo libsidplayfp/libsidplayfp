@@ -42,7 +42,9 @@ namespace libsidplayfp
  */
 class ColorRAMBank final : public Bank
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     uint8_t ram[0x400];
 
 public:

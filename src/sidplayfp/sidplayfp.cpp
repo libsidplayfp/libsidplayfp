@@ -142,7 +142,48 @@ unsigned int sidplayfp::mix(short *buffer, unsigned int samples)
     return sidplayer.mix(buffer, samples);
 }
 
+std::vector<uint8_t> sidplayfp::saveState()
+{
+    return sidplayer.saveState();
+}
+bool sidplayfp::restoreState(const std::vector<uint8_t>& state)
+{
+    return sidplayer.restoreState(state);
+}
+bool sidplayfp::enableTrackerSeek(const char* identity)
+{
+    return sidplayer.enableTrackerSeek(identity);
+}
+bool sidplayfp::seekTracker(unsigned targetMs)
+{
+    return sidplayer.seekTracker(targetMs);
+}
+uint64_t sidplayfp::trackerCallsSkipped() const
+{
+    return sidplayer.trackerCallsSkipped();
+}
+
 int sidplayfp::getBufSize(unsigned int cycles)
 {
     return sidplayer.getBufSize(cycles);
+}
+
+void sidplayfp::nativePcmSeek(bool enable)
+{
+    sidplayer.nativePcmSeek(enable);
+}
+
+uint64_t sidplayfp::nativePcmCalls() const
+{
+    return sidplayer.nativePcmCalls();
+}
+
+void sidplayfp::fastCpuSeek(bool enable)
+{
+    sidplayer.fastCpuSeek(enable);
+}
+
+uint64_t sidplayfp::fastLoopCycles() const
+{
+    return sidplayer.fastLoopCycles();
 }

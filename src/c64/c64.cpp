@@ -85,6 +85,7 @@ c64::c64() :
     vic(*this),
     disconnectedBusBank(mmu),
     mmu(eventScheduler, &ioBank),
+    playSid(eventScheduler, mmu, sidBank),
     cpubus(mmu),
     cpu(eventScheduler, cpubus)
 {
@@ -114,6 +115,7 @@ void c64::resetIoBank()
 void c64::reset()
 {
     eventScheduler.reset();
+    playSid.reset(0);
 
     //cpu.reset();
     cia1.reset();
