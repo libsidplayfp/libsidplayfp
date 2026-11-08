@@ -199,9 +199,14 @@ public:
     /**
      * Clock the emulation.
      *
+     * @param budget maximum event batch budget
+     * @return the batch budget consumed.
      * @throws haltInstruction
      */
-    void clock() { eventScheduler.clock(); }
+    unsigned int clock(unsigned int budget = 1)
+    {
+        return eventScheduler.clock(budget);
+    }
 
     void debug(bool enable, FILE *out) { cpu.debug(enable, out); }
 
@@ -214,7 +219,7 @@ public:
     void setModel(model_t model);
 
     /**
-     * Set the cia model.
+     * Set the CIA model.
      */
     void setCiaModel(cia_model_t model);
 
