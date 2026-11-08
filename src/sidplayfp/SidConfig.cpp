@@ -37,7 +37,8 @@ SidConfig::SidConfig() :
     sidEmulation(nullptr),
     powerOnDelay(DEFAULT_POWER_ON_DELAY),
     samplingMethod(RESAMPLE_INTERPOLATE),
-    oplModel(NONE)
+    oplModel(YM3812),
+    forceOpl(false)
 {}
 
 bool SidConfig::compare(const SidConfig &config) const
@@ -54,5 +55,6 @@ bool SidConfig::compare(const SidConfig &config) const
         || sidEmulation != config.sidEmulation
         || powerOnDelay != config.powerOnDelay
         || samplingMethod != config.samplingMethod
-        || oplModel != config.oplModel;
+        || oplModel != config.oplModel
+        || forceOpl != config.forceOpl;
 }

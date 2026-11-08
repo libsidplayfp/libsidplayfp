@@ -91,7 +91,6 @@ public:
     /// @since 3.3
     typedef enum
     {
-        NONE,           ///< No OPL chip
         YM3526,         ///< Yamaha YM3526 (OPL)
         YM3812          ///< Yamaha YM3812 (OPL2)
     } opl_model_t;
@@ -168,9 +167,14 @@ public:
     sampling_method_t samplingMethod;
 
     /**
-     * Intended OPL model.
+     * Intended OPL model if required.
      */
     opl_model_t oplModel;
+
+    /**
+     * Add an OPL chip.
+     */
+    bool forceOpl;
 
     /**
      * Compare two config objects.
