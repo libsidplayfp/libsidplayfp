@@ -352,10 +352,11 @@ bool Player::config(const SidConfig &cfg, bool force)
         {
             releaseChips();
 
-            if (tuneInfo->fmOpl())
+            if (tuneInfo->fmOpl() || (cfg.oplModel != SidConfig::NONE))
             {
+                int model= (cfg.oplModel == SidConfig::YM3526) ? 1 : 2;
                 m_oplemu.sampling(m_c64.getMainCpuSpeed(), cfg.frequency);
-                m_oplemu.lock(m_c64.getEventScheduler(), cfg.frequency);
+                m_oplemu.lock(m_c64.getEventScheduler(), cfg.frequency, model);
                 m_c64.setOpl(&m_oplemu);
             }
 

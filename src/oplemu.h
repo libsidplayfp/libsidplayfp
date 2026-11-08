@@ -118,11 +118,15 @@ public:
 
     /**
      * Set execution environment and lock opl to it.
+     *
+     * @param scheduler
+     * @param rate the sampling rate
+     * @param model the chip model, 1:YM3526, 2:YM3812
      */
-    void lock(EventScheduler *scheduler, uint32_t rate)
+    void lock(EventScheduler *scheduler, uint32_t rate, uint8_t model)
     {
         m_opl = OPL_new(OPL_CLOCK, rate);
-        OPL_setChipType(m_opl, 2); // 1:YM3526, 2:YM3812
+        OPL_setChipType(m_opl, model);
         eventScheduler = scheduler;
     }
 

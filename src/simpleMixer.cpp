@@ -113,7 +113,7 @@ SimpleMixer::SimpleMixer(bool stereo, short** buffers, int chips, bool opl, cons
 {
     m_opl = opl;
 
-    if ((stereo && pans) || (chips > 3))
+    if ((stereo && pans) || (chips > 3) || m_opl)
     {
         setupGeneric(stereo, pans, chips);
     }
