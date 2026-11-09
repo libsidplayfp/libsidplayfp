@@ -94,6 +94,6 @@ Known bugs/limitations:
   https://github.com/Cra3z/hashlib  
   distributed under MIT license
 
-* emu8950 1.2.2  
+* emu8950 1.2.4  
   https://github.com/digital-sound-antiques/emu8950  
   distributed under MIT license

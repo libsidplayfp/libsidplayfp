@@ -133,7 +133,6 @@ static inline int update_stage(OPL_ADPCM *_this) {
         _this->play_addr = _this->start_addr & (_this->play_addr_mask);
       } else {
         _this->play_start = 0;
-        _this->status &= ~STATUS_PCM_BSY;
         _this->status |= STATUS_EOS;
       }
     } else {
@@ -212,6 +211,13 @@ void OPL_ADPCM_writeReg(OPL_ADPCM *_this, uint32_t adr, uint32_t data) {
 
   switch (adr) {
   case 0x07: /* START/REC/MEM DATA/REPEAT/SP-OFF/RESET */
+    /* On a real Y8950, PCM BSY follows the START bit as written, also with
+     * RESET and after the end of a sample (same as openMSX). */
+    if (data & R07_START) {
+      _this->status |= STATUS_PCM_BSY;
+    } else {
+      _this->status &= ~STATUS_PCM_BSY;
+    }
     if (data & R07_RESET) {
       _this->play_start = 0;
       break;
@@ -223,7 +229,6 @@ void OPL_ADPCM_writeReg(OPL_ADPCM *_this, uint32_t adr, uint32_t data) {
       _this->output[0] = 0;
       _this->output[1] = 0;
       _this->diff = DDEF;
-      _this->status |= STATUS_PCM_BSY; 
     } else {
       _this->play_start = 0;
     }
