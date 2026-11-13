@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -36,7 +36,9 @@ SidConfig::SidConfig() :
     thirdSidAddress(0),
     sidEmulation(nullptr),
     powerOnDelay(DEFAULT_POWER_ON_DELAY),
-    samplingMethod(RESAMPLE_INTERPOLATE)
+    samplingMethod(RESAMPLE_INTERPOLATE),
+    oplModel(YM3812),
+    forceOpl(false)
 {}
 
 bool SidConfig::compare(const SidConfig &config) const
@@ -52,5 +54,7 @@ bool SidConfig::compare(const SidConfig &config) const
         || thirdSidAddress != config.thirdSidAddress
         || sidEmulation != config.sidEmulation
         || powerOnDelay != config.powerOnDelay
-        || samplingMethod != config.samplingMethod;
+        || samplingMethod != config.samplingMethod
+        || oplModel != config.oplModel
+        || forceOpl != config.forceOpl;
 }
