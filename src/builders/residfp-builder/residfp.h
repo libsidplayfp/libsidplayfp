@@ -130,6 +130,17 @@ public:
      * @since 3.2
      */
     void setNoiseLevel(int level);
+
+    /**
+     * Set strong P+S for 6581 model.
+     * If enabled when Pulse and Saw are combined the
+     * topbit is not pulled down, providing a stronger
+     * sound.
+     *
+     * @param enable true to turn on strong PS (default disabled)
+     * @since 3.2
+     */
+    void enableStrongPS(bool enable);
     //@}
 
 private:

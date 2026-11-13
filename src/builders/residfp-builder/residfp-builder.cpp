@@ -40,6 +40,7 @@ struct ReSIDfpBuilder::config
     Property<SidConfig::sid_cw_t> cws;
     Property<SidConfig::sid_caps_t> caps6581;
     Property<int> noiseLevel;
+    Property<bool> strongPS;
 };
 
 
@@ -79,6 +80,8 @@ libsidplayfp::sidemu* ReSIDfpBuilder::create()
             sid->set6581caps(m_config->caps6581.value());
         if (m_config->noiseLevel.has_value())
             sid->noiseLevel(m_config->noiseLevel.value());
+        if (m_config->strongPS.has_value())
+            sid->strongPS(m_config->strongPS.value());
         return sid;
     }
     catch (std::bad_alloc const &)
@@ -160,4 +163,11 @@ void ReSIDfpBuilder::setNoiseLevel(int level)
     m_config->noiseLevel = level;
     for (libsidplayfp::sidemu* e: sidobjs)
         static_cast<libsidplayfp::reSIDfpEmu*>(e)->noiseLevel(level);
+}
+
+void ReSIDfpBuilder::enableStrongPS(bool enable)
+{
+    m_config->strongPS = enable;
+    for (libsidplayfp::sidemu* e: sidobjs)
+        static_cast<libsidplayfp::reSIDfpEmu*>(e)->strongPS(enable);
 }
