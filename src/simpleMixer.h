@@ -80,16 +80,14 @@ private:
 
     int_least32_t m_monoScale = SCALE_FACTOR;
 
-    bool m_opl;
-
 private:
     void updateParams();
 
     // Fixed point gain 1/n, keeps the sum of n full scale chips in 16 bit
     static int_least32_t invCount(unsigned int n);
 
-    // Setup the mixers for more than 3 chips or for per chip panning
-    void setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int chips);
+    // Setup the mixers for more than 3 chips or opl or for per chip panning
+    void setupGeneric(bool stereo, bool opl, const SidTuneInfo::pan_t *pans, int chips);
 
     /*
      * Channel matrix
