@@ -230,6 +230,8 @@ public:
      * @name Panning hint
      * Stereo placement requested by the sidtune.
      * Only PSID/RSID version 5 files carry a hint.
+     *
+     * @since 3.2
      */
     //@{
     bool hasPanning() const;               ///< Whether the file carries a panning hint
@@ -241,6 +243,8 @@ public:
     /**
      * Whether the tune requires an FM OPL chip
      * (SFX Sound Expander or FM YAM compatible) in the $DF00-$DFFF range.
+     *
+     * @since 3.2
      */
     bool fmOpl() const;
 
