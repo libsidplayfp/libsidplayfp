@@ -102,9 +102,9 @@ public:
     {
         const event_clock_t cycles = eventScheduler->getTime(EVENT_CLOCK_PHI1) - m_accessClk;
         m_accessClk += cycles;
-        float integral;
-        m_err = std::modf(cycles * m_clockRatio + m_err, &integral);
-        int bytes = integral;
+        float c = cycles * m_clockRatio + m_err;
+        int bytes = std::ceil(c);
+        m_err = bytes - c;
         short *buf = m_buffer + m_bufferpos;
         for (int i=0; i<bytes; i++)
             buf[i] = OPL_calc(m_opl);
