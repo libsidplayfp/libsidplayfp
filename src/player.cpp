@@ -226,13 +226,12 @@ void Player::filter(unsigned int sidNum, bool enable)
 void Player::initMixer(bool stereo)
 {
     int chips = m_chips.size();
+    std::vector<short*> bufs(chips);
+    buffers(bufs.data());
+
     bool opl = installedOpl();
     if (opl)
-        chips++;
-    std::unique_ptr<short*[]> bufs(new short*[chips]);
-    buffers(bufs.get());
-    if (opl)
-        bufs[chips-1] = oplBuffer();
+        bufs.push_back(oplBuffer());
 
     // Per chip positions for a panning hint or more than 3 chips, else the fixed matrix
     std::vector<SidTuneInfo::pan_t> pans;
@@ -246,7 +245,7 @@ void Player::initMixer(bool stereo)
         }
     }
 
-    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.get(), installedSIDs(), opl, pans.empty() ? nullptr : pans.data()));
+    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.data(), installedSIDs(), opl, pans.empty() ? nullptr : pans.data()));
 }
 
 unsigned int Player::mix(short *buffer, unsigned int samples)
