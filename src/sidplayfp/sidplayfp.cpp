@@ -146,3 +146,13 @@ int sidplayfp::getBufSize(unsigned int cycles)
 {
     return sidplayer.getBufSize(cycles);
 }
+
+bool sidplayfp::installedOpl() const
+{
+    return sidplayer.installedOpl();
+}
+
+short* sidplayfp::oplBuffer() const
+{
+    return sidplayer.oplBuffer();
+}
