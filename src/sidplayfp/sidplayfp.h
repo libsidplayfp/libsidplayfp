@@ -236,6 +236,23 @@ public:
      * @since 3.0
      */
     int getBufSize(unsigned int cycles);
+
+    /**
+     * Check if an OPL chip is installed.
+     *
+     * @return true if an OPL chip is installed.
+     * @since 3.2
+     */
+    bool installedOpl() const;
+
+    /**
+     * Get the buffer pointers for the installed OPL chip.
+     *
+     * @return nullptr if no OPL chip is installed
+     * @since 3.2
+     */
+    short* oplBuffer() const;
+
 };
 
 #endif // SIDPLAYFP_H

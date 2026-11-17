@@ -141,6 +141,8 @@ public:
 
     void buffers(short** buffers) const;
 
+    short* oplBuffer() const;
+
     int play(unsigned int cycles);
 
     uint_least32_t timeMs() const { return m_c64.getTimeMs() - m_startTime; }
@@ -162,6 +164,8 @@ public:
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
 
     unsigned int installedSIDs() const { return m_chips.size(); }
+
+    bool installedOpl() const { return m_oplemu.locked(); }
 
     void initMixer(bool stereo);
 
