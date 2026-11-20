@@ -43,10 +43,11 @@ private:
 
     static keys_t::value_type parseKey(const std::string &buffer);
 
-    bool open_internal(std::ifstream& iniFile);
+    bool open_internal(std::istream& iniFile);
 
-public:
+  public:
     bool open(const char *fName);
+    bool open(std::istream& input);
 #ifdef _WIN32
     bool open(const wchar_t* fName);
 #endif

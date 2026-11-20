@@ -38,7 +38,9 @@ namespace libsidplayfp
  */
 class c64sid : public Bank
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     uint8_t lastpoke[0x20];
 
 protected:

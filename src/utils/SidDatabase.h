@@ -24,6 +24,7 @@
 #define SIDDATABASE_H
 
 #include <cstdint>
+#include <iosfwd>
 
 #include "sidplayfp/siddefs.h"
 
@@ -56,6 +57,13 @@ public:
      * @return false in case of errors, true otherwise.
      */
     bool open(const char *filename);
+    /**
+     * Read the songlengths database from a stream.
+     *
+     * @param input stream containing the songlengths database
+     * @return false in case of errors, true otherwise.
+     */
+    bool open(std::istream& input);
 #ifdef _WIN32
     bool open(const wchar_t* filename);
 #endif

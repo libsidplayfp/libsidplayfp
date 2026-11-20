@@ -45,7 +45,9 @@ namespace libsidplayfp
  */
 class sidemu : public c64sid
 {
-private:
+    friend struct SeekStateAccess;
+
+  private:
     sidbuilder* const m_builder;
 
 protected:

@@ -28,6 +28,7 @@
 #include "sidcxx11.h"
 
 #include "NullSid.h"
+#include "xsid/xsid.h"
 
 namespace libsidplayfp
 {
@@ -42,8 +43,9 @@ class SidBank final : public Bank
 private:
     /// SID chip
     c64sid *sid;
+    XSID* playSid = nullptr;
 
-public:
+  public:
     SidBank()
       : sid(NullSid::getInstance())
     {}
@@ -60,7 +62,26 @@ public:
 
     void poke(uint_least16_t addr, uint8_t data) override
     {
+        if (playSid)
+        {
+            if ((addr & 0x1f) == 0x18)
+            {
+                playSid->storeSidData0x18(data);
+                return;
+            }
+            playSid->write(static_cast<uint_least16_t>(addr & 0x1ff), data);
+            if ((addr & 0x1f) >= 0x1d)
+                return;
+        }
         sid->poke(addr, data);
+    }
+    void pokeHardware(uint8_t value)
+    {
+        sid->poke(0x18, value);
+    }
+    void setPlaySid(XSID* value)
+    {
+        playSid = value;
     }
 
     /**

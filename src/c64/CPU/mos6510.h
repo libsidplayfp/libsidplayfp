@@ -26,6 +26,8 @@
 #include <memory>
 #include <string>
 #include <cstdint>
+#include <cstring>
+#include <bitset>
 #include <cstdio>
 
 #include "flags.h"
@@ -51,6 +53,10 @@ namespace MOS6510Debug
 class CPUDataBus
 {
 public:
+    /// RAM view for recognised player calls.
+    const uint8_t* directReadRAM = nullptr;
+    explicit CPUDataBus(const uint8_t* ram = nullptr) : directReadRAM(ram) {}
+
   virtual ~CPUDataBus() = default;
 
   virtual uint8_t cpuRead(uint_least16_t addr) =0;
@@ -79,6 +85,7 @@ struct CPUDebug
  */
 class MOS6510
 {
+    friend struct SeekStateAccess;
     friend void MOS6510Debug::DumpState(event_clock_t time, MOS6510 &cpu);
 
 public:
@@ -121,6 +128,28 @@ private:
 private:
     /// Event scheduler
     EventScheduler &eventScheduler;
+
+    bool m_loopEnabled = false;
+    bool m_playerCallActive = false;
+    bool m_loopCacheUsed = false;
+    uint64_t m_loopSkippedCycles = 0;
+    void loopCodeWrite(uint16_t address)
+    {
+        if (!m_loopCacheUsed)
+            return;
+        if (address <= 1)
+        {
+            std::memset(m_loopCache, 0, sizeof(m_loopCache));
+            return;
+        }
+        if (address >= 0xd000 && address < 0xe000)
+            return;
+        const unsigned page = address >> 8;
+        if (m_loopSeenPages[page])
+            std::memset(m_loopCache + (page << 8), 0, 256);
+        if (page && m_loopSeenPages[page - 1])
+            std::memset(m_loopCache + ((page - 1) << 8), 0, 256);
+    }
 
     /// Data bus
     CPUDataBus &dataBus;
@@ -166,7 +195,58 @@ private:
     uint8_t Register_Y;
 
     /// Table of CPU opcode implementations
-    struct ProcessorCycle instrTable[0x101 << 3];
+    struct ProcessorCycle instrTable[0x102 << 3];
+
+    static constexpr int nativeSlot = 0x101 << 3;
+    enum class PcmActionKind
+    {
+        Write,
+        ReadLow,
+        ReadHigh,
+        Scratch,
+        Dac,
+        Ack,
+        Finish,
+        MixerFinish,
+        PlayerFinish
+    };
+    struct PcmAction
+    {
+        unsigned int cycle;
+        PcmActionKind kind;
+        uint16_t address;
+        uint8_t value;
+    };
+    PcmAction m_pcmActions[16];
+    unsigned int m_pcmActionCount = 0, m_pcmActionIndex = 0, m_pcmCycle = 0;
+    bool m_pcmEnabled = false, m_pcmActive = false, m_pcmCached = false;
+    uint16_t m_pcmLow = 0, m_pcmHigh = 0, m_pcmScratch = 0, m_pcmEnd = 0, m_pcmDac = 0;
+    uint8_t m_pcmPointer = 0, m_pcmAdd = 0, m_pcmEndValue = 0;
+    uint8_t m_pcmSample = 0, m_pcmSavedA = 0, m_pcmSavedY = 0, m_pcmSavedSP = 0;
+    uint64_t m_pcmCalls = 0;
+    PcmAction m_pcmMemoryWrites[16];
+    unsigned int m_pcmMemoryCount = 0;
+    bool m_pcmWriteCycle[96] = {};
+    event_clock_t m_pcmClock = 0;
+    bool m_idleActive = false;
+    uint16_t m_idlePC = 0;
+    unsigned int m_idlePhase = 0;
+    event_clock_t m_idleClock = 0;
+    void nativePcmSchedule();
+    void nativePcmSync();
+    void playerCallSync();
+    void playerCallSchedule();
+    void playerCallCycle();
+    bool beginPlayerCall(uint16_t pc);
+    void idleSync();
+    void idleWake();
+    bool cachePcmRoutine(uint16_t pc);
+    bool beginNativePcm(uint16_t pc);
+    bool beginDigiMixer(uint16_t pc);
+    void nativePcmCycle();
+    void pcmCodeWrite(uint16_t address);
+    void addPcmAction(unsigned cycle, PcmActionKind kind, uint16_t address = 0, uint8_t value = 0);
+    void updatePcmCycleKind();
 
     // Debug info
     std::unique_ptr<CPUDebug> cpu_debug;
@@ -324,7 +404,26 @@ public:
 
     inline uint8_t cpuRead(uint_least16_t addr) { return dataBus.cpuRead(addr); }
 
-    inline void cpuWrite(uint_least16_t addr, uint8_t data) { dataBus.cpuWrite(addr, data); }
+    inline void cpuWrite(uint_least16_t addr, uint8_t data)
+    {
+        loopCodeWrite(addr);
+        pcmCodeWrite(addr);
+        dataBus.cpuWrite(addr, data);
+    }
+    void fastCpuSeek(bool enable);
+    uint64_t fastLoopCycles() const
+    {
+        return m_loopSkippedCycles;
+    }
+    void nativePcmSeek(bool enable);
+    bool nativePcmSeeking() const
+    {
+        return m_loopEnabled || m_pcmEnabled || m_pcmActive || m_idleActive;
+    }
+    uint64_t nativePcmCalls() const
+    {
+        return m_pcmCalls;
+    }
 
     void reset();
 
@@ -338,6 +437,15 @@ public:
     void triggerNMI();
     void triggerIRQ();
     void clearIRQ();
+
+  private:
+    uint32_t m_loopMapGeneration = 0;
+    uint32_t m_loopPageGeneration[256] = {};
+    uint8_t m_loopCache[65536] = {};
+    bool m_loopSeenPages[256] = {};
+    bool m_playerCallAllowed = true;
+    PcmAction m_playerActions[2048] = {};
+    std::bitset<65536> m_playerWriteCycle;
 };
 
 }

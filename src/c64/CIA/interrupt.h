@@ -42,7 +42,9 @@ class MOS652X;
  */
 class InterruptSource
 {
-public:
+    friend struct SeekStateAccess;
+
+  public:
     enum
     {
         INTERRUPT_NONE         = 0,      ///< no interrupt
@@ -123,14 +125,14 @@ protected:
      * @param scheduler event scheduler
      * @param parent the CIA chip which this Interrupt belongs to
      */
-    InterruptSource(EventScheduler &scheduler, MOS652X &parent) :
-        m_parent(parent),
-        eventScheduler(scheduler),
-        interruptEvent("CIA Interrupt", *this, &InterruptSource::interrupt),
-        updateIdrEvent("CIA update ICR", *this, &InterruptSource::updateIdr),
-        setIrqEvent("CIA set IRQ", *this, &InterruptSource::setIrq),
-        clearIrqEvent("CIA clear IRQ", *this, &InterruptSource::clearIrq)
-    {}
+    InterruptSource(EventScheduler& scheduler, MOS652X& parent)
+        : m_parent(parent), eventScheduler(scheduler),
+          interruptEvent("CIA interrupt", *this, &InterruptSource::interrupt),
+          updateIdrEvent("CIA update ICR", *this, &InterruptSource::updateIdr),
+          setIrqEvent("CIA set IRQ", *this, &InterruptSource::setIrq),
+          clearIrqEvent("CIA clear IRQ", *this, &InterruptSource::clearIrq)
+    {
+    }
 
     /**
      * Schedules an IRQ asserting state transition for next cycle.

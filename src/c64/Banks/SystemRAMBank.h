@@ -37,6 +37,7 @@ namespace libsidplayfp
  */
 class SystemRAMBank final : public Bank
 {
+    friend struct SeekStateAccess;
     friend class MMU;
 
 private:

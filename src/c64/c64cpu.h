@@ -102,8 +102,8 @@ protected:
     }
 
 public:
-    explicit c64cpubus (MMU &mmu) :
-        m_mmu(mmu) {}
+    explicit c64cpubus(MMU& mmu) :
+        CPUDataBus(mmu.directReadRAM()), m_mmu(mmu) {}
 };
 
 }
