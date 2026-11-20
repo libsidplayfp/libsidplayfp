@@ -34,6 +34,7 @@
 #include "SidInfoImpl.h"
 #include "sidrandom.h"
 #include "simpleMixer.h"
+#include "oplemu.h"
 #include "c64/c64.h"
 
 #ifdef HAVE_CONFIG_H
@@ -91,6 +92,8 @@ class Player
 
     std::unique_ptr<SimpleMixer> m_simpleMixer;
 
+    oplemu m_oplemu;
+
 private:
     /**
      * Get the C64 model for the current loaded tune.
@@ -110,7 +113,7 @@ private:
     /**
      * Release the SID builders.
      */
-    void sidRelease();
+    void releaseChips();
 
     /**
      * Create the SID emulation(s).
@@ -151,6 +154,8 @@ private:
     bool load(SidTune *tune);
 
     void buffers(short** buffers) const;
+
+    short* oplBuffer() const;
 
     int play(unsigned int cycles);
 
@@ -195,6 +200,8 @@ private:
     bool getSidStatus(unsigned int sidNum, uint8_t regs[32]);
 
     unsigned int installedSIDs() const { return m_chips.size(); }
+
+    bool installedOpl() const { return m_oplemu.locked(); }
 
     void initMixer(bool stereo);
 

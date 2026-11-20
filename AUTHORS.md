@@ -33,6 +33,11 @@ implementation.
 
 COMPUTE!'s Sidplayer by Craig Chamberlain and Harry Bratt.
 
+3rd party libraries:
+
+    Cra3z             - hashlib
+    Mitsutaka Okazaki - emu8950
+
 Credit where credit is due, so if I missed anyone please let me know.
 
 -----------------------------------------------------------------------------

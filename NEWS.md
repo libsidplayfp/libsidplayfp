@@ -1,5 +1,13 @@
+3.2.0 2026-11-xx
+* Add support for SID version 5
+* Support new residfp caps and noise level tunables
+* sidlite: corrected ring modulation
+
+
+
 3.1.2 2026-10-25
 * Fixed possible out-of-bounds read (#280) - CVE-2026-111148
+
 
 
 3.1.1 2026-08-30

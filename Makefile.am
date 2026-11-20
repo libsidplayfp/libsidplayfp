@@ -67,6 +67,7 @@ src/Event.h \
 src/EventCallback.h \
 src/EventScheduler.cpp \
 src/EventScheduler.h \
+src/oplemu.h \
 src/player.cpp \
 src/call.cpp \
 src/call.h \
@@ -98,6 +99,7 @@ src/c64/Banks/Bank.h \
 src/c64/c64cpu.h \
 src/c64/c64cia.h \
 src/c64/c64env.h \
+src/c64/c64opl.h \
 src/c64/c64sid.h \
 src/c64/c64vic.h \
 src/c64/c64.cpp \
@@ -109,6 +111,7 @@ src/c64/Banks/DisconnectedBusBank.h \
 src/c64/Banks/ExtraSidBank.h \
 src/c64/Banks/IOBank.h \
 src/c64/Banks/NullSid.h \
+src/c64/Banks/OplBank.h \
 src/c64/Banks/pla.h \
 src/c64/Banks/SidBank.h \
 src/c64/Banks/SystemRAMBank.h \
@@ -159,7 +162,9 @@ src/sidtune/SidTuneTools.h \
 src/sidtune/SmartPtr.h \
 src/utils/iniParser.cpp \
 src/utils/iniParser.h \
-src/utils/SidDatabase.cpp
+src/utils/SidDatabase.cpp \
+src/libs/emu8950/emu8950.c \
+src/libs/emu8950/emuadpcm.c
 
 src_libsidplayfp_la_LDFLAGS = -version-info $(LIBSIDPLAYVERSION) $(W32_LDFLAGS)
 

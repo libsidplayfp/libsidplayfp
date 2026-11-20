@@ -186,4 +186,12 @@ void sidplayfp::fastCpuSeek(bool enable)
 uint64_t sidplayfp::fastLoopCycles() const
 {
     return sidplayer.fastLoopCycles();
+bool sidplayfp::installedOpl() const
+{
+    return sidplayer.installedOpl();
+}
+
+short* sidplayfp::oplBuffer() const
+{
+    return sidplayer.oplBuffer();
 }

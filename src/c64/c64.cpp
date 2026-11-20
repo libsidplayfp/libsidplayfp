@@ -83,6 +83,7 @@ c64::c64() :
     cia1(*this),
     cia2(*this),
     vic(*this),
+    m_oplBank(nullptr),
     disconnectedBusBank(mmu),
     mmu(eventScheduler, &ioBank),
     playSid(eventScheduler, mmu, sidBank),
@@ -184,6 +185,12 @@ bool c64::addExtraSid(c64sid *s, int address)
     return true;
 }
 
+void c64::setOpl(c64opl *o)
+{
+    m_oplBank = new OplBank(o);
+    ioBank.setBank(0xf, m_oplBank);
+}
+
 void c64::deleteSids(sidBankMap_t &extraSidBanks)
 {
     for (auto sidBank: extraSidBanks)
@@ -197,13 +204,15 @@ c64::~c64()
     deleteSids(extraSidBanks);
 }
 
-void c64::clearSids()
+void c64::clearChips()
 {
     sidBank.setSID(nullptr);
 
     resetIoBank();
 
     deleteSids(extraSidBanks);
+
+    delete m_oplBank;
 }
 
 }

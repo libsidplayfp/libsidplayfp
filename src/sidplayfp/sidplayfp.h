@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000 Simon White
  *
@@ -299,6 +299,23 @@ class SID_EXTERN sidplayfp
      * @since 3.0
      */
     int getBufSize(unsigned int cycles);
+
+    /**
+     * Check if an OPL chip is installed.
+     *
+     * @return true if an OPL chip is installed.
+     * @since 3.2
+     */
+    bool installedOpl() const;
+
+    /**
+     * Get the buffer pointers for the installed OPL chip.
+     *
+     * @return nullptr if no OPL chip is installed
+     * @since 3.2
+     */
+    short* oplBuffer() const;
+
 };
 
 #endif // SIDPLAYFP_H

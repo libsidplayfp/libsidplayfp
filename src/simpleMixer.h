@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2025 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright (C) 2000 Simon White
  *
@@ -86,8 +86,8 @@ private:
     // Fixed point gain 1/n, keeps the sum of n full scale chips in 16 bit
     static int_least32_t invCount(unsigned int n);
 
-    // Setup the mixers for more than 3 chips or for per chip panning
-    void setupGeneric(bool stereo, const SidTuneInfo::pan_t *pans, int chips);
+    // Setup the mixers for more than 3 chips or opl or for per chip panning
+    void setupGeneric(bool stereo, bool opl, const SidTuneInfo::pan_t *pans, int chips);
 
     /*
      * Channel matrix
@@ -166,7 +166,7 @@ public:
      *
      * @param pans position of each chip, nullptr for the fixed matrix of 1 to 3 chips
      */
-    SimpleMixer(bool stereo, short** buffers, int chips, const SidTuneInfo::pan_t *pans = nullptr);
+    SimpleMixer(bool stereo, short** buffers, int chips, bool opl, const SidTuneInfo::pan_t *pans = nullptr);
 
     /**
      * Do the mixing.

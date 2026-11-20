@@ -1,7 +1,7 @@
 /*
  * This file is part of libsidplayfp, a SID player engine.
  *
- * Copyright 2011-2024 Leandro Nini <drfiemost@users.sourceforge.net>
+ * Copyright 2011-2026 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2001 Simon White
  *
@@ -59,7 +59,7 @@ public:
     {
         C2200PF,        ///< Old 2200pF
         C470PF,         ///< New 440pF
-        C330PF          ///< "Galway" 330pF
+        C330PF          ///< "Galway" 330pF @since 3.2
     } sid_caps_t;
 
     /// CIA chip model
@@ -87,6 +87,14 @@ public:
         RESAMPLE_INTERPOLATE    ///< Resampling
     } sampling_method_t;
 
+    /// OPL chip model
+    /// @since 3.3
+    typedef enum
+    {
+        YM3526,         ///< Yamaha YM3526 (OPL)
+        YM3812          ///< Yamaha YM3812 (OPL2)
+    } opl_model_t;
+
 public:
     /**
      * Maximum power on delay.
@@ -100,7 +108,7 @@ public:
 
 public:
     /**
-     * Intended c64 model when unknown or forced.
+     * Intended C64 model when unknown or forced.
      */
     c64_model_t defaultC64Model;
 
@@ -110,12 +118,12 @@ public:
     bool forceC64Model;
 
     /**
-     * Intended sid model when unknown or forced.
+     * Intended SID model when unknown or forced.
      */
     sid_model_t defaultSidModel;
 
     /**
-     * Force the sid model to #defaultSidModel.
+     * Force the SID model to #defaultSidModel.
      */
     bool forceSidModel;
 
@@ -125,7 +133,7 @@ public:
     bool digiBoost;
 
     /**
-     * Intended cia model.
+     * Intended CIA model.
      */
     cia_model_t ciaModel;
 
@@ -157,6 +165,16 @@ public:
      * Sampling method.
      */
     sampling_method_t samplingMethod;
+
+    /**
+     * Intended OPL model if required.
+     */
+    opl_model_t oplModel;
+
+    /**
+     * Add an OPL chip.
+     */
+    bool forceOpl;
 
     /**
      * Compare two config objects.

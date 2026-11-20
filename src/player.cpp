@@ -53,7 +53,6 @@ const char ERR_NA[]                   = "NA";
 const char ERR_NO_TUNE_LOADED[]       = "SIDPLAYER ERROR: No tune loaded";
 const char ERR_UNSUPPORTED_FREQ[]     = "SIDPLAYER ERROR: Unsupported sampling frequency.";
 const char ERR_UNSUPPORTED_SID_ADDR[] = "SIDPLAYER ERROR: Unsupported SID address.";
-const char ERR_UNSUPPORTED_FMOPL[]    = "SIDPLAYER ERROR: FM OPL tunes are not supported.";
 const char ERR_UNSUPPORTED_SIZE[]     = "SIDPLAYER ERROR: Size of music data exceeds C64 memory.";
 const char ERR_INVALID_PERCENTAGE[]   = "SIDPLAYER ERROR: Percentage value out of range.";
 const char ERR_BAD_BUF_SIZE[]         = "SIDPLAYER ERROR: Bad buffer size";
@@ -156,6 +155,11 @@ void Player::initialise()
             chip->clock();
             chip->bufferpos(0);
         }
+        if (m_oplemu.locked())
+        {
+            m_oplemu.clock();
+            m_oplemu.bufferpos(0);
+        }
     }
 
     psiddrv driver(m_tune->getInfo());
@@ -226,8 +230,13 @@ void Player::filter(unsigned int sidNum, bool enable)
 
 void Player::initMixer(bool stereo)
 {
-    std::unique_ptr<short*[]> bufs(new short*[m_chips.size()]);
-    buffers(bufs.get());
+    int chips = m_chips.size();
+    std::vector<short*> bufs(chips);
+    buffers(bufs.data());
+
+    bool opl = installedOpl();
+    if (opl)
+        bufs.push_back(oplBuffer());
 
     // Per chip positions for a panning hint or more than 3 chips, else the fixed matrix
     std::vector<SidTuneInfo::pan_t> pans;
@@ -241,7 +250,7 @@ void Player::initMixer(bool stereo)
         }
     }
 
-    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.get(), installedSIDs(), pans.empty() ? nullptr : pans.data()));
+    m_simpleMixer.reset(new SimpleMixer(stereo, bufs.data(), installedSIDs(), opl, pans.empty() ? nullptr : pans.data()));
 }
 
 unsigned int Player::mix(short *buffer, unsigned int samples)
@@ -255,6 +264,11 @@ void Player::buffers(short** buffers) const
     {
         buffers[i] = m_chips[i]->buffer();
     }
+}
+
+short* Player::oplBuffer() const
+{
+    return m_oplemu.locked() ? m_oplemu.buffer() : nullptr;
 }
 
 int Player::play(unsigned int cycles)
@@ -294,6 +308,11 @@ int Player::play(unsigned int cycles)
             sampleCount = s->bufferpos();
             // Reset the buffer
             s->bufferpos(0);
+        }
+        if (m_oplemu.locked())
+        {
+            m_oplemu.clock();
+            m_oplemu.bufferpos(0);
         }
         return sampleCount;
     }
@@ -349,13 +368,15 @@ bool Player::config(const SidConfig &cfg, bool force)
 
         try
         {
-            // No FM OPL emulation, reject per spec (MAY reject).
-            if (tuneInfo->fmOpl())
-            {
-                throw configError(ERR_UNSUPPORTED_FMOPL);
-            }
+            releaseChips();
 
-            sidRelease();
+            if (tuneInfo->fmOpl() || cfg.forceOpl)
+            {
+                int model = (cfg.oplModel == SidConfig::YM3526) ? 1 : 2;
+                m_oplemu.sampling(m_c64.getMainCpuSpeed(), cfg.frequency);
+                m_oplemu.lock(m_c64.getEventScheduler(), cfg.frequency, model);
+                m_c64.setOpl(&m_oplemu);
+            }
 
             std::vector<unsigned int> addresses;
             const uint_least16_t secondSidAddress = tuneInfo->sidChipBase(1) != 0 ?
@@ -396,7 +417,7 @@ bool Player::config(const SidConfig &cfg, bool force)
         }
         catch (configError const &e)
         {
-            sidRelease();
+            releaseChips();
             m_errorString = e.message();
             m_cfg.sidEmulation = nullptr;
             if (&m_cfg != &cfg)
@@ -545,10 +566,13 @@ SidConfig::sid_model_t getSidModel(SidTuneInfo::model_t sidModel, SidConfig::sid
     }
 }
 
-void Player::sidRelease()
+void Player::releaseChips()
 {
     ++m_stateGeneration;
     m_c64.clearSids();
+    m_c64.clearChips();
+
+    m_oplemu.unlock();
 
     for (sidemu *s: m_chips)
     {
