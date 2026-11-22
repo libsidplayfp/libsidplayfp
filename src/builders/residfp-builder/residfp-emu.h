@@ -86,7 +86,7 @@ public:
 #endif
     }
 
-    void offset6581(double offset)
+    void offset6581(MAYBE_UNUSED double offset)
     {
 #if (LIBRESIDFP_VERSION_MAJ > 1) || (LIBRESIDFP_VERSION_MIN >= 2)
         m_sid.setOffset6581(offset);
@@ -100,13 +100,13 @@ public:
 #endif
     }
 
-    void noiseLevel(int level) {
+    void noiseLevel(MAYBE_UNUSED int level) {
 #if (LIBRESIDFP_VERSION_MAJ > 1) || (LIBRESIDFP_VERSION_MIN >= 3)
         m_sid.noiseLevel(level);
 #endif
     }
 
-    void strongPS(bool enable) {
+    void strongPS(MAYBE_UNUSED bool enable) {
 #if (LIBRESIDFP_VERSION_MAJ > 1) || (LIBRESIDFP_VERSION_MIN >= 3)
         m_sid.enableStrongPS(enable);
 #endif
