@@ -24,6 +24,7 @@
 #ifndef SIMPLEMIXER_H
 #define SIMPLEMIXER_H
 
+#include <numeric>
 #include <vector>
 #ifdef __has_include
 #  if __has_include(<version>)
@@ -109,10 +110,8 @@ private:
     template <int Chips>
     int_least32_t mono() const
     {
-        int_least32_t res = 0;
-        for (int i = 0; i < Chips; i++)
-            res += m_iSamples[i];
-        return res * SCALE[Chips-1] / SCALE_FACTOR;
+        int_least32_t res = std::accumulate(m_iSamples.begin(), m_iSamples.end(), int_least32_t(0));
+        return (res * SCALE[Chips-1]) / SCALE_FACTOR;
     }
 
     // Stereo mixing
@@ -139,17 +138,13 @@ private:
     // Generic mixing, any number of chips
     int_least32_t monoGeneric() const
     {
-        int_least64_t res = 0;
-        for (std::size_t i = 0; i < m_iSamples.size(); i++)
-            res += m_iSamples[i];
-        return static_cast<int_least32_t>(res * m_monoScale / SCALE_FACTOR);
+        int_least64_t res = std::accumulate(m_iSamples.begin(), m_iSamples.end(), int_least64_t(0));
+        return static_cast<int_least32_t>((res * m_monoScale) / SCALE_FACTOR);
     }
 
     int_least32_t stereoGeneric(const std::vector<int_least32_t> &gain) const
     {
-        int_least64_t res = 0;
-        for (std::size_t i = 0; i < m_iSamples.size(); i++)
-            res += static_cast<int_least64_t>(m_iSamples[i]) * gain[i];
+        int_least64_t res = std::inner_product(m_iSamples.begin(), m_iSamples.end(), gain.begin(), int_least64_t(0));
         return static_cast<int_least32_t>(res / SCALE_FACTOR);
     }
 
