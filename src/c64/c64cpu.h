@@ -88,12 +88,12 @@ protected:
         {
             if (data == 0)
             {
-                std::cout << std::endl << "\x1b[0;32m" << "OK" << std::endl;
+                std::cout << std::endl << "\x1b[0;32m" << "OK" << "\x1b[0m" << std::endl;
                 exit(EXIT_SUCCESS);
             }
             else if (data == 0xff)
             {
-                std::cout << std::endl << "\x1b[0;31m" << "KO" << std::endl;
+                std::cout << std::endl << "\x1b[0;31m" << "KO" << "\x1b[0m" << std::endl;
                 exit(EXIT_FAILURE);
             }
         }
