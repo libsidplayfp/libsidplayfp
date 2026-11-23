@@ -24,6 +24,8 @@
 #define STIL_H
 
 #include <string>
+#include <sstream>
+#include <fstream>
 #include <algorithm>
 #include <map>
 #include <iosfwd>
@@ -123,6 +125,14 @@ public:
      *      - true  - All okay
      */
     bool setBaseDir(const char *pathToHVSC);
+    /**
+     * Load STIL and BUGlist data from text strings.
+     *
+     * @param stil the STIL text
+     * @param bugs the BUGlist text
+     * @return true if the data was loaded successfully.
+     */
+    bool setData(const std::string& stil, const std::string& bugs);
 
     /**
      * Returns a floating number telling what the version
@@ -267,14 +277,18 @@ public:
      */
     inline const char *getErrorStr() const {return (STIL_ERROR_STR[lastError]);}
 
-private:
+  private:
+    bool memoryMode = false;
+    std::istringstream stilMemory, bugMemory;
+    std::istream& openInput(std::ifstream& disk, bool bugs, const char* filename);
+
     typedef std::map<std::string, std::streampos> dirList;
 
     /// Path to STIL.
-    const char *PATH_TO_STIL;
+    const char* PATH_TO_STIL;
 
     /// Path to BUGlist.
-    const char *PATH_TO_BUGLIST;
+    const char* PATH_TO_BUGLIST;
 
     /// Version number/copyright string
     std::string versionString;
@@ -302,7 +316,7 @@ private:
     STILerror lastError;
 
     /// Error strings containing the description of the possible errors in STIL.
-    static const char *STIL_ERROR_STR[];
+    static const char* STIL_ERROR_STR[];
 
     ////////////////
 
@@ -331,7 +345,7 @@ private:
      *      - false - something went wrong
      *      - true  - everything is okay
      */
-    bool determineEOL(std::ifstream &stilFile);
+    bool determineEOL(std::istream& stilFile);
 
     /**
      * Populates the given dirList array with the directories
@@ -347,7 +361,7 @@ private:
      *                inFile
      *      - true  - everything is okay
      */
-    bool getDirs(std::ifstream &inFile, dirList &dirs, bool isSTILFile);
+    bool getDirs(std::istream& inFile, dirList& dirs, bool isSTILFile);
 
     /**
      * Positions the file pointer to the given entry in 'inFile'
@@ -360,7 +374,7 @@ private:
      *      - true - if successful
      *      - false - otherwise
      */
-    bool positionToEntry(const char *entryStr, std::ifstream &inFile, dirList &dirs);
+    bool positionToEntry(const char* entryStr, std::istream& inFile, dirList& dirs);
 
     /**
      * Reads the entry from 'inFile' into 'buffer'. 'inFile' should
@@ -370,7 +384,7 @@ private:
      * @param entryStr - the entry needed to be read
      * @param buffer   - where to put the result to
      */
-    void readEntry(std::ifstream &inFile, std::string &buffer);
+    void readEntry(std::istream& inFile, std::string& buffer);
 
     /**
      * Given a STIL formatted entry in 'buffer', a tune number,
@@ -389,7 +403,8 @@ private:
      *      - false - if nothing was put into 'result'
      *      - true  - 'result' has the resulting field
      */
-    bool getField(std::string &result, const char *buffer, int tuneNo = 0, STILField field = all) const;
+    bool getField(std::string& result, const char* buffer, int tuneNo = 0,
+                  STILField field = all) const;
 
     /**
      * @param result - where to put the resulting string to (if any)
@@ -403,7 +418,8 @@ private:
      *      - false - if nothing was put into 'result'
      *      - true  - 'result' has the resulting field
      */
-    bool getOneField(std::string &result, const char *start, const char *end, STILField field) const;
+    bool getOneField(std::string& result, const char* start, const char* end,
+                     STILField field) const;
 
     /**
      * Extracts one line from 'infile' to 'line[]'. The end of
@@ -414,7 +430,7 @@ private:
      *                 to the start of the desired line)
      * @param line   - char array to put the line into
      */
-    void getStilLine(std::ifstream &infile, std::string &line);
+    void getStilLine(std::istream& infile, std::string& line);
 };
 
 #endif // STIL_H
